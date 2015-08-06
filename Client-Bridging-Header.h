@@ -8,6 +8,7 @@
 #import "Try.h"
 
 #import "GCDWebServer.h"
+#import "GCDWebServerResponse.h"
 #import "GCDWebServerDataResponse.h"
 #import "FXCrashDetector.h"
 #import "ThirdParty/UIImageViewAligned/UIImageViewAligned/UIImageViewAligned.h"

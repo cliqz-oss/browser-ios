@@ -141,7 +141,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
         SessionRestoreHandler.register(server)
-        server.start()
+
+//		server.registerMainBundleResourcesOfType("*", localPath: "page", module: "freshtab")
+		server.start()
+		
+		let bundlePath = NSBundle.mainBundle().bundlePath
+		let freshtabPath = bundlePath + "/" + "page"
+		let extensionPath = bundlePath + "/" + "tool_iOS"
+
+		let httpsServer = HttpServer()
+		httpsServer["/freshtab/(.+)"] = HttpHandlers.directory(freshtabPath)
+		httpsServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
+
+		httpsServer["/myproxy"] = { (request: HttpRequest) in
+			let u: String = request.urlParams[0].1
+			let data = NSData(contentsOfURL: NSURL(string:u)!)
+			return HttpResponse.RAW(200, data!)
+		}
+		httpsServer.start(listenPort: 3000)
     }
 
     private func setUserAgent() {

@@ -30,14 +30,14 @@ private struct BrowserViewControllerUX {
     private static let BookmarkStarAnimationOffset: CGFloat = 80
 }
 
-class BrowserViewController: UIViewController {
+class BrowserViewController: UIViewController, SearchViewDelegate {
 
     private var urlBar: URLBarView!
     private var readerModeBar: ReaderModeBarView?
     private var statusBarOverlay: UIView!
     private var toolbar: BrowserToolbar?
     private var homePanelController: HomePanelViewController?
-    private var searchController: SearchViewController?
+    private var searchController: BrowserViewController2?
     private var webViewContainer: UIView!
     private let uriFixup = URIFixup()
     private var screenshotHelper: ScreenshotHelper!
@@ -165,6 +165,10 @@ class BrowserViewController: UIViewController {
         }
     }
 
+	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+		self.searchController?.view.setNeedsLayout()
+	}
+
     func SELstatusBarFrameWillChange(notification: NSNotification) {
         if let statusBarFrame = notification.userInfo![UIApplicationStatusBarFrameUserInfoKey] as? NSValue {
             scrollController.showToolbars(animated: false)
@@ -243,6 +247,12 @@ class BrowserViewController: UIViewController {
         self.updateToolbarStateForTraitCollection(self.traitCollection)
 
     }
+
+	func searchView(SearchViewController: BrowserViewController2, didSelectUrl url: NSURL) {
+		finishEditingAndSubmit(url, visitType: .Link)
+//		self.urlBar.updateURLBarText(url)
+//		self.urlBarDidEndEditing(self.urlBar)
+	}
 
     func loadQueuedTabs() {
         log.debug("Loading queued tabs.")
@@ -485,6 +495,8 @@ class BrowserViewController: UIViewController {
     private func updateInContentHomePanel(url: NSURL?) {
         if !urlBar.isEditing {
             if AboutUtils.isAboutHomeURL(url){
+				
+				var wb: WKWebView = self.webViewContainer.subviews[0] as! WKWebView
                 showHomePanelController(inline: (tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
             } else {
                 hideHomePanelController()
@@ -497,6 +509,22 @@ class BrowserViewController: UIViewController {
             return
         }
 
+		searchController = BrowserViewController2()
+		searchController!.delegate = self
+		view.addSubview(searchController!.view)
+		let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(searchController!.view) ?? 0
+		
+		searchController!.view.snp_makeConstraints { make in
+			make.top.equalTo(self.urlBar.snp_bottom)
+			make.left.right.equalTo(self.view)
+			make.bottom.equalTo(-keyboardHeight)
+			return
+		}
+		homePanelController?.view?.hidden = true
+		searchLoader.addListener(searchController!)
+		addChildViewController(searchController!)
+		
+		/*
         urlBar.locationView.inputMode = .Search
 
         searchController = SearchViewController()
@@ -516,6 +544,7 @@ class BrowserViewController: UIViewController {
         homePanelController?.view?.hidden = true
 
         addChildViewController(searchController!)
+*/
     }
 
     private func hideSearchController() {
@@ -829,7 +858,6 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
-        searchLoader.query = text
 
         if text.isEmpty {
             hideSearchController()
@@ -837,6 +865,7 @@ extension BrowserViewController: URLBarDelegate {
             showSearchController()
             searchController!.searchQuery = text
         }
+		searchLoader.query = text
     }
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
@@ -992,7 +1021,7 @@ extension BrowserViewController: BrowserDelegate {
 
         let errorHelper = ErrorPageHelper()
         browser.addHelper(errorHelper, name: ErrorPageHelper.name())
-    }
+	}
 
     func browser(browser: Browser, willDeleteWebView webView: WKWebView) {
         webView.removeObserver(self, forKeyPath: KVOEstimatedProgress)
@@ -1241,6 +1270,7 @@ extension BrowserViewController: TabManagerDelegate {
             urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         }
 
+
         updateInContentHomePanel(selected?.url)
     }
 
@@ -1338,8 +1368,8 @@ extension BrowserViewController: WKNavigationDelegate {
                 case "about", "http", "https":
                     if isWhitelistedUrl(url) {
                         // If the url is whitelisted, we open it without prompting.
-                        openExternal(url, prompt: false)
-                        decisionHandler(WKNavigationActionPolicy.Cancel)
+//                        openExternal(url, prompt: false)
+                        decisionHandler(WKNavigationActionPolicy.Allow)
                     } else {
                         decisionHandler(WKNavigationActionPolicy.Allow)
                     }
@@ -1348,9 +1378,9 @@ extension BrowserViewController: WKNavigationDelegate {
                     decisionHandler(WKNavigationActionPolicy.Cancel)
                 default:
                     if UIApplication.sharedApplication().canOpenURL(url) {
-                        openExternal(url)
+//                        openExternal(url)
                     }
-                    decisionHandler(WKNavigationActionPolicy.Cancel)
+                    decisionHandler(WKNavigationActionPolicy.Allow)
                 }
             }
         } else {

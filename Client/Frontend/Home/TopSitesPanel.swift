@@ -6,6 +6,7 @@ import UIKit
 import Shared
 import XCGLogger
 import Storage
+import WebKit
 
 private let log = XCGLogger.defaultInstance()
 
@@ -66,12 +67,16 @@ private class SuggestedSitesData<T: Tile>: Cursor<T> {
 class TopSitesPanel: UIViewController {
     weak var homePanelDelegate: HomePanelDelegate?
 
+	private lazy var freshtabView: WKWebView = {return WKWebView()}()
+
+	/*
     private var collection: TopSitesCollectionView? = nil
     private lazy var dataSource: TopSitesDataSource = {
         return TopSitesDataSource(profile: self.profile, data: Cursor(status: .Failure, msg: "Nothing loaded yet"))
     }()
     private lazy var layout: TopSitesLayout = { return TopSitesLayout() }()
-
+*/
+	/*
     var editingThumbnails: Bool = false {
         didSet {
             if editingThumbnails != oldValue {
@@ -85,12 +90,13 @@ class TopSitesPanel: UIViewController {
             }
         }
     }
+*/
 
     let profile: Profile
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-        layout.setupForOrientation(toInterfaceOrientation)
-        collection?.setNeedsLayout()
+//        layout.setupForOrientation(toInterfaceOrientation)
+//        collection?.setNeedsLayout()
     }
     
     init(profile: Profile) {
@@ -105,6 +111,15 @@ class TopSitesPanel: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		self.view.addSubview(self.freshtabView)
+		self.freshtabView.snp_makeConstraints { make in
+			make.edges.equalTo(self.view)
+		}
+		var u = NSURL(string: "http://localhost:3000/freshtab/freshtab.html")
+		let r = NSURLRequest(URL: u!)
+		self.freshtabView.loadRequest(r)
+
+		/*
         var collection = TopSitesCollectionView(frame: self.view.frame, collectionViewLayout: layout)
         collection.backgroundColor = UIConstants.PanelBackgroundColor
         collection.delegate = self
@@ -117,6 +132,7 @@ class TopSitesPanel: UIViewController {
         }
         self.collection = collection
         self.refreshHistory(layout.thumbnailCount)
+*/
     }
 
     deinit {
@@ -124,20 +140,23 @@ class TopSitesPanel: UIViewController {
     }
 
     func firefoxAccountChanged(notification: NSNotification) {
+		/*
         if notification.name == NotificationFirefoxAccountChanged {
             refreshHistory(self.layout.thumbnailCount)
         }
+*/
     }
 
     //MARK: Private Helpers
     private func updateDataSourceWithSites(result: Result<Cursor<Site>>) {
         if let data = result.successValue {
-            self.dataSource.data = data
-            self.dataSource.profile = self.profile
+//            self.dataSource.data = data
+//            self.dataSource.profile = self.profile
         }
     }
 
     private func updateRemoveButtonStates() {
+		/*
         for i in 0..<layout.thumbnailCount {
             if let cell = collection?.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0)) as? ThumbnailCell {
                 //TODO: Only toggle the remove button for non-suggested tiles for now
@@ -148,6 +167,7 @@ class TopSitesPanel: UIViewController {
                 }
             }
         }
+*/
     }
 
     private func deleteHistoryTileForURL(url: String, atIndexPath indexPath: NSIndexPath) {
@@ -160,13 +180,16 @@ class TopSitesPanel: UIViewController {
     }
 
     private func refreshHistory(frequencyLimit: Int) {
+		/*
         self.profile.history.getSitesByFrecencyWithLimit(frequencyLimit).uponQueue(dispatch_get_main_queue(), block: { result in
             self.updateDataSourceWithSites(result)
             self.collection?.reloadData()
         })
+*/
     }
 
     private func deleteOrUpdateSites(result: Result<Cursor<Site>>, indexPath: NSIndexPath) {
+		/*
         if let data = result.successValue {
             let numOfThumbnails = self.layout.thumbnailCount
             collection?.performBatchUpdates({
@@ -184,17 +207,19 @@ class TopSitesPanel: UIViewController {
                 self.updateRemoveButtonStates()
             })
         }
+*/
     }
 }
 
 extension TopSitesPanel: HomePanel {
     func endEditing() {
-        editingThumbnails = false
+//        editingThumbnails = false
     }
 }
 
 extension TopSitesPanel: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+		/*
         if editingThumbnails {
             return
         }
@@ -204,9 +229,11 @@ extension TopSitesPanel: UICollectionViewDelegate {
             let visitType = VisitType.Bookmark
             homePanelDelegate?.homePanel(self, didSelectURL: NSURL(string: site.url)!, visitType: visitType)
         }
+*/
     }
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+		/*
         if let thumbnailCell = cell as? ThumbnailCell {
             thumbnailCell.delegate = self
 
@@ -214,22 +241,25 @@ extension TopSitesPanel: UICollectionViewDelegate {
                 thumbnailCell.removeButton.hidden = false
             }
         }
+*/
     }
 }
 
 extension TopSitesPanel: ThumbnailCellDelegate {
     func didRemoveThumbnail(thumbnailCell: ThumbnailCell) {
+		/*
         if let indexPath = collection?.indexPathForCell(thumbnailCell) {
             let site = dataSource[indexPath.item]
             if let url = site?.url {
                 self.deleteHistoryTileForURL(url, atIndexPath: indexPath)
             }
         }
+*/
         
     }
 
     func didLongPressThumbnail(thumbnailCell: ThumbnailCell) {
-        editingThumbnails = true
+//        editingThumbnails = true
     }
 }
 
@@ -456,7 +486,6 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         cell.imageView.contentMode = UIViewContentMode.ScaleAspectFit
         cell.isAccessibilityElement = true
         cell.accessibilityLabel = cell.textLabel.text
-
         return cell
     }
 

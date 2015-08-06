@@ -204,13 +204,13 @@ class Browser: NSObject {
         webView?.goToBackForwardListItem(item)
     }
 
-    func loadRequest(request: NSURLRequest) -> WKNavigation? {
-        lastRequest = request
-        if let webView = webView {
-            return webView.loadRequest(request)
-        }
-        return nil
-    }
+	func loadRequest(request: NSURLRequest) -> WKNavigation? {
+		lastRequest = request
+		if let webView = webView {
+			return webView.loadRequest(request)
+		}
+		return nil
+	}
 
     func stop() {
         webView?.stopLoading()
