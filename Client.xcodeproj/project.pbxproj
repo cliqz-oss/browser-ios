@@ -291,6 +291,7 @@
 		4F58982D1B613A8D0076DE6A /* page in Resources */ = {isa = PBXBuildFile; fileRef = 4F58982C1B613A8D0076DE6A /* page */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
+		4FBF695C1B7CAABE00039862 /* freshtab in Resources */ = {isa = PBXBuildFile; fileRef = 4FBF695B1B7CAABE00039862 /* freshtab */; };
 		4FDC2E991B68BCBE001803EC /* DemoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDC2E921B68BCBE001803EC /* DemoServer.swift */; };
 		4FDC2E9A1B68BCBE001803EC /* HttpHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDC2E931B68BCBE001803EC /* HttpHandlers.swift */; };
 		4FDC2E9B1B68BCBE001803EC /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDC2E941B68BCBE001803EC /* HttpParser.swift */; };
@@ -1364,6 +1365,7 @@
 		4F58982C1B613A8D0076DE6A /* page */ = {isa = PBXFileReference; lastKnownFileType = folder; name = page; path = "../fresh-tab/dist/web/page"; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
+		4FBF695B1B7CAABE00039862 /* freshtab */ = {isa = PBXFileReference; lastKnownFileType = folder; name = freshtab; path = "../fresh-tab/dist/mobile/freshtab"; sourceTree = "<group>"; };
 		4FDC2E921B68BCBE001803EC /* DemoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoServer.swift; sourceTree = "<group>"; };
 		4FDC2E931B68BCBE001803EC /* HttpHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpHandlers.swift; sourceTree = "<group>"; };
 		4FDC2E941B68BCBE001803EC /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
@@ -2563,6 +2565,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4FBF695B1B7CAABE00039862 /* freshtab */,
 				4F58982C1B613A8D0076DE6A /* page */,
 				4F5898261B5FA4540076DE6A /* tool_iOS */,
 				0B7100491B4C73350046AF87 /* libxml2.2.dylib */,
@@ -3695,6 +3698,7 @@
 				4F5898271B5FA4540076DE6A /* tool_iOS in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
+				4FBF695C1B7CAABE00039862 /* freshtab in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				E49DF24C1B440D090049777A /* Licenses.html in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
