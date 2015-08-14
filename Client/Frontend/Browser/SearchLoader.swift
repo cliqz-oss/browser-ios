@@ -7,7 +7,7 @@ import Shared
 import Storage
 import XCGLogger
 
-private let log = XCGLogger.defaultInstance()
+private let log = Logger.browserLogger
 
 private let URLBeforePathRegex = NSRegularExpression(pattern: "^https?://([^/]+/)", options: nil, error: nil)!
 
@@ -47,7 +47,7 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, BrowserViewControlle
             deferred.uponQueue(dispatch_get_main_queue()) { result in
                 self.inProgress = nil
 
-                    // Failed cursors are excluded in .get().
+                // Failed cursors are excluded in .get().
                 if let cursor = result.successValue {
                     self.load(cursor)
                     self.urlBar.setAutocompleteSuggestion(self.getAutocompleteSuggestion(cursor))

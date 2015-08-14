@@ -1,11 +1,11 @@
 Building Firefox for iOS
 ========================
 
-Prerequisites, as of *May 11 2015*:
+Prerequisites, as of *August 10 2015*:
 
-* Mac OS X 10.10.3
-* Xcode 6.3.1 with the iOS 8.3 SDK
-* Carthage 0.7.1 via Homebrew
+* Mac OS X 10.10.4
+* Xcode 6.4 with the iOS 8.4 SDK
+* Carthage 0.7.4 via Homebrew
 
 (We try to keep up to date with the most recent production versions of OS X, Xcode and the iOS SDK.)
 
@@ -66,24 +66,29 @@ Before you can run the application on your device, you need to setup a few thing
 2. Create a new App Id. Name it 'Fennec'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec`. In the App Services section, select *App Groups*.
 3. Create a new App Id. Name it 'Fennec ShareTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ShareTo`. In the App Services section, select *App Groups*.
 4. Create a new App Id. Name it 'Fennec SendTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.SendTo`. In the App Services section, select *App Groups*.
-5. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
+5. Create a new App Id. Name it 'Fennec ViewLater'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ViewLater`. In the App Services section, select *App Groups*.
+6. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
 
 Now we are going to create three Provisioning Profiles that are linked to the App Ids that we just created:
 
 1. Create a new *Development Provisioning Profile* and link it to the *Fennec* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec*.
 2. Create a new *Development Provisioning Profile* and link it to the *Fennec SendTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec SendTo*.
 3. Create a new *Development Provisioning Profile* and link it to the *Fennec ShareTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ShareTo*.
+4. Create a new *Development Provisioning Profile* and link it to the *Fennec ViewLater* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ViewLater*.
 
 Now go to Xcode, *Preferences -> Accounts* and select your developer account. Hit the *View Details* button and then press the little reload button in the bottom left corner. This should sync the Provisioning Profiles and you should see the three profiles appear that you creates earlier.
 
 Almost done. The one thing missing is that we need to adjust the following files in the project:
 
+* `Client/Configuration/BaseConfig.xcconfig`
 * `Client/Info.plist`
 * `Client/Fennec.entitlements`
 * `Extensions/ShareTo/Info.plist`
 * `Extensions/ShareTo/Fennec.entitlements`
 * `Extensions/SendTo/Info.plist`
 * `Extensions/SendTo/Fennec.entitlements`
+* `Extensions/ViewLater/Info.plist`
+* `Extensions/ViewLater/Fennec.entitlements`
 
 In all these files, replace occurrences of `org.mozilla.ios` with `YOURREVERSEDOMAIN`. Make sure you expand all the fields of the `.entitlements` files. Make sure you just replace the `org.mozilla.ios` part and keep prefixes like `group.` that some files contain.
 
@@ -102,3 +107,7 @@ Updating SQLCipher.
 As of bug https://bugzilla.mozilla.org/show_bug.cgi?id=1182620 we do not run the SQLCipher 'amalgamation' phase anymore. Instead we have simply included generated copies of `sqlite3.c`, `sqlite3.h` and `sqlite3ext.h` in the project. This works around problems where the amalgamation phase did not work for production builds. It also speeds up things.
 
 To update to a newer version of SQLCipher: check out the original SQLCipher project and build it. Do not copy the project or anything in the Firefox project. Just follow their instructions. Then copy the above three `.c` and `.h` files back into the Firefox project. Also update the `README`, `VERION` and `CHANGELOG` files from the original distribution so that we know what version we have included.
+
+MozBuildID.xcconfig
+
+By default, .xcconfig files are cached after building a Xcode project. We generate a build identifier from the timestamp of when a build is made and a copy of the MozBuildID.xcconfig.template is filled in with the timestamp and renamed MozBuildID.xcconfig. Because of this, to generate a correct build identifier for a build, you will need to not just do a basic Clean of the project, but also a Clean Build Folder (Cmd+Alt+Shift+K)

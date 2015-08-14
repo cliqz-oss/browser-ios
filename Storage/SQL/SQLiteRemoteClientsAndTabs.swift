@@ -6,7 +6,7 @@ import Foundation
 import Shared
 import XCGLogger
 
-private let log = XCGLogger.defaultInstance()
+private let log = Logger.syncLogger
 
 public class SQLiteRemoteClientsAndTabs: RemoteClientsAndTabs {
     let db: BrowserDB
@@ -43,6 +43,14 @@ public class SQLiteRemoteClientsAndTabs: RemoteClientsAndTabs {
     public func wipeClients() -> Deferred<Result<()>> {
         return self.doWipe { (conn, inout err: NSError?) -> () in
             self.clients.delete(conn, item: nil, err: &err)
+        }
+    }
+
+    public func wipeRemoteTabs() -> Deferred<Result<()>> {
+        return self.doWipe { (conn, inout err: NSError?) -> () in
+            if let error = conn.executeChange("DELETE FROM \(self.tabs.name) WHERE client_guid IS NOT NULL", withArgs: nil) {
+                err = error
+            }
         }
     }
 
@@ -146,13 +154,32 @@ public class SQLiteRemoteClientsAndTabs: RemoteClientsAndTabs {
 
         if let err = err {
             clientCursor.close()
-            return Deferred(value: Result(failure: DatabaseError(err: err)))
+            return deferResult(DatabaseError(err: err))
         }
 
         let clients = clientCursor.asArray()
         clientCursor.close()
 
-        return Deferred(value: Result(success: clients))
+        return deferResult(clients)
+    }
+
+    public func getTabsForClientWithGUID(guid: GUID?) -> Deferred<Result<[RemoteTab]>> {
+        let tabsSQL: String
+        let clientArgs: Args?
+        if let clientGUID = guid {
+            tabsSQL = "SELECT * FROM \(TableTabs) WHERE client_guid = ?"
+            clientArgs = [guid]
+        } else {
+            tabsSQL = "SELECT * FROM \(TableTabs) WHERE client_guid IS NULL"
+            clientArgs = nil
+        }
+
+        log.debug("Looking for tabs for client with guid: \(guid)")
+        return db.runQuery(tabsSQL, args: clientArgs, factory: tabs.factory!) >>== {
+            let tabs = $0.asArray()
+            log.debug("Found \(tabs.count) tabs for client with guid: \(guid)")
+            return deferResult(tabs)
+        }
     }
 
     public func getClientsAndTabs() -> Deferred<Result<[ClientAndTabs]>> {
@@ -165,7 +192,7 @@ public class SQLiteRemoteClientsAndTabs: RemoteClientsAndTabs {
 
         if let err = err {
             clientCursor.close()
-            return Deferred(value: Result(failure: DatabaseError(err: err)))
+            return deferResult(DatabaseError(err: err))
         }
 
         let clients = clientCursor.asArray()
@@ -181,7 +208,7 @@ public class SQLiteRemoteClientsAndTabs: RemoteClientsAndTabs {
 
         if let err = err {
             tabCursor.close()
-            return Deferred(value: Result(failure: DatabaseError(err: err)))
+            return deferResult(DatabaseError(err: err))
         }
 
         let deferred = Deferred<Result<[ClientAndTabs]>>(defaultQueue: dispatch_get_main_queue())

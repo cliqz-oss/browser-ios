@@ -84,16 +84,18 @@ class ToolbarTests: KIFTestCase, UITextFieldDelegate {
     }
 
     func testURLEntry() {
-        let textField = tester().waitForViewWithAccessibilityLabel("Address and Search") as! UITextField
+        let textField = tester().waitForViewWithAccessibilityIdentifier("url") as! UITextField
         tester().tapViewWithAccessibilityIdentifier("url")
         tester().enterTextIntoCurrentFirstResponder("foobar")
         tester().tapViewWithAccessibilityLabel("Cancel")
         XCTAssertEqual(textField.text, "", "Verify that the URL bar text clears on about:home")
 
-        let url = "\(webRoot)/numberedPage.html?page=1"
+        // 127.0.0.1 doesn't cause http:// to be hidden. localhost does. Both will work.
+        let localhostURL = webRoot.stringByReplacingOccurrencesOfString("127.0.0.1", withString: "localhost", options: NSStringCompareOptions.allZeros, range: nil)
+        let url = "\(localhostURL)/numberedPage.html?page=1"
 
         // URL without "http://".
-        let displayURL = "\(webRoot)/numberedPage.html?page=1".substringFromIndex(advance(url.startIndex, count("http://")))
+        let displayURL = "\(localhostURL)/numberedPage.html?page=1".substringFromIndex(advance(url.startIndex, count("http://")))
 
         tester().tapViewWithAccessibilityIdentifier("url")
         tester().enterTextIntoCurrentFirstResponder("\(url)\n")
@@ -110,7 +112,31 @@ class ToolbarTests: KIFTestCase, UITextFieldDelegate {
         XCTAssertEqual(textField.text, displayURL, "Verify that text reverts to page URL after clearing text")
     }
 
+    func testClearURLTextUsingBackspace() {
+        // 127.0.0.1 doesn't cause http:// to be hidden. localhost does. Both will work.
+        let localhostURL = webRoot.stringByReplacingOccurrencesOfString("127.0.0.1", withString: "localhost", options: NSStringCompareOptions.allZeros, range: nil)
+        let url = "\(localhostURL)/numberedPage.html?page=1"
+
+        var textField = tester().waitForViewWithAccessibilityIdentifier("url") as! UITextField
+        tester().tapViewWithAccessibilityIdentifier("url")
+        tester().enterTextIntoCurrentFirstResponder(url+"\n")
+        tester().waitForAnimationsToFinish()
+        tester().tapViewWithAccessibilityIdentifier("url")
+        tester().waitForKeyInputReady()
+        tester().enterTextIntoCurrentFirstResponder("\u{8}")
+
+        let autocompleteField = tester().waitForViewWithAccessibilityIdentifier("address") as! UITextField
+        XCTAssertEqual(autocompleteField.text, "", "Verify that backspace keypress deletes text when url is highlighted")
+    }
+
     override func tearDown() {
+        let previousOrientation = UIDevice.currentDevice().valueForKey("orientation") as! Int
+        if previousOrientation == UIInterfaceOrientation.LandscapeLeft.rawValue {
+            // Rotate back to portrait
+            let value = UIInterfaceOrientation.Portrait.rawValue
+            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+        }
+
         BrowserUtils.resetToAboutHome(tester())
     }
 }

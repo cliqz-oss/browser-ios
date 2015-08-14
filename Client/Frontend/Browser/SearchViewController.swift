@@ -51,7 +51,6 @@ private struct SearchViewControllerUX {
 protocol SearchViewControllerDelegate: class {
     func searchViewController(searchViewController: SearchViewController, didSelectURL url: NSURL)
     func presentSearchSettingsController()
-    func searchViewControllerWillAppear(searchViewController: SearchViewController)
 }
 
 class SearchViewController: SiteTableViewController, KeyboardHelperDelegate, LoaderListener {
@@ -133,7 +132,6 @@ class SearchViewController: SiteTableViewController, KeyboardHelperDelegate, Loa
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.searchDelegate?.searchViewControllerWillAppear(self)
         reloadSearchEngines()
         reloadData()
     }
@@ -382,6 +380,9 @@ class SearchViewController: SiteTableViewController, KeyboardHelperDelegate, Loa
 
     func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardWillShowWithState state: KeyboardState) {
         animateSearchEnginesWithKeyboard(state)
+    }
+
+    func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardDidShowWithState state: KeyboardState) {
     }
 
     func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardWillHideWithState state: KeyboardState) {

@@ -8,8 +8,7 @@ import Shared
 import Account
 import XCGLogger
 
-// TODO: same comment as for SyncAuthState.swift!
-private let log = XCGLogger.defaultInstance()
+private let log = Logger.syncLogger
 
 
 // Not an error that indicates a server problem, but merely an
@@ -309,7 +308,7 @@ public class Sync15StorageClient {
             log.verbose("Response is \(response).")
 
             if let error = error {
-                log.error("Got error \(error). Response: \(response?.statusCode)")
+                log.error("Response: \(response?.statusCode ?? 0). Got error \(error).")
                 deferred.fill(Result<T>(failure: RequestError(error)))
                 return
             }
@@ -351,12 +350,18 @@ public class Sync15StorageClient {
         }
     }
 
+    lazy private var alamofire: Alamofire.Manager = {
+        let ua = UserAgent.syncUserAgent
+        let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+        return Alamofire.Manager.managerWithUserAgent(ua, configuration: configuration)
+    }()
+
     func requestGET(url: NSURL) -> Request {
         let req = NSMutableURLRequest(URL: url)
         req.HTTPMethod = Method.GET.rawValue
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         let authorized: NSMutableURLRequest = self.authorizer(req)
-        return Alamofire.request(authorized)
+        return alamofire.request(authorized)
                         .validate(contentType: ["application/json"])
     }
 
@@ -365,7 +370,7 @@ public class Sync15StorageClient {
         req.HTTPMethod = Method.DELETE.rawValue
         req.setValue("1", forHTTPHeaderField: "X-Confirm-Delete")
         let authorized: NSMutableURLRequest = self.authorizer(req)
-        return Alamofire.request(authorized)
+        return alamofire.request(authorized)
     }
 
     func requestWrite(url: NSURL, method: String, body: String, contentType: String, ifUnmodifiedSince: Timestamp?) -> Request {
@@ -380,7 +385,7 @@ public class Sync15StorageClient {
         }
 
         req.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)!
-        return Alamofire.request(authorized)
+        return alamofire.request(authorized)
     }
 
     func requestPUT(url: NSURL, body: JSON, ifUnmodifiedSince: Timestamp?) -> Request {
@@ -431,7 +436,7 @@ public class Sync15StorageClient {
             deferred.fill(Result(failure: RecordParseError()))
         }
 
-        req.responseParsedJSON(handler)
+        req.responseParsedJSON(true, completionHandler: handler)
         return deferred
     }
 
@@ -522,6 +527,7 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
     private let client: Sync15StorageClient
     private let encrypter: RecordEncrypter<T>
     private let collectionURI: NSURL
+    private let collectionQueue = dispatch_queue_create("com.mozilla.sync.collectionclient", DISPATCH_QUEUE_SERIAL)
 
     init(client: Sync15StorageClient, serverURI: NSURL, collection: String, encrypter: RecordEncrypter<T>) {
         self.client = client
@@ -545,7 +551,7 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
         let json = optFilter(records.map(self.encrypter.serializer))
 
         let req = client.requestPOST(self.collectionURI, body: json, ifUnmodifiedSince: nil)
-        req.responseParsedJSON(self.client.errorWrap(deferred) { (_, response, data, error) in
+        req.responseParsedJSON(queue: collectionQueue, partial: true, completionHandler: self.client.errorWrap(deferred) { (_, response, data, error) in
             if let json: JSON = data as? JSON,
                let result = POSTResult.fromJSON(json) {
                 let storageResponse = StorageResponse(value: result, response: response!)
@@ -577,7 +583,7 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
         }
 
         let req = client.requestGET(uriForRecord(guid))
-        req.responseParsedJSON(self.client.errorWrap(deferred) { (_, response, data, error) in
+        req.responseParsedJSON(queue:collectionQueue, partial: true, completionHandler: self.client.errorWrap(deferred) { (_, response, data, error) in
 
             if let json: JSON = data as? JSON {
                 let envelope = EnvelopeJSON(json)
@@ -613,7 +619,7 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
             NSURLQueryItem(name: "full", value: "1"),
             NSURLQueryItem(name: "newer", value: millisecondsToDecimalSeconds(since))]))
 
-        req.responseParsedJSON(self.client.errorWrap(deferred) { (_, response, data, error) in
+        req.responseParsedJSON(queue: collectionQueue, partial: true, completionHandler: self.client.errorWrap(deferred) { (_, response, data, error) in
 
             if let json: JSON = data as? JSON {
                 func recordify(json: JSON) -> Record<T>? {

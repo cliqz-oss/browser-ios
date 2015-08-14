@@ -5,10 +5,12 @@
 import Shared
 import Storage
 import AVFoundation
+import XCGLogger
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var browserViewController: BrowserViewController!
+    var rootViewController: UINavigationController!
     weak var profile: BrowserProfile?
     var tabManager: TabManager!
 
@@ -18,11 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set the Firefox UA for browsing.
         setUserAgent()
 
-        // Listen for crashes
-        FXCrashDetector.sharedDetector().listenForCrashes()
-
         // Start the keyboard helper to monitor and cache keyboard state.
         KeyboardHelper.defaultHelper.startObserving()
+
+        // Create a new sync log file on cold app launch
+        Logger.syncLogger.newLogWithDate(NSDate())
 
         let profile = getProfile(application)
 
@@ -36,16 +38,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window!.backgroundColor = UIColor.whiteColor()
 
         let defaultRequest = NSURLRequest(URL: UIConstants.AboutHomeURL)
-        self.tabManager = TabManager(defaultNewTabRequest: defaultRequest, prefs: profile.prefs)
+        self.tabManager = TabManager(defaultNewTabRequest: defaultRequest, profile: profile)
         browserViewController = BrowserViewController(profile: profile, tabManager: self.tabManager)
 
         // Add restoration class, the factory that will return the ViewController we 
         // will restore with.
         browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
         browserViewController.restorationClass = AppDelegate.self
+        browserViewController.automaticallyAdjustsScrollViewInsets = false
 
-        self.window!.rootViewController = browserViewController
+        rootViewController = UINavigationController(rootViewController: browserViewController)
+        rootViewController.automaticallyAdjustsScrollViewInsets = false
+        rootViewController.delegate = self
+        rootViewController.navigationBarHidden = true
+
+        self.window!.rootViewController = rootViewController
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
+
+        activeCrashReporter = BreakpadCrashReporter(breakpadInstance: BreakpadController.sharedInstance())
+        configureActiveCrashReporter(profile.prefs.boolForKey("crashreports.send.always"))
 
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
             if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL, absoluteString = url.absoluteString {
@@ -54,10 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        // Force a database upgrade by requesting a non-existent password
-        profile.logins.getLoginsForProtectionSpace(NSURLProtectionSpace(host: "example.com", port: 0, `protocol`: nil, realm: nil, authenticationMethod: nil))
-
-        // check to see if we started cos someone tapped on a notification
+        // check to see if we started 'cos someone tapped on a notification.
         if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             viewURLInNewTab(localNotification)
         }
@@ -162,39 +170,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func setUserAgent() {
-        let currentiOSVersion = UIDevice.currentDevice().systemVersion
-        let lastiOSVersion = NSUserDefaults.standardUserDefaults().stringForKey("LastDeviceSystemVersionNumber")
-        var firefoxUA = NSUserDefaults.standardUserDefaults().stringForKey("UserAgent")
-        if firefoxUA == nil
-            || lastiOSVersion != currentiOSVersion {
-            let webView = UIWebView()
+        // Note that we use defaults here that are readable from extensions, so they
+        // can just used the cached identifier.
+        let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
+        let firefoxUA = UserAgent.defaultUserAgent(defaults)
 
-            NSUserDefaults.standardUserDefaults().setObject(currentiOSVersion,forKey: "LastDeviceSystemVersionNumber")
-            let userAgent = webView.stringByEvaluatingJavaScriptFromString("navigator.userAgent")!
+        // Set the UA for WKWebView (via defaults), the favicon fetcher, and the image loader.
+        // This only needs to be done once per runtime.
 
-            // Extract the WebKit version and use it as the Safari version.
-            let webKitVersionRegex = NSRegularExpression(pattern: "AppleWebKit/([^ ]+) ", options: nil, error: nil)!
-            let match = webKitVersionRegex.firstMatchInString(userAgent, options: nil, range: NSRange(location: 0, length: count(userAgent)))
-            if match == nil {
-                println("Error: Unable to determine WebKit version")
-                return
-            }
-            let webKitVersion = (userAgent as NSString).substringWithRange(match!.rangeAtIndex(1))
-
-            // Insert "FxiOS/<version>" before the Mobile/ section.
-            let mobileRange = (userAgent as NSString).rangeOfString("Mobile/")
-            if mobileRange.location == NSNotFound {
-                println("Error: Unable to find Mobile section")
-                return
-            }
-
-            let mutableUA = NSMutableString(string: userAgent)
-            mutableUA.insertString("FxiOS/\(appVersion) ", atIndex: mobileRange.location)
-            firefoxUA = "\(mutableUA) Safari/\(webKitVersion)"
-            NSUserDefaults.standardUserDefaults().setObject(firefoxUA, forKey: "UserAgent")
-        }
-        NSUserDefaults.standardUserDefaults().registerDefaults(["UserAgent": firefoxUA!])
-
+        defaults.registerDefaults(["UserAgent": firefoxUA])
+        FaviconFetcher.userAgent = firefoxUA
         SDWebImageDownloader.sharedDownloader().setValue(firefoxUA, forHTTPHeaderField: "User-Agent")
     }
 
@@ -246,6 +231,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NSNotificationCenter.defaultCenter().postNotificationName(FSReadingListAddReadingListItemNotification, object: self, userInfo: ["URL": urlToOpen, "Title": title])
             }
         }
+    }
+}
+
+// MARK: - Root View Controller Animations
+extension AppDelegate: UINavigationControllerDelegate {
+    func navigationController(navigationController: UINavigationController,
+        animationControllerForOperation operation: UINavigationControllerOperation,
+        fromViewController fromVC: UIViewController,
+        toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            if operation == UINavigationControllerOperation.Push {
+                return BrowserToTrayAnimator()
+            } else if operation == UINavigationControllerOperation.Pop {
+                return TrayToBrowserAnimator()
+            } else {
+                return nil
+            }
+    }
+}
+
+var activeCrashReporter: CrashReporter?
+func configureActiveCrashReporter(optedIn: Bool?) {
+    if let reporter = activeCrashReporter {
+        configureCrashReporter(reporter, optedIn: optedIn)
+    }
+}
+
+public func configureCrashReporter(reporter: CrashReporter, #optedIn: Bool?) {
+    let configureReporter: () -> () = {
+        let addUploadParameterForKey: String -> Void = { key in
+            if let value = NSBundle.mainBundle().objectForInfoDictionaryKey(key) as? String {
+                reporter.addUploadParameter(value, forKey: key)
+            }
+        }
+
+        addUploadParameterForKey("AppID")
+        addUploadParameterForKey("BuildID")
+        addUploadParameterForKey("ReleaseChannel")
+        addUploadParameterForKey("Vendor")
+    }
+
+    if let optedIn = optedIn {
+        // User has explicitly opted-in for sending crash reports. If this is not true, then the user has
+        // explicitly opted-out of crash reporting so don't bother starting breakpad or stop if it was running
+        if optedIn {
+            reporter.start(true)
+            configureReporter()
+            reporter.setUploadingEnabled(true)
+        } else {
+            reporter.stop()
+        }
+    }
+    // We haven't asked the user for their crash reporting preference yet. Log crashes anyways but don't send them.
+    else {
+        reporter.start(true)
+        configureReporter()
     }
 }
 

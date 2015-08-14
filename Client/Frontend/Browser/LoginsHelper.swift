@@ -8,7 +8,7 @@ import Storage
 import XCGLogger
 import WebKit
 
-private let log = XCGLogger.defaultInstance()
+private let log = Logger.browserLogger
 
 private let SaveButtonTitle = NSLocalizedString("Save", comment: "Button to save the user's password")
 private let NotNowButtonTitle = NSLocalizedString("Not now", comment: "Button to not save the user's password")
@@ -124,7 +124,7 @@ class LoginsHelper: BrowserHelper {
             browser?.removeSnackbar(snackBar!)
         }
 
-        snackBar = CountdownSnackBar(attrText: promptMessage,
+        snackBar = TimerSnackBar(attrText: promptMessage,
             img: UIImage(named: "lock_verified"),
             buttons: [
                 SnackButton(title: SaveButtonTitle, callback: { (bar: SnackBar) -> Void in
@@ -159,7 +159,7 @@ class LoginsHelper: BrowserHelper {
             browser?.removeSnackbar(snackBar!)
         }
 
-        snackBar = CountdownSnackBar(attrText: promptMessage,
+        snackBar = TimerSnackBar(attrText: promptMessage,
             img: UIImage(named: "lock_verified"),
             buttons: [
                 SnackButton(title: UpdateButtonTitle, callback: { (bar: SnackBar) -> Void in

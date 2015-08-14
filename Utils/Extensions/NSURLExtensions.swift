@@ -96,6 +96,13 @@ extension NSURL {
         }
         return nil
     }
+    
+    public func baseDomainAndPath() -> String? {
+        if let baseDomain = self.baseDomain() {
+            return baseDomain + (self.path ?? "/")
+        }
+        return nil
+    }
 
     public func absoluteStringWithoutHTTPScheme() -> String? {
         if let urlString = self.absoluteString {
@@ -130,6 +137,16 @@ extension NSURL {
         }
     }
 
+    public func normalizedHost() -> String? {
+        if var host = self.host {
+            if let range = host.rangeOfString("^(www|mobile|m)\\.", options: .RegularExpressionSearch) {
+                host.replaceRange(range, with: "")
+            }
+            return host
+        }
+        return nil
+    }
+
     /**
     Returns the public portion of the host name determined by the public suffix list found here: https://publicsuffix.org/list/. 
     For example for the url www.bbc.co.uk, based on the entries in the TLD list, the public suffix would return co.uk.
@@ -148,10 +165,14 @@ extension NSURL {
 //MARK: Private Helpers
 private extension NSURL {
     private func publicSuffixFromHost(var host: String, withAdditionalParts additionalPartCount: Int) -> String? {
-        if host.isEmpty { return nil }
+        if host.isEmpty {
+            return nil
+        }
 
-        // Check edge cast where host is either a single or double .
-        if host.isEmpty || host.lastPathComponent == "." { return "" }
+        // Check edge case where the host is either a single or double '.'.
+        if host.isEmpty || host.lastPathComponent == "." {
+            return ""
+        }
 
         /**
         *  The following algorithm breaks apart the domain and checks each sub domain against the effective TLD
@@ -209,8 +230,11 @@ private extension NSURL {
         var baseDomain: String?
         if additionalPartCount > 0 {
             if let suffix = suffix {
-                // Take out the public suffixed and add in the additional parts we want
-                let suffixlessHost = host.stringByReplacingOccurrencesOfString(suffix, withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                // Take out the public suffixed and add in the additional parts we want.
+                let literalFromEnd = NSStringCompareOptions.LiteralSearch |        // Match the string exactly.
+                                     NSStringCompareOptions.BackwardsSearch |      // Search from the end.
+                                     NSStringCompareOptions.AnchoredSearch         // Stick to the end.
+                let suffixlessHost = host.stringByReplacingOccurrencesOfString(suffix, withString: "", options: literalFromEnd, range: nil)
                 let suffixlessTokens = suffixlessHost.componentsSeparatedByString(".").filter { $0 != "" }
                 let maxAdditionalCount = max(0, suffixlessTokens.count - additionalPartCount)
                 let additionalParts = suffixlessTokens[maxAdditionalCount..<suffixlessTokens.count]
