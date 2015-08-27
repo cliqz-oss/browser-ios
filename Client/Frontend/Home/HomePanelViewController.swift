@@ -12,7 +12,8 @@ private struct HomePanelViewControllerUX {
     // Height of the top panel switcher button toolbar.
     static let ButtonContainerHeight: CGFloat = 40
     static let ButtonContainerBorderColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
-    static let BackgroundColor = UIConstants.PanelBackgroundColor
+//    static let BackgroundColor = UIConstants.PanelBackgroundColor
+	static let BackgroundColor = UIConstants.AppBackgroundColor
     static let EditDoneButtonRightPadding: CGFloat = -12
 }
 

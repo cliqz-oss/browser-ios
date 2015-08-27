@@ -92,7 +92,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
+	<false/>
 	<key>Vendor</key>
 	<string>$(MOZ_VENDOR)</string>
 </dict>

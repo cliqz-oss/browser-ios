@@ -44,7 +44,8 @@ class BrowserLocationView: UIView {
         set (newReaderModeState) {
             if newReaderModeState != self.readerModeButton.readerModeState {
                 self.readerModeButton.readerModeState = newReaderModeState
-                readerModeButton.hidden = (newReaderModeState == ReaderModeState.Unavailable)
+//                readerModeButton.hidden = (newReaderModeState == ReaderModeState.Unavailable)
+				readerModeButton.hidden = true
                 UIView.animateWithDuration(0.1, animations: { () -> Void in
                     if newReaderModeState == ReaderModeState.Unavailable {
                         self.readerModeButton.alpha = 0.0
@@ -78,6 +79,8 @@ class BrowserLocationView: UIView {
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultMediumFont
+		urlTextField.rightViewMode = .UnlessEditing
+		urlTextField.rightView = UIImageView(image: UIImage(named: "refresh"))
         return urlTextField
     }()
 
@@ -203,7 +206,7 @@ extension BrowserLocationView: UIGestureRecognizerDelegate {
 }
 
 extension BrowserLocationView: AccessibilityActionsSource {
-    func accessibilityCustomActionsForView(view: UIView) -> [UIAccessibilityCustomAction]? {
+	func accessibilityCustomActionsForView(view: UIView) -> [UIAccessibilityCustomAction]? {
         if view === urlTextField {
             return delegate?.browserLocationViewLocationAccessibilityActions(self)
         }

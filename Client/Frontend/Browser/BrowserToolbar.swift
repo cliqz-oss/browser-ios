@@ -47,12 +47,12 @@ public class BrowserToolbarHelper: NSObject {
     var loading: Bool = false {
         didSet {
             if loading {
-                toolbar.stopReloadButton.setImage(ImageStop, forState: .Normal)
-                toolbar.stopReloadButton.setImage(ImageStopPressed, forState: .Highlighted)
+//                toolbar.stopReloadButton.setImage(ImageStop, forState: .Normal)
+//                toolbar.stopReloadButton.setImage(ImageStopPressed, forState: .Highlighted)
                 toolbar.stopReloadButton.accessibilityLabel = NSLocalizedString("Stop", comment: "Accessibility Label for the browser toolbar Stop button")
             } else {
-                toolbar.stopReloadButton.setImage(ImageReload, forState: .Normal)
-                toolbar.stopReloadButton.setImage(ImageReloadPressed, forState: .Highlighted)
+//                toolbar.stopReloadButton.setImage(ImageReload, forState: .Normal)
+//                toolbar.stopReloadButton.setImage(ImageReloadPressed, forState: .Highlighted)
                 toolbar.stopReloadButton.accessibilityLabel = NSLocalizedString("Reload", comment: "Accessibility Label for the browser toolbar Reload button")
             }
         }
@@ -78,10 +78,10 @@ public class BrowserToolbarHelper: NSObject {
         toolbar.forwardButton.addGestureRecognizer(longPressGestureForwardButton)
         toolbar.forwardButton.addTarget(self, action: "SELdidClickForward", forControlEvents: UIControlEvents.TouchUpInside)
 
-        toolbar.stopReloadButton.setImage(UIImage(named: "reload"), forState: .Normal)
-        toolbar.stopReloadButton.setImage(UIImage(named: "reloadPressed"), forState: .Highlighted)
+//        toolbar.stopReloadButton.setImage(UIImage(named: "reload"), forState: .Normal)
+//        toolbar.stopReloadButton.setImage(UIImage(named: "reloadPressed"), forState: .Highlighted)
         toolbar.stopReloadButton.accessibilityLabel = NSLocalizedString("Reload", comment: "Accessibility Label for the browser toolbar Reload button")
-        toolbar.stopReloadButton.addTarget(self, action: "SELdidClickStopReload", forControlEvents: UIControlEvents.TouchUpInside)
+//        toolbar.stopReloadButton.addTarget(self, action: "SELdidClickStopReload", forControlEvents: UIControlEvents.TouchUpInside)
 
         toolbar.shareButton.setImage(UIImage(named: "send"), forState: .Normal)
         toolbar.shareButton.setImage(UIImage(named: "sendPressed"), forState: .Highlighted)
@@ -169,7 +169,8 @@ class BrowserToolbar: Toolbar, BrowserToolbarProtocol {
 
         self.helper = BrowserToolbarHelper(toolbar: self)
 
-        addButtons(backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton)
+//        addButtons(backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton)
+		addButtons(backButton, forwardButton, shareButton, bookmarkButton)
 
         accessibilityNavigationStyle = .Combined
         accessibilityLabel = NSLocalizedString("Navigation Toolbar", comment: "Accessibility label for the navigation toolbar displayed at the bottom of the screen.")

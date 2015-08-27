@@ -41,22 +41,22 @@ class HomePanels {
             imageName: "History",
             accessibilityLabel: NSLocalizedString("History", comment: "Panel accessibility label")),
 
-        HomePanelDescriptor(
-            makeViewController: { profile in
-                let controller = RemoteTabsPanel()
-                controller.profile = profile
-                return controller
-            },
-            imageName: "SyncedTabs",
-            accessibilityLabel: NSLocalizedString("Synced tabs", comment: "Panel accessibility label")),
-
-        HomePanelDescriptor(
-            makeViewController: { profile in
-                let controller = ReadingListPanel()
-                controller.profile = profile
-                return controller
-            },
-            imageName: "ReadingList",
-            accessibilityLabel: NSLocalizedString("Reading list", comment: "Panel accessibility label")),
+//        HomePanelDescriptor(
+//            makeViewController: { profile in
+//                let controller = RemoteTabsPanel()
+//                controller.profile = profile
+//                return controller
+//            },
+//            imageName: "SyncedTabs",
+//            accessibilityLabel: NSLocalizedString("Synced tabs", comment: "Panel accessibility label")),
+//
+//        HomePanelDescriptor(
+//            makeViewController: { profile in
+//                let controller = ReadingListPanel()
+//                controller.profile = profile
+//                return controller
+//            },
+//            imageName: "ReadingList",
+//            accessibilityLabel: NSLocalizedString("Reading list", comment: "Panel accessibility label")),
     ]
 }

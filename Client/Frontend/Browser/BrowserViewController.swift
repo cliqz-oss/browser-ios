@@ -527,7 +527,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 		homePanelController?.view?.hidden = true
 		searchLoader.addListener(searchController!)
 		addChildViewController(searchController!)
-		
+
 		/*
         urlBar.locationView.inputMode = .Search
 
@@ -549,6 +549,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         homePanelController?.view?.hidden = true
 
         addChildViewController(searchController!)
+*/
     }
 
     private func hideSearchController() {

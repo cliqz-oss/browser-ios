@@ -14,6 +14,8 @@ protocol AutocompleteTextFieldDelegate: class {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool
     func autocompleteTextFieldDidBeginEditing(autocompleteTextField: AutocompleteTextField)
+	func autocompleteTextFieldDidEndEditing(autocompleteTextField: AutocompleteTextField)
+
 }
 
 private struct AutocompleteTextFieldUX {
@@ -162,6 +164,10 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         return autocompleteDelegate?.autocompleteTextFieldShouldClear(self) ?? true
     }
 
+	func textFieldDidEndEditing(textField: UITextField) {
+		autocompleteDelegate?.autocompleteTextFieldDidEndEditing(self)
+	}
+
     override func setMarkedText(markedText: String!, selectedRange: NSRange) {
         // Clear the autocompletion if any provisionally inserted text has been
         // entered (e.g., a partial composition from a Japanese keyboard).
@@ -187,11 +193,11 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         super.deleteBackward()
     }
 	
-	override func deleteBackward() {
-		super.deleteBackward()
-		enteredTextLength = count(self.text)
-		autocompleteDelegate?.autocompleteTextField(self, didTextChange: self.text)
-	}
+//	override func deleteBackward() {
+//		super.deleteBackward()
+//		enteredTextLength = count(self.text)
+//		autocompleteDelegate?.autocompleteTextField(self, didTextChange: self.text)
+//	}
 
     override func caretRectForPosition(position: UITextPosition!) -> CGRect {
         return completionActive ? CGRectZero : super.caretRectForPosition(position)

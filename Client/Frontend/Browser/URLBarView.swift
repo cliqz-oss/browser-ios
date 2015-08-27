@@ -15,7 +15,7 @@ private struct URLBarViewUX {
     static let LocationHeight = 28
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
-    static let TextFieldBorderWidth: CGFloat = 1
+    static let TextFieldBorderWidth: CGFloat = 0
     // offset from edge of tabs button
     static let URLBarCurveOffset: CGFloat = 14
     static let URLBarCurveOffsetLeft: CGFloat = -10
@@ -28,7 +28,7 @@ private struct URLBarViewUX {
 
     static func backgroundColorWithAlpha(alpha: CGFloat) -> UIColor {
         return UIConstants.AppBackgroundColor.colorWithAlphaComponent(alpha)
-    }
+	}
 }
 
 protocol URLBarDelegate: class {
@@ -93,9 +93,9 @@ class URLBarView: UIView {
         locationContainer.clipsToBounds = true
 
         locationContainer.layer.borderColor = URLBarViewUX.TextFieldBorderColor.CGColor
-        locationContainer.layer.cornerRadius = URLBarViewUX.TextFieldCornerRadius
-        locationContainer.layer.borderWidth = URLBarViewUX.TextFieldBorderWidth
-
+		locationContainer.layer.cornerRadius = URLBarViewUX.TextFieldCornerRadius
+		locationContainer.layer.borderWidth = URLBarViewUX.TextFieldBorderWidth
+//		locationContainer.backgroundColor = UIColor.orangeColor()
         return locationContainer
     }()
 
@@ -103,7 +103,8 @@ class URLBarView: UIView {
         let tabsButton = InsetButton()
         tabsButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         tabsButton.setTitle("0", forState: UIControlState.Normal)
-        tabsButton.setTitleColor(URLBarViewUX.backgroundColorWithAlpha(1), forState: UIControlState.Normal)
+//        tabsButton.setTitleColor(URLBarViewUX.backgroundColorWithAlpha(1), forState: UIControlState.Normal)
+		tabsButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         tabsButton.titleLabel?.layer.backgroundColor = UIColor.whiteColor().CGColor
         tabsButton.titleLabel?.layer.cornerRadius = 2
         tabsButton.titleLabel?.font = UIConstants.DefaultSmallFontBold
@@ -162,7 +163,8 @@ class URLBarView: UIView {
     private weak var clonedTabsButton: InsetButton?
 
     private var rightBarConstraint: Constraint?
-    private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
+//    private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
+	private let defaultRightOffset: CGFloat = 0
 
     var currentURL: NSURL? {
         get {
@@ -185,8 +187,8 @@ class URLBarView: UIView {
     }
 
     private func commonInit() {
-        backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
-        addSubview(curveShape)
+        backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1)
+//        addSubview(curveShape)
         addSubview(scrollToTopButton)
 
         locationContainer.addSubview(locationView)
@@ -195,7 +197,7 @@ class URLBarView: UIView {
 
         addSubview(progressBar)
         addSubview(tabsButton)
-        addSubview(cancelButton)
+//        addSubview(cancelButton)
 
         addSubview(shareButton)
         addSubview(bookmarkButton)
@@ -225,10 +227,10 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-        cancelButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-        }
+//        cancelButton.snp_makeConstraints { make in
+//            make.centerY.equalTo(self.locationContainer)
+//            make.trailing.equalTo(self)
+//        }
 
         tabsButton.titleLabel?.snp_makeConstraints { make in
             make.size.equalTo(URLBarViewUX.TabsButtonHeight)
@@ -240,11 +242,11 @@ class URLBarView: UIView {
             make.width.height.equalTo(UIConstants.ToolbarHeight)
         }
 
-        curveShape.snp_makeConstraints { make in
-            make.top.left.bottom.equalTo(self)
-            self.rightBarConstraint = make.right.equalTo(self).constraint
-            self.rightBarConstraint?.updateOffset(defaultRightOffset)
-        }
+//        curveShape.snp_makeConstraints { make in
+//            make.top.left.bottom.equalTo(self)
+//            self.rightBarConstraint = make.right.equalTo(self).constraint
+//            self.rightBarConstraint?.updateOffset(defaultRightOffset)
+//        }
 
         locationTextField.snp_makeConstraints { make in
             make.edges.equalTo(self.locationView.urlTextField)
@@ -286,7 +288,8 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading)
+//                make.trailing.equalTo(self.cancelButton.snp_leading)
+				make.trailing.equalTo(self.tabsButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -299,7 +302,7 @@ class URLBarView: UIView {
                 } else {
                     // Otherwise, left align the location view
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(0)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -324,10 +327,10 @@ class URLBarView: UIView {
     }
 
     func updateAlphaForSubviews(alpha: CGFloat) {
-        self.tabsButton.alpha = alpha
-        self.locationContainer.alpha = alpha
-        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
-        self.actionButtons.map { $0.alpha = alpha }
+        self.tabsButton.alpha = 1
+        self.locationContainer.alpha = 1
+        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - 0)
+        self.actionButtons.map { $0.alpha = 1 }
     }
 
     func updateTabCount(count: Int) {
@@ -335,7 +338,7 @@ class URLBarView: UIView {
         let newTabsButton = InsetButton()
         self.clonedTabsButton = newTabsButton
         newTabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
-        newTabsButton.setTitleColor(UIConstants.AppBackgroundColor, forState: UIControlState.Normal)
+        newTabsButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         newTabsButton.titleLabel?.layer.backgroundColor = UIColor.whiteColor().CGColor
         newTabsButton.titleLabel?.layer.cornerRadius = 2
         newTabsButton.titleLabel?.font = UIConstants.DefaultSmallFontBold
@@ -436,7 +439,7 @@ class URLBarView: UIView {
 
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
-        self.cancelButton.hidden = false
+//        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         self.locationTextField.hidden = false
         self.shareButton.hidden = !self.toolbarIsShowing
@@ -447,7 +450,7 @@ class URLBarView: UIView {
     }
 
     func transitionToOverlay() {
-        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+//        self.cancelButton.alpha = inOverlayMode ? 1 : 0
         self.progressBar.alpha = inOverlayMode ? 0 : 1
         self.locationTextField.alpha = inOverlayMode ? 1 : 0
         self.shareButton.alpha = inOverlayMode ? 0 : 1
@@ -460,7 +463,7 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-            self.cancelButton.transform = CGAffineTransformIdentity
+//            self.cancelButton.transform = CGAffineTransformIdentity
             let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
             self.tabsButton.transform = tabsButtonTransform
             self.clonedTabsButton?.transform = tabsButtonTransform
@@ -474,7 +477,7 @@ class URLBarView: UIView {
         } else {
             self.tabsButton.transform = CGAffineTransformIdentity
             self.clonedTabsButton?.transform = CGAffineTransformIdentity
-            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+//            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
@@ -485,7 +488,7 @@ class URLBarView: UIView {
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-        self.cancelButton.hidden = !inOverlayMode
+//        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         self.locationTextField.hidden = !inOverlayMode
         self.shareButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -555,7 +558,8 @@ extension URLBarView: BrowserToolbarProtocol {
     override var accessibilityElements: [AnyObject]! {
         get {
             if inOverlayMode {
-                return [locationTextField, cancelButton]
+//                return [locationTextField, cancelButton]
+				return [locationTextField]
             } else {
                 if toolbarIsShowing {
                     return [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
@@ -618,6 +622,13 @@ extension URLBarView: AutocompleteTextFieldDelegate {
         delegate?.urlBar(self, didEnterText: "")
         return true
     }
+	
+	func autocompleteTextFieldDidEndEditing(autocompleteTextField: AutocompleteTextField) {
+		if (self.inOverlayMode) {
+			self.leaveOverlayMode()
+		}
+	}
+
 }
 
 /* Code for drawing the urlbar curve */
@@ -696,7 +707,7 @@ private class CurveView: UIView {
         CGContextSaveGState(context)
         CGContextClearRect(context, rect)
         CGContextSetFillColorWithColor(context, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
-        getPath().fill()
+//        getPath().fill()
         leftCurvePath.fill()
         CGContextDrawPath(context, kCGPathFill)
         CGContextRestoreGState(context)

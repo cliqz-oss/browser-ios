@@ -8,7 +8,8 @@ import Shared
 public struct UIConstants {
     static let AboutHomeURL = NSURL(string: "\(WebServer.sharedInstance.base)/about/home/#panel=0")!
 
-    static let AppBackgroundColor = UIColor.blackColor()
+    static let AppBackgroundColor = UIColor(rgb: 0xEAEAEA)
+//	static let AppBackgroundColor = UIColor.redColor()
 
     static let ToolbarHeight: CGFloat = 44
     static let DefaultRowHeight: CGFloat = 58

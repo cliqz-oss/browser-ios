@@ -55,8 +55,8 @@ class TopSitesPanel: UIViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        self.refreshHistory(self.layout.thumbnailCount)
-        self.layout.setupForOrientation(UIView.viewOrientationForSize(size))
+//        self.refreshHistory(self.layout.thumbnailCount)
+//        self.layout.setupForOrientation(UIView.viewOrientationForSize(size))
     }
 
     override func supportedInterfaceOrientations() -> Int {
@@ -108,14 +108,13 @@ class TopSitesPanel: UIViewController {
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
         case NotificationFirefoxAccountChanged, NotificationPrivateDataCleared:
-            refreshHistory(self.layout.thumbnailCount)
+//            refreshHistory(self.layout.thumbnailCount)
             break
         default:
             // no need to do anything at all
             log.warning("Received unexpected notification \(notification.name)")
             break
         }
-*/
     }
 
     //MARK: Private Helpers
@@ -125,8 +124,8 @@ class TopSitesPanel: UIViewController {
 //            self.dataSource.profile = self.profile
 
             // redraw now we've udpated our sources
-            self.collection?.collectionViewLayout.invalidateLayout()
-            self.collection?.setNeedsLayout()
+//            self.collection?.collectionViewLayout.invalidateLayout()
+//            self.collection?.setNeedsLayout()
         }
     }
 
@@ -147,10 +146,11 @@ class TopSitesPanel: UIViewController {
 
     private func deleteHistoryTileForSite(site: Site, atIndexPath indexPath: NSIndexPath) {
         profile.history.removeSiteFromTopSites(site) >>== {
-            self.profile.history.getSitesByFrecencyWithLimit(self.layout.thumbnailCount).uponQueue(dispatch_get_main_queue(), block: { result in
-                self.updateDataSourceWithSites(result)
-                self.deleteOrUpdateSites(result, indexPath: indexPath)
-            })
+			// TODO: Naira review this feature and redesign for our case.
+//            self.profile.history.getSitesByFrecencyWithLimit(self.layout.thumbnailCount).uponQueue(dispatch_get_main_queue(), block: { result in
+//                self.updateDataSourceWithSites(result)
+//                self.deleteOrUpdateSites(result, indexPath: indexPath)
+//            })
         }
     }
 

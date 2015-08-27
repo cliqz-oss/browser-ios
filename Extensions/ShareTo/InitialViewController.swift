@@ -81,13 +81,13 @@ class InitialViewController: UIViewController, ShareControllerDelegate {
     }
     
     func presentShareDialog(item: ShareItem) {
-        shareDialogController = ShareDialogController()
-        shareDialogController.delegate = self
-        shareDialogController.item = item
-        shareDialogController.initialShareDestinations = getLastUsedShareDestinations()
+		shareDialogController = ShareDialogController()
+		shareDialogController.delegate = self
+		shareDialogController.item = item
+		shareDialogController.initialShareDestinations = getLastUsedShareDestinations()
         
-        self.addChildViewController(shareDialogController)
-        shareDialogController.view.setTranslatesAutoresizingMaskIntoConstraints(false)
+		self.addChildViewController(shareDialogController)
+		shareDialogController.view.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.view.addSubview(shareDialogController.view)
         shareDialogController.didMoveToParentViewController(self)
 
@@ -115,12 +115,12 @@ class InitialViewController: UIViewController, ShareControllerDelegate {
             self.shareDialogController.view.alpha = 1.0
         }, completion: nil)
     }
-    
+
     func dismissShareDialog() {
         shareDialogController.willMoveToParentViewController(nil)
         shareDialogController.view.removeFromSuperview()
         shareDialogController.removeFromParentViewController()
-    }
+	}
     
     //
     
