@@ -114,23 +114,19 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
     }
 
 	func loader(dataLoaded data: Cursor<Site>) {
-//		println("^^^^^^ ---- \(data)")
 		self.historyResults.removeAll(keepCapacity: true)
 		for site in data {
-//			println("HistItem^^^^ --- \(site)")
 			var d = Dictionary<String, String>()
 			d["url"] = site!.url
 			d["title"] = site!.title
-//			println("HistItem111^^^^ --- \(d)")
-
 			self.historyResults.append(d)
 		}
-//		println("ALLL HISSSTTT -- \(self.historyResults)")
-//		self.data = data
-//		tableView.reloadData()
 	}
 
 	func loadData(query: String) {
+		if let l = LocationManager.sharedLocationManager.location {
+			self.webView!.evaluateJavaScript("setLocation(\(l.coordinate.latitude), \(l.coordinate.longitude))", completionHandler: nil)
+		}
 		var JSString: String!
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		if q == "" {
@@ -144,11 +140,10 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 	}
 	
 	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-		println("QQQ -- \(request)")
 		if request.URL!.absoluteString != nil && request.URL!.absoluteString!.hasPrefix("http") {
 			delegate?.searchView(self, didSelectUrl: request.URL!)
 			return false
-		} else if (true) {
+		} else {
 		}
 		return true
 	}

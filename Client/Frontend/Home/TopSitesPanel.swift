@@ -18,10 +18,14 @@ extension UIView {
     }
 }
 
-class TopSitesPanel: UIViewController {
+class TopSitesPanel: UIViewController, WKNavigationDelegate {
     weak var homePanelDelegate: HomePanelDelegate?
 
-	private lazy var freshtabView: WKWebView = {return WKWebView()}()
+	private lazy var freshtabView: WKWebView = {
+		let w = WKWebView()
+		w.navigationDelegate = self
+		return w
+	}()
 
 	/*
     private var collection: TopSitesCollectionView? = nil
@@ -116,6 +120,15 @@ class TopSitesPanel: UIViewController {
             break
         }
     }
+
+	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+		if request.URL!.absoluteString != nil && request.URL!.absoluteString!.hasPrefix("http") {
+//			delegate?.searchView(self, didSelectUrl: request.URL!)
+			return false
+		} else {
+		}
+		return true
+	}
 
     //MARK: Private Helpers
     private func updateDataSourceWithSites(result: Result<Cursor<Site>>) {

@@ -11,19 +11,19 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="8jg-1f-0sB">
-                    <rect key="frame" x="175" y="175" width="130" height="130"/>
+                    <rect key="frame" x="86" y="88" width="308" height="303"/>
                     <animations/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="130" id="V8U-lj-86g"/>
-                        <constraint firstAttribute="height" constant="130" id="eV3-E9-QZk"/>
+                        <constraint firstAttribute="width" constant="308" id="V8U-lj-86g"/>
+                        <constraint firstAttribute="height" constant="303" id="eV3-E9-QZk"/>
                     </constraints>
                 </imageView>
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="8jg-1f-0sB" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ITK-hU-DwR"/>
-                <constraint firstItem="8jg-1f-0sB" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="grm-jt-xY2"/>
+                <constraint firstAttribute="centerY" secondItem="8jg-1f-0sB" secondAttribute="centerY" constant="0.5" id="W16-cy-ZHK"/>
+                <constraint firstAttribute="centerX" secondItem="8jg-1f-0sB" secondAttribute="centerX" id="bjg-gs-DDj"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -31,6 +31,6 @@
         </view>
     </objects>
     <resources>
-        <image name="splash" width="400" height="390"/>
+        <image name="splash" width="308" height="303"/>
     </resources>
 </document>

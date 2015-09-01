@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		
+
 		UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: false)
         // Set the Firefox UA for browsing.
         setUserAgent()
@@ -72,6 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 		
+		LocationManager.sharedLocationManager.startUpdateingLocation()
         return true
     }
 
@@ -143,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let taskId = application.beginBackgroundTaskWithExpirationHandler { _ in }
         self.profile?.shutdown()
         application.endBackgroundTask(taskId)
-    }
+	}
 
     private func setUpWebServer(profile: Profile) {
         let server = WebServer.sharedInstance
