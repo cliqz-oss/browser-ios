@@ -158,7 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		server.start()
 		
 		let bundlePath = NSBundle.mainBundle().bundlePath
-		let freshtabPath = bundlePath + "/" + "page"
+		let freshtabPath = bundlePath + "/" + "freshtab"
 		let extensionPath = bundlePath + "/" + "tool_iOS"
 
 		let httpsServer = HttpServer()
@@ -170,7 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			let data = NSData(contentsOfURL: NSURL(string:u)!)
 			return HttpResponse.RAW(200, data!)
 		}
-		httpsServer.start(listenPort: 3000)
+		httpsServer.start(listenPort: 3001)
     }
 
     private func setUserAgent() {

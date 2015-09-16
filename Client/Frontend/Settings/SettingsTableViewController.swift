@@ -441,7 +441,7 @@ private class VersionSetting : Setting {
     override var title: NSAttributedString? {
         let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
         let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as! String
-        return NSAttributedString(string: String(format: NSLocalizedString("Version %@ (%@)", comment: "Version number of Firefox shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: String(format: NSLocalizedString("Version %@(%@) based on Firefox 1.0", comment: "Version number of Cliqz shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override func onClick(navigationController: UINavigationController?) {

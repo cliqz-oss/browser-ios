@@ -18,11 +18,15 @@ extension UIView {
     }
 }
 
-class TopSitesPanel: UIViewController, WKNavigationDelegate {
+class TopSitesPanel: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
     weak var homePanelDelegate: HomePanelDelegate?
 
 	private lazy var freshtabView: WKWebView = {
-		let w = WKWebView()
+		var config = WKWebViewConfiguration()
+		let controller = WKUserContentController()
+		config.userContentController = controller
+		controller.addScriptMessageHandler(self, name: "freshtabCardSelected")
+		let w = WKWebView(frame: self.view.bounds, configuration: config)
 		w.navigationDelegate = self
 		return w
 	}()
@@ -84,7 +88,7 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 		self.freshtabView.snp_makeConstraints { make in
 			make.edges.equalTo(self.view)
 		}
-		var u = NSURL(string: "http://localhost:3000/freshtab/freshtab.html")
+		var u = NSURL(string: "http://localhost:3001/freshtab/freshtab.html")
 		let r = NSURLRequest(URL: u!)
 		self.freshtabView.loadRequest(r)
 
@@ -120,14 +124,43 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
             break
         }
     }
+	
+	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+//		if let url = navigationAction.request.URL {
+//			if let host = url.host {
+//				if host.contains("localhost") {
+//					decisionHandler(WKNavigationActionPolicy.Allow)
+//				} else {
+//					let visitType = VisitType.Bookmark
+//					homePanelDelegate?.homePanel(self, didSelectURL: url, visitType: visitType)
+//					decisionHandler(WKNavigationActionPolicy.Cancel)
+//				}
+//				return
+//			}
+//		}
+		decisionHandler(WKNavigationActionPolicy.Allow)
+	}
 
 	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if request.URL!.absoluteString != nil && request.URL!.absoluteString!.hasPrefix("http") {
+			let visitType = VisitType.Bookmark
+			homePanelDelegate?.homePanel(self, didSelectURL: request.URL!, visitType: visitType)
 //			delegate?.searchView(self, didSelectUrl: request.URL!)
 			return false
 		} else {
 		}
 		return true
+	}
+
+	func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+		if message.name == "freshtabCardSelected" {
+			let input = message.body as! NSDictionary
+			let url = input.objectForKey("url") as? String
+			if let u = NSURL(string: url!) {
+				let visitType = VisitType.Bookmark
+				homePanelDelegate?.homePanel(self, didSelectURL: u, visitType: visitType)
+			}
+		}
 	}
 
     //MARK: Private Helpers

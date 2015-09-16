@@ -79,7 +79,7 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 		var x = NSBundle.mainBundle().bundlePath as String
 		x.extend("/tool_iOS/")
 		let baseUrl = NSURL(fileURLWithPath: x, isDirectory: true)
-		var u = NSURL(string: "http://localhost:3000/extension/index.html")
+		var u = NSURL(string: "http://localhost:3001/extension/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL:u!))
 //		self.webView!.loadHTMLString(content!, baseURL: baseUrl)
 
@@ -149,7 +149,7 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if navigationAction.request.URL!.absoluteString != nil && !navigationAction.request.URL!.absoluteString!.hasPrefix("http://localhost:3000/") {
+		if navigationAction.request.URL!.absoluteString != nil && !navigationAction.request.URL!.absoluteString!.hasPrefix("http://localhost:3001/") {
 			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}

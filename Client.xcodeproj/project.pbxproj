@@ -286,10 +286,10 @@
 		39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; };
 		39A362DA1AAF5ECE00F47390 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
+		4F50E8631B984791008BF4B8 /* freshtab in Resources */ = {isa = PBXBuildFile; fileRef = 4F50E8621B984791008BF4B8 /* freshtab */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F5898251B5F94220076DE6A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5898241B5F94220076DE6A /* WebViewController.swift */; };
 		4F5898271B5FA4540076DE6A /* tool_iOS in Resources */ = {isa = PBXBuildFile; fileRef = 4F5898261B5FA4540076DE6A /* tool_iOS */; };
-		4F58982D1B613A8D0076DE6A /* page in Resources */ = {isa = PBXBuildFile; fileRef = 4F58982C1B613A8D0076DE6A /* page */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4FBEBC2A1B90980E00464BE8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBEBC291B90980D00464BE8 /* CoreLocation.framework */; };
@@ -1387,10 +1387,10 @@
 		2FFC4D371ABE3C420081D675 /* FxAStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxAStateTests.swift; sourceTree = "<group>"; };
 		39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/XCGLogger/Library/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
+		4F50E8621B984791008BF4B8 /* freshtab */ = {isa = PBXFileReference; lastKnownFileType = folder; name = freshtab; path = "../fresh-tab/dist/iOS/freshtab"; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F5898241B5F94220076DE6A /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		4F5898261B5FA4540076DE6A /* tool_iOS */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tool_iOS; path = "../navigation-extension/build/dev/tool_iOS"; sourceTree = "<group>"; };
-		4F58982C1B613A8D0076DE6A /* page */ = {isa = PBXFileReference; lastKnownFileType = folder; name = page; path = "../fresh-tab/dist/web/page"; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4FBEBC291B90980D00464BE8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -2665,8 +2665,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
-				4FBEBC291B90980D00464BE8 /* CoreLocation.framework */,
-				4F58982C1B613A8D0076DE6A /* page */,
+				4F50E8621B984791008BF4B8 /* freshtab */,
 				4F5898261B5FA4540076DE6A /* tool_iOS */,
 				E60961821B62B68A00DD640F /* libstdc++.6.0.9.dylib */,
 				0B7100491B4C73350046AF87 /* libxml2.2.dylib */,
@@ -2674,6 +2673,7 @@
 				D39FA16B1A83E17800EE869C /* CoreGraphics.framework */,
 				0B8E0FF31A932BD500161DC3 /* ImageIO.framework */,
 				D36998881AD70A0A00650C6C /* IOKit.framework */,
+				4FBEBC291B90980D00464BE8 /* CoreLocation.framework */,
 				28CE83E81A1D206D00576538 /* Client-Bridging-Header.h */,
 				D31FC2291A8D908800BAF7EC /* Alamofire.xcodeproj */,
 				E638F21D1B62B5E700B080C0 /* Breakpad.xcodeproj */,
@@ -3352,6 +3352,7 @@
 					};
 					F84B21BD1A090F8100AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3367,6 +3368,7 @@
 					};
 					F84B22481A0920C600AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3378,6 +3380,7 @@
 					};
 					F84B225B1A09210A00AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3814,6 +3817,7 @@
 				4F5898271B5FA4540076DE6A /* tool_iOS in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
+				4F50E8631B984791008BF4B8 /* freshtab in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				E49DF24C1B440D090049777A /* Licenses.html in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
@@ -3845,7 +3849,6 @@
 				E4B7B7781A793CF20022C5E0 /* FiraSans-Italic.ttf in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
 				E4A961381AC06FA50069AD6F /* ReaderViewLoading.html in Resources */,
-				4F58982D1B613A8D0076DE6A /* page in Resources */,
 				E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */,
 				E4424B3C1AC71FB400F44C38 /* FiraSans-Book.ttf in Resources */,
 				0BF42D391A7C0E8900889E28 /* Favicons.js in Resources */,
@@ -5671,7 +5674,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -5685,7 +5688,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
@@ -5714,8 +5717,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -5723,7 +5726,7 @@
 				MOZ_BUNDLE_DISPLAY_NAME = "Fennec Nightly";
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -5735,15 +5738,15 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -5820,8 +5823,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -5834,7 +5837,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -5866,8 +5869,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
@@ -5877,7 +5880,7 @@
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -5890,8 +5893,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
@@ -5900,7 +5903,7 @@
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6383,7 +6386,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = cliqzmunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -6411,7 +6414,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6431,7 +6434,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6461,7 +6464,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6481,7 +6484,7 @@
 				MOZ_PRODUCT_NAME = Firefox;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6511,7 +6514,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6531,7 +6534,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7077,8 +7080,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -7092,7 +7095,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
@@ -7105,8 +7108,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -7119,7 +7122,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
@@ -7168,8 +7171,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -7182,7 +7185,7 @@
 				MOZ_BUNDLE_DISPLAY_NAME = cliqzmunk;
 				MOZ_PRODUCT_NAME = cliqzmunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7193,8 +7196,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
@@ -7203,7 +7206,7 @@
 				MOZ_BUNDLE_DISPLAY_NAME = "Fennec Aurora";
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7215,8 +7218,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -7228,7 +7231,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = cliqzmunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7240,8 +7243,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
@@ -7249,7 +7252,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "809ac248-3adb-4035-a656-6b8a4e96472a";
+				PROVISIONING_PROFILE = "096a01df-47d7-4989-b2ea-85cf5bb7183c";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
