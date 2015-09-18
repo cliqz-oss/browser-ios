@@ -6,36 +6,42 @@
 
 import Foundation
 
-class HttpServer
+public class HttpServer
 {
-    typealias Handler = HttpRequest -> HttpResponse
+    public typealias Handler = HttpRequest -> HttpResponse
     
     var handlers: [(expression: NSRegularExpression, handler: Handler)] = []
     var clientSockets: Set<CInt> = []
     let clientSocketsLock = 0
     var acceptSocket: CInt = -1
     
-    let matchingOptions = NSMatchingOptions(0)
-    let expressionOptions = NSRegularExpressionOptions(0)
+    let matchingOptions = NSMatchingOptions(rawValue: 0)
+    let expressionOptions = NSRegularExpressionOptions(rawValue: 0)
     
-    subscript (path: String) -> Handler? {
+    public init(){
+    }
+    
+    public subscript (path: String) -> Handler? {
         get {
             return nil
         }
         set ( newValue ) {
-            if let regex = NSRegularExpression(pattern: path, options: expressionOptions, error: nil) {
+            do {
+                let regex = try NSRegularExpression(pattern: path, options: expressionOptions)
                 if let newHandler = newValue {
                     handlers.append(expression: regex, handler: newHandler)
                 }
+            } catch {
+                    
             }
         }
     }
     
-    func routes() -> [String] { return map(handlers, { $0.0.pattern }) }
+    public func routes() -> [String] { return handlers.map { $0.0.pattern } }
     
-    func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
+    public func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
         stop()
-        if let socket = Socket.tcpForListen(port: listenPort, error: error) {
+        if let socket = Socket.tcpForListen(listenPort, error: error) {
             self.acceptSocket = socket
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
                 while let socket = Socket.acceptClientSocket(self.acceptSocket) {
@@ -70,13 +76,13 @@ class HttpServer
         return false
     }
     
-    func findHandler(url:String) -> (NSRegularExpression, Handler)? {
-        return filter(self.handlers, {
+    public func findHandler(url:String) -> (NSRegularExpression, Handler)? {
+        return self.handlers.filter {
             $0.0.numberOfMatchesInString(url, options: self.matchingOptions, range: HttpServer.asciiRange(url)) > 0
-        }).first
+        }.first
     }
     
-    func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
+    public func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
         var capturedGroups = [String]()
         if let result = expression.firstMatchInString(value, options: matchingOptions, range: HttpServer.asciiRange(value)) {
             let nsValue: NSString = value
@@ -89,7 +95,7 @@ class HttpServer
         return capturedGroups
     }
     
-    func stop() {
+    public func stop() {
         Socket.release(acceptSocket)
         acceptSocket = -1
         HttpServer.lock(self.clientSocketsLock) {
@@ -100,17 +106,17 @@ class HttpServer
         }
     }
     
-    class func asciiRange(value: String) -> NSRange {
+    public class func asciiRange(value: String) -> NSRange {
         return NSMakeRange(0, value.lengthOfBytesUsingEncoding(NSASCIIStringEncoding))
     }
     
-    class func lock(handle: AnyObject, closure: () -> ()) {
+    public class func lock(handle: AnyObject, closure: () -> ()) {
         objc_sync_enter(handle)
         closure()
         objc_sync_exit(handle)
     }
     
-    class func respond(socket: CInt, response: HttpResponse, keepAlive: Bool) {
+    public class func respond(socket: CInt, response: HttpResponse, keepAlive: Bool) {
         Socket.writeUTF8(socket, string: "HTTP/1.1 \(response.statusCode()) \(response.reasonPhrase())\r\n")
         if let body = response.body() {
             Socket.writeASCII(socket, string: "Content-Length: \(body.length)\r\n")
@@ -125,7 +131,6 @@ class HttpServer
         }
         Socket.writeASCII(socket, string: "\r\n")
         if let body = response.body() {
-			let s = NSString(data: body, encoding:NSNonLossyASCIIStringEncoding )
             Socket.writeData(socket, data: body)
         }
     }

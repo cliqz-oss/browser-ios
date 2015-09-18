@@ -34,7 +34,7 @@ private struct URLBarViewUX {
 protocol URLBarDelegate: class {
     func urlBarDidPressTabs(urlBar: URLBarView)
     func urlBarDidPressReaderMode(urlBar: URLBarView)
-    /// :returns: whether the long-press was handled by the delegate; i.e. return `false` when the conditions for even starting handling long-press were not satisfied
+    /// - returns: whether the long-press was handled by the delegate; i.e. return `false` when the conditions for even starting handling long-press were not satisfied
     func urlBarDidLongPressReaderMode(urlBar: URLBarView) -> Bool
     func urlBarDidPressStop(urlBar: URLBarView)
     func urlBarDidPressReload(urlBar: URLBarView)
@@ -51,6 +51,15 @@ class URLBarView: UIView {
     weak var delegate: URLBarDelegate?
     weak var browserToolbarDelegate: BrowserToolbarDelegate?
     var helper: BrowserToolbarHelper?
+    var isTransitioning: Bool = false {
+        didSet {
+            if isTransitioning {
+                // Cancel any pending/in-progress animations related to the progress bar
+                self.progressBar.setProgress(1, animated: false)
+                self.progressBar.alpha = 0.0
+            }
+        }
+    }
 
     var toolbarIsShowing = false
 
@@ -62,7 +71,7 @@ class URLBarView: UIView {
 
     lazy var locationView: BrowserLocationView = {
         let locationView = BrowserLocationView()
-        locationView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        locationView.translatesAutoresizingMaskIntoConstraints = false
         locationView.readerModeState = ReaderModeState.Unavailable
         locationView.delegate = self
         return locationView
@@ -70,7 +79,7 @@ class URLBarView: UIView {
 
     private lazy var locationTextField: ToolbarTextField = {
         let locationTextField = ToolbarTextField()
-        locationTextField.setTranslatesAutoresizingMaskIntoConstraints(false)
+        locationTextField.translatesAutoresizingMaskIntoConstraints = false
         locationTextField.autocompleteDelegate = self
         locationTextField.keyboardType = UIKeyboardType.WebSearch
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
@@ -87,7 +96,7 @@ class URLBarView: UIView {
 
     private lazy var locationContainer: UIView = {
         let locationContainer = UIView()
-        locationContainer.setTranslatesAutoresizingMaskIntoConstraints(false)
+        locationContainer.translatesAutoresizingMaskIntoConstraints = false
 
         // Enable clipping to apply the rounded edges to subviews.
         locationContainer.clipsToBounds = true
@@ -101,7 +110,7 @@ class URLBarView: UIView {
 
     private lazy var tabsButton: UIButton = {
         let tabsButton = InsetButton()
-        tabsButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        tabsButton.translatesAutoresizingMaskIntoConstraints = false
         tabsButton.setTitle("0", forState: UIControlState.Normal)
 //        tabsButton.setTitleColor(URLBarViewUX.backgroundColorWithAlpha(1), forState: UIControlState.Normal)
 		tabsButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -181,7 +190,7 @@ class URLBarView: UIView {
         commonInit()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -190,10 +199,6 @@ class URLBarView: UIView {
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1)
 //        addSubview(curveShape)
         addSubview(scrollToTopButton)
-
-        locationContainer.addSubview(locationView)
-        locationContainer.addSubview(locationTextField)
-        addSubview(locationContainer)
 
         addSubview(progressBar)
         addSubview(tabsButton)
@@ -205,11 +210,16 @@ class URLBarView: UIView {
         addSubview(backButton)
         addSubview(stopReloadButton)
 
+        locationContainer.addSubview(locationView)
+        locationContainer.addSubview(locationTextField)
+        addSubview(locationContainer)
+
         helper = BrowserToolbarHelper(toolbar: self)
         setupConstraints()
 
         // Make sure we hide any views that shouldn't be showing in non-overlay mode.
         updateViewsForOverlayModeAndToolbarChanges()
+        self.locationTextField.hidden = !inOverlayMode
     }
 
     private func setupConstraints() {
@@ -391,15 +401,19 @@ class URLBarView: UIView {
 
     func updateProgressBar(progress: Float) {
         if progress == 1.0 {
-            self.progressBar.setProgress(progress, animated: true)
+            self.progressBar.setProgress(progress, animated: !isTransitioning)
             UIView.animateWithDuration(1.5, animations: {
                 self.progressBar.alpha = 0.0
-            }, completion: { _ in
-                self.progressBar.setProgress(0.0, animated: false)
+            }, completion: { finished in
+                if finished {
+                    self.progressBar.setProgress(0.0, animated: false)
+                }
             })
         } else {
-            self.progressBar.alpha = 1.0
-            self.progressBar.setProgress(progress, animated: (progress > progressBar.progress))
+            if self.progressBar.alpha < 1.0 {
+                self.progressBar.alpha = 1.0
+            }
+            self.progressBar.setProgress(progress, animated: (progress > progressBar.progress) && !isTransitioning)
         }
     }
 
@@ -412,36 +426,46 @@ class URLBarView: UIView {
     }
 
     func enterOverlayMode(locationText: String?, pasted: Bool) {
-        if pasted {
-            // Clear any existing text, focus the field, then set the actual pasted text.
-            // This avoids highlighting all of the text.
-            locationTextField.text = ""
-            locationTextField.becomeFirstResponder()
-            locationTextField.text = locationText
-        } else {
-            // Copy the current URL to the editable text field, then activate it.
-            locationTextField.text = locationText
-            locationTextField.becomeFirstResponder()
-        }
 
         // Show the overlay mode UI, which includes hiding the locationView and replacing it
         // with the editable locationTextField.
-        animateToOverlayState(true)
+        animateToOverlayState(overlayMode: true)
 
         delegate?.urlBarDidEnterOverlayMode(self)
+
+        // Bug 1193755 Workaround - Calling becomeFirstResponder before the animation happens
+        // won't take the initial frame of the label into consideration, which makes the label
+        // look squished at the start of the animation and expand to be correct. As a workaround,
+        // we becomeFirstResponder as the next event on UI thread, so the animation starts before we
+        // set a first responder.
+        if pasted {
+            // Clear any existing text, focus the field, then set the actual pasted text.
+            // This avoids highlighting all of the text.
+            self.locationTextField.text = ""
+            dispatch_async(dispatch_get_main_queue()) {
+                self.locationTextField.becomeFirstResponder()
+                self.locationTextField.text = locationText
+            }
+        } else {
+            // Copy the current URL to the editable text field, then activate it.
+            self.locationTextField.text = locationText
+            dispatch_async(dispatch_get_main_queue()) {
+                self.locationTextField.becomeFirstResponder()
+            }
+        }
     }
 
-    func leaveOverlayMode() {
+    func leaveOverlayMode(didCancel cancel: Bool = false) {
         locationTextField.resignFirstResponder()
-        animateToOverlayState(false)
+        animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
     }
 
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
+        self.bringSubviewToFront(self.locationContainer)
 //        self.cancelButton.hidden = false
         self.progressBar.hidden = false
-        self.locationTextField.hidden = false
         self.shareButton.hidden = !self.toolbarIsShowing
         self.bookmarkButton.hidden = !self.toolbarIsShowing
         self.forwardButton.hidden = !self.toolbarIsShowing
@@ -490,7 +514,6 @@ class URLBarView: UIView {
     func updateViewsForOverlayModeAndToolbarChanges() {
 //        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
-        self.locationTextField.hidden = !inOverlayMode
         self.shareButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.forwardButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -498,13 +521,16 @@ class URLBarView: UIView {
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
     }
 
-    func animateToOverlayState(overlay: Bool) {
+    func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {
         prepareOverlayAnimation()
         layoutIfNeeded()
 
         inOverlayMode = overlay
 
-        UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: nil, animations: { _ in
+        locationView.urlTextField.hidden = inOverlayMode
+        locationTextField.hidden = !inOverlayMode
+
+        UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: [], animations: { _ in
             self.transitionToOverlay()
             self.setNeedsUpdateConstraints()
             self.layoutIfNeeded()
@@ -518,7 +544,7 @@ class URLBarView: UIView {
     }
 
     func SELdidClickCancel() {
-        leaveOverlayMode()
+        leaveOverlayMode(didCancel: true)
     }
 
     func SELtappedScrollToTopArea() {
@@ -549,13 +575,13 @@ extension URLBarView: BrowserToolbarProtocol {
         }
     }
 
-    func updatePageStatus(#isWebPage: Bool) {
+    func updatePageStatus(isWebPage isWebPage: Bool) {
         bookmarkButton.enabled = isWebPage
         stopReloadButton.enabled = isWebPage
         shareButton.enabled = isWebPage
     }
 
-    override var accessibilityElements: [AnyObject]! {
+    override var accessibilityElements: [AnyObject]? {
         get {
             if inOverlayMode {
 //                return [locationTextField, cancelButton]
@@ -606,7 +632,8 @@ extension URLBarView: BrowserLocationViewDelegate {
 
 extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool {
-        delegate?.urlBar(self, didSubmitText: locationTextField.text)
+        guard let text = locationTextField.text else { return true }
+        delegate?.urlBar(self, didSubmitText: text)
         return true
     }
 
@@ -663,7 +690,7 @@ private class CurveView: UIView {
         commonInit()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -680,7 +707,7 @@ private class CurveView: UIView {
     private func drawFromTop(path: UIBezierPath) {
         let height: Double = Double(UIConstants.ToolbarHeight)
         let width = getWidthForHeight(height)
-        var from = (Double(self.frame.width) - width * 2 - Double(URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer), Double(0))
+        let from = (Double(self.frame.width) - width * 2 - Double(URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer), Double(0))
 
         path.moveToPoint(CGPoint(x: from.0, y: from.1))
         path.addCurveToPoint(CGPoint(x: from.0 + width * W_M2, y: from.1 + height * H_M2),
@@ -709,7 +736,7 @@ private class CurveView: UIView {
         CGContextSetFillColorWithColor(context, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
 //        getPath().fill()
         leftCurvePath.fill()
-        CGContextDrawPath(context, kCGPathFill)
+        CGContextDrawPath(context, CGPathDrawingMode.Fill)
         CGContextRestoreGState(context)
     }
 }
@@ -719,7 +746,7 @@ private class ToolbarTextField: AutocompleteTextField {
         super.init(frame: frame)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

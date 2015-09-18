@@ -28,11 +28,14 @@ class HttpHandlers {
                 var isDir: ObjCBool = false;
                 if ( fileManager.fileExistsAtPath(filePath, isDirectory: &isDir) ) {
                     if ( isDir ) {
-                        if let files = fileManager.contentsOfDirectoryAtPath(filePath, error: nil) {
+                        do {
+                            let files = try fileManager.contentsOfDirectoryAtPath(filePath)
                             var response = "<h3>\(filePath)</h3></br><table>"
-                            response += join("", map(files, { "<tr><td><a href=\"\(request.url)/\($0)\">\($0)</a></td></tr>"}))
+                            response += files.map({ "<tr><td><a href=\"\(request.url)/\($0)\">\($0)</a></td></tr>"}).joinWithSeparator("")
                             response += "</table>"
                             return HttpResponse.OK(.HTML(response))
+                        } catch  {
+                            return HttpResponse.NotFound
                         }
                     } else {
                         if let fileBody = NSData(contentsOfFile: filePath) {
@@ -43,5 +46,15 @@ class HttpHandlers {
             }
             return HttpResponse.NotFound
         }
+    }
+}
+
+private extension String {
+    var stringByExpandingTildeInPath: String {
+        return (self as NSString).stringByExpandingTildeInPath
+    }
+
+    func stringByAppendingPathComponent(str: String) -> String {
+        return (self as NSString).stringByAppendingPathComponent(str)
     }
 }

@@ -50,12 +50,12 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 //			views: ["pagingScrollView": v]))
 //
 //		self.pagingScrollView = v
-		var config = WKWebViewConfiguration()
+		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
 		controller.addScriptMessageHandler(self, name: "interOp")
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
-        self.webView?.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.webView?.translatesAutoresizingMaskIntoConstraints = false
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
 		self.view.backgroundColor = UIColor.redColor()
@@ -63,26 +63,17 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 //			configuration: theConfiguration)
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(
             "H:|[webView]|",
-            options: NSLayoutFormatOptions(0),
+			options: NSLayoutFormatOptions(rawValue: 0),
             metrics: nil,
             views: ["webView": self.webView!]))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(
             "V:|[webView]|",
-            options: NSLayoutFormatOptions(0),
+			options: NSLayoutFormatOptions(rawValue: 0),
             metrics: nil,
             views: ["webView": self.webView!]))
-		let myFilePath = NSBundle.mainBundle().pathForResource("tool_iOS/index", ofType: "html")
-		var error: NSError?
-		var content: String?
-		content = String(contentsOfFile: myFilePath!, encoding: NSUTF8StringEncoding)
-		var x = NSBundle.mainBundle().bundlePath as String
-		x.extend("/tool_iOS/")
-		let baseUrl = NSURL(fileURLWithPath: x, isDirectory: true)
-		var u = NSURL(string: "http://localhost:3001/extension/index.html")
+		let u = NSURL(string: "http://localhost:3001/extension/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL:u!))
-//		self.webView!.loadHTMLString(content!, baseURL: baseUrl)
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -140,7 +131,7 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 	}
 	
 	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-		if request.URL!.absoluteString != nil && request.URL!.absoluteString!.hasPrefix("http") {
+		if request.URL!.absoluteString.hasPrefix("http") {
 			delegate?.searchView(self, didSelectUrl: request.URL!)
 			return false
 		} else {
@@ -149,7 +140,7 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if navigationAction.request.URL!.absoluteString != nil && !navigationAction.request.URL!.absoluteString!.hasPrefix("http://localhost:3001/") {
+		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3001/") {
 			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
@@ -161,20 +152,21 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
 		if message.name == "interOp" {
-			println("Received event \(message.body) --- \(message.name)")
+			print("Received event \(message.body) --- \(message.name)")
 			let input = message.body as! NSDictionary
 			let callbakcID = input.objectForKey("callbackId")
 			let query = input.objectForKey("query") as? String
-			var error: NSError?
-//			println("HISTORYYYYYYY --- \(self.historyResults)")
 			var jsonStr: NSString = ""
-			if let json = NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions.allZeros, error: &error) {
-				jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+			do {
+				let json = try NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions(rawValue: 0))
+					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+			} catch let error as NSError {
+				print("Json conversion is failed with error: \(error)")
 			}
 
 //			println("JSONFAIIILLL --- \(error)")
 			let exec = "CLIQZEnvironment.historySearchDone(\(callbakcID!), '\(query!)', '\(jsonStr)');"
-			println("historyresults!!! --- \(exec)")
+			print("historyresults!!! --- \(exec)")
 			self.webView!.evaluateJavaScript(exec, completionHandler: nil)
 		}
 	}

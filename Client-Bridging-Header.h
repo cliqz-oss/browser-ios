@@ -7,8 +7,6 @@
 #import "FSReadingList.h"
 #import "Try.h"
 
-#import "Breakpad/BreakpadController.h"
-
 #import "GCDWebServer.h"
 #import "GCDWebServerResponse.h"
 #import "GCDWebServerDataResponse.h"
