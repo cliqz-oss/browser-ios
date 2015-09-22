@@ -29,7 +29,7 @@ struct IntroViewControllerUX {
 	static let CardTextFont = UIFont(name: "HelveticaNeue", size: 25)
 
 //    static let CardTitleFont = UIFont.systemFontOfSize(20, weight: UIFontWeightBold)
-	static let CardTitleFont = UIFont(name: "HelveticaNeue", size: 30)
+	static let CardTitleFont = UIFont(name: "HelveticaNeue", size: 28)
     static let CardTextLineHeight = CGFloat(6)
 
     static let Card1Title = NSLocalizedString("Welcome to CLIQZ", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
@@ -391,6 +391,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             titleLabel.text = title
 			titleLabel.textColor = UIColor.whiteColor()
             titleLabel.font = IntroViewControllerUX.CardTitleFont
+			titleLabel.adjustsFontSizeToFitWidth = true
             introView.addSubview(titleLabel)
             titleLabel.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(55)

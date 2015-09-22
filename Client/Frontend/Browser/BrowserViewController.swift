@@ -1063,9 +1063,11 @@ extension BrowserViewController: BrowserToolbarDelegate {
                 printInfo.outputType = .General
                 let renderer = BrowserPrintPageRenderer(browser: selected)
 
-                let activityItems = [printInfo, renderer, selected.title ?? url.absoluteString, url]
+//                let activityItems = [printInfo, renderer, selected.title ?? url.absoluteString, url]
+				let activityItems = [printInfo, renderer, url]
 
                 let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+				activityViewController.setValue(selected.title, forKey: "subject")
 
                 // Hide 'Add to Reading List' which currently uses Safari.
                 // Also hide our own View Later… after all, you're in the browser!
@@ -1509,7 +1511,7 @@ extension BrowserViewController: WKNavigationDelegate {
                     decisionHandler(WKNavigationActionPolicy.Allow)
                 }
 //            }
-            decisionHandler(WKNavigationActionPolicy.Cancel)
+//            decisionHandler(WKNavigationActionPolicy.Cancel)
         }
     }
 

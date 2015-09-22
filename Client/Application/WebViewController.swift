@@ -126,8 +126,6 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 			JSString = "search_mobile('\(q)')"
 		}
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
-//		self.webView!.stringByEvaluatingJavaScriptFromString(JSString!)
-//			stringByEvaluatingJavaScriptFromString(JSString!)
 	}
 	
 	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -163,80 +161,9 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 			} catch let error as NSError {
 				print("Json conversion is failed with error: \(error)")
 			}
-
-//			println("JSONFAIIILLL --- \(error)")
 			let exec = "CLIQZEnvironment.historySearchDone(\(callbakcID!), '\(query!)', '\(jsonStr)');"
-			print("historyresults!!! --- \(exec)")
 			self.webView!.evaluateJavaScript(exec, completionHandler: nil)
 		}
 	}
-
-//    @IBAction func closeBrowser(sender: AnyObject) {
-//        self.willBeDismissed?()
-//		AWSAnalyticsHandler.logEvent(.BackToSearch, attribute: nil)
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-//
-//	@IBAction func closeTab(sender: AnyObject) {
-//		self.pagingScrollView.closeCurrentPage()
-//	}
-//	
-//	func pagingScrollView(pagingScrollView: PagingScrollView, didCloseTabAtIndex index: Int) {
-////		self.urls.removeObjectAtIndex(index)
-////		self.urls.removeAtIndex(index)
-//		if self.urls.count == 0 {
-//			self.closeBrowser(self.pagingScrollView)
-//		}
-//	}
-
-//	func loadURLs(urls: NSMutableArray) {
-//		self.urls = urls
-////		if let u = url {
-////			self.urls.append(u)
-//////			self.pagingScrollView.loadUrl(u)
-////		}
-//	}
-
-    // MARK: UIProgressView lifecycle
-    
-//    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-//        if keyPath == "estimatedProgress" && object as! NSObject == webView! {
-//            let newValue = change["new"] as! Float
-//            self.progressView.setProgress(newValue, animated: true)
-//            if newValue == 1.0 {
-//                self.progressView.hidden = true
-//            }
-//        }
-//    }
-//
-//    func finishProgress() {
-//        self.progressView.setProgress(1, animated: true)
-//        UIView.animateWithDuration(0.2, delay: 0.3, options: UIViewAnimationOptions(), animations: { () -> Void in
-//            self.progressView.hidden = true
-//            return
-//        }, completion: nil)
-//    }
-	
-    // MARK: WKNavigationDelegate methods
-    
-	
-//	
-//	func pagingScrollViewDidStartPageLoading(pagingScrollView: PagingScrollView) {
-//		self.progressView.setProgress(0, animated: false)
-//		self.progressView.setProgress(0.1, animated: true)
-//		self.progressView.hidden = false
-//	}
-	
-//	func pagingScrollViewDidFinishPageLoading(pagingScrollView: PagingScrollView) {
-//		finishProgress()
-//	}
-	
-//	func pagingScrollView(pagingScrollView: PagingScrollView, estimatedProgressChanged newValue: Double) {
-//		let f = Float(newValue)
-//		self.progressView.setProgress(f, animated: true)
-//		if newValue == 1.0 {
-//			self.progressView.hidden = true
-//		}
-//	}
 
 }
