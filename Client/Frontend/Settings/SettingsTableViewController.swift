@@ -740,13 +740,14 @@ class SettingsTableViewController: UITableViewController {
         }
 
         settings += [
+			/*
             SettingSection(title: nil, children: [
                 // Without a Firefox Account:
                 ConnectSetting(settings: self),
                 // With a Firefox Account:
                 AccountStatusSetting(settings: self),
                 SyncNowSetting(settings: self)
-            ] + accountDebugSettings),
+            ] + accountDebugSettings),*/
             SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
         ]
 
@@ -759,8 +760,8 @@ class SettingsTableViewController: UITableViewController {
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: [
                 ShowIntroductionSetting(settings: self),
-                SendFeedbackSetting(),
-                OpenSupportPageSetting()
+                SendFeedbackSetting()
+//                OpenSupportPageSetting()
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
                 VersionSetting(settings: self),

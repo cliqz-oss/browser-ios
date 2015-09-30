@@ -7,6 +7,8 @@ import Storage
 import AVFoundation
 import XCGLogger
 import Breakpad
+import Fabric
+import Crashlytics
 
 private let log = Logger.browserLogger
 
@@ -80,6 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 		
 		LocationManager.sharedLocationManager.startUpdateingLocation()
+		Fabric.with([Crashlytics.self()])
         return true
     }
 

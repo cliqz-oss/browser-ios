@@ -18,7 +18,9 @@ MOZ_BUILD_ID = 1101
 MOZ_SOCORRO_PRODUCT_NAME = FenneciOS
 
 // Crash-stats upload URL
-MOZ_BREAKPAD_URL = crash-reports.mozilla.com/submit?id=$(MOZ_BUNDLE_ID)&version=$(MOZ_VERSION)&buildid=$(MOZ_BUILD_ID)
+//Cliqz - reports.cliqz.com
+//MOZ_BREAKPAD_URL = crash-reports.mozilla.com/submit?id=$(MOZ_BUNDLE_ID)&version=$(MOZ_VERSION)&buildid=$(MOZ_BUILD_ID)
+MOZ_BREAKPAD_URL = reports.cliqz.com/submit/sslreport
 
 // Frequency to poll for uploads for crashes in seconds
 MOZ_BREAKPAD_UPLOAD_FREQUENCY = 30
