@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-		UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: false)
+		UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: false)
         // Set the Firefox UA for browsing.
         setUserAgent()
 
@@ -170,7 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		let bundlePath = NSBundle.mainBundle().bundlePath
 		let freshtabPath = bundlePath + "/" + "freshtab"
-		let extensionPath = bundlePath + "/" + "tool_iOS"
+		let extensionPath = bundlePath + "/" + "navigation"
 
 		let httpsServer = HttpServer()
 		httpsServer["/freshtab/(.+)"] = HttpHandlers.directory(freshtabPath)

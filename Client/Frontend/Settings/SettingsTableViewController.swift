@@ -7,6 +7,7 @@ import Base32
 import Shared
 import UIKit
 import XCGLogger
+import MessageUI
 
 private var ShowDebugSettings: Bool = false
 private var DebugSettingsClickCount: Int = 0
@@ -536,6 +537,8 @@ private class ShowIntroductionSetting: Setting {
 }
 
 private class SendFeedbackSetting: Setting {
+	static private let email = "feedback@cliqz.com"
+	
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Send Feedback", comment: "Show an input.mozilla.org page where people can submit feedback"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
@@ -546,8 +549,23 @@ private class SendFeedbackSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        setUpAndPushSettingsContentViewController(navigationController)
-    }
+		if MFMailComposeViewController.canSendMail() {
+			presentEmailViewController(navigationController)
+		} else {
+			let url = NSURL(string: "mailto:\(SendFeedbackSetting.email)")
+			UIApplication.sharedApplication().openURL(url!)
+		}
+	}
+
+	func presentEmailViewController(navigationController: UINavigationController?) {
+		let emailTitle = "Feedback on Cliqz for iOS, version 1.0"
+		let toRecipents = [SendFeedbackSetting.email]
+		let mailViewController: MFMailComposeViewController = MFMailComposeViewController()
+		mailViewController.mailComposeDelegate = navigationController?.topViewController as! SettingsTableViewController
+		mailViewController.setSubject(emailTitle)
+		mailViewController.setToRecipients(toRecipents)
+		navigationController?.presentViewController(mailViewController, animated: true, completion: nil)
+	}
 }
 
 // Opens the the SUMO page in a new tab
@@ -703,7 +721,7 @@ private class PopupBlockingSettings: Setting {
 }
 
 // The base settings view controller.
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     private let Identifier = "CellIdentifier"
     private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
     private var settings = [SettingSection]()
@@ -715,7 +733,7 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         let privacyTitle = NSLocalizedString("Privacy", comment: "Privacy section title")
-        let accountDebugSettings: [Setting]
+        var accountDebugSettings: [Setting]
         if AppConstants.BuildChannel != .Aurora {
             accountDebugSettings = [
                 // Debug settings:
@@ -890,6 +908,11 @@ class SettingsTableViewController: UITableViewController {
         if (indexPath.section == 0 && indexPath.row == 0) { return 64 } //make account/sign-in row taller, as per design specs
         return 44
     }
+	
+	func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+		self.dismissViewControllerAnimated(true, completion: nil)
+	}
+
 }
 
 class SettingsTableFooterView: UIView {

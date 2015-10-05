@@ -116,7 +116,7 @@ class BrowserViewController2 : UIViewController, LoaderListener, WKNavigationDel
 
 	func loadData(query: String) {
 		if let l = LocationManager.sharedLocationManager.location {
-			self.webView!.evaluateJavaScript("setLocation(\(l.coordinate.latitude), \(l.coordinate.longitude))", completionHandler: nil)
+//			self.webView!.evaluateJavaScript("setLocation(\(l.coordinate.latitude), \(l.coordinate.longitude))", completionHandler: nil)
 		}
 		var JSString: String!
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
