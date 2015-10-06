@@ -99,7 +99,7 @@ class BrowserScrollingController: NSObject {
         self.animateToolbarsWithOffsets(
             animated: animated,
             duration: actualDuration,
-            headerOffset: -headerFrame.height,
+            headerOffset: -headerFrame.height - UIApplication.sharedApplication().statusBarFrame.height,
             footerOffset: footerFrame.height - snackBarsFrame.height,
             alpha: 0,
             completion: completion)
@@ -140,7 +140,7 @@ private extension BrowserScrollingController {
                     scrollWithDelta(delta)
                 }
 
-                if headerTopOffset == -headerFrame.height {
+                if headerTopOffset == -headerFrame.height - UIApplication.sharedApplication().statusBarFrame.height {
                     toolbarState = .Collapsed
                 } else if headerTopOffset == 0 {
                     toolbarState = .Visible
@@ -167,7 +167,7 @@ private extension BrowserScrollingController {
         }
 
         var updatedOffset = headerTopOffset - delta
-        headerTopOffset = clamp(updatedOffset, min: -headerFrame.height, max: 0)
+        headerTopOffset = clamp(updatedOffset, min: -headerFrame.height - UIApplication.sharedApplication().statusBarFrame.height, max: 0)
         if isHeaderDisplayedForGivenOffset(updatedOffset) {
             scrollView?.contentOffset = CGPoint(x: contentOffset.x, y: contentOffset.y - delta)
         }
@@ -180,7 +180,7 @@ private extension BrowserScrollingController {
     }
 
     func isHeaderDisplayedForGivenOffset(offset: CGFloat) -> Bool {
-        return offset > -headerFrame.height && offset < 0
+        return offset > -headerFrame.height - UIApplication.sharedApplication().statusBarFrame.height && offset < 0
     }
 
     func clamp(y: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
