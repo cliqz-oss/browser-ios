@@ -1,0 +1,75 @@
+<html><head>
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link></head><body>
+<h1>Lookback.io</h1>
+
+<p>Lookback is a tool and library for user experience testing that you can install into your app. Lookback records the iOS screen, the front-facing camera, microphone, metadata, touches and active views, and uploads it all in near-realtime to lookback.io where you can study and dive into the data.</p>
+
+<p>Some use cases are:</p>
+
+<ul>
+<li>User testing sessions. Instead of mounting web cams in your testing lab to record both the screen and your tester's reactions, let Lookback do the hard work for you.</li>
+<li>Long-term usability study. Let a user record a week of using your app, and study trends, reactions and recurring problems.</li>
+<li>Quality assurance. Record videos of found bugs, complete with a trace of how the tester reached it.</li>
+</ul>
+
+<p>For more examples, see <a href="http://lookback.io/examples">the Lookback example videos site</a>.</p>
+
+<h2>Installation</h2>
+
+<h3>Getting Lookback into your app</h3>
+
+<p>The easiest way to add the Lookback SDK into your app is to use the <a href="http://cocoapods.org">CocoaPods package manager</a>. After setting up CocoaPods for your project, just add the following line to your Podfile:</p>
+
+<pre><code>pod 'Lookback'
+</code></pre>
+
+<p>and run <code>pod install</code>.</p>
+
+<p>If you would rather download the .framework and link to it manually, see the <a href="http://lookback.io/docs/install-using-cocoapods">manual installation guide online</a>.</p>
+
+<h3>Setting up Lookback</h3>
+
+<p>Once Lookback has been linked into your app, you need to tell it who you are, and how to start recording. Thus, you must create an account and create a team and app with it. Once you have done so, you will get an "app token". You can then edit your app delegate to look something like below:</p>
+
+<pre><code>// SRAppDelegate.m
+#import &lt;Lookback/Lookback.h&gt;
+@implementation SRAppDelegate   
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    .......
+    [LookBack setupWithAppToken:@"&lt;&lt; YOUR APP TOKEN&gt;&gt;"];
+    [LookBack lookback].shakeToRecord = YES;
+    .......
+}
+</code></pre>
+
+<p>If you prefer to display the Lookback settings on your own instead of overriding the shake gesture, you can instead present GFSettingsViewController however you want, as long as it's wrapped in a navigation controller:</p>
+
+<pre><code>- (IBAction)showLookbackSettings:(id)sender
+{
+    UIViewController *settings = [GFSettingsViewController settingsViewControllerForInstance:[LookBack lookback]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:settings];
+    settings.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissSettings)];
+    [self.window.rootViewController presentViewController:nav animated:YES completion:nil];
+}
+</code></pre>
+
+<p>You're now ready to record! To use additional features of the SDK, please see the <a href="http://lookback.io/docs/customizing">Lookback documentation site</a> and the LookBack.h header file.</p>
+
+<h2>FAQ</h2>
+
+<h3>Why are my view controller names not logged correctly?</h3>
+
+<p>Lookback figures out which view controllers are on screen and maps them to timestamps in the video recording. Lookback will use your view controller's class name and make it human readable. If you implement <code>+(NSString*)lookBackIdentifier</code>, that will be used instead.</p>
+
+<p>NOTE: This information is picked up in <code>-[UIViewController viewDidAppear:]</code> and <code>-[UIViewController viewWillDisappear:]</code>. If you override these methods in your view controllers and don't call super, the view names will not be logged! Your viewDidAppear: should always look like this:</p>
+
+<pre><code>- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    ...
+}
+</code></pre>
+
+<h3>What does the "Upload when inactive" option mean?</h3>
+
+<p>Normally when you start a recording, it will be paused whenever the application becomes inactive (backgrounded or screen locked). If you record a very long session, it will take a long time to upload, and be difficult to manage. In this case, you might want to enable the "Upload when inactive" option. Then, recording will stop when the app is inactive, the short session uploaded, and a new recording started anew when the app becomes active.</p>
