@@ -23,13 +23,11 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	public func startUpdateingLocation() {
 		self.manager.startUpdatingLocation()
-		println("Hellllloooo --- %@", self.manager.location)
 	}
 
-	public func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-		println("Hellllloooo --- %@", locations)
+	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 		if locations.count > 0 {
-			self.location = locations[locations.count - 1] as? CLLocation
+			self.location = locations[locations.count - 1]
 		}
 	}
 	

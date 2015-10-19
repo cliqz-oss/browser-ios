@@ -23,7 +23,7 @@ class TwoLineTableViewCell: UITableViewCell {
         separatorInset = UIEdgeInsetsMake(0, ImageSize + 2 * ImageMargin, 0, 0)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -56,11 +56,11 @@ class TwoLineCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(detailTextLabel)
         contentView.addSubview(imageView)
 
-        backgroundColor = UIColor.clearColor()
+        contentView.backgroundColor = UIColor.clearColor()
         layoutMargins = UIEdgeInsetsZero
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -91,22 +91,17 @@ class TwoLineHeaderFooterView: UITableViewHeaderFooterView {
     let imageView = UIImageView()
 
     // Yes, this is strange.
-    override var textLabel: UILabel {
+    override var textLabel: UILabel? {
         return _textLabel
     }
 
     // Yes, this is strange.
-    override var detailTextLabel: UILabel {
+    override var detailTextLabel: UILabel? {
         return _detailTextLabel
     }
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
         twoLineHelper.setUpViews(self, textLabel: _textLabel, detailTextLabel: _detailTextLabel, imageView: imageView)
 
         contentView.addSubview(_textLabel)
@@ -116,7 +111,7 @@ class TwoLineHeaderFooterView: UITableViewHeaderFooterView {
         layoutMargins = UIEdgeInsetsZero
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -143,7 +138,11 @@ private class TwoLineCellHelper {
         self.detailTextLabel = detailTextLabel
         self.imageView = imageView
 
-        self.container.backgroundColor = UIColor.clearColor()
+        if let headerView = self.container as? UITableViewHeaderFooterView {
+            headerView.contentView.backgroundColor = UIColor.clearColor()
+        } else {
+            self.container.backgroundColor = UIColor.clearColor()
+        }
 
         textLabel.font = UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)
         textLabel.textColor = TextColor

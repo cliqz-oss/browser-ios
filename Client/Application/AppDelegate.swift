@@ -6,6 +6,20 @@ import Shared
 import Storage
 import AVFoundation
 import XCGLogger
+import Breakpad
+import Fabric
+import Crashlytics
+//import Lookback
+
+private let log = Logger.browserLogger
+
+extension UINavigationController {
+
+	public override func disablesAutomaticKeyboardDismissal() -> Bool {
+		return false
+	}
+
+}
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -18,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-		UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: false)
+		UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: false)
         // Set the Firefox UA for browsing.
         setUserAgent()
 
@@ -33,8 +47,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set up a web server that serves us static content. Do this early so that it is ready when the UI is presented.
         setUpWebServer(profile)
 
-        // for aural progress bar: play even with silent switch on, and do not stop audio from other apps (like music)
-        AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, withOptions: AVAudioSessionCategoryOptions.MixWithOthers, error: nil)
+        do {
+            // for aural progress bar: play even with silent switch on, and do not stop audio from other apps (like music)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, withOptions: AVAudioSessionCategoryOptions.MixWithOthers)
+        } catch _ {
+            log.error("Failed to assign AVAudioSession category to allow playing with silent switch on for aural progress bar")
+        }
 
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIColor.whiteColor()
@@ -61,9 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configureActiveCrashReporter(profile.prefs.boolForKey("crashreports.send.always"))
 
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
-            if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL, absoluteString = url.absoluteString {
+            if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL {
                 let title = (userInfo["Title"] as? String) ?? ""
-                profile.readingList?.createRecordWithURL(absoluteString, title: title, addedBy: UIDevice.currentDevice().name)
+                profile.readingList?.createRecordWithURL(url.absoluteString, title: title, addedBy: UIDevice.currentDevice().name)
             }
         }
 
@@ -72,7 +90,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 		
+		// Enable location manager
 		LocationManager.sharedLocationManager.startUpdateingLocation()
+		
+		// Setup crash reporter
+		Fabric.with([Crashlytics.self()])
+		
+		// Setup feedback framework
+		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		Lookback.sharedLookback().shakeToRecord = true
+		Lookback.sharedLookback().feedbackBubbleVisible = true
+//		Lookback_Weak.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		
         return true
     }
 
@@ -100,22 +129,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         if let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) {
             if components.scheme != "firefox" && components.scheme != "firefox-x-callback" {
                 return false
             }
             var url: String?
-            var appName: String?
-            var callbackScheme: String?
-            for item in components.queryItems as? [NSURLQueryItem] ?? [] {
+            for item in (components.queryItems ?? []) as [NSURLQueryItem] {
                 switch item.name {
                 case "url":
                     url = item.value
-                case "x-source":
-                    callbackScheme = item.value
-                case "x-source-name":
-                    appName = item.value
                 default: ()
                 }
             }
@@ -141,10 +164,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         self.profile?.syncManager.endTimedSyncs()
 
-        let taskId = application.beginBackgroundTaskWithExpirationHandler { _ in }
-        self.profile?.shutdown()
-        application.endBackgroundTask(taskId)
-	}
+        var taskId: UIBackgroundTaskIdentifier = 0
+        taskId = application.beginBackgroundTaskWithExpirationHandler { _ in
+            log.warning("Running out of background time, but we have a profile shutdown pending.")
+            application.endBackgroundTask(taskId)
+        }
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            self.profile?.shutdown()
+            application.endBackgroundTask(taskId)
+        }
+    }
 
     private func setUpWebServer(profile: Profile) {
         let server = WebServer.sharedInstance
@@ -158,8 +188,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		server.start()
 		
 		let bundlePath = NSBundle.mainBundle().bundlePath
-		let freshtabPath = bundlePath + "/" + "page"
-		let extensionPath = bundlePath + "/" + "tool_iOS"
+		let freshtabPath = bundlePath + "/" + "freshtab"
+		let extensionPath = bundlePath + "/" + "navigation"
 
 		let httpsServer = HttpServer()
 		httpsServer["/freshtab/(.+)"] = HttpHandlers.directory(freshtabPath)
@@ -170,7 +200,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			let data = NSData(contentsOfURL: NSURL(string:u)!)
 			return HttpResponse.RAW(200, data!)
 		}
-		httpsServer.start(listenPort: 3000)
+		httpsServer.start(3001)
     }
 
     private func setUserAgent() {
@@ -185,6 +215,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         defaults.registerDefaults(["UserAgent": firefoxUA])
         FaviconFetcher.userAgent = firefoxUA
         SDWebImageDownloader.sharedDownloader().setValue(firefoxUA, forHTTPHeaderField: "User-Agent")
+
+        // Record the user agent for use by search suggestion clients.
+        SearchViewController.userAgent = firefoxUA
     }
 
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
@@ -202,10 +235,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     break
                 }
             } else {
-                println("ERROR: Unknown notification action received")
+                print("ERROR: Unknown notification action received")
             }
         } else {
-            println("ERROR: Unknown notification received")
+            print("ERROR: Unknown notification received")
         }
     }
 
@@ -261,7 +294,7 @@ func configureActiveCrashReporter(optedIn: Bool?) {
     }
 }
 
-public func configureCrashReporter(reporter: CrashReporter, #optedIn: Bool?) {
+public func configureCrashReporter(reporter: CrashReporter, optedIn: Bool?) {
     let configureReporter: () -> () = {
         let addUploadParameterForKey: String -> Void = { key in
             if let value = NSBundle.mainBundle().objectForInfoDictionaryKey(key) as? String {

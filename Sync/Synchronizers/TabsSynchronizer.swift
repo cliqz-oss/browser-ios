@@ -38,7 +38,7 @@ public class TabsSynchronizer: BaseSingleCollectionSynchronizer, Synchronizer {
             "clientName": self.scratchpad.clientName,
             "tabs": jsonTabs
         ])
-        log.debug("Sending tabs JSON \(tabsJSON.toString(pretty: true))")
+        log.debug("Sending tabs JSON \(tabsJSON.toString(true))")
         let payload = TabsPayload(tabsJSON)
         return Record(id: guid, payload: payload, ttl: ThreeWeeksInSeconds)
     }
@@ -82,11 +82,19 @@ public class TabsSynchronizer: BaseSingleCollectionSynchronizer, Synchronizer {
 
             func afterWipe() -> Success {
                 log.info("Fetching tabs.")
-                func doInsert(record: Record<TabsPayload>) -> Deferred<Result<(Int)>> {
+                let doInsert: (Record<TabsPayload>) -> Deferred<Maybe<(Int)>> = { record in
                     let remotes = record.payload.remoteTabs
                     log.debug("\(remotes)")
                     log.info("Inserting \(remotes.count) tabs for client \(record.id).")
-                    return localTabs.insertOrUpdateTabsForClientGUID(record.id, tabs: remotes)
+                    let ins = localTabs.insertOrUpdateTabsForClientGUID(record.id, tabs: remotes)
+                    ins.upon() { res in
+                        if let inserted = res.successValue {
+                            if inserted != remotes.count {
+                                log.warning("Only inserted \(inserted) tabs, not \(remotes.count). Malformed or missing client?")
+                            }
+                        }
+                    }
+                    return ins
                 }
 
                 let ourGUID = self.scratchpad.clientGUID
@@ -96,14 +104,25 @@ public class TabsSynchronizer: BaseSingleCollectionSynchronizer, Synchronizer {
 
                 log.debug("Got \(records.count) tab records.")
 
-                let allDone = all(records.filter({ $0.id != ourGUID }).map(doInsert))
-                return allDone.bind { (results) -> Success in
-                    if let failure = find(results, { $0.isFailure }) {
-                        return deferResult(failure.failureValue!)
-                    }
+                // We can only insert tabs for clients that we know locally, so
+                // first we fetch the list of IDs and intersect the two.
+                // TODO: there's a much more efficient way of doing this.
+                return localTabs.getClientGUIDs()
+                    >>== { clientGUIDs in
+                        let filtered = records.filter({ $0.id != ourGUID && clientGUIDs.contains($0.id) })
+                        if filtered.count != records.count {
+                            log.debug("Filtered \(records.count) records down to \(filtered.count).")
+                        }
 
-                    self.lastFetched = responseTimestamp!
-                    return succeed()
+                        let allDone = all(filtered.map(doInsert))
+                        return allDone.bind { (results) -> Success in
+                            if let failure = find(results, f: { $0.isFailure }) {
+                                return deferMaybe(failure.failureValue!)
+                            }
+
+                            self.lastFetched = responseTimestamp!
+                            return succeed()
+                        }
                 }
             }
 
@@ -118,7 +137,7 @@ public class TabsSynchronizer: BaseSingleCollectionSynchronizer, Synchronizer {
         }
 
         if let reason = self.reasonToNotSync(storageClient) {
-            return deferResult(SyncStatus.NotStarted(reason))
+            return deferMaybe(SyncStatus.NotStarted(reason))
         }
 
         let keys = self.scratchpad.keys?.value
@@ -129,17 +148,17 @@ public class TabsSynchronizer: BaseSingleCollectionSynchronizer, Synchronizer {
             if !self.remoteHasChanges(info) {
                 // upload local tabs if they've changed or we're in a fresh start.
                 uploadOurTabs(localTabs, toServer: tabsClient)
-                return deferResult(.Completed)
+                return deferMaybe(.Completed)
             }
 
             return tabsClient.getSince(self.lastFetched)
                 >>== onResponseReceived
                 >>> { self.uploadOurTabs(localTabs, toServer: tabsClient) }
-                >>> { deferResult(.Completed) }
+                >>> { deferMaybe(.Completed) }
         }
 
         log.error("Couldn't make tabs factory.")
-        return deferResult(FatalError(message: "Couldn't make tabs factory."))
+        return deferMaybe(FatalError(message: "Couldn't make tabs factory."))
     }
 }
 

@@ -15,7 +15,7 @@ class SnackBarUX {
  * spaced in the bottom of the bar. The main convenience of these is that you can pass
  * in a callback in the constructor (although these also style themselves appropriately).
  *
- *``SnackButton(title: "OK", { _ in println("OK") })``
+ *``SnackButton(title: "OK", { _ in print("OK", terminator: "\n") })``
  */
 class SnackButton : UIButton {
     let callback: (bar: SnackBar) -> Void
@@ -47,7 +47,7 @@ class SnackButton : UIButton {
         super.init(frame: frame)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -63,9 +63,9 @@ class SnackButton : UIButton {
  * ``let bar = SnackBar(text: "This is some text in the snackbar.",
  *     img: UIImage(named: "bookmark"),
  *     buttons: [
- *         SnackButton(title: "OK", { _ in println("OK") }),
- *         SnackButton(title: "Cancel", { _ in println("Cancel") }),
- *         SnackButton(title: "Maybe", { _ in println("Maybe") })
+ *         SnackButton(title: "OK", { _ in print("OK", terminator: "\n") }),
+ *         SnackButton(title: "Cancel", { _ in print("Cancel", terminator: "\n") }),
+ *         SnackButton(title: "Maybe", { _ in print("Maybe", terminator: "\n") })
  *     ]
  * )``
  */
@@ -80,7 +80,7 @@ class SnackBar: UIView {
     var bottom: Constraint?
 
     convenience init(text: String, img: UIImage?, buttons: [SnackButton]?) {
-        var attributes = [NSObject: AnyObject]()
+        var attributes = [String: AnyObject]()
         attributes[NSFontAttributeName] = UIConstants.DefaultMediumFont
         attributes[NSBackgroundColorAttributeName] = UIColor.clearColor()
         let attrText = NSAttributedString(string: text, attributes: attributes)
@@ -127,10 +127,10 @@ class SnackBar: UIView {
 
         self.backgroundColor = UIColor.clearColor()
         buttonsView.drawTopBorder = true
-        buttonsView.drawBottomBorder = true
+        buttonsView.drawBottomBorder = false
         buttonsView.drawSeperators = true
 
-        imageView.contentMode = UIViewContentMode.TopLeft
+        imageView.contentMode = UIViewContentMode.Left
 
         textLabel.font = UIConstants.DefaultMediumFont
         textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
@@ -138,7 +138,7 @@ class SnackBar: UIView {
         textLabel.backgroundColor = UIColor.clearColor()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -154,10 +154,23 @@ class SnackBar: UIView {
         super.layoutSubviews()
     }
 
+    private func drawLine(context: CGContextRef, start: CGPoint, end: CGPoint) {
+        CGContextSetStrokeColorWithColor(context, UIConstants.BorderColor.CGColor)
+        CGContextSetLineWidth(context, 1)
+        CGContextMoveToPoint(context, start.x, start.y)
+        CGContextAddLineToPoint(context, end.x, end.y)
+        CGContextStrokePath(context)
+    }
+
+    override func drawRect(rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()
+        drawLine(context!, start: CGPoint(x: 0, y: 1), end: CGPoint(x: frame.size.width, y: 1))
+    }
+
     /**
      * Called to check if the snackbar should be removed or not. By default, Snackbars persist forever.
      * Override this class or use a class like CountdownSnackbar if you want things expire
-     * :returns: true if the snackbar should be kept alive
+     * - returns: true if the snackbar should be kept alive
      */
     func shouldPersist(browser: Browser) -> Bool {
         return true
@@ -167,47 +180,48 @@ class SnackBar: UIView {
         super.updateConstraints()
 
         backgroundView.snp_remakeConstraints { make in
-            make.edges.equalTo(self)
+            make.bottom.left.right.equalTo(self)
+            // Offset it by the width of the top border line so we can see the line from the super view
+            make.top.equalTo(self).offset(1)
         }
 
         contentView.snp_remakeConstraints { make in
-            make.top.left.right.equalTo(self).insets(EdgeInsetsMake(UIConstants.DefaultPadding, UIConstants.DefaultPadding, UIConstants.DefaultPadding, UIConstants.DefaultPadding	))
+            make.top.left.right.equalTo(self).inset(EdgeInsetsMake(UIConstants.DefaultPadding, left: UIConstants.DefaultPadding, bottom: UIConstants.DefaultPadding, right: UIConstants.DefaultPadding))
         }
 
         if let img = imageView.image {
-            imageView.snp_remakeConstraints({ make in
-                make.top.left.equalTo(contentView)
+            imageView.snp_remakeConstraints { make in
+                make.left.centerY.equalTo(contentView)
                 // To avoid doubling the padding, the textview doesn't have an inset on its left side.
                 // Instead, it relies on the imageView to tell it where its left side should be.
                 make.width.equalTo(img.size.width + UIConstants.DefaultPadding)
                 make.height.equalTo(img.size.height + UIConstants.DefaultPadding)
-                make.bottom.lessThanOrEqualTo(contentView.snp_bottom)
-            })
+            }
         } else {
-            imageView.snp_remakeConstraints({ make in
+            imageView.snp_remakeConstraints { make in
                 make.width.height.equalTo(0)
                 make.top.left.equalTo(self)
                 make.bottom.lessThanOrEqualTo(contentView.snp_bottom)
-            })
+            }
         }
 
-        textLabel.snp_remakeConstraints({ make in
+        textLabel.snp_remakeConstraints { make in
             make.top.equalTo(contentView)
             make.left.equalTo(self.imageView.snp_right)
             make.trailing.equalTo(contentView)
             make.bottom.lessThanOrEqualTo(contentView.snp_bottom)
-        })
+        }
 
-        buttonsView.snp_remakeConstraints({ make in
+        buttonsView.snp_remakeConstraints { make in
             make.top.equalTo(contentView.snp_bottom).offset(UIConstants.DefaultPadding)
             make.bottom.equalTo(self.snp_bottom)
             make.left.right.equalTo(self)
             if self.buttonsView.subviews.count > 0 {
-                make.height.equalTo(UIConstants.ToolbarHeight)
+                make.height.equalTo(UIConstants.SnackbarButtonHeight)
             } else {
                 make.height.equalTo(0)
             }
-        })
+        }
     }
 
     var showing: Bool {
@@ -261,7 +275,7 @@ class TimerSnackBar: SnackBar {
         super.init(frame: frame)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

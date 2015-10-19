@@ -2,18 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "paneliconhistorySelected.png"
+      "filename" : "clock active@1x.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "paneliconhistorySelected@2x.png"
+      "filename" : "clock active@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "paneliconhistorySelected@3x.png"
+      "filename" : "clock active@3x.png",
+      "scale" : "3x"
     }
   ],
   "info" : {

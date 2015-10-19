@@ -7,6 +7,10 @@ import WebKit
 import Storage
 import Shared
 
+import XCGLogger
+
+private let log = Logger.browserLogger
+
 protocol BrowserHelper {
     static func name() -> String
     func scriptMessageHandlerName() -> String?
@@ -22,6 +26,20 @@ protocol BrowserDelegate {
 }
 
 class Browser: NSObject {
+    private var _isPrivate: Bool = false
+    internal private(set) var isPrivate: Bool {
+        get {
+            if #available(iOS 9, *) {
+                return _isPrivate
+            } else {
+                return false
+            }
+        }
+        set {
+            _isPrivate = newValue
+        }
+    }
+
     var webView: WKWebView? = nil
     var browserDelegate: BrowserDelegate? = nil
     var bars = [SnackBar]()
@@ -44,9 +62,16 @@ class Browser: NSObject {
         self.configuration = configuration
     }
 
+    @available(iOS 9, *)
+    init(configuration: WKWebViewConfiguration, isPrivate: Bool) {
+        self.configuration = configuration
+        super.init()
+        self.isPrivate = isPrivate
+    }
+
     class func toTab(browser: Browser) -> RemoteTab? {
         if let displayURL = browser.displayURL {
-            let history = browser.historyList.filter(RemoteTab.shouldIncludeURL).reverse()
+            let history = Array(browser.historyList.filter(RemoteTab.shouldIncludeURL).reverse())
             return RemoteTab(clientGUID: nil,
                 URL: displayURL,
                 title: browser.displayTitle,
@@ -54,7 +79,7 @@ class Browser: NSObject {
                 lastUsed: NSDate.now(),
                 icon: nil)
         } else if let sessionData = browser.sessionData where !sessionData.urls.isEmpty {
-            let history = sessionData.urls.reverse()
+            let history = Array(sessionData.urls.reverse())
             return RemoteTab(clientGUID: nil,
                 URL: history[0],
                 title: browser.displayTitle,
@@ -93,29 +118,7 @@ class Browser: NSObject {
             webView.navigationDelegate = navigationDelegate
             helperManager = HelperManager(webView: webView)
 
-            // Pulls restored session data from a previous SavedTab to load into the Browser. If it's nil, a session restore 
-            // has already been triggered via custom URL, so we use the last request to trigger it again; otherwise,
-            // we extract the information needed to restore the tabs and create a NSURLRequest with the custom session restore URL
-            // to trigger the session restore via custom handlers
-            if let sessionData = self.sessionData {
-                restoring = true
-                
-                var updatedURLs = [String]()
-                for url in sessionData.urls {
-                    let updatedURL = WebServer.sharedInstance.updateLocalURL(url)!.absoluteString!
-                    updatedURLs.append(updatedURL)
-                }
-                let currentPage = sessionData.currentPage
-                self.sessionData = nil
-                var jsonDict = [String: AnyObject]()
-                jsonDict["history"] = updatedURLs
-                jsonDict["currentPage"] = currentPage
-                let escapedJSON = JSON.stringify(jsonDict, pretty: false).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
-                let restoreURL = NSURL(string: "\(WebServer.sharedInstance.base)/about/sessionrestore?history=\(escapedJSON)")
-                webView.loadRequest(NSURLRequest(URL: restoreURL!))
-            } else if let request = lastRequest {
-                webView.loadRequest(request)
-            }
+            restore(webView)
 
             self.webView = webView
             browserDelegate?.browser?(self, didCreateWebView: webView)
@@ -123,6 +126,35 @@ class Browser: NSObject {
             // lastTitle is used only when showing zombie tabs after a session restore.
             // Since we now have a web view, lastTitle is no longer useful.
             lastTitle = nil
+        }
+    }
+
+    func restore(webView: WKWebView) {
+        // Pulls restored session data from a previous SavedTab to load into the Browser. If it's nil, a session restore
+        // has already been triggered via custom URL, so we use the last request to trigger it again; otherwise,
+        // we extract the information needed to restore the tabs and create a NSURLRequest with the custom session restore URL
+        // to trigger the session restore via custom handlers
+        if let sessionData = self.sessionData {
+            restoring = true
+
+            var updatedURLs = [String]()
+            for url in sessionData.urls {
+                let updatedURL = WebServer.sharedInstance.updateLocalURL(url)!.absoluteString
+                updatedURLs.append(updatedURL)
+            }
+            let currentPage = sessionData.currentPage
+            self.sessionData = nil
+            var jsonDict = [String: AnyObject]()
+            jsonDict["history"] = updatedURLs
+            jsonDict["currentPage"] = currentPage
+            let escapedJSON = JSON.stringify(jsonDict, pretty: false).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+            let restoreURL = NSURL(string: "\(WebServer.sharedInstance.base)/about/sessionrestore?history=\(escapedJSON)")
+            lastRequest = NSURLRequest(URL: restoreURL!)
+            webView.loadRequest(lastRequest!)
+        } else if let request = lastRequest {
+            webView.loadRequest(request)
+        } else {
+            log.error("creating webview with no lastRequest and no session data: \(self.url)")
         }
     }
 
@@ -141,11 +173,11 @@ class Browser: NSObject {
     }
 
     var backList: [WKBackForwardListItem]? {
-        return webView?.backForwardList.backList as? [WKBackForwardListItem]
+        return webView?.backForwardList.backList
     }
 
     var forwardList: [WKBackForwardListItem]? {
-        return webView?.backForwardList.forwardList as? [WKBackForwardListItem]
+        return webView?.backForwardList.forwardList
     }
 
     var historyList: [NSURL] {
@@ -226,27 +258,35 @@ class Browser: NSObject {
         webView?.goToBackForwardListItem(item)
     }
 
-	func loadRequest(request: NSURLRequest) -> WKNavigation? {
-		lastRequest = request
-		if let webView = webView {
-			return webView.loadRequest(request)
-		}
-		return nil
-	}
+    func loadRequest(request: NSURLRequest) -> WKNavigation? {
+        if let webView = webView {
+            lastRequest = request
+            return webView.loadRequest(request)
+        }
+        return nil
+    }
 
     func stop() {
         webView?.stopLoading()
     }
 
     func reload() {
-        webView?.reload()
+        if let _ = webView?.reloadFromOrigin() {
+            log.info("reloaded zombified tab from origin")
+            return
+        }
+
+        if let webView = self.webView {
+            log.info("restoring webView from scratch")
+            restore(webView)
+        }
     }
 
     func addHelper(helper: BrowserHelper, name: String) {
         helperManager!.addHelper(helper, name: name)
     }
 
-    func getHelper(#name: String) -> BrowserHelper? {
+    func getHelper(name name: String) -> BrowserHelper? {
         return helperManager?.getHelper(name: name)
     }
 
@@ -278,7 +318,7 @@ class Browser: NSObject {
     }
 
     func removeSnackbar(bar: SnackBar) {
-        if let index = find(bars, bar) {
+        if let index = bars.indexOf(bar) {
             bars.removeAtIndex(index)
             browserDelegate?.browser(self, didRemoveSnackbar: bar)
         }
@@ -330,7 +370,7 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
     }
 
     func addHelper(helper: BrowserHelper, name: String) {
-        if let existingHelper = helpers[name] {
+        if let _ = helpers[name] {
             assertionFailure("Duplicate helper added: \(name)")
         }
 
@@ -343,7 +383,7 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
         }
     }
 
-    func getHelper(#name: String) -> BrowserHelper? {
+    func getHelper(name name: String) -> BrowserHelper? {
         return helpers[name]
     }
 }
@@ -351,17 +391,17 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
 extension WKWebView {
     func runScriptFunction(function: String, fromScript: String, callback: (AnyObject?) -> Void) {
         if let path = NSBundle.mainBundle().pathForResource(fromScript, ofType: "js") {
-            if let source = NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding, error: nil) as? String {
+            if let source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
                 evaluateJavaScript(source, completionHandler: { (obj, err) -> Void in
                     if let err = err {
-                        println("Error injecting \(err)")
+                        print("Error injecting \(err)")
                         return
                     }
 
                     self.evaluateJavaScript("__firefox__.\(fromScript).\(function)", completionHandler: { (obj, err) -> Void in
                         self.evaluateJavaScript("delete window.__firefox__.\(fromScript)", completionHandler: { (obj, err) -> Void in })
                         if let err = err {
-                            println("Error running \(err)")
+                            print("Error running \(err)")
                             return
                         }
                         callback(obj)

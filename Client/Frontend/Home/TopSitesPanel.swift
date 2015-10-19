@@ -18,11 +18,15 @@ extension UIView {
     }
 }
 
-class TopSitesPanel: UIViewController, WKNavigationDelegate {
+class TopSitesPanel: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
     weak var homePanelDelegate: HomePanelDelegate?
 
 	private lazy var freshtabView: WKWebView = {
-		let w = WKWebView()
+		var config = WKWebViewConfiguration()
+		let controller = WKUserContentController()
+		config.userContentController = controller
+		controller.addScriptMessageHandler(self, name: "freshtabCardSelected")
+		let w = WKWebView(frame: self.view.bounds, configuration: config)
 		w.navigationDelegate = self
 		return w
 	}()
@@ -63,18 +67,18 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 //        self.layout.setupForOrientation(UIView.viewOrientationForSize(size))
     }
 
-    override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.AllButUpsideDown
     }
 
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataCleared, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -84,12 +88,12 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 		self.freshtabView.snp_makeConstraints { make in
 			make.edges.equalTo(self.view)
 		}
-		var u = NSURL(string: "http://localhost:3000/freshtab/freshtab.html")
+		var u = NSURL(string: "http://localhost:3001/freshtab/freshtab.html")
 		let r = NSURLRequest(URL: u!)
 		self.freshtabView.loadRequest(r)
 
 		/*
-        var collection = TopSitesCollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        let collection = TopSitesCollectionView(frame: self.view.frame, collectionViewLayout: layout)
         collection.backgroundColor = UIConstants.PanelBackgroundColor
         collection.delegate = self
         collection.dataSource = dataSource
@@ -106,12 +110,12 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataCleared, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearedHistory, object: nil)
     }
     
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
-        case NotificationFirefoxAccountChanged, NotificationPrivateDataCleared:
+        case NotificationFirefoxAccountChanged, NotificationPrivateDataClearedHistory:
 //            refreshHistory(self.layout.thumbnailCount)
             break
         default:
@@ -120,9 +124,27 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
             break
         }
     }
+	
+	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+//		if let url = navigationAction.request.URL {
+//			if let host = url.host {
+//				if host.contains("localhost") {
+//					decisionHandler(WKNavigationActionPolicy.Allow)
+//				} else {
+//					let visitType = VisitType.Bookmark
+//					homePanelDelegate?.homePanel(self, didSelectURL: url, visitType: visitType)
+//					decisionHandler(WKNavigationActionPolicy.Cancel)
+//				}
+//				return
+//			}
+//		}
+		decisionHandler(WKNavigationActionPolicy.Allow)
+	}
 
 	func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-		if request.URL!.absoluteString != nil && request.URL!.absoluteString!.hasPrefix("http") {
+		if request.URL!.absoluteString.hasPrefix("http") {
+			let visitType = VisitType.Bookmark
+			homePanelDelegate?.homePanel(self, didSelectURL: request.URL!, visitType: visitType)
 //			delegate?.searchView(self, didSelectUrl: request.URL!)
 			return false
 		} else {
@@ -130,8 +152,19 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 		return true
 	}
 
+	func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+		if message.name == "freshtabCardSelected" {
+			let input = message.body as! NSDictionary
+			let url = input.objectForKey("url") as? String
+			if let u = NSURL(string: url!) {
+				let visitType = VisitType.Bookmark
+				homePanelDelegate?.homePanel(self, didSelectURL: u, visitType: visitType)
+			}
+		}
+	}
+
     //MARK: Private Helpers
-    private func updateDataSourceWithSites(result: Result<Cursor<Site>>) {
+    private func updateDataSourceWithSites(result: Maybe<Cursor<Site>>) {
         if let data = result.successValue {
 //            self.dataSource.data = data
 //            self.dataSource.profile = self.profile
@@ -176,7 +209,7 @@ class TopSitesPanel: UIViewController, WKNavigationDelegate {
 */
     }
 
-    private func deleteOrUpdateSites(result: Result<Cursor<Site>>, indexPath: NSIndexPath) {
+    private func deleteOrUpdateSites(result: Maybe<Cursor<Site>>, indexPath: NSIndexPath) {
 		/*
         if let data = result.successValue {
             let numOfThumbnails = self.layout.thumbnailCount
@@ -215,7 +248,8 @@ extension TopSitesPanel: UICollectionViewDelegate {
         if let site = dataSource[indexPath.item] {
             // We're gonna call Top Sites bookmarks for now.
             let visitType = VisitType.Bookmark
-            homePanelDelegate?.homePanel(self, didSelectURL: NSURL(string: site.url)!, visitType: visitType)
+            let destination = NSURL(string: site.url)?.domainURL() ?? NSURL(string: "about:blank")!
+            homePanelDelegate?.homePanel(self, didSelectURL: destination, visitType: visitType)
         }
 */
     }
@@ -251,7 +285,7 @@ extension TopSitesPanel: ThumbnailCellDelegate {
 }
 
 private class TopSitesCollectionView: UICollectionView {
-    private override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    private override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         // Hide the keyboard if this view is touched.
         window?.rootViewController?.view.endEditing(true)
         super.touchesBegan(touches, withEvent: event)
@@ -297,7 +331,7 @@ private class TopSitesLayout: UICollectionViewLayout {
         setupForOrientation(UIApplication.sharedApplication().statusBarOrientation)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -311,7 +345,7 @@ private class TopSitesLayout: UICollectionViewLayout {
         }
     }
 
-    private func getIndexAtPosition(#y: CGFloat) -> Int {
+    private func getIndexAtPosition(y: CGFloat) -> Int {
         if y < topSectionHeight {
             let row = Int(y / thumbnailHeight)
             return min(count - 1, max(0, row * thumbnailCols))
@@ -321,7 +355,6 @@ private class TopSitesLayout: UICollectionViewLayout {
 
     override func collectionViewContentSize() -> CGSize {
         if count <= thumbnailCount {
-            let row = floor(Double(count / thumbnailCols))
             return CGSize(width: width, height: topSectionHeight)
         }
 
@@ -336,13 +369,14 @@ private class TopSitesLayout: UICollectionViewLayout {
         for section in 0..<(self.collectionView?.numberOfSections() ?? 0) {
             for item in 0..<(self.collectionView?.numberOfItemsInSection(section) ?? 0) {
                 let indexPath = NSIndexPath(forItem: item, inSection: section)
-                layoutAttributes.append(self.layoutAttributesForItemAtIndexPath(indexPath))
+                guard let attrs = self.layoutAttributesForItemAtIndexPath(indexPath) else { continue }
+                layoutAttributes.append(attrs)
             }
         }
         self.layoutAttributes = layoutAttributes
     }
 
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
+    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attrs = [UICollectionViewLayoutAttributes]()
         if let layoutAttributes = self.layoutAttributes {
             for attr in layoutAttributes {
@@ -355,7 +389,7 @@ private class TopSitesLayout: UICollectionViewLayout {
         return attrs
     }
 
-    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
+    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
         let attr = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
 
         // Set the top thumbnail frames.
@@ -420,7 +454,21 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
     }
 
     private func createTileForSite(cell: ThumbnailCell, site: Site) -> ThumbnailCell {
-        cell.textLabel.text = site.title.isEmpty ? (NSURL(string: site.url)?.baseDomainAndPath() ?? site.url) : site.title
+
+        // We always want to show the domain URL, not the title.
+        //
+        // Eventually we can do something more sophisticated — e.g., if the site only consists of one
+        // history item, show it, and otherwise use the longest common sub-URL (and take its title
+        // if you visited that exact URL), etc. etc. — but not yet.
+        //
+        // The obvious solution here and in collectionView:didSelectItemAtIndexPath: is for the cursor
+        // to return domain sites, not history sites -- that is, with the right icon, title, and URL --
+        // and for this code to just use what it gets.
+        //
+        // Instead we'll painstakingly re-extract those things here.
+
+        let domainURL = NSURL(string: site.url)?.normalizedHost() ?? site.url
+        cell.textLabel.text = domainURL
         cell.imageWrapper.backgroundColor = UIColor.clearColor()
 
         // Resets used cell's background image so that it doesn't get recycled when a tile doesn't update its background image.
@@ -452,7 +500,7 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
     }
 
     private func createTileForSuggestedSite(cell: ThumbnailCell, site: SuggestedSite) -> ThumbnailCell {
-        cell.textLabel.text = site.title.isEmpty ? site.url : site.title
+        cell.textLabel.text = site.title.isEmpty ? NSURL(string: site.url)?.normalizedHostAndPath() : site.title
         cell.imageWrapper.backgroundColor = site.backgroundColor
         cell.backgroundImage.image = nil
 
