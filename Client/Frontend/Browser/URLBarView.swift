@@ -456,9 +456,12 @@ class URLBarView: UIView {
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
-        locationTextField.resignFirstResponder()
-        animateToOverlayState(overlayMode: false, didCancel: cancel)
+//		locationTextField.becomeFirstResponder()
+//		self.endEditing(true)
         delegate?.urlBarDidLeaveOverlayMode(self)
+		animateToOverlayState(overlayMode: false, didCancel: cancel)
+		locationTextField.resignFirstResponder()
+//		locationTextField.endEditing(true)
     }
 
     func prepareOverlayAnimation() {
@@ -536,6 +539,13 @@ class URLBarView: UIView {
             self.layoutIfNeeded()
         }, completion: { _ in
             self.updateViewsForOverlayModeAndToolbarChanges()
+			if self.locationTextField.hidden {
+				self.locationTextField.resignFirstResponder()
+				self.locationView.resignFirstResponder()
+//				self.locationTextField.enabled = false
+//				self.locationTextField.endEditing(true)
+//				self.locationView.endEditing(true)
+			}
         })
     }
 

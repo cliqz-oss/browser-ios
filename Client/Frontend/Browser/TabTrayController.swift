@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import WebKit
 
 struct TabTrayControllerUX {
     static let CornerRadius = CGFloat(4.0)
@@ -180,7 +181,159 @@ class TabCell: UICollectionViewCell {
     }
 }
 
-class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+//class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDelegateFlowLayout, WKNavigationDelegate, WKScriptMessageHandler {
+
+	var tabView: WKWebView!
+	var navBar: UIView!
+	var addTabButton: UIButton!
+	var profile: Profile!
+
+	@available(iOS 9, *)
+	lazy var addPrivateTabButton: UIButton = {
+		let button = UIButton()
+		button.setTitle("P", forState: .Normal)
+		button.addTarget(self, action: "SELdidClickAddPrivateTab", forControlEvents: .TouchUpInside)
+		button.accessibilityLabel = NSLocalizedString("Add Private Tab", comment: "Accessibility labe for the Add Private Tab button in the Tab Tray.")
+		return button
+		}()
+
+	var settingsButton: UIButton!
+	func webView(webView: WKWebView, didCommitNavigation navigation: WKNavigation!) {
+	}
+	
+	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+		if message.name == "onReady" {
+			self.tabView.evaluateJavaScript("window.main([{id:231,url:'www.google.com',img:'http://www.golem.de/1501/111943-94019-i_rc.jpg'},{id:232,url:'www.google.com',img:'http://www.golem.de/1501/111943-94019-i_rc.jpg'}]);", completionHandler: nil)
+		} else if message.name == "deleteTabs" {
+			let params = message.body as! NSDictionary
+			print("LIst: \(params)")
+			self.tabView.evaluateJavaScript("window.main([{id:231,url:'www.google.com',img:'http://www.golem.de/1501/111943-94019-i_rc.jpg'}]);", completionHandler: nil)
+		}
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		view.accessibilityLabel = NSLocalizedString("Tabs Tray", comment: "Accessibility label for the Tabs Tray view.")
+//		tabManager.addDelegate(self)
+		
+		navBar = UIView()
+		navBar.backgroundColor = TabTrayControllerUX.BackgroundColor
+		
+		let signInButton = UIButton(type: UIButtonType.Custom)
+		signInButton.addTarget(self, action: "SELdidClickDone", forControlEvents: UIControlEvents.TouchUpInside)
+		signInButton.setTitle(NSLocalizedString("Sign in", comment: "Button that leads to Sign in section of the Settings sheet."), forState: UIControlState.Normal)
+		signInButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		// workaround for VoiceOver bug - if we create the button with UIButton.buttonWithType,
+		// it gets initial frame with height 0 and accessibility somehow does not update the height
+		// later and thus the button becomes completely unavailable to VoiceOver unless we
+		// explicitly set the height to some (reasonable) non-zero value.
+		// Also note that setting accessibilityFrame instead of frame has no effect.
+		signInButton.frame.size.height = signInButton.intrinsicContentSize().height
+		
+		let navItem = UINavigationItem()
+		navItem.titleView = signInButton
+		signInButton.hidden = true //hiding sign in button until we decide on UX
+		
+		addTabButton = UIButton()
+		addTabButton.setImage(UIImage(named: "add"), forState: .Normal)
+		addTabButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: .TouchUpInside)
+		addTabButton.accessibilityLabel = NSLocalizedString("Add Tab", comment: "Accessibility label for the Add Tab button in the Tab Tray.")
+		
+		settingsButton = UIButton()
+		settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		settingsButton.addTarget(self, action: "SELdidClickSettingsItem", forControlEvents: .TouchUpInside)
+		settingsButton.accessibilityLabel = NSLocalizedString("Settings", comment: "Accessibility label for the Settings button in the Tab Tray.")
+		
+//		let flowLayout = TabTrayCollectionViewLayout()
+//		collectionView = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
+//		collectionView.dataSource = self
+//		collectionView.delegate = self
+//		collectionView.registerClass(TabCell.self, forCellWithReuseIdentifier: CellIdentifier)
+//		
+//		collectionView.backgroundColor = TabTrayControllerUX.BackgroundColor
+		
+//		view.addSubview(collectionView)
+		
+		let config = WKWebViewConfiguration()
+		let controller = WKUserContentController()
+		config.userContentController = controller
+		controller.addScriptMessageHandler(self, name: "onReady")
+		controller.addScriptMessageHandler(self, name: "deleteTabs")
+		self.tabView = WKWebView(frame: self.view.bounds, configuration: config)
+		self.tabView.navigationDelegate = self
+		let myFilePath = NSBundle.mainBundle().pathForResource("tab-mngt/tabs", ofType: "html")
+		var content: String?
+		do {
+			content = try String(contentsOfFile: myFilePath!, encoding: NSUTF8StringEncoding)
+			var x = NSBundle.mainBundle().bundlePath as String
+			x += "/tab-mngt/"
+			let baseUrl = NSURL(fileURLWithPath: x, isDirectory: true)
+			self.tabView.loadHTMLString(content!, baseURL: baseUrl)
+		} catch let error as NSError {
+			print("Invalid content: \(error)")
+		}
+		let data: [String: String] = [
+			"id": "1", "url": "https://www.google.de/search?q=&ie=utf-8&oe=utf-8", "img": ""]
+		var jsonStr = ""
+		do {
+			let json = try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
+			jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)! as String
+		} catch let error as NSError {
+			print("Json conversion is failed with error: \(error)")
+		}
+
+		view.addSubview(tabView)
+		view.addSubview(navBar)
+//		view.addSubview(addTabButton)
+		view.addSubview(settingsButton)
+		
+		makeConstraints()
+		
+		if #available(iOS 9, *) {
+			view.addSubview(addPrivateTabButton)
+			addPrivateTabButton.snp_makeConstraints { make in
+//				make.right.equalTo(addTabButton.snp_left).offset(-10)
+				make.right.equalTo(-10)
+				make.size.equalTo(UIConstants.ToolbarHeight)
+				make.centerY.equalTo(self.navBar)
+			}
+		}
+	}
+	
+	private func makeConstraints() {
+		let viewBindings: [String: AnyObject] = [
+			"topLayoutGuide" : topLayoutGuide,
+			"navBar" : navBar
+		]
+		
+		let topConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[topLayoutGuide][navBar]", options: [], metrics: nil, views: viewBindings)
+		view.addConstraints(topConstraints)
+		
+		navBar.snp_makeConstraints { make in
+			make.height.equalTo(UIConstants.ToolbarHeight)
+			make.left.right.equalTo(self.view)
+		}
+
+//		addTabButton.snp_makeConstraints { make in
+//			make.trailing.bottom.equalTo(self.navBar)
+//			make.size.equalTo(UIConstants.ToolbarHeight)
+//		}
+		
+		settingsButton.snp_makeConstraints { make in
+			make.leading.bottom.equalTo(self.navBar)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
+		
+		tabView.snp_makeConstraints { make in
+			make.top.equalTo(navBar.snp_bottom)
+			make.left.right.bottom.equalTo(self.view)
+		}
+	}
+
+	// ----------------
+	/*
     var tabManager: TabManager!
     private let CellIdentifier = "CellIdentifier"
     var collectionView: UICollectionView!
@@ -411,18 +564,27 @@ class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDel
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         collectionView.collectionViewLayout.invalidateLayout()
     }
+*/
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.Default
     }
 }
 
+/*
 extension TabTrayController: PresentingModalViewControllerDelegate {
     func dismissPresentedModalViewController(modalViewController: UIViewController, animated: Bool) {
         dismissViewControllerAnimated(animated, completion: { self.collectionView.reloadData() })
     }
+}*/
+
+extension TabTrayController: PresentingModalViewControllerDelegate {
+	func dismissPresentedModalViewController(modalViewController: UIViewController, animated: Bool) {
+		dismissViewControllerAnimated(animated, completion: nil)
+	}
 }
 
+/*
 extension TabTrayController: SwipeAnimatorDelegate {
     func swipeAnimator(animator: SwipeAnimator, viewDidExitContainerBounds: UIView) {
         let tabCell = animator.container as! TabCell
@@ -434,7 +596,9 @@ extension TabTrayController: SwipeAnimatorDelegate {
         }
     }
 }
+*/
 
+/*
 extension TabTrayController: TabManagerDelegate {
     func tabManager(tabManager: TabManager, didSelectedTabChange selected: Browser?, previous: Browser?) {
         // Our UI doesn't care about what's selected
@@ -477,6 +641,7 @@ extension TabTrayController: TabCellDelegate {
         }
     }
 }
+
 
 extension TabTrayController: UIScrollViewAccessibilityDelegate {
     func accessibilityScrollStatusForScrollView(scrollView: UIScrollView) -> String? {
@@ -525,6 +690,7 @@ private class TabTrayCollectionViewLayout: UICollectionViewFlowLayout {
         return calculatedSize
     }
 }
+*/
 
 // A transparent view with a rectangular border with rounded corners, stroked
 // with a semi-transparent white border.

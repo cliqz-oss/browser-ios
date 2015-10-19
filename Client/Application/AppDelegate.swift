@@ -9,8 +9,17 @@ import XCGLogger
 import Breakpad
 import Fabric
 import Crashlytics
+//import Lookback
 
 private let log = Logger.browserLogger
+
+extension UINavigationController {
+
+	public override func disablesAutomaticKeyboardDismissal() -> Bool {
+		return false
+	}
+
+}
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -81,8 +90,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 		
+		// Enable location manager
 		LocationManager.sharedLocationManager.startUpdateingLocation()
+		
+		// Setup crash reporter
 		Fabric.with([Crashlytics.self()])
+		
+		// Setup feedback framework
+		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		Lookback.sharedLookback().shakeToRecord = true
+		Lookback.sharedLookback().feedbackBubbleVisible = true
+//		Lookback_Weak.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		
         return true
     }
 

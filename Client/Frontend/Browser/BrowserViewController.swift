@@ -42,7 +42,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     
     private var statusBarOverlay: UIView!
     private var toolbar: BrowserToolbar?
-    private var searchController: BrowserViewController2?
+    private var searchController: CliqzSearchViewController?
     private let uriFixup = URIFixup()
     private var screenshotHelper: ScreenshotHelper!
     private var homePanelIsInline = false
@@ -343,8 +343,25 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         }
     }
 
-	func searchView(SearchViewController: BrowserViewController2, didSelectUrl url: NSURL) {
+	func findFirstResponder (w: UIView) -> UIView? {
+//		let w = UIApplication.sharedApplication().delegate?.window!!
+		if w.isFirstResponder() {
+			return w
+		} else {
+		for v in w.subviews {
+			if v.isFirstResponder() {
+				return v
+			} else {
+				return findFirstResponder(v)
+			}
+		}
+		}
+		return nil;
+	}
+
+	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
 		finishEditingAndSubmit(url, visitType: .Link)
+		hideSearchController()
 //		self.urlBar.updateURLBarText(url)
 //		self.urlBarDidEndEditing(self.urlBar)
 	}
@@ -401,7 +418,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+		print ("Helllooooo")
         // On iPhone, if we are about to show the On-Boarding, blank out the browser so that it does
         // not flash before we present. This change of alpha also participates in the animation when
         // the intro view is dismissed.
@@ -444,6 +461,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         if !presentIntroViewController() {
             loadQueuedTabs()
         }
+		self.urlBar.enterOverlayMode("", pasted: false)
+		showSearchController()
         super.viewDidAppear(animated)
     }
 
@@ -614,7 +633,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
             return
         }
 
-		searchController = BrowserViewController2()
+		searchController = CliqzSearchViewController()
 		searchController!.delegate = self
 		view.addSubview(searchController!.view)
 		let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(searchController!.view) ?? 0
@@ -653,8 +672,13 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 */
     }
 
+	override func disablesAutomaticKeyboardDismissal() -> Bool {
+		return false
+	}
+
     private func hideSearchController() {
         if let searchController = searchController {
+//			searchController.view.endEditing(true)
             searchController.willMoveToParentViewController(nil)
             searchController.view.removeFromSuperview()
             searchController.removeFromParentViewController()
@@ -663,6 +687,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         }
     }
 
+
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
@@ -670,7 +695,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         if let tab = tabManager.selectedTab,
            let nav = tab.loadRequest(NSURLRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
-        }
+		}
+//		UIApplication.sharedApplication().sendAction(Selector("resignFirstResponder"), to: nil, from: nil, forEvent: nil)
     }
 
     func addBookmark(url: String, title: String?) {
@@ -876,7 +902,7 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidPressTabs(urlBar: URLBarView) {
         let tabTrayController = TabTrayController()
         tabTrayController.profile = profile
-        tabTrayController.tabManager = tabManager
+//        tabTrayController.tabManager = tabManager
 
         if let tab = tabManager.selectedTab {
             tab.setScreenshot(screenshotHelper.takeScreenshot(tab, aspectRatio: 0, quality: 1))
@@ -964,9 +990,9 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
 
         if text.isEmpty {
-            hideSearchController()
+//            hideSearchController()
         } else {
-            showSearchController()
+//            showSearchController()
             searchController!.searchQuery = text
         }
 		searchLoader.query = text
@@ -994,7 +1020,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
-        hideSearchController()
+//        hideSearchController()
         updateInContentHomePanel(tabManager.selectedTab?.url)
     }
 }

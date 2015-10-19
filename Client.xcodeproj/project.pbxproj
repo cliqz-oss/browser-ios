@@ -287,11 +287,12 @@
 		39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; };
 		39A362DA1AAF5ECE00F47390 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
+		4F410A921BD4DCD000A3B30B /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F410A911BD4DCCF00A3B30B /* CliqzSearchViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		4F50E8631B984791008BF4B8 /* freshtab in Resources */ = {isa = PBXBuildFile; fileRef = 4F50E8621B984791008BF4B8 /* freshtab */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
-		4F5898251B5F94220076DE6A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5898241B5F94220076DE6A /* WebViewController.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
+		4FAA861D1BCE96BA0079DBE6 /* tab-mngt in Resources */ = {isa = PBXBuildFile; fileRef = 4FAA861C1BCE96BA0079DBE6 /* tab-mngt */; settings = {ASSET_TAGS = (); }; };
 		4FBEBC2A1B90980E00464BE8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBEBC291B90980D00464BE8 /* CoreLocation.framework */; };
 		4FBEBC2C1B90AFF600464BE8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBEBC2B1B90AFF500464BE8 /* LocationManager.swift */; };
 		4FBF69D31B8370BA00039862 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBF69D21B8370BA00039862 /* BrowserViewController.swift */; };
@@ -305,6 +306,17 @@
 		4FDC2E9F1B68BCBE001803EC /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDC2E981B68BCBE001803EC /* Socket.swift */; };
 		4FE4BB481BBE730300915F7A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB471BBE730300915F7A /* MessageUI.framework */; };
 		4FE4BB4A1BBE904A00915F7A /* navigation in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4BB491BBE904A00915F7A /* navigation */; settings = {ASSET_TAGS = (); }; };
+		4FE4BB5C1BC3F43F00915F7A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB5B1BC3F43F00915F7A /* AudioToolbox.framework */; };
+		4FE4BB5E1BC3F44800915F7A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB5D1BC3F44800915F7A /* AVFoundation.framework */; };
+		4FE4BB601BC3F45300915F7A /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB5F1BC3F45300915F7A /* CoreImage.framework */; };
+		4FE4BB621BC3F45E00915F7A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB611BC3F45E00915F7A /* CoreMedia.framework */; };
+		4FE4BB641BC3F46A00915F7A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB631BC3F46A00915F7A /* CoreVideo.framework */; };
+		4FE4BB661BC3F48100915F7A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB651BC3F48100915F7A /* MediaPlayer.framework */; };
+		4FE4BB681BC3F49800915F7A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB671BC3F49800915F7A /* MobileCoreServices.framework */; };
+		4FE4BB6A1BC3F4A300915F7A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB691BC3F4A300915F7A /* QuartzCore.framework */; };
+		4FE4BB6C1BC3F4AD00915F7A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB6B1BC3F4AC00915F7A /* SystemConfiguration.framework */; };
+		4FE4BB6E1BC3F4B900915F7A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE4BB6D1BC3F4B900915F7A /* VideoToolbox.framework */; };
+		4FE4BB761BC5398500915F7A /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4BB751BC5398500915F7A /* Lookback.bundle */; settings = {ASSET_TAGS = (); }; };
 		4FF29AA71BB2E104008662E4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF29AA51BB2E104008662E4 /* Fabric.framework */; settings = {ASSET_TAGS = (); }; };
 		4FF29AA81BB2E104008662E4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FF29AA61BB2E104008662E4 /* Crashlytics.framework */; settings = {ASSET_TAGS = (); }; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
@@ -1461,12 +1473,13 @@
 		2FFC4D371ABE3C420081D675 /* FxAStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxAStateTests.swift; sourceTree = "<group>"; };
 		39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/XCGLogger/Library/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
+		4F410A911BD4DCCF00A3B30B /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
 		4F50E8621B984791008BF4B8 /* freshtab */ = {isa = PBXFileReference; lastKnownFileType = folder; name = freshtab; path = "../fresh-tab/dist/iOS/freshtab"; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
-		4F5898241B5F94220076DE6A /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
-		4F9062591BAAEC4900906143 /* Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Client-Bridging-Header.h"; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
+		4FAA86101BCBD7620079DBE6 /* Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Client-Bridging-Header.h"; sourceTree = "<group>"; };
+		4FAA861C1BCE96BA0079DBE6 /* tab-mngt */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tab-mngt"; path = "../mobile-tab-manager/build/ios/tab-mngt"; sourceTree = "<group>"; };
 		4FBEBC291B90980D00464BE8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4FBEBC2B1B90AFF500464BE8 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		4FBF69D21B8370BA00039862 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
@@ -1480,6 +1493,18 @@
 		4FDC2E981B68BCBE001803EC /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		4FE4BB471BBE730300915F7A /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4FE4BB491BBE904A00915F7A /* navigation */ = {isa = PBXFileReference; lastKnownFileType = folder; name = navigation; path = "../stefan-nav-ext/navigation-extension/build/dev/androidkit/navigation"; sourceTree = "<group>"; };
+		4FE4BB5B1BC3F43F00915F7A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4FE4BB5D1BC3F44800915F7A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4FE4BB5F1BC3F45300915F7A /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		4FE4BB611BC3F45E00915F7A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4FE4BB631BC3F46A00915F7A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		4FE4BB651BC3F48100915F7A /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4FE4BB671BC3F49800915F7A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		4FE4BB691BC3F4A300915F7A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4FE4BB6B1BC3F4AC00915F7A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4FE4BB6D1BC3F4B900915F7A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		4FE4BB751BC5398500915F7A /* Lookback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Lookback.bundle; sourceTree = "<group>"; };
+		4FE4BB771BC53A2200915F7A /* Lookback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lookback.framework; path = lookback/Safe/Lookback.framework; sourceTree = "<group>"; };
 		4FF29AA51BB2E104008662E4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4FF29AA61BB2E104008662E4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
@@ -1767,7 +1792,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FE4BB6E1BC3F4B900915F7A /* VideoToolbox.framework in Frameworks */,
+				4FE4BB6C1BC3F4AD00915F7A /* SystemConfiguration.framework in Frameworks */,
+				4FE4BB6A1BC3F4A300915F7A /* QuartzCore.framework in Frameworks */,
+				4FE4BB681BC3F49800915F7A /* MobileCoreServices.framework in Frameworks */,
 				4FE4BB481BBE730300915F7A /* MessageUI.framework in Frameworks */,
+				4FE4BB661BC3F48100915F7A /* MediaPlayer.framework in Frameworks */,
+				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
+				4FE4BB641BC3F46A00915F7A /* CoreVideo.framework in Frameworks */,
+				4FE4BB621BC3F45E00915F7A /* CoreMedia.framework in Frameworks */,
+				4FE4BB601BC3F45300915F7A /* CoreImage.framework in Frameworks */,
+				4FE4BB5E1BC3F44800915F7A /* AVFoundation.framework in Frameworks */,
+				4FE4BB5C1BC3F43F00915F7A /* AudioToolbox.framework in Frameworks */,
 				4FBEBC2A1B90980E00464BE8 /* CoreLocation.framework in Frameworks */,
 				E60961811B62B62600DD640F /* (null) in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
@@ -1781,7 +1817,6 @@
 				4FF29AA81BB2E104008662E4 /* Crashlytics.framework in Frameworks */,
 				2FA436121ABB83B4008031D1 /* Account.framework in Frameworks */,
 				E4D5672F1ADECE2800F1EFE7 /* ReadingList.framework in Frameworks */,
-				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
 				39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */,
 				4FF29AA71BB2E104008662E4 /* Fabric.framework in Frameworks */,
@@ -2357,6 +2392,15 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		4FE4BB741BC5398500915F7A /* Lookback-Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FE4BB751BC5398500915F7A /* Lookback.bundle */,
+			);
+			name = "Lookback-Resources";
+			path = "lookback/Lookback-Resources";
+			sourceTree = "<group>";
+		};
 		D31FC22A1A8D908800BAF7EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -2518,6 +2562,7 @@
 		D3A994941A368691008AD1AC /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				4F410A911BD4DCCF00A3B30B /* CliqzSearchViewController.swift */,
 				4FBF69D21B8370BA00039862 /* BrowserViewController.swift */,
 				0B3E7D931B27A7CE00E2E84D /* AboutHomeHandler.swift */,
 				0AE491A51A41C88C0046C724 /* BackForwardListViewController.swift */,
@@ -2786,11 +2831,24 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4FAA861C1BCE96BA0079DBE6 /* tab-mngt */,
+				4FAA86101BCBD7620079DBE6 /* Client-Bridging-Header.h */,
+				4FE4BB771BC53A2200915F7A /* Lookback.framework */,
+				4FE4BB741BC5398500915F7A /* Lookback-Resources */,
+				4FE4BB6D1BC3F4B900915F7A /* VideoToolbox.framework */,
+				4FE4BB6B1BC3F4AC00915F7A /* SystemConfiguration.framework */,
+				4FE4BB691BC3F4A300915F7A /* QuartzCore.framework */,
+				4FE4BB671BC3F49800915F7A /* MobileCoreServices.framework */,
+				4FE4BB651BC3F48100915F7A /* MediaPlayer.framework */,
+				4FE4BB631BC3F46A00915F7A /* CoreVideo.framework */,
+				4FE4BB611BC3F45E00915F7A /* CoreMedia.framework */,
+				4FE4BB5F1BC3F45300915F7A /* CoreImage.framework */,
+				4FE4BB5D1BC3F44800915F7A /* AVFoundation.framework */,
+				4FE4BB5B1BC3F43F00915F7A /* AudioToolbox.framework */,
 				4FE4BB491BBE904A00915F7A /* navigation */,
 				4FE4BB471BBE730300915F7A /* MessageUI.framework */,
 				4FF29AA51BB2E104008662E4 /* Fabric.framework */,
 				4FF29AA61BB2E104008662E4 /* Crashlytics.framework */,
-				4F9062591BAAEC4900906143 /* Client-Bridging-Header.h */,
 				4F50E8621B984791008BF4B8 /* freshtab */,
 				D39FA16B1A83E17800EE869C /* CoreGraphics.framework */,
 				0B8E0FF31A932BD500161DC3 /* ImageIO.framework */,
@@ -2908,7 +2966,6 @@
 			isa = PBXGroup;
 			children = (
 				4FBF69D41B83713400039862 /* CrashReporter.swift */,
-				4F5898241B5F94220076DE6A /* WebViewController.swift */,
 				F84B21E51A0910F600AAB793 /* AppDelegate.swift */,
 				E40FAB0B1A7ABB77009CB80D /* WebServer.swift */,
 				E4D6BEB81A0930EC00F538BD /* LaunchScreen.xib */,
@@ -3998,6 +4055,7 @@
 			files = (
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
+				4FAA861D1BCE96BA0079DBE6 /* tab-mngt in Resources */,
 				4F50E8631B984791008BF4B8 /* freshtab in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
@@ -4014,6 +4072,7 @@
 				D32075391B017DA400CA1CD2 /* SearchPlugins in Resources */,
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
 				746B6A791B277C1800EA83E3 /* SessionRestore.html in Resources */,
+				4FE4BB761BC5398500915F7A /* Lookback.bundle in Resources */,
 				2F44FB2C1A9D5D8500FD20CC /* Home.xcassets in Resources */,
 				E4ECCD8D1AB091470005E717 /* Reader.xcassets in Resources */,
 				E69922161B94E3EF007C480D /* brand.dtd in Resources */,
@@ -4504,7 +4563,6 @@
 				2F44FCC71A9E8CF500FD20CC /* SearchSettingsTableViewController.swift in Sources */,
 				0BF42D371A7C0B8E00889E28 /* FaviconManager.swift in Sources */,
 				6BB2FD981B017DAB001A189B /* AuralProgressBar.swift in Sources */,
-				4F5898251B5F94220076DE6A /* WebViewController.swift in Sources */,
 				D38B2D341A8D96D00040E6B5 /* GCDWebServerFunctions.m in Sources */,
 				E698FFDA1B4AADF40001F623 /* BrowserScrollController.swift in Sources */,
 				D34510881ACF415700EC27F0 /* SearchLoader.swift in Sources */,
@@ -4538,6 +4596,7 @@
 				D34DC8531A16C40C00D49B7B /* Profile.swift in Sources */,
 				4FDC2E9F1B68BCBE001803EC /* Socket.swift in Sources */,
 				D38B2D3A1A8D96D00040E6B5 /* GCDWebServerResponse.m in Sources */,
+				4F410A921BD4DCD000A3B30B /* CliqzSearchViewController.swift in Sources */,
 				D3FEC38D1AC4B42F00494F45 /* AutocompleteTextField.swift in Sources */,
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
@@ -5869,7 +5928,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_NIGHTLY";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -5881,26 +5940,32 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/lookback/Safe/**",
+					"$(PROJECT_DIR)/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/lookback/Safe/Lookback.framework/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk;
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "8569d991-f0c3-429a-8814-102e9c02409a";
+				PROVISIONING_PROFILE = "ec2d9d61-f78f-44b0-8929-7e1dfa0c73c2";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5925,8 +5990,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
@@ -5936,7 +6001,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.shareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -5948,8 +6013,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
@@ -5958,7 +6023,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.sendto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -6023,7 +6088,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -6035,26 +6100,32 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/lookback/Safe/**",
+					"$(PROJECT_DIR)/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/lookback/Safe/Lookback.framework/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = Firefox;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk;
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "8569d991-f0c3-429a-8814-102e9c02409a";
+				PROVISIONING_PROFILE = "ec2d9d61-f78f-44b0-8929-7e1dfa0c73c2";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6081,8 +6152,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -6094,7 +6165,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.shareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6107,8 +6178,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -6119,7 +6190,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.sendto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6588,8 +6659,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
@@ -6604,7 +6675,7 @@
 				MOZ_PRODUCT_NAME = Cliqzmunk;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.viewlater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -6631,8 +6702,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6654,7 +6725,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.viewlater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6683,8 +6754,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6706,7 +6777,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.viewlater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6735,8 +6806,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
@@ -6758,7 +6829,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.viewlater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7218,7 +7289,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_DEBUG";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -7273,7 +7344,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_AURORA";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -7285,27 +7356,33 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/lookback/Safe/**",
+					"$(PROJECT_DIR)/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/lookback/Safe/Lookback.framework/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = Cliqzmunk;
 				MOZ_PRODUCT_NAME = Cliqzmunk;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk;
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "8569d991-f0c3-429a-8814-102e9c02409a";
+				PROVISIONING_PROFILE = "ec2d9d61-f78f-44b0-8929-7e1dfa0c73c2";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7317,26 +7394,32 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/lookback/Safe/**",
+					"$(PROJECT_DIR)/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/lookback/Safe/Lookback.framework/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = FennecAurora;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk;
 				PRODUCT_MODULE_NAME = Cliqzmunk;
 				PRODUCT_NAME = Cliqzmunk;
-				PROVISIONING_PROFILE = "8569d991-f0c3-429a-8814-102e9c02409a";
+				PROVISIONING_PROFILE = "ec2d9d61-f78f-44b0-8929-7e1dfa0c73c2";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7378,8 +7461,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -7394,7 +7477,7 @@
 				MOZ_PRODUCT_NAME = cliqzmunk;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.shareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7405,8 +7488,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -7417,7 +7500,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.shareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7429,8 +7512,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -7444,7 +7527,7 @@
 				MOZ_PRODUCT_NAME = Cliqzmunk;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.sendto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7456,8 +7539,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -7467,7 +7550,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqzmunk.sendto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
+				PROVISIONING_PROFILE = "91b97e45-a9ed-434d-8b2a-19c8284f84dd";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

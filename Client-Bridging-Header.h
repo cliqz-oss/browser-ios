@@ -3,6 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCrypto.h>
+#import <UIKit/UIKit.h>
 
 #import "FSReadingList.h"
 #import "Try.h"
@@ -15,5 +16,6 @@
 #import "Carthage/Checkouts/SDWebImage/SDWebImage/UIView+WebCacheOperation.h"
 #import "Carthage/Checkouts/SWTableViewCell/SWTableViewCell/PodFiles/SWTableViewCell.h"
 #import "Carthage/Checkouts/RaptureXML/RaptureXML/RXMLElement.h"
+#import "Lookback/Lookback.h"
 
 #endif
