@@ -86,7 +86,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         }
 
         buttonContainerBottomBorderView.snp_makeConstraints { make in
-            make.top.equalTo(self.buttonContainerView.snp_bottom).offset(-1)
+			make.top.equalTo(self.buttonContainerView.snp_bottom).offset(-1)
             make.left.right.bottom.equalTo(self.buttonContainerView)
         }
 

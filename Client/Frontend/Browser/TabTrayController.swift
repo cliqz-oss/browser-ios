@@ -184,6 +184,8 @@ class TabCell: UICollectionViewCell {
 //class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDelegateFlowLayout, WKNavigationDelegate, WKScriptMessageHandler {
 
+	var tabManager: TabManager!
+
 	var tabView: WKWebView!
 	var navBar: UIView!
 	var addTabButton: UIButton!
@@ -286,7 +288,7 @@ class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDel
 
 		view.addSubview(tabView)
 		view.addSubview(navBar)
-//		view.addSubview(addTabButton)
+		view.addSubview(addTabButton)
 		view.addSubview(settingsButton)
 		
 		makeConstraints()
@@ -294,8 +296,8 @@ class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDel
 		if #available(iOS 9, *) {
 			view.addSubview(addPrivateTabButton)
 			addPrivateTabButton.snp_makeConstraints { make in
-//				make.right.equalTo(addTabButton.snp_left).offset(-10)
-				make.right.equalTo(-10)
+				make.right.equalTo(addTabButton.snp_left).offset(-10)
+//				make.right.equalTo(-10)
 				make.size.equalTo(UIConstants.ToolbarHeight)
 				make.centerY.equalTo(self.navBar)
 			}
@@ -316,10 +318,10 @@ class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDel
 			make.left.right.equalTo(self.view)
 		}
 
-//		addTabButton.snp_makeConstraints { make in
-//			make.trailing.bottom.equalTo(self.navBar)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
-//		}
+		addTabButton.snp_makeConstraints { make in
+			make.trailing.bottom.equalTo(self.navBar)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
 		
 		settingsButton.snp_makeConstraints { make in
 			make.leading.bottom.equalTo(self.navBar)
@@ -330,6 +332,23 @@ class TabTrayController: UIViewController, UITabBarDelegate, UICollectionViewDel
 			make.top.equalTo(navBar.snp_bottom)
 			make.left.right.bottom.equalTo(self.view)
 		}
+	}
+
+	func SELdidClickAddTab() {
+		// We're only doing one update here, but using a batch update lets us delay selecting the tab
+		// until after its insert animation finishes.
+		let tab = self.tabManager.addTab()
+		self.tabManager.selectTab(tab)
+		self.navigationController?.popViewControllerAnimated(true)
+
+//		self.collectionView.performBatchUpdates({ _ in
+//			let tab = self.tabManager.addTab()
+//			self.tabManager.selectTab(tab)
+//			}, completion: { finished in
+//				if finished {
+//					self.navigationController?.popViewControllerAnimated(true)
+//				}
+//		})
 	}
 
 	// ----------------

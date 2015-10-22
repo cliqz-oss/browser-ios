@@ -137,7 +137,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if request.URL!.absoluteString.hasPrefix("http") {
 			delegate?.searchView(self, didSelectUrl: request.URL!)
 //			self.webView?.evaluateJavaScript("urlbar.blur();", completionHandler: nil)
-//			self.webView?.evaluateJavaScript("cliqz-results.focus(); alert('MMMM');", completionHandler: nil)
+//			self.webView?.evaluateJavaScript("cliqz-results.focus(); alert('MMMM');", completionHandler: 	nil)
 			return false
 			
 		} else {

@@ -343,22 +343,6 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         }
     }
 
-	func findFirstResponder (w: UIView) -> UIView? {
-//		let w = UIApplication.sharedApplication().delegate?.window!!
-		if w.isFirstResponder() {
-			return w
-		} else {
-		for v in w.subviews {
-			if v.isFirstResponder() {
-				return v
-			} else {
-				return findFirstResponder(v)
-			}
-		}
-		}
-		return nil;
-	}
-
 	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
 		finishEditingAndSubmit(url, visitType: .Link)
 		hideSearchController()
@@ -418,7 +402,6 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-		print ("Helllooooo")
         // On iPhone, if we are about to show the On-Boarding, blank out the browser so that it does
         // not flash before we present. This change of alpha also participates in the animation when
         // the intro view is dismissed.
@@ -461,8 +444,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         if !presentIntroViewController() {
             loadQueuedTabs()
         }
-		self.urlBar.enterOverlayMode("", pasted: false)
-		showSearchController()
+//		self.urlBar.enterOverlayMode("", pasted: false)
+//		showSearchController()
         super.viewDidAppear(animated)
     }
 
@@ -902,7 +885,7 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidPressTabs(urlBar: URLBarView) {
         let tabTrayController = TabTrayController()
         tabTrayController.profile = profile
-//        tabTrayController.tabManager = tabManager
+        tabTrayController.tabManager = tabManager
 
         if let tab = tabManager.selectedTab {
             tab.setScreenshot(screenshotHelper.takeScreenshot(tab, aspectRatio: 0, quality: 1))
@@ -990,12 +973,12 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
 
         if text.isEmpty {
-//            hideSearchController()
+            hideSearchController()
         } else {
-//            showSearchController()
+            showSearchController()
             searchController!.searchQuery = text
         }
-		searchLoader.query = text
+//		searchLoader.query = text
     }
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
@@ -1020,7 +1003,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
-//        hideSearchController()
+        hideSearchController()
         updateInContentHomePanel(tabManager.selectedTab?.url)
     }
 }
