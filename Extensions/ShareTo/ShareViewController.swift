@@ -28,7 +28,7 @@ protocol ShareControllerDelegate {
 private struct ShareDialogControllerUX {
     static let CornerRadius: CGFloat = 4                                                            // Corner radius of the dialog
 
-    static let NavigationBarTintColor = UIColor.blueColor() //UIColor(rgb: 0xf37c00)                                      // Tint color changes the text color in the navigation bar
+    static let NavigationBarTintColor = UIColor(rgb: 0xf37c00)                                      // Tint color changes the text color in the navigation bar
     static let NavigationBarCancelButtonFont = UIFont.systemFontOfSize(UIFont.buttonFontSize())     // System default
     static let NavigationBarAddButtonFont = UIFont.boldSystemFontOfSize(UIFont.buttonFontSize())    // System default
     static let NavigationBarIconSize = 38                                                           // Width and height of the icon
@@ -89,7 +89,7 @@ class ShareDialogController: UIViewController, UITableViewDataSource, UITableVie
         // Setup the NavigationItem
 
         navItem = UINavigationItem()
-        navItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel button title in share dialog"), style: .Plain, target: self, action: "cancel")
+        navItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancel")
         navItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: ShareDialogControllerUX.NavigationBarCancelButtonFont], forState: UIControlState.Normal)
 
         navItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Add", tableName: "ShareTo", comment: "Add button in the share dialog"), style: UIBarButtonItemStyle.Done, target: self, action: "add")

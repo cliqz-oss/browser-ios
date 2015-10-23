@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-               BuildableName = "Cliqzmunk.app"
+               BuildableName = "Client.app"
                BlueprintName = "Client"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
@@ -161,7 +161,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "Cliqzmunk.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
@@ -184,7 +184,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "Cliqzmunk.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
@@ -203,7 +203,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "Cliqzmunk.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
@@ -215,23 +215,5 @@
    <ArchiveAction
       buildConfiguration = "FennecAurora"
       revealArchiveInOrganizer = "YES">
-      <PostActions>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "echo &quot;Generating Breakpad symbols...&quot;&#10;${PROJECT_DIR}/scripts/generate-breakpad-symbols.sh">
-               <EnvironmentBuildable>
-                  <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-                     BuildableName = "Cliqzmunk.app"
-                     BlueprintName = "Client"
-                     ReferencedContainer = "container:Client.xcodeproj">
-                  </BuildableReference>
-               </EnvironmentBuildable>
-            </ActionContent>
-         </ExecutionAction>
-      </PostActions>
    </ArchiveAction>
 </Scheme>

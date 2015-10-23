@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "cliqz-symbol_splashscreen@0.5x.png"
+      "filename" : "tonefox-1.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "cliqz-symbol_splashscreen@1x-2.png"
+      "filename" : "tonefox.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "cliqz-symbol_splashscreen@2x.png"
+      "filename" : "tonefox-2.png"
     }
   ],
   "info" : {

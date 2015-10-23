@@ -2,18 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "cliqz-symbol@1x-2.png",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "mozLogo.png"
     },
     {
       "idiom" : "universal",
-      "filename" : "cliqz-symbol@2x-2.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "mozLogo@2x.png"
     },
     {
       "idiom" : "universal",
-      "filename" : "cliqz-symbol@3x-2.png",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "mozLogo@3x.png"
     }
   ],
   "info" : {

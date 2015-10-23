@@ -62,9 +62,9 @@ function createHighlightOverlay(element) {
 
     highlightDiv.appendChild(rectDiv);
   }
- }
+}
 
-var handleTouchMove = function (event) {
+function handleTouchMove(event) {
   if (longPressTimeout) {
        var { screenX, screenY } = event.touches[0];
         // Cancel the context menu if finger has moved beyond the maximum allowed distance.
@@ -72,9 +72,9 @@ var handleTouchMove = function (event) {
          cancel();
       }
    }
- }
+}
 
-var handleTouchEnd = function (event) {
+function handleTouchEnd(event) {
   cancel();
 
   removeEventListener("touchend", handleTouchEnd);
@@ -137,9 +137,13 @@ addEventListener("touchstart", function (event) {
       cancel();
       webkit.messageHandlers.contextMenuMessageHandler.postMessage(data);
     }, 500);
+
+    webkit.messageHandlers.contextMenuMessageHandler.postMessage({ handled: true });
   }
 }, true);
 
+// If the user touches down and moves enough to make the page scroll, cancel the
+// context menu handlers.
 addEventListener("scroll", cancel);
 
 }) ();

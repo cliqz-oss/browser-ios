@@ -23,6 +23,12 @@ public class MockSyncManager: SyncManager {
 
     public func beginTimedSyncs() {}
     public func endTimedSyncs() {}
+    public func applicationDidBecomeActive() {
+        self.beginTimedSyncs()
+    }
+    public func applicationDidEnterBackground() {
+        self.endTimedSyncs()
+    }
 
     public func onAddedAccount() -> Success {
         return succeed()
@@ -69,7 +75,7 @@ public class MockProfile: Profile {
      * Favicons, history, and bookmarks are all stored in one intermeshed
      * collection of tables.
      */
-    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory> = {
+    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage> = {
         return SQLiteHistory(db: self.db)!
     }()
 
@@ -81,7 +87,7 @@ public class MockProfile: Profile {
         return MockTabQueue()
     }()
 
-    var history: protocol<BrowserHistory, SyncableHistory> {
+    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage> {
         return self.places
     }
 
@@ -89,7 +95,7 @@ public class MockProfile: Profile {
         return MockSyncManager()
     }()
 
-    lazy var bookmarks: protocol<BookmarksModelFactory, ShareToDestination> = {
+    lazy var bookmarks: protocol<BookmarksModelFactory, ShareToDestination, ResettableSyncStorage, AccountRemovalDelegate> = {
         // Make sure the rest of our tables are initialized before we try to read them!
         // This expression is for side-effects only.
         let p = self.places
@@ -113,7 +119,7 @@ public class MockProfile: Profile {
         return ReadingListService(profileStoragePath: self.files.rootPath as String)
     }()
 
-    private lazy var remoteClientsAndTabs: RemoteClientsAndTabs = {
+    internal lazy var remoteClientsAndTabs: RemoteClientsAndTabs = {
         return SQLiteRemoteClientsAndTabs(db: self.db)
     }()
 
@@ -121,7 +127,7 @@ public class MockProfile: Profile {
         return SQLiteRemoteClientsAndTabs(db: self.db)
     }()
 
-    lazy var logins: protocol<BrowserLogins, SyncableLogins> = {
+    lazy var logins: protocol<BrowserLogins, SyncableLogins, ResettableSyncStorage> = {
         return MockLogins(files: self.files)
     }()
 

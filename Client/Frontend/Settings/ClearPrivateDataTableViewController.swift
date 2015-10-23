@@ -10,6 +10,7 @@ private let SectionButton = 1
 private let NumberOfSections = 2
 private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
 private let HeaderHeight: CGFloat = 44
+private let TogglesPrefKey = "clearprivatedata.toggles"
 
 class ClearPrivateDataTableViewController: UITableViewController {
     private var clearButton: UITableViewCell?
@@ -28,13 +29,23 @@ class ClearPrivateDataTableViewController: UITableViewController {
     }()
 
     private lazy var toggles: [Bool] = {
+        if let savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
+            return savedToggles
+        }
+
         return [Bool](count: self.clearables.count, repeatedValue: true)
     }()
+
+    private var clearButtonEnabled = true {
+        didSet {
+            clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.DestructiveRed : UIColor.lightGrayColor()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = NSLocalizedString("Clear Private Data", comment: "Navigation title for clearing private data.")
+        title = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Navigation title in settings.")
 
         tableView.registerClass(SettingsTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderIdentifier)
 
@@ -52,15 +63,16 @@ class ClearPrivateDataTableViewController: UITableViewController {
             let control = UISwitch()
             control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
-            control.on = true
+            control.on = toggles[indexPath.item]
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
         } else {
             assert(indexPath.section == SectionButton)
-            cell.textLabel?.text = NSLocalizedString("Clear Private Data", comment: "Button in settings that clears private data for the selected items.")
+            cell.textLabel?.text = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Button in settings that clears private data for the selected items.")
             cell.textLabel?.textAlignment = NSTextAlignment.Center
             cell.textLabel?.textColor = UIConstants.DestructiveRed
+            cell.accessibilityTraits = UIAccessibilityTraitButton
             clearButton = cell
         }
 
@@ -86,8 +98,8 @@ class ClearPrivateDataTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, shouldHighlightRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         guard indexPath.section == SectionButton else { return false }
 
-        // Highlight the button only if at least one clearable is enabled.
-        return toggles.contains(true)
+        // Highlight the button only if it's enabled.
+        return clearButtonEnabled
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -99,18 +111,16 @@ class ClearPrivateDataTableViewController: UITableViewController {
             .map { (_, clearable) in clearable.clear() }
             .allSucceed()
             .upon { result in
-                // TODO: Need some kind of success/failure UI. Bug 1202093.
-                if result.isSuccess {
-                    print("Private data cleared")
-                } else {
-                    print("Error clearing private data")
-                    assertionFailure("\(result.failureValue)")
-                }
+                assert(result.isSuccess, "Private data cleared successfully")
+
+                self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
 
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.navigationController?.popViewControllerAnimated(true)
+                    // Disable the Clear Private Data button after it's clicked.
+                    self.clearButtonEnabled = false
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 }
-        }
+            }
     }
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -125,6 +135,6 @@ class ClearPrivateDataTableViewController: UITableViewController {
         toggles[toggle.tag] = toggle.on
 
         // Dim the clear button if no clearables are selected.
-        clearButton?.textLabel?.textColor = toggles.contains(true) ? UIConstants.DestructiveRed : UIColor.lightGrayColor()
+        clearButtonEnabled = toggles.contains(true)
     }
 }

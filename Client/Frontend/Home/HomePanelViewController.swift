@@ -12,8 +12,7 @@ private struct HomePanelViewControllerUX {
     // Height of the top panel switcher button toolbar.
     static let ButtonContainerHeight: CGFloat = 40
     static let ButtonContainerBorderColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
-//    static let BackgroundColor = UIConstants.PanelBackgroundColor
-	static let BackgroundColor = UIConstants.AppBackgroundColor
+    static let BackgroundColor = UIConstants.PanelBackgroundColor
     static let EditDoneButtonRightPadding: CGFloat = -12
 }
 
@@ -28,6 +27,10 @@ protocol HomePanelViewControllerDelegate: class {
 protocol HomePanel: class {
     weak var homePanelDelegate: HomePanelDelegate? { get set }
     optional func endEditing()
+}
+
+struct HomePanelUX {
+    static let EmptyTabContentOffset = -180
 }
 
 @objc
@@ -86,7 +89,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         }
 
         buttonContainerBottomBorderView.snp_makeConstraints { make in
-			make.top.equalTo(self.buttonContainerView.snp_bottom).offset(-1)
+            make.top.equalTo(self.buttonContainerView.snp_bottom).offset(-1)
             make.left.right.bottom.equalTo(self.buttonContainerView)
         }
 
@@ -132,17 +135,28 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
 
                 if index < panels.count {
                     let panel = self.panels[index].makeViewController(profile: profile)
-                    (panel as? HomePanel)?.homePanelDelegate = self
-                    panel.view.accessibilityNavigationStyle = .Combined
-                    panel.view.accessibilityLabel = self.panels[index].accessibilityLabel
-                    self.showPanel(panel)
+                    let accessibilityLabel = self.panels[index].accessibilityLabel
+                    if let panelController = panel as? UINavigationController,
+                     let rootPanel = panelController.viewControllers.first {
+                        setupHomePanel(rootPanel, accessibilityLabel: accessibilityLabel)
+                        self.showPanel(panelController)
+                    } else {
+                        setupHomePanel(panel, accessibilityLabel: accessibilityLabel)
+                        self.showPanel(panel)
+                    }
                 }
             }
         }
     }
 
+    func setupHomePanel(panel: UIViewController, accessibilityLabel: String) {
+        (panel as? HomePanel)?.homePanelDelegate = self
+        panel.view.accessibilityNavigationStyle = .Combined
+        panel.view.accessibilityLabel = accessibilityLabel
+    }
+
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.Default
+        return UIStatusBarStyle.LightContent
     }
 
     private func hideCurrentPanel() {

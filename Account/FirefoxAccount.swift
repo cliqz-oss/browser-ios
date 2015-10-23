@@ -55,9 +55,8 @@ public class FirefoxAccount {
         self.configuration = configuration
         self.stateCache = stateCache
         self.stateCache.checkpoint()
-        self.syncAuthState = SyncAuthState(account: self,
-            cache: KeychainCache.fromBranch("account.syncAuthState", withLabel: self.stateCache.label, factory: syncAuthStateCachefromJSON)
-)
+        self.syncAuthState = FirefoxAccountSyncAuthState(account: self,
+            cache: KeychainCache.fromBranch("account.syncAuthState", withLabel: self.stateCache.label, factory: syncAuthStateCachefromJSON))
     }
 
     public class func fromConfigurationAndJSON(configuration: FirefoxAccountConfiguration, data: JSON) -> FirefoxAccount? {
@@ -189,7 +188,7 @@ public class FirefoxAccount {
             if let existingDeferred = self.advanceDeferred where existingDeferred === deferred {
                 // The guard should not be needed, but should prevent trampling racing consumers.
                 self.advanceDeferred = nil
-                log.debug("advance() completed and shared deferred is existing deferred; clearing shared defered.")
+                log.debug("advance() completed and shared deferred is existing deferred; clearing shared deferred.")
             } else {
                 log.warning("advance() completed but shared deferred is not existing deferred; ignoring potential bug!")
             }

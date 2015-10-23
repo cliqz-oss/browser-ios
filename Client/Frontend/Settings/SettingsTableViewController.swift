@@ -7,7 +7,6 @@ import Base32
 import Shared
 import UIKit
 import XCGLogger
-import MessageUI
 
 private var ShowDebugSettings: Bool = false
 private var DebugSettingsClickCount: Int = 0
@@ -17,6 +16,9 @@ private let Bug1204635_S1 = NSLocalizedString("Clear Everything", tableName: "Cl
 private let Bug1204635_S2 = NSLocalizedString("Are you sure you want to clear all of your data? This will also close all open tabs.", tableName: "ClearPrivateData", comment: "Message shown in the dialog prompting users if they want to clear everything")
 private let Bug1204635_S3 = NSLocalizedString("Clear", tableName: "ClearPrivateData", comment: "Used as a button label in the dialog to Clear private data dialog")
 private let Bug1204635_S4 = NSLocalizedString("Cancel", tableName: "ClearPrivateData", comment: "Used as a button label in the dialog to cancel clear private data dialog")
+
+// The following are strings for bug 1162174 - Support third party passwords
+private let Bug1162174_S1 = NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")
 
 // A base TableViewCell, to help minimize initialization and allow recycling.
 class SettingsTableViewCell: UITableViewCell {
@@ -323,10 +325,7 @@ private class AccountStatusSetting: WithAccountSetting {
                 viewController.url = cs?.URL
             case .None, .NeedsUpgrade:
                 // In future, we'll want to link to /settings and an upgrade page, respectively.
-                if let cs = NSURLComponents(URL: account.configuration.forceAuthURL, resolvingAgainstBaseURL: false) {
-                    cs.queryItems?.append(NSURLQueryItem(name: "email", value: account.email))
-                    viewController.url = cs.URL
-                }
+                return
             }
         }
         navigationController?.pushViewController(viewController, animated: true)
@@ -468,7 +467,7 @@ private class VersionSetting : Setting {
     override var title: NSAttributedString? {
         let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
         let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as! String
-        return NSAttributedString(string: String(format: NSLocalizedString("Version %@(%@) based on Firefox 1.0", comment: "Version number of Cliqz shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: String(format: NSLocalizedString("Version %@ (%@)", comment: "Version number of Firefox shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     private override func onConfigureCell(cell: UITableViewCell) {
         super.onConfigureCell(cell)
@@ -510,7 +509,7 @@ private class YourRightsSetting: Setting {
     }
 
     override var url: NSURL? {
-        return NSURL(string: WebServer.sharedInstance.URLForResource("rights", module: "about"))
+        return NSURL(string: "https://www.mozilla.org/about/legal/terms/firefox/")
     }
 
     private override func onClick(navigationController: UINavigationController?) {
@@ -537,8 +536,6 @@ private class ShowIntroductionSetting: Setting {
 }
 
 private class SendFeedbackSetting: Setting {
-	static private let email = "feedback@cliqz.com"
-	
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Send Feedback", comment: "Show an input.mozilla.org page where people can submit feedback"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
@@ -549,23 +546,8 @@ private class SendFeedbackSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-		if MFMailComposeViewController.canSendMail() {
-			presentEmailViewController(navigationController)
-		} else {
-			let url = NSURL(string: "mailto:\(SendFeedbackSetting.email)")
-			UIApplication.sharedApplication().openURL(url!)
-		}
-	}
-
-	func presentEmailViewController(navigationController: UINavigationController?) {
-		let emailTitle = "Feedback on Cliqz for iOS, version 1.0"
-		let toRecipents = [SendFeedbackSetting.email]
-		let mailViewController: MFMailComposeViewController = MFMailComposeViewController()
-		mailViewController.mailComposeDelegate = navigationController?.topViewController as! SettingsTableViewController
-		mailViewController.setSubject(emailTitle)
-		mailViewController.setToRecipients(toRecipents)
-		navigationController?.presentViewController(mailViewController, animated: true, completion: nil)
-	}
+        setUpAndPushSettingsContentViewController(navigationController)
+    }
 }
 
 // Opens the the SUMO page in a new tab
@@ -677,6 +659,37 @@ private class SendCrashReportsSetting: Setting {
     }
 }
 
+private class ClosePrivateTabs: Setting {
+    let profile: Profile
+
+    private let titleText = NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs")
+    private let statusText =
+        NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'")
+
+    override var status: NSAttributedString? {
+        return NSAttributedString(string: statusText, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewHeaderTextColor])
+    }
+
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        super.init(title: NSAttributedString(string: titleText, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+
+    override func onConfigureCell(cell: UITableViewCell) {
+        super.onConfigureCell(cell)
+        let control = UISwitch()
+        control.onTintColor = UIConstants.ControlTintColor
+        control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        control.on = profile.prefs.boolForKey("settings.closePrivateTabs") ?? false
+        cell.accessoryView = control
+    }
+
+    @objc func switchValueChanged(control: UISwitch) {
+        profile.prefs.setBool(control.on, forKey: "settings.closePrivateTabs")
+        configureActiveCrashReporter(profile.prefs.boolForKey("settings.closePrivateTabs"))
+    }
+}
+
 private class PrivacyPolicySetting: Setting {
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Firefox Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
@@ -721,7 +734,7 @@ private class PopupBlockingSettings: Setting {
 }
 
 // The base settings view controller.
-class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+class SettingsTableViewController: UITableViewController {
     private let Identifier = "CellIdentifier"
     private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
     private var settings = [SettingSection]()
@@ -733,7 +746,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         super.viewDidLoad()
 
         let privacyTitle = NSLocalizedString("Privacy", comment: "Privacy section title")
-        var accountDebugSettings: [Setting]
+        let accountDebugSettings: [Setting]
         if AppConstants.BuildChannel != .Aurora {
             accountDebugSettings = [
                 // Debug settings:
@@ -758,28 +771,38 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         }
 
         settings += [
-			/*
             SettingSection(title: nil, children: [
                 // Without a Firefox Account:
                 ConnectSetting(settings: self),
                 // With a Firefox Account:
                 AccountStatusSetting(settings: self),
                 SyncNowSetting(settings: self)
-            ] + accountDebugSettings),*/
+            ] + accountDebugSettings),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
         ]
 
-
-        settings += [
-            SettingSection(title: NSAttributedString(string: privacyTitle), children: [
+        var privacySettings: [Setting]
+        if #available(iOS 9, *) {
+            privacySettings = [
+                ClearPrivateDataSetting(settings: self),
+                ClosePrivateTabs(settings: self),
+                SendCrashReportsSetting(settings: self),
+                PrivacyPolicySetting()
+            ]
+        } else {
+            privacySettings = [
                 ClearPrivateDataSetting(settings: self),
                 SendCrashReportsSetting(settings: self),
-                PrivacyPolicySetting(),
-            ]),
+                PrivacyPolicySetting()
+            ]
+        }
+
+        settings += [
+            SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: [
                 ShowIntroductionSetting(settings: self),
-                SendFeedbackSetting()
-//                OpenSupportPageSetting()
+                SendFeedbackSetting(),
+                OpenSupportPageSetting()
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
                 VersionSetting(settings: self),
@@ -905,14 +928,19 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (indexPath.section == 0 && indexPath.row == 0) { return 64 } //make account/sign-in row taller, as per design specs
+        //make account/sign-in and close private tabs rows taller, as per design specs
+        if indexPath.section == 0 && indexPath.row == 0 {
+            return 64
+        }
+
+        if #available(iOS 9, *) {
+            if indexPath.section == 2 && indexPath.row == 1 {
+                return 64
+            }
+        }
+
         return 44
     }
-	
-	func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-		self.dismissViewControllerAnimated(true, completion: nil)
-	}
-
 }
 
 class SettingsTableFooterView: UIView {

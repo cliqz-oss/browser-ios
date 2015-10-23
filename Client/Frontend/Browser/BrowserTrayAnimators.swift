@@ -20,25 +20,41 @@ class TrayToBrowserAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 private extension TrayToBrowserAnimator {
     func transitionFromTray(tabTray: TabTrayController, toBrowser bvc: BrowserViewController, usingContext transitionContext: UIViewControllerContextTransitioning) {
         guard let container = transitionContext.containerView() else { return }
+        guard let selectedTab = bvc.tabManager.selectedTab else { return }
+
+        // Bug 1205464 - Top Sites tiles blow up or shrink after rotating
+        // Force the BVC's frame to match the tab trays since for some reason on iOS 9 the UILayoutContainer in
+        // the UINavigationController doesn't rotate the presenting view controller
+        let os = NSProcessInfo().operatingSystemVersion
+        switch (os.majorVersion, os.minorVersion, os.patchVersion) {
+        case (9, _, _):
+            bvc.view.frame = UIWindow().frame
+        default:
+            break
+        }
+
+        let tabManager = bvc.tabManager
+        let displayedTabs = selectedTab.isPrivate ? tabManager.privateTabs : tabManager.normalTabs
+        guard let expandFromIndex = displayedTabs.indexOf(selectedTab) else { return }
 
         // Hide browser components
         bvc.toggleSnackBarVisibility(show: false)
         toggleWebViewVisibility(show: false, usingTabManager: bvc.tabManager)
         bvc.homePanelController?.view.hidden = true
+        bvc.webViewContainerBackdrop.hidden = true
 
         // Take a snapshot of the collection view that we can scale/fade out. We don't need to wait for screen updates since it's already rendered on the screen
-//        let tabCollectionViewSnapshot = tabTray.collectionView.snapshotViewAfterScreenUpdates(false)
-//        tabTray.collectionView.alpha = 0
-//        tabCollectionViewSnapshot.frame = tabTray.collectionView.frame
-//        container.insertSubview(tabCollectionViewSnapshot, aboveSubview: tabTray.view)
+        let tabCollectionViewSnapshot = tabTray.collectionView.snapshotViewAfterScreenUpdates(false)
+        tabTray.collectionView.alpha = 0
+        tabCollectionViewSnapshot.frame = tabTray.collectionView.frame
+        container.insertSubview(tabCollectionViewSnapshot, aboveSubview: tabTray.view)
 
         // Create a fake cell to use for the upscaling animation
-//        let startingFrame = calculateCollapsedCellFrameUsingCollectionView(tabTray.collectionView, atIndex: bvc.tabManager.selectedIndex)
-//        let cell = createTransitionCellFromBrowser(bvc.tabManager.selectedTab, withFrame: startingFrame)
-		let cell = createTransitionCellFromBrowser(bvc.tabManager.selectedTab, withFrame: CGRectZero)
+        let startingFrame = calculateCollapsedCellFrameUsingCollectionView(tabTray.collectionView, atIndex: expandFromIndex)
+        let cell = createTransitionCellFromBrowser(bvc.tabManager.selectedTab, withFrame: startingFrame)
         cell.backgroundHolder.layer.cornerRadius = 0
 
-//        container.insertSubview(bvc.view, aboveSubview: tabCollectionViewSnapshot)
+        container.insertSubview(bvc.view, aboveSubview: tabCollectionViewSnapshot)
         container.insertSubview(cell, aboveSubview: bvc.view)
 
         // Flush any pending layout/animation code in preperation of the animation call
@@ -51,7 +67,7 @@ private extension TrayToBrowserAnimator {
 
         // Re-calculate the starting transforms for header/footer views in case we switch orientation
         resetTransformsForViews([bvc.header, bvc.headerBackdrop, bvc.readerModeBar, bvc.footer, bvc.footerBackdrop])
-//        transformHeaderFooterForBVC(bvc, toFrame: startingFrame, container: container)
+        transformHeaderFooterForBVC(bvc, toFrame: startingFrame, container: container)
 
         UIView.animateWithDuration(self.transitionDuration(transitionContext),
             delay: 0, usingSpringWithDamping: 1,
@@ -67,21 +83,25 @@ private extension TrayToBrowserAnimator {
             resetTransformsForViews([bvc.header, bvc.footer, bvc.readerModeBar, bvc.footerBackdrop, bvc.headerBackdrop])
             bvc.urlBar.updateAlphaForSubviews(1)
 
-//            tabCollectionViewSnapshot.transform = CGAffineTransformMakeScale(0.9, 0.9)
-//            tabCollectionViewSnapshot.alpha = 0
+            tabCollectionViewSnapshot.transform = CGAffineTransformMakeScale(0.9, 0.9)
+            tabCollectionViewSnapshot.alpha = 0
 
             // Push out the navigation bar buttons
             let buttonOffset = tabTray.addTabButton.frame.width + TabTrayControllerUX.ToolbarButtonOffset
             tabTray.addTabButton.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, buttonOffset , 0)
             tabTray.settingsButton.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -buttonOffset , 0)
+            if #available(iOS 9, *) {
+                tabTray.togglePrivateMode.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, buttonOffset , 0)
+            }
         }, completion: { finished in
             // Remove any of the views we used for the animation
             cell.removeFromSuperview()
-//            tabCollectionViewSnapshot.removeFromSuperview()
+            tabCollectionViewSnapshot.removeFromSuperview()
             bvc.footer.alpha = 1
             bvc.startTrackingAccessibilityStatus()
             bvc.toggleSnackBarVisibility(show: true)
             toggleWebViewVisibility(show: true, usingTabManager: bvc.tabManager)
+            bvc.webViewContainerBackdrop.hidden = false
             bvc.homePanelController?.view.hidden = false
             bvc.urlBar.isTransitioning = false
             transitionContext.completeTransition(true)
@@ -104,17 +124,21 @@ class BrowserToTrayAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
 private extension BrowserToTrayAnimator {
     func transitionFromBrowser(bvc: BrowserViewController, toTabTray tabTray: TabTrayController, usingContext transitionContext: UIViewControllerContextTransitioning) {
+
         guard let container = transitionContext.containerView() else { return }
+        guard let selectedTab = bvc.tabManager.selectedTab else { return }
+
+        let tabManager = bvc.tabManager
+        let displayedTabs = selectedTab.isPrivate ? tabManager.privateTabs : tabManager.normalTabs
+        guard let scrollToIndex = displayedTabs.indexOf(selectedTab) else { return }
 
         // Insert tab tray below the browser and force a layout so the collection view can get it's frame right
         container.insertSubview(tabTray.view, belowSubview: bvc.view)
 
         // Force subview layout on the collection view so we can calculate the correct end frame for the animation
         tabTray.view.layoutSubviews()
-        // don't select anything if the selected index == -1 as that is the non-select value
-        if bvc.tabManager.selectedIndex >= 0 {
-//            tabTray.collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: bvc.tabManager.selectedIndex, inSection: 0), atScrollPosition: .CenteredVertically, animated: false)
-        }
+
+        tabTray.collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: scrollToIndex, inSection: 0), atScrollPosition: .CenteredVertically, animated: false)
 
         // Build a tab cell that we will use to animate the scaling of the browser to the tab
         let expandedFrame = calculateExpandedCellFrameFromBVC(bvc)
@@ -123,11 +147,11 @@ private extension BrowserToTrayAnimator {
         cell.innerStroke.hidden = true
 
         // Take a snapshot of the collection view to perform the scaling/alpha effect
-//        let tabCollectionViewSnapshot = tabTray.collectionView.snapshotViewAfterScreenUpdates(true)
-//        tabCollectionViewSnapshot.frame = tabTray.collectionView.frame
-//        tabCollectionViewSnapshot.transform = CGAffineTransformMakeScale(0.9, 0.9)
-//        tabCollectionViewSnapshot.alpha = 0
-//        tabTray.view.addSubview(tabCollectionViewSnapshot)
+        let tabCollectionViewSnapshot = tabTray.collectionView.snapshotViewAfterScreenUpdates(true)
+        tabCollectionViewSnapshot.frame = tabTray.collectionView.frame
+        tabCollectionViewSnapshot.transform = CGAffineTransformMakeScale(0.9, 0.9)
+        tabCollectionViewSnapshot.alpha = 0
+        tabTray.view.addSubview(tabCollectionViewSnapshot)
 
         container.addSubview(cell)
         cell.layoutIfNeeded()
@@ -143,9 +167,9 @@ private extension BrowserToTrayAnimator {
         // the screenshot ends up being blank unless we set the collection view hidden after the screen update happens. 
         // To work around this, we dispatch the setting of collection view to hidden after the screen update is completed.
         dispatch_async(dispatch_get_main_queue()) {
-//            tabTray.collectionView.hidden = true
-
-//            let finalFrame = calculateCollapsedCellFrameUsingCollectionView(tabTray.collectionView, atIndex: bvc.tabManager.selectedIndex)
+            tabTray.collectionView.hidden = true
+            let finalFrame = calculateCollapsedCellFrameUsingCollectionView(tabTray.collectionView,
+                atIndex: scrollToIndex)
 
             UIView.animateWithDuration(self.transitionDuration(transitionContext),
                 delay: 0, usingSpringWithDamping: 1,
@@ -153,22 +177,26 @@ private extension BrowserToTrayAnimator {
                 options: UIViewAnimationOptions.CurveEaseInOut,
                 animations:
             {
-//                cell.frame = finalFrame
+                cell.frame = finalFrame
                 cell.title.transform = CGAffineTransformIdentity
                 cell.layoutIfNeeded()
 
-//                transformHeaderFooterForBVC(bvc, toFrame: finalFrame, container: container)
+                transformHeaderFooterForBVC(bvc, toFrame: finalFrame, container: container)
 
                 bvc.urlBar.updateAlphaForSubviews(0)
                 bvc.footer.alpha = 0
-//                tabCollectionViewSnapshot.alpha = 1
+                tabCollectionViewSnapshot.alpha = 1
 
-//                resetTransformsForViews([tabCollectionViewSnapshot, tabTray.addTabButton, tabTray.settingsButton])
+                var viewsToReset: [UIView?] = [tabCollectionViewSnapshot, tabTray.addTabButton, tabTray.settingsButton]
+                if #available(iOS 9, *) {
+                    viewsToReset.append(tabTray.togglePrivateMode)
+                }
+                resetTransformsForViews(viewsToReset)
             }, completion: { finished in
                 // Remove any of the views we used for the animation
                 cell.removeFromSuperview()
-//                tabCollectionViewSnapshot.removeFromSuperview()
-//                tabTray.collectionView.hidden = false
+                tabCollectionViewSnapshot.removeFromSuperview()
+                tabTray.collectionView.hidden = false
 
                 bvc.toggleSnackBarVisibility(show: true)
                 toggleWebViewVisibility(show: true, usingTabManager: bvc.tabManager)
@@ -237,7 +265,7 @@ private func calculateExpandedCellFrameFromBVC(bvc: BrowserViewController) -> CG
     // there is no toolbar for home panels
     if !bvc.shouldShowFooterForTraitCollection(bvc.traitCollection) {
         return frame
-    } else if AboutUtils.isAboutURL(bvc.tabManager.selectedTab?.url) {
+    } else if AboutUtils.isAboutURL(bvc.tabManager.selectedTab?.url) && bvc.toolbar == nil {
         frame.size.height += UIConstants.ToolbarHeight
     }
 
@@ -279,10 +307,22 @@ private func createTransitionCellFromBrowser(browser: Browser?, withFrame frame:
     let cell = TabCell(frame: frame)
     cell.background.image = browser?.screenshot
     cell.titleText.text = browser?.displayTitle
+
+    if let browser = browser where browser.isPrivate {
+        cell.style = .Dark
+    }
+
     if let favIcon = browser?.displayFavicon {
         cell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
     } else {
-        cell.favicon.image = UIImage(named: "defaultFavicon")
+        var defaultFavicon = UIImage(named: "defaultFavicon")
+        if browser?.isPrivate ?? false {
+            defaultFavicon = defaultFavicon?.imageWithRenderingMode(.AlwaysTemplate)
+            cell.favicon.image = defaultFavicon
+            cell.favicon.tintColor = (browser?.isPrivate ?? false) ? UIColor.whiteColor() : UIColor.darkGrayColor()
+        } else {
+            cell.favicon.image = defaultFavicon
+        }
     }
     return cell
 }

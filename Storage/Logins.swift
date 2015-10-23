@@ -219,18 +219,23 @@ public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatabl
         ]
     }
 
-    public class func fromScript(url: NSURL, script: [String: String]) -> LoginData {
-        let login = Login(hostname: getPasswordOrigin(url.absoluteString)!, username: script["username"]!, password: script["password"]!)
+    public class func fromScript(url: NSURL, script: [String: AnyObject]) -> LoginData? {
+        guard let username = script["username"] as? String,
+              let password = script["password"] as? String else {
+                return nil
+        }
 
-        if let formSubmit = script["formSubmitURL"] {
+        let login = Login(hostname: getPasswordOrigin(url.absoluteString)!, username: username, password: password)
+
+        if let formSubmit = script["formSubmitURL"] as? String {
             login.formSubmitURL = formSubmit
         }
 
-        if let passwordField = script["passwordField"] {
+        if let passwordField = script["passwordField"] as? String {
             login.passwordField = passwordField
         }
 
-        if let userField = script["usernameField"] {
+        if let userField = script["usernameField"] as? String {
             login.usernameField = userField
         }
 
@@ -511,7 +516,7 @@ public protocol BrowserLogins {
     func removeAll() -> Success
 }
 
-public protocol SyncableLogins {
+public protocol SyncableLogins: AccountRemovalDelegate {
     /**
      * Delete the login with the provided GUID. Succeeds if the GUID is unknown.
      */
@@ -527,11 +532,6 @@ public protocol SyncableLogins {
      */
     func markAsSynchronized(_: [GUID], modified: Timestamp) -> Deferred<Maybe<Timestamp>>
     func markAsDeleted(guids: [GUID]) -> Success
-
-    /**
-     * Clean up any metadata.
-     */
-    func onRemovedAccount() -> Success
 }
 
 public class LoginDataError: MaybeErrorType {

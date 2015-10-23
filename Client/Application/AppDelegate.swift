@@ -7,19 +7,8 @@ import Storage
 import AVFoundation
 import XCGLogger
 import Breakpad
-import Fabric
-import Crashlytics
-//import Lookback
 
 private let log = Logger.browserLogger
-
-extension UINavigationController {
-
-	public override func disablesAutomaticKeyboardDismissal() -> Bool {
-		return false
-	}
-
-}
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -31,8 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
-		UIApplication.sharedApplication().setStatusBarStyle(.Default, animated: false)
         // Set the Firefox UA for browsing.
         setUserAgent()
 
@@ -57,8 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIColor.whiteColor()
 
-        let defaultRequest = NSURLRequest(URL: UIConstants.AboutHomeURL)
-        self.tabManager = TabManager(defaultNewTabRequest: defaultRequest, profile: profile)
+        let defaultRequest = NSURLRequest(URL: UIConstants.DefaultHomePage)
+        let imageStore = DiskImageStore(files: profile.files, namespace: "TabManagerScreenshots", quality: UIConstants.ScreenshotQuality)
+        self.tabManager = TabManager(defaultNewTabRequest: defaultRequest, prefs: profile.prefs, imageStore: imageStore)
+        self.tabManager.stateDelegate = self
         browserViewController = BrowserViewController(profile: profile, tabManager: self.tabManager)
 
         // Add restoration class, the factory that will return the ViewController we 
@@ -89,19 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             viewURLInNewTab(localNotification)
         }
-		
-		// Enable location manager
-		LocationManager.sharedLocationManager.startUpdateingLocation()
-		
-		// Setup crash reporter
-		Fabric.with([Crashlytics.self()])
-		
-		// Setup feedback framework
-		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
-		Lookback.sharedLookback().shakeToRecord = true
-		Lookback.sharedLookback().feedbackBubbleVisible = true
-//		Lookback_Weak.setupWithAppToken("HWiD4ErSbeNy9JcRg")
-		
         return true
     }
 
@@ -125,6 +101,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            AdjustIntegration.sharedInstance.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
+        }
         self.window!.makeKeyAndVisible()
         return true
     }
@@ -154,7 +133,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
-        self.profile?.syncManager.beginTimedSyncs()
+        self.profile?.syncManager.applicationDidBecomeActive()
 
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
@@ -162,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        self.profile?.syncManager.endTimedSyncs()
+        self.profile?.syncManager.applicationDidEnterBackground()
 
         var taskId: UIBackgroundTaskIdentifier = 0
         taskId = application.beginBackgroundTaskWithExpirationHandler { _ in
@@ -183,24 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
         SessionRestoreHandler.register(server)
-
-//		server.registerMainBundleResourcesOfType("*", localPath: "page", module: "freshtab")
-		server.start()
-		
-		let bundlePath = NSBundle.mainBundle().bundlePath
-		let freshtabPath = bundlePath + "/" + "freshtab"
-		let extensionPath = bundlePath + "/" + "navigation"
-
-		let httpsServer = HttpServer()
-		httpsServer["/freshtab/(.+)"] = HttpHandlers.directory(freshtabPath)
-		httpsServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
-
-		httpsServer["/myproxy"] = { (request: HttpRequest) in
-			let u: String = request.urlParams[0].1
-			let data = NSData(contentsOfURL: NSURL(string:u)!)
-			return HttpResponse.RAW(200, data!)
-		}
-		httpsServer.start(3001)
+        server.start()
     }
 
     private func setUserAgent() {
@@ -287,6 +249,20 @@ extension AppDelegate: UINavigationControllerDelegate {
     }
 }
 
+extension AppDelegate: TabManagerStateDelegate {
+    func tabManagerWillStoreTabs(tabs: [Browser]) {
+        // It is possible that not all tabs have loaded yet, so we filter out tabs with a nil URL.
+        let storedTabs: [RemoteTab] = tabs.flatMap( Browser.toTab )
+
+        // Don't insert into the DB immediately. We tend to contend with more important
+        // work like querying for top sites.
+        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(ProfileRemoteTabsSyncDelay * Double(NSEC_PER_MSEC))), queue) {
+            self.profile?.storeTabs(storedTabs)
+        }
+    }
+}
+
 var activeCrashReporter: CrashReporter?
 func configureActiveCrashReporter(optedIn: Bool?) {
     if let reporter = activeCrashReporter {
@@ -325,4 +301,3 @@ public func configureCrashReporter(reporter: CrashReporter, optedIn: Bool?) {
         configureReporter()
     }
 }
-
