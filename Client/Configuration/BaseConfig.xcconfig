@@ -9,7 +9,7 @@ MOZ_APP_ID = fennecios@mozilla.org
 MOZ_BUNDLE_ID = org.mozilla.ios.$(MOZ_PRODUCT_NAME)
 
 // App Version
-MOZ_VERSION = 1.0
+MOZ_VERSION = 1.1
 
 // Build ID
 MOZ_BUILD_ID = 1101
@@ -18,9 +18,7 @@ MOZ_BUILD_ID = 1101
 MOZ_SOCORRO_PRODUCT_NAME = FenneciOS
 
 // Crash-stats upload URL
-//Cliqz - reports.cliqz.com
-//MOZ_BREAKPAD_URL = crash-reports.mozilla.com/submit?id=$(MOZ_BUNDLE_ID)&version=$(MOZ_VERSION)&buildid=$(MOZ_BUILD_ID)
-MOZ_BREAKPAD_URL = reports.cliqz.com/submit/sslreport
+MOZ_BREAKPAD_URL = crash-reports.mozilla.com/submit?id=$(MOZ_BUNDLE_ID)&version=$(MOZ_VERSION)&buildid=$(MOZ_BUILD_ID)
 
 // Frequency to poll for uploads for crashes in seconds
 MOZ_BREAKPAD_UPLOAD_FREQUENCY = 30

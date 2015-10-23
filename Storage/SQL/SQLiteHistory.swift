@@ -8,8 +8,6 @@ import XCGLogger
 
 private let log = Logger.syncLogger
 
-private let LogPII = false
-
 class NoSuchRecordError: MaybeErrorType {
     let guid: GUID
     init(guid: GUID) {
@@ -181,7 +179,7 @@ extension SQLiteHistory: BrowserHistory {
         if let host = site.url.asURL?.normalizedHost() {
             let update = "UPDATE \(TableHistory) SET title = ?, local_modified = ?, should_upload = 1, domain_id = (SELECT id FROM \(TableDomains) where domain = ?) WHERE url = ?"
             let updateArgs: Args? = [site.title, time, host, site.url]
-            if LogPII {
+            if Logger.logPII {
                 log.debug("Setting title to \(site.title) for URL \(site.url)")
             }
             let error = conn.executeChange(update, withArgs: updateArgs)
@@ -213,7 +211,10 @@ extension SQLiteHistory: BrowserHistory {
 
             return 1
         }
-        log.warning("Invalid URL \(site.url). Not stored in history.")
+
+        if Logger.logPII {
+            log.warning("Invalid URL \(site.url). Not stored in history.")
+        }
         return 0
     }
 
@@ -485,7 +486,7 @@ extension SQLiteHistory: Favicons {
      * in the history table.
      */
     public func addFavicon(icon: Favicon, forSite site: Site) -> Deferred<Maybe<Int>> {
-        if LogPII {
+        if Logger.logPII {
             log.verbose("Adding favicon \(icon.url) for site \(site.url).")
         }
         func doChange(query: String, args: Args?) -> Deferred<Maybe<Int>> {
@@ -651,7 +652,7 @@ extension SQLiteHistory: SyncableHistory {
             if let metadata = metadata {
                 // The item exists locally (perhaps originally with a different GUID).
                 if metadata.serverModified == modified {
-                    log.debug("History item \(place.guid) is unchanged; skipping insert-or-update.")
+                    log.verbose("History item \(place.guid) is unchanged; skipping insert-or-update.")
                     return deferMaybe(place.guid)
                 }
 
@@ -669,21 +670,21 @@ extension SQLiteHistory: SyncableHistory {
                         return self.db.run(update, withArgs: args) >>> always(place.guid)
                     }
 
-                    log.debug("Remote changes overriding local.")
+                    log.verbose("Remote changes overriding local.")
                     // Fall through.
                 }
 
                 // The record didn't change locally. Update it.
-                log.debug("Updating local history item for guid \(place.guid).")
+                log.verbose("Updating local history item for guid \(place.guid).")
                 let update = "UPDATE \(TableHistory) SET title = ?, server_modified = ?, is_deleted = 0 WHERE id = ?"
                 let args: Args = [place.title, serverModified, metadata.id]
                 return self.db.run(update, withArgs: args) >>> always(place.guid)
             }
 
             // The record doesn't exist locally. Insert it.
-            log.debug("Inserting remote history item for guid \(place.guid).")
+            log.verbose("Inserting remote history item for guid \(place.guid).")
             if let host = place.url.asURL?.normalizedHost() {
-                if LogPII {
+                if Logger.logPII {
                     log.debug("Inserting: \(place.url).")
                 }
 
@@ -696,7 +697,7 @@ extension SQLiteHistory: SyncableHistory {
                 ]) >>> always(place.guid)
             } else {
                 // This is a URL with no domain. Insert it directly.
-                if LogPII {
+                if Logger.logPII {
                     log.debug("Inserting: \(place.url) with no domain.")
                 }
 
@@ -844,17 +845,21 @@ extension SQLiteHistory: SyncableHistory {
         let args: Args = guids.map { $0 as AnyObject }
         return self.db.run(sql, withArgs: args) >>> always(modified)
     }
+}
 
+extension SQLiteHistory: ResettableSyncStorage {
+    // We don't drop deletions when we reset -- we might need to upload a deleted item
+    // that never made it to the server.
+    public func resetClient() -> Success {
+        let flag = "UPDATE \(TableHistory) SET should_upload = 1, server_modified = NULL"
+        return self.db.run(flag)
+    }
+}
+
+extension SQLiteHistory: AccountRemovalDelegate {
     public func onRemovedAccount() -> Success {
-        log.info("Clearing history metadata after account removal.")
-
-        let discard =
-        "DELETE FROM \(TableHistory) WHERE is_deleted = 1"
-
-        let flag =
-        "UPDATE \(TableHistory) SET " +
-        "should_upload = 1, server_modified = NULL "
-
-        return self.db.run(discard) >>> { self.db.run(flag) }
+        log.info("Clearing history metadata and deleted items after account removal.")
+        let discard = "DELETE FROM \(TableHistory) WHERE is_deleted = 1"
+        return self.db.run(discard) >>> self.resetClient
     }
 }

@@ -11,28 +11,33 @@ private let log = Logger.browserLogger
 
 let BookmarkStatusChangedNotification = "BookmarkStatusChangedNotification"
 
+struct BookmarksPanelUX {
+    private static let BookmarkFolderHeaderViewChevronInset: CGFloat = 10
+    private static let BookmarkFolderChevronSize: CGFloat = 20
+    private static let BookmarkFolderChevronLineWidth: CGFloat = 4.0
+    private static let BookmarkFolderTextColor = UIColor(red: 92/255, green: 92/255, blue: 92/255, alpha: 1.0)
+    private static let BookmarkFolderTextFont = UIFont.systemFontOfSize(UIConstants.DefaultMediumFontSize, weight: UIFontWeightMedium)
+}
+
 class BookmarksPanel: SiteTableViewController, HomePanel {
     weak var homePanelDelegate: HomePanelDelegate? = nil
     var source: BookmarksModel?
+    var parentFolders = [BookmarkFolder]()
+    var bookmarkFolder = BookmarkRoots.MobileFolderGUID
+
+    private let BookmarkFolderCellIdentifier = "BookmarkFolderIdentifier"
+    private let BookmarkFolderHeaderViewIdentifier = "BookmarkFolderHeaderIdentifier"
 
     private lazy var defaultIcon: UIImage = {
         return UIImage(named: "defaultFavicon")!
     }()
-
-    override var profile: Profile! {
-        didSet {
-            // Until we have something useful to show for desktop bookmarks,
-            // only show mobile bookmarks.
-            // Note that we also need to build a similar kind of virtual hierarchy
-            // to what we have on Android.
-            profile.bookmarks.modelForFolder(BookmarkRoots.MobileFolderGUID, success: self.onNewModel, failure: self.onModelFailure)
-            // profile.bookmarks.modelForRoot(self.onNewModel, failure: self.onModelFailure)
-        }
-    }
-
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
+
+        self.tableView.registerClass(BookmarkFolderTableViewCell.self, forCellReuseIdentifier: BookmarkFolderCellIdentifier)
+        self.tableView.registerClass(BookmarkFolderTableViewHeader.self, forHeaderFooterViewReuseIdentifier: BookmarkFolderHeaderViewIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -41,6 +46,18 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // if we've not already set a source for this panel fetch a new model
+        // otherwise just use the existing source to select a folder
+        guard let source = self.source else {
+            // Get all the bookmarks split by folders
+            profile.bookmarks.modelForFolder(bookmarkFolder).upon(onModelFetched)
+            return
+        }
+        source.selectFolder(bookmarkFolder).upon(onModelFetched)
     }
 
     func notificationReceived(notification: NSNotification) {
@@ -55,6 +72,14 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         }
     }
 
+    private func onModelFetched(result: Maybe<BookmarksModel>) {
+        guard let model = result.successValue else {
+            self.onModelFailure(result.failureValue)
+            return
+        }
+        self.onNewModel(model)
+    }
+
     private func onNewModel(model: BookmarksModel) {
         self.source = model
         dispatch_async(dispatch_get_main_queue()) {
@@ -63,11 +88,11 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
     }
 
     private func onModelFailure(e: Any) {
-        print("Error: failed to get data: \(e)")
+        log.error("Error: failed to get data: \(e)")
     }
 
     override func reloadData() {
-        self.source?.reloadData(self.onNewModel, failure: self.onModelFailure)
+        self.source?.reloadData().upon(onModelFetched)
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -75,49 +100,75 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        if let source = source {
-            if let bookmark = source.current[indexPath.row] {
-                if let url = bookmark.favicon?.url.asURL where url.scheme == "asset" {
-                    cell.imageView?.image = UIImage(named: url.host!)
-                } else {
-                    cell.imageView?.setIcon(bookmark.favicon, withPlaceholder: self.defaultIcon)
-                }
-
-                switch (bookmark) {
-                    case let item as BookmarkItem:
-                        if item.title.isEmpty {
-                            cell.textLabel?.text = item.url
-                        } else {
-                            cell.textLabel?.text = item.title
-                        }
-                    default:
-                        // Bookmark folders don't have a good fallback if there's no title. :(
-                        cell.textLabel?.text = bookmark.title
-                }
+        guard let source = source, bookmark = source.current[indexPath.row] else { return super.tableView(tableView, cellForRowAtIndexPath: indexPath) }
+        let cell: UITableViewCell
+        if let _ = bookmark as? BookmarkFolder {
+            cell = tableView.dequeueReusableCellWithIdentifier(BookmarkFolderCellIdentifier, forIndexPath: indexPath)
+        } else {
+            cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+            if let url = bookmark.favicon?.url.asURL where url.scheme == "asset" {
+                cell.imageView?.image = UIImage(named: url.host!)
+            } else {
+                cell.imageView?.setIcon(bookmark.favicon, withPlaceholder: self.defaultIcon)
             }
+        }
+
+        switch (bookmark) {
+            case let item as BookmarkItem:
+                if item.title.isEmpty {
+                    cell.textLabel?.text = item.url
+                } else {
+                    cell.textLabel?.text = item.title
+                }
+            default:
+                // Bookmark folders don't have a good fallback if there's no title. :(
+                cell.textLabel?.text = bookmark.title
         }
 
         return cell
     }
 
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? BookmarkFolderTableViewCell {
+            cell.textLabel?.font = BookmarksPanelUX.BookmarkFolderTextFont
+        }
+    }
+
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // Don't show a header for the root
-        if source == nil || source?.current.guid == BookmarkRoots.MobileFolderGUID {
+        if source == nil || parentFolders.isEmpty {
             return nil
         }
+        guard let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(BookmarkFolderHeaderViewIdentifier) as? BookmarkFolderTableViewHeader else { return nil }
 
-        // Note: If there's no root (i.e. source == nil), we'll also show no header.
-        return source?.current.title
+        // register as delegate to ensure we get notified when the user interacts with this header
+        if header.delegate == nil {
+            header.delegate = self
+        }
+
+        if parentFolders.count == 1 {
+            header.textLabel?.text = NSLocalizedString("Bookmarks", comment: "Panel accessibility label")
+        } else if let parentFolder = parentFolders.last {
+            header.textLabel?.text = parentFolder.title
+        }
+
+        return header
     }
 
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // Don't show a header for the root. If there's no root (i.e. source == nil), we'll also show no header.
-        if source == nil || source?.current.guid == BookmarkRoots.MobileFolderGUID {
+        if source == nil || parentFolders.isEmpty {
             return 0
         }
 
-        return super.tableView(tableView, heightForHeaderInSection: section)
+        return SiteTableViewControllerUX.RowHeight
+    }
+
+    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? BookmarkFolderTableViewHeader {
+            // for some reason specifying the font in header view init is being ignored, so setting it here
+            header.textLabel?.font = BookmarksPanelUX.BookmarkFolderTextFont
+        }
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -131,8 +182,13 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
                 break
 
             case let folder as BookmarkFolder:
-                // Descend into the folder.
-                source.selectFolder(folder, success: self.onNewModel, failure: self.onModelFailure)
+                let nextController = BookmarksPanel()
+                nextController.parentFolders = parentFolders + [source.current]
+                nextController.bookmarkFolder = folder.guid
+                nextController.source = source
+                nextController.homePanelDelegate = self.homePanelDelegate
+                nextController.profile = self.profile
+                self.navigationController?.pushViewController(nextController, animated: true)
                 break
 
             default:
@@ -171,6 +227,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
                 // queue, and so calling anything else that calls through to the DB will
                 // deadlock. This problem will go away when the bookmarks API switches to
                 // Deferred instead of using callbacks.
+                // TODO: it's now time for this.
                 self.profile.bookmarks.remove(bookmark).uponQueue(dispatch_get_main_queue()) { res in
                     if let err = res.failureValue {
                         self.onModelFailure(err)
@@ -178,7 +235,11 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
                     }
 
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.source?.reloadData({ model in
+                        self.source?.reloadData().upon {
+                            guard let model = $0.successValue else {
+                                self.onModelFailure($0.failureValue)
+                                return
+                            }
                             dispatch_async(dispatch_get_main_queue()) {
                                 tableView.beginUpdates()
                                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Left)
@@ -188,12 +249,136 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
 
                                 NSNotificationCenter.defaultCenter().postNotificationName(BookmarkStatusChangedNotification, object: bookmark, userInfo:["added":false])
                             }
-                        }, failure: self.onModelFailure)
+                        }
                     }
                 }
             }
         })
 
         return [delete]
+    }
+}
+
+private protocol BookmarkFolderTableViewHeaderDelegate {
+    func didSelectHeader()
+}
+
+extension BookmarksPanel: BookmarkFolderTableViewHeaderDelegate {
+    private func didSelectHeader() {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+}
+
+class BookmarkFolderTableViewCell: TwoLineTableViewCell {
+    private let ImageMargin: CGFloat = 12
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.backgroundColor = SiteTableViewControllerUX.HeaderBackgroundColor
+        textLabel?.backgroundColor = UIColor.clearColor()
+        textLabel?.tintColor = BookmarksPanelUX.BookmarkFolderTextColor
+        textLabel?.font = BookmarksPanelUX.BookmarkFolderTextFont
+
+        imageView?.image = UIImage(named: "bookmarkFolder")
+
+        let chevron = ChevronView(direction: .Right)
+        chevron.tintColor = BookmarksPanelUX.BookmarkFolderTextColor
+        chevron.frame = CGRectMake(0, 0, BookmarksPanelUX.BookmarkFolderChevronSize, BookmarksPanelUX.BookmarkFolderChevronSize)
+        chevron.lineWidth = BookmarksPanelUX.BookmarkFolderChevronLineWidth
+        accessoryView = chevron
+
+        separatorInset = UIEdgeInsetsZero
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // doing this here as TwoLineTableViewCell changes the imageView frame in it's layoutSubviews and we have to make sure it is right
+        if let imageSize = imageView?.image?.size {
+            imageView?.frame = CGRectMake(ImageMargin, (frame.height - imageSize.width) / 2, imageSize.width, imageSize.height)
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private class BookmarkFolderTableViewHeader : UITableViewHeaderFooterView {
+    var delegate: BookmarkFolderTableViewHeaderDelegate?
+
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIConstants.HighlightBlue
+        return label
+    }()
+
+    lazy var chevron: ChevronView = {
+        let chevron = ChevronView(direction: .Left)
+        chevron.tintColor = UIConstants.HighlightBlue
+        chevron.lineWidth = BookmarksPanelUX.BookmarkFolderChevronLineWidth
+        return chevron
+    }()
+
+    lazy var topBorder: UIView = {
+        let view = UIView()
+        view.backgroundColor = SiteTableViewControllerUX.HeaderBorderColor
+        return view
+    }()
+
+    lazy var bottomBorder: UIView = {
+        let view = UIView()
+        view.backgroundColor = SiteTableViewControllerUX.HeaderBorderColor
+        return view
+    }()
+
+    override var textLabel: UILabel? {
+        return titleLabel
+    }
+
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+
+        userInteractionEnabled = true
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "viewWasTapped:")
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        addGestureRecognizer(tapGestureRecognizer)
+
+        addSubview(topBorder)
+        addSubview(bottomBorder)
+        contentView.addSubview(chevron)
+        contentView.addSubview(titleLabel)
+
+        chevron.snp_makeConstraints { make in
+            make.left.equalTo(contentView).offset(BookmarksPanelUX.BookmarkFolderHeaderViewChevronInset)
+            make.centerY.equalTo(contentView)
+            make.size.equalTo(BookmarksPanelUX.BookmarkFolderChevronSize)
+        }
+
+        titleLabel.snp_makeConstraints { make in
+            make.left.equalTo(chevron.snp_right).offset(BookmarksPanelUX.BookmarkFolderHeaderViewChevronInset)
+            make.right.greaterThanOrEqualTo(contentView).offset(-BookmarksPanelUX.BookmarkFolderHeaderViewChevronInset)
+            make.centerY.equalTo(contentView)
+        }
+
+        topBorder.snp_makeConstraints { make in
+            make.left.right.equalTo(self)
+            make.top.equalTo(self).offset(-0.5)
+            make.height.equalTo(0.5)
+        }
+
+        bottomBorder.snp_makeConstraints { make in
+            make.left.right.bottom.equalTo(self)
+            make.height.equalTo(0.5)
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func viewWasTapped(gestureRecognizer: UITapGestureRecognizer) {
+        delegate?.didSelectHeader()
     }
 }

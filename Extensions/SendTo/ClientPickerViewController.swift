@@ -42,7 +42,7 @@ class ClientPickerViewController: UITableViewController {
         title = NSLocalizedString("Send Tab", tableName: "SendTo", comment: "Title of the dialog that allows you to send a tab to a different device")
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title for selecting client screen"), style: .Plain, target: self, action: "cancel")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancel")
         tableView.registerClass(ClientPickerTableViewHeaderCell.self, forCellReuseIdentifier: ClientPickerTableViewHeaderCell.CellIdentifier)
         tableView.registerClass(ClientPickerTableViewCell.self, forCellReuseIdentifier: ClientPickerTableViewCell.CellIdentifier)
         tableView.registerClass(ClientPickerNoClientsTableViewCell.self, forCellReuseIdentifier: ClientPickerNoClientsTableViewCell.CellIdentifier)
@@ -132,10 +132,18 @@ class ClientPickerViewController: UITableViewController {
     }
 
     private func reloadClients() {
+        guard let profile = self.profile else {
+            return
+        }
+
         reloading = true
-        profile?.getClients().upon({ result in
-            self.reloading = false
-            if let c = result.successValue {
+        profile.getClients().upon({ result in
+            withExtendedLifetime(profile) {
+                self.reloading = false
+                guard let c = result.successValue else {
+                    return
+                }
+
                 self.clients = c
                 dispatch_async(dispatch_get_main_queue()) {
                     if self.clients.count == 0 {

@@ -108,6 +108,7 @@ class ThumbnailCell: UICollectionViewCell {
 
     lazy var backgroundImage: UIImageView = {
         let backgroundImage = UIImageView()
+        backgroundImage.backgroundColor = UIColor.clearColor()
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         return backgroundImage
     }()
@@ -115,7 +116,9 @@ class ThumbnailCell: UICollectionViewCell {
     lazy var backgroundEffect: UIVisualEffectView? = {
         let blur = UIBlurEffect(style: UIBlurEffectStyle.Light)
         let vib = UIVibrancyEffect(forBlurEffect: blur)
-        return DeviceInfo.isBlurSupported() ? UIVisualEffectView(effect: blur) : nil
+        let effect: UIVisualEffectView? = DeviceInfo.isBlurSupported() ? UIVisualEffectView(effect: blur) : nil
+        effect?.alpha = 0
+        return effect
     }()
 
     lazy var imageWrapper: UIView = {

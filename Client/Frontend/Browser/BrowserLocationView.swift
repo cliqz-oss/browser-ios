@@ -16,9 +16,9 @@ protocol BrowserLocationViewDelegate {
     func browserLocationViewLocationAccessibilityActions(browserLocationView: BrowserLocationView) -> [UIAccessibilityCustomAction]?
 }
 
-private struct BrowserLocationViewUX {
+struct BrowserLocationViewUX {
     static let HostFontColor = UIColor.blackColor()
-    static let BaseURLFontColor = UIColor.lightGrayColor()
+    static let BaseURLFontColor = UIColor.grayColor()
     static let BaseURLPitch = 0.75
     static let HostPitch = 1.0
     static let LocationContentInset = 8
@@ -28,6 +28,14 @@ class BrowserLocationView: UIView {
     var delegate: BrowserLocationViewDelegate?
     var longPressRecognizer: UILongPressGestureRecognizer!
     var tapRecognizer: UITapGestureRecognizer!
+
+    dynamic var baseURLFontColor: UIColor = BrowserLocationViewUX.BaseURLFontColor {
+        didSet { updateTextWithURL() }
+    }
+
+    dynamic var hostFontColor: UIColor = BrowserLocationViewUX.HostFontColor {
+        didSet { updateTextWithURL() }
+    }
 
     var url: NSURL? {
         didSet {
@@ -49,8 +57,7 @@ class BrowserLocationView: UIView {
             if newReaderModeState != self.readerModeButton.readerModeState {
                 let wasHidden = readerModeButton.hidden
                 self.readerModeButton.readerModeState = newReaderModeState
-//                readerModeButton.hidden = (newReaderModeState == ReaderModeState.Unavailable)
-				readerModeButton.hidden = true
+                readerModeButton.hidden = (newReaderModeState == ReaderModeState.Unavailable)
                 if wasHidden != readerModeButton.hidden {
                     UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
                 }
@@ -87,8 +94,6 @@ class BrowserLocationView: UIView {
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultMediumFont
-		urlTextField.rightViewMode = .UnlessEditing
-		urlTextField.rightView = UIImageView(image: UIImage(named: "refresh"))
         return urlTextField
     }()
 
@@ -193,12 +198,12 @@ class BrowserLocationView: UIView {
     }
 
     private func updateTextWithURL() {
-        if let httplessURL = url?.absoluteStringWithoutHTTPScheme(), let baseDomain = url?.baseDomain() {
+        if let httplessURL = url?.absoluteDisplayString(), let baseDomain = url?.baseDomain() {
             // Highlight the base domain of the current URL.
             let attributedString = NSMutableAttributedString(string: httplessURL)
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: BrowserLocationViewUX.BaseURLFontColor, range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: BrowserLocationViewUX.HostFontColor)
+            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
+            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: BrowserLocationViewUX.BaseURLPitch), range: nsRange)
             attributedString.pitchSubstring(baseDomain, withPitch: BrowserLocationViewUX.HostPitch)
             urlTextField.attributedText = attributedString
@@ -221,7 +226,7 @@ extension BrowserLocationView: UIGestureRecognizerDelegate {
 }
 
 extension BrowserLocationView: AccessibilityActionsSource {
-	func accessibilityCustomActionsForView(view: UIView) -> [UIAccessibilityCustomAction]? {
+    func accessibilityCustomActionsForView(view: UIView) -> [UIAccessibilityCustomAction]? {
         if view === urlTextField {
             return delegate?.browserLocationViewLocationAccessibilityActions(self)
         }

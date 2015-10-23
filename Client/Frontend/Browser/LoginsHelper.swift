@@ -34,7 +34,7 @@ class LoginsHelper: BrowserHelper {
         self.profile = profile
 
         if let path = NSBundle.mainBundle().pathForResource("LoginsHelper", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
-            let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+            let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
             browser.webView!.configuration.userContentController.addUserScript(userScript)
         }
     }
@@ -44,27 +44,25 @@ class LoginsHelper: BrowserHelper {
     }
 
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-        let frameInfo = message.frameInfo
-
-        // We don't currently inject the helper into iframes.
-        // Don't listen for messages from iframes, either.
-        if !frameInfo.mainFrame {
-            return
-        }
-
-        var res = message.body as! [String: String]
-        let type = res["type"]
+        guard var res = message.body as? [String: AnyObject] else { return }
+        guard let type = res["type"] as? String else { return }
 
         // We don't use the WKWebView's URL since the page can spoof the URL by using document.location
         // right before requesting login data. See bug 1194567 for more context.
-        if let url = frameInfo.request.URL {
-            if type == "request" {
+        if let url = message.frameInfo.request.URL {
+            // Since responses go to the main frame, make sure we only listen for main frame requests
+            // to avoid XSS attacks.
+            if message.frameInfo.mainFrame && type == "request" {
                 res["username"] = ""
                 res["password"] = ""
-                let login = Login.fromScript(url, script: res)
-                requestLogins(login, requestId: res["requestId"]!)
+                if let login = Login.fromScript(url, script: res),
+                   let requestId = res["requestId"] as? String {
+                    requestLogins(login, requestId: requestId)
+                }
             } else if type == "submit" {
-                setCredentials(Login.fromScript(url, script: res))
+                if let login = Login.fromScript(url, script: res) {
+                    setCredentials(login)
+                }
             }
         }
     }

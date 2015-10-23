@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "cliqz-symbol-settings@1x.png"
+      "filename" : "settings-flatfox.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "cliqz-symbol-settings@2x.png"
+      "filename" : "settings-flatfox@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "_thumb_11016.png"
+      "filename" : "settings-flatfox@3x.png"
     }
   ],
   "info" : {

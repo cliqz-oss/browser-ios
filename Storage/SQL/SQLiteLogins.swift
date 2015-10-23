@@ -214,7 +214,9 @@ public class SQLiteLogins: BrowserLogins {
         "ORDER BY timeLastUsed DESC"
 
         let args: Args = [protectionSpace.host, protectionSpace.host]
-        log.debug("Looking for login: \(protectionSpace.host)")
+        if Logger.logPII {
+            log.debug("Looking for login: \(protectionSpace.host)")
+        }
         return db.runQuery(sql, args: args, factory: SQLiteLogins.LoginDataFactory)
     }
 
@@ -232,7 +234,10 @@ public class SQLiteLogins: BrowserLogins {
             usernameMatch = "username IS NULL"
         }
 
-        log.debug("Looking for login: \(username), \(args[0])")
+        if Logger.logPII {
+            log.debug("Looking for login: \(username), \(args[0])")
+        }
+
         let sql =
         "SELECT \(projection) FROM " +
         "\(TableLoginsLocal) WHERE is_deleted = 0 AND hostname IS ? AND \(usernameMatch) " +
@@ -854,11 +859,14 @@ extension SQLiteLogins: SyncableLogins {
         return self.db.run("DELETE FROM \(TableLoginsMirror) WHERE guid IN \(inClause)", withArgs: args)
          >>> { self.db.run("DELETE FROM \(TableLoginsLocal) WHERE guid IN \(inClause)", withArgs: args) }
     }
+}
 
+extension SQLiteLogins: ResettableSyncStorage {
     /**
      * Clean up any metadata.
+     * TODO: is this safe for a regular reset? It forces a content-based merge.
      */
-    public func onRemovedAccount() -> Success {
+    public func resetClient() -> Success {
         // Clone all the mirrors so we don't lose data.
         return self.cloneMirrorToOverlay(whereClause: nil, args: nil)
 
@@ -867,5 +875,11 @@ extension SQLiteLogins: SyncableLogins {
 
         // Mark all of the local data as new.
         >>> { self.db.run("UPDATE \(TableLoginsLocal) SET sync_status = \(SyncStatus.New.rawValue)") }
+    }
+}
+
+extension SQLiteLogins: AccountRemovalDelegate {
+    public func onRemovedAccount() -> Success {
+        return self.resetClient()
     }
 }

@@ -1,6 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
 import Shared
@@ -14,6 +14,11 @@ public struct SyncAuthStateCache {
     let token: TokenServerToken
     let forKey: NSData
     let expiresAt: Timestamp
+}
+
+public protocol SyncAuthState {
+    func invalidate()
+    func token(now: Timestamp, canBeExpired: Bool) -> Deferred<Maybe<(token: TokenServerToken, forKey: NSData)>>
 }
 
 public func syncAuthStateCachefromJSON(json: JSON) -> SyncAuthStateCache? {
@@ -43,7 +48,7 @@ extension SyncAuthStateCache: JSONLiteralConvertible {
     }
 }
 
-public class SyncAuthState {
+public class FirefoxAccountSyncAuthState: SyncAuthState {
     private let account: FirefoxAccount
     private let cache: KeychainCache<SyncAuthStateCache>
 

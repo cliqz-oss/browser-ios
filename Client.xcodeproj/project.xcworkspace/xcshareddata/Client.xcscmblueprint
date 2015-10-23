@@ -6,24 +6,29 @@
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "DE40746A223017FCE2A7B33F10A7295A4F2008F5" : 0,
-    "6E3F4AC05DE804B6536E3CAD9936B342C89CB23F" : 0,
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : 0,
     "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : 0,
-    "6833293950E2928CEAADEE85B68B2B9358497554" : 0,
-    "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : 0
+    "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : 0,
+    "31F61D37FA0E05F17C9C09F96F652B8EC64779B9" : 0,
+    "55011AEBD444630C0E9DF47BD2E18FDBBDCC285D" : 0
   },
-  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "EA523C7C-2CE4-4EDF-9209-C2F5F2DF0115",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "735ABF42-7DDF-42DC-959C-850D55951B2D",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "DE40746A223017FCE2A7B33F10A7295A4F2008F5" : "mobile-tab-manager\/",
-    "6E3F4AC05DE804B6536E3CAD9936B342C89CB23F" : "fresh-tab\/",
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : "cliqzfox-ios\/Carthage\/Checkouts\/Base32\/Carthage\/Checkouts\/xcconfigs\/",
     "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : "cliqzfox-ios\/",
-    "6833293950E2928CEAADEE85B68B2B9358497554" : "navigation-extension\/",
-    "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : "cliqzfox-ios\/ThirdParty\/google-breakpad\/"
+    "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : "s2fxios\/ThirdParty\/google-breakpad\/",
+    "31F61D37FA0E05F17C9C09F96F652B8EC64779B9" : "s2fxios\/",
+    "55011AEBD444630C0E9DF47BD2E18FDBBDCC285D" : "s2fxios\/Carthage\/Checkouts\/SQLite.swift\/Vendor\/sqlcipher\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Client",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Client.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:mozilla\/firefox-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "31F61D37FA0E05F17C9C09F96F652B8EC64779B9"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:naira-cliqz\/cliqzfox-ios.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
@@ -35,19 +40,14 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4c0a9323-5329-0410-9bdc-e9ce6186880e++505"
     },
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:naira-cliqz\/navigation-extension.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/sqlcipher\/sqlcipher.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6833293950E2928CEAADEE85B68B2B9358497554"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "55011AEBD444630C0E9DF47BD2E18FDBBDCC285D"
     },
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:cliqz\/fresh-tab.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jspahrsummers\/xcconfigs.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6E3F4AC05DE804B6536E3CAD9936B342C89CB23F"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:khaled-cliqz\/mobile-tab-manager.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE40746A223017FCE2A7B33F10A7295A4F2008F5"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E084C86B03F81D63323C9E7510697EA528A758C7"
     }
   ]
 }

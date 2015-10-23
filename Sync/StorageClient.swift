@@ -167,7 +167,14 @@ private func optionalUIntegerHeader(input: AnyObject?) -> Timestamp? {
     return nil
 }
 
+public enum SortOption: String {
+    case NewestFirst = "newest"
+    case OldestFirst = "oldest"
+    case Index = "index"
+}
+
 public struct ResponseMetadata {
+    public let status: Int
     public let alert: String?
     public let nextOffset: String?
     public let records: UInt64?
@@ -178,10 +185,11 @@ public struct ResponseMetadata {
     public let retryAfterMilliseconds: UInt64?
 
     public init(response: NSHTTPURLResponse) {
-        self.init(headers: response.allHeaderFields)
+        self.init(status: response.statusCode, headers: response.allHeaderFields)
     }
 
-    public init(headers: [NSObject : AnyObject]) {
+    init(status: Int, headers: [NSObject : AnyObject]) {
+        self.status = status
         alert = headers["X-Weave-Alert"] as? String
         nextOffset = headers["X-Weave-Next-Offset"] as? String
         records = optionalUIntegerHeader(headers["X-Weave-Records"])
@@ -268,7 +276,13 @@ public class Sync15StorageClient {
         self.backoff = backoff
 
         // This is a potentially dangerous assumption, but failable initializers up the stack are a giant pain.
-        self.serverURI = NSURL(string: token.api_endpoint)!
+        // We want the serverURI to *not* have a trailing slash: to efficiently wipe a user's storage, we delete
+        // the user root (like /1.5/1234567) and not an "empty collection" (like /1.5/1234567/); the storage
+        // server treats the first like a DROP table and the latter like a DELETE *, and the former is more
+        // efficient than the latter.
+        self.serverURI = NSURL(string: token.api_endpoint.endsWith("/")
+            ? token.api_endpoint.substringToIndex(token.api_endpoint.endIndex.predecessor())
+            : token.api_endpoint)!
         self.authorizer = {
             (r: NSMutableURLRequest) -> NSMutableURLRequest in
             let helper = HawkHelper(id: token.id, key: token.key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
@@ -304,8 +318,7 @@ public class Sync15StorageClient {
              * Returns true if handled.
              */
             func failFromResponse(response: NSHTTPURLResponse?) -> Bool {
-                // TODO: Swift 2.0 guards.
-                if response == nil {
+                guard let response = response else {
                     // TODO: better error.
                     log.error("No response")
                     let result = Maybe<T>(failure: RecordParseError())
@@ -313,7 +326,6 @@ public class Sync15StorageClient {
                     return true
                 }
 
-                let response = response!
                 log.debug("Status code: \(response.statusCode).")
 
                 let storageResponse = StorageResponse(value: response, metadata: ResponseMetadata(response: response))
@@ -441,7 +453,15 @@ public class Sync15StorageClient {
             return deferred
         }
 
-        let req = op(self.serverURI.URLByAppendingPathComponent(path))
+        // Special case "": we want /1.5/1234567 and not /1.5/1234567/.  See note about trailing slashes above.
+        let url: NSURL
+        if path == "" {
+            url = self.serverURI // No trailing slash.
+        } else {
+            url = self.serverURI.URLByAppendingPathComponent(path)
+        }
+
+        let req = op(url)
         let handler = self.errorWrap(deferred) { (_, response, result) in
             if let json: JSON = result.value as? JSON {
                 if let v = f(json) {
@@ -505,33 +525,58 @@ public class Sync15StorageClient {
         return doOp(self.requestDELETE, path: path, f: f)
     }
 
-    func getInfoCollections() -> Deferred<Maybe<StorageResponse<InfoCollections>>> {
-        return getResource("info/collections", f: InfoCollections.fromJSON)
-    }
-
-    func getMetaGlobal() -> Deferred<Maybe<StorageResponse<GlobalEnvelope>>> {
-        return getResource("storage/meta/global", f: { GlobalEnvelope($0) })
-    }
-
-    func uploadMetaGlobal(metaGlobal: MetaGlobal, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Timestamp>>> {
-        let payload = metaGlobal.toPayload()
-        if payload.isError {
-            return Deferred(value: Maybe(failure: MalformedMetaGlobalError()))
-        }
-
-        // TODO finish this!
-        let record: JSON = JSON(["payload": payload, "id": "global"])
-        return putResource("storage/meta/global", body: record, ifUnmodifiedSince: ifUnmodifiedSince, parser: decimalSecondsStringToTimestamp)
-    }
-
     func wipeStorage() -> Deferred<Maybe<StorageResponse<JSON>>> {
         // In Sync 1.5 it's preferred that we delete the root, not /storage.
         return deleteResource("", f: { $0 })
     }
 
-    // TODO: it would be convenient to have the storage client manage Keys,
-    // but of course we need to use a different set of keys to fetch crypto/keys
-    // itself.
+    func getInfoCollections() -> Deferred<Maybe<StorageResponse<InfoCollections>>> {
+        return getResource("info/collections", f: InfoCollections.fromJSON)
+    }
+
+    func getMetaGlobal() -> Deferred<Maybe<StorageResponse<MetaGlobal>>> {
+        return getResource("storage/meta/global") { json in
+            // We have an envelope.  Parse the meta/global record embedded in the 'payload' string.
+            let envelope = EnvelopeJSON(json)
+            if envelope.isValid() {
+                return MetaGlobal.fromJSON(JSON.parse(envelope.payload))
+            }
+            return nil
+        }
+    }
+
+    func getCryptoKeys(syncKeyBundle: KeyBundle, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Record<KeysPayload>>>> {
+        let syncKey = Keys(defaultBundle: syncKeyBundle)
+        let encoder = RecordEncoder<KeysPayload>(decode: { KeysPayload($0) }, encode: { $0 })
+        let encrypter = syncKey.encrypter("keys", encoder: encoder)
+        let client = self.clientForCollection("crypto", encrypter: encrypter)
+        return client.get("keys")
+    }
+
+    func uploadMetaGlobal(metaGlobal: MetaGlobal, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Timestamp>>> {
+        let payload = metaGlobal.asPayload()
+        if payload.isError {
+            return Deferred(value: Maybe(failure: MalformedMetaGlobalError()))
+        }
+
+        let record: JSON = JSON(["payload": payload.toString(), "id": "global"])
+        return putResource("storage/meta/global", body: record, ifUnmodifiedSince: ifUnmodifiedSince, parser: decimalSecondsStringToTimestamp)
+    }
+
+    // The crypto/keys record is a special snowflake: it is encrypted with the Sync key bundle.  All other records are
+    // encrypted with the bulk key bundle (including possibly a per-collection bulk key) stored in crypto/keys.
+    func uploadCryptoKeys(keys: Keys, withSyncKeyBundle syncKeyBundle: KeyBundle, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Timestamp>>> {
+        let syncKey = Keys(defaultBundle: syncKeyBundle)
+        let encoder = RecordEncoder<KeysPayload>(decode: { KeysPayload($0) }, encode: { $0 })
+        let encrypter = syncKey.encrypter("keys", encoder: encoder)
+        let client = self.clientForCollection("crypto", encrypter: encrypter)
+
+        let record = Record(id: "keys", payload: keys.asPayload())
+        return client.put(record, ifUnmodifiedSince: ifUnmodifiedSince)
+    }
+
+    // It would be convenient to have the storage client manage Keys, but of course we need to use a different set of
+    // keys to fetch crypto/keys itself.  See uploadCryptoKeys.
     func clientForCollection<T: CleartextPayloadJSON>(collection: String, encrypter: RecordEncrypter<T>) -> Sync15CollectionClient<T> {
         let storage = self.serverURI.URLByAppendingPathComponent("storage", isDirectory: true)
         return Sync15CollectionClient(client: self, serverURI: storage, collection: collection, encrypter: encrypter)
@@ -587,8 +632,6 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
 
     public func put(record: Record<T>, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Timestamp>>> {
         if let body = self.encrypter.serializer(record) {
-            log.debug("Body is \(body)")
-            log.debug("Original record is \(record)")
             return self.client.putResource(uriForRecord(record.id), body: body, ifUnmodifiedSince: ifUnmodifiedSince, parser: decimalSecondsStringToTimestamp)
         }
         return deferMaybe(RecordParseError())
@@ -627,32 +670,57 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
      * multiple requests. The others use application/newlines. We don't want to write
      * another Serializer, and we're loading everything into memory anyway.
      */
-    public func getSince(since: Timestamp) -> Deferred<Maybe<StorageResponse<[Record<T>]>>> {
+    public func getSince(since: Timestamp, sort: SortOption?=nil, limit: Int?=nil, offset: String?=nil) -> Deferred<Maybe<StorageResponse<[Record<T>]>>> {
         let deferred = Deferred<Maybe<StorageResponse<[Record<T>]>>>(defaultQueue: client.resultQueue)
 
+        // Fills the Deferred for us.
         if self.client.checkBackoff(deferred) {
             return deferred
         }
 
-        let req = client.requestGET(self.collectionURI.withQueryParams([
+        var params: [NSURLQueryItem] = [
             NSURLQueryItem(name: "full", value: "1"),
-            NSURLQueryItem(name: "newer", value: millisecondsToDecimalSeconds(since))]))
+            NSURLQueryItem(name: "newer", value: millisecondsToDecimalSeconds(since)),
+        ]
+
+        if let offset = offset {
+            params.append(NSURLQueryItem(name: "offset", value: offset))
+        }
+
+        if let limit = limit {
+            params.append(NSURLQueryItem(name: "limit", value: "\(limit)"))
+        }
+
+        if let sort = sort {
+            params.append(NSURLQueryItem(name: "sort", value: sort.rawValue))
+        }
+
+        log.debug("Issuing GET with newer = \(since).")
+        let req = client.requestGET(self.collectionURI.withQueryParams(params))
 
         req.responsePartialParsedJSON(queue: collectionQueue, completionHandler: self.client.errorWrap(deferred) { (_, response, result) in
 
-            if let json: JSON = result.value as? JSON {
-                func recordify(json: JSON) -> Record<T>? {
-                    let envelope = EnvelopeJSON(json)
-                    return Record<T>.fromEnvelope(envelope, payloadFactory: self.encrypter.factory)
-                }
-                if let arr = json.asArray {
-                    let response = StorageResponse(value: optFilter(arr.map(recordify)), response: response!)
-                    deferred.fill(Maybe(success: response))
-                    return
-                }
+            log.verbose("Response is \(response).")
+            guard let json: JSON = result.value as? JSON else {
+                log.warning("Non-JSON response.")
+                deferred.fill(Maybe(failure: RecordParseError()))
+                return
             }
 
-            deferred.fill(Maybe(failure: RecordParseError()))
+            guard let arr = json.asArray else {
+                log.warning("Non-array response.")
+                deferred.fill(Maybe(failure: RecordParseError()))
+                return
+            }
+
+            func recordify(json: JSON) -> Record<T>? {
+                let envelope = EnvelopeJSON(json)
+                return Record<T>.fromEnvelope(envelope, payloadFactory: self.encrypter.factory)
+            }
+
+            let records = optFilter(arr.map(recordify))
+            let response = StorageResponse(value: records, response: response!)
+            deferred.fill(Maybe(success: response))
         })
 
         return deferred
