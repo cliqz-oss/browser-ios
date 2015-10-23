@@ -6,6 +6,7 @@
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : 0,
     "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : 0,
     "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : 0,
     "31F61D37FA0E05F17C9C09F96F652B8EC64779B9" : 0,
@@ -13,6 +14,7 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "735ABF42-7DDF-42DC-959C-850D55951B2D",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : "cliqzfox-ios\/Carthage\/Checkouts\/Base32\/Carthage\/Checkouts\/xcconfigs\/",
     "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : "cliqzfox-ios\/",
     "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : "s2fxios\/ThirdParty\/google-breakpad\/",
     "31F61D37FA0E05F17C9C09F96F652B8EC64779B9" : "s2fxios\/",
@@ -41,6 +43,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/sqlcipher\/sqlcipher.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "55011AEBD444630C0E9DF47BD2E18FDBBDCC285D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jspahrsummers\/xcconfigs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E084C86B03F81D63323C9E7510697EA528A758C7"
     }
   ]
 }
