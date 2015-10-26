@@ -313,16 +313,8 @@
 		39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; };
 		39A362DA1AAF5ECE00F47390 /* XCGLogger.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 39A362D41AAF5E2C00F47390 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
-		4F32CD0F1BDA7A3200E3FC03 /* DemoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD081BDA7A3200E3FC03 /* DemoServer.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD101BDA7A3200E3FC03 /* HttpHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD091BDA7A3200E3FC03 /* HttpHandlers.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD111BDA7A3200E3FC03 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0A1BDA7A3200E3FC03 /* HttpParser.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD121BDA7A3200E3FC03 /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0B1BDA7A3200E3FC03 /* HttpRequest.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD131BDA7A3200E3FC03 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0C1BDA7A3200E3FC03 /* HttpResponse.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD141BDA7A3200E3FC03 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0D1BDA7A3200E3FC03 /* HttpServer.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD151BDA7A3200E3FC03 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0E1BDA7A3200E3FC03 /* Socket.swift */; settings = {ASSET_TAGS = (); }; };
 		4F32CD3C1BDA7A4200E3FC03 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD3B1BDA7A4200E3FC03 /* CliqzSearchViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		4F32CD3D1BDA7BB300E3FC03 /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; settings = {ASSET_TAGS = (); }; };
-		4F32CD4B1BDA849600E3FC03 /* navigation in Resources */ = {isa = PBXBuildFile; fileRef = 4F32CD4A1BDA849600E3FC03 /* navigation */; settings = {ASSET_TAGS = (); }; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
@@ -1545,15 +1537,7 @@
 		394CF6CE1BAA493C00906917 /* DefaultSuggestedSites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSuggestedSites.swift; sourceTree = "<group>"; };
 		39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XCGLogger.xcodeproj; path = Carthage/Checkouts/XCGLogger/XCGLogger/Library/XCGLogger.xcodeproj; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
-		4F32CD081BDA7A3200E3FC03 /* DemoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoServer.swift; sourceTree = "<group>"; };
-		4F32CD091BDA7A3200E3FC03 /* HttpHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpHandlers.swift; sourceTree = "<group>"; };
-		4F32CD0A1BDA7A3200E3FC03 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
-		4F32CD0B1BDA7A3200E3FC03 /* HttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpRequest.swift; sourceTree = "<group>"; };
-		4F32CD0C1BDA7A3200E3FC03 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
-		4F32CD0D1BDA7A3200E3FC03 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
-		4F32CD0E1BDA7A3200E3FC03 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		4F32CD3B1BDA7A4200E3FC03 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
-		4F32CD4A1BDA849600E3FC03 /* navigation */ = {isa = PBXFileReference; lastKnownFileType = folder; name = navigation; path = "../stefan-nav-ext/navigation-extension/build/dev/androidkit/navigation"; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
@@ -2482,20 +2466,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4F32CD071BDA7A3200E3FC03 /* HTTPServer */ = {
-			isa = PBXGroup;
-			children = (
-				4F32CD081BDA7A3200E3FC03 /* DemoServer.swift */,
-				4F32CD091BDA7A3200E3FC03 /* HttpHandlers.swift */,
-				4F32CD0A1BDA7A3200E3FC03 /* HttpParser.swift */,
-				4F32CD0B1BDA7A3200E3FC03 /* HttpRequest.swift */,
-				4F32CD0C1BDA7A3200E3FC03 /* HttpResponse.swift */,
-				4F32CD0D1BDA7A3200E3FC03 /* HttpServer.swift */,
-				4F32CD0E1BDA7A3200E3FC03 /* Socket.swift */,
-			);
-			path = HTTPServer;
-			sourceTree = "<group>";
-		};
 		D31FC22A1A8D908800BAF7EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -2989,7 +2959,6 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
-				4F32CD4A1BDA849600E3FC03 /* navigation */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
 				E4B334871BBF23F3004E2BFF /* iAd.framework */,
 				D31FC2291A8D908800BAF7EC /* Alamofire.xcodeproj */,
@@ -3052,7 +3021,6 @@
 		F84B21C01A090F8100AAB793 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				4F32CD071BDA7A3200E3FC03 /* HTTPServer */,
 				E4D6BEB51A092E0300F538BD /* Fennec.entitlements */,
 				E414F0781A8445A500283322 /* FennecAurora.entitlements */,
 				E4988B571A9B95FF008B8B92 /* FennecNightly.entitlements */,
@@ -4205,7 +4173,6 @@
 				E414F0791A8445A500283322 /* FennecAurora.entitlements in Resources */,
 				2F1BDF921A8523B000213B54 /* LICENSE in Resources */,
 				E4CD9F5B1A71506C00318571 /* Reader.css in Resources */,
-				4F32CD4B1BDA849600E3FC03 /* navigation in Resources */,
 				E4B7B7611A793CF20022C5E0 /* CharisSILB.ttf in Resources */,
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
@@ -4673,7 +4640,6 @@
 				E4B334601BBF2393004E2BFF /* Adjust.m in Sources */,
 				E42475E81AB73B9B00B23D33 /* SWUtilityButtonView.m in Sources */,
 				0B3E7DB81B27A7F600E2E84D /* AboutUtils.swift in Sources */,
-				4F32CD141BDA7A3200E3FC03 /* HttpServer.swift in Sources */,
 				E4B3345C1BBF2393004E2BFF /* ADJPackageHandler.m in Sources */,
 				D301AAEE1A3A55B70078DD1D /* TabTrayController.swift in Sources */,
 				D38B2D431A8D96D00040E6B5 /* GCDWebServerMultiPartFormRequest.m in Sources */,
@@ -4706,7 +4672,6 @@
 				4F32CD3D1BDA7BB300E3FC03 /* KeyboardHelper.swift in Sources */,
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
-				4F32CD121BDA7A3200E3FC03 /* HttpRequest.swift in Sources */,
 				0BD19A651A2530840084FBA7 /* Locking.swift in Sources */,
 				7BA8D1C71BA037F500C8AE9E /* OpenPdfHelper.swift in Sources */,
 				74203E251B276B3D007D481D /* SessionRestoreHandler.swift in Sources */,
@@ -4744,7 +4709,6 @@
 				E6D8D5E71B569D70009E5A58 /* BrowserTrayAnimators.swift in Sources */,
 				F84B22241A09122500AAB793 /* HomePanelViewController.swift in Sources */,
 				E42475DC1AB73B9B00B23D33 /* SWCellScrollView.m in Sources */,
-				4F32CD101BDA7A3200E3FC03 /* HttpHandlers.swift in Sources */,
 				0B5142CC1AE1BAF50014D0B3 /* UIViewExtensions.swift in Sources */,
 				E47616C71AB74CA600E7DD25 /* ReaderModeBarView.swift in Sources */,
 				E4B3344D1BBF2393004E2BFF /* ADJActivityHandler.m in Sources */,
@@ -4753,7 +4717,6 @@
 				E660BDD91BB06521009AC090 /* TabsButton.swift in Sources */,
 				2F44FCCB1A9E972E00FD20CC /* SearchEnginePicker.swift in Sources */,
 				2F834D1A1A80629A006A0B7B /* FxAContentViewController.swift in Sources */,
-				4F32CD151BDA7A3200E3FC03 /* Socket.swift in Sources */,
 				D34DC8531A16C40C00D49B7B /* Profile.swift in Sources */,
 				E4B3348C1BC01D8F004E2BFF /* AdjustIntegration.swift in Sources */,
 				D38B2D3A1A8D96D00040E6B5 /* GCDWebServerResponse.m in Sources */,
@@ -4763,18 +4726,15 @@
 				E4B334591BBF2393004E2BFF /* ADJEvent.m in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
-				4F32CD131BDA7A3200E3FC03 /* HttpResponse.swift in Sources */,
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				28EADE5D1AFC3A78007FB2FB /* UIImageViewExtensions.swift in Sources */,
 				0BB5B2BC1AC0AB9F0052877D /* UIImage+Extensions.swift in Sources */,
-				4F32CD111BDA7A3200E3FC03 /* HttpParser.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				E4B3345A1BBF2393004E2BFF /* ADJLogger.m in Sources */,
 				D3A9949D1A3686BD008AD1AC /* Browser.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,
-				4F32CD0F1BDA7A3200E3FC03 /* DemoServer.swift in Sources */,
 				D3BE7B261B054D4400641031 /* main.swift in Sources */,
 				0BA1E02E1B046F1E007675AF /* ErrorPageHelper.swift in Sources */,
 				D3A9949C1A3686BD008AD1AC /* BrowserViewController.swift in Sources */,
