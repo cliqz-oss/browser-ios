@@ -54,9 +54,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
 
     override func viewWillDisappear(animated: Bool) {
-		self.view.endEditing(true)
-        super.viewWillDisappear(animated)
-		self.view.endEditing(true)
+		super.viewWillDisappear(animated)
     }
 
 	func loader(dataLoaded data: Cursor<Site>) {
