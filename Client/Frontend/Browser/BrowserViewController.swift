@@ -34,7 +34,7 @@ private struct BrowserViewControllerUX {
     private static let BookmarkStarAnimationOffset: CGFloat = 80
 }
 
-class BrowserViewController: UIViewController {
+class BrowserViewController: UIViewController, SearchViewDelegate {
     var homePanelController: HomePanelViewController?
     var webViewContainer: UIView!
     var urlBar: URLBarView!
@@ -43,7 +43,7 @@ class BrowserViewController: UIViewController {
 
     private var statusBarOverlay: UIView!
     private(set) var toolbar: BrowserToolbar?
-    private var searchController: SearchViewController?
+    private var searchController: CliqzSearchViewController?
     private let uriFixup = URIFixup()
     private var screenshotHelper: ScreenshotHelper!
     private var homePanelIsInline = false
@@ -629,10 +629,15 @@ class BrowserViewController: UIViewController {
         }
 
         let isPrivate = tabManager.selectedTab?.isPrivate ?? false
+		searchController = CliqzSearchViewController()
+		searchController!.delegate = self
+		/*
         searchController = SearchViewController(isPrivate: isPrivate)
         searchController!.searchEngines = profile.searchEngines
         searchController!.searchDelegate = self
         searchController!.profile = self.profile
+		*/
+		
 
         searchLoader.addListener(searchController!)
 
@@ -1321,6 +1326,11 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
 }
 
 extension BrowserViewController: SearchViewControllerDelegate {
+	
+	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
+		finishEditingAndSubmit(url, visitType: .Link)
+	}
+	
     func searchViewController(searchViewController: SearchViewController, didSelectURL url: NSURL) {
         finishEditingAndSubmit(url, visitType: VisitType.Typed)
     }

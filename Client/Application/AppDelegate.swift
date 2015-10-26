@@ -78,6 +78,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             viewURLInNewTab(localNotification)
         }
+
+		let bundlePath = NSBundle.mainBundle().bundlePath
+		let extensionPath = bundlePath + "/" + "navigation"
+		
+		let httpServer = HttpServer()
+		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
+		
+		httpServer["/myproxy"] = { (request: HttpRequest) in
+			let u: String = request.urlParams[0].1
+			let data = NSData(contentsOfURL: NSURL(string:u)!)
+			return HttpResponse.RAW(200, data!)
+		}
+		httpServer.start(3005)
+		
         return true
     }
 
