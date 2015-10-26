@@ -36,14 +36,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
-		controller.addScriptMessageHandler(self, name: "interOp")
-		controller.addScriptMessageHandler(self, name: "linkSelected")
-		controller.addScriptMessageHandler(self, name: "changeUrlVal")
+//		controller.addScriptMessageHandler(self, name: "interOp")
+//		controller.addScriptMessageHandler(self, name: "linkSelected")
+//		controller.addScriptMessageHandler(self, name: "changeUrlVal")
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
-		let url = NSURL(string: "http://localhost:3005/extension/index.html")
-		self.webView!.loadRequest(NSURLRequest(URL: url!))
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
@@ -68,14 +66,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
-		var JSString: String!
-		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-		if q == "" {
-			JSString = "_cliqzNoResults()"
-		} else {
-			JSString = "search_mobile('\(q)')"
-		}
-		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
@@ -90,28 +80,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-		if message.name == "interOp" {
-			print("Received event \(message.body) --- \(message.name)")
-			let input = message.body as! NSDictionary
-			let callbakcID = input.objectForKey("callbackId")
-			let query = input.objectForKey("query") as? String
-			var jsonStr: NSString = ""
-			do {
-				let json = try NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions(rawValue: 0))
-					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
-			} catch let error as NSError {
-				print("Json conversion is failed with error: \(error)")
-			}
-			let exec = "CLIQZEnvironment.historySearchDone(\(callbakcID!), '\(query!)', '\(jsonStr)');"
-			self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-		} else if message.name == "linkSelected" {
-			let url = message.body as! String
-			print("LINK SEL: ---- \(url)")
-			delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
-		} else if message.name == "changeUrlVal" {
-			let url = message.body as! String
-				// TODO: Naira
-		}
 	}
 
 	private func layoutSearchEngineScrollView() {
