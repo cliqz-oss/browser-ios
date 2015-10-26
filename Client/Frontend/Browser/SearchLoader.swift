@@ -19,7 +19,7 @@ typealias SearchLoader = _SearchLoader<AnyObject, AnyObject>
  * Shared data source for the SearchViewController and the URLBar domain completion.
  * Since both of these use the same SQL query, we can perform the query once and dispatch the results.
  */
-class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, SearchViewController> {
+class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewController> {
     private let profile: Profile
     private let urlBar: URLBarView
     private var inProgress: Cancellable? = nil
