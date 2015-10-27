@@ -19,7 +19,8 @@ protocol SearchViewDelegate: class {
 
 class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate  {
 	
-	private var searchLoader: SearchLoader!
+    private var searchLoader: SearchLoader!
+    private let cliqzSearchEngine = CliqzSearchEngine()
     var webView: WKWebView?
 	weak var delegate: SearchViewDelegate?
 
@@ -45,6 +46,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
+        
+        cliqzSearchEngine.delegate = self
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -66,10 +69,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
+        cliqzSearchEngine.startSearch(query)
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3005/") {
+		if navigationAction.request.URL!.absoluteString.hasPrefix("http") {
 			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
@@ -111,4 +115,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
+}
+
+
+extension CliqzSearchViewController: CliqzSearchEngineDelegate {
+
+    func displaySearchResults(htmlResult: String) {
+        self.webView!.loadHTMLString(htmlResult, baseURL: nil)
+    }
+    
 }
