@@ -70,6 +70,7 @@
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
+		1EC3CB6C1BDE77130030977D /* CliqzSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */; settings = {ASSET_TAGS = (); }; };
 		1EC3CBD31BDFA5470030977D /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CBD21BDFA5470030977D /* DebugLogger.swift */; settings = {ASSET_TAGS = (); }; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -1390,6 +1391,7 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchEngine.swift; sourceTree = "<group>"; };
 		1EC3CBD21BDFA5470030977D /* DebugLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
 		2816EFFF1B33E05400522243 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 		281B2BE91ADF4D90002917DC /* MockProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MockProfile.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -2635,6 +2637,7 @@
 			isa = PBXGroup;
 			children = (
 				4F32CD3B1BDA7A4200E3FC03 /* CliqzSearchViewController.swift */,
+				1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */,
 				0B3E7D931B27A7CE00E2E84D /* AboutHomeHandler.swift */,
 				0AE491A51A41C88C0046C724 /* BackForwardListViewController.swift */,
 				D3A994961A3686BD008AD1AC /* Browser.swift */,
@@ -4634,6 +4637,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4CD9F6D1A77DD2800318571 /* ReaderModeStyleViewController.swift in Sources */,
+				1EC3CB6C1BDE77130030977D /* CliqzSearchEngine.swift in Sources */,
 				E4A960061ABB9C450069AD6F /* ReaderModeUtils.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
 				D308E4E41A5306F500842685 /* SearchEngines.swift in Sources */,
