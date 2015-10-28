@@ -71,6 +71,10 @@
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
 		1E8F3D2C1BE108C60050C791 /* StatisticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2A1BE108B20050C791 /* StatisticsCollector.swift */; settings = {ASSET_TAGS = (); }; };
+		1E8F3D2F1BE113F30050C791 /* CliqzSearchEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */; settings = {ASSET_TAGS = (); }; };
+		1E8F3D301BE113FE0050C791 /* CliqzSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */; settings = {ASSET_TAGS = (); }; };
+		1E8F3D311BE114020050C791 /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CBD21BDFA5470030977D /* DebugLogger.swift */; settings = {ASSET_TAGS = (); }; };
+		1E8F3D321BE114070050C791 /* StatisticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2A1BE108B20050C791 /* StatisticsCollector.swift */; settings = {ASSET_TAGS = (); }; };
 		1EC3CB6C1BDE77130030977D /* CliqzSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */; };
 		1EC3CBD31BDFA5470030977D /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC3CBD21BDFA5470030977D /* DebugLogger.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -1393,6 +1397,7 @@
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
 		1E8F3D2A1BE108B20050C791 /* StatisticsCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsCollector.swift; sourceTree = "<group>"; };
+		1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchEngineTests.swift; sourceTree = "<group>"; };
 		1EC3CB6B1BDE77130030977D /* CliqzSearchEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchEngine.swift; sourceTree = "<group>"; };
 		1EC3CBD21BDFA5470030977D /* DebugLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
 		2816EFFF1B33E05400522243 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
@@ -3048,6 +3053,7 @@
 		F84B21D61A090F8100AAB793 /* ClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */,
 				F84B21D91A090F8100AAB793 /* ClientTests.swift */,
 				E60A60A01B6BFDDC00F850D4 /* CrashReporterTests.swift */,
 				D3D488581ABB54CD00A93597 /* FileAccessorTests.swift */,
@@ -4787,6 +4793,7 @@
 				D3D488591ABB54CD00A93597 /* FileAccessorTests.swift in Sources */,
 				0BA8964B1A250E6500C1010C /* ProfileTest.swift in Sources */,
 				0BB5B28D1AC0A6130052877D /* Toolbar.swift in Sources */,
+				1E8F3D2F1BE113F30050C791 /* CliqzSearchEngineTests.swift in Sources */,
 				03CCC9181AF05E7300DBF30D /* RelativeDatesTests.swift in Sources */,
 				F84B21DA1A090F8100AAB793 /* ClientTests.swift in Sources */,
 				E60A60A11B6BFDDC00F850D4 /* CrashReporterTests.swift in Sources */,
@@ -4812,12 +4819,14 @@
 				D3FA777B1A43B2990010CD32 /* SearchTests.swift in Sources */,
 				D3BA41681BD82F2200DA5457 /* XCTestCaseExtensions.swift in Sources */,
 				7BBFEEA11BB40A0800A305AA /* ReaderModeCache.swift in Sources */,
+				1E8F3D301BE113FE0050C791 /* CliqzSearchEngine.swift in Sources */,
 				D38B2D441A8D96D00040E6B5 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				E42475DD1AB73B9B00B23D33 /* SWCellScrollView.m in Sources */,
 				D39843171AC13F9300D658F4 /* ThumbnailCell.swift in Sources */,
 				D3C744CE1A687D6C004CE85D /* URIFixup.swift in Sources */,
 				2816F0011B33E05400522243 /* UIConstants.swift in Sources */,
 				D38B2D3E1A8D96D00040E6B5 /* GCDWebServerDataRequest.m in Sources */,
+				1E8F3D311BE114020050C791 /* DebugLogger.swift in Sources */,
 				0BF1B7FE1AC60F0200A7B407 /* InsetButton.swift in Sources */,
 				7BBFEEA01BB409F300A305AA /* AboutUtils.swift in Sources */,
 				0BD19A681A2530A40084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
@@ -4833,6 +4842,7 @@
 				D38B2D381A8D96D00040E6B5 /* GCDWebServerRequest.m in Sources */,
 				0BA8964C1A250E6500C1010C /* TestBookmarks.swift in Sources */,
 				D38B2D321A8D96D00040E6B5 /* GCDWebServerConnection.m in Sources */,
+				1E8F3D321BE114070050C791 /* StatisticsCollector.swift in Sources */,
 				7BBFEE9D1BB409D800A305AA /* SessionData.swift in Sources */,
 				7BBFEEA21BB40A1700A305AA /* ReaderModeStyleViewController.swift in Sources */,
 				0BE108361A1B1EC700D4B712 /* TestLocking.swift in Sources */,
