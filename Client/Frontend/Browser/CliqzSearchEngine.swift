@@ -10,28 +10,31 @@ import UIKit
 import Alamofire
 
 class CliqzSearchEngine: NSObject {
-	private lazy var cachedData = Dictionary<String, NSDictionary>()
-	
+	private lazy var cachedData = Dictionary<String, [String : AnyObject]>()
+	private var statisticsCollector = StatisticsCollector.sharedInstance
+    
     private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
 	internal func startSearch(query: String, callback: ((query: String, data: String)) -> Void) {
-		
-        DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 		
 		if let data = cachedData[query] {
 			let html = self.parseResponse(data)
 			callback((query, html))
 		} else {
+            statisticsCollector.startEvent(query)
+            DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 			Alamofire.request(.GET, searchURL, parameters: ["q": query])
 				.responseJSON {
 					request, response, result in
 					switch result {
 						
 					case .Success(let json):
-						let jsonDict = json as! NSDictionary
+						let jsonDict = json as! [String : AnyObject]
 						self.cachedData[query] = jsonDict
 						let html = self.parseResponse(jsonDict)
 						callback((query, html))
+                        self.statisticsCollector.endEvent(query)
+                        DebugLogger.log("<< parsed response for query: \(query)")
 						
 					case .Failure(let data, let error):
 						DebugLogger.log("Request failed with error: \(error)")
@@ -48,20 +51,18 @@ class CliqzSearchEngine: NSObject {
 		self.cachedData.removeAll()
 	}
 	
-    private func parseResponse (json: NSDictionary) -> String {
-        let query = json["q"]
-        DebugLogger.log("<< parsing response for query: \(query!)")
+    private func parseResponse (json: [String : AnyObject]) -> String {
         
         var html = "<html><head></head><body><font size='20'>"
 		
-		if let results = json["result"] as? NSArray {
+		if let results = json["result"] as? [[String:AnyObject]] {
 			for result in results {
 				var url = ""
 				if let u = result["url"] as? String {
 					url = u
 				}
-				var snippet = NSDictionary()
-				if let s = result["snippet"] as? NSDictionary {
+				var snippet = [String:AnyObject]()
+				if let s = result["snippet"] as? [String:AnyObject] {
 					snippet = s
 				}
 				var title = ""
