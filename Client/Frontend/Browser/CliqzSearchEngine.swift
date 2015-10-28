@@ -12,16 +12,18 @@ import Alamofire
 class CliqzSearchEngine: NSObject {
 	private lazy var cachedData = Dictionary<String, NSDictionary>()
 	
+	private var statisticsCollector = StatisticsCollector.sharedInstance
+    
     private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
 	internal func startSearch(query: String, callback: ((query: String, data: String)) -> Void) {
-		
-        DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 		
 		if let data = cachedData[query] {
 			let html = self.parseResponse(data)
 			callback((query, html))
 		} else {
+            statisticsCollector.startEvent(query)
+            DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 			Alamofire.request(.GET, searchURL, parameters: ["q": query])
 				.responseJSON {
 					request, response, result in
@@ -32,6 +34,8 @@ class CliqzSearchEngine: NSObject {
 						self.cachedData[query] = jsonDict
 						let html = self.parseResponse(jsonDict)
 						callback((query, html))
+                        self.statisticsCollector.endEvent(query)
+                        DebugLogger.log("<< parsed response for query: \(query)")
 						
 					case .Failure(let data, let error):
 						DebugLogger.log("Request failed with error: \(error)")

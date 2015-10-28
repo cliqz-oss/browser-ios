@@ -23,7 +23,7 @@ class DebugLogger {
                 fatalError("printLog only works for values that conform to CustomDebugStringConvertible or CustomStringConvertible")
             }
 			
-			print("[DEBUG] \(stringRepresentation)")
+			NSLog("[DEBUG] \(stringRepresentation)")
         #endif
     }
 }
