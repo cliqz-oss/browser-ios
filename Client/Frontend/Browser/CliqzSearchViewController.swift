@@ -47,7 +47,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
         
-        cliqzSearchEngine.delegate = self
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -57,6 +56,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
     }
+
+	override func didReceiveMemoryWarning() {
+		self.cliqzSearchEngine.clearCache()
+	}
 
 	func loader(dataLoaded data: Cursor<Site>) {
 		self.historyResults.removeAll(keepCapacity: true)
@@ -69,7 +72,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
-        cliqzSearchEngine.startSearch(query)
+		cliqzSearchEngine.startSearch(query) {
+			(q, data) in
+			if q == self.searchQuery {
+				self.webView!.loadHTMLString(data, baseURL: nil)
+			}
+		}
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
@@ -115,13 +123,4 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
-}
-
-
-extension CliqzSearchViewController: CliqzSearchEngineDelegate {
-
-    func displaySearchResults(htmlResult: String) {
-        self.webView!.loadHTMLString(htmlResult, baseURL: nil)
-    }
-    
 }

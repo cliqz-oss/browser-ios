@@ -19,10 +19,11 @@ class DebugLogger {
             } else if let value = value as? CustomStringConvertible {
                 stringRepresentation = value.description
             } else {
+				stringRepresentation = ""
                 fatalError("printLog only works for values that conform to CustomDebugStringConvertible or CustomStringConvertible")
             }
-            
-            NSLog("[DEBUG] \(stringRepresentation)")
+			
+			print("[DEBUG] \(stringRepresentation)")
         #endif
     }
 }

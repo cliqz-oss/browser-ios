@@ -9,48 +9,70 @@
 import UIKit
 import Alamofire
 
-protocol CliqzSearchEngineDelegate : class {
-    func displaySearchResults(htmlResult: String)
-}
-
 class CliqzSearchEngine: NSObject {
-    weak var delegate: CliqzSearchEngineDelegate?
-    let searchURL = "http://newbeta.cliqz.com/api/v1/results"
+	private lazy var cachedData = Dictionary<String, NSDictionary>()
+	
+    private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
-    func startSearch(query: String) {
-        
+	internal func startSearch(query: String, callback: ((query: String, data: String)) -> Void) {
+		
         DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
-        Alamofire.request(.GET, searchURL, parameters: ["q": query])
-            .responseJSON { request, response, result in
-                switch result {
-                case .Success(let json):
-                    let html = self.parseResponse(json as! NSDictionary)
-                    self.delegate?.displaySearchResults(html)
-                    
-                case .Failure(let data, let error):
-                    DebugLogger.log("Request failed with error: \(error)")
-                    
-                    if let data = data {
-                        DebugLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
-                    }
-                }
-        }
+		
+		if let data = cachedData[query] {
+			let html = self.parseResponse(data)
+			callback((query, html))
+		} else {
+			Alamofire.request(.GET, searchURL, parameters: ["q": query])
+				.responseJSON {
+					request, response, result in
+					switch result {
+						
+					case .Success(let json):
+						let jsonDict = json as! NSDictionary
+						self.cachedData[query] = jsonDict
+						let html = self.parseResponse(jsonDict)
+						callback((query, html))
+						
+					case .Failure(let data, let error):
+						DebugLogger.log("Request failed with error: \(error)")
+
+						if let data = data {
+							DebugLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
+						}
+					}
+			}
+		}
     }
-    func parseResponse (json: NSDictionary) -> String {
+
+	internal func clearCache() {
+		self.cachedData.removeAll()
+	}
+	
+    private func parseResponse (json: NSDictionary) -> String {
         let query = json["q"]
         DebugLogger.log("<< parsing response for query: \(query!)")
         
-        var html = "<html><head></head><body>"
-        
-        let results = json["result"] as? NSArray
-        for result in results! {
-            let url = result["url"] as? String
-            let snippet = result["snippet"] as? NSDictionary
-            let title = snippet!["title"]
-            html += "<a href='\(url!)'>\(title!)</a></br></br>"
-        }
-        
-        html += "</body></html>"
+        var html = "<html><head></head><body><font size='20'>"
+		
+		if let results = json["result"] as? NSArray {
+			for result in results {
+				var url = ""
+				if let u = result["url"] as? String {
+					url = u
+				}
+				var snippet = NSDictionary()
+				if let s = result["snippet"] as? NSDictionary {
+					snippet = s
+				}
+				var title = ""
+				if let t = snippet["title"] as? String {
+					title = t
+				}
+				html += "<a href='\(url)' >\(title)</a></br></br>"
+			}
+		}
+
+        html += "</font></body></html>"
         return html
     }
 }

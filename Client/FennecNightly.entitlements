@@ -6,7 +6,7 @@
 	<string>$(AppIdentifierPrefix)org.mozilla.ios.FennecNightly</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.org.mozilla.ios.FennecNightly</string>
+		<string></string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
