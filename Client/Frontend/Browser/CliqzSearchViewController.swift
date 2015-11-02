@@ -33,20 +33,19 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
 //		controller.addScriptMessageHandler(self, name: "interOp")
 //		controller.addScriptMessageHandler(self, name: "linkSelected")
 //		controller.addScriptMessageHandler(self, name: "changeUrlVal")
-        self.webView = WKWebView(frame: self.view.bounds, configuration: config)
+		self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
-        self.view.addSubview(self.webView!)
+		self.view.addSubview(self.webView!)
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-        
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -105,7 +104,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	private func animateSearchEnginesWithKeyboard(keyboardState: KeyboardState) {
 		layoutSearchEngineScrollView()
-		
 		UIView.animateWithDuration(keyboardState.animationDuration, animations: {
 			UIView.setAnimationCurve(keyboardState.animationCurve)
 			self.view.layoutIfNeeded()
