@@ -71,7 +71,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
-		cliqzSearchEngine.startSearch(query) {
+		cliqzSearchEngine.startSearch(query, history: self.historyResults) {
 			(q, data) in
 			if q == self.searchQuery {
 				self.webView!.loadHTMLString(data, baseURL: nil)

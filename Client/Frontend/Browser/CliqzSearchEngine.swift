@@ -15,10 +15,10 @@ class CliqzSearchEngine: NSObject {
     
     private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
-	internal func startSearch(query: String, callback: ((query: String, data: String)) -> Void) {
+	internal func startSearch(query: String, history: Array<Dictionary<String, String>>, callback: ((query: String, data: String)) -> Void) {
 		
 		if let data = cachedData[query] {
-			let html = self.parseResponse(data)
+			let html = self.parseResponse(data, history: history)
 			callback((query, html))
 		} else {
             statisticsCollector.startEvent(query)
@@ -31,7 +31,7 @@ class CliqzSearchEngine: NSObject {
 					case .Success(let json):
 						let jsonDict = json as! [String : AnyObject]
 						self.cachedData[query] = jsonDict
-						let html = self.parseResponse(jsonDict)
+						let html = self.parseResponse(jsonDict, history: history)
 						callback((query, html))
                         self.statisticsCollector.endEvent(query)
                         DebugLogger.log("<< parsed response for query: \(query)")
@@ -50,9 +50,9 @@ class CliqzSearchEngine: NSObject {
 	internal func clearCache() {
 		self.cachedData.removeAll()
 	}
+
+	private func parseResponse (json: NSDictionary, history: Array<Dictionary<String, String>>) -> String {
 	
-    private func parseResponse (json: [String : AnyObject]) -> String {
-        
         var html = "<html><head></head><body><font size='20'>"
 		
 		if let results = json["result"] as? [[String:AnyObject]] {
@@ -69,8 +69,19 @@ class CliqzSearchEngine: NSObject {
 				if let t = snippet["title"] as? String {
 					title = t
 				}
-				html += "<a href='\(url)' >\(title)</a></br></br>"
+				html += "<a href='\(url)'>\(title)</a></br></br>"
 			}
+		}
+		for h in history {
+			var url = ""
+			if let u = h["url"] {
+				url = u
+			}
+			var title = ""
+			if let t = h["title"] {
+				title = t
+			}
+			html += "<a href='\(url)' style='color: #FFA500;'>\(title)</a></br></br>"
 		}
 
         html += "</font></body></html>"
