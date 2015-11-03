@@ -46,7 +46,8 @@ class CliqzSearchEngineTests: XCTestCase {
     func callSreach(timer : NSTimer) {
         if currentQueryIndex < queries.count {
             let query = queries[currentQueryIndex++]
-            cliqzSearchEngine.startSearch(query) {
+            let historyResults: Array<Dictionary<String, String>> = Array<Dictionary<String, String>>()
+            cliqzSearchEngine.startSearch(query, history:historyResults) {
                 (htmlResult) -> Void in
                 self.searchedQueries++
                 if self.searchedQueries == self.queries.count {
