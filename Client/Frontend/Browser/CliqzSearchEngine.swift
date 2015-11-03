@@ -14,12 +14,12 @@ class CliqzSearchEngine: NSObject {
 	
     private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
-	internal func startSearch(query: String, callback: ((query: String, data: String)) -> Void) {
+	internal func startSearch(query: String, history: Array<Dictionary<String, String>>, callback: ((query: String, data: String)) -> Void) {
 		
         DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 		
 		if let data = cachedData[query] {
-			let html = self.parseResponse(data)
+			let html = self.parseResponse(data, history: history)
 			callback((query, html))
 		} else {
 			Alamofire.request(.GET, searchURL, parameters: ["q": query])
@@ -30,7 +30,7 @@ class CliqzSearchEngine: NSObject {
 					case .Success(let json):
 						let jsonDict = json as! NSDictionary
 						self.cachedData[query] = jsonDict
-						let html = self.parseResponse(jsonDict)
+						let html = self.parseResponse(jsonDict, history: history)
 						callback((query, html))
 						
 					case .Failure(let data, let error):
@@ -47,8 +47,8 @@ class CliqzSearchEngine: NSObject {
 	internal func clearCache() {
 		self.cachedData.removeAll()
 	}
-	
-    private func parseResponse (json: NSDictionary) -> String {
+
+	private func parseResponse (json: NSDictionary, history: Array<Dictionary<String, String>>) -> String {
         let query = json["q"]
         DebugLogger.log("<< parsing response for query: \(query!)")
         
@@ -68,8 +68,19 @@ class CliqzSearchEngine: NSObject {
 				if let t = snippet["title"] as? String {
 					title = t
 				}
-				html += "<a href='\(url)' >\(title)</a></br></br>"
+				html += "<a href='\(url)'>\(title)</a></br></br>"
 			}
+		}
+		for h in history {
+			var url = ""
+			if let u = h["url"] {
+				url = u
+			}
+			var title = ""
+			if let t = h["title"] {
+				title = t
+			}
+			html += "<a href='\(url)' style='color: #FFA500;'>\(title)</a></br></br>"
 		}
 
         html += "</font></body></html>"
