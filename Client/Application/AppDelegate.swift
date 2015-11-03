@@ -153,11 +153,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             self.profile?.shutdown()
             application.endBackgroundTask(taskId)
-        }
-    }
+		}
+		let userDefaulst = NSUserDefaults.standardUserDefaults()
+		userDefaulst.setValue(NSDate(), forKey: "lastVisitedDate")
+		userDefaulst.synchronize()
+	}
 
-    private func setUpWebServer(profile: Profile) {
-        let server = WebServer.sharedInstance
+	private func setUpWebServer(profile: Profile) {
+		let server = WebServer.sharedInstance
         ReaderModeHandlers.register(server, profile: profile)
         ErrorPageHelper.register(server)
         AboutHomeHandler.register(server)
@@ -197,13 +200,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 default:
                     break
                 }
-            } else {
+			} else {
                 print("ERROR: Unknown notification action received")
-            }
-        } else {
+			}
+		} else {
             print("ERROR: Unknown notification received")
-        }
-    }
+		}
+	}
 
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
         viewURLInNewTab(notification)

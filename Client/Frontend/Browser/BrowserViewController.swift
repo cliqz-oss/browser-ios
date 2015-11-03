@@ -63,6 +63,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     private let profile: Profile
     let tabManager: TabManager
+	
+	private var isNewTabNeeded = false
 
     // These views wrap the urlbar and toolbar to provide background effects on them
     var header: BlurWrapper!
@@ -314,6 +316,13 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         self.updateToolbarStateForTraitCollection(self.traitCollection)
 
         setupConstraints()
+		
+		let userDefaults = NSUserDefaults.standardUserDefaults()
+		if let lastVisitedDate = userDefaults.valueForKey("lastVisitedDate") as? NSDate {
+			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 300 {
+				self.isNewTabNeeded = true
+			}
+		}
     }
 
     private func setupConstraints() {
@@ -436,9 +445,13 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         } else {
             tabManager.restoreTabs()
         }
-
-        updateTabCountUsingTabManager(tabManager, animated: false)
-    }
+		if (isNewTabNeeded) {
+			self.tabManager.addTabAndSelect()
+			self.urlBar.enterOverlayMode("", pasted: false)
+			self.isNewTabNeeded = false
+		}
+		updateTabCountUsingTabManager(tabManager, animated: false)
+	}
 
     private func showCrashOptInAlert() {
         let alert = UIAlertController.crashOptInAlert(
