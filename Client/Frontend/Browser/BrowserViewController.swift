@@ -319,7 +319,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 		
 		let userDefaults = NSUserDefaults.standardUserDefaults()
 		if let lastVisitedDate = userDefaults.valueForKey("lastVisitedDate") as? NSDate {
-			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 1500 {
+			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 300 {
 				self.isNewTabNeeded = true
 			}
 		}
