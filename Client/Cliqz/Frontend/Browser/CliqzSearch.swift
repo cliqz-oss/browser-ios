@@ -1,5 +1,5 @@
 //
-//  CliqzSearchEngine.swift
+//  CliqzSearch.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 10/26/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CliqzSearchEngine: NSObject {
+class CliqzSearch: NSObject {
 	private lazy var cachedData = Dictionary<String, [String : AnyObject]>()
 	private var statisticsCollector = StatisticsCollector.sharedInstance
     

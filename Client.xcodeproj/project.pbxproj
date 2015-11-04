@@ -70,16 +70,16 @@
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
-		1E79B83A1BE91AC800B19219 /* CliqzSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearchEngine.swift */; settings = {ASSET_TAGS = (); }; };
+		1E79B83A1BE91AC800B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83C1BE91AC800B19219 /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8381BE91AC800B19219 /* DebugLogger.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83D1BE91AC800B19219 /* StatisticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8391BE91AC800B19219 /* StatisticsCollector.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83E1BE91AD300B19219 /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8381BE91AC800B19219 /* DebugLogger.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83F1BE91AD700B19219 /* StatisticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8391BE91AC800B19219 /* StatisticsCollector.swift */; settings = {ASSET_TAGS = (); }; };
-		1E79B8401BE91ADE00B19219 /* CliqzSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearchEngine.swift */; settings = {ASSET_TAGS = (); }; };
+		1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B8421BEA1C2200B19219 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8411BEA1C2200B19219 /* ConnectionManager.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B8431BEA1C2200B19219 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8411BEA1C2200B19219 /* ConnectionManager.swift */; settings = {ASSET_TAGS = (); }; };
-		1E8F3D2F1BE113F30050C791 /* CliqzSearchEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */; settings = {ASSET_TAGS = (); }; };
+		1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */; settings = {ASSET_TAGS = (); }; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28158BAC1ABC7C0E00C56FC8 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAE2401ABB531100877008 /* Bytes.swift */; };
@@ -1398,12 +1398,12 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
-		1E79B8351BE91AC800B19219 /* CliqzSearchEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchEngine.swift; sourceTree = "<group>"; };
+		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
 		1E79B8381BE91AC800B19219 /* DebugLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
 		1E79B8391BE91AC800B19219 /* StatisticsCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsCollector.swift; sourceTree = "<group>"; };
 		1E79B8411BEA1C2200B19219 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
-		1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchEngineTests.swift; sourceTree = "<group>"; };
+		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
 		2816EFFF1B33E05400522243 /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
 		281B2BE91ADF4D90002917DC /* MockProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MockProfile.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		281B2C071ADF4F29002917DC /* DeferredUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeferredUtils.swift; sourceTree = "<group>"; };
@@ -2108,7 +2108,7 @@
 		1E79B8341BE91AC800B19219 /* Browser */ = {
 			isa = PBXGroup;
 			children = (
-				1E79B8351BE91AC800B19219 /* CliqzSearchEngine.swift */,
+				1E79B8351BE91AC800B19219 /* CliqzSearch.swift */,
 				1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */,
 			);
 			path = Browser;
@@ -3089,7 +3089,7 @@
 		F84B21D61A090F8100AAB793 /* ClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				1E8F3D2E1BE113F30050C791 /* CliqzSearchEngineTests.swift */,
+				1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */,
 				F84B21D91A090F8100AAB793 /* ClientTests.swift */,
 				E60A60A01B6BFDDC00F850D4 /* CrashReporterTests.swift */,
 				D3D488581ABB54CD00A93597 /* FileAccessorTests.swift */,
@@ -4786,7 +4786,7 @@
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				E4B3345A1BBF2393004E2BFF /* ADJLogger.m in Sources */,
-				1E79B83A1BE91AC800B19219 /* CliqzSearchEngine.swift in Sources */,
+				1E79B83A1BE91AC800B19219 /* CliqzSearch.swift in Sources */,
 				D3A9949D1A3686BD008AD1AC /* Browser.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,
@@ -4826,7 +4826,7 @@
 				D3D488591ABB54CD00A93597 /* FileAccessorTests.swift in Sources */,
 				0BA8964B1A250E6500C1010C /* ProfileTest.swift in Sources */,
 				0BB5B28D1AC0A6130052877D /* Toolbar.swift in Sources */,
-				1E8F3D2F1BE113F30050C791 /* CliqzSearchEngineTests.swift in Sources */,
+				1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */,
 				03CCC9181AF05E7300DBF30D /* RelativeDatesTests.swift in Sources */,
 				F84B21DA1A090F8100AAB793 /* ClientTests.swift in Sources */,
 				E60A60A11B6BFDDC00F850D4 /* CrashReporterTests.swift in Sources */,
@@ -4838,7 +4838,7 @@
 				D38B2D2F1A8D96D00040E6B5 /* GCDWebServer.m in Sources */,
 				0BA2E43C1A69EDAB000581FA /* Profile.swift in Sources */,
 				7BBFEE9F1BB409EB00A305AA /* ErrorPageHelper.swift in Sources */,
-				1E79B8401BE91ADE00B19219 /* CliqzSearchEngine.swift in Sources */,
+				1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */,
 				D38B2D351A8D96D00040E6B5 /* GCDWebServerFunctions.m in Sources */,
 				7BBFEE9C1BB409D200A305AA /* SnackBar.swift in Sources */,
 				D38B2D501A8D96D00040E6B5 /* GCDWebServerFileResponse.m in Sources */,

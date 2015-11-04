@@ -20,7 +20,7 @@ protocol SearchViewDelegate: class {
 class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate  {
 	
     private var searchLoader: SearchLoader!
-    private let cliqzSearchEngine = CliqzSearchEngine()
+    private let cliqzSearch = CliqzSearch()
     var webView: WKWebView?
 	weak var delegate: SearchViewDelegate?
 
@@ -57,7 +57,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
 
 	override func didReceiveMemoryWarning() {
-		self.cliqzSearchEngine.clearCache()
+		self.cliqzSearch.clearCache()
 	}
 
 	func loader(dataLoaded data: Cursor<Site>) {
@@ -71,7 +71,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
-		cliqzSearchEngine.startSearch(query, history: self.historyResults) {
+		cliqzSearch.startSearch(query, history: self.historyResults) {
 			(q, data) in
 			if q == self.searchQuery {
 				self.webView!.loadHTMLString(data, baseURL: nil)
