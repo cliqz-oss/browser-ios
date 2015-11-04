@@ -1,5 +1,5 @@
 //
-//  CliqzSearchEngineTests.swift
+//  CliqzSearchTests.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 10/27/15.
@@ -10,7 +10,7 @@ import UIKit
 import XCTest
 
 class CliqzSearchEngineTests: XCTestCase {
-    let cliqzSearchEngine = CliqzSearchEngine()
+    let cliqzSearch = CliqzSearch()
     let statisticsCollector = StatisticsCollector.sharedInstance
     let baseQueries = ["facebook", "google", "hello", "test", "weather munich"]
     lazy var queries: [String] = self.initialQueries()
@@ -46,7 +46,8 @@ class CliqzSearchEngineTests: XCTestCase {
     func callSreach(timer : NSTimer) {
         if currentQueryIndex < queries.count {
             let query = queries[currentQueryIndex++]
-            cliqzSearchEngine.startSearch(query) {
+            let historyResults: Array<Dictionary<String, String>> = Array<Dictionary<String, String>>()
+            cliqzSearch.startSearch(query, history:historyResults) {
                 (htmlResult) -> Void in
                 self.searchedQueries++
                 if self.searchedQueries == self.queries.count {

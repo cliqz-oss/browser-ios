@@ -1,5 +1,5 @@
 //
-//  CliqzSearchEngine.swift
+//  CliqzSearch.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 10/26/15.
@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import Alamofire
 
-class CliqzSearchEngine: NSObject {
+class CliqzSearch: NSObject {
 	private lazy var cachedData = Dictionary<String, [String : AnyObject]>()
 	private var statisticsCollector = StatisticsCollector.sharedInstance
     
@@ -23,27 +22,24 @@ class CliqzSearchEngine: NSObject {
 		} else {
             statisticsCollector.startEvent(query)
             DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
-			Alamofire.request(.GET, searchURL, parameters: ["q": query])
-				.responseJSON {
-					request, response, result in
-					switch result {
-						
-					case .Success(let json):
-						let jsonDict = json as! [String : AnyObject]
-						self.cachedData[query] = jsonDict
-						let html = self.parseResponse(jsonDict, history: history)
-						callback((query, html))
-                        self.statisticsCollector.endEvent(query)
-                        DebugLogger.log("<< parsed response for query: \(query)")
-						
-					case .Failure(let data, let error):
-						DebugLogger.log("Request failed with error: \(error)")
 
-						if let data = data {
-							DebugLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
-						}
-					}
-			}
+            ConnectionManager.sharedInstance.sendGetRequest(searchURL, parameters: ["q" : query],
+                onSuccess: { json in
+                    self.statisticsCollector.endEvent(query)
+                    DebugLogger.log("<< Received response for query: \(query)")
+                    let jsonDict = json as! [String : AnyObject]
+                    self.cachedData[query] = jsonDict
+                    let html = self.parseResponse(jsonDict, history: history)
+                    callback((query, html))
+                    DebugLogger.log("<< parsed response for query: \(query)")
+                },
+                onFailure: { (data, error) in
+                    self.statisticsCollector.endEvent(query)
+                    DebugLogger.log("Request failed with error: \(error)")
+                    if let data = data {
+                        DebugLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
+                    }
+            })
 		}
     }
 
