@@ -70,11 +70,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func loadData(query: String) {
 		var JSString: String!
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-		if q == "" {
-			JSString = "_cliqzNoResults()"
-		} else {
+//		if q == "" {
+//			JSString = "_cliqzNoResults()"
+//		} else {
 			JSString = "search_mobile('\(q)')"
-		}
+//		}
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 	}
 
