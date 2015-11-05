@@ -92,9 +92,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			case "jsBridge":
 				if let input = message.body as? NSDictionary {
 					if let action = input["action"] as? String {
-						let data = input["data"] as? NSDictionary {
-						let callback = input["callBack"] as? String {
-						handleJSMessage(action, data: data, callback: callback)
+						handleJSMessage(action, data: input["data"], callback: input["callBack"] as? String)
 					}
 				}
 		default:
@@ -156,7 +154,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
-	private func handleJSMessage(action: String, data: NSDictionary?, callback: String?) {
+	private func handleJSMessage(action: String, data: AnyObject?, callback: String?) {
 		switch action {
 			case "searchHistory":
 				var jsonStr: NSString = ""
@@ -167,15 +165,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 					print("Json conversion is failed with error: \(error)")
 				}
 				if let c = callback {
-					let exec = "\(callback)(\(jsonStr))"
+					let exec = "\(c)(\(jsonStr))"
 				self.webView!.evaluateJavaScript(exec, completionHandler: nil)
 			}
 			case "openLink":
-				if let url = data["url"] as? String {
+				if let url = data as? String {
 					delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
 				}
-			case "":
-			default
+//			case "":
+		default:
 				print("Unhandles JS action: \(action)")
 		}
 	}
