@@ -36,9 +36,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
-		controller.addScriptMessageHandler(self, name: "interOp")
-		controller.addScriptMessageHandler(self, name: "linkSelected")
-		controller.addScriptMessageHandler(self, name: "changeUrlVal")
+		controller.addScriptMessageHandler(self, name: "jsBridge")
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
@@ -90,7 +88,21 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-		if message.name == "interOp" {
+		switch message.name {
+			case "jsBridge":
+				if let input = message.body as? NSDictionary {
+					if let action = input["action"] as? String {
+						let data = input["data"] as? NSDictionary {
+						let callback = input["callBack"] as? String {
+						handleJSMessage(action, data: data, callback: callback)
+					}
+				}
+		default:
+			print("Unhandled JS message: \(message.name)!!!")
+			
+		}
+		/*
+		== "interOp" {
 			print("Received event \(message.body) --- \(message.name)")
 			let input = message.body as! NSDictionary
 			let callbakcID = input.objectForKey("callbackId")
@@ -112,6 +124,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			let url = message.body as! String
 				// TODO: Naira
 		}
+*/
 	}
 
 	private func layoutSearchEngineScrollView() {
@@ -143,4 +156,27 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
+	private func handleJSMessage(action: String, data: NSDictionary?, callback: String?) {
+		switch action {
+			case "searchHistory":
+				var jsonStr: NSString = ""
+				do {
+					let json = try NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions(rawValue: 0))
+					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+				} catch let error as NSError {
+					print("Json conversion is failed with error: \(error)")
+				}
+				if let c = callback {
+					let exec = "\(callback)(\(jsonStr))"
+				self.webView!.evaluateJavaScript(exec, completionHandler: nil)
+			}
+			case "openLink":
+				if let url = data["url"] as? String {
+					delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
+				}
+			case "":
+			default
+				print("Unhandles JS action: \(action)")
+		}
+	}
 }
