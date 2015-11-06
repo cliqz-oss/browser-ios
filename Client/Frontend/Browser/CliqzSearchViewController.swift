@@ -33,13 +33,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	override func viewDidLoad() {
         super.viewDidLoad()
+		
 		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
 		controller.addScriptMessageHandler(self, name: "jsBridge")
+		
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
+		
 		let url = NSURL(string: "http://localhost:3005/extension/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL: url!))
 
@@ -159,15 +162,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			case "searchHistory":
 				var jsonStr: NSString = ""
 				do {
-					let json = try NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions(rawValue: 0))
+					let fullResults = NSDictionary(objects: [self.historyResults, self.searchQuery!], forKeys: ["results", "query"])
+					let json = try NSJSONSerialization.dataWithJSONObject(fullResults, options: NSJSONWritingOptions(rawValue: 0))
 					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
 				} catch let error as NSError {
 					print("Json conversion is failed with error: \(error)")
 				}
 				if let c = callback {
 					let exec = "\(c)(\(jsonStr))"
-				self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-			}
+					self.webView!.evaluateJavaScript(exec, completionHandler: nil)
+				}
 			case "openLink":
 				if let url = data as? String {
 					delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
