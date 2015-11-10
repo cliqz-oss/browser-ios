@@ -24,7 +24,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     var webView: WKWebView?
 	weak var delegate: SearchViewDelegate?
 
-	private var historyResults: Array<Dictionary<String, String>> = Array<Dictionary<String, String>>()
+	private var historyResults: Cursor<Site>?
 	
 	var searchQuery: String? {
 		didSet {
@@ -61,20 +61,32 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loader(dataLoaded data: Cursor<Site>) {
-		self.historyResults.removeAll(keepCapacity: true)
-		for site in data {
-			var d = Dictionary<String, String>()
-			d["url"] = site!.url
-			d["title"] = site!.title
-			self.historyResults.append(d)
-		}
+		self.historyResults = data
 	}
 
+	func getHistory() -> Array<Dictionary<String, String>> {
+		var results = Array<Dictionary<String, String>>()
+		if let r = self.historyResults {
+			for site in r {
+				var d = Dictionary<String, String>()
+				d["url"] = site!.url
+				d["title"] = site!.title
+				results.append(d)
+			}
+		}
+		return results
+	}
+	
+	func isHistoryUptodate() -> Bool {
+		return true
+	}
+	
 	func loadData(query: String) {
-		cliqzSearch.startSearch(query, history: self.historyResults) {
+		cliqzSearch.startSearch(query) {
 			(q, data) in
 			if q == self.searchQuery {
-				self.webView!.loadHTMLString(data, baseURL: nil)
+				let history = self.getHistory()
+				self.webView!.loadHTMLString(SearchContentGenerator.generateContent(data, history: history), baseURL: nil)
 			}
 		}
 	}
