@@ -95,7 +95,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			case "jsBridge":
 				if let input = message.body as? NSDictionary {
 					if let action = input["action"] as? String {
-						handleJSMessage(action, data: input["data"], callback: input["callBack"] as? String)
+						handleJSMessage(action, data: input["data"], callback: input["callback"] as? String)
 					}
 				}
 		default:
