@@ -158,7 +158,7 @@ class TabManager : NSObject {
             _selectedIndex = -1
         }
 
-        preserveTabs()
+//        preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
         selectedTab?.createWebview()
@@ -251,7 +251,7 @@ class TabManager : NSObject {
         tab.loadRequest(request ?? defaultNewTabRequest)
 
         if flushToDisk {
-        	storeChanges()
+//        	storeChanges()
         }
     }
 

@@ -319,7 +319,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 		
 		let userDefaults = NSUserDefaults.standardUserDefaults()
 		if let lastVisitedDate = userDefaults.valueForKey("lastVisitedDate") as? NSDate {
-			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 300 {
+			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 0.5 {
 				self.isNewTabNeeded = true
 			}
 		}
@@ -443,7 +443,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
                 showRestoreTabsAlert()
             }
         } else {
-            tabManager.restoreTabs()
+//            tabManager.restoreTabs()
         }
 		if (isNewTabNeeded) {
 			self.tabManager.addTabAndSelect()
