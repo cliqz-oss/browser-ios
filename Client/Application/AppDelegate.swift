@@ -79,6 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 
+        
+        AppStatus.sharedInstance.appStarted()
+
         return true
     }
 
@@ -139,6 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
         self.browserViewController.loadQueuedTabs()
+        AppStatus.sharedInstance.appDidBecomeActive(self.profile!)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
@@ -157,7 +161,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let userDefaulst = NSUserDefaults.standardUserDefaults()
 		userDefaulst.setValue(NSDate(), forKey: "lastVisitedDate")
 		userDefaulst.synchronize()
-	}
+        AppStatus.sharedInstance.appDidEnterBackground()
+    }
+    func applicationWillResignActive(application: UIApplication) {
+        AppStatus.sharedInstance.appDidBecomeInactive()
+    }
+    func applicationWillTerminate(application: UIApplication) {
+        AppStatus.sharedInstance.appWillTerminate()
+    }
+
 
 	private func setUpWebServer(profile: Profile) {
 		let server = WebServer.sharedInstance
