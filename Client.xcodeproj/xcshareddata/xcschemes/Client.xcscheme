@@ -244,7 +244,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Firefox"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
