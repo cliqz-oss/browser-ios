@@ -66,6 +66,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Websites you visit may request your location.</string>
+	<key>Release</key>
+	<string>${RELEASE}</string>
 	<key>ReleaseChannel</key>
 	<string>$(MOZ_RELEASE_CHANNEL)</string>
 	<key>UIAppFonts</key>

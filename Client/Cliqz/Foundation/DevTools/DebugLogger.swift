@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Cliqz. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 class DebugLogger {
     class func log<T>(@autoclosure object: () -> T) {
