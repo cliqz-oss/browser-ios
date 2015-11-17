@@ -19,7 +19,7 @@ class StatisticsCollector {
     //MARK: - Private Variables
     private let padingLength = 25
     private var eventStatistics = [(String, Int)]()
-    private var eventStartTimes = [String :Int64]()
+    private var eventStartTimes = [String :Double]()
     private var sumLatency = 0
 
     //MARK: - Public Variables
@@ -32,11 +32,11 @@ class StatisticsCollector {
     //MARK: - Public Methods
     //MARK: Start/End Events
     func startEvent(eventName: String) {
-        eventStartTimes[eventName] = getCurrentMillis()
+        eventStartTimes[eventName] = NSDate.getCurrentMillis()
     }
     
     func endEvent(eventName: String) {
-        let endTime = getCurrentMillis()
+        let endTime = NSDate.getCurrentMillis()
         let startTime = eventStartTimes[eventName]!
         let latency = Int(endTime - startTime)
         sumLatency += latency
@@ -61,12 +61,7 @@ class StatisticsCollector {
     }
     
     func clearStatistics() {
-        eventStatistics = [(String, Int)]()
-        eventStartTimes = [String :Int64]()
-    }
-    
-    //MARK: General Utils
-    func getCurrentMillis()->Int64 {
-        return  Int64(NSDate().timeIntervalSince1970 * 1000)
+        eventStatistics.removeAll()
+        eventStartTimes.removeAll()
     }
 }

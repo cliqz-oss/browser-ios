@@ -71,6 +71,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func loadData(query: String) {
+        TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("key_stroke", query.characters.count))
 		cliqzSearch.startSearch(query, history: self.historyResults) {
 			(q, data) in
 			if q == self.searchQuery {
