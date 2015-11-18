@@ -10,7 +10,7 @@ import Foundation
 
 extension NSDate {
     class func getCurrentMillis()-> Double {
-        return  NSDate().timeIntervalSince1970 * 1000.0 //TODO: check
+        return  NSDate().timeIntervalSince1970 * 1000.0
     }
     
     class func getDay()-> Int {
