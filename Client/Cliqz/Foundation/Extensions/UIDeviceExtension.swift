@@ -8,6 +8,7 @@
 
 import Foundation
 
+//TODO: use exact model of device instead of Model enum
 public enum Model : String {
     case simulator = "simulator/sandbox",
     iPod1          = "iPod 1",

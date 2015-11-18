@@ -22,7 +22,6 @@ class AppStatus {
     var lastEnvironmentEventDate: NSDate?
     
     lazy var isRelease: Bool  = self.isReleasedVersion()
-    //TODO: use userdefined
     private func isReleasedVersion() -> Bool {
         let infoDict = NSBundle.mainBundle().infoDictionary;
         if let isRelease = infoDict!["Release"] {
@@ -81,11 +80,13 @@ class AppStatus {
     
     internal func appDidBecomeActive(profile: Profile) {
         lastOpenedDate = NSDate()
+        NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
     }
     internal func appDidBecomeInactive() {
         logApplicationUsageEvent("Inactive")
+        NetworkReachability.sharedInstance.logNetworkStatusEvent()
     }
     internal func appDidEnterBackground() {
         logApplicationUsageEvent("background")

@@ -16,9 +16,9 @@ enum NetworkReachabilityStatus : CustomStringConvertible {
     
     var description : String {
         switch self {
-        case .NotReachable: return "Disconnected";
-        case .ReachableViaWiFi: return "Wifi";
-        case .ReachableViaWWAN: return "3G";
+            case .NotReachable: return "Disconnected";
+            case .ReachableViaWiFi: return "Wifi";
+            case .ReachableViaWWAN: return "WWAN";
         }
     }
 }
@@ -27,6 +27,7 @@ class NetworkReachability : NSObject {
     let internetReachability = Reachability.reachabilityForInternetConnection()
     var isReachable: Bool?
     var networkReachabilityStatus: NetworkReachabilityStatus?
+    var lastRefreshDate: NSDate?
     
     //MARK: - Singltone
     static let sharedInstance = NetworkReachability()
@@ -36,22 +37,37 @@ class NetworkReachability : NSObject {
     func startMonitoring() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("reachabilityChanged:"), name: kReachabilityChangedNotification, object: nil)
         internetReachability.startNotifier()
-        updateCurrentState(internetReachability)
     }
-    
     func reachabilityChanged(notification: NSNotification) {
         if let currentReachability = notification.object as? Reachability {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                self.logNetworkStatusEvent()
                 self.updateCurrentState(currentReachability)
-                TelemetryLogger.sharedInstance.logEvent(.NetworkChange("network_change", self.networkReachabilityStatus!.description))
             }
-
         }
     }
     
-    func updateCurrentState(currentReachability: Reachability) {
-        let networkStatus = currentReachability.currentReachabilityStatus()
+    func refreshStatus() {
+        updateCurrentState(internetReachability)
+    }
+    func logNetworkStatusEvent() {
         
+        var duration: Int
+        if let durationStart = lastRefreshDate {
+            duration = Int(NSDate().timeIntervalSinceDate(durationStart))
+        } else {
+            duration = 0
+        }
+        
+        TelemetryLogger.sharedInstance.logEvent(.NetworkStatus(self.networkReachabilityStatus!.description, duration))
+    }
+    
+    //MARK: - Private Helper methods
+    
+    //MARK: update current network status    
+    private func updateCurrentState(currentReachability: Reachability) {
+        lastRefreshDate = NSDate()
+        let networkStatus = currentReachability.currentReachabilityStatus()
         if networkStatus == NotReachable {
             DebugLogger.log("NotReachable")
             self.isReachable = false

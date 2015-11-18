@@ -11,7 +11,7 @@ import Foundation
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
     case ApplicationUsage   (String, String, String, Float, Double)
-    case NetworkChange      (String, String)
+    case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, Int, Int, [String: AnyObject])
 }
@@ -67,8 +67,8 @@ class TelemetryLogger : EventsLogger {
             case .ApplicationUsage(let action, let network, let context, let battery, let timeUsed):
                 event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, timeUsed: timeUsed)
                 
-            case .NetworkChange(let action, let network):
-                event = self.createNetworkChangeEvent(action, network: network)
+            case .NetworkStatus(let network, let duration):
+                event = self.createNetworkStatusEvent(network, duration:duration)
 
             case .QueryInteraction(let action, let length):
                 event = self.createQueryInteractionEvent(action, length: length)
@@ -133,12 +133,13 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createNetworkChangeEvent(action: String, network: String) -> [String: AnyObject]{
+    private func createNetworkStatusEvent(network: String, duration: Int) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
-        event["action"] = action
+        event["action"] = "network_status"
         event["network"] = network
+        event["duration"] = duration
         
         return event
     }
