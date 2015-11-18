@@ -317,18 +317,16 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
         setupConstraints()
 		
-		let userDefaults = NSUserDefaults.standardUserDefaults()
-		if let lastVisitedDate = userDefaults.valueForKey("lastVisitedDate") as? NSDate {
-			if NSDate().timeIntervalSinceDate(lastVisitedDate) > 0.5 {
+//		let lastVisitedDate = NSUserDefaults.standardUserDefaults().valueForKey("lastVisitedDate") as? NSDate
+//		if lastVisitedDate == nil || NSDate().timeIntervalSinceDate(lastVisitedDate!) > 300 {
 				self.isNewTabNeeded = true
-			}
-		}
+//		}
     }
 
     private func setupConstraints() {
         urlBar.snp_makeConstraints { make in
             make.edges.equalTo(self.header)
-        }
+		}
 
         let viewBindings: [String: AnyObject] = [
             "header": header,
