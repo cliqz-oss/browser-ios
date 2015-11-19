@@ -16,4 +16,8 @@ extension NSDate {
     class func getDay()-> Int {
         return  Int(NSDate().timeIntervalSince1970 / 86400)
     }
+    
+    func daysSinceDate(anotherDate: NSDate)-> Int {
+        return Int( self.timeIntervalSinceDate(anotherDate) / 86400 )
+    }
 }

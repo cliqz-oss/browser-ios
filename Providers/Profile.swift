@@ -131,7 +131,7 @@ protocol Profile: class {
     var queue: TabQueue { get }
     var searchEngines: SearchEngines { get }
     var files: FileAccessor { get }
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage> { get }
+    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> { get }
     var favicons: Favicons { get }
     var readingList: ReadingListService? { get }
     var logins: protocol<BrowserLogins, SyncableLogins, ResettableSyncStorage> { get }
@@ -262,7 +262,7 @@ public class BrowserProfile: Profile {
      * Any other class that needs to access any one of these should ensure
      * that this is initialized first.
      */
-    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage> = {
+    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
         return SQLiteHistory(db: self.db)!
     }()
 
@@ -270,7 +270,7 @@ public class BrowserProfile: Profile {
         return self.places
     }
 
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage> {
+    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> {
         return self.places
     }
 

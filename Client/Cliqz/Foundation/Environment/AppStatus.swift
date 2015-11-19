@@ -167,20 +167,32 @@ class AppStatus {
         dispatch_async(dispatchQueue) {
             self.lastEnvironmentEventDate = NSDate()
             let device: Model = UIDevice.currentDevice().deviceType
-            let language = NSLocale.preferredLanguages()[0]
+            let language = self.getAppLanguage()
             let version = self.getCurrentAppVersion()
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
-            //TODO get history, and prefs
-            let historyUrls = -1
-            let historyDays = -1
+            let historyUrls = profile.history.count()
+            let historyDays = self.getHistoryDays(profile)
+            //TODO `prefs`
             let prefs = [String: AnyObject]()
-
-            print(device.rawValue)
             
             TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device.rawValue, language, version, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
-        
     }
+    
+    private func getAppLanguage() -> String {
+        let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode)
+        let countryCode = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode)
+        return "\(languageCode)-\(countryCode)"
+    }
+    
+    private func getHistoryDays(profile: Profile) -> Int {
+        var historyDays = 0
+        if let oldestVisitDate = profile.history.getOldestVisitDate() {
+            historyDays = NSDate().daysSinceDate(oldestVisitDate)
+        }
+        return historyDays
+    }
+    
     
 }
