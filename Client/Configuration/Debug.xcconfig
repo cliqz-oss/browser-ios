@@ -6,7 +6,7 @@
 
 MOZ_BUNDLE_DISPLAY_NAME = Cliqz Release
 
-MOZ_PRODUCT_NAME = Fennec
+MOZ_PRODUCT_NAME = Cliqz Release
 
 MOZ_RELEASE_CHANNEL = debug
 

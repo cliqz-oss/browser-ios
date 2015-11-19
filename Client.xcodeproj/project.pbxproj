@@ -322,10 +322,10 @@
 		4F32CD151BDA7A3200E3FC03 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD0E1BDA7A3200E3FC03 /* Socket.swift */; };
 		4F32CD3C1BDA7A4200E3FC03 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F32CD3B1BDA7A4200E3FC03 /* CliqzSearchViewController.swift */; };
 		4F32CD3D1BDA7BB300E3FC03 /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; };
-		4F32CD4B1BDA849600E3FC03 /* navigation in Resources */ = {isa = PBXBuildFile; fileRef = 4F32CD4A1BDA849600E3FC03 /* navigation */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
+		4F97BA301BFC8293000592CF /* mobile in Resources */ = {isa = PBXBuildFile; fileRef = 4F97BA2F1BFC8292000592CF /* mobile */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
 		59A687B4A05CC772FE7E5A09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
@@ -1553,10 +1553,10 @@
 		4F32CD0D1BDA7A3200E3FC03 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		4F32CD0E1BDA7A3200E3FC03 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		4F32CD3B1BDA7A4200E3FC03 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
-		4F32CD4A1BDA849600E3FC03 /* navigation */ = {isa = PBXFileReference; lastKnownFileType = folder; name = navigation; path = "../stefan-nav-ext/navigation-extension/build/dev/androidkit/navigation"; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
+		4F97BA2F1BFC8292000592CF /* mobile */ = {isa = PBXFileReference; lastKnownFileType = folder; name = mobile; path = "../stefan-nav-ext/navigation-extension/build/dev/mobile"; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		59A6825233896FC846499289 /* HistoryPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HistoryPanel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		59A6839879D615FC1C0D71CE /* BookmarksPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksPanel.swift; sourceTree = "<group>"; };
@@ -2989,7 +2989,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
-				4F32CD4A1BDA849600E3FC03 /* navigation */,
+				4F97BA2F1BFC8292000592CF /* mobile */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
 				E4B334871BBF23F3004E2BFF /* iAd.framework */,
 				D31FC2291A8D908800BAF7EC /* Alamofire.xcodeproj */,
@@ -3663,6 +3663,7 @@
 					};
 					E4BA8A2A1B4B0A1600BC2E95 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 2UYYSSHVUH;
 					};
 					E4D567171ADECE2700F1EFE7 = {
 						CreatedOnToolsVersion = 6.3;
@@ -3694,6 +3695,7 @@
 					};
 					F84B22481A0920C600AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3705,7 +3707,7 @@
 					};
 					F84B225B1A09210A00AAB793 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 9RJ684BAZW;
+						DevelopmentTeam = 2UYYSSHVUH;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -4206,7 +4208,6 @@
 				E414F0791A8445A500283322 /* FennecAurora.entitlements in Resources */,
 				2F1BDF921A8523B000213B54 /* LICENSE in Resources */,
 				E4CD9F5B1A71506C00318571 /* Reader.css in Resources */,
-				4F32CD4B1BDA849600E3FC03 /* navigation in Resources */,
 				E4B7B7611A793CF20022C5E0 /* CharisSILB.ttf in Resources */,
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
@@ -4227,6 +4228,7 @@
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
 				E4B7B7681A793CF20022C5E0 /* FiraSans-Bold.ttf in Resources */,
 				E4B7B7781A793CF20022C5E0 /* FiraSans-Italic.ttf in Resources */,
+				4F97BA301BFC8293000592CF /* mobile in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
 				E4A961381AC06FA50069AD6F /* ReaderViewLoading.html in Resources */,
 				E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */,
@@ -6135,10 +6137,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6171,9 +6173,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = "Fennec Nightly";
 				MOZ_PRODUCT_NAME = FennecNightly;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -6185,14 +6187,14 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
@@ -6269,8 +6271,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -6282,10 +6284,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "e9751c71-11f5-43be-869c-d1120dea23f2";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6312,8 +6314,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
@@ -6322,9 +6324,9 @@
 				MOZ_BUNDLE_DISPLAY_NAME = Firefox;
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6337,8 +6339,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/SendTo/Info.plist";
@@ -6346,9 +6348,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
+				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -6811,8 +6813,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6824,7 +6826,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = Fennec;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
@@ -6852,8 +6854,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -6872,9 +6874,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecAurora;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "826837c1-92e2-4200-8dca-890dc146049c";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6902,8 +6904,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -6922,8 +6924,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = Firefox;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d15da888-8e17-49dd-a42d-09ee71020733";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6951,7 +6954,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -6971,8 +6974,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7504,7 +7508,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = Fennec;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
@@ -7531,10 +7535,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = FennecAurora;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "340e9444-6fc5-464d-90a9-0fcd3d001c37";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7576,8 +7580,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -7589,7 +7593,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = "Fennec ($(USER))";
 				MOZ_PRODUCT_NAME = Fennec;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
@@ -7602,8 +7606,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
@@ -7611,9 +7615,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = "Fennec Aurora";
 				MOZ_PRODUCT_NAME = FennecAurora;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2a788632-d145-4fdd-a5f2-8a3289920e30";
+				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -7625,8 +7629,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -7637,7 +7641,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = Fennec;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;
@@ -7651,7 +7655,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -7659,7 +7663,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MOZ_PRODUCT_NAME = FennecAurora;
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecBasic.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.FennecCliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
 				SKIP_INSTALL = YES;

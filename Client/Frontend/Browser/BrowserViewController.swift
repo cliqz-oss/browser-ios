@@ -1538,13 +1538,12 @@ extension BrowserViewController: WKNavigationDelegate {
     }
 
     func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-
         guard let url = navigationAction.request.URL else {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }
 
-        switch url.scheme {
+		switch url.scheme {
         case "about", "http", "https":
             if isWhitelistedUrl(url) {
                 // If the url is whitelisted, we open it without prompting…
