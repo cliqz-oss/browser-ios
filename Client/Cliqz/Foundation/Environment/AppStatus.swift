@@ -169,13 +169,14 @@ class AppStatus {
             let device: Model = UIDevice.currentDevice().deviceType
             let language = self.getAppLanguage()
             let version = self.getCurrentAppVersion()
+            let osVersion = UIDevice.currentDevice().systemVersion
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
             let historyUrls = profile.history.count()
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
             let prefs = [String: AnyObject]()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device.rawValue, language, version, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device.rawValue, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }

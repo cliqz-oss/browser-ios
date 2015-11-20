@@ -13,7 +13,7 @@ public enum TelemetryLogEventType {
     case ApplicationUsage   (String, String, String, Float, Double)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, Int, Int, [String: AnyObject])
+    case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
 }
 
 
@@ -73,8 +73,8 @@ class TelemetryLogger : EventsLogger {
             case .QueryInteraction(let action, let length):
                 event = self.createQueryInteractionEvent(action, length: length)
                 
-            case .Environment(let device, let language, let version, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
-                event = self.createEnvironmentEvent(device, language: language, version: version, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
+            case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
+                event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
             }
             
             self.sendEvent(event)
@@ -119,13 +119,14 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, version: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
+    private func createEnvironmentEvent(device: String, language: String, version: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
         event["device"] = device
         event["language"] = language
         event["version"] = version
+        event["os_version"] = osVersion
         event["defaultSearchEngine"] = defaultSearchEngine
         event["historyUrls"] = historyUrls
         event["historyDays"] = historyDays
