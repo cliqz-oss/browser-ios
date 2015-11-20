@@ -54,9 +54,13 @@ class AppStatus {
     
     
     //MARK:- pulbic interface
-    internal func appStarted(){
+    internal func appWillFinishLaunching() {
+        lastOpenedDate = NSDate()
+    }
+
+    internal func appDidFinishLaunching() {
         NetworkReachability.sharedInstance.startMonitoring()
-        
+
         dispatch_async(dispatchQueue) {
             
             let (version, buildNumber) = self.getVersionDescriptor()
@@ -77,24 +81,34 @@ class AppStatus {
         }
     }
     
+    internal func appWillEnterForeground() {
+        lastOpenedDate = NSDate()
+    }
     
     internal func appDidBecomeActive(profile: Profile) {
-        lastOpenedDate = NSDate()
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
     }
-    internal func appDidBecomeInactive() {
+    
+    internal func appDidBecomeResponsive(startupType: String) {
+        let startupTime = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, timeUsed: nil)
+    }
+    
+    internal func appWillResignActive() {
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
     }
+    
     internal func appDidEnterBackground() {
-        logApplicationUsageEvent("background")
+        let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
     }
+    
     internal func appWillTerminate() {
-        logApplicationUsageEvent("terminate")
-        TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
+        logApplicationUsageEvent("Terminate")
     }
     
     //MARK:- Private Helper Methods
@@ -139,18 +153,20 @@ class AppStatus {
     }
     
     //MARK: application usage event
+    
     private func logApplicationUsageEvent(action: String) {
+        logApplicationUsageEvent(action, startupType: nil, startupTime: nil, timeUsed: nil)
+    }
+    
+    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, timeUsed: Double?) {
         dispatch_async(dispatchQueue) {
-            var timeUsed = 0.0
-            if let lastOpenedDate = self.lastOpenedDate {
-                timeUsed = NSDate().timeIntervalSinceDate(lastOpenedDate) * 1000
-            }
             let network = NetworkReachability.sharedInstance.networkReachabilityStatus?.description
+            let battery = self.batteryLevel()
+            let memory = self.getMemoryUsage()
             //TODO `context`
             let context = ""
-            let battery = self.batteryLevel()
             
-            TelemetryLogger.sharedInstance.logEvent(.ApplicationUsage(action, network!, context, battery, timeUsed))
+            TelemetryLogger.sharedInstance.logEvent(.ApplicationUsage(action, network!, context, battery, memory, startupType, startupTime, timeUsed))
             
         }
     }
@@ -193,6 +209,27 @@ class AppStatus {
             historyDays = NSDate().daysSinceDate(oldestVisitDate)
         }
         return historyDays
+    }
+    
+    func getMemoryUsage()-> Double {
+        var info = task_basic_info()
+        var count = mach_msg_type_number_t(sizeofValue(info))/4
+        
+        let kerr: kern_return_t = withUnsafeMutablePointer(&info) {
+            
+            task_info(mach_task_self_,
+                task_flavor_t(TASK_BASIC_INFO),
+                task_info_t($0),
+                &count)
+        }
+        
+        if kerr == KERN_SUCCESS {
+            let memorySize = Double(info.resident_size) / 1048576.0
+            return memorySize
+        }
+        else {
+            return -1
+        }
     }
     
     

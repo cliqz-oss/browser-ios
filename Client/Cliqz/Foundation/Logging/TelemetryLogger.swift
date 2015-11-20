@@ -10,7 +10,7 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
-    case ApplicationUsage   (String, String, String, Float, Double)
+    case ApplicationUsage   (String, String, String, Float, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
@@ -64,8 +64,8 @@ class TelemetryLogger : EventsLogger {
             case .LifeCycle(let action, let version):
                 event = self.createLifeCycleEvent(action, version: version)
                 
-            case .ApplicationUsage(let action, let network, let context, let battery, let timeUsed):
-                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, timeUsed: timeUsed)
+            case .ApplicationUsage(let action, let network, let context, let battery, let memory, let startupType, let startupTime, let timeUsed):
+                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, timeUsed: timeUsed)
                 
             case .NetworkStatus(let network, let duration):
                 event = self.createNetworkStatusEvent(network, duration:duration)
@@ -107,7 +107,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, timeUsed: Double) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
@@ -115,7 +115,19 @@ class TelemetryLogger : EventsLogger {
         event["network"] = network
         event["context"] = context
         event["battery"] = battery
-        event["timeUsed"] = timeUsed
+        event["memory"] = memory
+
+        if startupType != nil {
+            event["startup_type"] = startupType
+        }
+        
+        if startupTime != nil {
+            event["startup_time"] = startupTime
+        }
+
+        if timeUsed != nil {
+            event["time_used"] = timeUsed
+        }
         
         return event
     }
