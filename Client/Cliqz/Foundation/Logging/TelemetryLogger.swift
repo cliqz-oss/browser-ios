@@ -14,6 +14,7 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
+    case UrlFocusBlur       (String, String)
 }
 
 
@@ -70,11 +71,15 @@ class TelemetryLogger : EventsLogger {
             case .NetworkStatus(let network, let duration):
                 event = self.createNetworkStatusEvent(network, duration:duration)
 
-            case .QueryInteraction(let action, let length):
-                event = self.createQueryInteractionEvent(action, length: length)
+            case .QueryInteraction(let action, let currentLength):
+                event = self.createQueryInteractionEvent(action, currentLength: currentLength)
                 
             case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
+                
+            case .UrlFocusBlur(let action, let context):
+                event = self.createUrlFocusBlurEvent(action, context: context)
+                
             }
             
             self.sendEvent(event)
@@ -157,12 +162,24 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createQueryInteractionEvent(action: String, length: Int) -> [String: AnyObject]{
+    private func createQueryInteractionEvent(action: String, currentLength: Int) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
         event["action"] = action
-        event["current_length"] = length
+        event["current_length"] = currentLength
+        
+        return event
+    }
+    
+    private func createUrlFocusBlurEvent(action: String, context: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = action
+        if !context.isEmpty {
+            event["context"] = context
+        }
         
         return event
     }
