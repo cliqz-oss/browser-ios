@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         KeyboardHelper.defaultHelper.startObserving()
 
         // Create a new sync log file on cold app launch
-        Logger.syncLogger.newLogWithDate(NSDate())
+		// Naira: Removed logger inisialization because of performance considerations and also we don't need FF logger.
+//        Logger.syncLogger.newLogWithDate(NSDate())
 
         let profile = getProfile(application)
 
@@ -146,6 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+
         self.profile?.syncManager.applicationDidEnterBackground()
 
         var taskId: UIBackgroundTaskIdentifier = 0
@@ -169,7 +171,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         AppStatus.sharedInstance.appWillTerminate()
     }
-
 
 	private func setUpWebServer(profile: Profile) {
 		let server = WebServer.sharedInstance
