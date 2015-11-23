@@ -172,9 +172,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-	func applicationWillEnterForeground(application: UIApplication) {
-	}
-
     private func setUpWebServer(profile: Profile) {
         let server = WebServer.sharedInstance
         ReaderModeHandlers.register(server, profile: profile)
