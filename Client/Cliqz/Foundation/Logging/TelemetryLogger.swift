@@ -26,12 +26,7 @@ class TelemetryLogger : EventsLogger {
     static let sharedInstance = TelemetryLogger()
     
     init() {
-        #if DEBUG
-            super.init(endPoint: "http://localhost:8085/")
-        #else
-            super.init(endPoint: "https://logging.cliqz.com")
-        #endif
-        
+        super.init(endPoint: "https://logging.cliqz.com")        
         loadTelemetrySeq()
     }
     
