@@ -91,6 +91,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         return toolbar ?? urlBar
     }
 
+    private var isAppResponsive = false
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -226,13 +228,23 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
             self.view.backgroundColor = UIColor.clearColor()
         }, completion: { _ in
             self.webViewContainerBackdrop.alpha = 0
+            self.appDidBecomeResponsive("warm")
         })
     }
-
+    func appDidEnterBackgroundNotification() {
+        isAppResponsive = false
+    }
+    func appDidBecomeResponsive(startupType: String) {
+        if isAppResponsive == false {
+            isAppResponsive = true
+            AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
+        }
+    }
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: BookmarkStatusChangedNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
 
     override func viewDidLoad() {
@@ -240,6 +252,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELBookmarkStatusDidChange:", name: BookmarkStatusChangedNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("appDidEnterBackgroundNotification"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         footerBackdrop = UIView()
@@ -324,6 +338,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 			}
 		}
     }
+
 
     private func setupConstraints() {
         urlBar.snp_makeConstraints { make in
@@ -491,6 +506,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         presentIntroViewController()
         self.webViewContainerToolbar.hidden = false
         super.viewDidAppear(animated)
+        self.appDidBecomeResponsive("cold")
     }
 
     override func viewDidDisappear(animated: Bool) {

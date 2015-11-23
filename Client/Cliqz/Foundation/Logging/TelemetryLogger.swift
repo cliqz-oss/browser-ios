@@ -10,10 +10,11 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
-    case ApplicationUsage   (String, String, String, Float, Double)
+    case ApplicationUsage   (String, String, String, Float, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, Int, Int, [String: AnyObject])
+    case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
+    case UrlFocusBlur       (String, String)
 }
 
 
@@ -25,12 +26,7 @@ class TelemetryLogger : EventsLogger {
     static let sharedInstance = TelemetryLogger()
     
     init() {
-        #if DEBUG
-            super.init(endPoint: "http://localhost:8085/")
-        #else
-            super.init(endPoint: "https://logging.cliqz.com")
-        #endif
-        
+        super.init(endPoint: "https://logging.cliqz.com")        
         loadTelemetrySeq()
     }
     
@@ -64,17 +60,21 @@ class TelemetryLogger : EventsLogger {
             case .LifeCycle(let action, let version):
                 event = self.createLifeCycleEvent(action, version: version)
                 
-            case .ApplicationUsage(let action, let network, let context, let battery, let timeUsed):
-                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, timeUsed: timeUsed)
+            case .ApplicationUsage(let action, let network, let context, let battery, let memory, let startupType, let startupTime, let timeUsed):
+                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, timeUsed: timeUsed)
                 
             case .NetworkStatus(let network, let duration):
                 event = self.createNetworkStatusEvent(network, duration:duration)
 
-            case .QueryInteraction(let action, let length):
-                event = self.createQueryInteractionEvent(action, length: length)
+            case .QueryInteraction(let action, let currentLength):
+                event = self.createQueryInteractionEvent(action, currentLength: currentLength)
                 
-            case .Environment(let device, let language, let version, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
-                event = self.createEnvironmentEvent(device, language: language, version: version, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
+            case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
+                event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
+                
+            case .UrlFocusBlur(let action, let context):
+                event = self.createUrlFocusBlurEvent(action, context: context)
+                
             }
             
             self.sendEvent(event)
@@ -107,7 +107,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, timeUsed: Double) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
@@ -115,17 +115,30 @@ class TelemetryLogger : EventsLogger {
         event["network"] = network
         event["context"] = context
         event["battery"] = battery
-        event["timeUsed"] = timeUsed
+        event["memory"] = memory
+
+        if startupType != nil {
+            event["startup_type"] = startupType
+        }
+        
+        if startupTime != nil {
+            event["startup_time"] = startupTime
+        }
+
+        if timeUsed != nil {
+            event["time_used"] = timeUsed
+        }
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, version: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
+    private func createEnvironmentEvent(device: String, language: String, version: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
         event["device"] = device
         event["language"] = language
         event["version"] = version
+        event["os_version"] = osVersion
         event["defaultSearchEngine"] = defaultSearchEngine
         event["historyUrls"] = historyUrls
         event["historyDays"] = historyDays
@@ -144,12 +157,24 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createQueryInteractionEvent(action: String, length: Int) -> [String: AnyObject]{
+    private func createQueryInteractionEvent(action: String, currentLength: Int) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
         event["action"] = action
-        event["current_length"] = length
+        event["current_length"] = currentLength
+        
+        return event
+    }
+    
+    private func createUrlFocusBlurEvent(action: String, context: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = action
+        if !context.isEmpty {
+            event["context"] = context
+        }
         
         return event
     }
