@@ -624,30 +624,30 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
 
     private func showSearchController() {
-        if searchController != nil {
-            return
+        if searchController == nil {
+//			let isPrivate = tabManager.selectedTab?.isPrivate ?? false
+			searchController = CliqzSearchViewController()
+			searchController!.delegate = self
+			/*
+			searchController = SearchViewController(isPrivate: isPrivate)
+			searchController!.searchEngines = profile.searchEngines
+			searchController!.searchDelegate = self
+			searchController!.profile = self.profile
+			*/
+			
+			
+			searchLoader.addListener(searchController!)
+			addChildViewController(searchController!)
+			
+			view.addSubview(searchController!.view)
+			
+			searchController!.view.snp_makeConstraints { make in
+				make.top.equalTo(self.urlBar.snp_bottom)
+				make.left.right.bottom.equalTo(self.view)
+				return
+			}
         }
-
-        let isPrivate = tabManager.selectedTab?.isPrivate ?? false
-		searchController = CliqzSearchViewController()
-		searchController!.delegate = self
-		/*
-        searchController = SearchViewController(isPrivate: isPrivate)
-        searchController!.searchEngines = profile.searchEngines
-        searchController!.searchDelegate = self
-        searchController!.profile = self.profile
-		*/
-		
-
-        searchLoader.addListener(searchController!)
-
-        addChildViewController(searchController!)
-        view.addSubview(searchController!.view)
-        searchController!.view.snp_makeConstraints { make in
-            make.top.equalTo(self.urlBar.snp_bottom)
-            make.left.right.bottom.equalTo(self.view)
-            return
-        }
+		searchController!.view.hidden = false
 
         homePanelController?.view?.hidden = true
 
@@ -656,11 +656,13 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     private func hideSearchController() {
         if let searchController = searchController {
-            searchController.willMoveToParentViewController(nil)
-            searchController.view.removeFromSuperview()
-            searchController.removeFromParentViewController()
-            self.searchController = nil
+//            searchController.willMoveToParentViewController(nil)
+//            searchController.view.removeFromSuperview()
+//            searchController.removeFromParentViewController()
+//            self.searchController = nil
+			searchController.view.hidden = true
             homePanelController?.view?.hidden = false
+			
         }
     }
 
@@ -973,12 +975,12 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
 
-        if text.isEmpty {
-            hideSearchController()
-        } else {
+//        if text.isEmpty {
+//            hideSearchController()
+//        } else {
             showSearchController()
             searchController!.searchQuery = text
-        }
+//        }
     }
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
@@ -1536,13 +1538,12 @@ extension BrowserViewController: WKNavigationDelegate {
     }
 
     func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-
         guard let url = navigationAction.request.URL else {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }
 
-        switch url.scheme {
+		switch url.scheme {
         case "about", "http", "https":
             if isWhitelistedUrl(url) {
                 // If the url is whitelisted, we open it without prompting…

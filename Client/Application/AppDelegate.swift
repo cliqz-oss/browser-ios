@@ -80,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
 		let bundlePath = NSBundle.mainBundle().bundlePath
-		let extensionPath = bundlePath + "/" + "navigation"
+		let extensionPath = bundlePath + "/" + "mobile"
 		
 		let httpServer = HttpServer()
 		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
@@ -115,6 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             AdjustIntegration.sharedInstance.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
         }
@@ -147,6 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
+
         self.profile?.syncManager.applicationDidBecomeActive()
 
         // We could load these here, but then we have to futz with the tab counter
@@ -155,6 +157,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+
         self.profile?.syncManager.applicationDidEnterBackground()
 
         var taskId: UIBackgroundTaskIdentifier = 0
