@@ -9,8 +9,9 @@
 import Foundation
 
 class SynchronousArray {
-    var array: [AnyObject]
-    var dispatchQueue: dispatch_queue_t
+    var array = [AnyObject]()
+    let dispatchQueue = dispatch_queue_create("com.cliqz.synchronous.array", DISPATCH_QUEUE_SERIAL);
+
     
     var count: Int {
         get {
@@ -18,29 +19,24 @@ class SynchronousArray {
         }
     }
     
-    init(){
-        array = [AnyObject]()
-        dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
-    }
-    
     internal func getContents() -> [AnyObject] {
         return self.array
     }
     
     internal func append(newElement: AnyObject){
-        dispatch_sync(dispatchQueue) {
+        dispatch_async(dispatchQueue) {
             self.array.append(newElement)
         }
     }
     
     internal func appendContentsOf(anotherArray: [AnyObject]) {
-        dispatch_sync(dispatchQueue) {
+        dispatch_async(dispatchQueue) {
             self.array.appendContentsOf(anotherArray)
         }
     }
     
     internal func removeAll(){
-        dispatch_sync(dispatchQueue) {
+        dispatch_async(dispatchQueue) {
             self.array.removeAll()
         }
     }

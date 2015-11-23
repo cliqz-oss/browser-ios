@@ -10,11 +10,10 @@ import Foundation
 
 class AtomicInt {
     private var currentValue: Int
-    var dispatchQueue: dispatch_queue_t
+    let dispatchQueue = dispatch_queue_create("com.cliqz.atomic.int", DISPATCH_QUEUE_SERIAL);
     
     init(initialValue: Int) {
         currentValue = initialValue
-        dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
     }
     
     internal func get()-> Int {

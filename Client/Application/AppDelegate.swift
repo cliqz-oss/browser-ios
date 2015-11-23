@@ -20,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        AppStatus.sharedInstance.appWillFinishLaunching()
+        
         // Set the Firefox UA for browsing.
         setUserAgent()
 
@@ -79,10 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             viewURLInNewTab(localNotification)
         }
-
-        
-        AppStatus.sharedInstance.appStarted()
-
         return true
     }
 
@@ -106,6 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+        AppStatus.sharedInstance.appDidFinishLaunching()
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             AdjustIntegration.sharedInstance.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
         }
@@ -138,16 +138,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
+        AppStatus.sharedInstance.appDidBecomeActive(self.profile!)
         self.profile?.syncManager.applicationDidBecomeActive()
 
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
         self.browserViewController.loadQueuedTabs()
-        AppStatus.sharedInstance.appDidBecomeActive(self.profile!)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-
+        AppStatus.sharedInstance.appDidEnterBackground()
         self.profile?.syncManager.applicationDidEnterBackground()
 
         var taskId: UIBackgroundTaskIdentifier = 0
@@ -163,13 +163,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let userDefaulst = NSUserDefaults.standardUserDefaults()
 		userDefaulst.setValue(NSDate(), forKey: "lastVisitedDate")
 		userDefaulst.synchronize()
-        AppStatus.sharedInstance.appDidEnterBackground()
     }
+    
     func applicationWillResignActive(application: UIApplication) {
-        AppStatus.sharedInstance.appDidBecomeInactive()
+        AppStatus.sharedInstance.appWillResignActive()
     }
+    
     func applicationWillTerminate(application: UIApplication) {
         AppStatus.sharedInstance.appWillTerminate()
+    }
+    
+    func applicationWillEnterForeground(application: UIApplication) {
+        AppStatus.sharedInstance.appWillEnterForeground()
     }
 
 	private func setUpWebServer(profile: Profile) {

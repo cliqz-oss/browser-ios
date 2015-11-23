@@ -10,10 +10,22 @@ import Foundation
 
 extension NSDate {
     class func getCurrentMillis()-> Double {
-        return  NSDate().timeIntervalSince1970 * 1000.0 //TODO: check
+        return  NSDate().timeIntervalSince1970 * 1000.0
     }
     
     class func getDay()-> Int {
         return  Int(NSDate().timeIntervalSince1970 / 86400)
+    }
+    
+    class func milliSecondsSinceDate(anotherDate: NSDate?)-> Double? {
+        var milliSeconds: Double?
+        if anotherDate != nil {
+            milliSeconds = NSDate().timeIntervalSinceDate(anotherDate!) * 1000
+        }
+        return milliSeconds
+    }
+    
+    func daysSinceDate(anotherDate: NSDate)-> Int {
+        return Int( self.timeIntervalSinceDate(anotherDate) / 86400 )
     }
 }

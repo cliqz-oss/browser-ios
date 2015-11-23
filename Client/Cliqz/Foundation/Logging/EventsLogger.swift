@@ -23,11 +23,15 @@ class EventsLogger: NSObject {
     //MARK: - Dealing with SessionId
     private var source: String {
         get {
-            if AppStatus.sharedInstance.isRelease {
-                return "MI00" // release
-            } else {
-                return "MI01" // TestFlight
-            }
+            #if DEBUG
+                return "MI02" // Debug
+            #else
+                if AppStatus.sharedInstance.isRelease {
+                    return "MI00" // Release
+                } else {
+                    return "MI01" // TestFlight
+                }
+            #endif
         }
     }
     
