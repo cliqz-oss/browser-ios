@@ -4,9 +4,9 @@
 
 #include "BaseConfig.xcconfig"
 
-MOZ_BUNDLE_DISPLAY_NAME = Cliqz Core
+MOZ_BUNDLE_DISPLAY_NAME = Cliqz Beta
 
-MOZ_PRODUCT_NAME = Firefox
+MOZ_PRODUCT_NAME = Cliqz Beta
 
 MOZ_RELEASE_CHANNEL = release
 
