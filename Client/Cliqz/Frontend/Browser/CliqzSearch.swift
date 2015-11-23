@@ -14,11 +14,11 @@ class CliqzSearch: NSObject {
     
     private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
-	internal func startSearch(query: String, history: Array<Dictionary<String, String>>, callback: ((query: String, data: String)) -> Void) {
+	internal func startSearch(query: String, callback: ((query: String, data: NSDictionary)) -> Void) {
 		
 		if let data = cachedData[query] {
-			let html = self.parseResponse(data, history: history)
-			callback((query, html))
+//			let html = self.parseResponse(data, history: history)
+			callback((query, data))
 		} else {
             statisticsCollector.startEvent(query)
             DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
@@ -29,8 +29,8 @@ class CliqzSearch: NSObject {
                     DebugLogger.log("<< Received response for query: \(query)")
                     let jsonDict = json as! [String : AnyObject]
                     self.cachedData[query] = jsonDict
-                    let html = self.parseResponse(jsonDict, history: history)
-                    callback((query, html))
+//                    let html = self.parseResponse(jsonDict, history: history)
+                    callback((query, jsonDict))
                     DebugLogger.log("<< parsed response for query: \(query)")
                 },
                 onFailure: { (data, error) in
