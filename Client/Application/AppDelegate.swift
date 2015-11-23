@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		print("1111:   willFinishLaunchingWithOptions")
         // Set the Firefox UA for browsing.
         setUserAgent()
 
@@ -116,7 +115,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-		print("1111:   didFinishLaunchingWithOptions")
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             AdjustIntegration.sharedInstance.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
@@ -150,7 +148,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
-		print("1111:   applicationDidBecomeActive")
 
         self.profile?.syncManager.applicationDidBecomeActive()
 
@@ -160,7 +157,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-		print("1111:   applicationDidEnterBackground")
 
         self.profile?.syncManager.applicationDidEnterBackground()
 
@@ -177,7 +173,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 	func applicationWillEnterForeground(application: UIApplication) {
-		print("1111:   applicationWillEnterForeground")
 	}
 
     private func setUpWebServer(profile: Profile) {
