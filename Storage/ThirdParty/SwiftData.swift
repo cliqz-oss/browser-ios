@@ -50,6 +50,9 @@ public class SwiftData {
     static var EnableWAL = true
     static var EnableForeignKeys = true
 
+    /// Used to keep track of the corrupted databases we've logged.
+    static var corruptionLogsWritten = Set<String>()
+
     /// Used for testing.
     static var ReuseConnections = true
 
@@ -77,6 +80,7 @@ public class SwiftData {
 
         dispatch_sync(sharedConnectionQueue) {
             if self.sharedConnection == nil {
+                log.debug(">>> Creating shared SQLiteDBConnection for \(self.filename) on thread \(NSThread.currentThread()).")
                 self.sharedConnection = SQLiteDBConnection(filename: self.filename, flags: SwiftData.Flags.ReadWriteCreate.toSQL(), key: self.key, prevKey: self.prevKey)
             }
             connection = self.sharedConnection
@@ -95,6 +99,7 @@ public class SwiftData {
         if SwiftData.ReuseConnections {
             connection = getSharedConnection()
         } else {
+            log.debug(">>> Creating non-shared SQLiteDBConnection for \(self.filename) on thread \(NSThread.currentThread()).")
             connection = SQLiteDBConnection(filename: filename, flags: flags.toSQL(), key: self.key, prevKey: self.prevKey)
         }
 
@@ -290,10 +295,22 @@ public class SQLiteDBConnection {
         sqlite3_interrupt(sqliteDB)
     }
 
+    private func pragma<T: Equatable>(pragma: String, expected: T?, factory: SDRow -> T, message: String) {
+        let cursorResult = self.pragma(pragma, factory: factory)
+        assert(cursorResult == expected, message)
+    }
+
+    private func pragma<T>(pragma: String, factory: SDRow -> T) -> T? {
+        let cursor = executeQueryUnsafe("PRAGMA \(pragma)", factory: factory)
+        return cursor[0]
+    }
+
     init?(filename: String, flags: Int32, key: String? = nil, prevKey: String? = nil) {
+        log.debug("Opening connection to \(filename).")
         self.filename = filename
         self.queue = dispatch_queue_create("SQLite connection: \(filename)", DISPATCH_QUEUE_SERIAL)
-        if let _ = openWithFlags(flags) {
+        if let failure = openWithFlags(flags) {
+            log.warning("Opening connection to \(filename) failed: \(failure).")
             return nil
         }
 
@@ -309,9 +326,41 @@ public class SQLiteDBConnection {
             }
         }
 
+        //
+        // For where these values come from, see Bug 1213623.
+        //
+
+        let currentPageSize = executeQueryUnsafe("PRAGMA page_size", factory: IntFactory)[0]
+        let desiredPageSize = 32 * 1024
+
+        // This has to be done without WAL, so we always hop into rollback/delete journal mode.
+        if currentPageSize != desiredPageSize {
+            pragma("journal_mode=DELETE", expected: "delete",
+                   factory: StringFactory, message: "delete journal mode set")
+
+            pragma("page_size=\(desiredPageSize)", expected: nil, factory: IntFactory, message: "Page size set")
+
+            log.info("Vacuuming to alter database page size from \(currentPageSize) to \(desiredPageSize).")
+            if let err = self.vacuum() {
+                log.error("Vacuuming failed: \(err).")
+            } else {
+                log.debug("Vacuuming succeeded.")
+            }
+        }
+
         if SwiftData.EnableWAL {
-            let cursor = executeQueryUnsafe("PRAGMA journal_mode=WAL", factory: StringFactory)
-            assert(cursor[0] == "wal", "WAL journal mode set")
+            log.info("Enabling WAL mode.")
+
+            let desiredPagesPerJournal = 16
+            let desiredCheckpointSize = desiredPagesPerJournal * desiredPageSize
+            let desiredJournalSizeLimit = 3 * desiredCheckpointSize
+
+            pragma("journal_mode=WAL", expected: "wal",
+                   factory: StringFactory, message: "WAL journal mode set")
+            pragma("wal_autocheckpoint=\(desiredPagesPerJournal)", expected: desiredPagesPerJournal,
+                   factory: IntFactory, message: "WAL autocheckpoint set")
+            pragma("journal_size_limit=\(desiredJournalSizeLimit)", expected: desiredJournalSizeLimit,
+                   factory: IntFactory, message: "WAL journal size limit set")
         }
 
         if SwiftData.EnableForeignKeys {
@@ -323,6 +372,7 @@ public class SQLiteDBConnection {
     }
 
     deinit {
+        log.debug("deinit: closing connection on thread \(NSThread.currentThread()).")
         closeCustomConnection()
     }
 
@@ -338,7 +388,18 @@ public class SQLiteDBConnection {
      * Blindly attempts a WAL checkpoint on all attached databases.
      */
     func checkpoint(mode: Int32 = SQLITE_CHECKPOINT_PASSIVE) {
+        guard sqliteDB != nil else {
+            log.warning("Trying to checkpoint a nil DB!")
+            return
+        }
+
+        log.debug("Running WAL checkpoint on \(self.filename) on thread \(NSThread.currentThread()).")
         sqlite3_wal_checkpoint_v2(sqliteDB, nil, mode, nil, nil)
+        log.debug("WAL checkpoint done on \(self.filename).")
+    }
+
+    func vacuum() -> NSError? {
+        return self.executeChange("VACUUM")
     }
 
     /// Creates an error from a sqlite status. Will print to the console if debug_enabled is set.
@@ -372,12 +433,21 @@ public class SQLiteDBConnection {
 
     /// Closes a connection. This is called via deinit. Do not call this yourself.
     private func closeCustomConnection() -> NSError? {
-        let status = sqlite3_close(sqliteDB)
+        log.debug("Closing custom connection for \(self.filename) on \(NSThread.currentThread()).")
+        // Make sure we don't try to call sqlite3_close multiple times.
+        // TODO: add a lock here?
+        guard self.sqliteDB != nil else {
+            log.warning("Connection was nil.")
+            return nil
+        }
 
-        sqliteDB = nil
+        let status = sqlite3_close(self.sqliteDB)
+        log.debug("Closed \(self.filename).")
+        self.sqliteDB = nil
 
         if status != SQLITE_OK {
-            return createErr("During: Closing Database with Flags", status: Int(status))
+            log.error("Got \(status) while closing.")
+            return createErr("During: closing database with flags", status: Int(status))
         }
 
         return nil
@@ -394,6 +464,11 @@ public class SQLiteDBConnection {
             statement = nil
         }
         if let error = error {
+            // Special case: Write additional info to the database log in the case of a database corruption.
+            if error.code == Int(SQLITE_CORRUPT) {
+                writeCorruptionInfoForDBNamed(filename, toLogger: Logger.corruptLogger)
+            }
+
             log.error("SQL error: \(error.localizedDescription) for SQL \(sqlStr).")
             statement?.close()
             return error
@@ -421,6 +496,11 @@ public class SQLiteDBConnection {
             statement = nil
         }
         if let error = error {
+            // Special case: Write additional info to the database log in the case of a database corruption.
+            if error.code == Int(SQLITE_CORRUPT) {
+                writeCorruptionInfoForDBNamed(filename, toLogger: Logger.corruptLogger)
+            }
+
             log.error("SQL error: \(error.localizedDescription).")
             return Cursor<T>(err: error)
         }
@@ -432,6 +512,30 @@ public class SQLiteDBConnection {
         statement?.close()
 
         return cursor
+    }
+
+    func writeCorruptionInfoForDBNamed(dbFilename: String, toLogger logger: XCGLogger) {
+        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            guard !SwiftData.corruptionLogsWritten.contains(dbFilename) else { return }
+
+            logger.error("Corrupt DB Detected! - DB Filename: \(dbFilename)")
+
+            let dbFileSize = ("file://\(dbFilename)".asURL)?.allocatedFileSize() ?? 0
+            logger.error("DB file size: \(dbFileSize) bytes")
+
+            if let message = self.pragma("integrity_check", factory: StringFactory) {
+                logger.error("Integrity check message: \(message)")
+            }
+
+            // Write call stack
+            logger.error("Call stack: \(NSThread.callStackSymbols())")
+
+            // Write open file handles
+            let openDescriptors = FSUtils.openFileDescriptors()
+            logger.error("Open file descriptors: \(openDescriptors)")
+
+            SwiftData.corruptionLogsWritten.insert(dbFilename)
+        }
     }
 
     /**

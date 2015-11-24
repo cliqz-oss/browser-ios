@@ -28,6 +28,14 @@ extension KIFUITestActor {
         return element != nil
     }
 
+    func waitForViewWithAccessibilityHint(hint: String) -> UIView? {
+        var view: UIView? = nil
+        autoreleasepool {
+            waitForAccessibilityElement(nil, view: &view, withElementMatchingPredicate: NSPredicate(format: "accessibilityHint = %@", hint), tappable: false)
+        }
+        return view
+    }
+
     func viewExistsWithLabel(label: String) -> Bool {
         do {
             try self.tryFindingViewWithAccessibilityLabel(label)
@@ -348,5 +356,37 @@ class SimplePageServer {
         // history exclusion code (Bug 1188626).
         let webRoot = "http://127.0.0.1:\(webServer.port)"
         return webRoot
+    }
+}
+
+class SearchUtils {
+    static func navigateToSearchSettings(tester: KIFUITestActor, engine: String = "Yahoo") {
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.waitForViewWithAccessibilityLabel("Tabs Tray")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.waitForViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Search, \(engine)")
+        tester.waitForViewWithAccessibilityIdentifier("Search")
+    }
+
+    static func navigateFromSearchSettings(tester: KIFUITestActor) {
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Done")
+        tester.tapViewWithAccessibilityLabel("home")
+    }
+
+    // Given that we're at the Search Settings sheet, select the named search engine as the default.
+    // Afterwards, we're still at the Search Settings sheet.
+    static func selectDefaultSearchEngineName(tester: KIFUITestActor, engineName: String) {
+        tester.tapViewWithAccessibilityLabel("Default Search Engine", traits: UIAccessibilityTraitButton)
+        tester.waitForViewWithAccessibilityLabel("Default Search Engine")
+        tester.tapViewWithAccessibilityLabel(engineName)
+        tester.waitForViewWithAccessibilityLabel("Search")
+    }
+
+    // Given that we're at the Search Settings sheet, return the default search engine's name.
+    static func getDefaultSearchEngineName(tester: KIFUITestActor) -> String {
+        let view = tester.waitForCellWithAccessibilityLabel("Default Search Engine")
+        return view.accessibilityValue!
     }
 }

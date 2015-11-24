@@ -51,7 +51,7 @@ public class FaviconFetcher : NSObject, NSXMLParserDelegate {
                     }
                 }
 
-                oldIcons.sortInPlace({ (a, b) -> Bool in
+                oldIcons = oldIcons.sort({ (a, b) -> Bool in
                     return a.width > b.width
                 })
 
@@ -84,7 +84,8 @@ public class FaviconFetcher : NSObject, NSXMLParserDelegate {
                     }
                 }
 
-                deferred.fill(Maybe(failure: FaviconFetcherErrorType(description: error?.description ?? "No content.")))
+				// Cliqz: replaced error?.description because in Alamofire NSError is replaced with ErrorType which doesn't have description
+                deferred.fill(Maybe(failure: FaviconFetcherErrorType(description: "error?.description" ?? "No content.")))
             }
         }
         return deferred
