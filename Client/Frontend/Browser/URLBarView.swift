@@ -321,7 +321,8 @@ class URLBarView: UIView {
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
         locationTextField.returnKeyType = UIReturnKeyType.Go
-        locationTextField.clearButtonMode = UITextFieldViewMode.WhileEditing
+		// Cliqz: Changed mode to always to use it also as cancel button
+        locationTextField.clearButtonMode = UITextFieldViewMode.Always
         locationTextField.font = UIConstants.DefaultMediumFont
         locationTextField.accessibilityIdentifier = "address"
         locationTextField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")

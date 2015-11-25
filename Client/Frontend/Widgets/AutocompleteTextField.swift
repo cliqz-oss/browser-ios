@@ -67,6 +67,8 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
                 self.autocompleteDelegate?.autocompleteTextField(self, didEnterText: self.enteredText)
             }
         })
+		// Cliqz: Changed Textfield textColor according to requirements
+		self.textColor = UIColor.whiteColor()
     }
 
     func highlightAll() {
