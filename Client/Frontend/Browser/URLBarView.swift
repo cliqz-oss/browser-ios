@@ -190,7 +190,8 @@ class URLBarView: UIView {
 
     private func commonInit() {
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
-        addSubview(curveShape)
+		// Cliqz: Commented extra curveView accroding to requirements.
+//        addSubview(curveShape)
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
@@ -239,11 +240,14 @@ class URLBarView: UIView {
             make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
-        curveShape.snp_makeConstraints { make in
+		// Cliqz: Commented curveShape constraints because it's removed from view
+/*
+		curveShape.snp_makeConstraints { make in
             make.top.left.bottom.equalTo(self)
             self.rightBarConstraint = make.right.equalTo(self).constraint
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
         }
+*/
 
         backButton.snp_makeConstraints { make in
             make.left.centerY.equalTo(self)
@@ -352,7 +356,8 @@ class URLBarView: UIView {
     func updateAlphaForSubviews(alpha: CGFloat) {
         self.tabsButton.alpha = alpha
         self.locationContainer.alpha = alpha
-        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
+		// Cliqz: Commented because we should always have blue URLBar
+//        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
         self.actionButtons.forEach { $0.alpha = alpha }
     }
 
@@ -778,8 +783,11 @@ private class CurveView: UIView {
         CGContextSaveGState(context)
         CGContextClearRect(context, rect)
         CGContextSetFillColorWithColor(context, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
+		// Cliqz: Removed URLBar decorations according to requirements
+/*
         getPath().fill()
         leftCurvePath.fill()
+*/
         CGContextDrawPath(context, CGPathDrawingMode.Fill)
         CGContextRestoreGState(context)
     }

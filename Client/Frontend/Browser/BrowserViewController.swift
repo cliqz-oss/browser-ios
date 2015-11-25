@@ -65,7 +65,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 	private var isNewTabNeeded = false
 
     // These views wrap the urlbar and toolbar to provide background effects on them
-    var header: BlurWrapper!
+	// Cliqz: Replaced BlurWrapper because according new requirements we don't need to blur background of ULRBar
+    var header: UIView!
     var headerBackdrop: UIView!
     var footer: UIView!
     var footerBackdrop: UIView!
@@ -292,7 +293,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         urlBar.translatesAutoresizingMaskIntoConstraints = false
         urlBar.delegate = self
         urlBar.browserToolbarDelegate = self
-        header = BlurWrapper(view: urlBar)
+		// Cliqz: Replaced BlurWrapper because of requirements
+        header = urlBar //BlurWrapper(view: urlBar)
         view.addSubview(header)
 
         // UIAccessibilityCustomAction subclass holding an AccessibleAction instance does not work, thus unable to generate AccessibleActions and UIAccessibilityCustomActions "on-demand" and need to make them "persistent" e.g. by being stored in BVC
@@ -2287,25 +2289,32 @@ extension BrowserViewController {
         ReaderModeBarView.appearance().backgroundColor = UIConstants.PrivateModeReaderModeBackgroundColor
         ReaderModeBarView.appearance().buttonTintColor = UIColor.whiteColor()
 
-        header.blurStyle = .Dark
+		// Cliqz: As header is a UIView now, it doesn't have style member
+//        header.blurStyle = .Dark
         footerBackground?.blurStyle = .Dark
     }
 
     func applyNormalModeTheme() {
         BrowserLocationView.appearance().baseURLFontColor = BrowserLocationViewUX.BaseURLFontColor
         BrowserLocationView.appearance().hostFontColor = BrowserLocationViewUX.HostFontColor
-        BrowserLocationView.appearance().backgroundColor = UIColor.whiteColor()
+		// Cliqz: Changed LocationView backgroundColor according to requirements
+        BrowserLocationView.appearance().backgroundColor = UIColor.clearColor()
 
-        ToolbarTextField.appearance().backgroundColor = UIColor.whiteColor()
+		// Cliqz: TextField backgroundColor because of requirements
+        ToolbarTextField.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
         ToolbarTextField.appearance().textColor = UIColor.blackColor()
         ToolbarTextField.appearance().highlightColor = AutocompleteTextFieldUX.HighlightColor
         ToolbarTextField.appearance().clearButtonTintColor = nil
 
-        URLBarView.appearance().locationBorderColor = URLBarViewUX.TextFieldBorderColor
-        URLBarView.appearance().locationActiveBorderColor = URLBarViewUX.TextFieldActiveBorderColor
+		// Cliqz: Removed TextField border because of requirements
+        URLBarView.appearance().locationBorderColor = UIColor.clearColor()
+        URLBarView.appearance().locationActiveBorderColor = UIColor.clearColor()
         URLBarView.appearance().progressBarTint = URLBarViewUX.ProgressTintColor
         URLBarView.appearance().cancelTextColor = UIColor.blackColor()
         URLBarView.appearance().actionButtonTintColor = UIColor.darkGrayColor()
+
+		// Cliqz: Changed URLBar backgroundColor because of requirements
+		URLBarView.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
 
         BrowserToolbar.appearance().actionButtonTintColor = UIColor.darkGrayColor()
 
@@ -2319,7 +2328,8 @@ extension BrowserViewController {
         ReaderModeBarView.appearance().backgroundColor = UIColor.whiteColor()
         ReaderModeBarView.appearance().buttonTintColor = UIColor.darkGrayColor()
 
-        header.blurStyle = .ExtraLight
+		// Cliqz: Commented because header is now UIView which doesn't have style
+//        header.blurStyle = .ExtraLight
         footerBackground?.blurStyle = .ExtraLight
     }
 }
