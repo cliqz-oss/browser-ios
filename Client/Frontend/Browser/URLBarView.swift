@@ -47,6 +47,11 @@ protocol URLBarDelegate: class {
     func urlBar(urlBar: URLBarView, didEnterText text: String)
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
+    
+    // Cliqz: Added delegate methods for new bar buttons
+    func urlBarDidClickSearchHistory()
+    func urlBarDidClickSettings()
+    func urlBarDidClickRecommendations()
 }
 
 class URLBarView: UIView {
@@ -638,12 +643,15 @@ class URLBarView: UIView {
 	
 	// Cliqz: Added event handler methods for new buttons
 	func SELdidClickHistory() {
+        delegate?.urlBarDidClickSearchHistory()
 	}
 
 	func SELdidClickSettings() {
+        delegate?.urlBarDidClickSettings()
 	}
 
 	func SELdidClickRecommendations() {
+        delegate?.urlBarDidClickRecommendations()
 	}
 
 }

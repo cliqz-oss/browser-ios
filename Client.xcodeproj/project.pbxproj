@@ -74,6 +74,7 @@
 		1E1E31CB1C071FFF0032759D /* LayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C71C071FFF0032759D /* LayerViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		1E1E31CC1C071FFF0032759D /* RecommendationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		1E1E31CD1C071FFF0032759D /* SearchHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		1E1E31CE1C071FFF0032759D /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31CA1C071FFF0032759D /* TransitionAnimator.swift */; settings = {ASSET_TAGS = (); }; };
 		1E3301E41BFDCE9C00E8718D /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */; };
 		1E33020A1BFDCEAA00E8718D /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */; };
 		1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */; };
@@ -1455,6 +1456,7 @@
 		1E1E31C71C071FFF0032759D /* LayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerViewController.swift; sourceTree = "<group>"; };
 		1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsViewController.swift; sourceTree = "<group>"; };
 		1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewController.swift; sourceTree = "<group>"; };
+		1E1E31CA1C071FFF0032759D /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBarTelemetryHelper.swift; sourceTree = "<group>"; };
 		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
@@ -2215,6 +2217,7 @@
 			children = (
 				1E79B8351BE91AC800B19219 /* CliqzSearch.swift */,
 				1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */,
+				1E1E31CA1C071FFF0032759D /* TransitionAnimator.swift */,
 				1E1E31C71C071FFF0032759D /* LayerViewController.swift */,
 				1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */,
 				1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */,
@@ -4955,6 +4958,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F49F5B31C04EEA600319287 /* ADJTimerCycle.m in Sources */,
+				1E1E31CE1C071FFF0032759D /* TransitionAnimator.swift in Sources */,
 				39C5750E1BE28BAE00E1C4B1 /* OnePasswordExtension.h in Sources */,
 				39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */,
 				4F8920891C04E18D00F47CF0 /* HttpServer.swift in Sources */,

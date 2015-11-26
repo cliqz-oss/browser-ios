@@ -92,6 +92,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     private var isAppResponsive = false
     
+    // Cliqz: Added TransitionAnimator which is responsible for layers change animations
+    let transition = TransitionAnimator()
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -1065,6 +1068,46 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
         hideSearchController()
         updateInContentHomePanel(tabManager.selectedTab?.url)
+    }
+    
+    
+    // Cliqz: Added delegate methods implementation for new bar buttons
+    func urlBarDidClickSearchHistory() {
+        let searchHistoryViewController = SearchHistoryViewController()
+        let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
+        containerViewController.transitioningDelegate = self
+        transition.transitionDirection = TransitionDirection.Down
+        self.presentViewController(containerViewController, animated: true, completion: nil)
+    }
+    func urlBarDidClickSettings() {
+        let settingsTableViewController = SettingsTableViewController()
+        settingsTableViewController.profile = profile
+        settingsTableViewController.tabManager = tabManager
+        
+        let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
+        controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+        presentViewController(controller, animated: true, completion: nil)
+    }
+    func urlBarDidClickRecommendations() {
+        self.webViewContainerToolbar.hidden = true
+        let recommendationsViewController = RecommendationsViewController()
+        let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
+        containerViewController.transitioningDelegate = self
+        transition.transitionDirection = TransitionDirection.Up
+        self.presentViewController(containerViewController, animated: true, completion: nil)
+    }
+}
+// Cliqz: Added TransitioningDelegate to maintain layers change animations
+extension BrowserViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            transition.presenting = true
+            return transition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.presenting = false
+        return transition
     }
 }
 
