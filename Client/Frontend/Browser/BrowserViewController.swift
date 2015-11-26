@@ -468,9 +468,12 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 //            log.debug("Done restoring tabs.")
         }
 
+		// Cliqz: Removed tabsButton and related method calls according requirements.
+		/*
 		log.debug("Updating tab count.")
 		updateTabCountUsingTabManager(tabManager, animated: false)
 		log.debug("BVC done.")
+*/
     }
 
     private func showCrashOptInAlert() {

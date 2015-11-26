@@ -130,7 +130,9 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
+		// Cliqz: Temporary changed Cancel buttons size to make it smaller, while we'll have exact requirements for cancel behavior.
+//        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
+		let cancelTitle = NSLocalizedString("C", comment: "C")
         cancelButton.setTitle(cancelTitle, forState: UIControlState.Normal)
         cancelButton.titleLabel?.font = UIConstants.DefaultMediumFont
         cancelButton.addTarget(self, action: "SELdidClickCancel", forControlEvents: UIControlEvents.TouchUpInside)
@@ -161,6 +163,25 @@ class URLBarView: UIView {
     lazy var actionButtons: [UIButton] = {
         return [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
     }()
+
+	// Cliqz: Added 3 new buttons according  to requirements.
+	lazy var historyButton: UIButton = { let historyButton = UIButton()
+		historyButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		historyButton.addTarget(self, action: "SELdidClickHistory", forControlEvents: UIControlEvents.TouchUpInside)
+		historyButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		return historyButton }()
+
+	lazy var settingsButton: UIButton = { let settingsButton = UIButton()
+		settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		settingsButton.addTarget(self, action: "SELdidClickSettings", forControlEvents: UIControlEvents.TouchUpInside)
+		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		return settingsButton }()
+	
+	lazy var recommendationsButton: UIButton = {  let recommendationsButton = UIButton()
+		recommendationsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		recommendationsButton.addTarget(self, action: "SELdidClickRecommendations", forControlEvents: UIControlEvents.TouchUpInside)
+		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		return recommendationsButton }()
 
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
     private weak var clonedTabsButton: TabsButton?
@@ -195,7 +216,8 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
-        addSubview(tabsButton)
+		// Cliqz: Removed tabsButton accroding to requirements.
+//        addSubview(tabsButton)
         addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -206,6 +228,11 @@ class URLBarView: UIView {
 
         locationContainer.addSubview(locationView)
         addSubview(locationContainer)
+		
+		// Cliqz: Added new buttons to the main view.
+		addSubview(historyButton)
+		addSubview(settingsButton)
+		addSubview(recommendationsButton)
 
         helper = BrowserToolbarHelper(toolbar: self)
         setupConstraints()
@@ -215,6 +242,25 @@ class URLBarView: UIView {
     }
 
     private func setupConstraints() {
+		// Cliqz: Added constraints for new buttons.
+		historyButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.left.equalTo(self)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
+
+		settingsButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.right.equalTo(self.recommendationsButton.snp_left)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
+
+		recommendationsButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.right.equalTo(self.cancelButton.snp_left)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
+
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
             make.left.right.equalTo(self.locationContainer)
@@ -234,11 +280,14 @@ class URLBarView: UIView {
             make.trailing.equalTo(self)
         }
 
+		// Cliqz: Removed tabsButtons constraints along with tabsButton.
+/*
         tabsButton.snp_makeConstraints { make in
             make.centerY.equalTo(self.locationContainer)
             make.trailing.equalTo(self)
             make.size.equalTo(UIConstants.ToolbarHeight)
         }
+*/
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
 /*
@@ -273,7 +322,8 @@ class URLBarView: UIView {
         }
 
         bookmarkButton.snp_makeConstraints { make in
-            make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
+            make.right.equalTo(self.settingsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -284,8 +334,9 @@ class URLBarView: UIView {
         if inOverlayMode {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
-                make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading)
+				// Cliqz: Changed locationContainer's constraints to align with new buttons
+				make.leading.equalTo(self.historyButton.snp_trailing)
+                make.trailing.equalTo(self.settingsButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -297,8 +348,9 @@ class URLBarView: UIView {
                     make.trailing.equalTo(self.shareButton.snp_leading)
                 } else {
                     // Otherwise, left align the location view
-                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+					// Cliqz: Changed locationContainer's constraints to align with new buttons
+					make.leading.equalTo(self.historyButton.snp_trailing)
+                    make.trailing.equalTo(self.settingsButton.snp_leading).offset(-14)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -583,6 +635,17 @@ class URLBarView: UIView {
     func SELtappedScrollToTopArea() {
         delegate?.urlBarDidPressScrollToTop(self)
     }
+	
+	// Cliqz: Added event handler methods for new buttons
+	func SELdidClickHistory() {
+	}
+
+	func SELdidClickSettings() {
+	}
+
+	func SELdidClickRecommendations() {
+	}
+
 }
 
 extension URLBarView: BrowserToolbarProtocol {
