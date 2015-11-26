@@ -607,6 +607,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
 
     private func showHomePanelController(inline inline: Bool) {
+		// Cliqz: Removed HomePanel as we don't need it
+		return
         log.debug("BVC showHomePanelController.")
         homePanelIsInline = inline
 
@@ -648,6 +650,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
 
     private func hideHomePanelController() {
+		// Cliqz: Removed HomePanel as we don't need it
+		return
         if let controller = homePanelController {
             UIView.animateWithDuration(0.2, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
                 controller.view.alpha = 0
