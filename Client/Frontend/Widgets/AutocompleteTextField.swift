@@ -69,6 +69,14 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         })
 		// Cliqz: Changed Textfield textColor according to requirements
 		self.textColor = UIColor.whiteColor()
+		// Cliqz: Added custom Clear button to show always event when the text is empty
+		let clearButton = UIButton()
+		let clearImg = UIImage(named: "stop")
+		clearButton.setImage(clearImg, forState: .Normal)
+		clearButton.frame = CGRectMake(0, 0, (clearImg?.size.width)!, (clearImg?.size.height)!)
+		clearButton.addTarget(self, action: "SELtextDidClear:", forControlEvents: UIControlEvents.TouchUpInside)
+		self.rightViewMode = .Always
+		self.rightView = clearButton
     }
 
     func highlightAll() {
@@ -202,6 +210,14 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         }
         notifyTextChanged?()
     }
+
+	// Cliqz: Added action handler for custom Clear button
+	func SELtextDidClear(textField: UITextField) {
+		removeCompletion()
+		if autocompleteDelegate?.autocompleteTextFieldShouldClear(self) == true {
+			self.text = ""
+		}
+	}
 
     override func deleteBackward() {
         removeCompletion()

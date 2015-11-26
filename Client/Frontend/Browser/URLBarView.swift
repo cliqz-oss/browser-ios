@@ -752,7 +752,12 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     }
 
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool {
-        delegate?.urlBar(self, didEnterText: "")
+		// Cliqz: Handled cancelation when Clear button is tapped second time
+		if autocompleteTextField.text == nil || autocompleteTextField.text!.isEmpty {
+			self.SELdidClickCancel()
+		} else {
+			delegate?.urlBar(self, didEnterText: "")
+		}
         return true
     }
 }
