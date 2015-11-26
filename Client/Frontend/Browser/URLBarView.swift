@@ -384,6 +384,8 @@ class URLBarView: UIView {
         locationTextField.accessibilityIdentifier = "address"
         locationTextField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
         locationTextField.attributedPlaceholder = self.locationView.placeholder
+		// Cliqz: Changed textField's tinColor to make cursor visible on blue background
+		locationTextField.tintColor = UIColor.whiteColor()
 
         locationContainer.addSubview(locationTextField)
 
