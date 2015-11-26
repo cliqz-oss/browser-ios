@@ -75,11 +75,11 @@ class BrowserLocationView: UIView {
     }
 
     lazy var placeholder: NSAttributedString = {
-		// Cliqz: Changed Placeholder text according to requirements
+		// Cliqz: Changed Placeholder text and color according to requirements
 		// TODO Naira: we should localize the string as well
 //        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
 		let placeholderText = NSLocalizedString("Search", comment: "Search")
-        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.grayColor()])
+        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
     }()
 
     lazy var urlTextField: UITextField = {
