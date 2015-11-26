@@ -251,6 +251,11 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     override func viewDidLoad() {
         log.debug("BVC viewDidLoad…")
+        
+        // Cliqz: present InroViewController each time the app start so that it can be easier to show it to the test users
+        presentIntroViewController(true)
+        log.debug("BVC intro presented.")
+        
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELBookmarkStatusDidChange:", name: BookmarkStatusChangedNotification, object: nil)

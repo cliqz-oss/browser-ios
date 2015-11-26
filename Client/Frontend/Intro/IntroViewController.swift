@@ -9,7 +9,10 @@ struct IntroViewControllerUX {
     static let Width = 375
     static let Height = 667
 
-    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
+    //Cliqz: replaced fixfox intro with cliqz intro
+    static let CardSlides = ["cliqz-intro1", "cliqz-intro2"]
+//    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
+
     static let NumberOfCards = CardSlides.count
 
     static let PagerCenterOffsetFromScrollViewBottom = 30
@@ -330,7 +333,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     }
 
     private var scaledHeightOfSlide: CGFloat {
-        return (view.frame.width / slides[0].size.width) * slides[0].size.height / slideVerticalScaleFactor
+        //Cliqz: display the inro image in the whole screen except the start button
+        return view.frame.height - startBrowsingButton.frame.height
+//        return (view.frame.width / slides[0].size.width) * slides[0].size.height / slideVerticalScaleFactor
     }
 
     private func attributedStringForLabel(text: String) -> NSMutableAttributedString {
