@@ -135,9 +135,7 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-		// Cliqz: Temporary changed Cancel buttons size to make it smaller, while we'll have exact requirements for cancel behavior.
-//        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
-		let cancelTitle = NSLocalizedString("C", comment: "C")
+        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
         cancelButton.setTitle(cancelTitle, forState: UIControlState.Normal)
         cancelButton.titleLabel?.font = UIConstants.DefaultMediumFont
         cancelButton.addTarget(self, action: "SELdidClickCancel", forControlEvents: UIControlEvents.TouchUpInside)
@@ -221,9 +219,9 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
-		// Cliqz: Removed tabsButton accroding to requirements.
+		// Cliqz: Removed tabsButton and cancelButton accroding to requirements.
 //        addSubview(tabsButton)
-        addSubview(cancelButton)
+//        addSubview(cancelButton)
 
         addSubview(shareButton)
         addSubview(bookmarkButton)
@@ -262,7 +260,7 @@ class URLBarView: UIView {
 
 		recommendationsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self.cancelButton.snp_left)
+			make.right.equalTo(self)
 			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
@@ -280,13 +278,13 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-        cancelButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-        }
-
-		// Cliqz: Removed tabsButtons constraints along with tabsButton.
+		// Cliqz: Removed tabsButton's and cancelButton's constraints along with corresponding buttons.
 /*
+		cancelButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.trailing.equalTo(self)
+		}
+		
         tabsButton.snp_makeConstraints { make in
             make.centerY.equalTo(self.locationContainer)
             make.trailing.equalTo(self)
@@ -556,7 +554,8 @@ class URLBarView: UIView {
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
         self.bringSubviewToFront(self.locationContainer)
-        self.cancelButton.hidden = false
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         self.shareButton.hidden = !self.toolbarIsShowing
         self.bookmarkButton.hidden = !self.toolbarIsShowing
@@ -566,7 +565,8 @@ class URLBarView: UIView {
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
-        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.alpha = inOverlayMode ? 1 : 0
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         self.bookmarkButton.alpha = inOverlayMode ? 0 : 1
@@ -578,7 +578,8 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-            self.cancelButton.transform = CGAffineTransformIdentity
+			// Cliqz: Commented out cancelButton as we've removed it
+//            self.cancelButton.transform = CGAffineTransformIdentity
             let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
             self.tabsButton.transform = tabsButtonTransform
             self.clonedTabsButton?.transform = tabsButtonTransform
@@ -592,7 +593,8 @@ class URLBarView: UIView {
         } else {
             self.tabsButton.transform = CGAffineTransformIdentity
             self.clonedTabsButton?.transform = CGAffineTransformIdentity
-            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+			// Cliqz: Commented out cancelButton as we've removed it
+//            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
@@ -603,7 +605,8 @@ class URLBarView: UIView {
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-        self.cancelButton.hidden = !inOverlayMode
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         self.shareButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -692,7 +695,8 @@ extension URLBarView: BrowserToolbarProtocol {
         get {
             if inOverlayMode {
                 guard let locationTextField = locationTextField else { return nil }
-                return [locationTextField, cancelButton]
+				// Cliqz: Removed cancelButton from the list as we don't use it anymore
+                return [locationTextField]
             } else {
                 if toolbarIsShowing {
                     return [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
