@@ -68,6 +68,12 @@
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
+		1E1E319D1C071FF20032759D /* history-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E1E31961C071FF20032759D /* history-1.png */; settings = {ASSET_TAGS = (); }; };
+		1E1E319E1C071FF20032759D /* history-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E1E31971C071FF20032759D /* history-2.png */; settings = {ASSET_TAGS = (); }; };
+		1E1E31A11C071FF20032759D /* recommendations.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E1E319A1C071FF20032759D /* recommendations.png */; settings = {ASSET_TAGS = (); }; };
+		1E1E31CB1C071FFF0032759D /* LayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C71C071FFF0032759D /* LayerViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		1E1E31CC1C071FFF0032759D /* RecommendationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		1E1E31CD1C071FFF0032759D /* SearchHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		1E3301E41BFDCE9C00E8718D /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */; };
 		1E33020A1BFDCEAA00E8718D /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */; };
 		1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */; };
@@ -1443,6 +1449,12 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E1E31961C071FF20032759D /* history-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "history-1.png"; sourceTree = "<group>"; };
+		1E1E31971C071FF20032759D /* history-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "history-2.png"; sourceTree = "<group>"; };
+		1E1E319A1C071FF20032759D /* recommendations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recommendations.png; sourceTree = "<group>"; };
+		1E1E31C71C071FFF0032759D /* LayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerViewController.swift; sourceTree = "<group>"; };
+		1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsViewController.swift; sourceTree = "<group>"; };
+		1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewController.swift; sourceTree = "<group>"; };
 		1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBarTelemetryHelper.swift; sourceTree = "<group>"; };
 		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
@@ -2169,6 +2181,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E1E31931C071FF20032759D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E1E31961C071FF20032759D /* history-1.png */,
+				1E1E31971C071FF20032759D /* history-2.png */,
+				1E1E319A1C071FF20032759D /* recommendations.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		1E79B8321BE91AC800B19219 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -2182,6 +2204,7 @@
 		1E79B8331BE91AC800B19219 /* Frontend */ = {
 			isa = PBXGroup;
 			children = (
+				1E1E31931C071FF20032759D /* Resources */,
 				1E79B8341BE91AC800B19219 /* Browser */,
 			);
 			path = Frontend;
@@ -2192,6 +2215,9 @@
 			children = (
 				1E79B8351BE91AC800B19219 /* CliqzSearch.swift */,
 				1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */,
+				1E1E31C71C071FFF0032759D /* LayerViewController.swift */,
+				1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */,
+				1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -4463,9 +4489,12 @@
 				4F97BA301BFC8293000592CF /* mobile in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
 				E4A961381AC06FA50069AD6F /* ReaderViewLoading.html in Resources */,
+				1E1E319D1C071FF20032759D /* history-1.png in Resources */,
 				E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */,
+				1E1E319E1C071FF20032759D /* history-2.png in Resources */,
 				E4424B3C1AC71FB400F44C38 /* FiraSans-Book.ttf in Resources */,
 				0BF42D391A7C0E8900889E28 /* Favicons.js in Resources */,
+				1E1E31A11C071FF20032759D /* recommendations.png in Resources */,
 				E4D6BEB91A0930EC00F538BD /* LaunchScreen.xib in Resources */,
 				E49C0EB11B46109C009092BB /* WindowCloseHelper.js in Resources */,
 				E4D8F3B01ACDD5150005A2E4 /* InfoPlist.strings in Resources */,
@@ -4930,6 +4959,7 @@
 				39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */,
 				4F8920891C04E18D00F47CF0 /* HttpServer.swift in Sources */,
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
+				1E1E31CD1C071FFF0032759D /* SearchHistoryViewController.swift in Sources */,
 				E4CD9F6D1A77DD2800318571 /* ReaderModeStyleViewController.swift in Sources */,
 				E4A960061ABB9C450069AD6F /* ReaderModeUtils.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
@@ -4943,6 +4973,7 @@
 				0B3E7DB81B27A7F600E2E84D /* AboutUtils.swift in Sources */,
 				E4B3345C1BBF2393004E2BFF /* ADJPackageHandler.m in Sources */,
 				4F89208A1C04E18D00F47CF0 /* Socket.swift in Sources */,
+				1E1E31CC1C071FFF0032759D /* RecommendationsViewController.swift in Sources */,
 				D301AAEE1A3A55B70078DD1D /* TabTrayController.swift in Sources */,
 				D38B2D431A8D96D00040E6B5 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */,
@@ -5059,6 +5090,7 @@
 				D3A9949C1A3686BD008AD1AC /* BrowserViewController.swift in Sources */,
 				59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */,
 				D30B0F301AA7D66300C01CA3 /* ThumbnailCell.swift in Sources */,
+				1E1E31CB1C071FFF0032759D /* LayerViewController.swift in Sources */,
 				1EF1B8B51BF4CFA100698822 /* DebugLogger.swift in Sources */,
 				59A68B280D62462B85CF57A4 /* HistoryPanel.swift in Sources */,
 				E4B334541BBF2393004E2BFF /* ADJAdjustFactory.m in Sources */,
