@@ -15,7 +15,7 @@ public enum TransitionDirection {
 
 class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    let duration    = 0.5
+    let duration    = 0.25
     var presenting  = true
     var transitionDirection = TransitionDirection.Up
     

@@ -32,7 +32,7 @@ class SearchHistoryViewController: LayerViewController {
             NSForegroundColorAttributeName : UIColor.whiteColor()
         ]
         
-        self.navigationItem.leftBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
+        self.navigationItem.leftBarButtonItem = createUIBarButton("future", action: Selector("dismiss"))
         self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
         
         // Dummy Content
