@@ -48,7 +48,7 @@ class SearchHistoryViewController: LayerViewController {
     func showFavorites() {
         showFavoritesOnly = !showFavoritesOnly
         if showFavoritesOnly {
-            self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
+            self.navigationItem.rightBarButtonItem = createUIBarButton("filledStar", action: Selector("showFavorites"))
             dummyImageView?.image = UIImage(named: "history-2.png")
         } else {
             self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))

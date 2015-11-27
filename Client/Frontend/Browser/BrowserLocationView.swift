@@ -205,8 +205,11 @@ class BrowserLocationView: UIView {
             // Highlight the base domain of the current URL.
             let attributedString = NSMutableAttributedString(string: httplessURL)
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
+			            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
+			            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
+			// Cliqz: Changed URL styling colors according to requirements.
+			attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.whiteColor(), range: nsRange)
+			attributedString.colorSubstring(baseDomain, withColor: UIColor.whiteColor())
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: BrowserLocationViewUX.BaseURLPitch), range: nsRange)
             attributedString.pitchSubstring(baseDomain, withPitch: BrowserLocationViewUX.HostPitch)
             urlTextField.attributedText = attributedString
