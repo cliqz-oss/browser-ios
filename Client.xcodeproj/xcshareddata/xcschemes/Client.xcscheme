@@ -245,6 +245,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Firefox"
+      customArchiveName = "CliqzBeta"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

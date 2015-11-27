@@ -468,7 +468,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         } else {
 			if (isNewTabNeeded) {
 				self.tabManager.addTabAndSelect()
-				self.urlBar.enterOverlayMode("", pasted: false)
+//				self.urlBar.enterOverlayMode("", pasted: false)
 				self.isNewTabNeeded = false
 			}
 //            log.debug("Restoring tabs.")
