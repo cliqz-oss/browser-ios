@@ -377,10 +377,11 @@ class URLBarView: UIView {
 
         locationTextField.translatesAutoresizingMaskIntoConstraints = false
         locationTextField.autocompleteDelegate = self
-        locationTextField.keyboardType = UIKeyboardType.WebSearch
+        //Cliqz: Changed the keyboard return button to default button `Return` as it dismiss the keyboard now instead of navigating to the search page
+//        locationTextField.keyboardType = UIKeyboardType.WebSearch
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
-        locationTextField.returnKeyType = UIReturnKeyType.Go
+//        locationTextField.returnKeyType = UIReturnKeyType.Go
 		// Cliqz: Changed mode to always to use it also as cancel button
         locationTextField.clearButtonMode = UITextFieldViewMode.Always
         locationTextField.font = UIConstants.DefaultMediumFont
@@ -749,8 +750,11 @@ extension URLBarView: BrowserLocationViewDelegate {
 
 extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool {
-        guard let text = locationTextField?.text else { return true }
-        delegate?.urlBar(self, didSubmitText: text)
+        //Cliqz: dismiss they keyboard when return button pressed instead of navigating to the
+        autocompleteTextField.resignFirstResponder()
+//        guard let text = locationTextField?.text else { return true }
+//        delegate?.urlBar(self, didSubmitText: text)
+        
         return true
     }
 
