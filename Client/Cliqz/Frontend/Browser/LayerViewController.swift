@@ -68,7 +68,7 @@ class LayerViewController: UIViewController {
         let button: UIButton = UIButton(type: UIButtonType.Custom)
         button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
         button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
-        button.frame = CGRectMake(0, 0, 53, 31)
+        button.frame = CGRectMake(0, 0, 20, 20)
         
         let barButton = UIBarButtonItem(customView: button)
         return barButton

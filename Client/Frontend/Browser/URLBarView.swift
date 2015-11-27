@@ -253,7 +253,7 @@ class URLBarView: UIView {
 		// Cliqz: Added constraints for new buttons.
 		historyButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self).offset(10)
+			make.left.equalTo(self).offset(15)
 //			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
