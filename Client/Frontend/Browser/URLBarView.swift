@@ -169,21 +169,26 @@ class URLBarView: UIView {
 
 	// Cliqz: Added 3 new buttons according  to requirements.
 	lazy var historyButton: UIButton = { let historyButton = UIButton()
-		historyButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		historyButton.setImage(UIImage(named: "past"), forState: .Normal)
 		historyButton.addTarget(self, action: "SELdidClickHistory", forControlEvents: UIControlEvents.TouchUpInside)
 		historyButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
 		return historyButton }()
 
 	lazy var settingsButton: UIButton = { let settingsButton = UIButton()
-		settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+//		settingsButton.backgroundColor = UIColor.redColor()
+		settingsButton.setImage(UIImage(named: "cliqzSettings"), forState: .Normal)
+		settingsButton.frame = CGRectMake(0, 0, 14, 14)
 		settingsButton.addTarget(self, action: "SELdidClickSettings", forControlEvents: UIControlEvents.TouchUpInside)
 		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
+
 		return settingsButton }()
 	
 	lazy var recommendationsButton: UIButton = {  let recommendationsButton = UIButton()
-		recommendationsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+		recommendationsButton.setImage(UIImage(named: "future"), forState: .Normal)
 		recommendationsButton.addTarget(self, action: "SELdidClickRecommendations", forControlEvents: UIControlEvents.TouchUpInside)
 		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
 		return recommendationsButton }()
 
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
@@ -248,20 +253,20 @@ class URLBarView: UIView {
 		// Cliqz: Added constraints for new buttons.
 		historyButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self)
-			make.size.equalTo(UIConstants.ToolbarHeight)
+			make.left.equalTo(self).offset(10)
+//			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
 		settingsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self.recommendationsButton.snp_left)
-			make.size.equalTo(UIConstants.ToolbarHeight)
+			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
+//			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
 		recommendationsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self)
-			make.size.equalTo(UIConstants.ToolbarHeight)
+			make.right.equalTo(self).offset(-15)
+//			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
         scrollToTopButton.snp_makeConstraints { make in
@@ -339,7 +344,7 @@ class URLBarView: UIView {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
 				make.leading.equalTo(self.historyButton.snp_trailing)
-                make.trailing.equalTo(self.settingsButton.snp_leading)
+                make.trailing.equalTo(self.settingsButton.snp_leading).offset(-15)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }

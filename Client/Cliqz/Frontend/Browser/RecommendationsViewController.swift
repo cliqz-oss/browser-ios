@@ -29,7 +29,7 @@ class RecommendationsViewController: LayerViewController {
             NSForegroundColorAttributeName : UIColor.whiteColor()
         ]
         
-        self.navigationItem.leftBarButtonItem = createUIBarButton("settings", action: Selector("dismiss"))
+        self.navigationItem.leftBarButtonItem = createUIBarButton("future", action: Selector("dismiss"))
         // Dummy Content
         dummyImageView?.image = UIImage(named: "recommendations.png")
     }

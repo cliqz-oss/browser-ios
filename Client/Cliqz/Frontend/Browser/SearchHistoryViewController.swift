@@ -32,8 +32,8 @@ class SearchHistoryViewController: LayerViewController {
             NSForegroundColorAttributeName : UIColor.whiteColor()
         ]
         
-        self.navigationItem.leftBarButtonItem = createUIBarButton("settings", action: Selector("dismiss"))
-        self.navigationItem.rightBarButtonItem = createUIBarButton("settings", action: Selector("showFavorites"))
+        self.navigationItem.leftBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
+        self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
         
         // Dummy Content
         dummyImageView?.image = UIImage(named: "history-1.png")
@@ -48,10 +48,10 @@ class SearchHistoryViewController: LayerViewController {
     func showFavorites() {
         showFavoritesOnly = !showFavoritesOnly
         if showFavoritesOnly {
-            self.navigationItem.rightBarButtonItem = createUIBarButton("settings", action: Selector("showFavorites"))
+            self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
             dummyImageView?.image = UIImage(named: "history-2.png")
         } else {
-            self.navigationItem.rightBarButtonItem = createUIBarButton("settings", action: Selector("showFavorites"))
+            self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
             dummyImageView?.image = UIImage(named: "history-1.png")
         }
     }

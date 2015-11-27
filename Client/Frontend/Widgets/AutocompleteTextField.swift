@@ -71,7 +71,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 		self.textColor = UIColor.whiteColor()
 		// Cliqz: Added custom Clear button to show always event when the text is empty
 		let clearButton = UIButton()
-		let clearImg = UIImage(named: "stop")
+		let clearImg = UIImage(named: "clear")
 		clearButton.setImage(clearImg, forState: .Normal)
 		clearButton.frame = CGRectMake(0, 0, (clearImg?.size.width)!, (clearImg?.size.height)!)
 		clearButton.addTarget(self, action: "SELtextDidClear:", forControlEvents: UIControlEvents.TouchUpInside)
