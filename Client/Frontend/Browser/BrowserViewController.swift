@@ -253,9 +253,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         log.debug("BVC viewDidLoad…")
         
         // Cliqz: present InroViewController each time the app start so that it can be easier to show it to the test users
-        presentIntroViewController(true)
-        log.debug("BVC intro presented.")
-        
+//        presentIntroViewController(true)
+//        log.debug("BVC intro presented.")
+		
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELBookmarkStatusDidChange:", name: BookmarkStatusChangedNotification, object: nil)
@@ -468,7 +468,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         } else {
 			if (isNewTabNeeded) {
 				self.tabManager.addTabAndSelect()
-//				self.urlBar.enterOverlayMode("", pasted: false)
+				self.urlBar.enterOverlayMode("", pasted: false)
 				self.isNewTabNeeded = false
 			}
 //            log.debug("Restoring tabs.")
