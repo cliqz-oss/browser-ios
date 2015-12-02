@@ -896,13 +896,16 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
 
     func openURLInNewTab(url: NSURL) {
-        let tab: Browser
-        if #available(iOS 9, *) {
-            tab = tabManager.addTab(NSURLRequest(URL: url), isPrivate: tabTrayController?.privateMode ?? false)
-        } else {
-            tab = tabManager.addTab(NSURLRequest(URL: url))
-        }
-        tabManager.selectTab(tab)
+        //Cliqz: Open any url in the same tab not in a new tab, as tabs are hidden for the current UX
+//        let tab: Browser
+//        if #available(iOS 9, *) {
+//            tab = tabManager.addTab(NSURLRequest(URL: url), isPrivate: tabTrayController?.privateMode ?? false)
+//        } else {
+//            tab = tabManager.addTab(NSURLRequest(URL: url))
+//        }
+//        tabManager.selectTab(tab)
+        
+        tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url))
     }
 }
 
@@ -1745,19 +1748,24 @@ extension BrowserViewController: WKUIDelegate {
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 
         guard let currentTab = tabManager.selectedTab else { return nil }
-
-        screenshotHelper.takeScreenshot(currentTab)
-
-        // If the page uses window.open() or target="_blank", open the page in a new tab.
-        // TODO: This doesn't work for window.open() without user action (bug 1124942).
-        let newTab: Browser
-        if #available(iOS 9, *) {
-            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
-        } else {
-            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
-        }
-        tabManager.selectTab(newTab)
-        return newTab.webView
+        
+        //Cliqz: Open any popup in the same tab not in a new tab, as tabs are hidden for the current UX
+//        screenshotHelper.takeScreenshot(currentTab)
+//
+//        // If the page uses window.open() or target="_blank", open the page in a new tab.
+//        // TODO: This doesn't work for window.open() without user action (bug 1124942).
+//        let newTab: Browser
+//        if #available(iOS 9, *) {
+//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
+//        } else {
+//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
+//        }
+//        tabManager.selectTab(newTab)
+//        
+//        return newTab.webView
+        
+        currentTab.webView?.loadRequest(navigationAction.request)
+        return nil
     }
 
     func webView(webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: () -> Void) {
@@ -2168,26 +2176,27 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         if let url = elements.link, currentTab = tabManager.selectedTab {
             dialogTitle = url.absoluteString
-            let isPrivate = currentTab.isPrivate
-            if !isPrivate {
-                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
-                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-                        self.tabManager.addTab(NSURLRequest(URL: url))
-                    })
-                }
-                actionSheetController.addAction(openNewTabAction)
-            }
-
-            if #available(iOS 9, *) {
-                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
-                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
-                    })
-                }
-                actionSheetController.addAction(openNewPrivateTabAction)
-            }
+            //Cliqz: Disable showing `Open In New Tab` option when long pressing on a url, as tabs are hidden for the current UX
+//            let isPrivate = currentTab.isPrivate
+//            if !isPrivate {
+//                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
+//                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+//                        self.tabManager.addTab(NSURLRequest(URL: url))
+//                    })
+//                }
+//                actionSheetController.addAction(openNewTabAction)
+//            }
+//
+//            if #available(iOS 9, *) {
+//                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
+//                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+//                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+//                    })
+//                }
+//                actionSheetController.addAction(openNewPrivateTabAction)
+//            }
 
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
