@@ -1059,6 +1059,11 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
         var url = uriFixup.getURL(text)
 
+        //Cliqz: navigate to the url only if it is only a valid url
+        if url == nil {
+            return
+        }
+        
         // If we can't make a valid URL, do a search query.
         if url == nil {
             url = profile.searchEngines.defaultEngine.searchURLForQuery(text)

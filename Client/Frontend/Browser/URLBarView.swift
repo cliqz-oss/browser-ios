@@ -752,8 +752,9 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool {
         //Cliqz: dismiss they keyboard when return button pressed instead of navigating to the
         autocompleteTextField.resignFirstResponder()
-//        guard let text = locationTextField?.text else { return true }
-//        delegate?.urlBar(self, didSubmitText: text)
+        
+        guard let text = locationTextField?.text else { return true }
+        delegate?.urlBar(self, didSubmitText: text)
         
         return true
     }
