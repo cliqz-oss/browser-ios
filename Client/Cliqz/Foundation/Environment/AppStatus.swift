@@ -56,10 +56,10 @@ class AppStatus {
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
         lastOpenedDate = NSDate()
+        NetworkReachability.sharedInstance.startMonitoring()
     }
 
     internal func appDidFinishLaunching() {
-        NetworkReachability.sharedInstance.startMonitoring()
 
         dispatch_async(dispatchQueue) {
             

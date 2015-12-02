@@ -32,7 +32,10 @@ class NetworkReachability : NSObject {
     //MARK: - Singltone
     static let sharedInstance = NetworkReachability()
 
-    
+    override init () {
+        super.init()
+        refreshStatus()
+    }
     //MARK: - Reachability monitoring 
     func startMonitoring() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("reachabilityChanged:"), name: kReachabilityChangedNotification, object: nil)
