@@ -55,12 +55,16 @@ class AppStatus {
     
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillFinishLuanch"))
+        
         lastOpenedDate = NSDate()
         NetworkReachability.sharedInstance.startMonitoring()
+        
     }
 
     internal func appDidFinishLaunching() {
-
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidFinishLuanch"))
+        
         dispatch_async(dispatchQueue) {
             
             let (version, buildNumber) = self.getVersionDescriptor()
@@ -82,10 +86,14 @@ class AppStatus {
     }
     
     internal func appWillEnterForeground() {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillEnterForeground"))
+        
         lastOpenedDate = NSDate()
     }
     
     internal func appDidBecomeActive(profile: Profile) {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidBecomeActive"))
+        
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
@@ -97,17 +105,23 @@ class AppStatus {
     }
     
     internal func appWillResignActive() {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillResignActive"))
+        
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
     }
     
     internal func appDidEnterBackground() {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidEnterBackground"))
+        
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
     }
     
     internal func appWillTerminate() {
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillTerminate"))
+        
         logApplicationUsageEvent("Terminate")
     }
     

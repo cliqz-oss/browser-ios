@@ -15,6 +15,8 @@ public enum TelemetryLogEventType {
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
     case UrlFocusBlur       (String, String)
+    
+    case AppStateChange      (String)
 }
 
 
@@ -74,7 +76,9 @@ class TelemetryLogger : EventsLogger {
                 
             case .UrlFocusBlur(let action, let context):
                 event = self.createUrlFocusBlurEvent(action, context: context)
-                
+
+            case .AppStateChange(let transition):
+                event = self.createAppStateChangeEvent(transition)
             }
             
             self.sendEvent(event)
@@ -175,6 +179,16 @@ class TelemetryLogger : EventsLogger {
         if !context.isEmpty {
             event["context"] = context
         }
+        
+        return event
+    }
+    
+    private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = "AppStateChange"
+        event["transition"] = transition
         
         return event
     }
