@@ -121,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
 		let bundlePath = NSBundle.mainBundle().bundlePath
-		let extensionPath = bundlePath + "/" + "mobile"
+		let extensionPath = bundlePath + "/" + "search"
 		
 		let httpServer = HttpServer()
 		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
