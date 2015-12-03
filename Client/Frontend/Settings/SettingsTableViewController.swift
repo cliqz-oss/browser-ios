@@ -527,7 +527,10 @@ private class VersionSetting : Setting {
 // Opens the the license page in a new tab
 private class LicenseAndAcknowledgementsSetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Licenses", comment: "Settings item that opens a tab containing the licenses. See http://mzl.la/1NSAWCG"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        //Cliqz: replaced FireFox licenses URL with Cliqz one
+        return NSAttributedString(string: NSLocalizedString("Licenses", comment: "Settings item that opens a tab containing the licenses. See http://cdn.cliqz.com/mobile/extension/static/licenses.html"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        
+//        return NSAttributedString(string: NSLocalizedString("Licenses", comment: "Settings item that opens a tab containing the licenses. See http://mzl.la/1NSAWCG"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {
@@ -653,11 +656,17 @@ private class ClearPrivateDataSetting: Setting {
 
 private class PrivacyPolicySetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Cliqz Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        //Cliqz: replaced FireFox Privacy Policy URL with Cliqz one
+        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Cliqz Browser Privacy Policy page from the Privacy section in the settings. See http://cdn.cliqz.com/mobile/extension/static/privacy.html"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        
+//        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Firefox Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {
-        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
+        //Cliqz: replaced FireFox Privacy Policy URL with Cliqz one
+        return NSURL(string: "http://cdn.cliqz.com/mobile/extension/static/privacy.html")
+
+//        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -678,82 +687,96 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         let privacyTitle = NSLocalizedString("Privacy", comment: "Privacy section title")
-        let accountDebugSettings: [Setting]
-        if AppConstants.BuildChannel != .Aurora {
-            accountDebugSettings = [
-                // Debug settings:
-                RequirePasswordDebugSetting(settings: self),
-                RequireUpgradeDebugSetting(settings: self),
-                ForgetSyncAuthStateDebugSetting(settings: self),
-            ]
-        } else {
-            accountDebugSettings = []
-        }
+        //Cliqz: Removed unused sections from Settings table
+//        let accountDebugSettings: [Setting]
+//        if AppConstants.BuildChannel != .Aurora {
+//            accountDebugSettings = [
+//                // Debug settings:
+//                RequirePasswordDebugSetting(settings: self),
+//                RequireUpgradeDebugSetting(settings: self),
+//                ForgetSyncAuthStateDebugSetting(settings: self),
+//            ]
+//        } else {
+//            accountDebugSettings = []
+//        }
 
         let prefs = profile.prefs
-        var generalSettings = [
-            SearchSetting(settings: self),
+        
+        //Cliqz: Removed unused sections from Settings table
+        let generalSettings = [
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
-                titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
-            BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
-                titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
-        ]
-
-        // There is nothing to show in the Customize section if we don't include the compact tab layout
-        // setting on iPad. When more options are added that work on both device types, this logic can
-        // be changed.
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            generalSettings +=  [
-                BoolSetting(prefs: prefs, prefKey: "CompactTabLayout", defaultValue: true,
-                    titleText: NSLocalizedString("Use Compact Tabs", comment: "Setting to enable compact tabs in the tab overview"))
+            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
             ]
-        }
 
+//        var generalSettings = [
+//            SearchSetting(settings: self),
+//            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
+//                titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
+//            BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
+//                titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
+//        ]
+
+//        // There is nothing to show in the Customize section if we don't include the compact tab layout
+//        // setting on iPad. When more options are added that work on both device types, this logic can
+//        // be changed.
+//        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+//            generalSettings +=  [
+//                BoolSetting(prefs: prefs, prefKey: "CompactTabLayout", defaultValue: true,
+//                    titleText: NSLocalizedString("Use Compact Tabs", comment: "Setting to enable compact tabs in the tab overview"))
+//            ]
+//        }
+
+        //Cliqz: Removed unused sections from Settings table
         settings += [
-            SettingSection(title: nil, children: [
-                // Without a Firefox Account:
-                ConnectSetting(settings: self),
-                // With a Firefox Account:
-                AccountStatusSetting(settings: self),
-                SyncNowSetting(settings: self)
-            ] + accountDebugSettings),
+//            SettingSection(title: nil, children: [
+//                // Without a Firefox Account:
+//                ConnectSetting(settings: self),
+//                // With a Firefox Account:
+//                AccountStatusSetting(settings: self),
+//                SyncNowSetting(settings: self)
+//            ] + accountDebugSettings),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
         ]
 
-        var privacySettings: [Setting] = [ClearPrivateDataSetting(settings: self)]
-
-        if #available(iOS 9, *) {
-            privacySettings += [
-                BoolSetting(prefs: prefs,
-                    prefKey: "settings.closePrivateTabs",
-                    defaultValue: false,
-                    titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
-                    statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
-            ]
-        }
-
-        privacySettings += [
-            BoolSetting(prefs: prefs, prefKey: "crashreports.send.always", defaultValue: false,
-                titleText: NSLocalizedString("Send Crash Reports", comment: "Setting to enable the sending of crash reports"),
-                settingDidChange: { configureActiveCrashReporter($0) }),
-            PrivacyPolicySetting()
-        ]
+        
+        //Cliqz: Removed unused sections from Settings table
+        let privacySettings: [Setting] = [PrivacyPolicySetting()]
+//        var privacySettings: [Setting] = [ClearPrivateDataSetting(settings: self)]
+//
+//        if #available(iOS 9, *) {
+//            privacySettings += [
+//                BoolSetting(prefs: prefs,
+//                    prefKey: "settings.closePrivateTabs",
+//                    defaultValue: false,
+//                    titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
+//                    statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
+//            ]
+//        }
+//
+//        privacySettings += [
+//            BoolSetting(prefs: prefs, prefKey: "crashreports.send.always", defaultValue: false,
+//                titleText: NSLocalizedString("Send Crash Reports", comment: "Setting to enable the sending of crash reports"),
+//                settingDidChange: { configureActiveCrashReporter($0) }),
+//            PrivacyPolicySetting()
+//        ]
 
 
         settings += [
             SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: [
                 ShowIntroductionSetting(settings: self),
-                SendFeedbackSetting(),
-                OpenSupportPageSetting()
+                //Cliqz: Removed unused sections from Settings table
+//                SendFeedbackSetting(),
+//                OpenSupportPageSetting()
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
                 VersionSetting(settings: self),
                 LicenseAndAcknowledgementsSetting(),
-                YourRightsSetting(),
-                DisconnectSetting(settings: self),
-                ExportBrowserDataSetting(settings: self),
-                DeleteExportedDataSetting(settings: self),
+                //Cliqz: Removed unused sections from Settings table
+//                YourRightsSetting(),
+//                DisconnectSetting(settings: self),
+//                ExportBrowserDataSetting(settings: self),
+//                DeleteExportedDataSetting(settings: self),
             ])
         ]
 
