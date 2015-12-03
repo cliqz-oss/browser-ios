@@ -12,11 +12,7 @@ public extension Logger {
     static let logPII = false
 
     /// Logger used for recording happenings with Sync, Accounts, Providers, Storage, and Profiles
-	// Cliqz: Replaced FileLogger with dummy logger to optimize launch time and also to stub FF logger
-	static var syncLogger: XCGLogger  { XCGLogger.setup(.None)
-										return XCGLogger.defaultInstance() }
-
-	//RollingFileLogger(filenameRoot: "sync", logDirectoryPath: Logger.logFileDirectoryPath()) XCGLogger.setup(.None)
+	static let syncLogger = RollingFileLogger(filenameRoot: "sync", logDirectoryPath: Logger.logFileDirectoryPath())
 
     /// Logger used for recording frontend/browser happenings
     static let browserLogger: XCGLogger = Logger.fileLoggerWithName("browser")
