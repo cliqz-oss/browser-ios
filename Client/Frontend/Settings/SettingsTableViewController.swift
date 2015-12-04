@@ -236,15 +236,15 @@ private class DisconnectSetting: WithAccountSetting {
 
     override func onClick(navigationController: UINavigationController?) {
         let alertController = UIAlertController(
-            title: NSLocalizedString("Log Out?", comment: "Title of the 'log out firefox account' alert"),
-            message: NSLocalizedString("Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device.", comment: "Text of the 'log out firefox account' alert"),
+            title: NSLocalizedString("Log Out?", comment: "Title of the 'log out Cliqz account' alert"),
+            message: NSLocalizedString("Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device.", comment: "Text of the 'log out Cliqz account' alert"),
             preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
-            UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button in the 'log out firefox account' alert"), style: .Cancel) { (action) in
+            UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button in the 'log out Cliqz account' alert"), style: .Cancel) { (action) in
                 // Do nothing.
             })
         alertController.addAction(
-            UIAlertAction(title: NSLocalizedString("Log Out", comment: "Disconnect button in the 'log out firefox account' alert"), style: .Destructive) { (action) in
+            UIAlertAction(title: NSLocalizedString("Log Out", comment: "Disconnect button in the 'log out Cliqz account' alert"), style: .Destructive) { (action) in
                 self.settings.profile.removeAccount()
                 // Refresh, to show that we no longer have an Account immediately.
                 self.settings.SELrefresh()
@@ -254,9 +254,9 @@ private class DisconnectSetting: WithAccountSetting {
 }
 
 private class SyncNowSetting: WithAccountSetting {
-    private let syncNowTitle = NSAttributedString(string: NSLocalizedString("Sync Now", comment: "Sync Firefox Account"), attributes: [NSForegroundColorAttributeName: UIColor.blackColor(), NSFontAttributeName: UIConstants.DefaultStandardFont])
+    private let syncNowTitle = NSAttributedString(string: NSLocalizedString("Sync Now", comment: "Sync Cliqz Account"), attributes: [NSForegroundColorAttributeName: UIColor.blackColor(), NSFontAttributeName: UIConstants.DefaultStandardFont])
 
-    private let syncingTitle = NSAttributedString(string: NSLocalizedString("Syncing…", comment: "Syncing Firefox Account"), attributes: [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(UIConstants.DefaultStandardFontSize, weight: UIFontWeightRegular)])
+    private let syncingTitle = NSAttributedString(string: NSLocalizedString("Syncing…", comment: "Syncing Cliqz Account"), attributes: [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(UIConstants.DefaultStandardFontSize, weight: UIFontWeightRegular)])
 
     override var accessoryType: UITableViewCellAccessoryType { return .None }
 
@@ -335,7 +335,7 @@ private class AccountStatusSetting: WithAccountSetting {
                 res.setAttributes(attrs, range: range)
                 return res
             case .NeedsUpgrade:
-                let string = NSLocalizedString("Upgrade Firefox to connect.", comment: "Text message in the settings table view")
+                let string = NSLocalizedString("Upgrade Cliqz to connect.", comment: "Text message in the settings table view")
                 let range = NSRange(location: 0, length: string.characters.count)
                 let orange = UIColor(red: 255.0 / 255, green: 149.0 / 255, blue: 0.0 / 255, alpha: 1)
                 let attrs = [NSForegroundColorAttributeName : orange]
@@ -505,7 +505,7 @@ private class VersionSetting : Setting {
     override var title: NSAttributedString? {
         let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
         let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as! String
-        return NSAttributedString(string: String(format: NSLocalizedString("Version %@ (%@)", comment: "Version number of Firefox shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: String(format: NSLocalizedString("Version %@ (%@)", comment: "Version number of Cliqz shown in settings"), appVersion, buildNumber), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     private override func onConfigureCell(cell: UITableViewCell) {
         super.onConfigureCell(cell)
@@ -653,7 +653,7 @@ private class ClearPrivateDataSetting: Setting {
 
 private class PrivacyPolicySetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Firefox Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Cliqz Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {

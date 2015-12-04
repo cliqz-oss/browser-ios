@@ -78,8 +78,8 @@ private struct TempStrings {
 /// Old strings that will be removed when we kill 1.0. We need to keep them around for now for l10n export.
 private struct ObsoleteStrings {
     let introMultiplePages = NSLocalizedString("Browse multiple Web pages at the same time with tabs.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
-    let introPersonalize = NSLocalizedString("Personalize your Firefox just the way you like in Settings.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
-    let introConnect = NSLocalizedString("Connect Firefox everywhere you use it.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
+    let introPersonalize = NSLocalizedString("Personalize your Cliqz just the way you like in Settings.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
+    let introConnect = NSLocalizedString("Connect Cliqz everywhere you use it.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     let settingsSearchSuggestions = NSLocalizedString("Show search suggestions", comment: "Label for show search suggestions setting.")
     let settingsSignIn = NSLocalizedString("Sign in", comment: "Text message / button in the settings table view")
 }

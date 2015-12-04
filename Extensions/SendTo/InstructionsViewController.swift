@@ -80,8 +80,8 @@ class InstructionsViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", tableName: "SendTo", comment: "Close button in top navigation bar"), style: UIBarButtonItemStyle.Done, target: self, action: "close")
 
         setupHelpView(view,
-            introText: NSLocalizedString("You are not signed in to your Firefox Account.", tableName: "SendTo", comment: "See http://mzl.la/1ISlXnU"),
-                showMeText: NSLocalizedString("Please open Firefox, go to Settings and sign in to continue.", tableName: "SendTo", comment: "See http://mzl.la/1ISlXnU"))
+            introText: NSLocalizedString("You are not signed in to your Cliqz Account.", tableName: "SendTo", comment: "See http://mzl.la/1ISlXnU"),
+                showMeText: NSLocalizedString("Please open Cliqz, go to Settings and sign in to continue.", tableName: "SendTo", comment: "See http://mzl.la/1ISlXnU"))
     }
 
     func close() {

@@ -194,9 +194,9 @@ enum RemoteTabsError {
         case NotLoggedIn:
             return "" // This does not have a localized string because we have a whole specific screen for it.
         case NoClients:
-            return NSLocalizedString("You don't have any other devices connected to this Firefox Account available to sync.", comment: "Error message in the remote tabs panel")
+            return NSLocalizedString("You don't have any other devices connected to this Cliqz Account available to sync.", comment: "Error message in the remote tabs panel")
         case NoTabs:
-            return NSLocalizedString("You don't have any tabs open in Firefox on your other devices.", comment: "Error message in the remote tabs panel")
+            return NSLocalizedString("You don't have any tabs open in Cliqz on your other devices.", comment: "Error message in the remote tabs panel")
         case FailedToSync:
             return NSLocalizedString("There was a problem accessing tabs from your other devices. Try again in a few moments.", comment: "Error message in the remote tabs panel")
         }
