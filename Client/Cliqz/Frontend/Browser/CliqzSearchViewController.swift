@@ -44,7 +44,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
 		
-		let url = NSURL(string: "http://localhost:3005/extension/index.html")
+//		let url = NSURL(string: "http://localhost:3005/extension/index.html")
+		let url = NSURL(string: "http://cdn.cliqz.com/mobile/extension/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL: url!))
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
@@ -96,7 +97,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3005/") {
+//		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3005/") {
+		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://cdn.cliqz.com") {
 			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
