@@ -754,6 +754,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
 
     private func animateBookmarkStar() {
+		// Cliqz: Removed bookmarkButton
+		/*
         let offset: CGFloat
         let button: UIButton!
 
@@ -781,6 +783,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
                 button.transform = CGAffineTransformIdentity
             }, completion: nil)
         })
+*/
     }
 
     private func removeBookmark(url: String) {
