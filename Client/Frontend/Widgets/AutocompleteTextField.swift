@@ -67,8 +67,6 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
                 self.autocompleteDelegate?.autocompleteTextField(self, didEnterText: self.enteredText)
             }
         })
-		// Cliqz: Changed Textfield textColor according to requirements
-		self.textColor = UIColor.whiteColor()
 		// Cliqz: Added custom Clear button to show always event when the text is empty
 		let clearButton = UIButton()
 		let clearImg = UIImage(named: "clear")

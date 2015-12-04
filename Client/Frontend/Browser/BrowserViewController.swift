@@ -2374,9 +2374,11 @@ extension BrowserViewController {
 
 		// Cliqz: TextField backgroundColor because of requirements
         ToolbarTextField.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
-        ToolbarTextField.appearance().textColor = UIColor.blackColor()
+        ToolbarTextField.appearance().textColor = UIColor.whiteColor()
         ToolbarTextField.appearance().highlightColor = AutocompleteTextFieldUX.HighlightColor
         ToolbarTextField.appearance().clearButtonTintColor = nil
+        // Cliqz: Changed textField's tinColor to make cursor visible on blue background
+        ToolbarTextField.appearance().tintColor = UIColor.whiteColor()
 
 		// Cliqz: Removed TextField border because of requirements
         URLBarView.appearance().locationBorderColor = UIColor.clearColor()
