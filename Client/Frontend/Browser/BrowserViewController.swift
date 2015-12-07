@@ -437,6 +437,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         super.viewWillAppear(animated)
         log.debug("BVC super.viewWillAppear done.")
 
+        applyNormalModeTheme()
+        
         // On iPhone, if we are about to show the On-Boarding, blank out the browser so that it does
         // not flash before we present. This change of alpha also participates in the animation when
         // the intro view is dismissed.
@@ -2405,6 +2407,10 @@ extension BrowserViewController {
 		// Cliqz: Commented because header is now UIView which doesn't have style
 //        header.blurStyle = .ExtraLight
         footerBackground?.blurStyle = .ExtraLight
+
+        // Cliqz: set the background color of BrowserViewController to while so that when opening the app after crash it shouldn't show the app backgorund color
+        self.view.backgroundColor = UIColor.whiteColor()
+
     }
 }
 
