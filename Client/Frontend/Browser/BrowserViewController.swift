@@ -520,6 +520,8 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
             },
             noCallback: { _ in
                 self.tabManager.addTabAndSelect()
+                // Cliqz: focus on the search bar when selecting not to restore tabs
+                self.urlBar.enterOverlayMode("", pasted: false)
             }
         )
 
