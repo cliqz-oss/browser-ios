@@ -362,6 +362,8 @@
 		4F49F5B31C04EEA600319287 /* ADJTimerCycle.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F52F5E61C10C88700F6B249 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 4F52F5E51C10C88700F6B249 /* search */; };
+		4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E71C15D1B200F6B249 /* Fabric.framework */; };
+		4F52F5EA1C15D1B200F6B249 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */; };
 		4F8920841C04E18D00F47CF0 /* DemoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F89207D1C04E18D00F47CF0 /* DemoServer.swift */; };
 		4F8920851C04E18D00F47CF0 /* HttpHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F89207E1C04E18D00F47CF0 /* HttpHandlers.swift */; };
 		4F8920861C04E18D00F47CF0 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F89207F1C04E18D00F47CF0 /* HttpParser.swift */; };
@@ -1633,6 +1635,8 @@
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F52F5E51C10C88700F6B249 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../khaled-nav-ext/navigation-extension/dist/mobile/search"; sourceTree = "<group>"; };
+		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		4F89207D1C04E18D00F47CF0 /* DemoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoServer.swift; sourceTree = "<group>"; };
 		4F89207E1C04E18D00F47CF0 /* HttpHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpHandlers.swift; sourceTree = "<group>"; };
 		4F89207F1C04E18D00F47CF0 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
@@ -1999,11 +2003,13 @@
 				0B6544D31A96C5F0000DD202 /* libSDWebImage.a in Frameworks */,
 				288A2D9D1AB8B3260023ABC3 /* Shared.framework in Frameworks */,
 				2FCAE2311ABB51F800877008 /* Storage.framework in Frameworks */,
+				4F52F5EA1C15D1B200F6B249 /* Crashlytics.framework in Frameworks */,
 				2FA436121ABB83B4008031D1 /* Account.framework in Frameworks */,
 				E4D5672F1ADECE2800F1EFE7 /* ReadingList.framework in Frameworks */,
 				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
 				39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */,
+				4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */,
 				282731751ABC9BE700AA1954 /* Sync.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3247,6 +3253,8 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
+				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
 				4F52F5E51C10C88700F6B249 /* search */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
 				E4B334871BBF23F3004E2BFF /* iAd.framework */,
@@ -4552,7 +4560,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"${INCLUDE_SETTINGS_BUNDLE}\" = \"YES\" ]\nthen\n    cp -r \"${PROJECT_DIR}/${TARGET_NAME}/Application/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi";
+			shellScript = "if [ \"${INCLUDE_SETTINGS_BUNDLE}\" = \"YES\" ]\nthen\n    cp -r \"${PROJECT_DIR}/${TARGET_NAME}/Application/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi\n\n./Fabric.framework/run e2196a01734594e39924c95dc61ee2b0603549f8 518c6e5dad5c6e09ec4ac71d46025a3a0db744abd167929cebb9b98686da9bd4";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -6456,7 +6464,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -6604,7 +6615,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 10betterpages GmbH (2UYYSSHVUH)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -7828,7 +7842,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -7855,7 +7872,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

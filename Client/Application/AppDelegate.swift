@@ -8,6 +8,8 @@ import AVFoundation
 import XCGLogger
 import Breakpad
 import MessageUI
+import Fabric
+import Crashlytics
 
 private let log = Logger.browserLogger
 
@@ -173,6 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        )
 
         log.debug("Done with applicationDidFinishLaunching.")
+		Fabric.with([Crashlytics.self])
         return true
     }
 
