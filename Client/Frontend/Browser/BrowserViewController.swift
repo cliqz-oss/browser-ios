@@ -460,13 +460,15 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
                 return
             }
 
-            let optedIntoCrashReporting = profile.prefs.boolForKey("crashreports.send.always")
-            if optedIntoCrashReporting == nil {
-                // Offer a chance to allow the user to opt into crash reporting
-                showCrashOptInAlert()
-            } else {
-                showRestoreTabsAlert()
-            }
+            // Cliqz disable calling BreakPad crash reporting
+            showRestoreTabsAlert()
+//            let optedIntoCrashReporting = profile.prefs.boolForKey("crashreports.send.always")
+//            if optedIntoCrashReporting == nil {
+//                // Offer a chance to allow the user to opt into crash reporting
+//                showCrashOptInAlert()
+//            } else {
+//                showRestoreTabsAlert()
+//            }
         } else {
 			if (isNewTabNeeded) {
 				self.tabManager.addTabAndSelect()

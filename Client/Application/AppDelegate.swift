@@ -103,9 +103,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rootViewController.navigationBarHidden = true
         self.window!.rootViewController = rootViewController
 
-        log.debug("Configuring Breakpad…")
-        activeCrashReporter = BreakpadCrashReporter(breakpadInstance: BreakpadController.sharedInstance())
-        configureActiveCrashReporter(profile.prefs.boolForKey("crashreports.send.always"))
+        // Cliqz: disable BreakPad crash reporting
+//        log.debug("Configuring Breakpad…")
+//        activeCrashReporter = BreakpadCrashReporter(breakpadInstance: BreakpadController.sharedInstance())
+//        configureActiveCrashReporter(profile.prefs.boolForKey("crashreports.send.always"))
 
         log.debug("Adding observers…")
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
