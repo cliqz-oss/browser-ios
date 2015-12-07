@@ -211,10 +211,11 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
 	// Cliqz: Added action handler for custom Clear button
 	func SELtextDidClear(textField: UITextField) {
-		removeCompletion()
 		if autocompleteDelegate?.autocompleteTextFieldShouldClear(self) == true {
+            enteredText = ""
 			self.text = ""
 		}
+        removeCompletion()
 	}
 
     override func deleteBackward() {
