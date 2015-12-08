@@ -123,18 +123,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 
-		let bundlePath = NSBundle.mainBundle().bundlePath
-		let extensionPath = bundlePath + "/" + "search"
+//		let bundlePath = NSBundle.mainBundle().bundlePath
+//		let extensionPath = bundlePath + "/" + "search"
 		
-		let httpServer = HttpServer()
-		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
-		
-		httpServer["/myproxy"] = { (request: HttpRequest) in
-			let u: String = request.urlParams[0].1
-			let data = NSData(contentsOfURL: NSURL(string:u)!)
-			return HttpResponse.RAW(200, data!)
-		}
-		httpServer.start(3005)
+//		let httpServer = HttpServer()
+//		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
+//		
+//		httpServer["/myproxy"] = { (request: HttpRequest) in
+//			let u: String = request.urlParams[0].1
+//			let data = NSData(contentsOfURL: NSURL(string:u)!)
+//			return HttpResponse.RAW(200, data!)
+//		}
+//		httpServer.start(3005)
 		
         log.debug("Done with setting up the application.")
         return true

@@ -4,9 +4,9 @@
 
 #include "BaseConfig.xcconfig"
 
-MOZ_BUNDLE_DISPLAY_NAME = Fennec Aurora
+MOZ_BUNDLE_DISPLAY_NAME = CLIQZ Aurora
 
-MOZ_PRODUCT_NAME = FennecAurora
+MOZ_PRODUCT_NAME = CLIQZAurora
 
 MOZ_RELEASE_CHANNEL = aurora
 

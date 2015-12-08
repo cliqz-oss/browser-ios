@@ -5,9 +5,9 @@
 
 #include "BaseConfig.xcconfig"
 
-MOZ_BUNDLE_DISPLAY_NAME = Fennec Nightly
+MOZ_BUNDLE_DISPLAY_NAME = CLIQZ Nightly
 
-MOZ_PRODUCT_NAME = FennecNightly
+MOZ_PRODUCT_NAME = CLIQZNightly
 
 MOZ_RELEASE_CHANNEL = nightly
 
