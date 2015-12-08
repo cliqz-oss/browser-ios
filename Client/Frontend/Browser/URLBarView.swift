@@ -238,9 +238,9 @@ class URLBarView: UIView {
         addSubview(locationContainer)
 		
 		// Cliqz: Added new buttons to the main view.
-		addSubview(historyButton)
+//		addSubview(historyButton)
 		addSubview(settingsButton)
-		addSubview(recommendationsButton)
+//		addSubview(recommendationsButton)
 
         helper = BrowserToolbarHelper(toolbar: self)
         setupConstraints()
@@ -251,23 +251,24 @@ class URLBarView: UIView {
 
     private func setupConstraints() {
 		// Cliqz: Added constraints for new buttons.
-		historyButton.snp_makeConstraints { make in
-			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self).offset(15)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
-		}
+//		historyButton.snp_makeConstraints { make in
+//			make.centerY.equalTo(self.locationContainer)
+//			make.left.equalTo(self).offset(15)
+////			make.size.equalTo(UIConstants.ToolbarHeight)
+//		}
 
 		settingsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
+			make.right.equalTo(self).offset(-10)
+//			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
 //			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
-		recommendationsButton.snp_makeConstraints { make in
-			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self).offset(-15)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
-		}
+//		recommendationsButton.snp_makeConstraints { make in
+//			make.centerY.equalTo(self.locationContainer)
+//			make.right.equalTo(self).offset(-15)
+////			make.size.equalTo(UIConstants.ToolbarHeight)
+//		}
 
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
@@ -343,7 +344,8 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
-				make.leading.equalTo(self.historyButton.snp_trailing)
+//				make.leading.equalTo(self.historyButton.snp_trailing)
+				make.leading.equalTo(self)
                 make.trailing.equalTo(self.settingsButton.snp_leading).offset(-15)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
@@ -357,7 +359,8 @@ class URLBarView: UIView {
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
-					make.leading.equalTo(self.historyButton.snp_trailing)
+//					make.leading.equalTo(self.historyButton.snp_trailing)
+					make.leading.equalTo(self)
                     make.trailing.equalTo(self.settingsButton.snp_leading).offset(-14)
                 }
 
