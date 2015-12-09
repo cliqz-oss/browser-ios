@@ -472,8 +472,6 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         } else {
 			if (isNewTabNeeded) {
 				self.tabManager.addTabAndSelect()
-				self.urlBar.enterOverlayMode("", pasted: false)
-				self.isNewTabNeeded = false
 			}
 //            log.debug("Restoring tabs.")
 //            tabManager.restoreTabs()
@@ -530,7 +528,13 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
     override func viewDidAppear(animated: Bool) {
         log.debug("BVC viewDidAppear.")
-        presentIntroViewController()
+		// Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
+		if (!presentIntroViewController()) {
+			if (isNewTabNeeded) {
+				self.urlBar.enterOverlayMode("", pasted: false)
+				self.isNewTabNeeded = false
+			}
+		}
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
