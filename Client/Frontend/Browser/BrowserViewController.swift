@@ -1104,6 +1104,9 @@ extension BrowserViewController: URLBarDelegate {
     // Cliqz: Added delegate methods implementation for new bar buttons
     func urlBarDidClickSearchHistory() {
         let searchHistoryViewController = SearchHistoryViewController()
+        searchHistoryViewController.profile = profile
+        searchHistoryViewController.homePanelDelegate = self
+        
         let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
         containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Down
@@ -2419,6 +2422,26 @@ extension BrowserViewController {
         // Cliqz: set the background color of BrowserViewController to while so that when opening the app after crash it shouldn't show the app backgorund color
         self.view.backgroundColor = UIColor.whiteColor()
 
+    }
+}
+
+// CLiqz: Added extension for HomePanelDelegate to react for didSelectURL from SearchHistoryViewController
+extension BrowserViewController: HomePanelDelegate {
+    
+    func homePanelDidRequestToSignIn(homePanel: HomePanel) {
+        
+    }
+    func homePanelDidRequestToCreateAccount(homePanel: HomePanel) {
+        
+    }
+    func homePanel(homePanel: HomePanel, didSelectURL url: NSURL, visitType: VisitType) {
+        // Delegate method for History panel
+        // Navigate to the url
+        self.tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL:url))
+        
+        // Blur the focus from the URL bar if exist
+        self.urlBar.leaveOverlayMode(didCancel: false)
+        
     }
 }
 

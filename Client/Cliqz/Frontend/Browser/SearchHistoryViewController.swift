@@ -8,18 +8,13 @@
 
 import UIKit
 
-class SearchHistoryViewController: LayerViewController {
+class SearchHistoryViewController: HistoryPanel {
 
-    var showFavoritesOnly = false
-    
-    //MARK: - overiden methods
-    override func didInit() {
-        super.didInit()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        prepareView()
     }
-    
-    override func prepareView() {
-        super.prepareView()
-        
+    func prepareView() {
         self.title = NSLocalizedString("Search history", comment: "Search history title")
         
         // View
@@ -33,26 +28,30 @@ class SearchHistoryViewController: LayerViewController {
         ]
         
         self.navigationItem.leftBarButtonItem = createUIBarButton("future", action: Selector("dismiss"))
-        self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
-        
-        // Dummy Content
-        dummyImageView?.image = UIImage(named: "history-1.png")
     }
     
-    override func setupConstraints() {
-        super.setupConstraints()
-    }
+    //MARK: - Overriden methods
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+        dismiss()
+    }
 
-    //MARK: - Custom Actions
-    func showFavorites() {
-        showFavoritesOnly = !showFavoritesOnly
-        if showFavoritesOnly {
-            self.navigationItem.rightBarButtonItem = createUIBarButton("filledStar", action: Selector("showFavorites"))
-            dummyImageView?.image = UIImage(named: "history-2.png")
-        } else {
-            self.navigationItem.rightBarButtonItem = createUIBarButton("star", action: Selector("showFavorites"))
-            dummyImageView?.image = UIImage(named: "history-1.png")
-        }
+    //MARK: - Private helpers
+    private func createUIBarButton(imageName: String, action: Selector) -> UIBarButtonItem {
+        
+        let button: UIButton = UIButton(type: UIButtonType.Custom)
+        button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
+        button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
+        button.frame = CGRectMake(0, 0, 20, 20)
+        
+        let barButton = UIBarButtonItem(customView: button)
+        return barButton
     }
+    //MARK: - Actions
+    func dismiss() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    
 }
