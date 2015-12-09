@@ -470,7 +470,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 //                showRestoreTabsAlert()
 //            }
         } else {
-			if (isNewTabNeeded) {
+			if (isNewTabNeeded && self.tabManager.count == 0) {
 				self.tabManager.addTabAndSelect()
 			}
 //            log.debug("Restoring tabs.")
