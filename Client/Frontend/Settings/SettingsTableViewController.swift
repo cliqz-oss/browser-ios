@@ -739,9 +739,10 @@ class SettingsTableViewController: UITableViewController {
         ]
 
         
+        var privacySettings: [Setting] = [ClearPrivateDataSetting(settings: self)]
+        
         //Cliqz: Removed unused sections from Settings table
-        let privacySettings: [Setting] = [PrivacyPolicySetting()]
-//        var privacySettings: [Setting] = [ClearPrivateDataSetting(settings: self)]
+        privacySettings += [PrivacyPolicySetting()]
 //
 //        if #available(iOS 9, *) {
 //            privacySettings += [
