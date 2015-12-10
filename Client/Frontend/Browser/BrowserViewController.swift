@@ -72,6 +72,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     var footerBackdrop: UIView!
     private var footerBackground: BlurWrapper?
     private var topTouchArea: UIButton!
+    
+    // Cliqz: webViewOverlay to cover the wkwebview when navigating from search result
+    var webViewOverlay: UIView?
 
     // Backdrop used for displaying greyed background for private tabs
     var webViewContainerBackdrop: UIView!
@@ -748,6 +751,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         if let tab = tabManager.selectedTab,
            let nav = tab.loadRequest(NSURLRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
+            
+            // Cliqz: add webViewOverlay to the wkwebview to hide the old page while navigating to a new page
+            showWebViewOverLay(tab)
         }
     }
 
@@ -919,6 +925,27 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 //        tabManager.selectTab(tab)
         
         tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url))
+    }
+}
+
+/**
+ * Cliqz: Add an overlay to the WKWebView to hide the old page while navigating to the new search result
+ */
+extension BrowserViewController {
+    
+    private func showWebViewOverLay(selectedTab: Browser) {
+        if self.webViewOverlay == nil {
+            webViewOverlay = UIView(frame: (selectedTab.webView?.bounds)!)
+            webViewOverlay!.backgroundColor = UIColor.whiteColor()
+            selectedTab.webView?.addSubview(webViewOverlay!)
+        }
+    }
+    
+    private func hideWebViewOverlay() {
+        if webViewOverlay != nil {
+            webViewOverlay!.removeFromSuperview()
+            webViewOverlay = nil
+        }
     }
 }
 
@@ -1725,6 +1752,9 @@ extension BrowserViewController: WKNavigationDelegate {
         }
 
         addOpenInViewIfNeccessary(webView.URL)
+        
+        // Cliqz: hide the webViewOverlay when finis navigating to a url
+        hideWebViewOverlay()
     }
 
     private func addOpenInViewIfNeccessary(url: NSURL?) {
