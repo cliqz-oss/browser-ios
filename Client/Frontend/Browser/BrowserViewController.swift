@@ -2436,12 +2436,7 @@ extension BrowserViewController: HomePanelDelegate {
     }
     func homePanel(homePanel: HomePanel, didSelectURL url: NSURL, visitType: VisitType) {
         // Delegate method for History panel
-        // Navigate to the url
-        self.tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL:url))
-        
-        // Blur the focus from the URL bar if exist
-        self.urlBar.leaveOverlayMode(didCancel: false)
-        
+        finishEditingAndSubmit(url, visitType: VisitType.Typed)
     }
 }
 
