@@ -1150,7 +1150,8 @@ extension BrowserViewController: URLBarDelegate {
     }
     func urlBarDidClickRecommendations() {
         self.webViewContainerToolbar.hidden = true
-        let recommendationsViewController = RecommendationsViewController()
+        let recommendationsViewController = RecommendationsViewController(profile: self.profile)
+		recommendationsViewController.delegate = self
         let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
         containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Up
@@ -2451,7 +2452,6 @@ extension BrowserViewController {
 
         // Cliqz: set the background color of BrowserViewController to while so that when opening the app after crash it shouldn't show the app backgorund color
         self.view.backgroundColor = UIColor.whiteColor()
-
     }
 }
 
@@ -2468,6 +2468,17 @@ extension BrowserViewController: HomePanelDelegate {
         // Delegate method for History panel
         finishEditingAndSubmit(url, visitType: VisitType.Typed)
     }
+}
+
+// Cliqz: Added extension for RecommendationsViewControllerDelegate to hanlde url selection events
+extension BrowserViewController: RecommendationsViewControllerDelegate {
+	
+	func recommendationsViewController(recommendationsViewController: RecommendationsViewController, didSelectURL url: NSURL?) {
+		if let u = url {
+			finishEditingAndSubmit(u, visitType: .Link)
+		}
+		// Handle the case when the URL is not valid
+	}
 }
 
 // A small convienent class for wrapping a view with a blur background that can be modified

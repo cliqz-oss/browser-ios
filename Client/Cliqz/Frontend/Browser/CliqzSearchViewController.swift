@@ -34,16 +34,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	override func viewDidLoad() {
         super.viewDidLoad()
-		
+
 		let config = WKWebViewConfiguration()
 		let controller = WKUserContentController()
 		config.userContentController = controller
 		controller.addScriptMessageHandler(self, name: "jsBridge")
-		
+
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
-		
+
 //		let url = NSURL(string: "http://localhost:3005/extension/index.html")
 		let url = NSURL(string: "http://cdn.cliqz.com/mobile/extension/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL: url!))
