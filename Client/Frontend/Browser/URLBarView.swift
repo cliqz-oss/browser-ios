@@ -424,6 +424,8 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+		// Cliqz: Removed Updating tabs count
+		/*
         let currentCount = self.tabsButton.titleLabel.text
         // only animate a tab count change if the tab count has actually changed
         if currentCount != count.description {
@@ -490,6 +492,7 @@ class URLBarView: UIView {
                 completion(true)
         }
         }
+*/
     }
 
     func updateProgressBar(progress: Float) {
