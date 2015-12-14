@@ -117,6 +117,7 @@ class AppStatus {
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
+        TelemetryLogger.sharedInstance.persistEvents()
     }
     
     internal func appWillTerminate() {
