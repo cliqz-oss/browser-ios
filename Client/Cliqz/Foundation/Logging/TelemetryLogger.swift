@@ -38,7 +38,7 @@ class TelemetryLogger : EventsLogger {
     private let telementrySequenceKey = "TelementrySequence"
 
     private func loadTelemetrySeq() {
-        dispatch_sync(dispatchQueue) {
+        dispatch_sync(serialDispatchQueue) {
             if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
                 self.telemetrySeq = AtomicInt(initialValue: storedSeq)
             } else {
@@ -56,7 +56,8 @@ class TelemetryLogger : EventsLogger {
 
         dispatch_async(dispatchQueue) {
             var event: [String: AnyObject]
-            
+            var disableSendingEvent = false
+
             switch (eventType) {
                 
             case .LifeCycle(let action, let version):
@@ -70,18 +71,28 @@ class TelemetryLogger : EventsLogger {
 
             case .QueryInteraction(let action, let currentLength):
                 event = self.createQueryInteractionEvent(action, currentLength: currentLength)
+                // disable sending event when there is query interaction
+                disableSendingEvent = true
                 
             case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
                 
             case .UrlFocusBlur(let action, let context):
                 event = self.createUrlFocusBlurEvent(action, context: context)
+                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
+                disableSendingEvent = true
 
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
             }
             
-            self.sendEvent(event)
+            // Always store the event
+            self.storeEvent(event)
+            
+            // try to send the event only if there is no query interactions
+            if !disableSendingEvent {
+                self.sendEvent(event)
+            }
         }
     }
     

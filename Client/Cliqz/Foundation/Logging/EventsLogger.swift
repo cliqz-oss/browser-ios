@@ -11,9 +11,11 @@ import Foundation
 class EventsLogger: NSObject {
     
     //MARK: - Constants
-    private let batchSize = 5
+    private let batchSize = 25
     private let loggerEndPoint: String
     private let sessionIdKey = "SessionId"
+    let serialDispatchQueue = dispatch_queue_create("com.cliqz.EventsLogger", DISPATCH_QUEUE_SERIAL);
+
     
     //MARK: - Instant Variables
     private var events = SynchronousArray()
@@ -65,18 +67,23 @@ class EventsLogger: NSObject {
         LocalDataStore.setObject(self.sessionId, forKey: sessionIdKey)
     }
     
-    //MARK: - Sending events to server
-    internal func sendEvent(event: [String: AnyObject]){
+    //MARK: - Storing and Sending events to server
+    internal func storeEvent(event: [String: AnyObject]){
         self.events.append(event)
-        if self.shoudPublishEvents() {
-            self.publishEvents()
-            self.events.removeAll()
+    }
+    internal func sendEvent(event: [String: AnyObject]){
+        // dispatch_async in a serial thread so as not to send same events twice
+        dispatch_async(serialDispatchQueue) {
+            if self.shoudPublishEvents() {
+                let publishedEvents = self.events.getContents()
+                self.events.removeAll()
+                self.publishEvents(publishedEvents)
+            }
         }
     }
     
     //MARK: - Private methods
     private func shoudPublishEvents() -> Bool {
-        // TODO: Check if internect connection (Wifi/3G/...)
         if let isReachable = NetworkReachability.sharedInstance.isReachable {
             if isReachable && self.events.count >= self.batchSize {
                 return true
@@ -86,9 +93,8 @@ class EventsLogger: NSObject {
         return false;
     }
     
-    private func publishEvents(){
+    private func publishEvents(publishedEvents: [AnyObject]){
 
-        let publishedEvents = self.events.getContents()
         ConnectionManager.sharedInstance.sendPostRequest(loggerEndPoint, body: publishedEvents,
             onSuccess: { json in
                 let jsonDict = json as! [String : AnyObject]
