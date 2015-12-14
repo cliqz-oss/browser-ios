@@ -232,6 +232,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     func SELstartBrowsing() {
         delegate?.introViewControllerDidFinish(self)
+        // Cliqz: logged Onboarding event
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("hide", pageControl.currentPage))
     }
 
     func SELback() {
@@ -325,6 +327,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
                     self.scrollView.signinButton = nil
                 }
             })
+            // Cliqz: logged Onboarding event
+            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
         }
     }
 

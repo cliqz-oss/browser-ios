@@ -16,6 +16,7 @@ public enum TelemetryLogEventType {
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
     case UrlFocusBlur       (String, String)
     case LayerChange        (String, String)
+    case Onboarding         (String, Int)
     
     case AppStateChange      (String)
 }
@@ -85,6 +86,9 @@ class TelemetryLogger : EventsLogger {
 
             case .LayerChange(let currentLayer, let nextLayer):
                 event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
+                
+            case .Onboarding(let action, let page):
+                event = self.createOnboardingEvent(action, page: page)
                 
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
@@ -207,6 +211,19 @@ class TelemetryLogger : EventsLogger {
         event["next_layer"] = nextLayer
         event["display_time"] = event["ts"]
         
+        return event
+    }
+    
+    private func createOnboardingEvent(action: String, page: Int) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "onboarding"
+        event["action"] = action
+        event["page"] = page
+        if action == "hide" {
+            event["display_time"] = event["ts"]
+        }
+
         return event
     }
     
