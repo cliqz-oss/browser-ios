@@ -91,7 +91,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	}
 	
 	// Mark: Action handlers
-	private func dismiss() {
+	func dismiss() {
 		self.dismissViewControllerAnimated(true, completion: nil)
 	}
 	
