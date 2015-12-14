@@ -15,6 +15,7 @@ public enum TelemetryLogEventType {
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
     case UrlFocusBlur       (String, String)
+    case LayerChange        (String, String)
     
     case AppStateChange      (String)
 }
@@ -82,6 +83,9 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
                 disableSendingEvent = true
 
+            case .LayerChange(let currentLayer, let nextLayer):
+                event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
+                
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
             }
@@ -190,6 +194,18 @@ class TelemetryLogger : EventsLogger {
         if !context.isEmpty {
             event["context"] = context
         }
+        
+        return event
+    }
+    
+    private func createLayerChangeEvent(currentLayer: String, nextLayer: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = "layer_change"
+        event["current_layer"] = currentLayer
+        event["next_layer"] = nextLayer
+        event["display_time"] = event["ts"]
         
         return event
     }

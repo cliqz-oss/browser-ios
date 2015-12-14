@@ -52,5 +52,6 @@ class SearchHistoryViewController: HistoryPanel {
     //MARK: - Actions
     func dismiss() {
         self.dismissViewControllerAnimated(true, completion: nil)
+        TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
     }
 }

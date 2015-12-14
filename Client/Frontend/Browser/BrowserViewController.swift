@@ -1138,6 +1138,8 @@ extension BrowserViewController: URLBarDelegate {
         containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Down
         self.presentViewController(containerViewController, animated: true, completion: nil)
+        
+        TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
     }
     func urlBarDidClickSettings() {
         let settingsTableViewController = SettingsTableViewController()
@@ -1156,6 +1158,8 @@ extension BrowserViewController: URLBarDelegate {
         containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Up
         self.presentViewController(containerViewController, animated: true, completion: nil)
+        
+        TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "future"))
     }
 }
 // Cliqz: Added TransitioningDelegate to maintain layers change animations
