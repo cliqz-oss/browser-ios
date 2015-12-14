@@ -21,8 +21,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
     private var searchLoader: SearchLoader!
     private let cliqzSearch = CliqzSearch()
-    var webView: WKWebView?
+
+	var webView: WKWebView?
 	weak var delegate: SearchViewDelegate?
+
+	private var spinnerView: UIActivityIndicatorView!
 
 	private var historyResults: Cursor<Site>?
 	
@@ -43,6 +46,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
+
+		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+		self.view.addSubview(spinnerView)
+		spinnerView.startAnimating()
 
 //		let url = NSURL(string: "http://localhost:3005/extension/index.html")
 		let url = NSURL(string: "http://cdn.cliqz.com/mobile/extension/index.html")
@@ -108,6 +115,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func webView(webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
 	}
 
+	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+		self.spinnerView.removeFromSuperview()
+		self.spinnerView.stopAnimating()
+	}
+
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
 		switch message.name {
 			case "jsBridge":
@@ -152,6 +164,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			make.top.equalTo(0)
 			make.left.right.equalTo(self.view)
 			make.bottom.equalTo(self.view).offset(-keyboardHeight)
+		}
+		self.spinnerView.snp_makeConstraints { make in
+			make.centerX.equalTo(self.view)
+			make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
+			return
 		}
 	}
 
