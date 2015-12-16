@@ -31,8 +31,9 @@ class SearchBarTelemetryHelper: NSObject {
             TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("keystroke_del", currentLength))
         } else if stringLength == 1 {
             // key_stroke
-            let currentLength = oldLength + 1
-            TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("key_stroke", currentLength))
+            // Disabled sending key_stroke as it is hard to remove it from the JavaScript code for now
+//            let currentLength = oldLength + 1
+//            TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("key_stroke", currentLength))
         } else if stringLength > 1 {
             // paste
             let currentLength = oldLength + stringLength - range.length
