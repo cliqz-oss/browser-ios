@@ -195,30 +195,30 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	private func handleJSMessage(action: String, data: AnyObject?, callback: String?) {
 		switch action {
-			case "searchHistory":
-				var jsonStr: NSString = ""
-				do {
-					let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
-					let json = try NSJSONSerialization.dataWithJSONObject(fullResults, options: NSJSONWritingOptions(rawValue: 0))
-					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
-				} catch let error as NSError {
-					print("Json conversion is failed with error: \(error)")
-				}
-				if let c = callback {
-					let exec = "\(c)(\(jsonStr))"
-					self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-				}
-			case "openLink":
-				if let url = data as? String {
-					delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
-				}
-			
-            case "pushTelemetry":
-                if let telemetrySignal = data as? [String: AnyObject] {
-                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
-                }
+        case "searchHistory":
+            var jsonStr: NSString = ""
+            do {
+                let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
+                let json = try NSJSONSerialization.dataWithJSONObject(fullResults, options: NSJSONWritingOptions(rawValue: 0))
+                jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+            } catch let error as NSError {
+                print("Json conversion is failed with error: \(error)")
+            }
+            if let c = callback {
+                let exec = "\(c)(\(jsonStr))"
+                self.webView!.evaluateJavaScript(exec, completionHandler: nil)
+            }
+        case "openLink":
+            if let url = data as? String {
+                delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
+            }
+            
+        case "pushTelemetry":
+            if let telemetrySignal = data as? [String: AnyObject] {
+                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+            }
 		default:
-				print("Unhandles JS action: \(action)")
+            print("Unhandles JS action: \(action)")
 		}
 	}
 }
