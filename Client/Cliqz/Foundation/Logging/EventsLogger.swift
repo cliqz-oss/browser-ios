@@ -73,12 +73,13 @@ class EventsLogger: NSObject {
     internal func storeEvent(event: [String: AnyObject]){
         events.append(event)
         if events.count % 10 == 0 {
-            // periodically presist events to avoid loosing a lot of events in case of app crash
+            // periodically persist events to avoid loosing a lot of events in case of app crash
             persistEvents()
         }
     }
     internal func persistEvents() {
-        LocalDataStore.setObject(events.getContents(), forKey: self.telemetryeventsKey)
+        let eventsData = NSKeyedArchiver.archivedDataWithRootObject(events.getContents())
+        LocalDataStore.setObject(eventsData, forKey: self.telemetryeventsKey)
     }
     
     internal func clearPersistedEvents() {
@@ -86,7 +87,8 @@ class EventsLogger: NSObject {
     }
     
     internal func loadPersistedEvents() {
-        if let events = LocalDataStore.objectForKey(self.telemetryeventsKey) as? [AnyObject] {
+        if let eventsData = LocalDataStore.objectForKey(self.telemetryeventsKey) as? NSData {
+            let events = NSKeyedUnarchiver.unarchiveObjectWithData(eventsData) as! [AnyObject]
             self.events.appendContentsOf(events)
         }
     }
