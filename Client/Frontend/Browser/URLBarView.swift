@@ -186,8 +186,7 @@ class URLBarView: UIView {
 	
 	lazy var recommendationsButton: UIButton = {  let recommendationsButton = UIButton()
 		recommendationsButton.setImage(UIImage(named: "future"), forState: .Normal)
-		recommendationsButton.addTarget(self, action: "SELdidClickRecommendations", forControlEvents: UIControlEvents.TouchUpInside)
-		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		recommendationsButton.addTarget(self, action: "hell", forControlEvents: UIControlEvents.TouchUpInside)
 		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
 		return recommendationsButton }()
 
@@ -265,8 +264,8 @@ class URLBarView: UIView {
 
 		recommendationsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self).offset(-15)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
+			make.right.equalTo(self).offset(-12)
+			make.width.equalTo(25)
 		}
 
         scrollToTopButton.snp_makeConstraints { make in
