@@ -18,6 +18,7 @@ public enum TelemetryLogEventType {
     case LayerChange        (String, String)
     case Onboarding         (String, Int)
     case PastTap            (String, Int, Double, Double, Double)
+    case JavaScriptsignal   ([String: AnyObject])
     
     //TODO: to be removed as it was added for testing
     case AppStateChange      (String)
@@ -95,6 +96,9 @@ class TelemetryLogger : EventsLogger {
             case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
                 event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
                 
+            case .JavaScriptsignal(let javaScriptSignal):
+                event = self.creatJavaScriptSignalEvent(javaScriptSignal)
+            
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
             }
@@ -115,7 +119,7 @@ class TelemetryLogger : EventsLogger {
         var event = [String: AnyObject]()
         
         event["session"] = self.sessionId
-        event["telemetrySeq"] = telemetrySeq!.incrementAndGet()
+        event["telemetrySeq"] = getNextTelemetrySeq()
         event["ts"] = NSDate.getCurrentMillis()
         
         if telemetrySeq!.get() % 10 == 0 {
@@ -123,6 +127,17 @@ class TelemetryLogger : EventsLogger {
             storeCurrentTelemetrySeq()
         }
         return event
+    }
+    
+    private func getNextTelemetrySeq() -> Int {
+        let nextTelemetrySeq = telemetrySeq!.incrementAndGet()
+
+        // periodically store the telemetrySeq
+        if nextTelemetrySeq % 10 == 0 {
+            storeCurrentTelemetrySeq()
+        }
+        
+        return nextTelemetrySeq
     }
 
     
@@ -243,6 +258,16 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
+    private func creatJavaScriptSignalEvent(javaScriptSignal: [String: AnyObject]) -> [String: AnyObject] {
+        var event = javaScriptSignal
+        
+        event["session"] = self.sessionId
+        event["telemetrySeq"] = getNextTelemetrySeq()
+
+        return event
+    }
+
     
     //TODO: to be removed as it was added for testing
     private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {

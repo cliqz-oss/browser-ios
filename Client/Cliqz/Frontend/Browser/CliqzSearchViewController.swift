@@ -212,7 +212,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 				if let url = data as? String {
 					delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
 				}
-//			case "":
+			
+            case "pushTelemetry":
+                if let telemetrySignal = data as? [String: AnyObject] {
+                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+                }
 		default:
 				print("Unhandles JS action: \(action)")
 		}
