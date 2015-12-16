@@ -55,7 +55,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.navigationController?.navigationBar.barTintColor = UIColor(red: 68.0/255.0, green: 166.0/255.0, blue: 48.0/255.0, alpha: 1)
 		self.navigationController?.navigationBar.titleTextAttributes = [
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
-		
+		self.title = NSLocalizedString("Search recommendations", comment: "Search Recommendations and top visited sites title")
 		self.navigationItem.rightBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
 
 		self.setupConstraints()
