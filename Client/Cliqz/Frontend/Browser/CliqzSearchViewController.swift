@@ -52,7 +52,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		spinnerView.startAnimating()
 
 //		let url = NSURL(string: "http://localhost:3005/extension/index.html")
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/extension/index.html")
+		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/index.html")
 		self.webView!.loadRequest(NSURLRequest(URL: url!))
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
@@ -95,11 +95,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func loadData(query: String) {
 		var JSString: String!
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-//		if q == "" {
-//			JSString = "_cliqzNoResults()"
-//		} else {
-			JSString = "search_mobile('\(q)')"
-//		}
+		var coordinates = ""
+		if let l = LocationManager.sharedInstance.location {
+			coordinates += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
+		}
+		JSString = "search_mobile('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 	}
 
@@ -165,10 +165,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			make.left.right.equalTo(self.view)
 			make.bottom.equalTo(self.view).offset(-keyboardHeight)
 		}
-		self.spinnerView.snp_makeConstraints { make in
-			make.centerX.equalTo(self.view)
-			make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
-			return
+		if let _ = self.spinnerView.superview {
+			self.spinnerView.snp_makeConstraints { make in
+				make.centerX.equalTo(self.view)
+				make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
+				return
+			}
 		}
 	}
 

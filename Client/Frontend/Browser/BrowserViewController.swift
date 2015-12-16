@@ -537,6 +537,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 				self.urlBar.enterOverlayMode("", pasted: false)
 				self.isNewTabNeeded = false
 			}
+			LocationManager.sharedInstance.startUpdateingLocation()
 		}
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
