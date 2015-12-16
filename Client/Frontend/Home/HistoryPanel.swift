@@ -50,6 +50,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
     }()
 
     var refreshControl: UIRefreshControl?
+    
+    // Cliqz record time history when history page opened for telementry signal
+    var openDatetime: Double?
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -60,6 +63,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.accessibilityIdentifier = "History List"
+        
+        // Cliqz record time history when history page opened for telementry signal
+        openDatetime = NSDate.getCurrentMillis()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -239,6 +245,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
            let url = NSURL(string: site.url) {
             let visitType = VisitType.Typed    // Means History, too.
             homePanelDelegate?.homePanel(self, didSelectURL: url, visitType: visitType)
+            
+            // Cliqz log history tap telemery signal
+            logHistoryTapTelemetrySignal(site)
             return
         }
         log.warning("No site or no URL when selecting row.")
@@ -424,5 +433,34 @@ class HistoryPanel: SiteTableViewController, HomePanel {
             }
         })
         return [delete]
+    }
+}
+
+// Cliqz log history tap telemery signal
+extension HistoryPanel {
+    private func logHistoryTapTelemetrySignal(site: Site) {
+        let pastType = "web"
+        let queryLength = site.url.characters.count
+        let positionAge = getPositionAge(site)
+        let lengthAge = self.getHistoryHours(profile)
+        let displayTime = NSDate.getCurrentMillis() - openDatetime!
+        
+        TelemetryLogger.sharedInstance.logEvent(.PastTap(pastType, queryLength, positionAge, lengthAge, displayTime))
+    }
+    private func getPositionAge(site: Site) -> Double {
+        var positionAge = 0.0
+        if let visitDateMicroseconds = site.latestVisit?.date {
+            let visitDate = NSDate.fromTimestamp(visitDateMicroseconds/1000)
+            positionAge = NSDate().timeIntervalSinceDate(visitDate) / 3600
+        }
+        return positionAge
+    }
+    
+    private func getHistoryHours(profile: Profile) -> Double {
+        var historyHours = 0.0
+        if let oldestVisitDate = profile.history.getOldestVisitDate() {
+            historyHours = NSDate().timeIntervalSinceDate(oldestVisitDate) / 3600
+        }
+        return historyHours
     }
 }

@@ -17,7 +17,9 @@ public enum TelemetryLogEventType {
     case UrlFocusBlur       (String, String)
     case LayerChange        (String, String)
     case Onboarding         (String, Int)
+    case PastTap            (String, Int, Double, Double, Double)
     
+    //TODO: to be removed as it was added for testing
     case AppStateChange      (String)
 }
 
@@ -89,6 +91,9 @@ class TelemetryLogger : EventsLogger {
                 
             case .Onboarding(let action, let page):
                 event = self.createOnboardingEvent(action, page: page)
+               
+            case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
+                event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
                 
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
@@ -226,7 +231,20 @@ class TelemetryLogger : EventsLogger {
 
         return event
     }
+    private func createPastTabEvent(pastType: String, querylength: Int, positionAge: Double, lengthAge: Double, displayTime: Double) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = "past_tap"
+        event["query_length"] = querylength
+        event["position_age"] = positionAge
+        event["length_age"] = lengthAge
+        event["display_time"] = displayTime
+        
+        return event
+    }
     
+    //TODO: to be removed as it was added for testing
     private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
         var event = createBasicEvent()
         
