@@ -62,7 +62,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     private let profile: Profile
     let tabManager: TabManager
 	
-	private var isNewTabNeeded = false
+	// Cliqz: Added private variables to handle session timeout and initial view
+	private var switchToSearchMode = false
+	private var needsNewTab = false
 
     // These views wrap the urlbar and toolbar to provide background effects on them
 	// Cliqz: Replaced BlurWrapper because according new requirements we don't need to blur background of ULRBar
@@ -233,7 +235,10 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
             self.view.backgroundColor = UIColor.clearColor()
         }, completion: { _ in
             self.webViewContainerBackdrop.alpha = 0
-            self.appDidBecomeResponsive("warm")
+            // Cliqz Added functionality for session timeout and telemtery logging when app becomes active
+			self.appDidBecomeResponsive("warm")
+			self.switchToSearchMode = SessionState.isSessionExpired()
+			self.switchToSearchModeIfNeeded()
         })
     }
     func appDidEnterBackgroundNotification() {
@@ -353,8 +358,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         setupConstraints()
         log.debug("BVC done.")
 
-		self.isNewTabNeeded = true
-    }
+		self.switchToSearchMode = true
+		self.needsNewTab = true
+	}
 
 
     private func setupConstraints() {
@@ -473,8 +479,9 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 //                showRestoreTabsAlert()
 //            }
         } else {
-			if (isNewTabNeeded) {
+			if (needsNewTab) {
 				self.tabManager.addTabAndSelect()
+				needsNewTab = false
 			}
 //            log.debug("Restoring tabs.")
 //            tabManager.restoreTabs()
@@ -533,10 +540,7 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         log.debug("BVC viewDidAppear.")
 		// Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
 		if (!presentIntroViewController()) {
-			if (isNewTabNeeded) {
-				self.urlBar.enterOverlayMode("", pasted: false)
-				self.isNewTabNeeded = false
-			}
+			switchToSearchModeIfNeeded()
 			LocationManager.sharedInstance.startUpdateingLocation()
 		}
         log.debug("BVC intro presented.")
@@ -744,6 +748,14 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 			
         }
     }
+
+	// Cliqz: Added method to show search view if needed
+	private func switchToSearchModeIfNeeded() {
+		if (self.switchToSearchMode) {
+			self.urlBar.enterOverlayMode("", pasted: false)
+			self.switchToSearchMode = false
+		}
+	}
 
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
         urlBar.currentURL = url
