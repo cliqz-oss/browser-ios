@@ -36,6 +36,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 	weak var delegate: RecommendationsViewControllerDelegate?
 
+	private var spinnerView: UIActivityIndicatorView!
+
 	init(profile: Profile) {
 		self.profile = profile
 		super.init(nibName: nil, bundle: nil)
@@ -57,6 +59,10 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
 		self.title = NSLocalizedString("Search recommendations", comment: "Search Recommendations and top visited sites title")
 		self.navigationItem.rightBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
+
+		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+		self.view.addSubview(spinnerView)
+		spinnerView.startAnimating()
 
 		self.setupConstraints()
 		self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
@@ -88,6 +94,12 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		default:
 			print("Unhandled Message")
 		}
+	}
+	
+	// Mark: Navigation delegate
+	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+		self.spinnerView.removeFromSuperview()
+		self.spinnerView.stopAnimating()
 	}
 	
 	// Mark: Action handlers
@@ -137,10 +149,14 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 			make.top.equalTo(0)
 			make.left.right.bottom.equalTo(self.view)
 		}
+		if let _ = self.spinnerView.superview {
+			self.spinnerView.snp_makeConstraints { make in
+				make.center.equalTo(self.view)
+			}
+		}
 	}
 	
 	private func createUIBarButton(imageName: String, action: Selector) -> UIBarButtonItem {
-		
 		let button: UIButton = UIButton(type: UIButtonType.Custom)
 		button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
 		button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)

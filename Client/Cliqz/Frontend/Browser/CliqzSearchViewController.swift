@@ -169,7 +169,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			self.spinnerView.snp_makeConstraints { make in
 				make.centerX.equalTo(self.view)
 				make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
-				return
 			}
 		}
 	}

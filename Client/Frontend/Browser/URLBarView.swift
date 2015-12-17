@@ -186,7 +186,7 @@ class URLBarView: UIView {
 	
 	lazy var recommendationsButton: UIButton = {  let recommendationsButton = UIButton()
 		recommendationsButton.setImage(UIImage(named: "future"), forState: .Normal)
-		recommendationsButton.addTarget(self, action: "hell", forControlEvents: UIControlEvents.TouchUpInside)
+		recommendationsButton.addTarget(self, action: "SELdidClickRecommendations", forControlEvents: UIControlEvents.TouchUpInside)
 		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
 		return recommendationsButton }()
 
