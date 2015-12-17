@@ -100,6 +100,14 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     // Cliqz: Added TransitionAnimator which is responsible for layers change animations
     let transition = TransitionAnimator()
     
+    // Cliqz: Added for logging the navigation Telemetry signal
+    var isBackNavigation        : Bool = false
+    var backListSize            : Int = 0
+    var navigationStep          : Int = 0
+    var backNavigationStep      : Int = 0
+    var navigationEndTime       : Double = NSDate.getCurrentMillis()
+    
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -735,6 +743,10 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
         homePanelController?.view?.hidden = true
 
         searchController!.didMoveToParentViewController(self)
+        
+        // Cliqz: reset navigation steps
+        navigationStep = 0
+        backNavigationStep = 0
     }
 
     private func hideSearchController() {
@@ -1717,6 +1729,11 @@ extension BrowserViewController: WKNavigationDelegate {
             }
             decisionHandler(WKNavigationActionPolicy.Cancel)
         }
+        
+        //Cliqz: Navigation telemetry signal
+        if url.absoluteString.rangeOfString("localhost") == nil {
+            startNavigation(webView, navigationAction: navigationAction)
+        }
     }
 
     func webView(webView: WKWebView,
@@ -1773,6 +1790,12 @@ extension BrowserViewController: WKNavigationDelegate {
         
         // Cliqz: hide the webViewOverlay when finis navigating to a url
         hideWebViewOverlay()
+        
+        //Cliqz: Navigation telemetry signal
+        if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
+            finishNavigation(webView)
+        }
+        
     }
 
     private func addOpenInViewIfNeccessary(url: NSURL?) {
@@ -2496,6 +2519,47 @@ extension BrowserViewController: RecommendationsViewControllerDelegate {
 		}
 		// Handle the case when the URL is not valid
 	}
+}
+// Cliqz: Added extension for logging the Navigation Telemetry signals
+extension BrowserViewController {
+    private func startNavigation(webView: WKWebView, navigationAction: WKNavigationAction) {
+        // determine if the navigation is back navigation
+        if navigationAction.navigationType == .BackForward && backListSize >= webView.backForwardList.backList.count {
+            isBackNavigation = true
+        } else {
+            isBackNavigation = false
+        }
+        backListSize = webView.backForwardList.backList.count
+    }
+
+    private func finishNavigation(webView: WKWebView) {
+        // calculate times
+        let currentTime = NSDate.getCurrentMillis()
+        let displayTime = currentTime - navigationEndTime
+        navigationEndTime = currentTime
+        
+        // calculate the url length
+        let urlLength = webView.URL?.absoluteString.characters.count
+        
+        
+        // check if back navigation
+        if isBackNavigation {
+            backNavigationStep++
+            logNavigationEvent("back", step: backNavigationStep, urlLength: urlLength!, displayTime: displayTime)
+        } else {
+            // discard the first navigation (result navigation is not included)
+            if navigationStep != 0 {
+                logNavigationEvent("location_change", step: navigationStep, urlLength: urlLength!, displayTime: displayTime)
+            }
+            navigationStep++
+            backNavigationStep = 0
+        }
+    }
+    
+    private func logNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) {
+        TelemetryLogger.sharedInstance.logEvent(.Navigation(action, step, urlLength, displayTime))
+    }
+    
 }
 
 // A small convienent class for wrapping a view with a blur background that can be modified

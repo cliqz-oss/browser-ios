@@ -18,6 +18,7 @@ public enum TelemetryLogEventType {
     case LayerChange        (String, String)
     case Onboarding         (String, Int)
     case PastTap            (String, Int, Double, Double, Double)
+    case Navigation         (String, Int, Int, Double)
     case JavaScriptsignal   ([String: AnyObject])
     
     //TODO: to be removed as it was added for testing
@@ -95,6 +96,9 @@ class TelemetryLogger : EventsLogger {
                
             case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
                 event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
+                
+            case .Navigation(let action, let step, let urlLength, let displayTime):
+                event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
                 
             case .JavaScriptsignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
@@ -254,6 +258,17 @@ class TelemetryLogger : EventsLogger {
         event["query_length"] = querylength
         event["position_age"] = positionAge
         event["length_age"] = lengthAge
+        event["display_time"] = displayTime
+        
+        return event
+    }
+    private func createNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "navigation"
+        event["action"] = action
+        event["step"] = step
+        event["url_length"] = urlLength
         event["display_time"] = displayTime
         
         return event
