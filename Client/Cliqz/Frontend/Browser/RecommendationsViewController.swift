@@ -16,7 +16,7 @@ protocol RecommendationsViewControllerDelegate: class {
 
 }
 
-class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
 
 	lazy var topSitesWebView: WKWebView = {
 		let config = WKWebViewConfiguration()
@@ -50,8 +50,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/freshtab.html")
-		self.topSitesWebView.loadRequest(NSURLRequest(URL: url!))
+		loadFreshtab()
 		
 		self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
 		self.navigationController?.navigationBar.barTintColor = UIColor(red: 68.0/255.0, green: 166.0/255.0, blue: 48.0/255.0, alpha: 1)
@@ -98,16 +97,35 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	
 	// Mark: Navigation delegate
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-		self.spinnerView.removeFromSuperview()
-		self.spinnerView.stopAnimating()
+		stopLoadingAnimation()
 	}
 	
+	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
+		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self)
+	}
+	
+	func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self)
+	}
+
 	// Mark: Action handlers
 	func dismiss() {
 		self.dismissViewControllerAnimated(true, completion: nil)
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("future", "present"))
 	}
-	
+
+	// Mark: AlertViewDelegate
+	func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+		switch (buttonIndex) {
+		case 0:
+			stopLoadingAnimation()
+		case 1:
+			loadFreshtab()
+		default:
+			print("Unhandled Button Click")
+		}
+	}
+
 	// Mark: Data loader
 	private func refreshTopSites(frecencyLimit: Int) {
 		// Reload right away with whatever is in the cache, then check to see if the cache is invalid. If it's invalid,
@@ -164,6 +182,16 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		
 		let barButton = UIBarButtonItem(customView: button)
 		return barButton
+	}
+
+	private func loadFreshtab() {
+		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/freshtab.html")
+		self.topSitesWebView.loadRequest(NSURLRequest(URL: url!))
+	}
+	
+	private func stopLoadingAnimation() {
+		self.spinnerView.removeFromSuperview()
+		self.spinnerView.stopAnimating()
 	}
 
 }

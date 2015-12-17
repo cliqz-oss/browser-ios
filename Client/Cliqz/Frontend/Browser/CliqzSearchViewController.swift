@@ -17,7 +17,7 @@ protocol SearchViewDelegate: class {
 	
 }
 
-class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate  {
+class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate, UIAlertViewDelegate  {
 	
     private var searchLoader: SearchLoader!
     private let cliqzSearch = CliqzSearch()
@@ -51,9 +51,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.view.addSubview(spinnerView)
 		spinnerView.startAnimating()
 
-//		let url = NSURL(string: "http://localhost:3005/extension/index.html")
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/index.html")
-		self.webView!.loadRequest(NSURLRequest(URL: url!))
+		loadExtension()
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
@@ -116,8 +114,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-		self.spinnerView.removeFromSuperview()
-		self.spinnerView.stopAnimating()
+		stopLoadingAnimation()
+	}
+
+	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
+		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self)
+	}
+
+	func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self)
 	}
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
@@ -132,30 +137,18 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			print("Unhandled JS message: \(message.name)!!!")
 			
 		}
-		/*
-		== "interOp" {
-			print("Received event \(message.body) --- \(message.name)")
-			let input = message.body as! NSDictionary
-			let callbakcID = input.objectForKey("callbackId")
-			let query = input.objectForKey("query") as? String
-			var jsonStr: NSString = ""
-			do {
-				let json = try NSJSONSerialization.dataWithJSONObject(self.historyResults, options: NSJSONWritingOptions(rawValue: 0))
-					jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
-			} catch let error as NSError {
-				print("Json conversion is failed with error: \(error)")
-			}
-			let exec = "CLIQZEnvironment.historySearchDone(\(callbakcID!), '\(query!)', '\(jsonStr)');"
-			self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-		} else if message.name == "linkSelected" {
-			let url = message.body as! String
-			print("LINK SEL: ---- \(url)")
-			delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
-		} else if message.name == "changeUrlVal" {
-			let url = message.body as! String
-				// TODO: Naira
+	}
+
+	// Mark: AlertViewDelegate
+	func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+		switch (buttonIndex) {
+		case 0:
+			stopLoadingAnimation()
+		case 1:
+			loadExtension()
+		default:
+			print("Unhandled Button Click")
 		}
-*/
 	}
 
 	private func layoutSearchEngineScrollView() {
@@ -181,6 +174,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		})
 	}
 
+	// Mark Keyboard delegate methods
 	func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardWillShowWithState state: KeyboardState) {
 		animateSearchEnginesWithKeyboard(state)
 	}
@@ -220,4 +214,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             print("Unhandles JS action: \(action)")
 		}
 	}
+
+	private func loadExtension() {
+		//		let url = NSURL(string: "http://localhost:3005/extension/index.html")
+		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/index.html")
+		self.webView!.loadRequest(NSURLRequest(URL: url!))
+	}
+
+	private func stopLoadingAnimation() {
+		self.spinnerView.removeFromSuperview()
+		self.spinnerView.stopAnimating()
+	}
+
 }
