@@ -8,5 +8,5 @@
 "CFBundleShortVersionString" = "";
 
 /* (No Commment) */
-"NSLocationWhenInUseUsageDescription" = "Webseiten, die Du besuchst, fragen evtl. nach Deinem Standort.";
+"NSLocationWhenInUseUsageDescription" = "Dadurch können wir die nächsten Restaurants, Kinos, Banken, usw. für Dich finden.";
 
