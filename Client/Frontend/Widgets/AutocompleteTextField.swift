@@ -127,7 +127,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         // Accept autocompletions if we're adding characters.
         canAutocomplete = !string.isEmpty
-        SearchBarTelemetryHelper.logQueryInteractionEvent(string, oldText: enteredText, range: range)
+        SearchBarTelemetryHelper.sharedInstance.logQueryInteractionEvent(string, oldText: enteredText, range: range)
         if completionActive {
             if string.isEmpty {
                 // Characters are being deleted, so clear the autocompletion, but don't change the text.
@@ -171,7 +171,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
     func textFieldDidBeginEditing(textField: UITextField) {
         autocompleteDelegate?.autocompleteTextFieldDidBeginEditing(self)
-        SearchBarTelemetryHelper.logUrlBarFocusEvent()
+        SearchBarTelemetryHelper.sharedInstance.logUrlBarFocusEvent()
     }
 
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {

@@ -10,7 +10,10 @@ import Foundation
 
 class SearchBarTelemetryHelper: NSObject {
     
-    class func logQueryInteractionEvent(newText: String, oldText: String, range: NSRange) {
+    //MARK: - Singltone
+    static let sharedInstance = SearchBarTelemetryHelper()
+    
+    func logQueryInteractionEvent(newText: String, oldText: String, range: NSRange) {
         
         let stringLength = newText.characters.count
         let oldLength = oldText.characters.count
@@ -40,7 +43,7 @@ class SearchBarTelemetryHelper: NSObject {
             TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("paste", currentLength))
         }
     }
-    class func logUrlBarFocusEvent() {
+    func logUrlBarFocusEvent() {
         //TODO context
         let context = ""
         TelemetryLogger.sharedInstance.logEvent(.UrlFocusBlur("urlbar_focus", context))
