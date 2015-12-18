@@ -19,6 +19,7 @@ public enum TelemetryLogEventType {
     case Onboarding         (String, Int)
     case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
+    case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptsignal   ([String: AnyObject])
     
     //TODO: to be removed as it was added for testing
@@ -99,6 +100,9 @@ class TelemetryLogger : EventsLogger {
                 
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
+                
+            case .ResultEnter(let queryLength, let autocompletedLength, let autocompletedUrl, let reactionTime, let urlbarTime):
+                event = self.createResultEnterEvent(queryLength, autocompletedLength: autocompletedLength, autocompletedUrl: autocompletedUrl, reactionTime: reactionTime, urlbarTime: urlbarTime)
                 
             case .JavaScriptsignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
@@ -274,6 +278,41 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
+    private func createResultEnterEvent(queryLength: Int, autocompletedLength: Int, autocompletedUrl: String?, reactionTime: Double, urlbarTime: Double) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        // This handel three types of signals: AutoComplete, DirectURL, and Google search
+        event["type"] = "action"
+        event["action"] = "result_enter"
+        event["query_length"] = queryLength
+        event["reaction_time"] = reactionTime
+        event["urlbar_time"] = urlbarTime
+        
+        if autocompletedLength > queryLength {
+            event["autocompleted_length"] = autocompletedLength
+            event["autocompleted"] = autocompletedUrl
+            event["inner_link"] = true
+        } else {
+            event["inner_link"] = false
+        }
+        
+        if  autocompletedUrl == nil {
+            event["position_type"] = ["inbar_query"]
+        } else {
+            event["position_type"] = ["inbar_url"]
+        }
+        
+        // fixed values so as not to conflict with desktop version
+        event["current_position"] = -1
+        
+        event["extra"] = nil
+        event["search"] = false
+        event["has_image"] = false
+        event["clustering_override"] = false
+        event["new_tab"] = false
+        
+        return event
+    }
+
     private func creatJavaScriptSignalEvent(javaScriptSignal: [String: AnyObject]) -> [String: AnyObject] {
         var event = javaScriptSignal
         

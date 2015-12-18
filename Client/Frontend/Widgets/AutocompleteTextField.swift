@@ -181,6 +181,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        // Cliqz: send result_enter telemetry Signal 
+        SearchBarTelemetryHelper.sharedInstance.logResultEnterEvent(enteredText, autoCompletedText: text!)
+        
         return autocompleteDelegate?.autocompleteTextFieldShouldReturn(self) ?? true
     }
 
