@@ -126,17 +126,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-		switch message.name {
-			case "jsBridge":
-				if let input = message.body as? NSDictionary {
-					if let action = input["action"] as? String {
-						handleJSMessage(action, data: input["data"], callback: input["callback"] as? String)
-					}
-				}
-		default:
-			print("Unhandled JS message: \(message.name)!!!")
-			
-		}
+		handleJSMessage(message)
 	}
 
 	// Mark: AlertViewDelegate
@@ -186,35 +176,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
-	private func handleJSMessage(action: String, data: AnyObject?, callback: String?) {
-		switch action {
-        case "searchHistory":
-            var jsonStr: NSString = ""
-            do {
-                let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
-                let json = try NSJSONSerialization.dataWithJSONObject(fullResults, options: NSJSONWritingOptions(rawValue: 0))
-                jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
-            } catch let error as NSError {
-                print("Json conversion is failed with error: \(error)")
-            }
-            if let c = callback {
-                let exec = "\(c)(\(jsonStr))"
-                self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-            }
-        case "openLink":
-            if let url = data as? String {
-                delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
-            }
-            
-        case "pushTelemetry":
-            if let telemetrySignal = data as? [String: AnyObject] {
-                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
-            }
-		default:
-            print("Unhandles JS action: \(action)")
-		}
-	}
-
 	private func loadExtension() {
 		//		let url = NSURL(string: "http://localhost:3005/extension/index.html")
 		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/index.html")
@@ -226,4 +187,59 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.spinnerView.stopAnimating()
 	}
 
+}
+
+// Handling communications with JavaScript
+extension CliqzSearchViewController {
+    private func handleJSMessage(message: WKScriptMessage) {
+        
+        switch message.name {
+        case "jsBridge":
+            if let input = message.body as? NSDictionary {
+                if let action = input["action"] as? String {
+                    handleJSAction(action, data: input["data"], callback: input["callback"] as? String)
+                }
+            }
+        default:
+            print("Unhandled JS message: \(message.name)!!!")
+            
+        }
+    }
+    
+    private func handleJSAction(action: String, data: AnyObject?, callback: String?) {
+        
+        switch action {
+        case "searchHistory":
+            let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
+            callJSMethod(callback, parameter: fullResults)
+            
+        case "openLink":
+            if let url = data as? String {
+                delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
+            }
+            
+        case "pushTelemetry":
+            if let telemetrySignal = data as? [String: AnyObject] {
+                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+            }
+        default:
+            print("Unhandles JS action: \(action)")
+        }
+    }
+    
+    private func callJSMethod(methodName: String?, parameter: AnyObject) {
+        var jsonStr: NSString = ""
+        do {
+            let json = try NSJSONSerialization.dataWithJSONObject(parameter, options: NSJSONWritingOptions(rawValue: 0))
+            jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+        } catch let error as NSError {
+            print("Json conversion is failed with error: \(error)")
+        }
+        if let c = methodName {
+            let exec = "\(c)(\(jsonStr))"
+            self.webView!.evaluateJavaScript(exec, completionHandler: nil)
+        }
+    }
+    
+    
 }
