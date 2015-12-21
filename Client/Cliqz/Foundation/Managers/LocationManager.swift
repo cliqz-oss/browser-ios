@@ -31,5 +31,16 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 			self.location = locations[locations.count - 1]
 		}
 	}
+    
+    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        switch status {
+        case .Denied, .NotDetermined, .Restricted:
+            self.location = nil
+        default:
+            //do nothing
+            break
+        }
+    }
+
 
 }
