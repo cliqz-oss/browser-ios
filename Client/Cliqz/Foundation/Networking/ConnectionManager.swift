@@ -53,28 +53,34 @@ class ConnectionManager {
     
     internal func sendPostRequest(url: String, body: AnyObject, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         
-        do {
-            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-            request.HTTPMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(body, options: [])
-            
-            Alamofire.request(request)
-                .responseJSON {
-                    request, response, result in
-                    switch result {
-                        
-                    case .Success(let json):
-                        onSuccess(json)
-                        
-                    case .Failure(let data, let error):
-                        onFailure(data, error)
-                    }
+        if NSJSONSerialization.isValidJSONObject(body) {
+            do {
+                let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+                request.HTTPMethod = "POST"
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(body, options: [])
+                
+                Alamofire.request(request)
+                    .responseJSON {
+                        request, response, result in
+                        switch result {
+                            
+                        case .Success(let json):
+                            onSuccess(json)
+                            
+                        case .Failure(let data, let error):
+                            onFailure(data, error)
+                        }
+                }
+            } catch let error as NSError {
+                DebugLogger.log("Sending request with the following body \(body), failed with error: \(error)")
+                let attributes = ["body": body, "error": error]
+                Answers.logCustomEventWithName("sendPostRequestException", customAttributes: attributes)
             }
-        } catch let error as NSError {
-            DebugLogger.log("Sending request with the following body \(body), failed with error: \(error)")
-            let attributes = ["body": body, "error": error]
-            Answers.logCustomEventWithName("sendPostRequestException", customAttributes: attributes)
+        } else {
+            let attributes = ["body": body]
+            Answers.logCustomEventWithName("sendPostRequestError", customAttributes: attributes)
         }
+        
     }
 }
