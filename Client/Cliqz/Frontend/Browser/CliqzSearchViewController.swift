@@ -199,9 +199,11 @@ extension CliqzSearchViewController {
                 if let action = input["action"] as? String {
                     handleJSAction(action, data: input["data"], callback: input["callback"] as? String)
                 }
+            } else {
+                DebugLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
             }
         default:
-            print("Unhandled JS message: \(message.name)!!!")
+            DebugLogger.log("Unhandled JS message with name : \(message.name) !!!")
             
         }
     }
@@ -221,6 +223,17 @@ extension CliqzSearchViewController {
         case "pushTelemetry":
             if let telemetrySignal = data as? [String: AnyObject] {
                 TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+            }
+        case "browserAction":
+            if let actionData = data as? [String: AnyObject], let actionType = actionData["type"] as? String {
+                if actionType == "phoneNumber" {
+                    if let phoneNumber = actionData["data"] as? String {
+                        let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
+                        if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
+                            UIApplication.sharedApplication().openURL(url)
+                        }
+                    }
+                }
             }
         default:
             print("Unhandles JS action: \(action)")

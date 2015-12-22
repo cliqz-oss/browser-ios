@@ -33,5 +33,13 @@ extension String {
         return String(randomString)
     }
     
+    func replace(string:String, replacement:String) -> String {
+        return self.stringByReplacingOccurrencesOfString(string, withString: replacement, options: NSStringCompareOptions.LiteralSearch, range: nil)
+    }
+    
+    func removeWhitespaces() -> String {
+        return self.replace(" ", replacement: "")
+    }
+    
     
 }
