@@ -86,6 +86,8 @@ class AppStatus {
     }
     
     internal func appWillEnterForeground() {
+        SessionState.sessionResumed()
+        
         TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillEnterForeground"))
         
         lastOpenedDate = NSDate()
@@ -112,6 +114,8 @@ class AppStatus {
     }
     
     internal func appDidEnterBackground() {
+        SessionState.sessionPaused()
+        
         TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidEnterBackground"))
         
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)

@@ -11,18 +11,14 @@ import Foundation
 class SessionState {
 
 	static let lastVisitedKey = "lastVisitedDate"
-	static let timeoutDuration: Double = 900
+	static let timeoutDuration: Double = 1800
 	static var isTimeout: Bool = false
-
 	class func sessionPaused() {
-		let userDefaulst = NSUserDefaults.standardUserDefaults()
-		userDefaulst.setValue(NSDate(), forKey: lastVisitedKey)
-		userDefaulst.synchronize()
+        LocalDataStore.setObject(NSDate(), forKey: lastVisitedKey)
 	}
 
 	class func sessionResumed() {
-		let userDefaulst = NSUserDefaults.standardUserDefaults()
-		if let date = userDefaulst.valueForKey(lastVisitedKey) as? NSDate {
+		if let date = LocalDataStore.objectForKey(lastVisitedKey) as? NSDate {
 			isTimeout = NSDate().timeIntervalSinceDate(date) > timeoutDuration
 		}
 	}

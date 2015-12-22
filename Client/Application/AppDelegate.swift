@@ -230,7 +230,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.profile?.shutdown()
             application.endBackgroundTask(taskId)
 		}
-		SessionState.sessionPaused()
     }
     
     func applicationWillResignActive(application: UIApplication) {
@@ -243,7 +242,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(application: UIApplication) {
         AppStatus.sharedInstance.appWillEnterForeground()
-		SessionState.sessionResumed()
 	}
 
 	private func setUpWebServer(profile: Profile) {
