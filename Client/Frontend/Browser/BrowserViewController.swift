@@ -34,7 +34,7 @@ private struct BrowserViewControllerUX {
     private static let BookmarkStarAnimationOffset: CGFloat = 80
 }
 
-class BrowserViewController: UIViewController, SearchViewDelegate {
+class BrowserViewController: UIViewController {
     var homePanelController: HomePanelViewController?
     var webViewContainer: UIView!
     var urlBar: URLBarView!
@@ -251,6 +251,14 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
     }
     func appDidEnterBackgroundNotification() {
         isAppResponsive = false
+
+        if searchController!.view.hidden == true {
+            let webView = self.tabManager.selectedTab?.webView
+            searchController!.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+        } else {
+            searchController!.appDidEnterBackground()
+        }
+        
     }
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
@@ -763,9 +771,12 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
 
 	// Cliqz: Added method to show search view if needed
 	private func switchToSearchModeIfNeeded() {
-		if (self.switchToSearchMode) {
+        if (self.switchToSearchMode) {
 			self.urlBar.enterOverlayMode("", pasted: false)
 			self.switchToSearchMode = false
+            if let searchController = self.searchController {
+                searchController.resetState()
+            }
 		}
 	}
 
@@ -1505,19 +1516,26 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
     }
 }
 
+extension BrowserViewController: SearchViewDelegate {
+    
+    func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
+        let query = (searchController?.searchQuery != nil) ? searchController?.searchQuery! : ""
+        let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query!)")
+        if let tab = tabManager.selectedTab,
+            let u = url, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+                self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
+        }
+        urlBar.currentURL = url
+        urlBar.leaveOverlayMode()
+//        finishEditingAndSubmit(url, visitType: .Link)
+    }
+    
+    func searchView(SearchViewController: CliqzSearchViewController, searchForQuery query: String) {
+        self.urlBar.enterOverlayMode(query, pasted: true)
+    }
+}
+
 extension BrowserViewController: SearchViewControllerDelegate {
-	
-	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
-		let query = (searchController?.searchQuery != nil) ? searchController?.searchQuery! : ""
-		let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query!)")
-		if let tab = tabManager.selectedTab,
-			let u = url, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
-				 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
-		}
-		urlBar.currentURL = url
-		urlBar.leaveOverlayMode()
-//		finishEditingAndSubmit(url, visitType: .Link)
-	}
 	
     func searchViewController(searchViewController: SearchViewController, didSelectURL url: NSURL) {
         finishEditingAndSubmit(url, visitType: VisitType.Typed)

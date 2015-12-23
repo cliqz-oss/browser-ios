@@ -13,7 +13,8 @@ import Storage
 
 protocol SearchViewDelegate: class {
 	
-	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL)
+    func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL)
+    func searchView(SearchViewController: CliqzSearchViewController, searchForQuery query: String)
 	
 }
 
@@ -21,6 +22,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
     private var searchLoader: SearchLoader!
     private let cliqzSearch = CliqzSearch()
+    
+    private let lastQueryKey = "LastQuery"
+    private let lastURLKey = "LastURL"
+    private let lastTitleKey = "LastTitle"
+    
+    private var lastQuery: String?
 
 	var webView: WKWebView?
 	weak var delegate: SearchViewDelegate?
@@ -55,6 +62,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
+        lastQuery = LocalDataStore.objectForKey(lastQueryKey) as? String
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -99,6 +107,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		}
 		JSString = "search_mobile('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
+
+        if query.characters.count > 0 {
+            lastQuery = query
+        }
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
@@ -191,6 +203,44 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 // Handling communications with JavaScript
 extension CliqzSearchViewController {
+
+    func appDidEnterBackground(lastURL: NSURL? = nil, lastTitle: String? = nil) {
+        LocalDataStore.setObject(lastQuery, forKey: lastQueryKey)
+
+        if lastURL != nil {
+            LocalDataStore.setObject(lastURL?.absoluteString, forKey: lastURLKey)
+            LocalDataStore.setObject(lastTitle, forKey: lastTitleKey)
+        } else {
+            LocalDataStore.setObject(nil, forKey: lastURLKey)
+            LocalDataStore.setObject(nil, forKey: lastTitleKey)
+        }
+        
+    }
+   
+    func resetState() {
+        
+        var configs = [String: AnyObject]()
+        if let lastURL = LocalDataStore.objectForKey(lastURLKey) as? String { // the app was closed while showing a url
+            configs["url"] = lastURL
+            // get title if possible
+            if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
+                configs["title"] = lastTitle
+            }
+            
+            callJSMethod("resetState", parameter: configs)
+        } else if let query = lastQuery { // the app was closed while searching
+            configs["q"] = query
+            // get current location if possible
+            if let currentLocation = LocationManager.sharedInstance.location {
+                configs["lat"] = currentLocation.coordinate.latitude
+                configs["long"] = currentLocation.coordinate.longitude
+            }
+            
+            callJSMethod("resetState", parameter: configs)
+        }
+        
+    }
+    
     private func handleJSMessage(message: WKScriptMessage) {
         
         switch message.name {
@@ -235,8 +285,14 @@ extension CliqzSearchViewController {
                     }
                 }
             }
+        case "notifyQuery":
+            if let queryData = data as? [String: AnyObject],
+                let query = queryData["q"] as? String {
+                    delegate?.searchView(self, searchForQuery: query)
+
+            }
         default:
-            print("Unhandles JS action: \(action)")
+            print("Unhandles JS action: \(action), with data: \(data)")
         }
     }
     
