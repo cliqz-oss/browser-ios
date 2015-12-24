@@ -104,7 +104,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
 //		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3005/") {
 		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://cdn.cliqz.com") {
-			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
+//			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
 		decisionHandler(.Allow)

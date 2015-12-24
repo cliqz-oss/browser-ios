@@ -880,7 +880,10 @@ class BrowserViewController: UIViewController, SearchViewDelegate {
             }
 
             if let tab = tabManager.selectedTab where tab.webView === webView && !tab.restoring {
-                updateUIForReaderHomeStateForTab(tab)
+				// Cliqz: Added if statement to avoid overridding url when search results are displayed
+				if self.searchController!.view.hidden && !tab.url!.absoluteString.contains("/cliqz/") {
+					updateUIForReaderHomeStateForTab(tab)
+				}
             }
         case KVOCanGoBack:
             guard let canGoBack = change?[NSKeyValueChangeNewKey] as? Bool else { break }
@@ -1071,6 +1074,10 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBarDisplayTextForURL(url: NSURL?) -> String? {
         // use the initial value for the URL so we can do proper pattern matching with search URLs
+		// Cliqz: return search query to display in the case when search results are visible (added for back/forward feature
+		if self.searchController != nil && !self.searchController!.view.hidden {
+			return self.searchController!.searchQuery
+		}
         var searchURL = self.tabManager.selectedTab?.currentInitialURL
         if searchURL == nil || ErrorPageHelper.isErrorPageURL(searchURL!) {
             searchURL = url
@@ -1170,7 +1177,7 @@ extension BrowserViewController: URLBarDelegate {
         let settingsTableViewController = SettingsTableViewController()
         settingsTableViewController.profile = profile
         settingsTableViewController.tabManager = tabManager
-        
+
         let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
         controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
         presentViewController(controller, animated: true, completion: nil)
@@ -1179,6 +1186,7 @@ extension BrowserViewController: URLBarDelegate {
         self.webViewContainerToolbar.hidden = true
         let recommendationsViewController = RecommendationsViewController(profile: self.profile)
 		recommendationsViewController.delegate = self
+		recommendationsViewController.tabManager = self.tabManager
         let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
         containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Up
@@ -1311,7 +1319,7 @@ extension BrowserViewController: BrowserDelegate {
         readerMode.delegate = self
         browser.addHelper(readerMode, name: ReaderMode.name())
 
-        let favicons = FaviconManager(browser: browser, profile: profile)
+		let favicons = FaviconManager(browser: browser, profile: profile)
         browser.addHelper(favicons, name: FaviconManager.name())
         
         // only add the logins helper if the tab is not a private browsing tab
@@ -1500,7 +1508,15 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
 extension BrowserViewController: SearchViewControllerDelegate {
 	
 	func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
-		finishEditingAndSubmit(url, visitType: .Link)
+		let query = (searchController?.searchQuery != nil) ? searchController?.searchQuery! : ""
+		let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query!)")
+		if let tab = tabManager.selectedTab,
+			let u = url, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+				 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
+		}
+		urlBar.currentURL = url
+		urlBar.leaveOverlayMode()
+//		finishEditingAndSubmit(url, visitType: .Link)
 	}
 	
     func searchViewController(searchViewController: SearchViewController, didSelectURL url: NSURL) {
@@ -1706,20 +1722,33 @@ extension BrowserViewController: WKNavigationDelegate {
 
     func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.URL else {
-            decisionHandler(WKNavigationActionPolicy.Cancel)
-            return
-        }
+			decisionHandler(WKNavigationActionPolicy.Cancel)
+			return
+		}
 
 		switch url.scheme {
         case "about", "http", "https":
-            if isWhitelistedUrl(url) {
-                // If the url is whitelisted, we open it without prompting…
-                // … unless the NavigationType is Other, which means it is JavaScript- or Redirect-initiated.
-                openExternal(url, prompt: navigationAction.navigationType == WKNavigationType.Other)
-                decisionHandler(WKNavigationActionPolicy.Cancel)
-            } else {
-                decisionHandler(WKNavigationActionPolicy.Allow)
-            }
+			// Cliqz: Added handling for back/forward functionality
+			if url.absoluteString.contains("cliqz/goto.html") {
+				if let q = url.query {
+					let comp = q.componentsSeparatedByString("=")
+					if comp.count == 2 {
+						webView.goBack()
+						self.urlBar.locationView.urlTextField.text = comp[1]
+						self.urlBar(self.urlBar, didEnterText: comp[1])
+					}
+				}
+				decisionHandler(WKNavigationActionPolicy.Cancel)
+			} else {
+				if isWhitelistedUrl(url) {
+					// If the url is whitelisted, we open it without prompting…
+					// … unless the NavigationType is Other, which means it is JavaScript- or Redirect-initiated.
+					openExternal(url, prompt: navigationAction.navigationType == WKNavigationType.Other)
+					decisionHandler(WKNavigationActionPolicy.Cancel)
+				} else {
+					decisionHandler(WKNavigationActionPolicy.Allow)
+				}
+			}
         case "tel":
             callExternal(url)
             decisionHandler(WKNavigationActionPolicy.Cancel)
@@ -1870,8 +1899,8 @@ extension BrowserViewController: WKUIDelegate {
             completionHandler()
         }))
         presentViewController(alertController, animated: true, completion: nil)
-    }
-
+	}
+	
     func webView(webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (Bool) -> Void) {
         tabManager.selectTab(tabManager[webView])
 

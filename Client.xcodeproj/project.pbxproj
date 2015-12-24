@@ -385,6 +385,7 @@
 		4FDD31351C1EE06700E02F83 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD31341C1EE06700E02F83 /* LocationManager.swift */; };
 		4FDD31381C2196A300E02F83 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD31371C2196A300E02F83 /* SessionState.swift */; };
 		4FDD313A1C22FB4800E02F83 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD31391C22FB4800E02F83 /* ErrorHandler.swift */; };
+		4FDD31B61C24195E00E02F83 /* trampolineForward.html in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD31B51C24195E00E02F83 /* trampolineForward.html */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
 		59A687B4A05CC772FE7E5A09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
@@ -1672,6 +1673,7 @@
 		4FDD31341C1EE06700E02F83 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		4FDD31371C2196A300E02F83 /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		4FDD31391C22FB4800E02F83 /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
+		4FDD31B51C24195E00E02F83 /* trampolineForward.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = trampolineForward.html; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		59A6825233896FC846499289 /* HistoryPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HistoryPanel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		59A6839879D615FC1C0D71CE /* BookmarksPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksPanel.swift; sourceTree = "<group>"; };
@@ -2217,6 +2219,7 @@
 		1E1E31931C071FF20032759D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4FDD31B51C24195E00E02F83 /* trampolineForward.html */,
 				1ECD863A1C2313C200C6B12D /* BookmarkPanel.strings */,
 				1ECD863D1C2313D900C6B12D /* ClearPrivateData.strings */,
 				1ECD86401C2313DF00C6B12D /* ErrorPages.strings */,
@@ -4539,6 +4542,7 @@
 				1ECD86411C2313E400C6B12D /* HistoryPanel.strings in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
 				D32075391B017DA400CA1CD2 /* SearchPlugins in Resources */,
+				4FDD31B61C24195E00E02F83 /* trampolineForward.html in Resources */,
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
 				746B6A791B277C1800EA83E3 /* SessionRestore.html in Resources */,
 				2F44FB2C1A9D5D8500FD20CC /* Home.xcassets in Resources */,

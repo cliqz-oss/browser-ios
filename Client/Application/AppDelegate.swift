@@ -123,18 +123,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 
-		let bundlePath = NSBundle.mainBundle().bundlePath
-		let extensionPath = bundlePath + "/" + "search"
+//		let bundlePath = NSBundle.mainBundle().bundlePath
+//		let extensionPath = bundlePath + "/" + "search"
 		
-		let httpServer = HttpServer()
-		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
-		
-		httpServer["/myproxy"] = { (request: HttpRequest) in
-			let u: String = request.urlParams[0].1
-			let data = NSData(contentsOfURL: NSURL(string:u)!)
-			return HttpResponse.RAW(200, data!)
-		}
-		httpServer.start(3005)
+//		let httpServer = HttpServer()
+//		httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
+//		
+//		httpServer["/myproxy"] = { (request: HttpRequest) in
+//			let u: String = request.urlParams[0].1
+//			let data = NSData(contentsOfURL: NSURL(string:u)!)
+//			return HttpResponse.RAW(200, data!)
+//		}
+//		httpServer.start(3005)
 		
         log.debug("Done with setting up the application.")
         return true
@@ -251,7 +251,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
         SessionRestoreHandler.register(server)
-        // Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
+		// Cliqz: Registered trampolineForward to be able to load it via URLRequest
+		server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
+//		server.registerHandlerForMethod("GET", module: "cliqz", resource: "trampolineForward.html") { (request: GCDWebServerRequest!) -> GCDWebServerResponse! in
+//			if let trampolinePath = NSBundle.mainBundle().pathForResource("trampolineForward", ofType: "html") {
+//				do {
+//					let trampolineString = try NSMutableString(contentsOfFile: trampolinePath, encoding: NSUTF8StringEncoding)
+//					return GCDWebServerDataResponse(HTML: trampolineString as String)
+//				} catch _ {
+//				}
+//			}
+//			return GCDWebServerResponse(statusCode: 404)
+//		}
+//		server.registerMainBundleResource("Readerrrr.css", module: "a")
+		// Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
         // catching and handling the error seemed to fix things, but we're not sure why.
         // Either way, not implicitly unwrapping a try is not a great way of doing things
         // so this is better anyway.

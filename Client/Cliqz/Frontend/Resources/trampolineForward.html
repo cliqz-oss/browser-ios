@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        "use strict";
+
+        function redirect() {
+            if (history.state == null) {
+                var queryStr = window.location.search.substring(1).split('+').join(' ');
+                var query = queryStr.split('&')
+                    .reduce(function(acc, par) {
+                        var kv = par.split('=');
+                        acc[kv[0]] = decodeURIComponent(kv[1]);
+                        return acc;
+                    }, {});
+                console.log(query);
+                history.replaceState(query, "page", "goto.html?q="+query.q);
+                // Workaround
+                setTimeout(function() { window.location.href = query.url}, 0);
+            } else {
+                var query = history.state.q;
+                var oReq = new XMLHttpRequest();
+                oReq.addEventListener("load", function() {
+					history.back();
+                });
+                oReq.open("GET", "cliqz://trampoline/search.html?q=" + encodeURIComponent(query));
+                oReq.send();
+            }
+        }
+    </script>
+</head>
+<body onload="redirect()">
+	<h>Merry Christmas!!!</h>
+</body>
+</html>

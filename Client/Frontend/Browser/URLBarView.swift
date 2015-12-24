@@ -202,7 +202,7 @@ class URLBarView: UIView {
         }
 
         set(newURL) {
-            locationView.url = newURL
+			locationView.url = newURL
         }
     }
 
@@ -238,7 +238,7 @@ class URLBarView: UIView {
 		
 		// Cliqz: Added new buttons to the main view.
 		addSubview(historyButton)
-		addSubview(settingsButton)
+//		addSubview(settingsButton)
 		addSubview(recommendationsButton)
 
         helper = BrowserToolbarHelper(toolbar: self)
@@ -256,11 +256,11 @@ class URLBarView: UIView {
 //			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
-		settingsButton.snp_makeConstraints { make in
-			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
-		}
+//		settingsButton.snp_makeConstraints { make in
+//			make.centerY.equalTo(self.locationContainer)
+//			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
+////			make.size.equalTo(UIConstants.ToolbarHeight)
+//		}
 
 		recommendationsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
@@ -330,7 +330,7 @@ class URLBarView: UIView {
 
         bookmarkButton.snp_makeConstraints { make in
 			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
-            make.right.equalTo(self.settingsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+			make.right.equalTo(self.recommendationsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -343,7 +343,7 @@ class URLBarView: UIView {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
 				make.leading.equalTo(self.historyButton.snp_trailing)
-                make.trailing.equalTo(self.settingsButton.snp_leading).offset(-15)
+                make.trailing.equalTo(self.recommendationsButton.snp_leading).offset(-15)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -357,7 +357,7 @@ class URLBarView: UIView {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
 					make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self.settingsButton.snp_leading).offset(-14)
+                    make.trailing.equalTo(self.recommendationsButton.snp_leading).offset(-14)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -773,6 +773,8 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 			self.SELdidClickCancel()
 		} else {
 			delegate?.urlBar(self, didEnterText: "")
+			// Cliqz: clears urlTextField as well, because in some cases it showes previous text
+			locationView.urlTextField.text = ""
 		}
         return true
     }

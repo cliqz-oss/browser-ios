@@ -31,7 +31,7 @@ class BrowserLocationView: UIView {
 
     dynamic var baseURLFontColor: UIColor = BrowserLocationViewUX.BaseURLFontColor {
         didSet { updateTextWithURL() }
-    }
+	}
 
     dynamic var hostFontColor: UIColor = BrowserLocationViewUX.HostFontColor {
         didSet { updateTextWithURL() }
@@ -97,6 +97,7 @@ class BrowserLocationView: UIView {
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultMediumFont
+		urlTextField.textColor = UIColor.whiteColor()
         return urlTextField
     }()
 
