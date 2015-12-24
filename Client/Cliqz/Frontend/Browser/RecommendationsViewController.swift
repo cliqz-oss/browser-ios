@@ -30,7 +30,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		return webView
 	}()
 
-	var profile: Profile
+	var profile: Profile!
+	var tabManager: TabManager!
 
 	private let maxFrecencyLimit: Int = 30
 
@@ -58,6 +59,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
 		self.title = NSLocalizedString("Search recommendations", comment: "Search Recommendations and top visited sites title")
 		self.navigationItem.rightBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
+		self.navigationItem.leftBarButtonItem = createUIBarButton("cliqzSettings", action: Selector("openSettings"))
 
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
@@ -112,6 +114,16 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	func dismiss() {
 		self.dismissViewControllerAnimated(true, completion: nil)
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("future", "present"))
+	}
+
+	func openSettings() {
+		let settingsTableViewController = SettingsTableViewController()
+		settingsTableViewController.profile = profile
+		settingsTableViewController.tabManager = tabManager
+		
+		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
+		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+		presentViewController(controller, animated: true, completion: nil)
 	}
 
 	// Mark: AlertViewDelegate
