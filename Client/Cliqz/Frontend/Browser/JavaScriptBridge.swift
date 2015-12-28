@@ -99,6 +99,10 @@ class JavaScriptBridge {
                 TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
             }
             
+        case "copyResult":
+            if let result = data as? String {
+                UIPasteboard.generalPasteboard().string = result
+            }
         default:
             print("Unhandles JS action: \(action), with data: \(data)")
         }
