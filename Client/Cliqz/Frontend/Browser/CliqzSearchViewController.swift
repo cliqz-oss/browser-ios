@@ -12,9 +12,9 @@ import Shared
 import Storage
 
 protocol SearchViewDelegate: class {
-	
-    func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL)
-    func searchView(SearchViewController: CliqzSearchViewController, searchForQuery query: String)
+
+    func didSelectURL(url: NSURL, searchQuery: String?)
+    func searchForQuery(query: String)
 	
 }
 
@@ -30,6 +30,14 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     private var lastQuery: String?
 
 	var webView: WKWebView?
+    
+    lazy var javaScriptBridge: JavaScriptBridge = {
+        let javaScriptBridge = JavaScriptBridge(profile: self.profile)
+        javaScriptBridge.delegate = self
+        return javaScriptBridge
+        }()
+    
+    
 	weak var delegate: SearchViewDelegate?
 
 	private var spinnerView: UIActivityIndicatorView!
@@ -41,19 +49,27 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 			self.loadData(searchQuery!)
 		}
 	}
+    
+    var profile: Profile
+    
+    init(profile: Profile) {
+        self.profile = profile
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 	override func viewDidLoad() {
         super.viewDidLoad()
 
-		let config = WKWebViewConfiguration()
-		let controller = WKUserContentController()
-		config.userContentController = controller
-		controller.addScriptMessageHandler(self, name: "jsBridge")
+        let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self;
         self.view.addSubview(self.webView!)
-
+        
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
 		spinnerView.startAnimating()
@@ -138,7 +154,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-		handleJSMessage(message)
+		javaScriptBridge.handleJSMessage(message)
 	}
 
 	// Mark: AlertViewDelegate
@@ -226,8 +242,7 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            
-            callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs)
         } else if let query = lastQuery { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -235,80 +250,29 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            
-            callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs)
         }
         
     }
     
-    private func handleJSMessage(message: WKScriptMessage) {
-        
-        switch message.name {
-        case "jsBridge":
-            if let input = message.body as? NSDictionary {
-                if let action = input["action"] as? String {
-                    handleJSAction(action, data: input["data"], callback: input["callback"] as? String)
-                }
-            } else {
-                DebugLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
-            }
-        default:
-            DebugLogger.log("Unhandled JS message with name : \(message.name) !!!")
-            
-        }
-    }
-    
-    private func handleJSAction(action: String, data: AnyObject?, callback: String?) {
-        
-        switch action {
-        case "searchHistory":
-            let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
-            callJSMethod(callback, parameter: fullResults)
-            
-        case "openLink":
-            if let url = data as? String {
-                delegate?.searchView(self, didSelectUrl: NSURL(string: url)!)
-            }
-            
-        case "pushTelemetry":
-            if let telemetrySignal = data as? [String: AnyObject] {
-                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
-            }
-        case "browserAction":
-            if let actionData = data as? [String: AnyObject], let actionType = actionData["type"] as? String {
-                if actionType == "phoneNumber" {
-                    if let phoneNumber = actionData["data"] as? String {
-                        let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
-                        if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
-                            UIApplication.sharedApplication().openURL(url)
-                        }
-                    }
-                }
-            }
-        case "notifyQuery":
-            if let queryData = data as? [String: AnyObject],
-                let query = queryData["q"] as? String {
-                    delegate?.searchView(self, searchForQuery: query)
+}
 
-            }
-        default:
-            print("Unhandles JS action: \(action), with data: \(data)")
-        }
+extension CliqzSearchViewController: JavaScriptBridgeDelegate {
+    
+    func didSelectUrl(url: NSURL) {
+        delegate?.didSelectURL(url, searchQuery: self.searchQuery)
     }
     
-    private func callJSMethod(methodName: String?, parameter: AnyObject) {
-        var jsonStr: NSString = ""
-        do {
-            let json = try NSJSONSerialization.dataWithJSONObject(parameter, options: NSJSONWritingOptions(rawValue: 0))
-            jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
-        } catch let error as NSError {
-            print("Json conversion is failed with error: \(error)")
-        }
-        if let c = methodName {
-            let exec = "\(c)(\(jsonStr))"
-            self.webView!.evaluateJavaScript(exec, completionHandler: nil)
-        }
+    func evaluateJavaScript(javaScriptString: String) {
+        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: nil)
     }
     
+    func searchForQuery(query: String) {
+        delegate?.searchForQuery(query)
+    }
     
+    func getSearchHistoryResults(callback: String?) {
+        let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
+        javaScriptBridge.callJSMethod(callback!, parameter: fullResults)
+    }
 }

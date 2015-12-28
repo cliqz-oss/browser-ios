@@ -78,6 +78,8 @@
 		1E3301E41BFDCE9C00E8718D /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */; };
 		1E33020A1BFDCEAA00E8718D /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */; };
 		1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */; };
+		1E641F221C2AD424003D3255 /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F211C2AD424003D3255 /* JavaScriptBridge.swift */; settings = {ASSET_TAGS = (); }; };
+		1E641F241C2AFE54003D3255 /* ConfigurationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */; settings = {ASSET_TAGS = (); }; };
 		1E79B83A1BE91AC800B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
 		1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */; };
 		1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
@@ -93,6 +95,7 @@
 		1ECD86501C23140A00C6B12D /* Search.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD86521C23140A00C6B12D /* Search.strings */; };
 		1EEC01571BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */; };
 		1EEC015A1BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */; };
+		1EF0BE851C2996F10052F84B /* search in Resources */ = {isa = PBXBuildFile; fileRef = 1EF0BE841C2996F10052F84B /* search */; settings = {ASSET_TAGS = (); }; };
 		1EF1B8AF1BF4CFA100698822 /* AtomicInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B89B1BF4CFA100698822 /* AtomicInt.swift */; };
 		1EF1B8B01BF4CFA100698822 /* AtomicInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B89B1BF4CFA100698822 /* AtomicInt.swift */; };
 		1EF1B8B11BF4CFA100698822 /* LocalDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B89C1BF4CFA100698822 /* LocalDataStore.swift */; };
@@ -370,7 +373,6 @@
 		4F49F5B21C04EC9E00319287 /* ADJTimerCycle.m in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
 		4F49F5B31C04EEA600319287 /* ADJTimerCycle.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
-		4F52F5E61C10C88700F6B249 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 4F52F5E51C10C88700F6B249 /* search */; };
 		4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E71C15D1B200F6B249 /* Fabric.framework */; };
 		4F52F5EA1C15D1B200F6B249 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */; };
 		4F8920841C04E18D00F47CF0 /* DemoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F89207D1C04E18D00F47CF0 /* DemoServer.swift */; };
@@ -1473,6 +1475,8 @@
 		1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewController.swift; sourceTree = "<group>"; };
 		1E1E31CA1C071FFF0032759D /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBarTelemetryHelper.swift; sourceTree = "<group>"; };
+		1E641F211C2AD424003D3255 /* JavaScriptBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaScriptBridge.swift; sourceTree = "<group>"; };
+		1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationManager.swift; sourceTree = "<group>"; };
 		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
 		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
@@ -1489,6 +1493,7 @@
 		1ECD86531C23144A00C6B12D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedBrowserHistory.swift; sourceTree = "<group>"; };
 		1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
+		1EF0BE841C2996F10052F84B /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
 		1EF1B89B1BF4CFA100698822 /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
 		1EF1B89C1BF4CFA100698822 /* LocalDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalDataStore.swift; sourceTree = "<group>"; };
 		1EF1B89D1BF4CFA100698822 /* SynchronousArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronousArray.swift; sourceTree = "<group>"; };
@@ -1658,7 +1663,6 @@
 		39C575F11BE2C31400E1C4B1 /* ShareExtensionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareExtensionHelper.swift; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
-		4F52F5E51C10C88700F6B249 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../khaled-nav-ext/navigation-extension/dist/mobile/search"; sourceTree = "<group>"; };
 		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		4F89207D1C04E18D00F47CF0 /* DemoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoServer.swift; sourceTree = "<group>"; };
@@ -2264,6 +2268,7 @@
 				1E1E31C71C071FFF0032759D /* LayerViewController.swift */,
 				1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */,
 				1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */,
+				1E641F211C2AD424003D3255 /* JavaScriptBridge.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -2792,6 +2797,7 @@
 			children = (
 				4FDD31341C1EE06700E02F83 /* LocationManager.swift */,
 				4FDD31391C22FB4800E02F83 /* ErrorHandler.swift */,
+				1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3309,9 +3315,9 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				1EF0BE841C2996F10052F84B /* search */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
-				4F52F5E51C10C88700F6B249 /* search */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
 				E4B334871BBF23F3004E2BFF /* iAd.framework */,
 				D31FC2291A8D908800BAF7EC /* Alamofire.xcodeproj */,
@@ -4523,9 +4529,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EF0BE851C2996F10052F84B /* search in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
-				4F52F5E61C10C88700F6B249 /* search in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				1ECD864A1C2313FA00C6B12D /* OnePasswordExtension.strings in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
@@ -5074,8 +5080,10 @@
 				D38B2D461A8D96D00040E6B5 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				E60A60821B6BFC0B00F850D4 /* CrashReporter.swift in Sources */,
 				D38B2D4C1A8D96D00040E6B5 /* GCDWebServerErrorResponse.m in Sources */,
+				1E641F221C2AD424003D3255 /* JavaScriptBridge.swift in Sources */,
 				E4B3344E1BBF2393004E2BFF /* ADJActivityKind.m in Sources */,
 				E4CD9F2D1A6DC91200318571 /* BrowserLocationView.swift in Sources */,
+				1E641F241C2AFE54003D3255 /* ConfigurationManager.swift in Sources */,
 				0BB5B2881AC0A2B90052877D /* SnackBar.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
 				E4B3344F1BBF2393004E2BFF /* ADJActivityPackage.m in Sources */,

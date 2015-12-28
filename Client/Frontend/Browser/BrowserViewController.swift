@@ -725,7 +725,7 @@ class BrowserViewController: UIViewController {
     private func showSearchController() {
         if searchController == nil {
 //			let isPrivate = tabManager.selectedTab?.isPrivate ?? false
-			searchController = CliqzSearchViewController()
+            searchController = CliqzSearchViewController(profile: self.profile)
 			searchController!.delegate = self
 			/*
 			searchController = SearchViewController(isPrivate: isPrivate)
@@ -1516,11 +1516,12 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
     }
 }
 
-extension BrowserViewController: SearchViewDelegate {
+// Cliqz: compined the two extensions for SearchViewDelegate & RecommendationsViewControllerDelegate into one
+extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate {
     
-    func searchView(SearchViewController: CliqzSearchViewController, didSelectUrl url: NSURL) {
-        let query = (searchController?.searchQuery != nil) ? searchController?.searchQuery! : ""
-        let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query!)")
+    func didSelectURL(url: NSURL, searchQuery: String?) {
+        let query = (searchQuery != nil) ? searchQuery! : ""
+        let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query)")
         if let tab = tabManager.selectedTab,
             let u = url, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
                 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
@@ -1529,10 +1530,14 @@ extension BrowserViewController: SearchViewDelegate {
         urlBar.leaveOverlayMode()
 //        finishEditingAndSubmit(url, visitType: .Link)
     }
+    func didSelectURL(url: NSURL) {
+        finishEditingAndSubmit(url, visitType: .Link)
+    }
     
-    func searchView(SearchViewController: CliqzSearchViewController, searchForQuery query: String) {
+    func searchForQuery(query: String) {
         self.urlBar.enterOverlayMode(query, pasted: true)
     }
+    
 }
 
 extension BrowserViewController: SearchViewControllerDelegate {
@@ -2557,16 +2562,6 @@ extension BrowserViewController: HomePanelDelegate {
     }
 }
 
-// Cliqz: Added extension for RecommendationsViewControllerDelegate to hanlde url selection events
-extension BrowserViewController: RecommendationsViewControllerDelegate {
-	
-	func recommendationsViewController(recommendationsViewController: RecommendationsViewController, didSelectURL url: NSURL?) {
-		if let u = url {
-			finishEditingAndSubmit(u, visitType: .Link)
-		}
-		// Handle the case when the URL is not valid
-	}
-}
 // Cliqz: Added extension for logging the Navigation Telemetry signals
 extension BrowserViewController {
     private func startNavigation(webView: WKWebView, navigationAction: WKNavigationAction) {

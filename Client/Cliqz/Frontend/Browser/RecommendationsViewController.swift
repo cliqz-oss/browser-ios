@@ -12,23 +12,25 @@ import Storage
 
 protocol RecommendationsViewControllerDelegate: class {
 
-	func recommendationsViewController(recommendationsViewController: RecommendationsViewController, didSelectURL url: NSURL?)
-
+	func didSelectURL(url: NSURL)
 }
 
 class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
 
 	lazy var topSitesWebView: WKWebView = {
-		let config = WKWebViewConfiguration()
-		let controller = WKUserContentController()
-		config.userContentController = controller
-		controller.addScriptMessageHandler(self, name: "jsBridge")
-		
+        let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
+        
 		let webView = WKWebView(frame: self.view.bounds, configuration: config)
 		webView.navigationDelegate = self
 		self.view.addSubview(webView)
 		return webView
 	}()
+    
+    lazy var javaScriptBridge: JavaScriptBridge = {
+        let javaScriptBridge = JavaScriptBridge(profile: self.profile)
+        javaScriptBridge.delegate = self
+        return javaScriptBridge
+    }()
 
 	var profile: Profile!
 	var tabManager: TabManager!
@@ -72,31 +74,9 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 	// Mark: WKScriptMessageHandler
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-		switch message.name {
-		case "jsBridge":
-			if let input = message.body as? NSDictionary {
-				if let action = input["action"] as? String {
-					switch action {
-					case "getTopSites":
-						if let callback = input["callback"] as? String,
-							limit = input["data"] as? Int {
-								self.reloadTopSitesWithLimit(limit, callback: callback)
-						}
-					case "openLink":
-						if let url = input["data"] as? String {
-							self.delegate?.recommendationsViewController(self, didSelectURL: NSURL(string: url))
-							self.dismiss()
-						}
-					default:
-						print("Unhandled action: \(action)")
-					}
-				}
-			}
-		default:
-			print("Unhandled Message")
-		}
+        javaScriptBridge.handleJSMessage(message)
 	}
-	
+    
 	// Mark: Navigation delegate
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
 		stopLoadingAnimation()
@@ -152,7 +132,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 	private func reloadTopSitesWithLimit(limit: Int, callback: String) -> Success {
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
-			var results = Array<Dictionary<String, String>>()
+            var results = [[String: String]]()
 			if let r = result.successValue {
 				for site in r {
 					var d = Dictionary<String, String>()
@@ -206,4 +186,17 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.spinnerView.stopAnimating()
 	}
 
+}
+
+
+extension RecommendationsViewController: JavaScriptBridgeDelegate {
+    
+    func didSelectUrl(url: NSURL) {
+        delegate?.didSelectURL(url)
+        self.dismiss()
+    }
+    
+    func evaluateJavaScript(javaScriptString: String) {
+        self.topSitesWebView.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    }
 }
