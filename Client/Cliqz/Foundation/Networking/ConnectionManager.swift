@@ -74,12 +74,10 @@ class ConnectionManager {
                 }
             } catch let error as NSError {
                 DebugLogger.log("Sending request with the following body \(body), failed with error: \(error)")
-                let attributes = ["body": body, "error": error]
-                Answers.logCustomEventWithName("sendPostRequestException", customAttributes: attributes)
+                Answers.logCustomEventWithName("sendPostRequestException", customAttributes: nil)
             }
         } else {
-            let attributes = ["body": body]
-            Answers.logCustomEventWithName("sendPostRequestError", customAttributes: attributes)
+            Answers.logCustomEventWithName("sendPostRequestError", customAttributes: nil)
         }
         
     }
