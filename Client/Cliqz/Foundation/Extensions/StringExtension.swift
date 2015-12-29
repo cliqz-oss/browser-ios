@@ -42,7 +42,11 @@ extension String {
     }
     
     func escapeURL() -> String {
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
+        let allowedCharacterSet = NSMutableCharacterSet()
+        allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
+        allowedCharacterSet.removeCharactersInString("=")
+        
+        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
     }
     
 }
