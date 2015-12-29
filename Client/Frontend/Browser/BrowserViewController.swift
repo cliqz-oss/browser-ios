@@ -107,6 +107,27 @@ class BrowserViewController: UIViewController {
     var backNavigationStep      : Int = 0
     var navigationEndTime       : Double = NSDate.getCurrentMillis()
     
+    // Cliqz: Furture and past layers
+    
+    lazy var searchHistoryContainer: UINavigationController = {
+        let searchHistoryViewController = SearchHistoryViewController()
+        searchHistoryViewController.profile = self.profile
+        searchHistoryViewController.homePanelDelegate = self
+        
+        let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
+        containerViewController.transitioningDelegate = self
+        return containerViewController
+        }()
+    
+    lazy var recommendationsContainer: UINavigationController = {
+        let recommendationsViewController = RecommendationsViewController(profile: self.profile)
+        recommendationsViewController.delegate = self
+        recommendationsViewController.tabManager = self.tabManager
+        
+        let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
+        containerViewController.transitioningDelegate = self
+        return containerViewController
+        }()
     
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
@@ -1173,14 +1194,9 @@ extension BrowserViewController: URLBarDelegate {
     
     // Cliqz: Added delegate methods implementation for new bar buttons
     func urlBarDidClickSearchHistory() {
-        let searchHistoryViewController = SearchHistoryViewController()
-        searchHistoryViewController.profile = profile
-        searchHistoryViewController.homePanelDelegate = self
-        
-        let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
-        containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Down
-        self.presentViewController(containerViewController, animated: true, completion: nil)
+
+        self.presentViewController(searchHistoryContainer, animated: true, completion: nil)
         
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
     }
@@ -1195,13 +1211,9 @@ extension BrowserViewController: URLBarDelegate {
     }
     func urlBarDidClickRecommendations() {
         self.webViewContainerToolbar.hidden = true
-        let recommendationsViewController = RecommendationsViewController(profile: self.profile)
-		recommendationsViewController.delegate = self
-		recommendationsViewController.tabManager = self.tabManager
-        let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
-        containerViewController.transitioningDelegate = self
         transition.transitionDirection = TransitionDirection.Up
-        self.presentViewController(containerViewController, animated: true, completion: nil)
+        
+        self.presentViewController(recommendationsContainer, animated: true, completion: nil)
         
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "future"))
     }

@@ -38,6 +38,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	private let maxFrecencyLimit: Int = 30
 
 	weak var delegate: RecommendationsViewControllerDelegate?
+    var reload = false
 
 	private var spinnerView: UIActivityIndicatorView!
 
@@ -71,6 +72,17 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
 		self.refreshTopSites(maxFrecencyLimit)
 	}
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if self.reload == true {
+            self.reload = false;
+            self.topSitesWebView.reload()
+        }
+    }
+    override func viewWillDisappear(animated: Bool) {
+        self.reload = true;
+    }
 
 	// Mark: WKScriptMessageHandler
 	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
