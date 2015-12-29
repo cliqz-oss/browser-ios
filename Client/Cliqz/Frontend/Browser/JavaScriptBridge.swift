@@ -69,8 +69,9 @@ class JavaScriptBridge {
         switch action {
             
         case "openLink":
-            if let url = data as? String {
-                delegate?.didSelectUrl(NSURL(string: url)!)
+            if let urlString = data as? String,
+                let url = NSURL(string: urlString) {
+                delegate?.didSelectUrl(url)
             }
             
         case "notifyQuery":

@@ -1533,9 +1533,9 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
-        let url = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!)&q=\(query)")
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.escapeURL())&q=\(query.escapeURL())")
         if let tab = tabManager.selectedTab,
-            let u = url, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
                 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
         }
         urlBar.currentURL = url
@@ -1769,8 +1769,9 @@ extension BrowserViewController: WKNavigationDelegate {
 					let comp = q.componentsSeparatedByString("=")
 					if comp.count == 2 {
 						webView.goBack()
-						self.urlBar.locationView.urlTextField.text = comp[1]
-						self.urlBar(self.urlBar, didEnterText: comp[1])
+                        let query = comp[1].stringByRemovingPercentEncoding!
+						self.urlBar.locationView.urlTextField.text = query
+						self.urlBar(self.urlBar, didEnterText: query)
 					}
 				}
 				decisionHandler(WKNavigationActionPolicy.Cancel)

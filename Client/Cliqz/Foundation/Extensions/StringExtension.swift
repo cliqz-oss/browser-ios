@@ -41,5 +41,8 @@ extension String {
         return self.replace(" ", replacement: "")
     }
     
+    func escapeURL() -> String {
+        return self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
+    }
     
 }
