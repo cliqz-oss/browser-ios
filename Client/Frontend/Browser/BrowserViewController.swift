@@ -110,9 +110,8 @@ class BrowserViewController: UIViewController {
     // Cliqz: Furture and past layers
     
     lazy var searchHistoryContainer: UINavigationController = {
-        let searchHistoryViewController = SearchHistoryViewController()
-        searchHistoryViewController.profile = self.profile
-        searchHistoryViewController.homePanelDelegate = self
+        let searchHistoryViewController = SearchHistoryViewController(profile: self.profile)
+        searchHistoryViewController.delegate = self
         
         let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
         containerViewController.transitioningDelegate = self
@@ -1528,8 +1527,8 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
     }
 }
 
-// Cliqz: compined the two extensions for SearchViewDelegate & RecommendationsViewControllerDelegate into one
-extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate {
+// Cliqz: compined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and SearchHistoryViewControllerDelegate into one extension
+extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, SearchHistoryViewControllerDelegate {
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
