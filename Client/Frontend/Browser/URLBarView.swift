@@ -253,6 +253,7 @@ class URLBarView: UIView {
 		historyButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.left.equalTo(self).offset(15)
+            make.width.equalTo(30)
 //			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
@@ -265,7 +266,7 @@ class URLBarView: UIView {
 		recommendationsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.right.equalTo(self).offset(-12)
-			make.width.equalTo(25)
+			make.width.equalTo(30)
 		}
 
         scrollToTopButton.snp_makeConstraints { make in
@@ -383,11 +384,14 @@ class URLBarView: UIView {
 //        locationTextField.returnKeyType = UIReturnKeyType.Go
 		// Cliqz: Changed mode to always to use it also as cancel button
         locationTextField.clearButtonMode = UITextFieldViewMode.Always
+        // Cliqz: Added left pading to the location field
+        locationTextField.setLeftPading(5)
         locationTextField.font = UIConstants.DefaultMediumFont
         locationTextField.accessibilityIdentifier = "address"
         locationTextField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
         locationTextField.attributedPlaceholder = self.locationView.placeholder
-
+        
+        
         locationContainer.addSubview(locationTextField)
 
         locationTextField.snp_makeConstraints { make in

@@ -84,6 +84,7 @@
 		1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */; };
 		1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
 		1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */; };
+		1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA200791C34270B00E3221E /* UITextFieldExtension.swift */; settings = {ASSET_TAGS = (); }; };
 		1EC69E7F1C15DF31003211A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1EC69E811C15DF31003211A3 /* Localizable.strings */; };
 		1ECD86381C2313C200C6B12D /* BookmarkPanel.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863A1C2313C200C6B12D /* BookmarkPanel.strings */; };
 		1ECD863B1C2313D900C6B12D /* ClearPrivateData.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863D1C2313D900C6B12D /* ClearPrivateData.strings */; };
@@ -1480,6 +1481,7 @@
 		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
 		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
+		1EA200791C34270B00E3221E /* UITextFieldExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		1EC69E801C15DF31003211A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EC69E821C15DF3F003211A3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1ECD86391C2313C200C6B12D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/BookmarkPanel.strings; sourceTree = "<group>"; };
@@ -2337,6 +2339,7 @@
 				1EF1B8A41BF4CFA100698822 /* NSDateExtension.swift */,
 				1EF1B8A51BF4CFA100698822 /* StringExtension.swift */,
 				1EF1B8DB1BF9EBD100698822 /* UIDeviceExtension.swift */,
+				1EA200791C34270B00E3221E /* UITextFieldExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5063,6 +5066,7 @@
 				1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */,
 				0B3E7D951B27A7CE00E2E84D /* AboutHomeHandler.swift in Sources */,
 				D3BE7B461B054F8600641031 /* TestAppDelegate.swift in Sources */,
+				1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */,
 				0B62EFD21AD63CD100ACB9CD /* Clearables.swift in Sources */,
 				E4B3345B1BBF2393004E2BFF /* ADJPackageBuilder.m in Sources */,
 				D3BE7B481B05596800641031 /* AuroraAppDelegate.swift in Sources */,

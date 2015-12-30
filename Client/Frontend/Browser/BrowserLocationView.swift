@@ -101,6 +101,9 @@ class BrowserLocationView: UIView {
 
         // Cliqz: Added background color to the location text field
         urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
+        // Cliqz: Added left pading to the url text field
+        urlTextField.setLeftPading(5)
+        
         return urlTextField
     }()
 
