@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Crashlytics
+
 
 enum CliqzErrorCode {
 	case CliqzErrorCodeScriptsLoadingFailed
@@ -14,7 +16,7 @@ enum CliqzErrorCode {
 
 class ErrorHandler {
 
-	internal class func handleError(errorCode: CliqzErrorCode, delegate: UIAlertViewDelegate) {
+	internal class func handleError(errorCode: CliqzErrorCode, delegate: UIAlertViewDelegate, error: NSError) {
 		switch (errorCode) {
 		case .CliqzErrorCodeScriptsLoadingFailed:
 			let title = NSLocalizedString("Sorry", tableName: "Cliqz", comment: "Error message title")
@@ -22,6 +24,9 @@ class ErrorHandler {
 			let cancel = NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel")
 			let retry = NSLocalizedString("Retry", tableName: "Cliqz", comment: "Button label on Alert view ")
 			showErrorMessage(title, message: message, cancelButtonTitle: cancel, otherButtonTitle: retry, delegate: delegate)
+            
+            let attirbutes = ["errorDescription": error.description]
+            Answers.logCustomEventWithName("JavaScriptLoadError", customAttributes: attirbutes)
 		}
 	}
 	
