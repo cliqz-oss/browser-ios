@@ -11,7 +11,9 @@ class HttpHandlers {
     class func directory(dir: String) -> ( HttpRequest -> HttpResponse ) {
         return { request in
             if let localPath = request.capturedUrlGroups.first {
-                let filesPath = dir.stringByExpandingTildeInPath.stringByAppendingPathComponent(localPath)
+                var filesPath = dir.stringByExpandingTildeInPath.stringByAppendingPathComponent(localPath)
+                // Cliqz: handle passing params into the url 
+                filesPath = filesPath.componentsSeparatedByString("?")[0]
                 if let fileBody = NSData(contentsOfFile: filesPath) {
                     return HttpResponse.RAW(200, fileBody)
                 }
