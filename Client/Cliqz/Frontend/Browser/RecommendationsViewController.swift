@@ -61,8 +61,9 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.navigationController?.navigationBar.titleTextAttributes = [
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
 		self.title = NSLocalizedString("Search recommendations", comment: "Search Recommendations and top visited sites title")
-		self.navigationItem.rightBarButtonItem = createUIBarButton("past", action: Selector("dismiss"))
-		self.navigationItem.leftBarButtonItem = createUIBarButton("cliqzSettings", action: Selector("openSettings"))
+        
+		self.navigationItem.rightBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
+		self.navigationItem.leftBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
 
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
@@ -178,14 +179,18 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		}
 	}
 	
-	private func createUIBarButton(imageName: String, action: Selector) -> UIBarButtonItem {
+	private func createBarButtonItems(imageName: String, action: Selector) -> [UIBarButtonItem] {
 		let button: UIButton = UIButton(type: UIButtonType.Custom)
 		button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
 		button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
-		button.frame = CGRectMake(0, 0, 20, 20)
+		button.frame = CGRectMake(0, 0, 36, 36)
 		
 		let barButton = UIBarButtonItem(customView: button)
-		return barButton
+        
+        let spacerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target:nil, action: nil)
+        spacerBarButtonItem.width = -5
+        
+        return [spacerBarButtonItem, barButton]
 	}
 
 	private func loadFreshtab() {

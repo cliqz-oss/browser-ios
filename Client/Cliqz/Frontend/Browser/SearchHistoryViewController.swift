@@ -58,7 +58,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", comment: "Search history title")
-        self.navigationItem.leftBarButtonItem = createUIBarButton("future", action: Selector("dismiss"))
+        self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
         
         
         self.setupConstraints()
@@ -118,14 +118,18 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         }
     }
     
-    private func createUIBarButton(imageName: String, action: Selector) -> UIBarButtonItem {
+    private func createBarButtonItems(imageName: String, action: Selector) -> [UIBarButtonItem] {
         let button: UIButton = UIButton(type: UIButtonType.Custom)
         button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
         button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
-        button.frame = CGRectMake(0, 0, 20, 20)
+        button.frame = CGRectMake(0, 0, 36, 36)
         
         let barButton = UIBarButtonItem(customView: button)
-        return barButton
+        
+        let spacerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target:nil, action: nil)
+        spacerBarButtonItem.width = -5
+        
+        return [spacerBarButtonItem, barButton]
     }
     
     private func loadHistory() {
