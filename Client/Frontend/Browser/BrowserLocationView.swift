@@ -98,6 +98,9 @@ class BrowserLocationView: UIView {
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultMediumFont
 		urlTextField.textColor = UIColor.whiteColor()
+
+        // Cliqz: Added background color to the location text field
+        urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
         return urlTextField
     }()
 

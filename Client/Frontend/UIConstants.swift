@@ -9,6 +9,7 @@ public struct UIConstants {
     static let DefaultHomePage = NSURL(string: "\(WebServer.sharedInstance.base)/about/home/#panel=0")!
 
 	// Cliqz: Changed background color according to the requirements
+    static let TextFieldBackgroundColor = UIColor(red: 45 / 255, green: 115 / 255, blue: 185 / 255, alpha: 1)
 	static let AppBackgroundColor = UIColor(red: 31 / 255, green: 104 / 255, blue: 173 / 255, alpha: 1)
     static let PrivateModePurple = UIColor(red: 207 / 255, green: 104 / 255, blue: 255 / 255, alpha: 1)
     static let PrivateModeLocationBackgroundColor = UIColor(red: 31 / 255, green: 31 / 255, blue: 31 / 255, alpha: 1)

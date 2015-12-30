@@ -2520,8 +2520,8 @@ extension BrowserViewController {
 		// Cliqz: Changed LocationView backgroundColor according to requirements
         BrowserLocationView.appearance().backgroundColor = UIColor.clearColor()
 
-		// Cliqz: TextField backgroundColor because of requirements
-        ToolbarTextField.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
+		// Cliqz: Changed TextField backgroundColor because of requirements
+        ToolbarTextField.appearance().backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
         ToolbarTextField.appearance().textColor = UIColor.whiteColor()
         ToolbarTextField.appearance().highlightColor = AutocompleteTextFieldUX.HighlightColor
         ToolbarTextField.appearance().clearButtonTintColor = nil
