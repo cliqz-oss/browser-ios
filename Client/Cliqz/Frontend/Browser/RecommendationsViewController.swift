@@ -78,7 +78,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
         super.viewDidAppear(animated)
         if self.reload == true {
             self.reload = false;
-            self.topSitesWebView.reload()
+            self.reloadTopSitesWithLimit(5, callback: "CLIQZEnvironment.displayTopSites")
         }
     }
     override func viewWillDisappear(animated: Bool) {

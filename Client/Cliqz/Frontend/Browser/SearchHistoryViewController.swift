@@ -68,7 +68,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         super.viewDidAppear(animated)
         if self.reload == true {
             self.reload = false;
-            self.historyWebView.reload()
+            self.getSearchHistoryResults("showHistory")
         }
     }
     override func viewWillDisappear(animated: Bool) {
