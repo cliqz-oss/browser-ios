@@ -133,8 +133,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     }
     
     private func loadHistory() {
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/history.html")
-//        let url = NSURL(string: "http://localhost:3005/extension/history.html")
+        let url = NSURL(string: NavigationExtension.historyURL)
         self.historyWebView.loadRequest(NSURLRequest(URL: url!))
     }
     

@@ -123,29 +123,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 
-        // Cliqz: starting the navigation extension inside a local server
-//        startNavigationExtensionLocalServer()
+        // Cliqz: starting the navigation extension
+        NavigationExtension.start()
         
         log.debug("Done with setting up the application.")
         return true
     }
     
-    // Cliqz: starting the navigation extension inside a local server
-    private func startNavigationExtensionLocalServer() {
-        let bundlePath = NSBundle.mainBundle().bundlePath
-        let extensionPath = bundlePath + "/" + "search"
-        
-        let httpServer = HttpServer()
-        httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
-        
-        httpServer["/myproxy"] = { (request: HttpRequest) in
-            let u: String = request.urlParams[0].1
-            let data = NSData(contentsOfURL: NSURL(string:u)!)
-            return HttpResponse.RAW(200, data!)
-        }
-        httpServer.start(3005)
-
-    }
     /**
      * We maintain a weak reference to the profile so that we can pause timed
      * syncs when we're backgrounded.

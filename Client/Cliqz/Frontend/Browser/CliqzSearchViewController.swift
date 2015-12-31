@@ -130,8 +130,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-//		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://localhost:3005/") {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix("http://cdn.cliqz.com") {
+		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
@@ -205,8 +204,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	private func loadExtension() {
-		//		let url = NSURL(string: "http://localhost:3005/extension/index.html")
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/index.html")
+		let url = NSURL(string: NavigationExtension.indexURL)
 		self.webView!.loadRequest(NSURLRequest(URL: url!))
 	}
 

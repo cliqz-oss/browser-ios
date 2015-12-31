@@ -194,7 +194,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	}
 
 	private func loadFreshtab() {
-		let url = NSURL(string: "http://cdn.cliqz.com/mobile/beta/freshtab.html")
+        let url = NSURL(string: NavigationExtension.freshtabURL)
 		self.topSitesWebView.loadRequest(NSURLRequest(URL: url!))
 	}
 	
