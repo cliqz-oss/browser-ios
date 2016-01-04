@@ -25,11 +25,12 @@ class AppStatus {
     lazy var isDebug: Bool  = _isDebugAssertConfiguration()
     
     private func isReleasedVersion() -> Bool {
-        let infoDict = NSBundle.mainBundle().infoDictionary;
-        if let isRelease = infoDict!["Release"] {
-            return isRelease.boolValue
-        }
-        return false
+//        let infoDict = NSBundle.mainBundle().infoDictionary;
+//        if let isRelease = infoDict!["Release"] {
+//            return isRelease.boolValue
+//        }
+//        return false
+        return true
     }
     
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
