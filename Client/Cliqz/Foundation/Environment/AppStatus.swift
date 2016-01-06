@@ -22,7 +22,7 @@ class AppStatus {
     var lastEnvironmentEventDate: NSDate?
     
     lazy var isRelease: Bool  = self.isReleasedVersion()
-    lazy var isDebug: Bool  = _isDebugAssertConfiguration()
+    lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
     
     private func isReleasedVersion() -> Bool {
 //        let infoDict = NSBundle.mainBundle().infoDictionary;

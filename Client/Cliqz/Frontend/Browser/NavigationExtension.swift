@@ -33,7 +33,9 @@ class NavigationExtension: NSObject {
     
     
     class func start() {
-        startNavigationExtensionLocalServer()
+        if AppStatus.sharedInstance.isDebug {
+            startNavigationExtensionLocalServer() // Debug
+        }
     }
     
     // Cliqz: starting the navigation extension inside a local server
