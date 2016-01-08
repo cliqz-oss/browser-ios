@@ -154,7 +154,7 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     func searchForQuery(query: String) {
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
         self.dismissViewControllerAnimated(true, completion: {
-            delegate?.searchForQuery(query)
+            self.delegate?.searchForQuery(query)
         })
     }
     
