@@ -11,7 +11,8 @@ import UIKit
 class NavigationExtension: NSObject {
     static let baseURL: String = {
         if AppStatus.sharedInstance.isDebug {
-            return "http://localhost:3005/extension" // Debug
+			return "http://cdn.cliqz.com/mobile/beta"
+//            return "http://localhost:3005/extension" // Debug
         } else if AppStatus.sharedInstance.isRelease {
             return "http://cdn.cliqz.com/mobile/extension" // Release
         } else {

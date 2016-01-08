@@ -51,7 +51,6 @@ protocol URLBarDelegate: class {
     // Cliqz: Added delegate methods for new bar buttons
     func urlBarDidClickSearchHistory()
     func urlBarDidClickSettings()
-    func urlBarDidClickRecommendations()
 }
 
 class URLBarView: UIView {
@@ -183,12 +182,6 @@ class URLBarView: UIView {
 		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
 
 		return settingsButton }()
-	
-	lazy var recommendationsButton: UIButton = {  let recommendationsButton = UIButton()
-		recommendationsButton.setImage(UIImage(named: "future"), forState: .Normal)
-		recommendationsButton.addTarget(self, action: "SELdidClickRecommendations", forControlEvents: UIControlEvents.TouchUpInside)
-		recommendationsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
-		return recommendationsButton }()
 
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
     private weak var clonedTabsButton: TabsButton?
@@ -239,7 +232,6 @@ class URLBarView: UIView {
 		// Cliqz: Added new buttons to the main view.
 		addSubview(historyButton)
 //		addSubview(settingsButton)
-		addSubview(recommendationsButton)
 
         helper = BrowserToolbarHelper(toolbar: self)
         setupConstraints()
@@ -263,13 +255,6 @@ class URLBarView: UIView {
 //			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
 ////			make.size.equalTo(UIConstants.ToolbarHeight)
 //		}
-
-		recommendationsButton.snp_makeConstraints { make in
-			make.centerY.equalTo(self.locationContainer)
-			make.right.equalTo(self).offset(-10)
-            make.width.equalTo(36)
-            make.height.equalTo(36)
-		}
 
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
@@ -333,7 +318,7 @@ class URLBarView: UIView {
 
         bookmarkButton.snp_makeConstraints { make in
 			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
-			make.right.equalTo(self.recommendationsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -346,7 +331,7 @@ class URLBarView: UIView {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
 				make.leading.equalTo(self.historyButton.snp_trailing)
-                make.trailing.equalTo(self.recommendationsButton.snp_leading).offset(-15)
+                make.trailing.equalTo(self).offset(-15)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -360,7 +345,7 @@ class URLBarView: UIView {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
 					make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self.recommendationsButton.snp_leading).offset(-14)
+                    make.trailing.equalTo(self).offset(-14)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -665,10 +650,6 @@ class URLBarView: UIView {
 
 	func SELdidClickSettings() {
         delegate?.urlBarDidClickSettings()
-	}
-
-	func SELdidClickRecommendations() {
-        delegate?.urlBarDidClickRecommendations()
 	}
 
 }
