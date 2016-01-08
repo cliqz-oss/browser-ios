@@ -243,17 +243,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SessionRestoreHandler.register(server)
 		// Cliqz: Registered trampolineForward to be able to load it via URLRequest
 		server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
-//		server.registerHandlerForMethod("GET", module: "cliqz", resource: "trampolineForward.html") { (request: GCDWebServerRequest!) -> GCDWebServerResponse! in
-//			if let trampolinePath = NSBundle.mainBundle().pathForResource("trampolineForward", ofType: "html") {
-//				do {
-//					let trampolineString = try NSMutableString(contentsOfFile: trampolinePath, encoding: NSUTF8StringEncoding)
-//					return GCDWebServerDataResponse(HTML: trampolineString as String)
-//				} catch _ {
-//				}
-//			}
-//			return GCDWebServerResponse(statusCode: 404)
-//		}
-//		server.registerMainBundleResource("Readerrrr.css", module: "a")
 		// Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
         // catching and handling the error seemed to fix things, but we're not sure why.
         // Either way, not implicitly unwrapping a try is not a great way of doing things
