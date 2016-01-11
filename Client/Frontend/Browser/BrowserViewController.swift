@@ -2533,7 +2533,7 @@ extension BrowserViewController {
         URLBarView.appearance().locationActiveBorderColor = UIColor.clearColor()
         URLBarView.appearance().progressBarTint = URLBarViewUX.ProgressTintColor
         URLBarView.appearance().cancelTextColor = UIColor.blackColor()
-        URLBarView.appearance().actionButtonTintColor = UIColor.darkGrayColor()
+        URLBarView.appearance().actionButtonTintColor = UIColor.whiteColor()
 
 		// Cliqz: Changed URLBar backgroundColor because of requirements
 		URLBarView.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)

@@ -294,7 +294,8 @@ class URLBarView: UIView {
 */
 
         backButton.snp_makeConstraints { make in
-            make.left.centerY.equalTo(self)
+			// Cliqz: changed back button's left contraing to move next to history button.
+            make.left.equalTo(self.historyButton.snp_right)
             make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
@@ -311,7 +312,8 @@ class URLBarView: UIView {
         }
 
         shareButton.snp_makeConstraints { make in
-            make.right.equalTo(self.bookmarkButton.snp_left)
+			// Cliqz: Changed right constraint because bookmark button is removed for now.
+            make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -321,8 +323,8 @@ class URLBarView: UIView {
 			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
-        }
-    }
+		}
+	}
 
     override func updateConstraints() {
         super.updateConstraints()
