@@ -110,7 +110,7 @@ class BrowserViewController: UIViewController {
     // Cliqz: Furture and past layers
     
     lazy var searchHistoryContainer: UINavigationController = {
-        let searchHistoryViewController = SearchHistoryViewController(profile: self.profile)
+		let searchHistoryViewController = SearchHistoryViewController(profile: self.profile, tabManager: self.tabManager)
         searchHistoryViewController.delegate = self
         
         let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)

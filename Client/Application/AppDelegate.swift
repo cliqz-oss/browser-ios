@@ -124,8 +124,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // Cliqz: starting the navigation extension
-        NavigationExtension.start()
-        
+//        NavigationExtension.start()
+		
         log.debug("Done with setting up the application.")
         return true
     }

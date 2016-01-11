@@ -39,8 +39,9 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     let QueryLimit = 50
     var reload = false
     
-    init(profile: Profile) {
+	init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
+		self.tabManager = tabManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,8 +60,9 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", comment: "Search history title")
         self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
-        
-        
+		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
+
+		
         self.setupConstraints()
     }
 
@@ -100,14 +102,14 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     }
     
     func openSettings() {
-        let settingsTableViewController = SettingsTableViewController()
-        settingsTableViewController.profile = profile
-        settingsTableViewController.tabManager = tabManager
-        
-        let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
-        controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-        presentViewController(controller, animated: true, completion: nil)
-    }
+		let settingsTableViewController = SettingsTableViewController()
+		settingsTableViewController.profile = profile
+		settingsTableViewController.tabManager = tabManager
+		
+		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
+		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+		presentViewController(controller, animated: true, completion: nil)
+	}
     
     
     // Mark: Configure Layout
