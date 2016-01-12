@@ -612,6 +612,8 @@ private class OpenSupportPageSetting: Setting {
 
 // Opens the search settings pane
 private class SearchSetting: Setting {
+	// Cliqz: Added to update default search engine if it's changed
+	unowned var settings: SettingsTableViewController
     let profile: Profile
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
@@ -622,14 +624,33 @@ private class SearchSetting: Setting {
 
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
+		// Cliqz: Added to update default search engine if it's changed
+		self.settings = settings
         super.init(title: NSAttributedString(string: NSLocalizedString("Search", comment: "Open search section of settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        let viewController = SearchSettingsTableViewController()
+		// Cliqz: Changed SearchEngine view to the simple list as we don't need extra features
+		let searchEnginePicker = SearchEnginePicker()
+		searchEnginePicker.engines = profile.searchEngines.orderedEngines.sort { e, f in e.shortName < f.shortName }
+		searchEnginePicker.selectedSearchEngineName = profile.searchEngines.defaultEngine.shortName
+		searchEnginePicker.delegate = self
+		navigationController?.pushViewController(searchEnginePicker, animated: true)
+/*        let viewController = SearchSettingsTableViewController()
         viewController.model = profile.searchEngines
         navigationController?.pushViewController(viewController, animated: true)
+*/
     }
+}
+
+// Cliqz: Added SearchEnginePickerDelegate to handle default Search Engine change.
+extension SearchSetting: SearchEnginePickerDelegate {
+	func searchEnginePicker(searchEnginePicker: SearchEnginePicker, didSelectSearchEngine searchEngine: OpenSearchEngine?) {
+		if let engine = searchEngine {
+			self.profile.searchEngines.defaultEngine = engine
+			settings.tableView.reloadData()
+		}
+	}
 }
 
 private class ClearPrivateDataSetting: Setting {
@@ -704,6 +725,7 @@ class SettingsTableViewController: UITableViewController {
         
         //Cliqz: Removed unused sections from Settings table
         let generalSettings = [
+			SearchSetting(settings: self),
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
             titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
             ]
@@ -760,7 +782,6 @@ class SettingsTableViewController: UITableViewController {
 //                settingDidChange: { configureActiveCrashReporter($0) }),
 //            PrivacyPolicySetting()
 //        ]
-
 
         settings += [
             SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
