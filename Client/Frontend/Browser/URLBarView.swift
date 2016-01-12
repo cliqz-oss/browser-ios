@@ -296,6 +296,7 @@ class URLBarView: UIView {
         backButton.snp_makeConstraints { make in
 			// Cliqz: changed back button's left contraing to move next to history button.
             make.left.equalTo(self.historyButton.snp_right)
+			make.centerY.equalTo(self)
             make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
@@ -409,6 +410,7 @@ class URLBarView: UIView {
 
     func updateAlphaForSubviews(alpha: CGFloat) {
         self.tabsButton.alpha = alpha
+		self.historyButton.alpha = alpha
         self.locationContainer.alpha = alpha
 		// Cliqz: Commented because we should always have blue URLBar
 //        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)

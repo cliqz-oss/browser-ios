@@ -269,23 +269,26 @@ class BrowserViewController: UIViewController {
 			self.switchToSearchModeIfNeeded()
         })
     }
+
     func appDidEnterBackgroundNotification() {
         isAppResponsive = false
 
-        if searchController!.view.hidden == true {
+        if searchController?.view.hidden == true {
             let webView = self.tabManager.selectedTab?.webView
-            searchController!.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
         } else {
-            searchController!.appDidEnterBackground()
+            searchController?.appDidEnterBackground()
         }
         
     }
+
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
             isAppResponsive = true
             AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
         }
     }
+
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: BookmarkStatusChangedNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
