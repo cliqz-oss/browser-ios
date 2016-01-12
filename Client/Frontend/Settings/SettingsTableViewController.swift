@@ -7,6 +7,7 @@ import Base32
 import Shared
 import UIKit
 import XCGLogger
+import MessageUI
 
 private var ShowDebugSettings: Bool = false
 private var DebugSettingsClickCount: Int = 0
@@ -33,7 +34,7 @@ class SettingsTableViewCell: UITableViewCell {
 }
 
 // A base setting class that shows a title. You probably want to subclass this, not use it directly.
-class Setting {
+class Setting : NSObject {
     private var _title: NSAttributedString?
 
     // The url the SettingsContentViewController will show, e.g. Licenses and Privacy Policy.
@@ -591,6 +592,25 @@ private class SendFeedbackSetting: Setting {
     }
 }
 
+// Cliqz: Added Settings for sending email feedback
+private class SendCliqzFeedbackSetting: Setting, MFMailComposeViewControllerDelegate {
+	override var title: NSAttributedString? {
+		return NSAttributedString(string: NSLocalizedString("Send Feedback", tableName: "Settings", comment: "Send Feedback Email"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+	}
+
+	override func onClick(navigationController: UINavigationController?) {
+		let emailViewController = MFMailComposeViewController()
+		emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Settings", comment: "Send Feedback Email Subject"))
+		emailViewController.setToRecipients(["feedback@cliqz.com"])
+		emailViewController.mailComposeDelegate = self
+		navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
+	}
+
+	@objc func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+		controller.dismissViewControllerAnimated(true, completion: nil)
+	}
+}
+
 // Opens the the SUMO page in a new tab
 private class OpenSupportPageSetting: Setting {
     init() {
@@ -626,7 +646,7 @@ private class SearchSetting: Setting {
         self.profile = settings.profile
 		// Cliqz: Added to update default search engine if it's changed
 		self.settings = settings
-        super.init(title: NSAttributedString(string: NSLocalizedString("Search", comment: "Open search section of settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        super.init(title: NSAttributedString(string: NSLocalizedString("Search", tableName:"Settings", comment: "Open search section of settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -726,8 +746,8 @@ class SettingsTableViewController: UITableViewController {
         //Cliqz: Removed unused sections from Settings table
         let generalSettings = [
 			SearchSetting(settings: self),
-            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
-            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
+//            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
+//            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
             ]
 
 //        var generalSettings = [
@@ -757,7 +777,7 @@ class SettingsTableViewController: UITableViewController {
 //                AccountStatusSetting(settings: self),
 //                SyncNowSetting(settings: self)
 //            ] + accountDebugSettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("General", tableName: "Settings", comment: "General settings section title")), children: generalSettings)
         ]
 
         
@@ -792,7 +812,7 @@ class SettingsTableViewController: UITableViewController {
 //                OpenSupportPageSetting()
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                VersionSetting(settings: self),
+                VersionSetting(settings: self), SendCliqzFeedbackSetting(),
                 LicenseAndAcknowledgementsSetting(),
                 //Cliqz: Removed unused sections from Settings table
 //                YourRightsSetting(),

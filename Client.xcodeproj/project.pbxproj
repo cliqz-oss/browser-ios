@@ -370,6 +370,8 @@
 		39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */; };
 		39C575F21BE2C31400E1C4B1 /* ShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C575F11BE2C31400E1C4B1 /* ShareExtensionHelper.swift */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
+		4F2EE94D1C456A95000FC6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */; };
+		4F2EE9751C458188000FC6C1 /* Settings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F2EE9771C458188000FC6C1 /* Settings.strings */; };
 		4F32CD3D1BDA7BB300E3FC03 /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; };
 		4F49F5B21C04EC9E00319287 /* ADJTimerCycle.m in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
 		4F49F5B31C04EEA600319287 /* ADJTimerCycle.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
@@ -1664,6 +1666,8 @@
 		39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.m"; sourceTree = "<group>"; };
 		39C575F11BE2C31400E1C4B1 /* ShareExtensionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareExtensionHelper.swift; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
+		4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		4F2EE9761C458188000FC6C1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Settings.strings; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -2026,6 +2030,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F2EE94D1C456A95000FC6C1 /* MessageUI.framework in Frameworks */,
 				E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */,
 				E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
@@ -2238,6 +2243,7 @@
 				1E1E31961C071FF20032759D /* history-1.png */,
 				1E1E31971C071FF20032759D /* history-2.png */,
 				1E1E319A1C071FF20032759D /* recommendations.png */,
+				4F2EE9771C458188000FC6C1 /* Settings.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3319,6 +3325,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
@@ -4546,6 +4553,7 @@
 				E4B7B7611A793CF20022C5E0 /* CharisSILB.ttf in Resources */,
 				1ECD864D1C23140200C6B12D /* PrivateBrowsing.strings in Resources */,
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
+				4F2EE9751C458188000FC6C1 /* Settings.strings in Resources */,
 				1EC69E7F1C15DF31003211A3 /* Localizable.strings in Resources */,
 				1ECD86411C2313E400C6B12D /* HistoryPanel.strings in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
@@ -5639,6 +5647,14 @@
 				1ECD86511C23140A00C6B12D /* de */,
 			);
 			name = Search.strings;
+			sourceTree = "<group>";
+		};
+		4F2EE9771C458188000FC6C1 /* Settings.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4F2EE9761C458188000FC6C1 /* de */,
+			);
+			name = Settings.strings;
 			sourceTree = "<group>";
 		};
 		E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */ = {
