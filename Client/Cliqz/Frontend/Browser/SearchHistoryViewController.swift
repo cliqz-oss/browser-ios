@@ -71,8 +71,11 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         if self.reload == true {
             self.reload = false;
             self.getSearchHistoryResults("showHistory")
-        }
+		} else {
+			javaScriptBridge.setDefaultSearchEngine()
+		}
     }
+
     override func viewWillDisappear(animated: Bool) {
         self.reload = true;
     }
