@@ -63,7 +63,14 @@ class JavaScriptBridge {
             
         }
     }
-    
+
+	func setDefaultSearchEngine() {
+		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("")?.absoluteString.componentsSeparatedByString("=")
+		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
+			"url": searchComps![0] + "="]
+		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams)
+	}
+
     // Mark: Handle JavaScript Action
     private func handleJSAction(action: String, data: AnyObject?, callback: String?) {
         switch action {

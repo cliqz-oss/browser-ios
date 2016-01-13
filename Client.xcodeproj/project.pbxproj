@@ -78,14 +78,14 @@
 		1E3301E41BFDCE9C00E8718D /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01561BFCAA5700A8FC49 /* ExtendedBrowserHistory.swift */; };
 		1E33020A1BFDCEAA00E8718D /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC01591BFCAB0000A8FC49 /* SQLiteHistoryExtension.swift */; };
 		1E33020C1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E33020B1BFE6FA900E8718D /* SearchBarTelemetryHelper.swift */; };
-		1E641F221C2AD424003D3255 /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F211C2AD424003D3255 /* JavaScriptBridge.swift */; settings = {ASSET_TAGS = (); }; };
-		1E641F241C2AFE54003D3255 /* ConfigurationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */; settings = {ASSET_TAGS = (); }; };
+		1E641F221C2AD424003D3255 /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F211C2AD424003D3255 /* JavaScriptBridge.swift */; };
+		1E641F241C2AFE54003D3255 /* ConfigurationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */; };
 		1E79B83A1BE91AC800B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
 		1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */; };
 		1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
 		1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */; };
-		1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA200791C34270B00E3221E /* UITextFieldExtension.swift */; settings = {ASSET_TAGS = (); }; };
-		1EA2010E1C352E1600E3221E /* NavigationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2010D1C352E1600E3221E /* NavigationExtension.swift */; settings = {ASSET_TAGS = (); }; };
+		1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA200791C34270B00E3221E /* UITextFieldExtension.swift */; };
+		1EA2010E1C352E1600E3221E /* NavigationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2010D1C352E1600E3221E /* NavigationExtension.swift */; };
 		1EC69E7F1C15DF31003211A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1EC69E811C15DF31003211A3 /* Localizable.strings */; };
 		1ECD86381C2313C200C6B12D /* BookmarkPanel.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863A1C2313C200C6B12D /* BookmarkPanel.strings */; };
 		1ECD863B1C2313D900C6B12D /* ClearPrivateData.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863D1C2313D900C6B12D /* ClearPrivateData.strings */; };
@@ -370,6 +370,8 @@
 		39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */; };
 		39C575F21BE2C31400E1C4B1 /* ShareExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C575F11BE2C31400E1C4B1 /* ShareExtensionHelper.swift */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
+		4F2EE94D1C456A95000FC6C1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */; };
+		4F2EE9751C458188000FC6C1 /* Settings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F2EE9771C458188000FC6C1 /* Settings.strings */; };
 		4F32CD3D1BDA7BB300E3FC03 /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; };
 		4F49F5B21C04EC9E00319287 /* ADJTimerCycle.m in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
 		4F49F5B31C04EEA600319287 /* ADJTimerCycle.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B334461BBF2393004E2BFF /* ADJTimerCycle.m */; };
@@ -1658,6 +1660,8 @@
 		39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OnePasswordExtension.m; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.m"; sourceTree = "<group>"; };
 		39C575F11BE2C31400E1C4B1 /* ShareExtensionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareExtensionHelper.swift; sourceTree = "<group>"; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
+		4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		4F2EE9761C458188000FC6C1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Settings.strings; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -2020,6 +2024,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F2EE94D1C456A95000FC6C1 /* MessageUI.framework in Frameworks */,
 				E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */,
 				E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
@@ -2232,6 +2237,7 @@
 				1E1E31961C071FF20032759D /* history-1.png */,
 				1E1E31971C071FF20032759D /* history-2.png */,
 				1E1E319A1C071FF20032759D /* recommendations.png */,
+				4F2EE9771C458188000FC6C1 /* Settings.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3313,6 +3319,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4F2EE94C1C456A95000FC6C1 /* MessageUI.framework */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
@@ -4540,6 +4547,7 @@
 				E4B7B7611A793CF20022C5E0 /* CharisSILB.ttf in Resources */,
 				1ECD864D1C23140200C6B12D /* PrivateBrowsing.strings in Resources */,
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
+				4F2EE9751C458188000FC6C1 /* Settings.strings in Resources */,
 				1EC69E7F1C15DF31003211A3 /* Localizable.strings in Resources */,
 				1ECD86411C2313E400C6B12D /* HistoryPanel.strings in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
@@ -5633,6 +5641,14 @@
 				1ECD86511C23140A00C6B12D /* de */,
 			);
 			name = Search.strings;
+			sourceTree = "<group>";
+		};
+		4F2EE9771C458188000FC6C1 /* Settings.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4F2EE9761C458188000FC6C1 /* de */,
+			);
+			name = Settings.strings;
 			sourceTree = "<group>";
 		};
 		E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */ = {
@@ -6779,7 +6795,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "5d6ae8bd-a94e-4267-9e0e-622f67230701";
+				PROVISIONING_PROFILE = "7aa490f0-b3ef-4338-9af8-b2ceb0205fda";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6813,7 +6829,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MOZ_BUNDLE_DISPLAY_NAME = Firefox;
+				MOZ_BUNDLE_DISPLAY_NAME = Cliqz;
 				MOZ_PRODUCT_NAME = Firefox;
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
@@ -8089,7 +8105,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/ShareTo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MOZ_BUNDLE_DISPLAY_NAME = "Fennec ($(USER))";
+				MOZ_BUNDLE_DISPLAY_NAME = Cliqz;
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

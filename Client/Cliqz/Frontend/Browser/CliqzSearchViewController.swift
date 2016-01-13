@@ -83,6 +83,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+		javaScriptBridge.setDefaultSearchEngine()
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -142,6 +143,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
 		stopLoadingAnimation()
+		provideDefaultSearchEngine()
 	}
 
 	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -212,6 +214,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.spinnerView.removeFromSuperview()
 		self.spinnerView.stopAnimating()
 	}
+	
+	private func provideDefaultSearchEngine() {
+		javaScriptBridge.setDefaultSearchEngine()
+	}
 
 }
 
@@ -230,9 +236,9 @@ extension CliqzSearchViewController {
         }
         
     }
-   
+
     func resetState() {
-        
+
         var configs = [String: AnyObject]()
         if let lastURL = LocalDataStore.objectForKey(lastURLKey) as? String { // the app was closed while showing a url
             configs["url"] = lastURL

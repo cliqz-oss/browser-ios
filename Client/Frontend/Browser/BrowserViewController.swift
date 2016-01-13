@@ -110,7 +110,7 @@ class BrowserViewController: UIViewController {
     // Cliqz: Furture and past layers
     
     lazy var searchHistoryContainer: UINavigationController = {
-        let searchHistoryViewController = SearchHistoryViewController(profile: self.profile)
+		let searchHistoryViewController = SearchHistoryViewController(profile: self.profile, tabManager: self.tabManager)
         searchHistoryViewController.delegate = self
         
         let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
@@ -269,23 +269,26 @@ class BrowserViewController: UIViewController {
 			self.switchToSearchModeIfNeeded()
         })
     }
+
     func appDidEnterBackgroundNotification() {
         isAppResponsive = false
 
-        if searchController!.view.hidden == true {
+        if searchController?.view.hidden == true {
             let webView = self.tabManager.selectedTab?.webView
-            searchController!.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
         } else {
-            searchController!.appDidEnterBackground()
+            searchController?.appDidEnterBackground()
         }
         
     }
+
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
             isAppResponsive = true
             AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
         }
     }
+
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: BookmarkStatusChangedNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
@@ -2533,7 +2536,7 @@ extension BrowserViewController {
         URLBarView.appearance().locationActiveBorderColor = UIColor.clearColor()
         URLBarView.appearance().progressBarTint = URLBarViewUX.ProgressTintColor
         URLBarView.appearance().cancelTextColor = UIColor.blackColor()
-        URLBarView.appearance().actionButtonTintColor = UIColor.darkGrayColor()
+        URLBarView.appearance().actionButtonTintColor = UIColor.whiteColor()
 
 		// Cliqz: Changed URLBar backgroundColor because of requirements
 		URLBarView.appearance().backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)

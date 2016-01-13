@@ -1,0 +1,19 @@
+/* 
+  Settings.strings
+  Client
+
+  Created by Sahakyan on 1/12/16.
+  Copyright © 2016 Mozilla. All rights reserved.
+*/
+
+/* Send Feedback Email */
+"Send Feedback" = "Feedback geben";
+
+/* Send Feedback Email Subject*/
+"Feedback to iOS Cliqz Browser" = "Feedback zu iOS Cliqz Browser";
+
+/* Open search section of settings */
+"Search" = "Suche";
+
+/* General settings section title */
+"General" = "Allgemein";
