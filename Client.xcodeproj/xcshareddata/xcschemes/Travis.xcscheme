@@ -16,7 +16,7 @@
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
                      BuildableName = "Client.app"
-                     BlueprintName = "Client"
+                     BlueprintName = "Cliqz"
                      ReferencedContainer = "container:Client.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
@@ -34,7 +34,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
                BuildableName = "Client.app"
-               BlueprintName = "Client"
+               BlueprintName = "Cliqz"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -170,7 +170,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
             BuildableName = "Client.app"
-            BlueprintName = "Client"
+            BlueprintName = "Cliqz"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -193,7 +193,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
             BuildableName = "Client.app"
-            BlueprintName = "Client"
+            BlueprintName = "Cliqz"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -212,7 +212,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
             BuildableName = "Client.app"
-            BlueprintName = "Client"
+            BlueprintName = "Cliqz"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

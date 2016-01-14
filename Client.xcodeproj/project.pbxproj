@@ -3872,9 +3872,9 @@
 			productReference = E6F9650C1B2F1CF20034B023 /* SharedTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F84B21BD1A090F8100AAB793 /* Client */ = {
+		F84B21BD1A090F8100AAB793 /* Cliqz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F84B21DD1A090F8100AAB793 /* Build configuration list for PBXNativeTarget "Client" */;
+			buildConfigurationList = F84B21DD1A090F8100AAB793 /* Build configuration list for PBXNativeTarget "Cliqz" */;
 			buildPhases = (
 				F84B21BA1A090F8100AAB793 /* Sources */,
 				F84B21BC1A090F8100AAB793 /* Resources */,
@@ -3900,7 +3900,7 @@
 				0BA84AE61AE57147009C4D0C /* PBXTargetDependency */,
 				E4BA8A341B4B0A1700BC2E95 /* PBXTargetDependency */,
 			);
-			name = Client;
+			name = Cliqz;
 			productName = Client;
 			productReference = F84B21BE1A090F8100AAB793 /* Client.app */;
 			productType = "com.apple.product-type.application";
@@ -4119,7 +4119,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				F84B21BD1A090F8100AAB793 /* Client */,
+				F84B21BD1A090F8100AAB793 /* Cliqz */,
 				F84B21D21A090F8100AAB793 /* ClientTests */,
 				F84B225B1A09210A00AAB793 /* SendTo */,
 				F84B22481A0920C600AAB793 /* ShareTo */,
@@ -5365,7 +5365,7 @@
 		};
 		28ECD9B11BA1F07000D829DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = 28ECD9BE1BA1F12B00D829DA /* PBXContainerItemProxy */;
 		};
 		2F0624F61AE5AA1A00FA022C /* PBXTargetDependency */ = {
@@ -5465,7 +5465,7 @@
 		};
 		2FCAE2291ABB51F800877008 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = 2FCAE2281ABB51F800877008 /* PBXContainerItemProxy */;
 		};
 		2FCAE2301ABB51F800877008 /* PBXTargetDependency */ = {
@@ -5500,7 +5500,7 @@
 		};
 		D39FA1661A83E0EC00EE869C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = D39FA1651A83E0EC00EE869C /* PBXContainerItemProxy */;
 		};
 		E444F8291B4C1E8D00FEB19B /* PBXTargetDependency */ = {
@@ -5530,7 +5530,7 @@
 		};
 		E4D567271ADECE2800F1EFE7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = E4D567261ADECE2800F1EFE7 /* PBXContainerItemProxy */;
 		};
 		E4D5672E1ADECE2800F1EFE7 /* PBXTargetDependency */ = {
@@ -5555,12 +5555,12 @@
 		};
 		E6F9653A1B2F1D330034B023 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = E63CD1B21B31B66400A63AFF /* PBXContainerItemProxy */;
 		};
 		F84B21D51A090F8100AAB793 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
+			target = F84B21BD1A090F8100AAB793 /* Cliqz */;
 			targetProxy = F84B21D41A090F8100AAB793 /* PBXContainerItemProxy */;
 		};
 		F84B22521A0920C600AAB793 /* PBXTargetDependency */ = {
@@ -8338,7 +8338,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = FennecAurora;
 		};
-		F84B21DD1A090F8100AAB793 /* Build configuration list for PBXNativeTarget "Client" */ = {
+		F84B21DD1A090F8100AAB793 /* Build configuration list for PBXNativeTarget "Cliqz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B21DE1A090F8100AAB793 /* Debug */,
