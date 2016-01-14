@@ -120,16 +120,16 @@ class TelemetryLogger : EventsLogger {
             }
         }
     }
-    
-    //MARK: - Private Helper methods
-    
+
+    // MARK: - Private Helper methods
+
     internal func createBasicEvent() ->[String: AnyObject] {
         var event = [String: AnyObject]()
-        
+
         event["session"] = self.sessionId
-        event["telemetrySeq"] = getNextTelemetrySeq()
-        event["ts"] = NSDate.getCurrentMillis()
-        
+        event["seq"] = getNextTelemetrySeq()
+        event["ts"] = NSNumber(longLong: Int64(NSDate.getCurrentMillis()))
+
         if telemetrySeq!.get() % 10 == 0 {
             // periodically store the telemetrySeq
             storeCurrentTelemetrySeq()
@@ -160,20 +160,20 @@ class TelemetryLogger : EventsLogger {
     }
     private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = action
+
+        event["type"] = "app_state_change"
+        event["state"] = action
         event["network"] = network
         event["context"] = context
         event["battery"] = battery
-        event["memory"] = memory
+        event["memory"] = NSNumber(longLong: Int64(memory))
 
         if startupType != nil {
             event["startup_type"] = startupType
         }
         
-        if startupTime != nil {
-            event["startup_time"] = startupTime
+        if let s = startupTime {
+            event["startup_time"] = NSNumber(longLong: Int64(s))
         }
 
         if timeUsed != nil {
@@ -200,8 +200,7 @@ class TelemetryLogger : EventsLogger {
     private func createNetworkStatusEvent(network: String, duration: Int) -> [String: AnyObject]{
         var event = createBasicEvent()
         
-        event["type"] = "activity"
-        event["action"] = "network_status"
+        event["type"] = "network_status"
         event["network"] = network
         event["duration"] = duration
         
@@ -248,6 +247,8 @@ class TelemetryLogger : EventsLogger {
         event["type"] = "onboarding"
         event["action"] = action
         event["page"] = page
+		event["product"] = "cliqz_ios"
+//		event["version"] =
         if action == "hide" {
             event["display_time"] = event["ts"]
         }
@@ -317,7 +318,7 @@ class TelemetryLogger : EventsLogger {
         var event = javaScriptSignal
         
         event["session"] = self.sessionId
-        event["telemetrySeq"] = getNextTelemetrySeq()
+        event["seq"] = getNextTelemetrySeq()
 
         return event
     }
@@ -327,10 +328,9 @@ class TelemetryLogger : EventsLogger {
     private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
         var event = createBasicEvent()
         
-        event["type"] = "activity"
-        event["action"] = "AppStateChange"
+        event["type"] = "app_state_transition"
         event["transition"] = transition
-        
+
         return event
     }
     
