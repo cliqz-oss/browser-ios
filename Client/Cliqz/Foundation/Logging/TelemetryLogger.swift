@@ -246,9 +246,9 @@ class TelemetryLogger : EventsLogger {
         
         event["type"] = "onboarding"
         event["action"] = action
-        event["page"] = page
+        event["action_target"] = page
 		event["product"] = "cliqz_ios"
-//		event["version"] =
+		event["version"] = "1.0"
         if action == "hide" {
             event["display_time"] = event["ts"]
         }
@@ -290,7 +290,7 @@ class TelemetryLogger : EventsLogger {
         
         if autocompletedLength > queryLength {
             event["autocompleted_length"] = autocompletedLength
-            event["autocompleted"] = autocompletedUrl
+            event["autocompleted"] = "url"
             event["inner_link"] = true
         } else {
             event["inner_link"] = false
