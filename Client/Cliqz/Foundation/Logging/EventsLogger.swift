@@ -118,7 +118,7 @@ class EventsLogger: NSObject {
     
     private func publishEvents(publishedEvents: [AnyObject]){
 
-        ConnectionManager.sharedInstance.sendPostRequest(loggerEndPoint, body: publishedEvents,
+        ConnectionManager.sharedInstance.sendPostRequest(loggerEndPoint, body: publishedEvents, enableCompression: true,
             onSuccess: { json in
                 let jsonDict = json as! [String : AnyObject]
                 if let newSessionId = jsonDict["new_session"] as? String {

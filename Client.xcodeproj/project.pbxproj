@@ -83,6 +83,7 @@
 		1E79B83A1BE91AC800B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
 		1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */; };
 		1E79B8401BE91ADE00B19219 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79B8351BE91AC800B19219 /* CliqzSearch.swift */; };
+		1E88AD361C4D15F4009BD07D /* NSData+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E88AD321C4D15F4009BD07D /* NSData+GZIP.swift */; };
 		1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */; };
 		1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA200791C34270B00E3221E /* UITextFieldExtension.swift */; };
 		1EA2010E1C352E1600E3221E /* NavigationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2010D1C352E1600E3221E /* NavigationExtension.swift */; };
@@ -115,7 +116,6 @@
 		1EF1B8BF1BF4CFA100698822 /* EventsLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8A71BF4CFA100698822 /* EventsLogger.swift */; };
 		1EF1B8C11BF4CFA100698822 /* TelemetryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8A81BF4CFA100698822 /* TelemetryLogger.swift */; };
 		1EF1B8C31BF4CFA100698822 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8AA1BF4CFA100698822 /* ConnectionManager.swift */; };
-		1EF1B8C41BF4CFA100698822 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8AA1BF4CFA100698822 /* ConnectionManager.swift */; };
 		1EF1B8C51BF4CFA100698822 /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8AB1BF4CFA100698822 /* NetworkReachability.swift */; };
 		1EF1B8C71BF4CFA100698822 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8AE1BF4CFA100698822 /* Reachability.m */; };
 		1EF1B8C81BF4CFA100698822 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1B8AE1BF4CFA100698822 /* Reachability.m */; };
@@ -1482,6 +1482,9 @@
 		1E641F231C2AFE54003D3255 /* ConfigurationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationManager.swift; sourceTree = "<group>"; };
 		1E79B8351BE91AC800B19219 /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79B8361BE91AC800B19219 /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
+		1E88AD321C4D15F4009BD07D /* NSData+GZIP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+GZIP.swift"; sourceTree = "<group>"; };
+		1E88AD341C4D15F4009BD07D /* include.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = include.h; sourceTree = "<group>"; };
+		1E88AD351C4D15F4009BD07D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
 		1EA200791C34270B00E3221E /* UITextFieldExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		1EA2010D1C352E1600E3221E /* NavigationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationExtension.swift; sourceTree = "<group>"; };
@@ -2282,6 +2285,15 @@
 			path = Browser;
 			sourceTree = "<group>";
 		};
+		1E88AD331C4D15F4009BD07D /* zlib */ = {
+			isa = PBXGroup;
+			children = (
+				1E88AD341C4D15F4009BD07D /* include.h */,
+				1E88AD351C4D15F4009BD07D /* module.modulemap */,
+			);
+			path = zlib;
+			sourceTree = "<group>";
+		};
 		1EEC01301BFCAA3C00A8FC49 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -2365,6 +2377,8 @@
 			isa = PBXGroup;
 			children = (
 				1EF1B8AC1BF4CFA100698822 /* Reachability */,
+				1E88AD331C4D15F4009BD07D /* zlib */,
+				1E88AD321C4D15F4009BD07D /* NSData+GZIP.swift */,
 				1EF1B8AA1BF4CFA100698822 /* ConnectionManager.swift */,
 				1EF1B8AB1BF4CFA100698822 /* NetworkReachability.swift */,
 			);
@@ -5169,6 +5183,7 @@
 				E4B334591BBF2393004E2BFF /* ADJEvent.m in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
+				1E88AD361C4D15F4009BD07D /* NSData+GZIP.swift in Sources */,
 				1EF1B8C31BF4CFA100698822 /* ConnectionManager.swift in Sources */,
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				1E79B83B1BE91AC800B19219 /* CliqzSearchViewController.swift in Sources */,
@@ -5279,7 +5294,6 @@
 				7BBFEEA31BB40A5300A305AA /* ReaderMode.swift in Sources */,
 				D38A1BEF1A9FA2CA00F6A386 /* SiteTableViewController.swift in Sources */,
 				1EF1B8C81BF4CFA100698822 /* Reachability.m in Sources */,
-				1EF1B8C41BF4CFA100698822 /* ConnectionManager.swift in Sources */,
 				D38B2D381A8D96D00040E6B5 /* GCDWebServerRequest.m in Sources */,
 				0BA8964C1A250E6500C1010C /* TestBookmarks.swift in Sources */,
 				D38B2D321A8D96D00040E6B5 /* GCDWebServerConnection.m in Sources */,
@@ -6652,6 +6666,7 @@
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6802,6 +6817,7 @@
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "5d6ae8bd-a94e-4267-9e0e-622f67230701";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8029,6 +8045,7 @@
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8059,6 +8076,7 @@
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "04bb3174-3092-4fd0-a45b-6e8488c64f02";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
