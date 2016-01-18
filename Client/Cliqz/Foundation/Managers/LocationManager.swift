@@ -23,6 +23,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	public func startUpdateingLocation() {
 		if !CLLocationManager.locationServicesEnabled() || CLLocationManager.authorizationStatus() == .NotDetermined {
+			TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
 			self.manager.requestWhenInUseAuthorization()
 			self.manager.startUpdatingLocation()
 		}
@@ -44,6 +45,21 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 			}
             break
         }
+		TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("status_change", status.stringValue()))
     }
 
+}
+
+extension CLAuthorizationStatus {
+	func stringValue() -> String {
+		let statuses: [Int: String] = [Int(CLAuthorizationStatus.NotDetermined.rawValue) : "NotDetermined",
+			Int(CLAuthorizationStatus.Restricted.rawValue) : "Restricted",
+			Int(CLAuthorizationStatus.Denied.rawValue) : "Denied",
+			Int(CLAuthorizationStatus.AuthorizedAlways.rawValue) : "AuthorizedAlways",
+			Int(CLAuthorizationStatus.AuthorizedWhenInUse.rawValue) : "AuthorizedWhenInUse"]
+		if let s = statuses[Int(rawValue)] {
+			return s
+		}
+		return "Unknown type"
+	}
 }

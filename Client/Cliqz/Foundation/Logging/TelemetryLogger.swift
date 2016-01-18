@@ -21,6 +21,7 @@ public enum TelemetryLogEventType {
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptsignal   ([String: AnyObject])
+	case LocationServicesStatus (String, String?)
     
     //TODO: to be removed as it was added for testing
     case AppStateChange      (String)
@@ -106,7 +107,8 @@ class TelemetryLogger : EventsLogger {
                 
             case .JavaScriptsignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
-            
+			case .LocationServicesStatus(let action, let status):
+				event = self.createLocationServicesStatusEvent(action, status: status)
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
             }
@@ -323,7 +325,16 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 
-    
+	private func createLocationServicesStatusEvent(action: String, status: String?) -> [String: AnyObject]{
+		var event = createBasicEvent()
+		event["type"] = "location_access"
+		event["action"] = action
+		if let s = status {
+			event["status"] = s
+		}
+		return event
+	}
+
     //TODO: to be removed as it was added for testing
     private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
         var event = createBasicEvent()

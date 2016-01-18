@@ -130,8 +130,8 @@ class JavaScriptBridge {
             self.callJSMethod(callback, parameter: results)
             return succeed()
         }
-    }
-    
+	}
+
     // Mark: Helper methods
     private func callPhoneNumber(data: AnyObject?) {
         if let phoneNumber = data as? String {
