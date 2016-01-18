@@ -53,7 +53,7 @@ class AppStatus {
 
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
-		TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_finis_launch"))
+		TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_finish_launch"))
         
         lastOpenedDate = NSDate()
         NetworkReachability.sharedInstance.startMonitoring()

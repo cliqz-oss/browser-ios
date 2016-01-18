@@ -251,7 +251,7 @@ class TelemetryLogger : EventsLogger {
 		event["version"] = "1.0"
         if action == "hide" {
             event["display_time"] = event["ts"]
-        }
+		}
 
         return event
     }
@@ -282,7 +282,7 @@ class TelemetryLogger : EventsLogger {
     private func createResultEnterEvent(queryLength: Int, autocompletedLength: Int, autocompletedUrl: String?, reactionTime: Double, urlbarTime: Double) -> [String: AnyObject] {
         var event = createBasicEvent()
         // This handel three types of signals: AutoComplete, DirectURL, and Google search
-        event["type"] = "action"
+        event["type"] = "activity"
         event["action"] = "result_enter"
         event["query_length"] = queryLength
         event["reaction_time"] = reactionTime
