@@ -580,8 +580,8 @@ class BrowserViewController: UIViewController {
 		// Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
 		if (!presentIntroViewController()) {
 			switchToSearchModeIfNeeded()
-			LocationManager.sharedInstance.startUpdateingLocation()
 		}
+		LocationManager.sharedInstance.startUpdateingLocation()
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 

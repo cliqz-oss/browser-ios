@@ -22,8 +22,10 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 	}()
 
 	public func startUpdateingLocation() {
-		self.manager.requestWhenInUseAuthorization()
-		self.manager.startUpdatingLocation()
+		if !CLLocationManager.locationServicesEnabled() || CLLocationManager.authorizationStatus() == .NotDetermined {
+			self.manager.requestWhenInUseAuthorization()
+			self.manager.startUpdatingLocation()
+		}
 	}
 
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -37,10 +39,11 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
         case .Denied, .NotDetermined, .Restricted:
             self.location = nil
         default:
-            //do nothing
+			if let l = self.manager.location {
+				self.location = l
+			}
             break
         }
     }
-
 
 }
