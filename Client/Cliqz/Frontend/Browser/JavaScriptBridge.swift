@@ -21,9 +21,11 @@ import Shared
 class JavaScriptBridge {
     weak var delegate: JavaScriptBridgeDelegate?
     var profile: Profile
-    
+    private let maxFrecencyLimit: Int = 30
+
     init(profile: Profile) {
         self.profile = profile
+        self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
     }
     
     func callJSMethod(methodName: String, parameter: AnyObject?) {
@@ -89,7 +91,7 @@ class JavaScriptBridge {
             
         case "getTopSites":
             if let limit = data as? Int {
-                reloadTopSitesWithLimit(limit, callback: callback!)
+                refreshTopSites(limit, callback: callback!)
             }
             
         case "searchHistory":
@@ -116,7 +118,20 @@ class JavaScriptBridge {
         }
     }
     
-    func reloadTopSitesWithLimit(limit: Int, callback: String) -> Success {
+    // Mark: Helper methods
+    
+    private func refreshTopSites(frecencyLimit: Int, callback: String) {
+        // Reload right away with whatever is in the cache, then check to see if the cache is invalid. If it's invalid,
+        // invalidate the cache and requery. This allows us to always show results right away if they are cached but
+        // also load in the up-to-date results asynchronously if needed
+        reloadTopSitesWithLimit(frecencyLimit, callback: callback) >>> {
+            return self.profile.history.updateTopSitesCacheIfInvalidated() >>== { result in
+                return result ? self.reloadTopSitesWithLimit(frecencyLimit, callback: callback) : succeed()
+            }
+        }
+    }
+    
+    private func reloadTopSitesWithLimit(limit: Int, callback: String) -> Success {
         return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
             var results = [[String: String]]()
             if let r = result.successValue {
@@ -132,7 +147,6 @@ class JavaScriptBridge {
         }
 	}
 
-    // Mark: Helper methods
     private func callPhoneNumber(data: AnyObject?) {
         if let phoneNumber = data as? String {
             let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
