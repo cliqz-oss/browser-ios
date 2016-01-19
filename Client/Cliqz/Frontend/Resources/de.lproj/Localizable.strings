@@ -72,7 +72,6 @@
 
 /* Alert Cancel Button
    Authentication prompt cancel button
-   Button label to cancel entering a URL or search query
    Cancel alert view
    Cancel button
    Cancel button in the 'log out Cliqz account' alert
@@ -426,15 +425,11 @@
 "Saved Logins" = "Gespeicherte Anmeldedaten";
 
 /* Navigation title for search settings.
-   Open search section of settings
-   Search */
+   Open search section of settings */
 "Search" = "Suche";
 
 /* (No Commment) */
 "Search Settings" = "Such-Einstellungen";
-
-/* Search history title */
-"Search history" = "Suchverlauf";
 
 /* The text shown in the URL bar on about:home */
 "Search or enter address" = "Suchen oder Adresse eingeben";

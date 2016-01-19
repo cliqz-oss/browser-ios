@@ -84,6 +84,7 @@
 		1E8F3D2F1BE113F30050C791 /* CliqzSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */; };
 		1EA2007A1C34270B00E3221E /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA200791C34270B00E3221E /* UITextFieldExtension.swift */; };
 		1EA2010E1C352E1600E3221E /* NavigationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA2010D1C352E1600E3221E /* NavigationExtension.swift */; };
+		1EC5CDED1C4E4D5500DDD4E6 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1EC5CDEF1C4E4D5500DDD4E6 /* Cliqz.strings */; };
 		1EC69E7F1C15DF31003211A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1EC69E811C15DF31003211A3 /* Localizable.strings */; };
 		1ECD86381C2313C200C6B12D /* BookmarkPanel.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863A1C2313C200C6B12D /* BookmarkPanel.strings */; };
 		1ECD863B1C2313D900C6B12D /* ClearPrivateData.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1ECD863D1C2313D900C6B12D /* ClearPrivateData.strings */; };
@@ -1482,6 +1483,8 @@
 		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
 		1EA200791C34270B00E3221E /* UITextFieldExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		1EA2010D1C352E1600E3221E /* NavigationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationExtension.swift; sourceTree = "<group>"; };
+		1EC5CDEE1C4E4D5500DDD4E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		1EC5CDF01C4E4D5F00DDD4E6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		1EC69E801C15DF31003211A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EC69E821C15DF3F003211A3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1ECD86391C2313C200C6B12D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/BookmarkPanel.strings; sourceTree = "<group>"; };
@@ -2227,6 +2230,7 @@
 		1E1E31931C071FF20032759D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1EC5CDEF1C4E4D5500DDD4E6 /* Cliqz.strings */,
 				4FDD31B51C24195E00E02F83 /* trampolineForward.html */,
 				1ECD863A1C2313C200C6B12D /* BookmarkPanel.strings */,
 				1ECD863D1C2313D900C6B12D /* ClearPrivateData.strings */,
@@ -4549,6 +4553,7 @@
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				1ECD864A1C2313FA00C6B12D /* OnePasswordExtension.strings in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
+				1EC5CDED1C4E4D5500DDD4E6 /* Cliqz.strings in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,
 				E69922171B94E3EF007C480D /* Licenses.html in Resources */,
@@ -5578,6 +5583,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1EC5CDEF1C4E4D5500DDD4E6 /* Cliqz.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EC5CDEE1C4E4D5500DDD4E6 /* en */,
+				1EC5CDF01C4E4D5F00DDD4E6 /* de */,
+			);
+			name = Cliqz.strings;
+			sourceTree = "<group>";
+		};
 		1EC69E811C15DF31003211A3 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

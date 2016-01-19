@@ -58,7 +58,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 246.0/255.0, green: 90.0/255.0, blue: 42.0/255.0, alpha: 1)
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName : UIColor.whiteColor()]
-        self.title = NSLocalizedString("Search history", comment: "Search history title")
+        self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")
         self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
 		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
 
