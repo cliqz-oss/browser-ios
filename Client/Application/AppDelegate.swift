@@ -10,6 +10,7 @@ import Breakpad
 import MessageUI
 import Fabric
 import Crashlytics
+import CoreSpotlight
 
 private let log = Logger.browserLogger
 
@@ -166,6 +167,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log.debug("Done with applicationDidFinishLaunching.")
 		Fabric.with([Crashlytics.self])
+		
+		self.indexWikipediaQueries()
         return true
     }
 
@@ -296,6 +299,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
         viewURLInNewTab(notification)
     }
+	
+	func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+		if #available(iOS 9.0, *) {
+		    if userActivity.activityType == CSSearchableItemActionType {
+				if let t = userActivity.title {
+					self.browserViewController.searchForQuery(t)
+				}
+				return true
+    		}
+		}
+		return false
+	}
 
     private func presentEmailComposerWithLogs() {
         if let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey(String(kCFBundleVersionKey)) as? NSString {
@@ -340,6 +355,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+	
+	private func indexWikipediaQueries() {
+		if let startWordsPath = NSBundle.mainBundle().pathForResource("wiki requests", ofType: "txt") {
+			if let startWords = try? String(contentsOfFile: startWordsPath, usedEncoding: nil) {
+				let allQueries = startWords.componentsSeparatedByString("\n")
+				var index = 1
+				for a in allQueries {
+					if #available(iOS 9.0, *) {
+					    let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeData as String)
+						attributeSet.title = a
+						attributeSet.contentDescription = "Wikipedia page"
+//						attributeSet.thumbnailData = DocumentImage.jpg
+						
+						let item = CSSearchableItem(uniqueIdentifier: "\(index)", domainIdentifier: "file-1", attributeSet: attributeSet)
+						CSSearchableIndex.defaultSearchableIndex().indexSearchableItems([item]) { error in
+							if error != nil {
+								print(error?.localizedDescription)
+							}
+							else {
+								print("Item indexed.")
+							}
+
+						}
+						++index
+					}
+				}
+			}
+		}
+	}
 }
 
 // MARK: - Root View Controller Animations

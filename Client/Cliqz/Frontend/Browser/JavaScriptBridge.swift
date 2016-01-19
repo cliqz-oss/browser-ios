@@ -91,7 +91,7 @@ class JavaScriptBridge {
             if let limit = data as? Int {
                 reloadTopSitesWithLimit(limit, callback: callback!)
             }
-            
+
         case "searchHistory":
             delegate?.getSearchHistoryResults?(callback)
             
