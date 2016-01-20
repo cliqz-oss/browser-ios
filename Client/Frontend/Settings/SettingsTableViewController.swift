@@ -569,7 +569,8 @@ private class ShowIntroductionSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        navigationController?.dismissViewControllerAnimated(true, completion: {
+        // Cliqz: dismiss the SettingsViewController without animation because we display it from History (i.e. we need to dismiss both settings and history views)
+        navigationController?.dismissViewControllerAnimated(false, completion: {
             if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
                 appDelegate.browserViewController.presentIntroViewController(true)
             }

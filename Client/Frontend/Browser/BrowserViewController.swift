@@ -2255,8 +2255,18 @@ extension BrowserViewController: IntroViewControllerDelegate {
                 introViewController.preferredContentSize = CGSize(width: IntroViewControllerUX.Width, height: IntroViewControllerUX.Height)
                 introViewController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
             }
-            presentViewController(introViewController, animated: true) {
-                self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+            
+            // Cliqz: if there is a ViewController already presented, dismiss it first before presenting the IntroView
+            if let presentedViewController = self.presentedViewController {
+                presentedViewController.dismissViewControllerAnimated(false, completion: {
+                    self.presentViewController(introViewController, animated: true) {
+                        self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+                    }
+                })
+            } else {
+                presentViewController(introViewController, animated: true) {
+                    self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+                }
             }
 
             return true
