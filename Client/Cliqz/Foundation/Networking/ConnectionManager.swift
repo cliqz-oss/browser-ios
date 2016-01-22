@@ -51,14 +51,23 @@ class ConnectionManager {
     }
     
     
-    internal func sendPostRequest(url: String, body: AnyObject, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    internal func sendPostRequest(url: String, body: AnyObject, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         
         if NSJSONSerialization.isValidJSONObject(body) {
             do {
                 let request = NSMutableURLRequest(URL: NSURL(string: url)!)
                 request.HTTPMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(body, options: [])
+                let data = try NSJSONSerialization.dataWithJSONObject(body, options: [])
+
+                if (enableCompression) {
+                    request.setValue("gzip", forHTTPHeaderField: "Content-Encoding")
+                    let compressedData : NSData = try data.gzippedData()
+                    request.HTTPBody = compressedData
+                } else {
+                    request.HTTPBody = data
+                }
+                
                 
                 Alamofire.request(request)
                     .responseJSON {

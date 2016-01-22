@@ -34,31 +34,27 @@ class AppStatus {
     }
     
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
-        var version = "B-\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
-        if isRelease {
-            version = "\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
-        }
-        return version
+            return "\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
     }
-    func getCurrentAppVersion() -> String {
+
+	func getCurrentAppVersion() -> String {
         return getAppVersion(getVersionDescriptor())
     }
+
     func batteryLevel() -> Float {
-        
         return UIDevice.currentDevice().batteryLevel
     }
 
     //MARK: - Singltone
     static let sharedInstance = AppStatus()
-    
+
     private init() {
         UIDevice.currentDevice().batteryMonitoringEnabled = true
     }
-    
-    
+
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillFinishLuanch"))
+		TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_finish_launch"))
         
         lastOpenedDate = NSDate()
         NetworkReachability.sharedInstance.startMonitoring()
@@ -66,7 +62,7 @@ class AppStatus {
     }
 
     internal func appDidFinishLaunching() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidFinishLuanch"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_finish_launch"))
         
         dispatch_async(dispatchQueue) {
             
@@ -91,13 +87,13 @@ class AppStatus {
     internal func appWillEnterForeground() {
         SessionState.sessionResumed()
         
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillEnterForeground"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_enter_foreground"))
         
         lastOpenedDate = NSDate()
     }
     
     internal func appDidBecomeActive(profile: Profile) {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidBecomeActive"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_become_active"))
         
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
@@ -110,7 +106,7 @@ class AppStatus {
     }
     
     internal func appWillResignActive() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillResignActive"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_resign_active"))
         
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
@@ -119,16 +115,16 @@ class AppStatus {
     internal func appDidEnterBackground() {
         SessionState.sessionPaused()
         
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("DidEnterBackground"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_enter_background"))
         
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
         TelemetryLogger.sharedInstance.persistEvents()
-    }
-    
+	}
+
     internal func appWillTerminate() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("WillTerminate"))
+        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_terminate"))
         
         logApplicationUsageEvent("Terminate")
     }
@@ -222,7 +218,7 @@ class AppStatus {
     private func getAppLanguage() -> String {
         let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode)
         let countryCode = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode)
-        return "\(languageCode)-\(countryCode)"
+        return "\(languageCode!)-\(countryCode!)"
     }
     
     private func getHistoryDays(profile: Profile) -> Int {

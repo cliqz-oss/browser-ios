@@ -580,8 +580,8 @@ class BrowserViewController: UIViewController {
 		// Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
 		if (!presentIntroViewController()) {
 			switchToSearchModeIfNeeded()
-			LocationManager.sharedInstance.startUpdateingLocation()
 		}
+		LocationManager.sharedInstance.startUpdateingLocation()
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
@@ -1535,7 +1535,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.escapeURL())&q=\(query.escapeURL())")
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
                 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
@@ -2255,8 +2255,18 @@ extension BrowserViewController: IntroViewControllerDelegate {
                 introViewController.preferredContentSize = CGSize(width: IntroViewControllerUX.Width, height: IntroViewControllerUX.Height)
                 introViewController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
             }
-            presentViewController(introViewController, animated: true) {
-                self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+            
+            // Cliqz: if there is a ViewController already presented, dismiss it first before presenting the IntroView
+            if let presentedViewController = self.presentedViewController {
+                presentedViewController.dismissViewControllerAnimated(false, completion: {
+                    self.presentViewController(introViewController, animated: true) {
+                        self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+                    }
+                })
+            } else {
+                presentViewController(introViewController, animated: true) {
+                    self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
+                }
             }
 
             return true

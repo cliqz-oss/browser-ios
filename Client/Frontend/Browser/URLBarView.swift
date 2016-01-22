@@ -134,7 +134,7 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
+        let cancelTitle = NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Button label to cancel entering a URL or search query")
         cancelButton.setTitle(cancelTitle, forState: UIControlState.Normal)
         cancelButton.titleLabel?.font = UIConstants.DefaultMediumFont
         cancelButton.addTarget(self, action: "SELdidClickCancel", forControlEvents: UIControlEvents.TouchUpInside)
@@ -371,7 +371,7 @@ class URLBarView: UIView {
 //        locationTextField.keyboardType = UIKeyboardType.WebSearch
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
-//        locationTextField.returnKeyType = UIReturnKeyType.Go
+        locationTextField.returnKeyType = UIReturnKeyType.Go
 		// Cliqz: Changed mode to always to use it also as cancel button
         locationTextField.clearButtonMode = UITextFieldViewMode.Always
         // Cliqz: Added left pading to the location field

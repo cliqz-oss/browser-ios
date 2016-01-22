@@ -569,7 +569,8 @@ private class ShowIntroductionSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        navigationController?.dismissViewControllerAnimated(true, completion: {
+        // Cliqz: dismiss the SettingsViewController without animation because we display it from History (i.e. we need to dismiss both settings and history views)
+        navigationController?.dismissViewControllerAnimated(false, completion: {
             if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
                 appDelegate.browserViewController.presentIntroViewController(true)
             }
@@ -603,6 +604,8 @@ private class SendCliqzFeedbackSetting: Setting, MFMailComposeViewControllerDele
 		emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Settings", comment: "Send Feedback Email Subject"))
 		emailViewController.setToRecipients(["feedback@cliqz.com"])
 		emailViewController.mailComposeDelegate = self
+		let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Settings", comment: "Footnote message for feedback")
+		emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType.rawValue), isHTML: false)
 		navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
 	}
 

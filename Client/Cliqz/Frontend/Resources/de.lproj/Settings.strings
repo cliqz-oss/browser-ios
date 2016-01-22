@@ -17,3 +17,6 @@
 
 /* General settings section title */
 "General" = "Allgemein";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback für CLIQZ Browser for iOS (Version %@), auf %@";

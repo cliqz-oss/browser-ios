@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "cliqz-intro-1.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "cliqz-intro1@2x.png",
+      "filename" : "cliqz-intro-1@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "cliqz-intro-1@3x.png",
       "scale" : "3x"
     }
   ],

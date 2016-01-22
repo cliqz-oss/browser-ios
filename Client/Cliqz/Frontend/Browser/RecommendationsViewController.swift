@@ -60,7 +60,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.navigationController?.navigationBar.barTintColor = UIColor(red: 68.0/255.0, green: 166.0/255.0, blue: 48.0/255.0, alpha: 1)
 		self.navigationController?.navigationBar.titleTextAttributes = [
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
-		self.title = NSLocalizedString("Search recommendations", comment: "Search Recommendations and top visited sites title")
+        self.title = NSLocalizedString("Search recommendations", tableName: "Cliqz", comment: "Search Recommendations and top visited sites title")
         
 		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
 		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
