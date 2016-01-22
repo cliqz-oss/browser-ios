@@ -314,7 +314,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func changePage() {
         let swipeCoordinate = CGFloat(pageControl.currentPage) * scrollView.frame.size.width
         scrollView.setContentOffset(CGPointMake(swipeCoordinate, 0), animated: true)
-    }
+	}
 
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
         // Need to add this method so that tapping the pageControl will also change the card texts. 
@@ -375,6 +375,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             // Cliqz: logged Onboarding event
             TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
         }
+		if page == pageControl.numberOfPages - 1 {
+			LocationManager.sharedInstance.startUpdateingLocation()
+		}
     }
 
     private var scaledWidthOfSlide: CGFloat {
