@@ -399,6 +399,10 @@ class BrowserViewController: UIViewController {
 
 		self.switchToSearchMode = true
 		self.needsNewTab = true
+		
+		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
+			LocationManager.sharedInstance.startUpdateingLocation()
+		}
 	}
 
 
@@ -581,7 +585,6 @@ class BrowserViewController: UIViewController {
 		if (!presentIntroViewController()) {
 			switchToSearchModeIfNeeded()
 		}
-		LocationManager.sharedInstance.startUpdateingLocation()
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
