@@ -1535,7 +1535,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.escapeURL())&q=\(query.escapeURL())")
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
                 self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
