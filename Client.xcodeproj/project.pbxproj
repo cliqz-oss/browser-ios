@@ -68,6 +68,9 @@
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
+		1E14288D1C51198900AAF632 /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E14288C1C51198900AAF632 /* CustomPageControl.swift */; };
+		1E1428901C52407D00AAF632 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E14288E1C52407D00AAF632 /* Lato-Light.ttf */; };
+		1E1428911C52407D00AAF632 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E14288F1C52407D00AAF632 /* Lato-Medium.ttf */; };
 		1E1E31CB1C071FFF0032759D /* LayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C71C071FFF0032759D /* LayerViewController.swift */; };
 		1E1E31CC1C071FFF0032759D /* RecommendationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */; };
 		1E1E31CD1C071FFF0032759D /* SearchHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */; };
@@ -1468,6 +1471,9 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E14288C1C51198900AAF632 /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
+		1E14288E1C52407D00AAF632 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
+		1E14288F1C52407D00AAF632 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
 		1E1E31C71C071FFF0032759D /* LayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerViewController.swift; sourceTree = "<group>"; };
 		1E1E31C81C071FFF0032759D /* RecommendationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsViewController.swift; sourceTree = "<group>"; };
 		1E1E31C91C071FFF0032759D /* SearchHistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewController.swift; sourceTree = "<group>"; };
@@ -2227,6 +2233,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E1428661C51197800AAF632 /* Custom UI */ = {
+			isa = PBXGroup;
+			children = (
+				1E14288C1C51198900AAF632 /* CustomPageControl.swift */,
+			);
+			path = "Custom UI";
+			sourceTree = "<group>";
+		};
 		1E1E31931C071FF20032759D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -2308,6 +2322,7 @@
 		1EF1B8991BF4CFA100698822 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				1E1428661C51197800AAF632 /* Custom UI */,
 				4FDD31361C21962200E02F83 /* Utils */,
 				4FDD31331C1EDF4A00E02F83 /* Managers */,
 				1EF1B8A61BF4CFA100698822 /* Logging */,
@@ -3540,6 +3555,8 @@
 		F84B22391A0914A300AAB793 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				1E14288E1C52407D00AAF632 /* Lato-Light.ttf */,
+				1E14288F1C52407D00AAF632 /* Lato-Medium.ttf */,
 				E4B7B73A1A793CF20022C5E0 /* CharisSILB.ttf */,
 				E4B7B73B1A793CF20022C5E0 /* CharisSILBI.ttf */,
 				E4B7B73C1A793CF20022C5E0 /* CharisSILI.ttf */,
@@ -4573,8 +4590,10 @@
 				746B6A791B277C1800EA83E3 /* SessionRestore.html in Resources */,
 				2F44FB2C1A9D5D8500FD20CC /* Home.xcassets in Resources */,
 				E4ECCD8D1AB091470005E717 /* Reader.xcassets in Resources */,
+				1E1428911C52407D00AAF632 /* Lato-Medium.ttf in Resources */,
 				E4B7B77D1A793CF20022C5E0 /* FiraSans-Regular.ttf in Resources */,
 				1ECD86501C23140A00C6B12D /* Search.strings in Resources */,
+				1E1428901C52407D00AAF632 /* Lato-Light.ttf in Resources */,
 				0BDA568B1B26B1BE008C9B96 /* LoginsHelper.js in Resources */,
 				1ECD863E1C2313DF00C6B12D /* ErrorPages.strings in Resources */,
 				E4B7B7791A793CF20022C5E0 /* FiraSans-Light.ttf in Resources */,
@@ -5189,6 +5208,7 @@
 				D3A9949D1A3686BD008AD1AC /* Browser.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
 				4F8920851C04E18D00F47CF0 /* HttpHandlers.swift in Sources */,
+				1E14288D1C51198900AAF632 /* CustomPageControl.swift in Sources */,
 				1EF1B8B11BF4CFA100698822 /* LocalDataStore.swift in Sources */,
 				39C575F21BE2C31400E1C4B1 /* ShareExtensionHelper.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,

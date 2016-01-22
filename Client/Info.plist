@@ -99,6 +99,8 @@
 		<string>FiraSans-Regular.ttf</string>
 		<string>FiraSans-SemiBold.ttf</string>
 		<string>FiraSans-UltraLight.ttf</string>
+		<string>Lato-Light.ttf</string>
+		<string>Lato-Medium.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

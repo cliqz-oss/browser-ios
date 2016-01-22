@@ -9,8 +9,8 @@ struct IntroViewControllerUX {
     static let Width = 375
     static let Height = 667
 
-    //Cliqz: replaced fixfox intro with cliqz intro
-    static let CardSlides = ["cliqz-intro1", "cliqz-intro2"]
+    // Cliqz: replaced fixfox intro with cliqz intro
+    static let CardSlides = ["cliqz-intro1", "cliqz-intro2", "cliqz-intro3"]
 //    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
 
     static let NumberOfCards = CardSlides.count
@@ -54,9 +54,16 @@ struct IntroViewControllerUX {
 
     static let BackForwardButtonEdgeInset = 20
 
-    static let Card1Color = UIColor(rgb: 0xFFC81E)
-    static let Card2Color = UIColor(rgb: 0x41B450)
+    // Cliqz: changed the background colors
+    static let Card1Color = UIColor(rgb: 0xFFFFFF)
+    static let Card2Color = UIColor(rgb: 0x0096DD)
     static let Card3Color = UIColor(rgb: 0x0096DD)
+    
+    // Cliqz: new titles and texts for cards
+    static let CardTitleCliqzBrowser = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!"
+    static let CardTextTyping = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag."
+    static let CardTextLocationSearch = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps)."
+    
 }
 
 let IntroViewControllerSeenProfileKey = "IntroViewControllerSeen"
@@ -80,6 +87,24 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var backButton: UIButton!
     var forwardButton: UIButton!
     var signInButton: UIButton!
+    
+    // Cliqz: custom getting started button
+    lazy var gettingStartedButton: UIButton = self.createGettingStartedButton()
+    
+    private func createGettingStartedButton() -> UIButton {
+        let button = UIButton()
+        button.setTitle("Jetzt loslegen!", forState: UIControlState.Normal)
+        button.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightBold)
+        button.setBackgroundImage(UIImage(named: "getting-started"), forState: UIControlState.Normal)
+        button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        button.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
+        button.snp_makeConstraints { (make) -> Void in
+            make.width.equalTo(200.0)
+            make.height.equalTo(40.0)
+        }
+
+        return button
+    }
 
     private var scrollView: IntroOverlayScrollView!
 
@@ -97,18 +122,19 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             slides.append(UIImage(named: slideName)!)
         }
 
-        startBrowsingButton = UIButton()
-        startBrowsingButton.backgroundColor = IntroViewControllerUX.StartBrowsingButtonColor
-        startBrowsingButton.setTitle(IntroViewControllerUX.StartBrowsingButtonTitle, forState: UIControlState.Normal)
-        startBrowsingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        startBrowsingButton.titleLabel?.font = IntroViewControllerUX.StartBrowsingButtonFont
-        startBrowsingButton.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
-
-        view.addSubview(startBrowsingButton)
-        startBrowsingButton.snp_makeConstraints { (make) -> Void in
-            make.left.right.bottom.equalTo(self.view)
-            make.height.equalTo(IntroViewControllerUX.StartBrowsingButtonHeight)
-        }
+        // Cliqz: remove start browsing button
+//        startBrowsingButton = UIButton()
+//        startBrowsingButton.backgroundColor = IntroViewControllerUX.StartBrowsingButtonColor
+//        startBrowsingButton.setTitle(IntroViewControllerUX.StartBrowsingButtonTitle, forState: UIControlState.Normal)
+//        startBrowsingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+//        startBrowsingButton.titleLabel?.font = IntroViewControllerUX.StartBrowsingButtonFont
+//        startBrowsingButton.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
+//
+//        view.addSubview(startBrowsingButton)
+//        startBrowsingButton.snp_makeConstraints { (make) -> Void in
+//            make.left.right.bottom.equalTo(self.view)
+//            make.height.equalTo(IntroViewControllerUX.StartBrowsingButtonHeight)
+//        }
 
         scrollView = IntroOverlayScrollView()
         scrollView.backgroundColor = UIColor.clearColor()
@@ -130,20 +156,27 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         scrollView.addSubview(slideContainer)
         scrollView.snp_makeConstraints { (make) -> Void in
-            make.left.right.top.equalTo(self.view)
-            make.bottom.equalTo(startBrowsingButton.snp_top)
+            // Cliqz: remove start browsing button
+            make.left.right.top.bottom.equalTo(self.view)
+//            make.left.right.top.equalTo(self.view)
+//            make.bottom.equalTo(startBrowsingButton.snp_top)
         }
 
-        pageControl = UIPageControl()
-        pageControl.pageIndicatorTintColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
-        pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
+        // Cliqz: Used custom page control to be able to change the indicator images
+        pageControl = CustomPageControl(activeImage: UIImage(named: "page-control-active")!, inactiveImage: UIImage(named: "page-control-inactive")!)
+        
+//        pageControl = UIPageControl()
+//        pageControl.pageIndicatorTintColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
+//        pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
         pageControl.numberOfPages = IntroViewControllerUX.NumberOfCards
         pageControl.addTarget(self, action: Selector("changePage"), forControlEvents: UIControlEvents.ValueChanged)
 
         view.addSubview(pageControl)
         pageControl.snp_makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.scrollView)
-            make.centerY.equalTo(self.startBrowsingButton.snp_top).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
+            // Cliqz: remove start browsing button
+            make.centerY.equalTo(self.view.snp_bottom).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
+//            make.centerY.equalTo(self.startBrowsingButton.snp_top).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
         }
 
 
@@ -153,29 +186,35 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             self.addLabelsToIntroView(introView, text: text, title: title)
         }
 
-        addCard(IntroViewControllerUX.CardTextOrganize, title: IntroViewControllerUX.CardTitleOrganize)
-        addCard(IntroViewControllerUX.CardTextCustomize, title: IntroViewControllerUX.CardTitleCustomize)
-        addCard(IntroViewControllerUX.CardTextShare, title: IntroViewControllerUX.CardTitleShare)
-        addCard(IntroViewControllerUX.CardTextChoose, title: IntroViewControllerUX.CardTitleChoose)
+        // Cliqz: changed titles and texts of the cards
+        addCard("", title: IntroViewControllerUX.CardTitleCliqzBrowser)
+        addTextCard(IntroViewControllerUX.CardTextTyping)
+        addTextCard(IntroViewControllerUX.CardTextLocationSearch, additionalView: gettingStartedButton)
+        
+//        addCard(IntroViewControllerUX.CardTextOrganize, title: IntroViewControllerUX.CardTitleOrganize)
+//        addCard(IntroViewControllerUX.CardTextCustomize, title: IntroViewControllerUX.CardTitleCustomize)
+//        addCard(IntroViewControllerUX.CardTextShare, title: IntroViewControllerUX.CardTitleShare)
+//        addCard(IntroViewControllerUX.CardTextChoose, title: IntroViewControllerUX.CardTitleChoose)
 
 
+        // Cliqz: removed Sync card
         // Sync card, with sign in to sync button.
-
-        signInButton = UIButton()
-        signInButton.backgroundColor = IntroViewControllerUX.SignInButtonColor
-        signInButton.setTitle(IntroViewControllerUX.SignInButtonTitle, forState: .Normal)
-        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        signInButton.titleLabel?.font = IntroViewControllerUX.SignInButtonFont
-        signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
-        signInButton.clipsToBounds = true
-        signInButton.addTarget(self, action: "SELlogin", forControlEvents: UIControlEvents.TouchUpInside)
-        signInButton.snp_makeConstraints { (make) -> Void in
-            make.height.equalTo(IntroViewControllerUX.SignInButtonHeight)
-        }
-
-        let syncCardView =  UIView()
-        addViewsToIntroView(syncCardView, view: signInButton, title: IntroViewControllerUX.CardTitleSync)
-        introViews.append(syncCardView)
+//
+//        signInButton = UIButton()
+//        signInButton.backgroundColor = IntroViewControllerUX.SignInButtonColor
+//        signInButton.setTitle(IntroViewControllerUX.SignInButtonTitle, forState: .Normal)
+//        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+//        signInButton.titleLabel?.font = IntroViewControllerUX.SignInButtonFont
+//        signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
+//        signInButton.clipsToBounds = true
+//        signInButton.addTarget(self, action: "SELlogin", forControlEvents: UIControlEvents.TouchUpInside)
+//        signInButton.snp_makeConstraints { (make) -> Void in
+//            make.height.equalTo(IntroViewControllerUX.SignInButtonHeight)
+//        }
+//
+//        let syncCardView =  UIView()
+//        addViewsToIntroView(syncCardView, view: signInButton, title: IntroViewControllerUX.CardTitleSync)
+//        introViews.append(syncCardView)
 
         // Add all the cards to the view, make them invisible with zero alpha
 
@@ -184,7 +223,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             self.view.addSubview(introView)
             introView.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(self.slideContainer.snp_bottom)
-                make.bottom.equalTo(self.startBrowsingButton.snp_top)
+                // Cliqz: remove start browsing button
+                make.bottom.equalTo(self.view.snp_bottom)
+//                make.bottom.equalTo(self.startBrowsingButton.snp_top)
                 make.left.right.equalTo(self.view)
             }
         }
@@ -203,7 +244,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         scrollView.snp_remakeConstraints { (make) -> Void in
             make.left.right.top.equalTo(self.view)
-            make.bottom.equalTo(self.startBrowsingButton.snp_top)
+            // Cliqz: remove start browsing button
+            make.bottom.equalTo(self.view.snp_bottom)
+//            make.bottom.equalTo(self.startBrowsingButton.snp_top)
         }
 
         for i in 0..<IntroViewControllerUX.NumberOfCards {
@@ -322,7 +365,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
                 newIntroView.alpha = 1.0
             }, completion: { _ in
                 if page == (IntroViewControllerUX.NumberOfCards - 1) {
-                    self.scrollView.signinButton = self.signInButton
+                    // Cliqz: replaced signinButton with gettingStarted button in the last card
+                    self.scrollView.signinButton = self.gettingStartedButton
+//                    self.scrollView.signinButton = self.signInButton
                 } else {
                     self.scrollView.signinButton = nil
                 }
@@ -337,18 +382,25 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     }
 
     private var scaledHeightOfSlide: CGFloat {
-        //Cliqz: display the inro image in the whole screen except the start button
-        return view.frame.height - startBrowsingButton.frame.height
-//        return (view.frame.width / slides[0].size.width) * slides[0].size.height / slideVerticalScaleFactor
+        return (view.frame.width / slides[0].size.width) * slides[0].size.height / slideVerticalScaleFactor
     }
 
     private func attributedStringForLabel(text: String) -> NSMutableAttributedString {
+        // Cliqz: modified the styling for the text label
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = IntroViewControllerUX.CardTextLineHeight
-        paragraphStyle.alignment = .Center
+        paragraphStyle.lineSpacing = CGFloat(5)
+        let textAttributes = [
+            NSForegroundColorAttributeName  : UIColor.whiteColor(),
+            NSParagraphStyleAttributeName   : paragraphStyle]
+        let string = NSMutableAttributedString(string: text, attributes: textAttributes)
 
-        let string = NSMutableAttributedString(string: text)
-        string.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, string.length))
+//        let paragraphStyle = NSMutableParagraphStyle()
+//        paragraphStyle.lineSpacing = IntroViewControllerUX.CardTextLineHeight
+//        paragraphStyle.alignment = .Center
+//
+//        let string = NSMutableAttributedString(string: text)
+//        string.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, string.length))
+        
         return string
     }
 
@@ -373,8 +425,10 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             let titleLabel = UILabel()
             titleLabel.numberOfLines = 0
             titleLabel.textAlignment = NSTextAlignment.Center
-            titleLabel.text = title
-            titleLabel.font = IntroViewControllerUX.CardTitleFont
+            // Cliqz: modified the styling for the title label
+            titleLabel.attributedText = attributedStringForTitle(title)
+//            titleLabel.text = title
+//            titleLabel.font = IntroViewControllerUX.CardTitleFont
             introView.addSubview(titleLabel)
             titleLabel.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(introView)
@@ -384,6 +438,62 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             }
         }
 
+    }
+    
+    // Cliqz: Added method to modify the styling for the text label
+    private func attributedStringForTitle(text: String) -> NSMutableAttributedString {
+        let string = NSMutableAttributedString(string: text)
+        var fontAdjustment = 0
+        if (self.view.frame.width > 320) {
+            fontAdjustment = 3
+        }
+        
+        // Add first lines styling
+        let firstLineLength = text.componentsSeparatedByString("\n")[0].characters.count
+        string.addAttributes([NSFontAttributeName: UIFont(name: "Lato-Medium", size: CGFloat(14+fontAdjustment))!], range: NSMakeRange(0, firstLineLength))
+        
+        // Add second lines styling
+        let secondLineLength = string.length - firstLineLength
+        string.addAttributes([NSFontAttributeName: UIFont(name: "Lato-Light", size: CGFloat(12+fontAdjustment))!], range: NSMakeRange(firstLineLength, secondLineLength))
+        
+        return string;
+    }
+    
+    // Cliqz: Added method to create custom page with text and an optional view
+    func addTextCard(text: String, additionalView: UIView? = nil) {
+        let introView =  UIView()
+        addViewsToIntroView(introView, text: text, additionalView: additionalView)
+        introViews.append(introView)
+    }
+    
+    private func addViewsToIntroView(introView: UIView, text: String, additionalView: UIView?) {
+        introView.backgroundColor = UIColor(rgb: 0x262626)
+        
+        let textLabel = UILabel()
+        textLabel.numberOfLines = 0
+        textLabel.attributedText = attributedStringForLabel(text)
+        if (self.view.frame.width > 320) {
+            textLabel.font = UIFont(name: "Lato-Medium", size: 18)
+        } else {
+            textLabel.font = UIFont(name: "Lato-Medium", size: 16)
+        }
+        
+        
+        introView.addSubview(textLabel)
+        textLabel.snp_makeConstraints { (make) -> Void in
+            make.topMargin.equalTo(30)
+            make.centerX.equalTo(introView)
+            make.width.equalTo(self.view.frame.width <= 320 ? 240 : 280) // TODO Talk to UX about small screen sizes
+        }
+        
+        if let view = additionalView {
+            introView.addSubview(view)
+            view.snp_makeConstraints { (make) -> Void in
+                make.top.equalTo(textLabel.snp_bottom).offset(20)
+                make.centerX.equalTo(introView)
+            }
+        }
+        
     }
 }
 
