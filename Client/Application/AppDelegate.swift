@@ -357,29 +357,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 	
 	private func indexWikipediaQueries() {
-		if let startWordsPath = NSBundle.mainBundle().pathForResource("wiki requests", ofType: "txt") {
-			if let startWords = try? String(contentsOfFile: startWordsPath, usedEncoding: nil) {
-				let allQueries = startWords.componentsSeparatedByString("\n")
-				var index = 1
-				for a in allQueries {
-					if #available(iOS 9.0, *) {
-					    let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeData as String)
-						attributeSet.title = a
-						attributeSet.contentDescription = "Wikipedia page"
-//						attributeSet.thumbnailData = DocumentImage.jpg
-						
-						let item = CSSearchableItem(uniqueIdentifier: "\(index)", domainIdentifier: "file-1", attributeSet: attributeSet)
-						CSSearchableIndex.defaultSearchableIndex().indexSearchableItems([item]) { error in
-							if error != nil {
-								print(error?.localizedDescription)
+		if let startWordsPath = NSBundle.mainBundle().pathForResource("wiki queries", ofType: "txt") {
+//			if let jsonString = try? String(contentsOfFile: startWordsPath, usedEncoding: nil) {
+			if let data = NSData(contentsOfFile: startWordsPath) {
+				do {
+					let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+					print("AAAA --- \(json)")
+					if let queryList = json as? NSArray {
+						for query in queryList {
+							if let q = query as? NSDictionary {
+								var index = 1
+								if #available(iOS 9.0, *) {
+									let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeData as String)
+									if let t = q.valueForKey("title") {
+										attributeSet.title = t as? String
+									} else {
+										attributeSet.title = q.valueForKey("query") as? String
+									}
+									attributeSet.contentDescription = q.valueForKey("description") as? String
+									if let u = q.valueForKey("image") as? String {
+										attributeSet.thumbnailURL = NSURL(string: u)
+									}
+									let item = CSSearchableItem(uniqueIdentifier: "UUID-\(index)", domainIdentifier: "wiki", attributeSet: attributeSet)
+									CSSearchableIndex.defaultSearchableIndex().indexSearchableItems([item]) { error in
+										if error != nil {
+											print(error?.localizedDescription)
+										}
+										else {
+											print("Item indexed.")
+										}
+									}
+								}
+								++index
 							}
-							else {
-								print("Item indexed.")
-							}
-
 						}
-						++index
 					}
+//					let allQueries = startWords.componentsSeparatedByString("\n")
+//					var index = 1
+//					for a in allQueries {
+//						if #available(iOS 9.0, *) {
+//							let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeData as String)
+//							attributeSet.title = a
+//							attributeSet.contentDescription = "Wikipedia page"
+//							attributeSet.thumbnailData = DocumentImage.jpg
+//							
+//							let item = CSSearchableItem(uniqueIdentifier: "\(index)", domainIdentifier: "file-1", attributeSet: attributeSet)
+//							CSSearchableIndex.defaultSearchableIndex().indexSearchableItems([item]) { error in
+//								if error != nil {
+//									print(error?.localizedDescription)
+//								}
+//								else {
+//									print("Item indexed.")
+//								}
+//
+//							}
+//							++index
+//						}
+//					}
+				} catch {
+					print("Invalid JSON file.")
 				}
 			}
 		}

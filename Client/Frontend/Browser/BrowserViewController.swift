@@ -665,7 +665,7 @@ class BrowserViewController: UIViewController {
             } else {
                 make.bottom.equalTo(self.view.snp_bottom)
             }
-        }
+		}
     }
 
     private func showHomePanelController(inline inline: Bool) {
