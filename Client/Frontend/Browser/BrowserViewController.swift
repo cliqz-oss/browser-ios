@@ -443,9 +443,27 @@ class BrowserViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         log.debug("BVC viewDidLayoutSubviews…")
         super.viewDidLayoutSubviews()
+        
+        // Cliqz: Changed the constraints for header and statusbarOverly to work properly during the animation to/from past layer
+        let currentDevice = UIDevice.currentDevice()
+        let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .Phone)
+        
+        header.snp_remakeConstraints { make in
+            make.height.equalTo(UIConstants.ToolbarHeight)
+            make.left.right.equalTo(self.view)
+            
+            if !iphoneLandscape {
+               make.top.equalTo(self.view).offset(20)
+            }
+        }
         statusBarOverlay.snp_remakeConstraints { make in
             make.top.left.right.equalTo(self.view)
-            make.height.equalTo(self.topLayoutGuide.length)
+            if iphoneLandscape {
+              make.height.equalTo(self.topLayoutGuide.length)
+            } else {
+                make.height.equalTo(20)
+            }
+//            make.height.equalTo(self.topLayoutGuide.length)
         }
         log.debug("BVC done.")
     }
@@ -1200,7 +1218,7 @@ extension BrowserViewController: URLBarDelegate {
     // Cliqz: Added delegate methods implementation for new bar buttons
     func urlBarDidClickSearchHistory() {
         transition.transitionDirection = TransitionDirection.Down
-
+        print(">>>>>>   self.topLayoutGuide.length: \(self.topLayoutGuide.length)")
         self.presentViewController(searchHistoryContainer, animated: true, completion: nil)
         
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
