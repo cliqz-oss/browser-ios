@@ -48,5 +48,13 @@ extension String {
         
         return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
     }
-    
+	
+	// Cliqz added extra URL encoding methods because stringByAddingPercentEncodingWithAllowedCharacters doesn't encodes &
+	func encodeURL() -> String {
+		return CFURLCreateStringByAddingPercentEscapes(nil,
+			self as CFStringRef,
+			nil,
+			String("!*'\"();:@&=+$,/?%#[]% ") as CFStringRef, CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) as String
+	}
+
 }

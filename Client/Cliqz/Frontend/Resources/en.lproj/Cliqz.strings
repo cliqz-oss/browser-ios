@@ -1,0 +1,22 @@
+/* The text shown in the search field */
+"Search" = "Search";
+
+/* Error message title */
+"Sorry" = "Sorry";
+
+/* Error message when JS scripts for search can't be loaded */
+"Something went wrong, the script wasn't loaded." = "Something went wrong, the script wasn't loaded.";
+
+/* Button label to cancel entering a URL or search query
+ Cancel */
+"Cancel" = "Cancel";
+
+
+/* Button label on Alert view */
+"Retry" = "Retry";
+
+/* Search Recommendations and top visited sites title */
+"Search recommendations" = "Recommendations";
+
+/* Search history title */
+"Search history" = "History";

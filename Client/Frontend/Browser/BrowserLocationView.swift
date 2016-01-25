@@ -78,7 +78,7 @@ class BrowserLocationView: UIView {
 		// Cliqz: Changed Placeholder text and color according to requirements
 		// TODO Naira: we should localize the string as well
 //        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
-		let placeholderText = NSLocalizedString("Search", comment: "Search")
+		let placeholderText = NSLocalizedString("Search", tableName: "Cliqz", comment: "The text shown in the search field")
         return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
     }()
 
