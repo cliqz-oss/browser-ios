@@ -749,8 +749,8 @@ class SettingsTableViewController: UITableViewController {
         //Cliqz: Removed unused sections from Settings table
         let generalSettings = [
 			SearchSetting(settings: self),
-//            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
-//            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
+            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
+            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
             ]
 
 //        var generalSettings = [

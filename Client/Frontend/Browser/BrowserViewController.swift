@@ -1218,7 +1218,6 @@ extension BrowserViewController: URLBarDelegate {
     // Cliqz: Added delegate methods implementation for new bar buttons
     func urlBarDidClickSearchHistory() {
         transition.transitionDirection = TransitionDirection.Down
-        print(">>>>>>   self.topLayoutGuide.length: \(self.topLayoutGuide.length)")
         self.presentViewController(searchHistoryContainer, animated: true, completion: nil)
         
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
