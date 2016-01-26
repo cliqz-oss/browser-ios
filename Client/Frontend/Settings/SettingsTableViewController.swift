@@ -675,7 +675,20 @@ extension SearchSetting: SearchEnginePickerDelegate {
 		}
 	}
 }
-
+// Cliqz: Added
+private class ImprintSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("Imprint", tableName: "Cliqz", comment: "Show Cliqz legal page. See https://cliqz.com/legal"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+    override var url: NSURL? {
+        return NSURL(string: "https://cliqz.com/legal")
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+    }
+}
 private class ClearPrivateDataSetting: Setting {
     let profile: Profile
     var tabManager: TabManager!
@@ -748,9 +761,10 @@ class SettingsTableViewController: UITableViewController {
         
         //Cliqz: Removed unused sections from Settings table
         let generalSettings = [
-			SearchSetting(settings: self),
-            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
-            titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting"))
+            SearchSetting(settings: self),
+            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
+            SendCliqzFeedbackSetting(),
+            ImprintSetting()
             ]
 
 //        var generalSettings = [
@@ -815,7 +829,7 @@ class SettingsTableViewController: UITableViewController {
 //                OpenSupportPageSetting()
             ]),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                VersionSetting(settings: self), SendCliqzFeedbackSetting(),
+                VersionSetting(settings: self),
                 LicenseAndAcknowledgementsSetting(),
                 //Cliqz: Removed unused sections from Settings table
 //                YourRightsSetting(),

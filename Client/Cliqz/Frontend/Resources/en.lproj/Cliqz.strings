@@ -11,7 +11,6 @@
  Cancel */
 "Cancel" = "Cancel";
 
-
 /* Button label on Alert view */
 "Retry" = "Retry";
 
@@ -20,3 +19,7 @@
 
 /* Search history title */
 "Search history" = "History";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Imprint";
+

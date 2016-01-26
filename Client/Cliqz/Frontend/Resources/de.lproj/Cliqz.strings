@@ -19,3 +19,7 @@
 
 /* Search history title */
 "Search history" = "Suchverlauf";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Impressum";
+
