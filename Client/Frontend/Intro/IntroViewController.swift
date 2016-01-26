@@ -359,19 +359,28 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     private func setActiveIntroView(newIntroView: UIView, forPage page: Int) {
         if introView != newIntroView {
-            UIView.animateWithDuration(IntroViewControllerUX.FadeDuration, animations: { () -> Void in
-                self.introView?.alpha = 0
-                self.introView = newIntroView
-                newIntroView.alpha = 1.0
-            }, completion: { _ in
-                if page == (IntroViewControllerUX.NumberOfCards - 1) {
-                    // Cliqz: replaced signinButton with gettingStarted button in the last card
-                    self.scrollView.signinButton = self.gettingStartedButton
+            // Cliqz: removed the fade animation when switching between cards
+            self.introView?.alpha = 0
+            self.introView = newIntroView
+            newIntroView.alpha = 1.0
+            if page == (IntroViewControllerUX.NumberOfCards - 1) {
+                // Cliqz: replaced signinButton with gettingStarted button in the last card
+                self.scrollView.signinButton = self.gettingStartedButton
+            } else {
+                self.scrollView.signinButton = nil
+            }
+            
+//            UIView.animateWithDuration(IntroViewControllerUX.FadeDuration, animations: { () -> Void in
+//                self.introView?.alpha = 0
+//                self.introView = newIntroView
+//                newIntroView.alpha = 1.0
+//            }, completion: { _ in
+//                if page == (IntroViewControllerUX.NumberOfCards - 1) {
 //                    self.scrollView.signinButton = self.signInButton
-                } else {
-                    self.scrollView.signinButton = nil
-                }
-            })
+//                } else {
+//                    self.scrollView.signinButton = nil
+//                }
+//            })
             // Cliqz: logged Onboarding event
             TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
         }
@@ -492,7 +501,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         if let view = additionalView {
             introView.addSubview(view)
             view.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(textLabel.snp_bottom).offset(20)
+                make.top.equalTo(textLabel.snp_bottom).offset(self.view.frame.width > 320 ? 50 : 20)
                 make.centerX.equalTo(introView)
             }
         }
