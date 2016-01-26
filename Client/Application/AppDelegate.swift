@@ -168,7 +168,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.debug("Done with applicationDidFinishLaunching.")
 		Fabric.with([Crashlytics.self])
 		
-		self.indexWikipediaQueries()
+		
+		self.indexWikipediaQueriesIfNeeded()
         return true
     }
 
@@ -356,13 +357,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 	
+	private func indexWikipediaQueriesIfNeeded() {
+		let defaults = NSUserDefaults.standardUserDefaults()
+		if defaults.valueForKey("WikipediaQueriesIndexed") == nil {
+			if #available(iOS 9.0, *) {
+				CSSearchableIndex.defaultSearchableIndex().deleteSearchableItemsWithDomainIdentifiers(["wiki"], completionHandler: nil)
+				self.indexWikipediaQueries()
+				defaults.setValue("done", forKey: "WikipediaQueriesIndexed")
+			}
+		}
+	}
+
 	private func indexWikipediaQueries() {
 		if let startWordsPath = NSBundle.mainBundle().pathForResource("wiki queries", ofType: "txt") {
 //			if let jsonString = try? String(contentsOfFile: startWordsPath, usedEncoding: nil) {
 			if let data = NSData(contentsOfFile: startWordsPath) {
 				do {
 					let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-					print("AAAA --- \(json)")
 					if let queryList = json as? NSArray {
 						for query in queryList {
 							if let q = query as? NSDictionary {
