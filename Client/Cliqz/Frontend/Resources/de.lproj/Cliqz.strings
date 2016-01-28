@@ -23,3 +23,9 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Impressum";
 
+/* Title for No Email account pop-up */
+"No Email account title" = "kein Email-Konto eingerichtet";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Bitte Email-Konto einrichten, um Feedback schicken zu können.";
+
