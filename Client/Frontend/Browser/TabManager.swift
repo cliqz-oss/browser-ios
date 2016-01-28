@@ -367,12 +367,31 @@ class TabManager : NSObject {
 }
 
 extension TabManager {
+
     class SavedTab: NSObject, NSCoding {
         let isSelected: Bool
         let title: String?
         let isPrivate: Bool
         var sessionData: SessionData?
         var screenshotUUID: NSUUID?
+
+        var jsonDictionary: [String: AnyObject] {
+            let title: String = self.title ?? "null"
+            let uuid: String = String(self.screenshotUUID ?? "null")
+
+            var json: [String: AnyObject] = [
+                "title": title,
+                "isPrivate": String(self.isPrivate),
+                "isSelected": String(self.isSelected),
+                "screenshotUUID": uuid
+            ]
+
+            if let sessionDataInfo = self.sessionData?.jsonDictionary {
+                json["sessionData"] = sessionDataInfo
+            }
+
+            return json
+        }
 
         init?(browser: Browser, isSelected: Bool) {
             self.screenshotUUID = browser.screenshotUUID
@@ -417,15 +436,26 @@ extension TabManager {
         }
     }
 
-    private func tabsStateArchivePath() -> String {
+    static private func tabsStateArchivePath() -> String {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
         return NSURL(fileURLWithPath: documentsPath).URLByAppendingPathComponent("tabsState.archive").path!
+    }
+
+    static func tabsToRestore() -> [SavedTab]? {
+        let tabStateArchivePath = tabsStateArchivePath()
+        if NSFileManager.defaultManager().fileExistsAtPath(tabStateArchivePath) {
+            if let data = NSData(contentsOfFile: tabStateArchivePath) {
+                let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
+                return unarchiver.decodeObjectForKey("tabs") as? [SavedTab]
+            }
+        }
+        return nil
     }
 
     private func preserveTabsInternal() {
         guard !isRestoring else { return }
 
-        let path = tabsStateArchivePath()
+        let path = TabManager.tabsStateArchivePath()
         var savedTabs = [SavedTab]()
         var savedUUIDs = Set<String>()
         for (tabIndex, tab) in tabs.enumerate() {
@@ -460,20 +490,9 @@ extension TabManager {
         }
     }
 
-    func tabsToRestore() -> [SavedTab]? {
-        let tabStateArchivePath = tabsStateArchivePath()
-        if NSFileManager.defaultManager().fileExistsAtPath(tabStateArchivePath) {
-            if let data = NSData(contentsOfFile: tabStateArchivePath) {
-                let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
-                return unarchiver.decodeObjectForKey("tabs") as? [SavedTab]
-            }
-        }
-        return nil
-    }
-
     private func restoreTabsInternal() {
         log.debug("Restoring tabs.")
-        guard let savedTabs = tabsToRestore() else {
+        guard let savedTabs = TabManager.tabsToRestore() else {
             log.debug("Nothing to restore.")
             return
         }
@@ -594,6 +613,18 @@ extension TabManager : WKNavigationDelegate {
     func webViewWebContentProcessDidTerminate(webView: WKWebView) {
         if let browser = selectedTab where browser.webView == webView {
             webView.reload()
+        }
+    }
+}
+
+extension TabManager {
+    class func tabRestorationDebugInfo() -> String {
+        let tabs = TabManager.tabsToRestore()?.map { $0.jsonDictionary } ?? []
+        do {
+            let jsonData = try NSJSONSerialization.dataWithJSONObject(tabs, options: [.PrettyPrinted])
+            return String(data: jsonData, encoding: NSUTF8StringEncoding) ?? ""
+        } catch _ {
+            return ""
         }
     }
 }

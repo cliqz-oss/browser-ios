@@ -1,0 +1,87 @@
+/* Button for larger reader font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"+" = "+";
+
+/* Button for smaller reader font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"-" = "-";
+
+/* Authentication prompt message with no realm. Parameter is the hostname of the site */
+"A username and password are being requested by %@." = "%@ଙ୍କ ଦ୍ୱାରା ଏକ ଇଉଜରନାମ ଓ ପାସୱାର୍ଡ଼ ବ୍ୟବହାର ହେଉଛି ।";
+
+/* Authentication prompt message with a realm. First parameter is the hostname. Second is the realm string */
+"A username and password are being requested by %@. The site says: %@" = "%1$@ଙ୍କ ଦେଇ ଏକ ଇଉଜରନାମ ଓ ପାସୱାର୍ଡ଼ ଅନୁରୋଧ କରାଯାଇଛି । ସାଇଟରେ ଲେଖାଯାଇଛି: %2$@";
+
+/* Button for reader mode font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"Aa" = "Aa";
+
+/* About settings section title */
+"About" = "ବାବଦରେ";
+
+/* Accessibility label for the Add Tab button in the Tab Tray. */
+"Add Tab" = "ଟ୍ୟାବ ଯୋଡ଼ନ୍ତୁ";
+
+/* Add URL to the reading list - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
+"Add to Reading List" = "ରିଡିଂ ଲିଷ୍ଟରେ ଯୋଡ଼ନ୍ତୁ";
+
+/* Accessibility message e.g. spoken by VoiceOver after the current page gets added to the Reading List using the Reader View button, e.g. by long-pressing it or by its accessibility custom action. */
+"Added page to Reading List" = "ରିଡ଼ିଂ ଲିଷ୍ଟରେ ପୃଷ୍ଠାଟି ଯୋଡ଼ାଗଲା";
+
+/* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
+"Address and Search" = "ଆଡ୍ରେସ ଓ ସର୍ଚ";
+
+/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+"Always Send" = "ସବୁବେଳେ ପଠାନ୍ତୁ";
+
+/* Authentication prompt title */
+"Authentication required" = "ଅନୁମତି ଲୋଡ଼ା";
+
+/* Accessibility Label for the browser toolbar Back button */
+"Back" = "ପଛକୁ";
+
+/* Block pop-up windows setting */
+"Block Pop-up Windows" = "ପପ-ଅପ ଉଇଣ୍ଡୋ ଅଟକାନ୍ତୁ";
+
+/* Bookmark a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
+"Bookmark" = "ବୁକମାର୍କ";
+
+/* Panel accessibility label */
+"Bookmarks" = "ବୁକମାର୍କଗୁଡ଼ିକ";
+
+/* Accessibility label for brightness adjustment slider in Reader Mode display settings */
+"Brightness" = "ଉଜ୍ଜଳତା";
+
+/* Alert Call Button */
+"Call" = "କଲ";
+
+/* Cancel button title in share dialog */
+"Cancel" = "ନାକଚ";
+
+/* Accessibility hint for the color theme setting buttons in reader mode display settings */
+"Changes color theme." = "ରଙ୍ଗ ଥିମ ବଦଳାନ୍ତୁ ।";
+
+/* Accessibility hint for the font type buttons in reader mode display settings */
+"Changes font type." = "ଫଣ୍ଟ ପ୍ରକାର ବଦଳାଏ ।";
+
+/* Label used as an item in Settings. When touched it will open a dialog prompting the user to make sure they want to clear all of their private data. */
+"Clear Private Data" = "ପ୍ରାଇଭେଟ ଡାଟା ସଫାକରନ୍ତୁ";
+
+/* Accessibility label for action denoting closing a tab in tab list (tray) */
+"Close" = "ବନ୍ଦ";
+
+/* No comment provided by engineer. */
+"Closing tab" = "ବନ୍ଦକରିବା ଟ୍ୟାବ";
+
+/* Copy the URL from the location bar */
+"Copy Address" = "ଠିକଣା କପି";
+
+/* Context menu item for copying an image to the clipboard */
+"Copy Image" = "ଛବି କପିକରନ୍ତୁ";
+
+/* Context menu item for copying a link URL to the clipboard */
+"Copy Link" = "ଲିଙ୍କ କପିକରନ୍ତୁ";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user wanted to add current page to the Reading List and this was not done, likely because it already was in the Reading List, but perhaps also because of real failures. */
+"Could not add page to Reading List. Maybe it's already there?" = "ରିଡ଼ିଂ ଲିଷ୍ଟରେ ପୃଷ୍ଠା ଯୋଡ଼ା ଯାଇପାରିଲା ନାହିଁ । ଏହା ଆଗରୁ ଅଛି କି?";
+
+/* Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed. */
+"Could not add page to Reading list" = "ରିଡ଼ିଂ ଲିଷ୍ଟରେ ପୃଷ୍ଟି ଯୋଡ଼ାଯାଇପାରିଲା ନାହିଁ";
+

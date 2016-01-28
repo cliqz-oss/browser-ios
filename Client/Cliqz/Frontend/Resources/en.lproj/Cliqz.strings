@@ -23,3 +23,14 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Imprint";
 
+/* Send Feedback Email */
+"Send Feedback" = "Feedback geben";
+
+/* Send Feedback Email Subject*/
+"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+
+/* Open search section of settings */
+"Search" = "Search";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@";

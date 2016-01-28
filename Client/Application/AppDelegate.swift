@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
 
         // Short circuit the app if we want to email logs from the debug menu
-        if DebugSettingsBundleOptions.emailLogsOnLaunch {
+        if DebugSettingsBundleOptions.launchIntoEmailComposer {
             self.window?.rootViewController = UIViewController()
             presentEmailComposerWithLogs()
             return true
@@ -56,15 +56,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.debug("Starting keyboard helper…")
         // Start the keyboard helper to monitor and cache keyboard state.
         KeyboardHelper.defaultHelper.startObserving()
-
-        // Create a new sync log file on cold app launch
-		// Naira: Removed logger inisialization because of performance considerations and also we don't need FF logger.
-//        Logger.syncLogger.newLogWithDate(NSDate())
+        
         log.debug("Creating Sync log file…")
+        let logDate = NSDate()
         // Create a new sync log file on cold app launch. Note that this doesn't roll old logs.
+        // Naira: Removed logger inisialization because of performance considerations and also we don't need FF logger.
+//        Logger.syncLogger.newLogWithDate(NSDate())
 
         log.debug("Creating corrupt DB logger…")
-        Logger.corruptLogger.newLogWithDate(NSDate())
+        Logger.corruptLogger.newLogWithDate(logDate)
+
+        log.debug("Creating Browser log file…")
+        Logger.browserLogger.newLogWithDate(logDate)
 
         log.debug("Getting profile…")
         let profile = getProfile(application)
@@ -160,12 +163,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Now roll logs.
         log.debug("Triggering log roll.")
+
+        // Cliqz: disabled calling to syncLogger
 //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),
 //            Logger.syncLogger.deleteOldLogsDownToSizeLimit
 //        )
 
+        // CliqzZ: Start Crashlytics
+        Fabric.with([Crashlytics.self])
+
         log.debug("Done with applicationDidFinishLaunching.")
-		Fabric.with([Crashlytics.self])
+
         return true
     }
 
@@ -195,7 +203,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
         AppStatus.sharedInstance.appDidBecomeActive(self.profile!)
-        guard !DebugSettingsBundleOptions.emailLogsOnLaunch else {
+
+        guard !DebugSettingsBundleOptions.launchIntoEmailComposer else {
             return
         }
 
@@ -255,14 +264,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func setUserAgent() {
-        // Note that we use defaults here that are readable from extensions, so they
-        // can just used the cached identifier.
-        let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
-        let firefoxUA = UserAgent.defaultUserAgent(defaults)
+        let firefoxUA = UserAgent.defaultUserAgent()
 
         // Set the UA for WKWebView (via defaults), the favicon fetcher, and the image loader.
-        // This only needs to be done once per runtime.
-
+        // This only needs to be done once per runtime. Note that we use defaults here that are
+        // readable from extensions, so they can just use the cached identifier.
+        let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
         defaults.registerDefaults(["UserAgent": firefoxUA])
         FaviconFetcher.userAgent = firefoxUA
         SDWebImageDownloader.sharedDownloader().setValue(firefoxUA, forHTTPHeaderField: "User-Agent")
@@ -301,16 +308,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey(String(kCFBundleVersionKey)) as? NSString {
             let mailComposeViewController = MFMailComposeViewController()
             mailComposeViewController.mailComposeDelegate = self
-            mailComposeViewController.setSubject("Email logs for iOS client version v\(appVersion) (\(buildNumber))")
-            do {
-                let logNamesAndData = try Logger.diskLogFilenamesAndData()
-                logNamesAndData.forEach { nameAndData in
-                    if let data = nameAndData.1 {
-                        mailComposeViewController.addAttachmentData(data, mimeType: "text/plain", fileName: nameAndData.0)
+            mailComposeViewController.setSubject("Debug Info for iOS client version v\(appVersion) (\(buildNumber))")
+
+            if DebugSettingsBundleOptions.attachLogsToDebugEmail {
+                do {
+                    let logNamesAndData = try Logger.diskLogFilenamesAndData()
+                    logNamesAndData.forEach { nameAndData in
+                        if let data = nameAndData.1 {
+                            mailComposeViewController.addAttachmentData(data, mimeType: "text/plain", fileName: nameAndData.0)
+                        }
                     }
+                } catch _ {
+                    print("Failed to retrieve logs from device")
                 }
-            } catch _ {
-                print("Failed to retrieve logs from device")
+            }
+
+            if DebugSettingsBundleOptions.attachTabStateToDebugEmail {
+                if let tabStateDebugData = TabManager.tabRestorationDebugInfo().dataUsingEncoding(NSUTF8StringEncoding) {
+                    mailComposeViewController.addAttachmentData(tabStateDebugData, mimeType: "text/plain", fileName: "tabState.txt")
+                }
             }
 
             self.window?.rootViewController?.presentViewController(mailComposeViewController, animated: true, completion: nil)

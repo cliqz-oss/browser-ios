@@ -268,17 +268,17 @@ private class SyncNowSetting: WithAccountSetting {
     }
 
     override var status: NSAttributedString? {
-        if let timestamp = profile.prefs.timestampForKey(PrefsKeys.KeyLastSyncFinishTime) {
-            let label = NSLocalizedString("Last synced: %@", comment: "Last synced time label beside Sync Now setting option. Argument is the relative date string.")
-            let formattedLabel = String(format: label, NSDate.fromTimestamp(timestamp).toRelativeTimeString())
-            let attributedString = NSMutableAttributedString(string: formattedLabel)
-            let attributes = [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(12, weight: UIFontWeightRegular)]
-            let range = NSMakeRange(0, attributedString.length)
-            attributedString.setAttributes(attributes, range: range)
-            return attributedString
+        guard let timestamp = profile.syncManager.lastSyncFinishTime else {
+            return nil
         }
 
-        return nil
+        let label = NSLocalizedString("Last synced: %@", comment: "Last synced time label beside Sync Now setting option. Argument is the relative date string.")
+        let formattedLabel = String(format: label, NSDate.fromTimestamp(timestamp).toRelativeTimeString())
+        let attributedString = NSMutableAttributedString(string: formattedLabel)
+        let attributes = [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(12, weight: UIFontWeightRegular)]
+        let range = NSMakeRange(0, attributedString.length)
+        attributedString.setAttributes(attributes, range: range)
+        return attributedString
     }
 
     override func onConfigureCell(cell: UITableViewCell) {
@@ -468,8 +468,14 @@ private class DeleteExportedDataSetting: HiddenSetting {
 
     override func onClick(navigationController: UINavigationController?) {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let fileManager = NSFileManager.defaultManager()
         do {
-            try NSFileManager.defaultManager().removeItemInDirectory(documentsPath, named: "browser.db")
+            let files = try fileManager.contentsOfDirectoryAtPath(documentsPath)
+            for file in files {
+                if file.startsWith("browser.") || file.startsWith("logins.") {
+                    try fileManager.removeItemInDirectory(documentsPath, named: file)
+                }
+            }
         } catch {
             print("Couldn't delete exported data: \(error).")
         }
@@ -484,12 +490,14 @@ private class ExportBrowserDataSetting: HiddenSetting {
 
     override func onClick(navigationController: UINavigationController?) {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-        if let browserDB = NSURL.fileURLWithPath(documentsPath).URLByAppendingPathComponent("browser.db").path {
-            do {
-                try self.settings.profile.files.copy("browser.db", toAbsolutePath: browserDB)
-            } catch {
-                print("Couldn't export browser data: \(error).")
+        do {
+            let log = Logger.syncLogger
+            try self.settings.profile.files.copyMatching(fromRelativeDirectory: "", toAbsoluteDirectory: documentsPath) { file in
+                log.debug("Matcher: \(file)")
+                return file.startsWith("browser.") || file.startsWith("logins.")
             }
+        } catch {
+            print("Couldn't export browser data: \(error).")
         }
     }
 }
@@ -596,15 +604,15 @@ private class SendFeedbackSetting: Setting {
 // Cliqz: Added Settings for sending email feedback
 private class SendCliqzFeedbackSetting: Setting, MFMailComposeViewControllerDelegate {
 	override var title: NSAttributedString? {
-		return NSAttributedString(string: NSLocalizedString("Send Feedback", tableName: "Settings", comment: "Send Feedback Email"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+		return NSAttributedString(string: NSLocalizedString("Send Feedback", tableName: "Cliqz", comment: "Send Feedback Email"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
 	}
 
 	override func onClick(navigationController: UINavigationController?) {
 		let emailViewController = MFMailComposeViewController()
-		emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Settings", comment: "Send Feedback Email Subject"))
+		emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Cliqz", comment: "Send Feedback Email Subject"))
 		emailViewController.setToRecipients(["feedback@cliqz.com"])
 		emailViewController.mailComposeDelegate = self
-		let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Settings", comment: "Footnote message for feedback")
+		let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
 		emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType.rawValue), isHTML: false)
 		navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
 	}
@@ -731,6 +739,34 @@ private class PrivacyPolicySetting: Setting {
     }
 }
 
+private class ChinaSyncServiceSetting: WithoutAccountSetting {
+    override var accessoryType: UITableViewCellAccessoryType { return .None }
+    var prefs: Prefs { return settings.profile.prefs }
+    let prefKey = "useChinaSyncService"
+
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: "本地同步服务", attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+
+    override var status: NSAttributedString? {
+        return NSAttributedString(string: "本地服务使用火狐通行证同步数据", attributes: [NSForegroundColorAttributeName: UIConstants.TableViewHeaderTextColor])
+    }
+
+    override func onConfigureCell(cell: UITableViewCell) {
+        super.onConfigureCell(cell)
+        let control = UISwitch()
+        control.onTintColor = UIConstants.ControlTintColor
+        control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        control.on = prefs.boolForKey(prefKey) ?? true
+        cell.accessoryView = control
+        cell.selectionStyle = .None
+    }
+
+    @objc func switchValueChanged(toggle: UISwitch) {
+        prefs.setObject(toggle.on, forKey: prefKey)
+    }
+}
+
 // The base settings view controller.
 class SettingsTableViewController: UITableViewController {
     private let Identifier = "CellIdentifier"
@@ -744,6 +780,7 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         let privacyTitle = NSLocalizedString("Privacy", comment: "Privacy section title")
+
         //Cliqz: Removed unused sections from Settings table
 //        let accountDebugSettings: [Setting]
 //        if AppConstants.BuildChannel != .Aurora {
@@ -759,14 +796,14 @@ class SettingsTableViewController: UITableViewController {
 
         let prefs = profile.prefs
         
-        //Cliqz: Removed unused sections from Settings table
+        //Cliqz: modified general settings unused sections from Settings table
         let generalSettings = [
             SearchSetting(settings: self),
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             SendCliqzFeedbackSetting(),
             ImprintSetting()
             ]
-
+        
 //        var generalSettings = [
 //            SearchSetting(settings: self),
 //            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
@@ -775,6 +812,19 @@ class SettingsTableViewController: UITableViewController {
 //                titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
 //        ]
 
+        //Cliqz: Removed unused sections from Settings table
+//        let accountChinaSyncSetting: [Setting]
+//        let locale = NSLocale.currentLocale()
+//        if locale.localeIdentifier != "zh_CN" {
+//            accountChinaSyncSetting = []
+//        } else {
+//            accountChinaSyncSetting = [
+//                // Show China sync service setting:
+//                ChinaSyncServiceSetting(settings: self)
+//            ]
+//        }
+        
+        //Cliqz: Removed unused sections from Settings table
 //        // There is nothing to show in the Customize section if we don't include the compact tab layout
 //        // setting on iPad. When more options are added that work on both device types, this logic can
 //        // be changed.
@@ -794,7 +844,7 @@ class SettingsTableViewController: UITableViewController {
 //                AccountStatusSetting(settings: self),
 //                SyncNowSetting(settings: self)
 //            ] + accountDebugSettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("General", tableName: "Settings", comment: "General settings section title")), children: generalSettings)
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
         ]
 
         
@@ -819,6 +869,7 @@ class SettingsTableViewController: UITableViewController {
 //                settingDidChange: { configureActiveCrashReporter($0) }),
 //            PrivacyPolicySetting()
 //        ]
+
 
         settings += [
             SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
@@ -845,7 +896,7 @@ class SettingsTableViewController: UITableViewController {
             style: UIBarButtonItemStyle.Done,
             target: navigationController, action: "SELdone")
         tableView.registerClass(SettingsTableViewCell.self, forCellReuseIdentifier: Identifier)
-        tableView.registerClass(SettingsTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderIdentifier)
+        tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderIdentifier)
         tableView.tableFooterView = SettingsTableFooterView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 128))
 
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
@@ -854,8 +905,8 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: ProfileDidStartSyncingNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: ProfileDidFinishSyncingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: NotificationProfileDidStartSyncing, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: NotificationProfileDidFinishSyncing, object: nil)
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -865,8 +916,8 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: ProfileDidStartSyncingNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: ProfileDidFinishSyncingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidStartSyncing, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
     }
 
     @objc private func SELsyncDidChangeState() {
@@ -916,7 +967,7 @@ class SettingsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderView
+        let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
         let sectionSetting = settings[section]
         if let sectionTitle = sectionSetting.title?.string {
             headerView.titleLabel.text = sectionTitle
@@ -999,7 +1050,7 @@ class SettingsTableFooterView: UIView {
     }
 }
 
-class SettingsTableSectionHeaderView: UITableViewHeaderFooterView {
+class SettingsTableSectionHeaderFooterView: UITableViewHeaderFooterView {
     var showTopBorder: Bool = true {
         didSet {
             topBorder.hidden = !showTopBorder
@@ -1042,6 +1093,12 @@ class SettingsTableSectionHeaderView: UITableViewHeaderFooterView {
         clipsToBounds = true
         layer.addSublayer(topBorder)
         layer.addSublayer(bottomBorder)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        showTopBorder = true
+        showBottomBorder = true
     }
 
     required init?(coder aDecoder: NSCoder) {

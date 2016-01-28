@@ -50,6 +50,10 @@ class BrowserViewController: UIViewController {
     private let snackBars = UIView()
     private let webViewContainerToolbar = UIView()
 
+    // popover rotation handling
+    private var displayedPopoverController: UIViewController?
+    private var updateDisplayedPopoverProperties: (() -> ())?
+
     private var openInHelper: OpenInHelper?
 
     // location label actions
@@ -148,6 +152,18 @@ class BrowserViewController: UIViewController {
         }
     }
 
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        displayedPopoverController?.dismissViewControllerAnimated(true, completion: nil)
+
+        coordinator.animateAlongsideTransition(nil) { context in
+            if let displayedPopoverController = self.displayedPopoverController {
+                self.updateDisplayedPopoverProperties?()
+                self.presentViewController(displayedPopoverController, animated: true, completion: nil)
+            }
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         log.debug("BVC received memory warning")
@@ -223,6 +239,8 @@ class BrowserViewController: UIViewController {
             updateToolbarStateForTraitCollection(newCollection)
         }
 
+        displayedPopoverController?.dismissViewControllerAnimated(true, completion: nil)
+
         // WKWebView looks like it has a bug where it doesn't invalidate it's visible area when the user
         // performs a device rotation. Since scrolling calls
         // _updateVisibleContentRects (https://github.com/WebKit/webkit/blob/master/Source/WebKit2/UIProcess/API/Cocoa/WKWebView.mm#L1430)
@@ -243,7 +261,7 @@ class BrowserViewController: UIViewController {
     }
 
     func SELappWillResignActiveNotification() {
-        // If we are displying a private tab, hide any elements in the browser that we wouldn't want shown 
+        // If we are displying a private tab, hide any elements in the browser that we wouldn't want shown
         // when the app is in the home switcher
         guard let privateTab = tabManager.selectedTab where privateTab.isPrivate else {
             return
@@ -397,9 +415,11 @@ class BrowserViewController: UIViewController {
         setupConstraints()
         log.debug("BVC done.")
 
+        // Cliqz: open the app in search mode
 		self.switchToSearchMode = true
 		self.needsNewTab = true
 		
+        // Cliqz: start listening for user location changes
 		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
 			LocationManager.sharedInstance.startUpdateingLocation()
 		}
@@ -523,7 +543,7 @@ class BrowserViewController: UIViewController {
             activeCrashReporter?.resetPreviousCrashState()
 
             // Only ask to restore tabs from a crash if we had non-home tabs or tabs with some kind of history in them
-            guard let tabsToRestore = tabManager.tabsToRestore() else { return }
+            guard let tabsToRestore = TabManager.tabsToRestore() else { return }
             let onlyNoHistoryTabs = !tabsToRestore.every { $0.sessionData?.urls.count > 1 }
             if onlyNoHistoryTabs {
                 tabManager.addTabAndSelect();
@@ -550,11 +570,9 @@ class BrowserViewController: UIViewController {
         }
 
 		// Cliqz: Removed tabsButton and related method calls according requirements.
-		/*
-		log.debug("Updating tab count.")
-		updateTabCountUsingTabManager(tabManager, animated: false)
-		log.debug("BVC done.")
-*/
+//		log.debug("Updating tab count.")
+//		updateTabCountUsingTabManager(tabManager, animated: false)
+//		log.debug("BVC done.")
     }
 
     private func showCrashOptInAlert() {
@@ -578,7 +596,7 @@ class BrowserViewController: UIViewController {
     }
 
     private func showRestoreTabsAlert() {
-        guard !DebugSettingsBundleOptions.skipSessionRestore else {
+        guard shouldRestoreTabs() else {
             self.tabManager.addTabAndSelect()
             return
         }
@@ -597,6 +615,12 @@ class BrowserViewController: UIViewController {
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
+    private func shouldRestoreTabs() -> Bool {
+        guard let tabsToRestore = TabManager.tabsToRestore() else { return false }
+        let onlyNoHistoryTabs = !tabsToRestore.every { $0.sessionData?.urls.count > 1 || !AboutUtils.isAboutHomeURL($0.sessionData?.urls.first) }
+        return !onlyNoHistoryTabs && !DebugSettingsBundleOptions.skipSessionRestore
+    }
+
     override func viewDidAppear(animated: Bool) {
         log.debug("BVC viewDidAppear.")
 		// Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
@@ -613,6 +637,7 @@ class BrowserViewController: UIViewController {
 
         log.debug("BVC calling super.viewDidAppear.")
         super.viewDidAppear(animated)
+        // Cliqz: cold start finished (for telemetry signals)
         self.appDidBecomeResponsive("cold")
         log.debug("BVC done.")
     }
@@ -828,8 +853,15 @@ class BrowserViewController: UIViewController {
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
 
-        if let tab = tabManager.selectedTab,
-           let nav = tab.loadRequest(NSURLRequest(URL: url)) {
+        guard let tab = tabManager.selectedTab else {
+            return
+        }
+
+        if let webView = tab.webView {
+            resetSpoofedUserAgentIfRequired(webView, newURL: url)
+        }
+
+        if let nav = tab.loadRequest(NSURLRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
             
             // Cliqz: add webViewOverlay to the wkwebview to hide the old page while navigating to a new page
@@ -1028,6 +1060,17 @@ extension BrowserViewController {
         if webViewOverlay != nil {
             webViewOverlay!.removeFromSuperview()
             webViewOverlay = nil
+        }
+    }
+
+    private func resetSpoofedUserAgentIfRequired(webView: WKWebView, newURL: NSURL) {
+        guard #available(iOS 9.0, *) else {
+            return
+        }
+
+        // Reset the UA when a different domain is being loaded
+        if webView.URL?.host != newURL.host {
+            webView.customUserAgent = nil
         }
     }
 }
@@ -1271,6 +1314,30 @@ extension BrowserViewController: BrowserToolbarDelegate {
         tabManager.selectedTab?.reload()
     }
 
+    func browserToolbarDidLongPressReload(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
+        guard #available(iOS 9.0, *) else {
+            return
+        }
+
+        guard let tab = tabManager.selectedTab where tab.webView?.URL != nil else {
+            return
+        }
+
+        let toggleActionTitle: String
+        if tab.desktopSite {
+            toggleActionTitle = NSLocalizedString("Request Mobile Site", comment: "Action Sheet Button for Requesting the Mobile Site")
+        } else {
+            toggleActionTitle = NSLocalizedString("Request Desktop Site", comment: "Action Sheet Button for Requesting the Desktop Site")
+        }
+
+        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        controller.addAction(UIAlertAction(title: toggleActionTitle, style: .Default, handler: { _ in tab.toggleDesktopSite() }))
+        controller.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Action Sheet Cancel Button"), style: .Cancel, handler: nil))
+        controller.popoverPresentationController?.sourceView = toolbar ?? urlBar
+        controller.popoverPresentationController?.sourceRect = button.frame
+        presentViewController(controller, animated: true, completion: nil)
+    }
+
     func browserToolbarDidPressStop(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
         tabManager.selectedTab?.stop()
     }
@@ -1311,7 +1378,18 @@ extension BrowserViewController: BrowserToolbarDelegate {
 
     func browserToolbarDidPressShare(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
         if let selectedTab = tabManager.selectedTab {
-            let helper = ShareExtensionHelper(tab: selectedTab)
+            var activities = [UIActivity]()
+
+            if #available(iOS 9.0, *) {
+                if (selectedTab.getHelper(name: ReaderMode.name()) as? ReaderMode)?.state != .Active {
+                    let requestDesktopSiteActivity = RequestDesktopSiteActivity(requestMobileSite: selectedTab.desktopSite) {
+                        selectedTab.toggleDesktopSite()
+                    }
+                    activities.append(requestDesktopSiteActivity)
+                }
+            }
+
+            let helper = ShareExtensionHelper(tab: selectedTab, activities: activities)
 
             let activityViewController = helper.createActivityViewController({
                 // We don't know what share action the user has chosen so we simply always
@@ -1320,13 +1398,23 @@ extension BrowserViewController: BrowserToolbarDelegate {
                 self.updateReaderModeBar()
             })
 
-            if let popoverPresentationController = activityViewController.popoverPresentationController {
-                // Using the button for the sourceView here results in this not showing on iPads.
-                popoverPresentationController.sourceView = self.toolbar ?? self.urlBar
-                popoverPresentationController.sourceRect = button.frame ?? button.frame
-                popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.Up
-                popoverPresentationController.delegate = self
+            let setupPopover = { [unowned self] in
+                if let popoverPresentationController = activityViewController.popoverPresentationController {
+                    let sourceView = self.navigationToolbar.shareButton
+                    popoverPresentationController.sourceView = sourceView.superview
+                    popoverPresentationController.sourceRect = sourceView.frame
+                    popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.Up
+                    popoverPresentationController.delegate = self
+                }
             }
+
+            setupPopover()
+
+            if activityViewController.popoverPresentationController != nil {
+                displayedPopoverController = activityViewController
+                updateDisplayedPopoverProperties = setupPopover
+            }
+
             self.presentViewController(activityViewController, animated: true, completion: nil)
         }
 
@@ -1798,21 +1886,32 @@ extension BrowserViewController: WKNavigationDelegate {
 				}
 				decisionHandler(WKNavigationActionPolicy.Cancel)
 			} else {
-				if isWhitelistedUrl(url) {
-					// If the url is whitelisted, we open it without prompting…
-					// … unless the NavigationType is Other, which means it is JavaScript- or Redirect-initiated.
-					openExternal(url, prompt: navigationAction.navigationType == WKNavigationType.Other)
-					decisionHandler(WKNavigationActionPolicy.Cancel)
-				} else {
-					decisionHandler(WKNavigationActionPolicy.Allow)
-				}
+                if isWhitelistedUrl(url) {
+                    // If the url is whitelisted, we open it without prompting…
+                    // … unless the NavigationType is Other, which means it is JavaScript- or Redirect-initiated.
+                    openExternal(url, prompt: navigationAction.navigationType == WKNavigationType.Other)
+                    decisionHandler(WKNavigationActionPolicy.Cancel)
+                } else {
+                    if navigationAction.navigationType == .LinkActivated {
+                        resetSpoofedUserAgentIfRequired(webView, newURL: url)
+                    }
+                    decisionHandler(WKNavigationActionPolicy.Allow)
+                }
 			}
         case "tel":
             callExternal(url)
             decisionHandler(WKNavigationActionPolicy.Cancel)
         default:
+            // If this is a scheme that we don't know how to handle, see if an external app
+            // can handle it. If not then we show an error page. In either case we cancel
+            // the request so that the webview does not see it.
             if UIApplication.sharedApplication().canOpenURL(url) {
                 openExternal(url)
+            } else {
+                // Only show the error page if this was not a JavaScript initiated request. This prevents the error to overwrite apps that try to open native apps from an already loadeded page.
+                if navigationAction.navigationType != WKNavigationType.Other {
+                    ErrorPageHelper().showPage(NSError(domain: kCFErrorDomainCFNetwork as String, code: Int(CFNetworkErrors.CFErrorHTTPBadURL.rawValue), userInfo: [:]), forUrl: url, inWebView: webView)
+                }
             }
             decisionHandler(WKNavigationActionPolicy.Cancel)
         }
@@ -1823,23 +1922,22 @@ extension BrowserViewController: WKNavigationDelegate {
         }
     }
 
-    func webView(webView: WKWebView,
-        didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge,
-        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-            if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPBasic || challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPDigest {
-                if let tab = tabManager[webView] {
-                    let helper = tab.getHelper(name: LoginsHelper.name()) as! LoginsHelper
-                    helper.handleAuthRequest(self, challenge: challenge).uponQueue(dispatch_get_main_queue()) { res in
-                        if let credentials = res.successValue {
-                            completionHandler(.UseCredential, credentials.credentials)
-                        } else {
-                            completionHandler(NSURLSessionAuthChallengeDisposition.RejectProtectionSpace, nil)
-                        }
-                    }
-                }
+    func webView(webView: WKWebView, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPBasic ||
+              challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPDigest,
+              let tab = tabManager[webView] else {
+            completionHandler(NSURLSessionAuthChallengeDisposition.PerformDefaultHandling, nil)
+            return
+        }
+
+        let loginsHelper = tab.getHelper(name: LoginsHelper.name()) as? LoginsHelper
+        Authenticator.handleAuthRequest(self, challenge: challenge, loginsHelper: loginsHelper).uponQueue(dispatch_get_main_queue()) { res in
+            if let credentials = res.successValue {
+                completionHandler(.UseCredential, credentials.credentials)
             } else {
-                completionHandler(NSURLSessionAuthChallengeDisposition.PerformDefaultHandling, nil)
+                completionHandler(NSURLSessionAuthChallengeDisposition.RejectProtectionSpace, nil)
             }
+        }
     }
 
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
@@ -1874,13 +1972,18 @@ extension BrowserViewController: WKNavigationDelegate {
         }
 
         addOpenInViewIfNeccessary(webView.URL)
-        
+
         // Cliqz: hide the webViewOverlay when finis navigating to a url
         hideWebViewOverlay()
         
         //Cliqz: Navigation telemetry signal
         if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
             finishNavigation(webView)
+        }
+
+        // Remember whether or not a desktop site was requested
+        if #available(iOS 9.0, *) {
+            tab.desktopSite = webView.customUserAgent?.isEmpty == false
         }
         
     }
@@ -1923,36 +2026,63 @@ extension BrowserViewController: WKNavigationDelegate {
     }
 }
 
+/// List of schemes that are allowed to open a popup window
+private let SchemesAllowedToOpenPopups = ["http", "https", "javascript", "data"]
+
 extension BrowserViewController: WKUIDelegate {
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-
         guard let currentTab = tabManager.selectedTab else { return nil }
-        
+
         //Cliqz: Open any popup in the same tab not in a new tab, as tabs are hidden for the current UX
-//        screenshotHelper.takeScreenshot(currentTab)
-//
-//        // If the page uses window.open() or target="_blank", open the page in a new tab.
-//        // TODO: This doesn't work for window.open() without user action (bug 1124942).
-//        let newTab: Browser
-//        if #available(iOS 9, *) {
-//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
-//        } else {
-//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
-//        }
-//        tabManager.selectTab(newTab)
-//        
-//        return newTab.webView
-        
         currentTab.webView?.loadRequest(navigationAction.request)
         return nil
+        
+        screenshotHelper.takeScreenshot(currentTab)
+
+        // If the page uses window.open() or target="_blank", open the page in a new tab.
+        // TODO: This doesn't work for window.open() without user action (bug 1124942).
+        let newTab: Browser
+        if #available(iOS 9, *) {
+            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
+        } else {
+            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
+        }
+        tabManager.selectTab(newTab)
+        
+        // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
+        // get a reference to it which it can return from window.open() - this will end up as a
+        // CFErrorHTTPBadURL being presented.
+        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
+            return nil
+        }
+        
+        return newTab.webView
+    }
+
+    /// Show a title for a JavaScript Panel (alert) based on the WKFrameInfo. On iOS9 we will use the new securityOrigin
+    /// and on iOS 8 we will fall back to the request URL. If the request URL is nil, which happens for JavaScript pages,
+    /// we fall back to "JavaScript" as a title.
+    private func titleForJavaScriptPanelInitiatedByFrame(frame: WKFrameInfo) -> String {
+        var title: String = "JavaScript"
+        if #available(iOS 9, *) {
+            title = "\(frame.securityOrigin.`protocol`)://\(frame.securityOrigin.host)"
+            if frame.securityOrigin.port != 0 {
+                title += ":\(frame.securityOrigin.port)"
+            }
+        } else {
+            if let url = frame.request.URL {
+                title = "\(url.scheme)://\(url.hostPort))"
+            }
+        }
+        return title
     }
 
     func webView(webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: () -> Void) {
         tabManager.selectTab(tabManager[webView])
 
         // Show JavaScript alerts.
-        let title = frame.request.URL!.host
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+
+        let alertController = UIAlertController(title: titleForJavaScriptPanelInitiatedByFrame(frame), message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: OKString, style: UIAlertActionStyle.Default, handler: { _ in
             completionHandler()
         }))
@@ -1963,8 +2093,7 @@ extension BrowserViewController: WKUIDelegate {
         tabManager.selectTab(tabManager[webView])
 
         // Show JavaScript confirm dialogs.
-        let title = frame.request.URL!.host
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController = UIAlertController(title: titleForJavaScriptPanelInitiatedByFrame(frame), message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: OKString, style: UIAlertActionStyle.Default, handler: { _ in
             completionHandler(true)
         }))
@@ -1978,8 +2107,7 @@ extension BrowserViewController: WKUIDelegate {
         tabManager.selectTab(tabManager[webView])
 
         // Show JavaScript input dialogs.
-        let title = frame.request.URL!.host
-        let alertController = UIAlertController(title: title, message: prompt, preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController = UIAlertController(title: titleForJavaScriptPanelInitiatedByFrame(frame), message: prompt, preferredStyle: UIAlertControllerStyle.Alert)
         var input: UITextField!
         alertController.addTextFieldWithConfigurationHandler({ (textField: UITextField) in
             textField.text = defaultText
@@ -2063,7 +2191,7 @@ extension BrowserViewController: WKUIDelegate {
     }
 }
 
-extension BrowserViewController: ReaderModeDelegate, UIPopoverPresentationControllerDelegate {
+extension BrowserViewController: ReaderModeDelegate {
     func readerMode(readerMode: ReaderMode, didChangeReaderModeState state: ReaderModeState, forBrowser browser: Browser) {
         // If this reader mode availability state change is for the tab that we currently show, then update
         // the button. Otherwise do nothing and the button will be updated when the tab is made active.
@@ -2083,6 +2211,17 @@ extension BrowserViewController: ReaderModeDelegate, UIPopoverPresentationContro
         return UIModalPresentationStyle.None
     }
 }
+
+// MARK: - UIPopoverPresentationControllerDelegate
+
+extension BrowserViewController: UIPopoverPresentationControllerDelegate {
+    func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
+        displayedPopoverController = nil
+        updateDisplayedPopoverProperties = nil
+    }
+}
+
+// MARK: - ReaderModeStyleViewControllerDelegate
 
 extension BrowserViewController: ReaderModeStyleViewControllerDelegate {
     func readerModeStyleViewController(readerModeStyleViewController: ReaderModeStyleViewController, didConfigureStyle style: ReaderModeStyle) {

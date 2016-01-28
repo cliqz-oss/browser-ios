@@ -43,7 +43,7 @@ class TopSitesPanel: UIViewController {
                     homePanelDelegate?.homePanelWillEnterEditingMode?(self)
                 }
 
-                updateRemoveButtonStates()
+                updateAllRemoveButtonStates()
             }
         }
     }
@@ -66,7 +66,7 @@ class TopSitesPanel: UIViewController {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: ProfileDidFinishSyncingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
     }
 
@@ -88,19 +88,20 @@ class TopSitesPanel: UIViewController {
         }
         self.collection = collection
 
+        self.dataSource.collectionView = self.collection
         self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
         self.refreshTopSites(maxFrecencyLimit)
     }
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: ProfileDidFinishSyncingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearedHistory, object: nil)
     }
     
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
-        case NotificationFirefoxAccountChanged, ProfileDidFinishSyncingNotification, NotificationPrivateDataClearedHistory:
+        case NotificationFirefoxAccountChanged, NotificationProfileDidFinishSyncing, NotificationPrivateDataClearedHistory:
             refreshTopSites(maxFrecencyLimit)
             break
         default:
@@ -116,36 +117,38 @@ class TopSitesPanel: UIViewController {
             self.dataSource.data = data
             self.dataSource.profile = self.profile
 
-            // redraw now we've udpated our sources
+            // redraw now we've updated our sources
             self.collection?.collectionViewLayout.invalidateLayout()
             self.collection?.setNeedsLayout()
         }
     }
 
-    private func updateRemoveButtonStates() {
-        for i in 0..<layout.thumbnailCount {
-            if let cell = collection?.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0)) as? ThumbnailCell {
-                //TODO: Only toggle the remove button for non-suggested tiles for now
-                if i < dataSource.data.count {
-                    cell.toggleRemoveButton(editingThumbnails)
-                } else {
-                    cell.toggleRemoveButton(false)
-                }
-            }
-        }
+    private func updateAllRemoveButtonStates() {
+        collection?.indexPathsForVisibleItems().forEach(updateRemoveButtonStateForIndexPath)
     }
 
     private func deleteHistoryTileForSite(site: Site, atIndexPath indexPath: NSIndexPath) {
-        func reloadThumbnails() {
-            self.profile.history.getTopSitesWithLimit(self.layout.thumbnailCount)
-                .uponQueue(dispatch_get_main_queue()) { result in
-                    self.deleteOrUpdateSites(result, indexPath: indexPath)
-            }
+        collection?.userInteractionEnabled = false
+
+        let newSites = profile.history.removeSiteFromTopSites(site) >>> {
+            self.profile.history.getTopSitesWithLimit(self.maxFrecencyLimit)
         }
 
-        profile.history.removeSiteFromTopSites(site)
-        >>> self.profile.history.refreshTopSitesCache
-        >>> reloadThumbnails
+        newSites.uponQueue(dispatch_get_main_queue()) { result in
+            self.deleteOrUpdateSites(result, indexPath: indexPath)
+            self.collection?.userInteractionEnabled = true
+        }
+    }
+
+    private func updateRemoveButtonStateForIndexPath(indexPath: NSIndexPath) {
+        // If we have a cell passed in, use it. If not, then use the indexPath to get it.
+        guard let cell = collection?.cellForItemAtIndexPath(indexPath) as? ThumbnailCell else {
+            return
+        }
+
+        dataSource[indexPath.row] is SuggestedSite ?
+            cell.toggleRemoveButton(false) :
+            cell.toggleRemoveButton(editingThumbnails)
     }
 
     private func refreshTopSites(frecencyLimit: Int) {
@@ -200,7 +203,7 @@ class TopSitesPanel: UIViewController {
                 self.collection?.deleteItemsAtIndexPaths([indexPath])
             }
         }, completion: { _ in
-            self.updateRemoveButtonStates()
+            self.updateAllRemoveButtonStates()
         })
     }
 
@@ -257,15 +260,13 @@ extension TopSitesPanel: UICollectionViewDelegate {
         if let site = dataSource[indexPath.item] {
             // We're gonna call Top Sites bookmarks for now.
             let visitType = VisitType.Bookmark
-            let destination = NSURL(string: site.url)?.domainURL() ?? NSURL(string: "about:blank")!
-            homePanelDelegate?.homePanel(self, didSelectURL: destination, visitType: visitType)
+            homePanelDelegate?.homePanel(self, didSelectURL: site.tileURL, visitType: visitType)
         }
     }
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let thumbnailCell = cell as? ThumbnailCell {
             thumbnailCell.delegate = self
-
             if editingThumbnails && indexPath.item < dataSource.data.count && thumbnailCell.removeButton.hidden {
                 thumbnailCell.removeButton.hidden = false
             }
@@ -275,12 +276,10 @@ extension TopSitesPanel: UICollectionViewDelegate {
 
 extension TopSitesPanel: ThumbnailCellDelegate {
     func didRemoveThumbnail(thumbnailCell: ThumbnailCell) {
-        if let indexPath = collection?.indexPathForCell(thumbnailCell) {
-            if let site = dataSource[indexPath.item] {
-                self.deleteHistoryTileForSite(site, atIndexPath: indexPath)
-            }
-        }
-        
+        guard let indexPath = collection?.indexPathForCell(thumbnailCell),
+              let site = dataSource[indexPath.item] else { return }
+
+        self.deleteHistoryTileForSite(site, atIndexPath: indexPath)
     }
 
     func didLongPressThumbnail(thumbnailCell: ThumbnailCell) {
@@ -299,10 +298,13 @@ private class TopSitesCollectionView: UICollectionView {
 private class TopSitesLayout: UICollectionViewLayout {
 
     private var thumbnailRows: Int {
+        assert(NSThread.isMainThread(), "Interacts with UIKit components - not thread-safe.")
         return max(2, Int((self.collectionView?.frame.height ?? self.thumbnailHeight) / self.thumbnailHeight))
     }
 
     private var thumbnailCols: Int {
+        assert(NSThread.isMainThread(), "Interacts with UIKit components - not thread-safe.")
+
         let size = collectionView?.bounds.size ?? CGSizeZero
         let traitCollection = collectionView!.traitCollection
         if traitCollection.horizontalSizeClass == .Compact {
@@ -331,12 +333,19 @@ private class TopSitesLayout: UICollectionViewLayout {
     }
 
     private var thumbnailCount: Int {
+        assertIsMainThread("layout.thumbnailCount interacts with UIKit components - cannot call from background thread.")
         return thumbnailRows * thumbnailCols
     }
-    private var width: CGFloat { return self.collectionView?.frame.width ?? 0 }
+
+    private var width: CGFloat {
+        assertIsMainThread("layout.width interacts with UIKit components - cannot call from background thread.")
+        return self.collectionView?.frame.width ?? 0
+    }
 
     // The width and height of the thumbnail here are the width and height of the tile itself, not the image inside the tile.
     private var thumbnailWidth: CGFloat {
+        assertIsMainThread("layout.thumbnailWidth interacts with UIKit components - cannot call from background thread.")
+
         let size = collectionView?.bounds.size ?? CGSizeZero
         let insets = ThumbnailCellUX.insetsForCollectionViewSize(size,
             traitCollection:  collectionView!.traitCollection)
@@ -346,6 +355,8 @@ private class TopSitesLayout: UICollectionViewLayout {
     // The tile's height is determined the aspect ratio of the thumbnails width. We also take into account
     // some padding between the title and the image.
     private var thumbnailHeight: CGFloat {
+        assertIsMainThread("layout.thumbnailHeight interacts with UIKit components - cannot call from background thread.")
+
         return floor(thumbnailWidth / CGFloat(ThumbnailCellUX.ImageAspectRatio))
     }
 
@@ -432,6 +443,8 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
     var profile: Profile
     var editingThumbnails: Bool = false
 
+    weak var collectionView: UICollectionView?
+
     private let blurQueue = dispatch_queue_create("FaviconBlurQueue", DISPATCH_QUEUE_CONCURRENT)
     private let BackgroundFadeInDuration: NSTimeInterval = 0.3
 
@@ -473,22 +486,23 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         }
     }
 
-    private func getFaviconForCell(cell:ThumbnailCell, site: Site, profile: Profile) {
-        setDefaultThumbnailBackgroundForCell(cell)
-        guard let url = site.url.asURL else { return }
+    private func downloadFaviconsAndUpdateForSite(site: Site) {
+        guard let siteURL = site.url.asURL else { return }
 
-        FaviconFetcher.getForURL(url, profile: profile) >>== { icons in
-            if icons.count == 0 { return }
-            guard let url = icons[0].url.asURL else { return }
+        FaviconFetcher.getForURL(siteURL, profile: profile).uponQueue(dispatch_get_main_queue()) { result in
+            guard let favicons = result.successValue where favicons.count > 0,
+                  let url = favicons.first?.url.asURL,
+                  let indexOfSite = (self.data.asArray().indexOf { $0 == site }) else {
+                return
+            }
 
+            let indexPathToUpdate = NSIndexPath(forItem: indexOfSite, inSection: 0)
+            guard let cell = self.collectionView?.cellForItemAtIndexPath(indexPathToUpdate) as? ThumbnailCell else { return }
             cell.imageView.sd_setImageWithURL(url) { (img, err, type, url) -> Void in
                 guard let img = img else {
-                    let icon = Favicon(url: "", date: NSDate(), type: IconType.NoneFound)
-                    profile.favicons.addFavicon(icon, forSite: site)
                     self.setDefaultThumbnailBackgroundForCell(cell)
                     return
                 }
-
                 cell.image = img
                 self.setBlurredBackground(img, withURL: url, forCell: cell)
             }
@@ -515,7 +529,8 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         cell.removeButton.hidden = !editing
 
         guard let icon = site.icon else {
-            getFaviconForCell(cell, site: site, profile: profile)
+            setDefaultThumbnailBackgroundForCell(cell)
+            downloadFaviconsAndUpdateForSite(site)
             return
         }
 
@@ -529,7 +544,8 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
                     cell.image = img
                     self.setBlurredBackground(img, withURL: url, forCell: cell)
                 } else {
-                    self.getFaviconForCell(cell, site: site, profile: profile)
+                    self.setDefaultThumbnailBackgroundForCell(cell)
+                    self.downloadFaviconsAndUpdateForSite(site)
                 }
             })
         }
