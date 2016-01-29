@@ -608,13 +608,22 @@ private class SendCliqzFeedbackSetting: Setting, MFMailComposeViewControllerDele
 	}
 
 	override func onClick(navigationController: UINavigationController?) {
-		let emailViewController = MFMailComposeViewController()
-		emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Cliqz", comment: "Send Feedback Email Subject"))
-		emailViewController.setToRecipients(["feedback@cliqz.com"])
-		emailViewController.mailComposeDelegate = self
-		let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
-		emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType.rawValue), isHTML: false)
-		navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
+		if MFMailComposeViewController.canSendMail() {
+			let emailViewController = MFMailComposeViewController()
+			emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Cliqz", comment: "Send Feedback Email Subject"))
+			emailViewController.setToRecipients(["feedback@cliqz.com"])
+			emailViewController.mailComposeDelegate = self
+			let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
+			emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType.rawValue), isHTML: false)
+			navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
+		} else {
+			let alertController = UIAlertController(
+				title: NSLocalizedString("No Email account title", tableName: "Cliqz", comment: "Title for No Email account pop-up"),
+				message: NSLocalizedString("No Email account message", tableName: "Cliqz", comment: "Text for the missing email account for sending feedback pop-up"),
+				preferredStyle: UIAlertControllerStyle.Alert)
+			alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .Default, handler: nil))
+			navigationController?.presentViewController(alertController, animated: true, completion: nil)
+		}
 	}
 
 	@objc func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {

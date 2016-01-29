@@ -35,3 +35,10 @@
 /* Footnote message for feedback */
 "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback für CLIQZ Browser for iOS (Version %@), auf %@";
 
+/* Title for No Email account pop-up */
+"No Email account title" = "kein Email-Konto eingerichtet";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Bitte Email-Konto einrichten, um Feedback schicken zu können.";
+
+
