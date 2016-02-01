@@ -118,6 +118,7 @@ class ErrorPageHelper {
 
                 let errCode = Int((request.query["code"] as! String))
                 let errDescription = request.query["description"] as! String
+                let errorTitle = NSLocalizedString(errDescription, tableName: "Cliqz", comment: "Error title")
                 var errDomain = request.query["domain"] as! String
 
                 // If we don't have any other actions, we always add a try again button
@@ -140,7 +141,7 @@ class ErrorPageHelper {
                 let asset = NSBundle.mainBundle().pathForResource("NetError", ofType: "html")
                 let response = GCDWebServerDataResponse(HTMLTemplate: asset, variables: [
                     "error_code": "\(errCode ?? -1)",
-                    "error_title": errDescription ?? "",
+                    "error_title": errorTitle ?? "",
                     "long_description": nil ?? "",
                     "short_description": errDomain,
                     "actions": actions

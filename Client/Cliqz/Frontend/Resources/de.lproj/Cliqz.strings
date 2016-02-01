@@ -41,4 +41,6 @@
 /* Text for the missing email account for sending feedback pop-up */
 "No Email account message" = "Bitte Email-Konto einrichten, um Feedback schicken zu können.";
 
+/* Error title */
+"The Internet connection appears to be offline." = "Die Internet-Verbindung scheint offline zu sein.";
 
