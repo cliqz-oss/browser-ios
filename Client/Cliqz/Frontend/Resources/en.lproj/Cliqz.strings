@@ -43,3 +43,9 @@
 
 /* Error title */
 "The Internet connection appears to be offline." = "The internet connection appears to be offline.";
+
+/* Title for `Top news` home shortcut. */
+"Top news" = "Top news";
+
+/* Title for `Last site` home shortcut. */
+"Last site" =  "Last site";

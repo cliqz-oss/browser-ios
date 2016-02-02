@@ -114,6 +114,7 @@
 		1EA710DB1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */; };
 		1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */; };
 		1EA710DF1C5A4AE7005C1F11 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */; };
+		1EE1C6941C60A5BA00F70C24 /* AppDelegateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28158BAC1ABC7C0E00C56FC8 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCAE2401ABB531100877008 /* Bytes.swift */; };
@@ -1591,6 +1592,7 @@
 		1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
 		1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
+		1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateExtension.swift; sourceTree = "<group>"; };
 		1F2D46FC970EC17AAF423059 /* dsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = dsb; path = dsb.lproj/SendTo.strings; sourceTree = "<group>"; };
 		1F5C41BFBC05B8A78F5E43D9 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1F84448DBE0C38509D16099B /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/ErrorPages.strings; sourceTree = "<group>"; };
@@ -3005,6 +3007,7 @@
 				1EA7109C1C5A3017005C1F11 /* StringExtension.swift */,
 				1EA7109D1C5A3017005C1F11 /* UIDeviceExtension.swift */,
 				1EA7109E1C5A3017005C1F11 /* UITextFieldExtension.swift */,
+				1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5823,6 +5826,7 @@
 				D38B2D311A8D96D00040E6B5 /* GCDWebServerConnection.m in Sources */,
 				D38B2D401A8D96D00040E6B5 /* GCDWebServerFileRequest.m in Sources */,
 				0B7100481B4C72D60046AF87 /* FaviconFetcher.swift in Sources */,
+				1EE1C6941C60A5BA00F70C24 /* AppDelegateExtension.swift in Sources */,
 				E4B334561BBF2393004E2BFF /* ADJAttributionHandler.m in Sources */,
 				E4252A0E1AF01AE40028C684 /* Swizzling.m in Sources */,
 				1EA710BF1C5A3017005C1F11 /* SearchBarTelemetryHelper.swift in Sources */,

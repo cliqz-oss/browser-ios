@@ -169,11 +169,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Logger.syncLogger.deleteOldLogsDownToSizeLimit
 //        )
 
-        // CliqzZ: Start Crashlytics
+        // Cliqz: Start Crashlytics
         Fabric.with([Crashlytics.self])
 
         log.debug("Done with applicationDidFinishLaunching.")
 
+        // Cliqz: Added to confire home shortcuts
+        if #available(iOS 9.0, *) {
+            self.configureHomeShortCuts()
+        }
+        
         return true
     }
 
@@ -229,6 +234,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.profile?.shutdown()
             application.endBackgroundTask(taskId)
 		}
+        
+        // Cliqz: Added to confire home shortcuts
+        if #available(iOS 9.0, *) {
+            self.configureHomeShortCuts()
+        }
     }
     
     func applicationWillResignActive(application: UIApplication) {

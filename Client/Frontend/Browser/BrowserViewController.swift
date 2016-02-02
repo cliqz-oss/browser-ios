@@ -132,6 +132,9 @@ class BrowserViewController: UIViewController {
         return containerViewController
         }()
     
+    // Cliqz: key for storing the last visited website
+    let lastVisitedWebsiteKey = "lastVisitedWebsite"
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -288,6 +291,7 @@ class BrowserViewController: UIViewController {
         })
     }
 
+    // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
     func appDidEnterBackgroundNotification() {
         isAppResponsive = false
 
@@ -298,8 +302,16 @@ class BrowserViewController: UIViewController {
             searchController?.appDidEnterBackground()
         }
         
+        if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
+            if !lastVisitedWebsite.hasPrefix("http://localhost") {
+                // Cliqz: store the last visited website
+                LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
+            }
+        }
+        
     }
 
+    // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
             isAppResponsive = true
@@ -307,6 +319,19 @@ class BrowserViewController: UIViewController {
         }
     }
 
+    // Cliqz: Added to navigate to the last visited website (3D quick home actions)
+    func navigateToLastWebsite() {
+        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
+            let lastVisitedURL = NSURL(string: lastVisitedWebsite)!
+            finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
+        }
+    }
+    
+    // Cliqz: Added to navigate to url (3D quick home actions)
+    func navigateToURL(url: NSURL) {
+        finishEditingAndSubmit(url, visitType: .Link)
+    }
+    
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: BookmarkStatusChangedNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
