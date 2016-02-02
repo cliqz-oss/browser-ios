@@ -372,6 +372,7 @@ class URLBarView: UIView {
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
         locationTextField.returnKeyType = UIReturnKeyType.Go
+		locationTextField.enablesReturnKeyAutomatically = true
 		// Cliqz: Changed mode to always to use it also as cancel button
         locationTextField.clearButtonMode = UITextFieldViewMode.Always
         // Cliqz: Added left pading to the location field
