@@ -221,7 +221,8 @@ class URLBarView: UIView {
 //        addSubview(cancelButton)
 
         addSubview(shareButton)
-        addSubview(bookmarkButton)
+        // Cliqz: Removed bookmarkButton from view as it covers the share button in the landscape mode
+//        addSubview(bookmarkButton)
         addSubview(forwardButton)
         addSubview(backButton)
         addSubview(stopReloadButton)
@@ -318,13 +319,13 @@ class URLBarView: UIView {
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
-
-        bookmarkButton.snp_makeConstraints { make in
-			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
-			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-            make.centerY.equalTo(self)
-            make.size.equalTo(backButton)
-		}
+        // Cliqz: Commented bookmarkButton constraints because it's removed from view as it covers the share button in the landscape mode
+//        bookmarkButton.snp_makeConstraints { make in
+//			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
+//			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+//            make.centerY.equalTo(self)
+//            make.size.equalTo(backButton)
+//		}
 	}
 
     override func updateConstraints() {
