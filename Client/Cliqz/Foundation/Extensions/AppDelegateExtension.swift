@@ -106,21 +106,24 @@ extension AppDelegate {
     
     // handel shortcut action
     private func handleShortcut(shortcutItem:UIApplicationShortcutItem) -> Bool {
-        
+        let index = UIApplication.sharedApplication().shortcutItems?.indexOf(shortcutItem)
         var succeeded = false
         
         if shortcutItem.type == lastWebsiteIdentifier {
             // open last website
             browserViewController.navigateToLastWebsite()
+            TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("last_site", index!))
             succeeded = true
         } else if shortcutItem.type == topNewsIdentifier {
             // open random top news
             navigateToRandomTopNews()
+            TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_news", index!))
             succeeded = true
         } else if shortcutItem.type == topSitesIdentifier {
             if let url = shortcutItem.userInfo?["url"] as? String,
                 let topSiteURL = NSURL(string: url) {
-                browserViewController.navigateToURL(topSiteURL)
+                    browserViewController.navigateToURL(topSiteURL)
+                    TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_site", index!))
                 succeeded = true
             }
         } else {

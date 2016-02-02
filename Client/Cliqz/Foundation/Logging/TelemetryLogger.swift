@@ -22,6 +22,7 @@ public enum TelemetryLogEventType {
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptsignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
+    case HomeScreenShortcut (String, Int)
     
     //TODO: to be removed as it was added for testing
     case AppStateChange      (String)
@@ -107,8 +108,14 @@ class TelemetryLogger : EventsLogger {
                 
             case .JavaScriptsignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
-			case .LocationServicesStatus(let action, let status):
+			
+            case .LocationServicesStatus(let action, let status):
 				event = self.createLocationServicesStatusEvent(action, status: status)
+                
+            case .HomeScreenShortcut(let targetType, let targetIndex):
+                event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
+                
+            //TODO: to be removed as it was added for testing
             case .AppStateChange(let transition):
                 event = self.createAppStateChangeEvent(transition)
             }
@@ -334,6 +341,15 @@ class TelemetryLogger : EventsLogger {
 		}
 		return event
 	}
+    
+    private func createHomeScreenShortcutEvent(targetType: String, targetIndex: Int) -> [String: AnyObject]{
+        var event = createBasicEvent()
+        event["type"] = "home_screen"
+        event["action"] = "click"
+        event["target_type"] = targetType
+        event["target_index"] = targetIndex
+        return event
+    }
 
     //TODO: to be removed as it was added for testing
     private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
