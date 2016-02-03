@@ -871,6 +871,7 @@ class BrowserViewController: UIViewController {
             if let searchController = self.searchController {
                 searchController.resetState()
             }
+            scrollController.showToolbars(animated: false)
 		}
 	}
 
