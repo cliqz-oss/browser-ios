@@ -18,12 +18,14 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     let duration    = 0.5
     var presenting  = true
     var transitionDirection = TransitionDirection.Up
+    var isAnimating = false
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?)-> NSTimeInterval {
         return duration
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+        isAnimating = true
         
         let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
@@ -62,6 +64,7 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 }
             }, completion:{_ in
                 transitionContext.completeTransition(true)
+                self.isAnimating = false
         })
 
         

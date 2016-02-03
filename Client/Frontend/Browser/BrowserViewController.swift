@@ -497,7 +497,7 @@ class BrowserViewController: UIViewController {
             make.height.equalTo(UIConstants.ToolbarHeight)
             make.left.right.equalTo(self.view)
             
-            if !iphoneLandscape {
+            if transition.isAnimating && !iphoneLandscape {
                make.top.equalTo(self.view).offset(20)
             }
         }
