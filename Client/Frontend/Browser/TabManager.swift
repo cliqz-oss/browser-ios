@@ -358,8 +358,8 @@ class TabManager : NSObject {
         self.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
         if #available(iOS 9, *) {
             self.privateConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
-        }
-    }
+		}
+	}
 
     func resetProcessPool() {
         configuration.processPool = WKProcessPool()

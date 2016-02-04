@@ -24,7 +24,7 @@
 "Imprint" = "Imprint";
 
 /* Send Feedback Email */
-"Send Feedback" = "Feedback geben";
+"Send Feedback" = "Send Feedback";
 
 /* Send Feedback Email Subject*/
 "Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
@@ -49,3 +49,6 @@
 
 /* Title for `Last site` home shortcut. */
 "Last site" =  "Last site";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Block Explicit Content";

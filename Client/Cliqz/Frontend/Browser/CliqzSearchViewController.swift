@@ -84,6 +84,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 		javaScriptBridge.setDefaultSearchEngine()
+		self.updateContentBlockingPreferences()
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -197,7 +198,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardWillShowWithState state: KeyboardState) {
 		animateSearchEnginesWithKeyboard(state)
 	}
-	
+
 	func keyboardHelper(keyboardHelper: KeyboardHelper, keyboardDidShowWithState state: KeyboardState) {
 	}
 	
@@ -218,7 +219,24 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func provideDefaultSearchEngine() {
 		javaScriptBridge.setDefaultSearchEngine()
 	}
-
+	
+	private func updateContentBlockingPreferences() {
+		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? false
+		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
+		var parameterString = ""
+		do {
+			if NSJSONSerialization.isValidJSONObject(params) {
+				let json = try NSJSONSerialization.dataWithJSONObject(params, options: NSJSONWritingOptions(rawValue: 0))
+				parameterString = String(data:json, encoding: NSUTF8StringEncoding)!
+			} else {
+				print("couldn't convert object \(params) to JSON because it is not valid JSON")
+			}
+		} catch let error as NSError {
+			print("JSON conversion is failed with error: \(error)")
+		}
+		let JSString = "CLIQZEnvironment.setClientPreferences(\(parameterString))"
+		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
+	}
 }
 
 // Handling communications with JavaScript

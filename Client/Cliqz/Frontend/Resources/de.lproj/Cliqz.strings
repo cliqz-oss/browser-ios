@@ -49,3 +49,6 @@
 
 /* Title for `Last site` home shortcut. */
 "Last site" =  "Letzte Seite öffne";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Nicht-jugendfreie Inhalte blockieren";
