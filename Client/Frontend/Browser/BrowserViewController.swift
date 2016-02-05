@@ -1254,15 +1254,15 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
         var url = uriFixup.getURL(text)
-
-        //Cliqz: navigate to the url only if it is only a valid url
-//        if url == nil {
-//            return
-//        }
 		
         // If we can't make a valid URL, do a search query.
         if url == nil {
             url = profile.searchEngines.defaultEngine.searchURLForQuery(text)
+            if url != nil {
+                // Cliqz: Support showing search view with query set when going back from search result
+                navigateToUrl(url!, searchQuery: text)
+                return
+            }
         }
 
         // If we still don't have a valid URL, something is broken. Give up.
@@ -1670,15 +1670,7 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
 extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, SearchHistoryViewControllerDelegate {
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
-        let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
-        if let tab = tabManager.selectedTab,
-            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
-                self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
-        }
-        urlBar.currentURL = url
-        urlBar.leaveOverlayMode()
-//        finishEditingAndSubmit(url, visitType: .Link)
+        navigateToUrl(url, searchQuery: searchQuery)
     }
     func didSelectURL(url: NSURL) {
         finishEditingAndSubmit(url, visitType: .Link)
@@ -1686,6 +1678,18 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     
     func searchForQuery(query: String) {
         self.urlBar.enterOverlayMode(query, pasted: true)
+    }
+    
+    private func navigateToUrl(url: NSURL, searchQuery: String?){
+        let query = (searchQuery != nil) ? searchQuery! : ""
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        if let tab = tabManager.selectedTab,
+            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+                self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
+                showWebViewOverLay(tab)
+        }
+        urlBar.currentURL = url
+        urlBar.leaveOverlayMode()
     }
     
 }
