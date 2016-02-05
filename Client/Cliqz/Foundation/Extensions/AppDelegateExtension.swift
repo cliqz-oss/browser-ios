@@ -30,12 +30,14 @@ extension AppDelegate {
         
         // last website shortcut
         let lastWebsiteTitle = NSLocalizedString("Last site", tableName: "Cliqz", comment: "Title for `Last site` home shortcut.")
-        let lastWebsiteShortcutItem = UIApplicationShortcutItem(type: lastWebsiteIdentifier, localizedTitle: lastWebsiteTitle)
+        let lastWebsiteIcon =  UIApplicationShortcutIcon(templateImageName: "lastVisitedSite")
+        let lastWebsiteShortcutItem = UIApplicationShortcutItem(type: lastWebsiteIdentifier, localizedTitle: lastWebsiteTitle, localizedSubtitle: nil, icon: lastWebsiteIcon, userInfo: nil)
         shortcutItems.append(lastWebsiteShortcutItem)
         
         // top news shortcut
         let topNewsTitle = NSLocalizedString("Top news", tableName: "Cliqz", comment: "Title for `Top news` home shortcut.")
-        let topNewsShortcutItem = UIApplicationShortcutItem(type: topNewsIdentifier, localizedTitle: topNewsTitle)
+        let topNewsIcon =  UIApplicationShortcutIcon(templateImageName: "topNews")
+        let topNewsShortcutItem = UIApplicationShortcutItem(type: topNewsIdentifier, localizedTitle: topNewsTitle, localizedSubtitle: nil, icon: topNewsIcon, userInfo: nil)
         shortcutItems.append(topNewsShortcutItem)
         
         if self.profile!.history.count() > 0 {
@@ -50,6 +52,8 @@ extension AppDelegate {
     
     // append top sites shortcuts to the application shortcut items
     private func appendTopSitesWithLimit(limit: Int, var shortcutItems: [UIApplicationShortcutItem]) -> Success {
+        let topSitesIcon =  UIApplicationShortcutIcon(templateImageName: "topSites")
+
         return self.profile!.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
             if let r = result.successValue {
                 for site in r {
@@ -58,7 +62,7 @@ extension AppDelegate {
                         let domainURL = self.extractDomainUrl(url),
                         let domainName = self.extractDomainName(url) {
                             let userInfo = ["url" : domainURL]
-                            let topSiteShortcutItem = UIApplicationShortcutItem(type: self.topSitesIdentifier, localizedTitle: domainName, localizedSubtitle: nil, icon: nil, userInfo: userInfo)
+                            let topSiteShortcutItem = UIApplicationShortcutItem(type: self.topSitesIdentifier, localizedTitle: domainName, localizedSubtitle: nil, icon: topSitesIcon, userInfo: userInfo)
                             shortcutItems.append(topSiteShortcutItem)
                     }
                 }
