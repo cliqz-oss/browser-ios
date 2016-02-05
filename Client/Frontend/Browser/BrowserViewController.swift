@@ -321,9 +321,17 @@ class BrowserViewController: UIViewController {
 
     // Cliqz: Added to navigate to the last visited website (3D quick home actions)
     func navigateToLastWebsite() {
-        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
-            let lastVisitedURL = NSURL(string: lastVisitedWebsite)!
-            finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
+        guard let tab = tabManager.selectedTab else {
+            return
+        }
+        
+        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String,
+            let lastVisitedURL = NSURL(string: lastVisitedWebsite) {
+            if lastVisitedURL != tab.webView?.URL {
+                finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
+            } else {
+                urlBar.leaveOverlayMode()
+            }
         }
     }
     
