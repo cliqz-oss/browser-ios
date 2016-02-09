@@ -151,6 +151,12 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         for i in 0..<IntroViewControllerUX.NumberOfCards {
             let imageView = UIImageView(frame: CGRect(x: CGFloat(i)*scaledWidthOfSlide, y: 0, width: scaledWidthOfSlide, height: scaledHeightOfSlide))
             imageView.image = slides[i]
+            if i > 0 {
+                var gradient: CAGradientLayer = CAGradientLayer()
+                gradient.frame = imageView.frame
+                gradient.colors = [UIColor(rgb: 0x66B3E9).CGColor, UIColor(rgb: 0x1C549F).CGColor]
+                slideContainer.layer.addSublayer(gradient)
+            }
             slideContainer.addSubview(imageView)
         }
 
@@ -345,7 +351,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             percentage = (percentage - 0.5) * 2
         }
 
-        slideContainer.backgroundColor = colorForPercentage(percentage, start: startColor, end: endColor)
+//        slideContainer.backgroundColor = colorForPercentage(percentage, start: startColor, end: endColor)
     }
 
     private func colorForPercentage(percentage: CGFloat, start: UIColor, end: UIColor) -> UIColor {
