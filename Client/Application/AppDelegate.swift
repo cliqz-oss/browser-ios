@@ -126,9 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewURLInNewTab(localNotification)
         }
 
-        // Cliqz: starting the navigation extension
-//        NavigationExtension.start()
-		
         log.debug("Done with setting up the application.")
         return true
     }
@@ -262,6 +259,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SessionRestoreHandler.register(server)
 		// Cliqz: Registered trampolineForward to be able to load it via URLRequest
 		server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
+        
+        // Cliqz: starting the navigation extension
+        NavigationExtension.start()
+        
 		// Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
         // catching and handling the error seemed to fix things, but we're not sure why.
         // Either way, not implicitly unwrapping a try is not a great way of doing things
