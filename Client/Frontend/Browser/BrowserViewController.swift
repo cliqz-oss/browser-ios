@@ -2479,6 +2479,8 @@ extension BrowserViewController: IntroViewControllerDelegate {
             if self.navigationController?.viewControllers.count > 1 {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
+            // Cliqz: show search view after dismissing on-boarding
+            self.urlBar.enterOverlayMode("", pasted: false)
         }
     }
 
