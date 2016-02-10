@@ -764,8 +764,6 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 			self.SELdidClickCancel()
 		} else {
 			delegate?.urlBar(self, didEnterText: "")
-			// Cliqz: clears urlTextField as well, because in some cases it showes previous text
-			locationView.urlTextField.text = ""
 		}
         return true
     }
