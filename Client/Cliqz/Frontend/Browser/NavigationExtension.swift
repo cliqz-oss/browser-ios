@@ -52,12 +52,10 @@ class NavigationExtension: NSObject {
     
     // starting navigation extension either by hosting it to the same server that FireFox uses or start new webserver
     class func start() {
-        if AppStatus.sharedInstance.isDebug {
-            if useFireFoxServer {
-                registerNavigationExtensionOnFireFoxServer()
-            } else {
-                startLocalServer()
-            }
+        if useFireFoxServer {
+            registerNavigationExtensionOnFireFoxServer()
+        } else {
+            startLocalServer()
         }
     }
     
