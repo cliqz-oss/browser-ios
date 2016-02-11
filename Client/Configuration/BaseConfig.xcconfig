@@ -12,7 +12,7 @@ MOZ_BUNDLE_ID = org.mozilla.ios.$(MOZ_PRODUCT_NAME)
 MOZ_VERSION = 0.5
 
 // Build ID
-MOZ_BUILD_ID = 1147
+MOZ_BUILD_ID = 1148
 
 // Product Name
 MOZ_SOCORRO_PRODUCT_NAME = Cliqz Beta
