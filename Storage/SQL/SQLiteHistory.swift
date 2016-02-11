@@ -263,7 +263,24 @@ extension SQLiteHistory: BrowserHistory {
     }
 
     public func getTopSitesWithLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
-        let topSitesQuery = "SELECT * FROM \(TableCachedTopSites) ORDER BY frecencies DESC LIMIT (?)"
+        // Cliqz: Used Cliqz customized query to get top sites instead of the regular Fire Fox one
+//        let topSitesQuery = "SELECT * FROM \(TableCachedTopSites) ORDER BY frecencies DESC LIMIT (?)"
+        
+        let topSitesQuery = "select mzh.id as historyID, mzh.guid as guid, mzh.url as url, mzh.title as title, sum(mzh.days_count) as total_count " +
+                                    "from ( " +
+                                        "select \(TableHistory).id , \(TableHistory).guid, \(TableHistory).url, \(TableHistory).title, \(TableVisits).siteID, " +
+                                                "(\(TableVisits).date /(86400* 1000000) - (strftime('%s', date('now', '-6 months'))/86400) ) as days_count " +
+                                        "from \(TableVisits), \(TableHistory) " +
+                                        "where \(TableVisits).date > (strftime('%s', date('now', '-6 months'))*1000000) " +
+                                                "and \(TableVisits).siteID == \(TableHistory).id " +
+                                                "and \(TableHistory).is_deleted == 0 " +
+                                                "and \(TableVisits).type < 4 " +
+                                    ") as mzh " +
+                            "group by mzh.siteID " +
+                            "order by total_count desc " +
+                            "limit (?)"
+        
+        
         let factory = SQLiteHistory.iconHistoryColumnFactory
         return self.db.runQuery(topSitesQuery, args: [limit], factory: factory)
     }
