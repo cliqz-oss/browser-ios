@@ -1287,7 +1287,9 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
-        hideSearchController()
+        if !AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
+            hideSearchController()
+        }
         updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     
@@ -1686,6 +1688,12 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     
     func searchForQuery(query: String) {
         self.urlBar.enterOverlayMode(query, pasted: true)
+    }
+    
+    func modalViewDismissed () {
+        if AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
+            self.urlBar.enterOverlayMode(self.searchController?.searchQuery, pasted: true)
+        }
     }
     
     private func navigateToUrl(url: NSURL, searchQuery: String?){
