@@ -70,6 +70,7 @@
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		0BF9F8BC1A3A82CA0049A0FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
+		1E7038E71C71E2EB001F2AE4 /* FooterActivityItemProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7038E61C71E2EB001F2AE4 /* FooterActivityItemProvider.swift */; };
 		1EA710771C5A2F99005C1F11 /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710551C5A2F99005C1F11 /* CliqzSearch.swift */; };
 		1EA710781C5A2F99005C1F11 /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710561C5A2F99005C1F11 /* CliqzSearchViewController.swift */; };
 		1EA710791C5A2F99005C1F11 /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710571C5A2F99005C1F11 /* JavaScriptBridge.swift */; };
@@ -1542,6 +1543,7 @@
 		1DCC49D4B04F6EEFDC8448AA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/PrivateBrowsing.strings; sourceTree = "<group>"; };
 		1DEF4E5E9FF3A6FD20F7F3F3 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/BookmarkPanel.strings; sourceTree = "<group>"; };
 		1E424B1A86EF63E4CA3D819D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ShareTo.strings; sourceTree = "<group>"; };
+		1E7038E61C71E2EB001F2AE4 /* FooterActivityItemProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterActivityItemProvider.swift; sourceTree = "<group>"; };
 		1E7C43A8A670A59915B58FBD /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1E7F4DD9A603E74632295F42 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Search.strings; sourceTree = "<group>"; };
 		1E8F3D2E1BE113F30050C791 /* CliqzSearchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchTests.swift; sourceTree = "<group>"; };
@@ -2953,6 +2955,7 @@
 				1EA7105A1C5A2F99005C1F11 /* RecommendationsViewController.swift */,
 				1EA7105B1C5A2F99005C1F11 /* SearchHistoryViewController.swift */,
 				1EA7105C1C5A2F99005C1F11 /* TransitionAnimator.swift */,
+				1E7038E61C71E2EB001F2AE4 /* FooterActivityItemProvider.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -5906,6 +5909,7 @@
 				1EA710B71C5A3017005C1F11 /* DebugLogger.swift in Sources */,
 				E42475E21AB73B9B00B23D33 /* SWTableViewCell.m in Sources */,
 				1EA710C21C5A3017005C1F11 /* ErrorHandler.swift in Sources */,
+				1E7038E71C71E2EB001F2AE4 /* FooterActivityItemProvider.swift in Sources */,
 				E40FAB0C1A7ABB77009CB80D /* WebServer.swift in Sources */,
 				1EA7107C1C5A2F99005C1F11 /* RecommendationsViewController.swift in Sources */,
 				1EA710781C5A2F99005C1F11 /* CliqzSearchViewController.swift in Sources */,

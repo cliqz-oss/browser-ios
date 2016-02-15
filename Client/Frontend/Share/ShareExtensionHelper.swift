@@ -29,6 +29,10 @@ class ShareExtensionHelper: NSObject {
         }
         activityItems.append(self)
 
+        // Cliqz: Added footer to shared urls
+        let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+        activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+        
         let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: activities)
 
         // Hide 'Add to Reading List' which currently uses Safari.
