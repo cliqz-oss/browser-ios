@@ -135,6 +135,9 @@ class BrowserViewController: UIViewController {
     // Cliqz: key for storing the last visited website
     let lastVisitedWebsiteKey = "lastVisitedWebsite"
     
+    // Cliqz: the response state code of the current opened link
+    var currentResponseStatusCode = 0
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -1998,8 +2001,11 @@ extension BrowserViewController: WKNavigationDelegate {
             if navigation == nil {
                 log.warning("Implicitly unwrapped optional navigation was nil.")
             }
-
-            postLocationChangeNotificationForTab(tab, navigation: navigation)
+            
+            // Cliqz: prevented adding all 4XX & 5XX urls to local history
+            if currentResponseStatusCode < 400 {
+                postLocationChangeNotificationForTab(tab, navigation: navigation)
+            }
 
             // Fire the readability check. This is here and not in the pageShow event handler in ReaderMode.js anymore
             // because that event wil not always fire due to unreliable page caching. This will either let us know that
@@ -2228,6 +2234,11 @@ extension BrowserViewController: WKUIDelegate {
     }
 
     func webView(webView: WKWebView, decidePolicyForNavigationResponse navigationResponse: WKNavigationResponse, decisionHandler: (WKNavigationResponsePolicy) -> Void) {
+        // Cliqz: get the response code of the current response from the navigationResponse
+        if let response = navigationResponse.response as? NSHTTPURLResponse {
+            currentResponseStatusCode = response.statusCode
+        }
+        
         if navigationResponse.canShowMIMEType {
             decisionHandler(WKNavigationResponsePolicy.Allow)
             return
