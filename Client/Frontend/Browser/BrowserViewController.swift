@@ -138,6 +138,9 @@ class BrowserViewController: UIViewController {
     // Cliqz: the response state code of the current opened link
     var currentResponseStatusCode = 0
     
+    // Cliqz: Added AdBlocker to detect and block ads
+    let adBlocker = AdBlocker()
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -1922,6 +1925,12 @@ extension BrowserViewController: WKNavigationDelegate {
 			return
 		}
 
+        // Cliqz: Check if url is an ad server block it
+        if adBlocker.isAdServer(url) {
+            decisionHandler(WKNavigationActionPolicy.Cancel)
+            return
+        }
+        
 		switch url.scheme {
         case "about", "http", "https":
 			// Cliqz: Added handling for back/forward functionality

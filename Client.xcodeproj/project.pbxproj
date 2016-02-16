@@ -116,6 +116,8 @@
 		1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */; };
 		1EA710DF1C5A4AE7005C1F11 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */; };
 		1EC76C8D1C6A374000AF245F /* search in Resources */ = {isa = PBXBuildFile; fileRef = 1EC76C8C1C6A374000AF245F /* search */; };
+		1ECC5B6B1C736A8600183831 /* AdServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1ECC5B6A1C736A8600183831 /* AdServers.plist */; };
+		1ECC5B951C736EE400183831 /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECC5B941C736EE400183831 /* AdBlocker.swift */; };
 		1EE1C6941C60A5BA00F70C24 /* AppDelegateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -1597,6 +1599,8 @@
 		1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
 		1EC76C8C1C6A374000AF245F /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
+		1ECC5B6A1C736A8600183831 /* AdServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdServers.plist; sourceTree = "<group>"; };
+		1ECC5B941C736EE400183831 /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateExtension.swift; sourceTree = "<group>"; };
 		1F2D46FC970EC17AAF423059 /* dsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = dsb; path = dsb.lproj/SendTo.strings; sourceTree = "<group>"; };
 		1F5C41BFBC05B8A78F5E43D9 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2970,6 +2974,7 @@
 				1EA710621C5A2F99005C1F11 /* Cliqz.strings */,
 				1EA7106C1C5A2F99005C1F11 /* OnePasswordExtension.strings */,
 				1EA710761C5A2F99005C1F11 /* trampolineForward.html */,
+				1ECC5B6A1C736A8600183831 /* AdServers.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3093,6 +3098,14 @@
 			path = HTTPServer;
 			sourceTree = "<group>";
 		};
+		1ECC5B931C736ED500183831 /* AdBlocker */ = {
+			isa = PBXGroup;
+			children = (
+				1ECC5B941C736EE400183831 /* AdBlocker.swift */,
+			);
+			path = AdBlocker;
+			sourceTree = "<group>";
+		};
 		1EEC01301BFCAA3C00A8FC49 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -3112,6 +3125,7 @@
 		1EF1B8991BF4CFA100698822 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				1ECC5B931C736ED500183831 /* AdBlocker */,
 				1EA710C91C5A30DD005C1F11 /* HTTPServer */,
 				1EA7108F1C5A3017005C1F11 /* Custom UI */,
 				1EA710911C5A3017005C1F11 /* Data Structures */,
@@ -5237,6 +5251,7 @@
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				1EA710811C5A2F99005C1F11 /* Cliqz.strings in Resources */,
+				1ECC5B6B1C736A8600183831 /* AdServers.plist in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,
@@ -5875,6 +5890,7 @@
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				28EADE5D1AFC3A78007FB2FB /* UIImageViewExtensions.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
+				1ECC5B951C736EE400183831 /* AdBlocker.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				E4B3345A1BBF2393004E2BFF /* ADJLogger.m in Sources */,
 				D39949F51C22461A00E2A03C /* RequestDesktopSiteActivity.swift in Sources */,
