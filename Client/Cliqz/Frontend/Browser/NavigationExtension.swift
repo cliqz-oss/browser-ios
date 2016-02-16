@@ -49,7 +49,6 @@ class NavigationExtension: NSObject {
         return "\(baseURL)/freshtab.html"
     }()
     
-    
     // starting navigation extension either by hosting it to the same server that FireFox uses or start new webserver
     class func start() {
         if useFireFoxServer {
@@ -58,8 +57,7 @@ class NavigationExtension: NSObject {
             startLocalServer()
         }
     }
-    
-    
+
     // using the same server that Firefox have to make the navigation extension works locally
     private class func registerNavigationExtensionOnFireFoxServer() {
         let bundlePath = NSBundle.mainBundle().bundlePath
@@ -68,8 +66,7 @@ class NavigationExtension: NSObject {
         let server = WebServer.sharedInstance
         server.registerMainBundlePath("/extension/", directoryPath: extensionPath)
     }
-    
-    
+
     // starting new local web server to host the navigation extension
     private class func startLocalServer() {
         let bundlePath = NSBundle.mainBundle().bundlePath

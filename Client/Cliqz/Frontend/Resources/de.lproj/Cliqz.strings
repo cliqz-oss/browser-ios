@@ -56,3 +56,11 @@
 /* Share footer */
 "Shared with CLIQZ for iOS" = "Geteilt mit CLIQZ für iOS";
 
+/* URL for detailed info for human web */
+"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
+
+/* Title for Human Web deteiled info on settings */
+"What is Human Web?" = "Was ist Human Web?";
+
+/* "Navigation title in settings */
+"Human Web" = "Human Web";

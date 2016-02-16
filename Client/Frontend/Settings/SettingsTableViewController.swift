@@ -694,14 +694,14 @@ extension SearchSetting: SearchEnginePickerDelegate {
 }
 // Cliqz: Added
 private class ImprintSetting: Setting {
-    override var title: NSAttributedString? {
+	override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Imprint", tableName: "Cliqz", comment: "Show Cliqz legal page. See https://cliqz.com/legal"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
-    }
-    
-    override var url: NSURL? {
+	}
+
+	override var url: NSURL? {
         return NSURL(string: "https://cliqz.com/legal")
-    }
-    
+	}
+
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
     }
@@ -746,6 +746,27 @@ private class PrivacyPolicySetting: Setting {
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
     }
+}
+
+//Cliqz: Added new settings item for Human Web
+private class HumanWebSetting: Setting {
+
+	let profile: Profile
+
+	init(settings: SettingsTableViewController) {
+		self.profile = settings.profile
+
+		let humanWebTitle = NSLocalizedString("Human Web", tableName: "", comment: "Label used as an item in Settings. When touched it will open a Human Web settings")
+		super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+	}
+	
+	override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+	override func onClick(navigationController: UINavigationController?) {
+		let viewController = HumanWebSettingsTableViewController()
+		viewController.profile = self.profile
+		navigationController?.pushViewController(viewController, animated: true)
+	}
 }
 
 private class ChinaSyncServiceSetting: WithoutAccountSetting {
@@ -811,7 +832,8 @@ class SettingsTableViewController: UITableViewController {
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
 			BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: false, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             SendCliqzFeedbackSetting(),
-            ImprintSetting()
+            ImprintSetting(),
+			HumanWebSetting(settings: self)
             ]
         
 //        var generalSettings = [
