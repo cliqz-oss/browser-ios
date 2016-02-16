@@ -62,5 +62,8 @@
 /* Title for Human Web deteiled info on settings */
 "What is Human Web?" = "Was ist Human Web?";
 
-/* "Navigation title in settings */
+/* Navigation title in settings */
 "Human Web" = "Human Web";
+
+/* Block Ads setting*/
+"Block Ads" = "Werbung blockieren";

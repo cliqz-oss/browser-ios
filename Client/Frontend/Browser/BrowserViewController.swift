@@ -139,12 +139,14 @@ class BrowserViewController: UIViewController {
     var currentResponseStatusCode = 0
     
     // Cliqz: Added AdBlocker to detect and block ads
-    let adBlocker = AdBlocker()
+    let adBlocker: AdBlocker
     
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
         self.readerModeCache = DiskReaderModeCache.sharedInstance
+        // Cliqz: Initialized AdBlocker object
+        self.adBlocker = AdBlocker(profile: profile)
         super.init(nibName: nil, bundle: nil)
         didInit()
     }
