@@ -15,15 +15,17 @@ public enum TransitionDirection {
 
 class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
-    let duration    = 0.25
+    let duration    = 0.5
     var presenting  = true
     var transitionDirection = TransitionDirection.Up
+    var isAnimating = false
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?)-> NSTimeInterval {
         return duration
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+        isAnimating = true
         
         let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
@@ -39,39 +41,30 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let upperFrame = CGRectOffset(middelFrame, 0, -middelFrame.size.height)
         let lowerFrame = CGRectOffset(middelFrame, 0, middelFrame.size.height)
         
-        
-        if transitionDirection == TransitionDirection.Up {
-            if presenting {
-                toView.frame = lowerFrame
-            } else {
-                fromView.frame = middelFrame
-            }
+        if (transitionDirection == TransitionDirection.Up && presenting) ||
+           (transitionDirection == TransitionDirection.Down && !presenting) {
+            toView.frame = lowerFrame
+            fromView.frame = middelFrame
         } else {
-            if presenting {
-                toView.frame = upperFrame
-            } else {
-                fromView.frame = middelFrame
-            }
+            toView.frame = upperFrame
+            fromView.frame = middelFrame
         }
+
         
         UIView.animateWithDuration(duration,
             animations: {
                 
-                if self.transitionDirection == TransitionDirection.Up {
-                    if self.presenting {
-                        toView.frame = middelFrame
-                    } else {
-                        fromView.frame = lowerFrame
-                    }
+                if (self.transitionDirection == TransitionDirection.Up && self.presenting) ||
+                    (self.transitionDirection == TransitionDirection.Down && !self.presenting) {
+                    toView.frame = middelFrame
+                    fromView.frame = upperFrame
                 } else {
-                    if self.presenting {
-                        toView.frame = middelFrame
-                    } else {
-                        fromView.frame = upperFrame
-                    }
+                    toView.frame = middelFrame
+                    fromView.frame = lowerFrame
                 }
             }, completion:{_ in
                 transitionContext.completeTransition(true)
+                self.isAnimating = false
         })
 
         

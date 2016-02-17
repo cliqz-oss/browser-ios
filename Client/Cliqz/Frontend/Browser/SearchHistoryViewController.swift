@@ -14,6 +14,7 @@ protocol SearchHistoryViewControllerDelegate: class {
     
     func didSelectURL(url: NSURL)
     func searchForQuery(query: String)
+    func modalViewDismissed()
 }
 
 class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
@@ -99,7 +100,9 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     // Mark: Action handlers
     func dismiss() {
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true) { () -> Void in
+            self.delegate?.modalViewDismissed()
+        }
     }
     
     func openSettings() {

@@ -19,3 +19,48 @@
 
 /* Search history title */
 "Search history" = "Suchverlauf";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Impressum";
+
+/* Send Feedback Email */
+"Send Feedback" = "Feedback geben";
+
+/* Send Feedback Email Subject*/
+"Feedback to iOS Cliqz Browser" = "Feedback zu iOS Cliqz Browser";
+
+/* Open search section of settings */
+"Search" = "Suche";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback für CLIQZ Browser for iOS (Version %@), auf %@";
+
+/* Title for No Email account pop-up */
+"No Email account title" = "kein Email-Konto eingerichtet";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Bitte Email-Konto einrichten, um Feedback schicken zu können.";
+
+/* Error title */
+"The Internet connection appears to be offline." = "Die Internet-Verbindung scheint offline zu sein.";
+
+/* Title for `Top news` home shortcut. */
+"Top news" = "Top News lesen";
+
+/* Title for `Last site` home shortcut. */
+"Last site" =  "Letzte Seite öffnen";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Nicht-jugendfreie Inhalte blockieren";
+
+/* Share footer */
+"Shared with CLIQZ for iOS" = "Geteilt mit CLIQZ für iOS";
+
+/* URL for detailed info for human web */
+"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
+
+/* Title for Human Web deteiled info on settings */
+"What is Human Web?" = "Was ist Human Web?";
+
+/* "Navigation title in settings */
+"Human Web" = "Human Web";

@@ -6,6 +6,8 @@ import Foundation
 import XCGLogger
 import Shared
 
+public let NotificationDatabaseWasRecreated = "NotificationDatabaseWasRecreated"
+
 private let log = Logger.syncLogger
 
 typealias Args = [AnyObject?]
@@ -104,11 +106,11 @@ public class BrowserDB {
     // creation of the table in the database.
     func createOrUpdate(tables: Table...) -> Bool {
         var success = true
+
         let doCreate = { (table: Table, connection: SQLiteDBConnection) -> () in
             switch self.createTable(connection, table: table) {
             case .Created:
                 success = true
-                connection.checkpoint()
                 return
             case .Exists:
                 log.debug("Table already exists.")
@@ -133,7 +135,6 @@ public class BrowserDB {
                     case .Updated:
                         log.debug("Updated table \(table.name).")
                         success = true
-                        connection.checkpoint()
                         break
                     case .Exists:
                         log.debug("Table \(table.name) already exists.")
@@ -163,12 +164,15 @@ public class BrowserDB {
 
         // If we failed, move the file and try again. This will probably break things that are already
         // attached and expecting a working DB, but at least we should be able to restart.
+        var notify: NSNotification? = nil
         if !success {
             log.debug("Couldn't create or update \(tables.map { $0.name }).")
             log.debug("Attempting to move \(self.filename) to another location.")
 
             // Make sure that we don't still have open the files that we want to move!
-            db.close()
+            // Note that we use sqlite3_close_v2, which might actually _not_ close the
+            // database file yet. For this reason we move the -shm and -wal files, too.
+            db.forceClose()
 
             // Note that a backup file might already exist! We append a counter to avoid this.
             var bakCounter = 0
@@ -192,10 +196,22 @@ public class BrowserDB {
                     try self.files.move(wal, toRelativePath: bak + "-wal")
                 }
                 success = true
+
+                // Notify the world that we moved the database. This allows us to
+                // reset sync and start over in the case of corruption.
+                let notification = NotificationDatabaseWasRecreated
+                notify = NSNotification(name: notification, object: self.filename)
             } catch _ {
                 success = false
             }
             assert(success)
+
+            // Do this after the relevant tables have been created.
+            defer {
+                if let notify = notify {
+                    NSNotificationCenter.defaultCenter().postNotification(notify)
+                }
+            }
 
             if let _ = db.transaction({ connection -> Bool in
                 for table in tables {
@@ -344,8 +360,8 @@ extension BrowserDB {
         }
     }
 
-    public func close() {
-        db.close()
+    public func forceClose() {
+        db.forceClose()
     }
 
     func run(sql: String, withArgs args: Args? = nil) -> Success {
@@ -388,12 +404,12 @@ extension BrowserDB {
 }
 
 extension SQLiteDBConnection {
-    func tablesExist(names: Args) -> Bool {
+    func tablesExist(names: [String]) -> Bool {
         let count = names.count
         let orClause = Array(count: count, repeatedValue: "name = ?").joinWithSeparator(" OR ")
         let tablesSQL = "SELECT name FROM sqlite_master WHERE type = 'table' AND (\(orClause))"
 
-        let res = self.executeQuery(tablesSQL, factory: StringFactory, withArgs: names)
+        let res = self.executeQuery(tablesSQL, factory: StringFactory, withArgs: names.map { $0 as AnyObject })
         log.debug("\(res.count) tables exist. Expected \(count)")
         return res.count > 0
     }

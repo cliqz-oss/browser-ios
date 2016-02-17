@@ -1,0 +1,132 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+import Foundation
+import Shared
+
+private let log = Logger.browserLogger
+
+class ShareExtensionHelper: NSObject {
+    private let selectedTab: Browser
+    private var onePasswordExtensionItem: NSExtensionItem!
+    private let activities: [UIActivity]
+
+    init(tab: Browser, activities: [UIActivity]) {
+        self.selectedTab = tab
+        self.activities = activities
+    }
+
+    func createActivityViewController(completionHandler: () -> Void) -> UIActivityViewController {
+        let printInfo = UIPrintInfo(dictionary: nil)
+        printInfo.jobName = selectedTab.url?.absoluteString ?? ""
+        printInfo.outputType = .General
+        let renderer = BrowserPrintPageRenderer(browser: selectedTab)
+
+        var activityItems = [printInfo, renderer]
+        if let title = selectedTab.title {
+            activityItems.append(TitleActivityItemProvider(title: title))
+        }
+        activityItems.append(self)
+
+        // Cliqz: Added footer to shared urls
+        let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+        activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+        
+        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: activities)
+
+        // Hide 'Add to Reading List' which currently uses Safari.
+        // We would also hide View Later, if possible, but the exclusion list doesn't currently support
+        // third-party activity types (rdar://19430419).
+        activityViewController.excludedActivityTypes = [
+            UIActivityTypeAddToReadingList,
+        ]
+
+        // This needs to be ready by the time the share menu has been displayed and
+        // activityViewController(activityViewController:, activityType:) is called,
+        // which is after the user taps the button. So a million cycles away.
+        if (ShareExtensionHelper.isPasswordManagerExtensionAvailable()) {
+            findLoginExtensionItem()
+        }
+
+        activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+            if !completed {
+                return
+            }
+
+            if self.isPasswordManagerActivityType(activityType) {
+                if let logins = returnedItems {
+                    self.fillPasswords(logins)
+                }
+            }
+
+            completionHandler()
+        }
+        return activityViewController
+    }
+}
+
+extension ShareExtensionHelper: UIActivityItemSource {
+    func activityViewControllerPlaceholderItem(activityViewController: UIActivityViewController) -> AnyObject {
+        return selectedTab.displayURL ?? NSURL()
+    }
+
+    func activityViewController(activityViewController: UIActivityViewController, itemForActivityType activityType: String) -> AnyObject? {
+        if isPasswordManagerActivityType(activityType) {
+            // Return the 1Password extension item
+            return onePasswordExtensionItem
+        } else {
+            // Return the URL for the selected tab. If we are in reader view then decode
+            // it so that we copy the original and not the internal localhost one.
+            if let url = selectedTab.displayURL where ReaderModeUtils.isReaderModeURL(url) {
+                return ReaderModeUtils.decodeURL(url)
+            }
+            return selectedTab.displayURL
+        }
+    }
+
+    func activityViewController(activityViewController: UIActivityViewController, dataTypeIdentifierForActivityType activityType: String?) -> String {
+        // Because of our UTI declaration, this UTI now satisfies both the 1Password Extension and the usual NSURL for Share extensions.
+        return "org.appextension.fill-browser-action"
+    }
+}
+
+private extension ShareExtensionHelper {
+    static func isPasswordManagerExtensionAvailable() -> Bool {
+        return OnePasswordExtension.sharedExtension().isAppExtensionAvailable()
+    }
+
+    func isPasswordManagerActivityType(activityType: String?) -> Bool {
+        if (!ShareExtensionHelper.isPasswordManagerExtensionAvailable()) {
+            return false
+        }
+        // A 'password' substring covers the most cases, such as pwsafe and 1Password.
+        // com.agilebits.onepassword-ios.extension
+        // com.app77.ios.pwsafe2.find-login-action-password-actionExtension
+        // If your extension's bundle identifier does not contain "password", simply submit a pull request by adding your bundle identifier.
+        return (activityType?.rangeOfString("password") != nil)
+            || (activityType == "com.lastpass.ilastpass.LastPassExt")
+
+    }
+
+    func findLoginExtensionItem() {
+        // Add 1Password to share sheet
+        OnePasswordExtension.sharedExtension().createExtensionItemForWebView(selectedTab.webView!, completion: {(extensionItem, error) -> Void in
+            if extensionItem == nil {
+                log.error("Failed to create the password manager extension item: \(error).")
+                return
+            }
+
+            // Set the 1Password extension item property
+            self.onePasswordExtensionItem = extensionItem
+        })
+    }
+
+    func fillPasswords(returnedItems: [AnyObject]) {
+        OnePasswordExtension.sharedExtension().fillReturnedItems(returnedItems, intoWebView: self.selectedTab.webView!, completion: { (success, returnedItemsError) -> Void in
+            if !success {
+                log.error("Failed to fill item into webview: \(returnedItemsError).")
+            }
+        })
+    }
+}

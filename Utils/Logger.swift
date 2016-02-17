@@ -15,7 +15,7 @@ public extension Logger {
 	static let syncLogger = RollingFileLogger(filenameRoot: "sync", logDirectoryPath: Logger.logFileDirectoryPath())
 
     /// Logger used for recording frontend/browser happenings
-    static let browserLogger: XCGLogger = Logger.fileLoggerWithName("browser")
+    static let browserLogger = RollingFileLogger(filenameRoot: "browser", logDirectoryPath: Logger.logFileDirectoryPath())
 
     /// Logger used for recording interactions with the keychain
     static let keychainLogger: XCGLogger = Logger.fileLoggerWithName("keychain")
@@ -83,6 +83,7 @@ public extension Logger {
 			// Cliqz: removed call logFilenamesAndURLs because syncLogger is replaced with XCGLogger which doesn't have member logFilenamesAndURLs
 //            filenamesAndURLs += try syncLogger.logFilenamesAndURLs()
             filenamesAndURLs += try corruptLogger.logFilenamesAndURLs()
+//            filenamesAndURLs += try browserLogger.logFilenamesAndURLs()
         } catch _ {
         }
 

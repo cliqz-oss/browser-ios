@@ -221,7 +221,8 @@ class URLBarView: UIView {
 //        addSubview(cancelButton)
 
         addSubview(shareButton)
-        addSubview(bookmarkButton)
+        // Cliqz: Removed bookmarkButton from view as it covers the share button in the landscape mode
+//        addSubview(bookmarkButton)
         addSubview(forwardButton)
         addSubview(backButton)
         addSubview(stopReloadButton)
@@ -318,13 +319,13 @@ class URLBarView: UIView {
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
-
-        bookmarkButton.snp_makeConstraints { make in
-			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
-			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-            make.centerY.equalTo(self)
-            make.size.equalTo(backButton)
-		}
+        // Cliqz: Commented bookmarkButton constraints because it's removed from view as it covers the share button in the landscape mode
+//        bookmarkButton.snp_makeConstraints { make in
+//			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
+//			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+//            make.centerY.equalTo(self)
+//            make.size.equalTo(backButton)
+//		}
 	}
 
     override func updateConstraints() {
@@ -372,6 +373,7 @@ class URLBarView: UIView {
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
         locationTextField.returnKeyType = UIReturnKeyType.Go
+		locationTextField.enablesReturnKeyAutomatically = true
 		// Cliqz: Changed mode to always to use it also as cancel button
         locationTextField.clearButtonMode = UITextFieldViewMode.Always
         // Cliqz: Added left pading to the location field
@@ -547,7 +549,9 @@ class URLBarView: UIView {
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
-        locationTextField?.resignFirstResponder()
+        // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events
+//        locationTextField?.resignFirstResponder()
+        locationTextField?.enforceResignFirstResponder()
         animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
     }
@@ -741,12 +745,8 @@ extension URLBarView: BrowserLocationViewDelegate {
 
 extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool {
-        //Cliqz: dismiss they keyboard when return button pressed instead of navigating to the
-//        autocompleteTextField.resignFirstResponder()
-		
         guard let text = locationTextField?.text else { return true }
         delegate?.urlBar(self, didSubmitText: text)
-
         return true
     }
 
@@ -764,8 +764,6 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 			self.SELdidClickCancel()
 		} else {
 			delegate?.urlBar(self, didEnterText: "")
-			// Cliqz: clears urlTextField as well, because in some cases it showes previous text
-			locationView.urlTextField.text = ""
 		}
         return true
     }
@@ -942,5 +940,14 @@ class ToolbarTextField: AutocompleteTextField {
         UIGraphicsEndImageContext()
         
         return tintedImage
+    }
+    
+    // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events
+    func enforceResignFirstResponder () {
+        super.resignFirstResponder();
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        return false
     }
 }

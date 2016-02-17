@@ -20,7 +20,7 @@ class ConnectionManager {
     
     //MARK: - Sending Requests
     
-    internal func sendGetRequest(url: String, parameters: [String: AnyObject], onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    internal func sendGetRequest(url: String, parameters: [String: AnyObject]?, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         Alamofire.request(.GET, url, parameters: parameters)
             .responseJSON {
                 request, response, result in

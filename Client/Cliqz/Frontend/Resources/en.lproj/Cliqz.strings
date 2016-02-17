@@ -11,7 +11,6 @@
  Cancel */
 "Cancel" = "Cancel";
 
-
 /* Button label on Alert view */
 "Retry" = "Retry";
 
@@ -20,3 +19,48 @@
 
 /* Search history title */
 "Search history" = "History";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Imprint";
+
+/* Send Feedback Email */
+"Send Feedback" = "Send Feedback";
+
+/* Send Feedback Email Subject*/
+"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+
+/* Open search section of settings */
+"Search" = "Search";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@";
+
+/* Title for No Email account pop-up */
+"No Email account title" = "No Email account";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Please setup an Email account to be able to send a feedback.";
+
+/* Error title */
+"The Internet connection appears to be offline." = "The internet connection appears to be offline.";
+
+/* Title for `Top news` home shortcut. */
+"Top news" = "Top news";
+
+/* Title for `Last site` home shortcut. */
+"Last site" =  "Last site";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Block Explicit Content";
+
+/* Share footer */
+"Shared with CLIQZ for iOS" = "Shared with CLIQZ for iOS";
+
+/* URL for detailed info for human web */
+"Human Web URL" = "https://cliqz.com/en/whycliqz/human-web";
+
+/* Title for Human Web deteiled info on settings */
+"What is Human Web?" = "What is Human Web?";
+
+/* "Navigation title in settings */
+"Human Web" = "Human Web";

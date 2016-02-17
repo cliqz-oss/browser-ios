@@ -53,6 +53,10 @@ class Browser: NSObject {
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
 
+    /// Whether or not the desktop site was requested with the last request, reload or navigation. Note that this property needs to
+    /// be managed by the web view's navigation delegate.
+    var desktopSite: Bool = false
+
     private(set) var screenshot: UIImage?
     var screenshotUUID: NSUUID?
 
@@ -239,6 +243,13 @@ class Browser: NSObject {
                 }
             }
 
+            if let urlComponents = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) where (urlComponents.user != nil) || (urlComponents.password != nil) {
+                urlComponents.user = nil
+                urlComponents.password = nil
+                return urlComponents.URL
+            }
+
+
             if !AboutUtils.isAboutURL(url) {
                 return url
             }
@@ -279,6 +290,16 @@ class Browser: NSObject {
     }
 
     func reload() {
+        if #available(iOS 9.0, *) {
+            webView?.customUserAgent = desktopSite ? UserAgent.desktopUserAgent() : nil
+
+            if let currentItem = webView?.backForwardList.currentItem where currentItem.URL != currentItem.initialURL {
+                // Reload the initial URL to avoid UA specific redirection
+                loadRequest(NSURLRequest(URL: currentItem.initialURL, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 60))
+                return
+            }
+        }
+
         if let _ = webView?.reloadFromOrigin() {
             log.info("reloaded zombified tab from origin")
             return
@@ -355,6 +376,12 @@ class Browser: NSObject {
         if revUUID {
             self.screenshotUUID = NSUUID()
         }
+    }
+
+    @available(iOS 9, *)
+    func toggleDesktopSite() {
+        desktopSite = !desktopSite
+        reload()
     }
 }
 

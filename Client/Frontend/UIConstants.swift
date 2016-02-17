@@ -64,10 +64,6 @@ public struct UIConstants {
 
 /// Strings that will be used for features that haven't yet landed.
 private struct TempStrings {
-    // Bug 1109675 - Request Desktop Site
-    let requestDesktopSite = NSLocalizedString("Request Desktop Site", comment: "Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button.")
-    let requestMobileSite = NSLocalizedString("Request Mobile Site", comment: "Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time.")
-
     // Bug 1182303 - Checkbox to block alert spam.
     let disableAlerts = NSLocalizedString("Disable additional page dialogs", comment: "Pending feature; currently unused string! Checkbox label shown after multiple alerts are shown")
 
@@ -79,6 +75,7 @@ private struct TempStrings {
 /// Old strings that will be removed when we kill 1.0. We need to keep them around for now for l10n export.
 private struct ObsoleteStrings {
     let introMultiplePages = NSLocalizedString("Browse multiple Web pages at the same time with tabs.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
+    // Cliqz: Replaced Firefox with Cliqz in localized messages.
     let introPersonalize = NSLocalizedString("Personalize your Cliqz just the way you like in Settings.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     let introConnect = NSLocalizedString("Connect Cliqz everywhere you use it.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     let settingsSearchSuggestions = NSLocalizedString("Show search suggestions", comment: "Label for show search suggestions setting.")
