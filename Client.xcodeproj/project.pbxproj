@@ -1401,7 +1401,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				4F49F5B21C04EC9E00319287 /* ADJTimerCycle.m in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
