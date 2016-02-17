@@ -16,6 +16,7 @@ import Shared
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
+    optional func shareCard(cardData: [String: AnyObject])
 }
 
 class JavaScriptBridge {
@@ -113,6 +114,12 @@ class JavaScriptBridge {
             if let result = data as? String {
                 UIPasteboard.generalPasteboard().string = result
             }
+            
+        case "shareCard":
+            if let cardData = data as? [String: AnyObject] {
+                delegate?.shareCard?(cardData)
+            }
+            
         default:
             print("Unhandles JS action: \(action), with data: \(data)")
         }

@@ -297,4 +297,29 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults)
     }
+    
+    func shareCard(cardData: [String: AnyObject]) {
+
+        if let url = NSURL(string: cardData["url"] as! String) {
+            
+            // start by empty activity items
+            var activityItems = [AnyObject]()
+            
+            // add the title to activity items if it exists
+            if let title = cardData["title"] as? String {
+                activityItems.append(TitleActivityItemProvider(title: title))
+            }
+            // add the url to activity items
+            activityItems.append(url)
+            
+            // add cliqz footer to activity items
+            let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+            activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+
+            // creating the ActivityController and presenting it
+            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+
+        }
+    }
 }
