@@ -17,6 +17,7 @@ import Shared
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
     optional func shareCard(cardData: [String: AnyObject])
+    optional func autoCompeleteQuery(autoCompleteText: String)
 }
 
 class JavaScriptBridge {
@@ -118,6 +119,11 @@ class JavaScriptBridge {
         case "shareCard":
             if let cardData = data as? [String: AnyObject] {
                 delegate?.shareCard?(cardData)
+            }
+            
+        case "autocomplete":
+            if let autoCompleteText = data as? String {
+                delegate?.autoCompeleteQuery?(autoCompleteText)
             }
             
         default:

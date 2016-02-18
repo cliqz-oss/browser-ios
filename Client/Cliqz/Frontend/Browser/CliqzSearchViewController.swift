@@ -15,6 +15,7 @@ protocol SearchViewDelegate: class {
 
     func didSelectURL(url: NSURL, searchQuery: String?)
     func searchForQuery(query: String)
+    func autoCompeleteQuery(autoCompleteText: String)
 	
 }
 
@@ -321,5 +322,9 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
             self.presentViewController(activityViewController, animated: true, completion: nil)
 
         }
+    }
+    
+    func autoCompeleteQuery(autoCompleteText: String) {
+        delegate?.autoCompeleteQuery(autoCompleteText)
     }
 }

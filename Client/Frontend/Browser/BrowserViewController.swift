@@ -1699,6 +1699,10 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         self.urlBar.enterOverlayMode(query, pasted: true)
     }
     
+    func autoCompeleteQuery(autoCompleteText: String) {
+        urlBar.setAutocompleteSuggestion(autoCompleteText)
+    }
+    
     func modalViewDismissed () {
         if AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
             self.urlBar.enterOverlayMode(self.searchController?.searchQuery, pasted: true)
