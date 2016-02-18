@@ -25,8 +25,8 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 		if !CLLocationManager.locationServicesEnabled() || CLLocationManager.authorizationStatus() == .NotDetermined {
 			TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
 			self.manager.requestWhenInUseAuthorization()
-			self.manager.startUpdatingLocation()
 		}
+		self.manager.startUpdatingLocation()
 	}
 
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
