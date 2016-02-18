@@ -114,7 +114,8 @@ class JavaScriptBridge {
                 UIPasteboard.generalPasteboard().string = result
             }
         default:
-            print("Unhandles JS action: \(action), with data: \(data)")
+			print("Unhandles JS action")
+//            print("Unhandles JS action: \(action), with data: \(data)")
         }
     }
     
