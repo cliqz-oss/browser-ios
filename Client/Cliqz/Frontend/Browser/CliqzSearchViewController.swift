@@ -265,7 +265,7 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
         } else if let query = lastQuery { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -273,7 +273,7 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
         }
         
     }
@@ -286,8 +286,8 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         delegate?.didSelectURL(url, searchQuery: self.searchQuery)
     }
     
-    func evaluateJavaScript(javaScriptString: String) {
-        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     func searchForQuery(query: String) {
@@ -296,7 +296,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     
     func getSearchHistoryResults(callback: String?) {
         let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
-        javaScriptBridge.callJSMethod(callback!, parameter: fullResults)
+        javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
     func shareCard(cardData: [String: AnyObject]) {

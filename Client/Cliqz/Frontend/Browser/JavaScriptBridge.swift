@@ -12,7 +12,7 @@ import Shared
 @objc protocol JavaScriptBridgeDelegate: class {
     
     func didSelectUrl(url: NSURL)
-    func evaluateJavaScript(javaScriptString: String)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?)
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
@@ -30,7 +30,7 @@ class JavaScriptBridge {
         self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
     }
     
-    func callJSMethod(methodName: String, parameter: AnyObject?) {
+    func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
         var parameterString: String = ""
         
         if parameter != nil {
@@ -47,7 +47,7 @@ class JavaScriptBridge {
         }
         
         let javaScriptString = "\(methodName)(\(parameterString))"
-        self.delegate?.evaluateJavaScript(javaScriptString)
+        self.delegate?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     
@@ -72,7 +72,7 @@ class JavaScriptBridge {
 		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("")?.absoluteString.componentsSeparatedByString("=")
 		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
 			"url": searchComps![0] + "="]
-		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams)
+		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
 	}
 
     // Mark: Handle JavaScript Action
@@ -155,7 +155,7 @@ class JavaScriptBridge {
                     results.append(d)
                 }
             }
-            self.callJSMethod(callback, parameter: results)
+            self.callJSMethod(callback, parameter: results, completionHandler: nil)
             return succeed()
         }
 	}

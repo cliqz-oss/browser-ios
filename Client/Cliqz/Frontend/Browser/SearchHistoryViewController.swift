@@ -153,8 +153,8 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
         self.dismiss()
     }
     
-    func evaluateJavaScript(javaScriptString: String) {
-        self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     func searchForQuery(query: String) {
@@ -178,7 +178,7 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
                         d["score"] = 0
                         historyResults.append(d)
                     }
-                    self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults])
+                    self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults], completionHandler: nil)
                 }
             }
         }

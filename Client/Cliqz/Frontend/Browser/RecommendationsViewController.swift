@@ -213,7 +213,7 @@ extension RecommendationsViewController: JavaScriptBridgeDelegate {
         self.dismiss()
     }
     
-    func evaluateJavaScript(javaScriptString: String) {
-        self.topSitesWebView.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.topSitesWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
 }
