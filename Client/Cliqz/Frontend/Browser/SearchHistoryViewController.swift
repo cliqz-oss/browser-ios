@@ -167,15 +167,16 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     func getSearchHistoryResults(callback: String?) {
 
         if callback != nil {
-            self.profile.history.getSitesByLastVisit(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
+            self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
                 if let sites = result.successValue {
                     var historyResults = [[String: AnyObject]]()
                     for site in sites {
                         var d = [String: AnyObject]()
+                        d["id"] = site!.id
                         d["url"] = site!.url
                         d["title"] = site!.title
                         d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-                        d["score"] = 0
+                        d["favorite"] = site!.favorite
                         historyResults.append(d)
                     }
                     self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults], completionHandler: nil)

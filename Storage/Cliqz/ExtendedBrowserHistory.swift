@@ -17,4 +17,7 @@ public protocol ExtendedBrowserHistory {
 
     // Cliqz: history favorites
     func alterVisitsTableAddFavoriteColumn()
+
+    // Cliqz: getting History
+    func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
 }

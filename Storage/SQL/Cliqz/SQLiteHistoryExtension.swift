@@ -43,6 +43,20 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         }
     }
     
+    public func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
+        let args: Args?
+        args = []
+        
+        let historySQL =
+        "SELECT \(TableVisits).id, \(TableVisits).date, \(TableVisits).favorite, \(TableHistory).url, \(TableHistory).title " +
+            "FROM \(TableHistory) " +
+            "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
+            "ORDER BY \(TableVisits).id DESC " +
+        "LIMIT \(limit) "
+        
+        // TODO countFactory
+        return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
+    }
     //MARK: - Helper Methods
     private func isColumnExist(tableName: String, columnName: String) -> Bool {
         let tableInfoSQL = "PRAGMA table_info(\(tableName))"
@@ -63,6 +77,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         let cout = row["rowCount"] as! Int
         return cout
     }
+    
     private class func dateFactory(row: SDRow) -> NSDate {
         
         let timeInMicroSeconds = row.getTimestamp("date")
@@ -71,8 +86,27 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         let date = NSDate(timeIntervalSince1970:timeIntervalSince1970)
         return date
     }
+    
     private class func columnNameFactory(row: SDRow) -> String {
         let columnName = row["name"] as! String
         return columnName
     }
+    
+    private class func historyVisitsFactory(row: SDRow) -> Site {
+        let id = row["id"] as! Int
+        let url = row["url"] as! String
+        let title = row["title"] as! String
+        let favorite = row["favorite"] as! Bool
+        
+        let site = Site(url: url, title: title)
+        site.id = id
+        site.favorite = favorite
+        
+        let date = row.getTimestamp("date") ?? 0
+        site.latestVisit = Visit(date: date, type: VisitType.Unknown)
+        
+        return site
+    }
+    
+
 }
