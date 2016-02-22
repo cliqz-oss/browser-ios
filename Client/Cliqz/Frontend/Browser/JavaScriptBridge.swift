@@ -126,6 +126,13 @@ class JavaScriptBridge {
                 delegate?.autoCompeleteQuery?(autoCompleteText)
             }
             
+        case "setHistoryFavorite":
+            if let historyData = data as? [String: AnyObject],
+                let ids = historyData["ids"] as? [Int],
+                let value = historyData["value"] as? Bool {
+                self.profile.history.setHistoryFavorite(ids, value:value)
+            }
+            
         default:
             print("Unhandles JS action: \(action), with data: \(data)")
         }

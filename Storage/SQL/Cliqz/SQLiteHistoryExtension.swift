@@ -42,6 +42,13 @@ extension SQLiteHistory: ExtendedBrowserHistory {
                 ])
         }
     }
+    public func setHistoryFavorite(ids: [Int], value: Bool) -> Success {
+        let idsCommaSeparated = ids.map{String($0)}.joinWithSeparator(",")
+        let favorite = value ? 1:0
+        return self.db.run([
+            ("UPDATE \(TableVisits) SET favorite = \(favorite) WHERE id in (\(idsCommaSeparated))", nil)
+            ])
+    }
     
     public func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
