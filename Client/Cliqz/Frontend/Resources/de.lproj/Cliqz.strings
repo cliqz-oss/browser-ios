@@ -65,5 +65,8 @@
 /* Navigation title in settings */
 "Human Web" = "Human Web";
 
-/* Block Ads setting*/
+/* Block Ads setting */
 "Block Ads" = "Werbung blockieren";
+
+/* Settings item for clearing favorite history */
+"Include favorites" = "Inklusive Favoriten";

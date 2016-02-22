@@ -11,3 +11,6 @@ public let NotificationPrivateDataClearedHistory = "PrivateDataClearedHistoryNot
 
 // Fired when the user finishes navigating to a page and the location has changed
 public let NotificationOnLocationChange = "OnLocationChange"
+
+// Cliqz: Fired when trying to clear local history
+public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"

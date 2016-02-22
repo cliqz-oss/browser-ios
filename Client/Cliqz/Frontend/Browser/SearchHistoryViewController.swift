@@ -44,10 +44,16 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.profile = profile
 		self.tabManager = tabManager
         super.init(nibName: nil, bundle: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearQueries:", name: NotificationPrivateDataClearQueries, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearQueries, object: nil)
     }
     
     override func viewDidLoad() {
@@ -183,6 +189,14 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
                 }
             }
         }
+    }
+    
+    
+    // MARK: - Clear History
+    func clearQueries(notification: NSNotification) {
+        let includeFavorites: Bool = (notification.object as? Bool) ?? false
+        
+        self.evaluateJavaScript("clearQueries(\(includeFavorites))", completionHandler: nil)
     }
 
 }

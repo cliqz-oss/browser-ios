@@ -50,6 +50,17 @@ extension SQLiteHistory: ExtendedBrowserHistory {
             ])
     }
     
+    public func clearHistory(favorite: Int) -> Success {
+        return self.db.run([
+            ("DELETE FROM \(TableVisits) WHERE favorite = \(favorite)", nil),
+            ("DELETE FROM \(TableHistory) WHERE id NOT IN (SELECT distinct(siteID) FROM \(TableVisits))", nil),
+            ("DELETE FROM \(TableDomains) WHERE id NOT IN (SELECT (domain_id) FROM \(TableHistory))", nil),
+            self.favicons.getCleanupCommands(),
+            ])
+            // We've probably deleted a lot of stuff. Vacuum now to recover the space.
+            >>> effect(self.db.vacuum)
+    }
+    
     public func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
         args = []
