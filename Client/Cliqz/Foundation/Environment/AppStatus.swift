@@ -97,6 +97,11 @@ class AppStatus {
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
+        
+         dispatch_async(dispatchQueue) {
+            // Alter Visits Table to add `favorite` column if it does not exit
+            profile.history.alterVisitsTableAddFavoriteColumn()
+        }
     }
     
     internal func appDidBecomeResponsive(startupType: String) {

@@ -33,6 +33,31 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         }
         return oldestVisitDate
     }
+    
+    public func alterVisitsTableAddFavoriteColumn() {
+        
+        if !isColumnExist(TableVisits, columnName: "favorite") {
+            self.db.run([
+                ("ALTER TABLE \(TableVisits) ADD COLUMN 'favorite' BOOL NOT NULL DEFAULT 0", nil)
+                ])
+        }
+    }
+    
+    //MARK: - Helper Methods
+    private func isColumnExist(tableName: String, columnName: String) -> Bool {
+        let tableInfoSQL = "PRAGMA table_info(\(tableName))"
+        
+        let result = db.runQuery(tableInfoSQL, args: nil, factory: SQLiteHistory.columnNameFactory).value
+        if let columnNames = result.successValue {
+            for tableColumnName in columnNames {
+                if tableColumnName == columnName {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     //MARK - Factories
     private class func countFactory(row: SDRow) -> Int {
         let cout = row["rowCount"] as! Int
@@ -46,5 +71,8 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         let date = NSDate(timeIntervalSince1970:timeIntervalSince1970)
         return date
     }
-    
+    private class func columnNameFactory(row: SDRow) -> String {
+        let columnName = row["name"] as! String
+        return columnName
+    }
 }

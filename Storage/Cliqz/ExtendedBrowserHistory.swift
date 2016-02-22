@@ -11,6 +11,10 @@ import Shared
 
 public protocol ExtendedBrowserHistory {
     
+    // Cliqz: added for telemetry signals
     func count() -> Int
     func getOldestVisitDate() -> NSDate? 
+
+    // Cliqz: history favorites
+    func alterVisitsTableAddFavoriteColumn()
 }
