@@ -81,7 +81,7 @@ class JavaScriptBridge {
             
         case "openLink":
             if let urlString = data as? String,
-                let url = NSURL(string: urlString) {
+                let url = NSURL(string: urlString.escapeURL()) {
                 delegate?.didSelectUrl(url)
             }
             

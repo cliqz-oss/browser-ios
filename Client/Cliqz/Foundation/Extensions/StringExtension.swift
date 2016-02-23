@@ -42,11 +42,15 @@ extension String {
     }
     
     func escapeURL() -> String {
-        let allowedCharacterSet = NSMutableCharacterSet()
-        allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
-        allowedCharacterSet.removeCharactersInString("=")
-        
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
+        if self.contains("%") { // String already escaped
+            return self
+        } else {
+            let allowedCharacterSet = NSMutableCharacterSet()
+            allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
+            allowedCharacterSet.removeCharactersInString("=")
+            
+            return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
+        }
     }
 	
 	// Cliqz added extra URL encoding methods because stringByAddingPercentEncodingWithAllowedCharacters doesn't encodes &
