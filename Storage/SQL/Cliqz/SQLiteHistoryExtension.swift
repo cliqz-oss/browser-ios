@@ -42,6 +42,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
                 ])
         }
     }
+    
     public func setHistoryFavorite(ids: [Int], value: Bool) -> Success {
         let idsCommaSeparated = ids.map{String($0)}.joinWithSeparator(",")
         let favorite = value ? 1:0
@@ -61,6 +62,17 @@ extension SQLiteHistory: ExtendedBrowserHistory {
             >>> effect(self.db.vacuum)
     }
     
+    public func removeHistory(ids: [Int]) -> Success {
+        let idsCommaSeparated = ids.map{String($0)}.joinWithSeparator(",")
+
+        return self.db.run([
+            ("DELETE FROM \(TableVisits) WHERE id in \(idsCommaSeparated)", nil),
+            ("DELETE FROM \(TableHistory) WHERE id NOT IN (SELECT distinct(siteID) FROM \(TableVisits))", nil),
+            ("DELETE FROM \(TableDomains) WHERE id NOT IN (SELECT (domain_id) FROM \(TableHistory))", nil),
+            self.favicons.getCleanupCommands(),
+            ])
+    }
+    
     public func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
         args = []
@@ -75,6 +87,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         // TODO countFactory
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
     }
+    
     //MARK: - Helper Methods
     private func isColumnExist(tableName: String, columnName: String) -> Bool {
         let tableInfoSQL = "PRAGMA table_info(\(tableName))"
@@ -90,7 +103,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return false
     }
     
-    //MARK - Factories
+    //MARK: - Factories
     private class func countFactory(row: SDRow) -> Int {
         let cout = row["rowCount"] as! Int
         return cout

@@ -133,6 +133,10 @@ class JavaScriptBridge {
                 self.profile.history.setHistoryFavorite(ids, value:value)
             }
             
+        case "removeHistory":
+            if let ids = data as? [Int] {
+                self.profile.history.removeHistory(ids)
+            }
         default:
             print("Unhandles JS action: \(action), with data: \(data)")
         }

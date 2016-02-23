@@ -19,8 +19,9 @@ public protocol ExtendedBrowserHistory {
     func alterVisitsTableAddFavoriteColumn()
     func setHistoryFavorite(ids: [Int], value: Bool) -> Success
 
-    // Cliqz: clear history
+    // Cliqz: clear/remove history
     func clearHistory(favorite: Int) -> Success
+    func removeHistory(ids: [Int]) -> Success
 
     // Cliqz: getting History
     func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
