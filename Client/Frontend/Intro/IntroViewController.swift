@@ -243,7 +243,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         // Activate the first card
         setActiveIntroView(introViews[0], forPage: 0)
-    }
+	}
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

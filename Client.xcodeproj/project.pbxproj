@@ -365,7 +365,7 @@
 		39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */; };
 		40464FAC9F0F5946BDA3E904 /* PrivateBrowsing.strings in Resources */ = {isa = PBXBuildFile; fileRef = 934B4F03AB7CE024187D1835 /* PrivateBrowsing.strings */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
-		4F2EE94D1C456A95000FC6C1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4F25B4AD1C7CAAFE00B1C4B5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */; };
 		4F2EE9751C458188000FC6C1 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E71C15D1B200F6B249 /* Fabric.framework */; };
@@ -600,7 +600,6 @@
 		E4B334601BBF2393004E2BFF /* Adjust.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B3344A1BBF2393004E2BFF /* Adjust.m */; };
 		E4B334611BBF2393004E2BFF /* ADJUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B3344C1BBF2393004E2BFF /* ADJUtil.m */; };
 		E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B334871BBF23F3004E2BFF /* iAd.framework */; };
-		E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B334891BBF23F9004E2BFF /* AdSupport.framework */; };
 		E4B3348C1BC01D8F004E2BFF /* AdjustIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B3348B1BC01D8F004E2BFF /* AdjustIntegration.swift */; };
 		E4B423BE1AB9FE6A007E66C8 /* ReaderModeCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B423BD1AB9FE6A007E66C8 /* ReaderModeCache.swift */; };
 		E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B423DC1ABA0318007E66C8 /* ReaderModeHandlers.swift */; };
@@ -1879,6 +1878,7 @@
 		4EDF4147AB2894093FD093AB /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Storage.strings; sourceTree = "<group>"; };
 		4EE64F269F0C00699CABC5E9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SendTo.strings; sourceTree = "<group>"; };
 		4F1D4D40AFF3B381AFB8980E /* eo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eo; path = eo.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -1887,6 +1887,7 @@
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9FDE211C725BB9001325CC /* HumanWebSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanWebSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4FF64547AFE8630F12FA0685 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/PrivateBrowsing.strings"; sourceTree = "<group>"; };
+		4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		503644A0B0AC3F704A5124A2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50974219B055F003B549FFCF /* br */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = br; path = br.lproj/ShareTo.strings; sourceTree = "<group>"; };
@@ -2736,8 +2737,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F2EE94D1C456A95000FC6C1 /* (null) in Frameworks */,
-				E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */,
+				4F25B4AD1C7CAAFE00B1C4B5 /* AVFoundation.framework in Frameworks */,
 				E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
 				E6231C031B90A466005ABB0D /* libstdc++.6.0.9.tbd in Frameworks */,
@@ -4065,6 +4065,8 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */,
+				4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */,
 				1EC76C8C1C6A374000AF245F /* search */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
@@ -7362,6 +7364,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -7406,6 +7409,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7458,6 +7462,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -8003,7 +8008,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/UITests/UITests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Debug;
 		};
@@ -8018,7 +8023,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/UITests/UITests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Release;
 		};
@@ -8117,7 +8122,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = FennecNightly;
 		};
@@ -8136,7 +8141,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -8157,7 +8162,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -8270,7 +8275,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Firefox;
 		};
@@ -8291,7 +8296,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -8358,6 +8363,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -8793,7 +8799,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -8841,7 +8847,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8891,7 +8897,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8941,7 +8947,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -9461,8 +9467,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9479,7 +9485,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = CLIQZ;
-				PROVISIONING_PROFILE = "e52cb543-d317-4a15-8f0c-12d84a87cef7";
+				PROVISIONING_PROFILE = "";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
@@ -9531,7 +9537,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Debug;
 		};
@@ -9544,7 +9550,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = FennecAurora;
 		};
@@ -9553,8 +9559,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -9568,7 +9574,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9590,7 +9596,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9616,7 +9622,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9638,7 +9644,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
