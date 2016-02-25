@@ -9,6 +9,7 @@ import Shared
 import Storage
 import Sync
 import XCGLogger
+import UIKit
 
 private let log = Logger.syncLogger
 
