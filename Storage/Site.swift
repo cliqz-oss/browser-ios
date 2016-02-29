@@ -54,6 +54,9 @@ public class Site : Identifiable {
     public var icon: Favicon?
     public var latestVisit: Visit?
 
+    // Cliqz: added to mark a site as favorite from JavaScript
+    public var favorite: Bool? = false
+    
     public init(url: String, title: String) {
         self.url = url
         self.title = title

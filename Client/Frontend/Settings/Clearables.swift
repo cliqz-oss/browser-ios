@@ -38,11 +38,43 @@ class HistoryClearable: Clearable {
     }
 
     func clear() -> Success {
-        return profile.history.clearHistory().bind { success in
+        // Cliqz: clear unfavorite history itmes
+        return profile.history.clearHistory(0).bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
             NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
-            log.debug("HistoryClearable succeeded: \(success).")
+            log.debug("UnStarredHistoryClearable succeeded: \(success).")
+            return Deferred(value: success)
+        }
+
+//        return profile.history.clearHistory().bind { success in
+//            SDImageCache.sharedImageCache().clearDisk()
+//            SDImageCache.sharedImageCache().clearMemory()
+//            NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
+//            log.debug("HistoryClearable succeeded: \(success).")
+//            return Deferred(value: success)
+//        }
+    }
+}
+
+// Cliqz: For Clearing favorite history items.
+class FavoriteHistoryClearable: Clearable {
+    let profile: Profile
+    init(profile: Profile) {
+        self.profile = profile
+    }
+
+    var label: String {
+        return NSLocalizedString("Include favorites", tableName: "Cliqz", comment: "Settings item for clearing favorite history")
+    }
+    
+    func clear() -> Success {
+        // clear favorite history itmes
+        return profile.history.clearHistory(1).bind { success in
+            SDImageCache.sharedImageCache().clearDisk()
+            SDImageCache.sharedImageCache().clearMemory()
+            NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
+            log.debug("FavoriteHistoryClearable succeeded: \(success).")
             return Deferred(value: success)
         }
     }
@@ -166,7 +198,9 @@ class CookiesClearable: Clearable {
 
     func clear() -> Success {
         if #available(iOS 9.0, *) {
-            let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
+            // Cliqz: Disable clearing the locale storage when clearing cookies as it clears Cliqz data like saved search queries
+//            let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
+            let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
             WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
         } else {
             // First close all tabs to make sure they aren't holding anything in memory.

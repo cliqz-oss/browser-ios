@@ -175,7 +175,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 9.0, *) {
             self.configureHomeShortCuts()
         }
-        
+//		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+//		Lookback.sharedLookback().shakeToRecord = true
+//		Lookback.sharedLookback() = false
+
         return true
     }
 

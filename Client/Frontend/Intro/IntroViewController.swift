@@ -151,12 +151,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         for i in 0..<IntroViewControllerUX.NumberOfCards {
             let imageView = UIImageView(frame: CGRect(x: CGFloat(i)*scaledWidthOfSlide, y: 0, width: scaledWidthOfSlide, height: scaledHeightOfSlide))
             imageView.image = slides[i]
-            if i > 0 {
-                var gradient: CAGradientLayer = CAGradientLayer()
-                gradient.frame = imageView.frame
-                gradient.colors = [UIColor(rgb: 0x66B3E9).CGColor, UIColor(rgb: 0x1C549F).CGColor]
-                slideContainer.layer.addSublayer(gradient)
-            }
             slideContainer.addSubview(imageView)
         }
 
@@ -243,7 +237,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         // Activate the first card
         setActiveIntroView(introViews[0], forPage: 0)
-    }
+	}
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -350,7 +344,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             endColor = IntroViewControllerUX.Card3Color
             percentage = (percentage - 0.5) * 2
         }
-
+        // Cliqz: disabled changing container coder gradually while navigating between cards
 //        slideContainer.backgroundColor = colorForPercentage(percentage, start: startColor, end: endColor)
     }
 

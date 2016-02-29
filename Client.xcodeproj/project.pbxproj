@@ -115,7 +115,8 @@
 		1EA710DB1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */; };
 		1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */; };
 		1EA710DF1C5A4AE7005C1F11 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */; };
-		1EC76C8D1C6A374000AF245F /* search in Resources */ = {isa = PBXBuildFile; fileRef = 1EC76C8C1C6A374000AF245F /* search */; };
+		1ECC5B6B1C736A8600183831 /* AdServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1ECC5B6A1C736A8600183831 /* AdServers.plist */; };
+		1ECC5B951C736EE400183831 /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECC5B941C736EE400183831 /* AdBlocker.swift */; };
 		1EE1C6941C60A5BA00F70C24 /* AppDelegateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -363,14 +364,30 @@
 		39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */; };
 		40464FAC9F0F5946BDA3E904 /* PrivateBrowsing.strings in Resources */ = {isa = PBXBuildFile; fileRef = 934B4F03AB7CE024187D1835 /* PrivateBrowsing.strings */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
-		4F2EE94D1C456A95000FC6C1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4F0E82481C7DE4E9004EBB3E /* CliqzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0E82471C7DE4E9004EBB3E /* CliqzUITests.swift */; };
+		4F0E82511C7DE4F9004EBB3E /* libKIF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D38B2D6C1A8D976A0040E6B5 /* libKIF.a */; };
+		4F0E82551C7DE8C4004EBB3E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D39FA16B1A83E17800EE869C /* CoreGraphics.framework */; };
+		4F0E82571C7DED43004EBB3E /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0E82561C7DED43004EBB3E /* Global.swift */; };
+		4F0E82581C7DF207004EBB3E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36998881AD70A0A00650C6C /* IOKit.framework */; };
+		4F0E82631C7EF6A4004EBB3E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82621C7EF6A4004EBB3E /* AudioToolbox.framework */; };
+		4F0E82651C7EF6B2004EBB3E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82641C7EF6B2004EBB3E /* CoreImage.framework */; };
+		4F0E82671C7EF6CA004EBB3E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82661C7EF6CA004EBB3E /* CoreMedia.framework */; };
+		4F0E82691C7EF6DC004EBB3E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82681C7EF6DC004EBB3E /* CoreVideo.framework */; };
+		4F0E826B1C7EF70A004EBB3E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E826A1C7EF70A004EBB3E /* MediaPlayer.framework */; };
+		4F0E826D1C7EF719004EBB3E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E826C1C7EF719004EBB3E /* MobileCoreServices.framework */; };
+		4F0E826F1C7EF72E004EBB3E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E826E1C7EF72E004EBB3E /* QuartzCore.framework */; };
+		4F0E82711C7EF7B0004EBB3E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82701C7EF7B0004EBB3E /* SystemConfiguration.framework */; };
+		4F0E82731C7EF7BB004EBB3E /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E82721C7EF7BB004EBB3E /* VideoToolbox.framework */; };
+		4F25B4AD1C7CAAFE00B1C4B5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */; };
 		4F2EE9751C458188000FC6C1 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		4F45B7A91C805C6900C4491B /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4F45B7A81C805C6900C4491B /* Lookback.bundle */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E71C15D1B200F6B249 /* Fabric.framework */; };
 		4F52F5EA1C15D1B200F6B249 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4F9FDE221C725BB9001325CC /* HumanWebSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9FDE211C725BB9001325CC /* HumanWebSettingsTableViewController.swift */; };
+		4FFCF4981C847F97008A9199 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 4FFCF4971C847F97008A9199 /* search */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
 		59A687B4A05CC772FE7E5A09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
@@ -598,7 +615,6 @@
 		E4B334601BBF2393004E2BFF /* Adjust.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B3344A1BBF2393004E2BFF /* Adjust.m */; };
 		E4B334611BBF2393004E2BFF /* ADJUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B3344C1BBF2393004E2BFF /* ADJUtil.m */; };
 		E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B334871BBF23F3004E2BFF /* iAd.framework */; };
-		E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4B334891BBF23F9004E2BFF /* AdSupport.framework */; };
 		E4B3348C1BC01D8F004E2BFF /* AdjustIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B3348B1BC01D8F004E2BFF /* AdjustIntegration.swift */; };
 		E4B423BE1AB9FE6A007E66C8 /* ReaderModeCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B423BD1AB9FE6A007E66C8 /* ReaderModeCache.swift */; };
 		E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B423DC1ABA0318007E66C8 /* ReaderModeHandlers.swift */; };
@@ -624,7 +640,6 @@
 		E4C358551AF144BA00299F7E /* FSReadingList.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C358541AF144BA00299F7E /* FSReadingList.m */; };
 		E4CD9E911A6897FB00318571 /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD9E901A6897FB00318571 /* ReaderMode.swift */; };
 		E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */ = {isa = PBXBuildFile; fileRef = E4CD9E991A68980A00318571 /* ReaderMode.js */; };
-		E4CD9F1D1A6D9C2800318571 /* WebServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD9F1C1A6D9C2800318571 /* WebServerTests.swift */; };
 		E4CD9F2D1A6DC91200318571 /* BrowserLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD9F2C1A6DC91200318571 /* BrowserLocationView.swift */; };
 		E4CD9F541A71506400318571 /* Reader.html in Resources */ = {isa = PBXBuildFile; fileRef = E4CD9F531A71506400318571 /* Reader.html */; };
 		E4CD9F5B1A71506C00318571 /* Reader.css in Resources */ = {isa = PBXBuildFile; fileRef = E4CD9F5A1A71506C00318571 /* Reader.css */; };
@@ -678,7 +693,6 @@
 		E4D8F3B01ACDD5150005A2E4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */; };
 		E4ECCD8D1AB091470005E717 /* Reader.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4ECCD8C1AB091470005E717 /* Reader.xcassets */; };
 		E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4ECCDAD1AB131770005E717 /* FiraSans-Medium.ttf */; };
-		E4ECCDC31AB1EAC70005E717 /* WebServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40FAB0B1A7ABB77009CB80D /* WebServer.swift */; };
 		E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4ECD0871B70FD4F00B90D22 /* WindowCloseHelper.swift */; };
 		E4F21AA61A13C4A300B0FAAA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4F21AA51A13C4A300B0FAAA /* Images.xcassets */; };
 		E4F480F51A954660003C0444 /* SWXMLHash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D38B2D811A8D98380040E6B5 /* SWXMLHash.framework */; };
@@ -1079,19 +1093,26 @@
 			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
 			remoteInfo = "XCGLogger (iOS)";
 		};
+		4F0E824A1C7DE4E9004EBB3E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
+			remoteInfo = Client;
+		};
+		4F45B8321C84555D00C4491B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 70CB94201B99E728007802FF;
+			remoteInfo = "XCGLogger (watchOS)";
+		};
 		4F9FDE371C725BB9001325CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B6544B01A96C59E000DD202 /* SDWebImage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 00733A4C1BC487C000A5A117;
 			remoteInfo = "WebImage tvOS";
-		};
-		4F9FDE4A1C725BB9001325CC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 70CB94201B99E728007802FF;
-			remoteInfo = "XCGLogger (watchOS)";
 		};
 		7B7692941B7CCBD100188277 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1590,7 +1611,8 @@
 		1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
 		1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
-		1EC76C8C1C6A374000AF245F /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
+		1ECC5B6A1C736A8600183831 /* AdServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdServers.plist; sourceTree = "<group>"; };
+		1ECC5B941C736EE400183831 /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateExtension.swift; sourceTree = "<group>"; };
 		1F2D46FC970EC17AAF423059 /* dsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = dsb; path = dsb.lproj/SendTo.strings; sourceTree = "<group>"; };
 		1F5C41BFBC05B8A78F5E43D9 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1868,7 +1890,23 @@
 		4E9445A7B3DD43B30AD630F2 /* cy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cy; path = cy.lproj/SendTo.strings; sourceTree = "<group>"; };
 		4EDF4147AB2894093FD093AB /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Storage.strings; sourceTree = "<group>"; };
 		4EE64F269F0C00699CABC5E9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SendTo.strings; sourceTree = "<group>"; };
+		4F0E82451C7DE4E9004EBB3E /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F0E82471C7DE4E9004EBB3E /* CliqzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CliqzUITests.swift; sourceTree = "<group>"; };
+		4F0E82491C7DE4E9004EBB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4F0E82521C7DE66C004EBB3E /* CliqzUITests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CliqzUITests-Bridging-Header.h"; sourceTree = "<group>"; };
+		4F0E82561C7DED43004EBB3E /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		4F0E82621C7EF6A4004EBB3E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4F0E82641C7EF6B2004EBB3E /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		4F0E82661C7EF6CA004EBB3E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4F0E82681C7EF6DC004EBB3E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		4F0E826A1C7EF70A004EBB3E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4F0E826C1C7EF719004EBB3E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		4F0E826E1C7EF72E004EBB3E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4F0E82701C7EF7B0004EBB3E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4F0E82721C7EF7BB004EBB3E /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		4F1D4D40AFF3B381AFB8980E /* eo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eo; path = eo.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4F45B7A81C805C6900C4491B /* Lookback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Lookback.bundle; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F52F5E71C15D1B200F6B249 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -1877,6 +1915,8 @@
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9FDE211C725BB9001325CC /* HumanWebSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanWebSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4FF64547AFE8630F12FA0685 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/PrivateBrowsing.strings"; sourceTree = "<group>"; };
+		4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		4FFCF4971C847F97008A9199 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../quickfixExtension/navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		503644A0B0AC3F704A5124A2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50974219B055F003B549FFCF /* br */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = br; path = br.lproj/ShareTo.strings; sourceTree = "<group>"; };
@@ -2726,8 +2766,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F2EE94D1C456A95000FC6C1 /* (null) in Frameworks */,
-				E4B3348A1BBF23F9004E2BFF /* AdSupport.framework in Frameworks */,
+				4F0E82731C7EF7BB004EBB3E /* VideoToolbox.framework in Frameworks */,
+				4F0E82711C7EF7B0004EBB3E /* SystemConfiguration.framework in Frameworks */,
+				4F0E826F1C7EF72E004EBB3E /* QuartzCore.framework in Frameworks */,
+				4F0E826D1C7EF719004EBB3E /* MobileCoreServices.framework in Frameworks */,
+				4F0E826B1C7EF70A004EBB3E /* MediaPlayer.framework in Frameworks */,
+				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
+				4F0E82691C7EF6DC004EBB3E /* CoreVideo.framework in Frameworks */,
+				4F0E82671C7EF6CA004EBB3E /* CoreMedia.framework in Frameworks */,
+				4F0E82651C7EF6B2004EBB3E /* CoreImage.framework in Frameworks */,
+				4F0E82631C7EF6A4004EBB3E /* AudioToolbox.framework in Frameworks */,
+				4F25B4AD1C7CAAFE00B1C4B5 /* AVFoundation.framework in Frameworks */,
 				E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
 				E6231C031B90A466005ABB0D /* libstdc++.6.0.9.tbd in Frameworks */,
@@ -2740,7 +2789,6 @@
 				4F52F5EA1C15D1B200F6B249 /* Crashlytics.framework in Frameworks */,
 				2FA436121ABB83B4008031D1 /* Account.framework in Frameworks */,
 				E4D5672F1ADECE2800F1EFE7 /* ReadingList.framework in Frameworks */,
-				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
 				39A362D91AAF5ECE00F47390 /* XCGLogger.framework in Frameworks */,
 				4F52F5E91C15D1B200F6B249 /* Fabric.framework in Frameworks */,
@@ -2776,6 +2824,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FCAE2251ABB51F800877008 /* Storage.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F0E82421C7DE4E9004EBB3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F0E82551C7DE8C4004EBB3E /* CoreGraphics.framework in Frameworks */,
+				4F0E82511C7DE4F9004EBB3E /* libKIF.a in Frameworks */,
+				4F0E82581C7DF207004EBB3E /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2964,6 +3022,7 @@
 				1EA710621C5A2F99005C1F11 /* Cliqz.strings */,
 				1EA7106C1C5A2F99005C1F11 /* OnePasswordExtension.strings */,
 				1EA710761C5A2F99005C1F11 /* trampolineForward.html */,
+				1ECC5B6A1C736A8600183831 /* AdServers.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3087,6 +3146,14 @@
 			path = HTTPServer;
 			sourceTree = "<group>";
 		};
+		1ECC5B931C736ED500183831 /* AdBlocker */ = {
+			isa = PBXGroup;
+			children = (
+				1ECC5B941C736EE400183831 /* AdBlocker.swift */,
+			);
+			path = AdBlocker;
+			sourceTree = "<group>";
+		};
 		1EEC01301BFCAA3C00A8FC49 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -3106,6 +3173,7 @@
 		1EF1B8991BF4CFA100698822 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				1ECC5B931C736ED500183831 /* AdBlocker */,
 				1EA710C91C5A30DD005C1F11 /* HTTPServer */,
 				1EA7108F1C5A3017005C1F11 /* Custom UI */,
 				1EA710911C5A3017005C1F11 /* Data Structures */,
@@ -3300,6 +3368,7 @@
 		28CE83EF1A1D246900576538 /* Third-Party Source */ = {
 			isa = PBXGroup;
 			children = (
+				4F45B7A31C805BD000C4491B /* Lookback */,
 				E4B334211BBF2393004E2BFF /* Adjust */,
 				E66C5B451BDA81050051AA93 /* Apple */,
 				0B5B51AC1B4CDB9E00E3B6E9 /* RaptureXML */,
@@ -3512,7 +3581,7 @@
 			children = (
 				39A362D41AAF5E2C00F47390 /* XCGLogger.framework */,
 				39A362D61AAF5E2C00F47390 /* XCGLogger.framework */,
-				4F9FDE4B1C725BB9001325CC /* XCGLogger.framework */,
+				4F45B8331C84555D00C4491B /* XCGLogger.framework */,
 				39A362D81AAF5E2C00F47390 /* XCGLoggerTests (iOS).xctest */,
 				7B7692CD1B7CCBD100188277 /* XCGLoggerTests (OS X).xctest */,
 			);
@@ -3526,6 +3595,34 @@
 				39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */,
 			);
 			name = OnePasswordExtension;
+			sourceTree = "<group>";
+		};
+		4F0E82461C7DE4E9004EBB3E /* CliqzUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4F0E82471C7DE4E9004EBB3E /* CliqzUITests.swift */,
+				4F0E82491C7DE4E9004EBB3E /* Info.plist */,
+				4F0E82521C7DE66C004EBB3E /* CliqzUITests-Bridging-Header.h */,
+				4F0E82561C7DED43004EBB3E /* Global.swift */,
+			);
+			path = CliqzUITests;
+			sourceTree = "<group>";
+		};
+		4F45B7A31C805BD000C4491B /* Lookback */ = {
+			isa = PBXGroup;
+			children = (
+				4F45B7A71C805C6900C4491B /* Lookback-Resources */,
+			);
+			name = Lookback;
+			path = ThirdParty/Lookback;
+			sourceTree = "<group>";
+		};
+		4F45B7A71C805C6900C4491B /* Lookback-Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4F45B7A81C805C6900C4491B /* Lookback.bundle */,
+			);
+			path = "Lookback-Resources";
 			sourceTree = "<group>";
 		};
 		D31FC22A1A8D908800BAF7EC /* Products */ = {
@@ -4045,7 +4142,18 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
-				1EC76C8C1C6A374000AF245F /* search */,
+				4FFCF4971C847F97008A9199 /* search */,
+				4F0E82721C7EF7BB004EBB3E /* VideoToolbox.framework */,
+				4F0E82701C7EF7B0004EBB3E /* SystemConfiguration.framework */,
+				4F0E826E1C7EF72E004EBB3E /* QuartzCore.framework */,
+				4F0E826C1C7EF719004EBB3E /* MobileCoreServices.framework */,
+				4F0E826A1C7EF70A004EBB3E /* MediaPlayer.framework */,
+				4F0E82681C7EF6DC004EBB3E /* CoreVideo.framework */,
+				4F0E82661C7EF6CA004EBB3E /* CoreMedia.framework */,
+				4F0E82641C7EF6B2004EBB3E /* CoreImage.framework */,
+				4F0E82621C7EF6A4004EBB3E /* AudioToolbox.framework */,
+				4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */,
+				4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
@@ -4067,6 +4175,7 @@
 				F84B21D61A090F8100AAB793 /* ClientTests */,
 				F8708D1E1A0970990051AB07 /* Extensions */,
 				28CE83B71A1D1D3200576538 /* FxAClient */,
+				4F0E82461C7DE4E9004EBB3E /* CliqzUITests */,
 				F84B21BF1A090F8100AAB793 /* Products */,
 				D34DC84C1A16C40C00D49B7B /* Providers */,
 				E4D567191ADECE2700F1EFE7 /* ReadingList */,
@@ -4103,6 +4212,7 @@
 				E4D567221ADECE2700F1EFE7 /* ReadingListTests.xctest */,
 				E6F9650C1B2F1CF20034B023 /* SharedTests.xctest */,
 				E4BA8A2B1B4B0A1600BC2E95 /* ViewLater.appex */,
+				4F0E82451C7DE4E9004EBB3E /* CliqzUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4469,6 +4579,24 @@
 			productReference = 2FCAE2241ABB51F800877008 /* StorageTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4F0E82441C7DE4E9004EBB3E /* CliqzUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F0E824C1C7DE4E9004EBB3E /* Build configuration list for PBXNativeTarget "CliqzUITests" */;
+			buildPhases = (
+				4F0E82411C7DE4E9004EBB3E /* Sources */,
+				4F0E82421C7DE4E9004EBB3E /* Frameworks */,
+				4F0E82431C7DE4E9004EBB3E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F0E824B1C7DE4E9004EBB3E /* PBXTargetDependency */,
+			);
+			name = CliqzUITests;
+			productName = CliqzUITests;
+			productReference = 4F0E82451C7DE4E9004EBB3E /* CliqzUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		D39FA15E1A83E0EC00EE869C /* UITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D39FA1671A83E0EC00EE869C /* Build configuration list for PBXNativeTarget "UITests" */;
@@ -4658,7 +4786,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Mozilla;
 				TargetAttributes = {
@@ -4684,6 +4812,10 @@
 					};
 					2FCAE2231ABB51F800877008 = {
 						CreatedOnToolsVersion = 6.2;
+						TestTargetID = F84B21BD1A090F8100AAB793;
+					};
+					4F0E82441C7DE4E9004EBB3E = {
+						CreatedOnToolsVersion = 7.2;
 						TestTargetID = F84B21BD1A090F8100AAB793;
 					};
 					D39FA15E1A83E0EC00EE869C = {
@@ -4822,6 +4954,7 @@
 				E4D567171ADECE2700F1EFE7 /* ReadingList */,
 				E4D567211ADECE2700F1EFE7 /* ReadingListTests */,
 				E6F9650B1B2F1CF20034B023 /* SharedTests */,
+				4F0E82441C7DE4E9004EBB3E /* CliqzUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -4953,18 +5086,18 @@
 			remoteRef = 39A362D71AAF5E2C00F47390 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		4F45B8331C84555D00C4491B /* XCGLogger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = XCGLogger.framework;
+			remoteRef = 4F45B8321C84555D00C4491B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		4F9FDE381C725BB9001325CC /* WebImage.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = WebImage.framework;
 			remoteRef = 4F9FDE371C725BB9001325CC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4F9FDE4B1C725BB9001325CC /* XCGLogger.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XCGLogger.framework;
-			remoteRef = 4F9FDE4A1C725BB9001325CC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7B7692951B7CCBD100188277 /* Alamofire.framework */ = {
@@ -5175,6 +5308,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4F0E82431C7DE4E9004EBB3E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D39FA15D1A83E0EC00EE869C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5231,6 +5371,7 @@
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				1EA710811C5A2F99005C1F11 /* Cliqz.strings in Resources */,
+				1ECC5B6B1C736A8600183831 /* AdServers.plist in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,
@@ -5254,6 +5395,7 @@
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
+				4FFCF4981C847F97008A9199 /* search in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
 				2F834D161A80629A006A0B7B /* FxASignIn.js in Resources */,
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
@@ -5271,7 +5413,6 @@
 				1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */,
 				2F44FB2D1A9D5D8500FD20CC /* FiraSans-BoldItalic.ttf in Resources */,
 				95284ECAA7D30BB261B5D9C6 /* BookmarkPanel.strings in Resources */,
-				1EC76C8D1C6A374000AF245F /* search in Resources */,
 				1EA710861C5A2F99005C1F11 /* OnePasswordExtension.strings in Resources */,
 				625C436D9C5099324703385D /* ClearPrivateData.strings in Resources */,
 				0A8F4C2DA5B2F89424F53049 /* ErrorPages.strings in Resources */,
@@ -5279,6 +5420,7 @@
 				FD8C4F10BEAD3F194714BE05 /* Intro.strings in Resources */,
 				A8724F7988CEA1DE79502A80 /* Localizable.strings in Resources */,
 				40464FAC9F0F5946BDA3E904 /* PrivateBrowsing.strings in Resources */,
+				4F45B7A91C805C6900C4491B /* Lookback.bundle in Resources */,
 				FE104902848FC532E48EA58B /* Search.strings in Resources */,
 				C2234AF28C75D7B797F42B55 /* Shared.strings in Resources */,
 				EC50447791BD79D0D46713CF /* Storage.strings in Resources */,
@@ -5613,6 +5755,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4F0E82411C7DE4E9004EBB3E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F0E82571C7DED43004EBB3E /* Global.swift in Sources */,
+				4F0E82481C7DE4E9004EBB3E /* CliqzUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D39FA15B1A83E0EC00EE869C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5869,6 +6020,7 @@
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				28EADE5D1AFC3A78007FB2FB /* UIImageViewExtensions.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
+				1ECC5B951C736EE400183831 /* AdBlocker.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				E4B3345A1BBF2393004E2BFF /* ADJLogger.m in Sources */,
 				D39949F51C22461A00E2A03C /* RequestDesktopSiteActivity.swift in Sources */,
@@ -5924,7 +6076,6 @@
 			files = (
 				E6327A8A1BF6473A008D12E0 /* DebugSettingsBundleOptions.swift in Sources */,
 				E42475E31AB73B9B00B23D33 /* SWTableViewCell.m in Sources */,
-				E4CD9F1D1A6D9C2800318571 /* WebServerTests.swift in Sources */,
 				D3D488591ABB54CD00A93597 /* FileAccessorTests.swift in Sources */,
 				0BA8964B1A250E6500C1010C /* ProfileTest.swift in Sources */,
 				0BB5B28D1AC0A6130052877D /* Toolbar.swift in Sources */,
@@ -5988,7 +6139,6 @@
 				4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */,
 				28D52E2F1BCDF53900187A1D /* ResetTests.swift in Sources */,
 				E42475E61AB73B9B00B23D33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
-				E4ECCDC31AB1EAC70005E717 /* WebServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6179,6 +6329,11 @@
 			isa = PBXTargetDependency;
 			name = "XCGLogger (iOS)";
 			targetProxy = 39A362DB1AAF5ECE00F47390 /* PBXContainerItemProxy */;
+		};
+		4F0E824B1C7DE4E9004EBB3E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F84B21BD1A090F8100AAB793 /* Client */;
+			targetProxy = 4F0E824A1C7DE4E9004EBB3E /* PBXContainerItemProxy */;
 		};
 		D31FC2481A8D910E00BAF7EC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7340,6 +7495,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -7384,6 +7540,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7436,6 +7593,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7956,6 +8114,168 @@
 			};
 			name = FennecNightly;
 		};
+		4F0E824D1C7DE4E9004EBB3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = CL.CliqzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CliqzUITests/CliqzUITests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		4F0E824E1C7DE4E9004EBB3E /* FennecAurora */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = CL.CliqzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CliqzUITests/CliqzUITests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = FennecAurora;
+		};
+		4F0E824F1C7DE4E9004EBB3E /* Firefox */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = CL.CliqzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CliqzUITests/CliqzUITests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Firefox;
+		};
+		4F0E82501C7DE4E9004EBB3E /* FennecNightly */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = CL.CliqzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CliqzUITests/CliqzUITests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = FennecNightly;
+		};
 		D349D7381A85977700229905 /* FennecAurora */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7981,7 +8301,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/UITests/UITests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Debug;
 		};
@@ -7996,7 +8316,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/UITests/UITests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Release;
 		};
@@ -8047,7 +8367,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_NIGHTLY";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -8073,7 +8393,11 @@
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = FennecNightly;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz;
 				PRODUCT_MODULE_NAME = Client;
@@ -8095,7 +8419,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = FennecNightly;
 		};
@@ -8114,7 +8438,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -8135,7 +8459,7 @@
 				MOZ_PRODUCT_NAME = FennecNightly;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -8198,7 +8522,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -8248,7 +8572,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Firefox;
 		};
@@ -8336,6 +8660,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -8771,7 +9096,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -8819,7 +9144,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8919,7 +9244,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -9374,7 +9699,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_DEBUG";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -9427,7 +9752,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_AURORA";
 				SDKROOT = iphoneos;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
-				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -9509,7 +9834,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = Debug;
 		};
@@ -9522,7 +9847,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = FennecAurora;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
 			};
 			name = FennecAurora;
 		};
@@ -9531,8 +9856,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -9546,7 +9871,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9568,7 +9893,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9594,7 +9919,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9616,7 +9941,7 @@
 				MOZ_PRODUCT_NAME = FennecAurora;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9698,6 +10023,17 @@
 				2FCAE2391ABB51F900877008 /* FennecAurora */,
 				E448FCA51AEE7A6000869B6C /* Firefox */,
 				2FCAE23A1ABB51F900877008 /* FennecNightly */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = FennecAurora;
+		};
+		4F0E824C1C7DE4E9004EBB3E /* Build configuration list for PBXNativeTarget "CliqzUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F0E824D1C7DE4E9004EBB3E /* Debug */,
+				4F0E824E1C7DE4E9004EBB3E /* FennecAurora */,
+				4F0E824F1C7DE4E9004EBB3E /* Firefox */,
+				4F0E82501C7DE4E9004EBB3E /* FennecNightly */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = FennecAurora;

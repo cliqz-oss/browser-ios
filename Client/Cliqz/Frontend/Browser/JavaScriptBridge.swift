@@ -12,10 +12,12 @@ import Shared
 @objc protocol JavaScriptBridgeDelegate: class {
     
     func didSelectUrl(url: NSURL)
-    func evaluateJavaScript(javaScriptString: String)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?)
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
+    optional func shareCard(cardData: [String: AnyObject])
+    optional func autoCompeleteQuery(autoCompleteText: String)
 }
 
 class JavaScriptBridge {
@@ -28,7 +30,7 @@ class JavaScriptBridge {
         self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
     }
     
-    func callJSMethod(methodName: String, parameter: AnyObject?) {
+    func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
         var parameterString: String = ""
         
         if parameter != nil {
@@ -45,7 +47,7 @@ class JavaScriptBridge {
         }
         
         let javaScriptString = "\(methodName)(\(parameterString))"
-        self.delegate?.evaluateJavaScript(javaScriptString)
+        self.delegate?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     
@@ -70,7 +72,7 @@ class JavaScriptBridge {
 		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("")?.absoluteString.componentsSeparatedByString("=")
 		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
 			"url": searchComps![0] + "="]
-		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams)
+		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
 	}
 
     // Mark: Handle JavaScript Action
@@ -78,9 +80,12 @@ class JavaScriptBridge {
         switch action {
             
         case "openLink":
-            if let urlString = data as? String,
-                let url = NSURL(string: urlString) {
-                delegate?.didSelectUrl(url)
+            if let urlString = data as? String {
+                if let url = NSURL(string: urlString) {
+                    delegate?.didSelectUrl(url)
+                } else if let url = NSURL(string: urlString.escapeURL()) {
+                    delegate?.didSelectUrl(url)
+                }
             }
             
         case "notifyQuery":
@@ -113,6 +118,28 @@ class JavaScriptBridge {
             if let result = data as? String {
                 UIPasteboard.generalPasteboard().string = result
             }
+            
+        case "shareCard":
+            if let cardData = data as? [String: AnyObject] {
+                delegate?.shareCard?(cardData)
+            }
+            
+        case "autocomplete":
+            if let autoCompleteText = data as? String {
+                delegate?.autoCompeleteQuery?(autoCompleteText)
+            }
+            
+        case "setHistoryFavorite":
+            if let historyData = data as? [String: AnyObject],
+                let ids = historyData["ids"] as? [Int],
+                let value = historyData["value"] as? Bool {
+                self.profile.history.setHistoryFavorite(ids, value:value)
+            }
+            
+        case "removeHistory":
+            if let ids = data as? [Int] {
+                self.profile.history.removeHistory(ids)
+            }
         default:
 			print("Unhandles JS action")
 //            print("Unhandles JS action: \(action), with data: \(data)")
@@ -143,7 +170,7 @@ class JavaScriptBridge {
                     results.append(d)
                 }
             }
-            self.callJSMethod(callback, parameter: results)
+            self.callJSMethod(callback, parameter: results, completionHandler: nil)
             return succeed()
         }
 	}

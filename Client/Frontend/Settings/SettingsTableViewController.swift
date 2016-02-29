@@ -830,7 +830,8 @@ class SettingsTableViewController: UITableViewController {
         let generalSettings = [
             SearchSetting(settings: self),
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
-			BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: false, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
+			BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: true, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
+            BoolSetting(prefs: prefs, prefKey: "blockAds", defaultValue: false, titleText: NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads setting")),
             SendCliqzFeedbackSetting(),
             ImprintSetting(),
 			HumanWebSetting(settings: self)

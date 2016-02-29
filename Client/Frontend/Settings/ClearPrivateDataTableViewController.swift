@@ -21,14 +21,24 @@ class ClearPrivateDataTableViewController: UITableViewController {
     private lazy var clearables: [Clearable] = {
         return [
             HistoryClearable(profile: self.profile),
+            // Cliqz: Added option to clear favorite history
+            FavoriteHistoryClearable(profile: self.profile),
             CacheClearable(tabManager: self.tabManager),
             CookiesClearable(tabManager: self.tabManager),
             SiteDataClearable(tabManager: self.tabManager),
         ]
     }()
+    
+    // Cliqz: Clear histroy and favorite items cell indexes
+    let clearHistoryCellIndex = 0
+    let clearFavoriteHistoryCellIndex = 1
 
     private lazy var toggles: [Bool] = {
-        if let savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
+        if var savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
+            // Cliqz: Added option to include favorite history items
+            if savedToggles.count == 4 {
+                savedToggles.insert(false, atIndex:1)
+            }
             return savedToggles
         }
 
@@ -67,6 +77,12 @@ class ClearPrivateDataTableViewController: UITableViewController {
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
+
+            // Cliqz: disalble include favorite history itmes
+            if indexPath.row == clearFavoriteHistoryCellIndex && toggles[clearHistoryCellIndex] == false {
+                cell.userInteractionEnabled = false
+                cell.textLabel?.textColor = UIColor.grayColor()
+            }
         } else {
             assert(indexPath.section == SectionButton)
             cell.textLabel?.text = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Button in settings that clears private data for the selected items.")
@@ -118,6 +134,12 @@ class ClearPrivateDataTableViewController: UITableViewController {
                     self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 }
             }
+        
+        // Cliqz: Clear queries history
+        if toggles[clearHistoryCellIndex] == true {
+            clearQueries()
+        }
+        
     }
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -133,5 +155,16 @@ class ClearPrivateDataTableViewController: UITableViewController {
 
         // Dim the clear button if no clearables are selected.
         clearButtonEnabled = toggles.contains(true)
+        
+        // Cliqz: disable include favorite history items cell in case browsing history was disabled and refresh table to adjust cells
+        if toggles[clearHistoryCellIndex] == false {
+           toggles[clearFavoriteHistoryCellIndex] = false
+        }
+        self.tableView.reloadData()
+    }
+    
+    private func clearQueries() {
+        let includeFavorites = toggles[clearFavoriteHistoryCellIndex]
+        NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: includeFavorites)
     }
 }

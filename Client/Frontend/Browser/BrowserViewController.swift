@@ -138,10 +138,15 @@ class BrowserViewController: UIViewController {
     // Cliqz: the response state code of the current opened link
     var currentResponseStatusCode = 0
     
+    // Cliqz: Added AdBlocker to detect and block ads
+    let adBlocker: AdBlocker
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
         self.readerModeCache = DiskReaderModeCache.sharedInstance
+        // Cliqz: Initialized AdBlocker object
+        self.adBlocker = AdBlocker(profile: profile)
         super.init(nibName: nil, bundle: nil)
         didInit()
     }
@@ -353,10 +358,7 @@ class BrowserViewController: UIViewController {
     override func viewDidLoad() {
         log.debug("BVC viewDidLoad…")
         
-        // Cliqz: present InroViewController each time the app start so that it can be easier to show it to the test users
-//        presentIntroViewController(true)
-//        log.debug("BVC intro presented.")
-		
+
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELBookmarkStatusDidChange:", name: BookmarkStatusChangedNotification, object: nil)
@@ -459,6 +461,10 @@ class BrowserViewController: UIViewController {
 		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
 			LocationManager.sharedInstance.startUpdateingLocation()
 		}
+		// Cliqz: present InroViewController each time the app start so that it can be easier to show it to the test users
+//		        presentIntroViewController(true)
+		//        log.debug("BVC intro presented.")
+		
 	}
 
 
@@ -1693,6 +1699,10 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         self.urlBar.enterOverlayMode(query, pasted: true)
     }
     
+    func autoCompeleteQuery(autoCompleteText: String) {
+        urlBar.setAutocompleteSuggestion(autoCompleteText)
+    }
+    
     func modalViewDismissed () {
         if AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
             self.urlBar.enterOverlayMode(self.searchController?.searchQuery, pasted: true)
@@ -1922,6 +1932,12 @@ extension BrowserViewController: WKNavigationDelegate {
 			return
 		}
 
+        // Cliqz: Check if url is an ad server block it
+        if adBlocker.isAdServer(url) {
+            decisionHandler(WKNavigationActionPolicy.Cancel)
+            return
+        }
+        
 		switch url.scheme {
         case "about", "http", "https":
 			// Cliqz: Added handling for back/forward functionality
@@ -2465,6 +2481,10 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
 
 extension BrowserViewController: IntroViewControllerDelegate {
     func presentIntroViewController(force: Bool = false) -> Bool{
+		// Cliqz: This check we need only for user testing when Intro view is should on viewDidLoad. To avoid of switching to the search mode.
+//		if ((self.presentedViewController?.isKindOfClass(IntroViewController)) != nil) {
+//			return true
+//		}
         if force || profile.prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
             let introViewController = IntroViewController()
             introViewController.delegate = self

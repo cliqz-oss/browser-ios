@@ -15,6 +15,7 @@ protocol SearchViewDelegate: class {
 
     func didSelectURL(url: NSURL, searchQuery: String?)
     func searchForQuery(query: String)
+    func autoCompeleteQuery(autoCompleteText: String)
 	
 }
 
@@ -264,7 +265,7 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
         } else if let query = lastQuery { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -272,7 +273,7 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs)
+            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
         }
         
     }
@@ -285,8 +286,8 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         delegate?.didSelectURL(url, searchQuery: self.searchQuery)
     }
     
-    func evaluateJavaScript(javaScriptString: String) {
-        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     func searchForQuery(query: String) {
@@ -295,6 +296,35 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     
     func getSearchHistoryResults(callback: String?) {
         let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
-        javaScriptBridge.callJSMethod(callback!, parameter: fullResults)
+        javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
+    }
+    
+    func shareCard(cardData: [String: AnyObject]) {
+
+        if let url = NSURL(string: cardData["url"] as! String) {
+            
+            // start by empty activity items
+            var activityItems = [AnyObject]()
+            
+            // add the title to activity items if it exists
+            if let title = cardData["title"] as? String {
+                activityItems.append(TitleActivityItemProvider(title: title))
+            }
+            // add the url to activity items
+            activityItems.append(url)
+            
+            // add cliqz footer to activity items
+            let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+            activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+
+            // creating the ActivityController and presenting it
+            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+
+        }
+    }
+    
+    func autoCompeleteQuery(autoCompleteText: String) {
+        delegate?.autoCompeleteQuery(autoCompleteText)
     }
 }

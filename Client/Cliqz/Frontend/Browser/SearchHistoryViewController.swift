@@ -44,10 +44,16 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.profile = profile
 		self.tabManager = tabManager
         super.init(nibName: nil, bundle: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearQueries:", name: NotificationPrivateDataClearQueries, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearQueries, object: nil)
     }
     
     override func viewDidLoad() {
@@ -60,8 +66,8 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")
-        self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
-		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
+        self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"), accessibilityLabel: "CloseHistoryButton")
+		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"), accessibilityLabel: "OpenSettingsButton")
 
 		
         self.setupConstraints()
@@ -124,12 +130,13 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         }
     }
     
-    private func createBarButtonItems(imageName: String, action: Selector) -> [UIBarButtonItem] {
+	private func createBarButtonItems(imageName: String, action: Selector, accessibilityLabel: String) -> [UIBarButtonItem] {
         let button: UIButton = UIButton(type: UIButtonType.Custom)
         button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
         button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
         button.frame = CGRectMake(0, 0, 36, 36)
-        
+        button.accessibilityLabel = accessibilityLabel
+
         let barButton = UIBarButtonItem(customView: button)
         
         let spacerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target:nil, action: nil)
@@ -153,8 +160,8 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
         self.dismiss()
     }
     
-    func evaluateJavaScript(javaScriptString: String) {
-        self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: nil)
+    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
     func searchForQuery(query: String) {
@@ -167,21 +174,30 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     func getSearchHistoryResults(callback: String?) {
 
         if callback != nil {
-            self.profile.history.getSitesByLastVisit(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
+            self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
                 if let sites = result.successValue {
                     var historyResults = [[String: AnyObject]]()
                     for site in sites {
                         var d = [String: AnyObject]()
+                        d["id"] = site!.id
                         d["url"] = site!.url
                         d["title"] = site!.title
                         d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-                        d["score"] = 0
+                        d["favorite"] = site!.favorite
                         historyResults.append(d)
                     }
-                    self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults])
+                    self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults], completionHandler: nil)
                 }
             }
         }
+    }
+    
+    
+    // MARK: - Clear History
+    func clearQueries(notification: NSNotification) {
+        let includeFavorites: Bool = (notification.object as? Bool) ?? false
+        
+        self.evaluateJavaScript("clearQueries(\(includeFavorites))", completionHandler: nil)
     }
 
 }
