@@ -115,7 +115,6 @@
 		1EA710DB1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */; };
 		1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */; };
 		1EA710DF1C5A4AE7005C1F11 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */; };
-		1EC76C8D1C6A374000AF245F /* search in Resources */ = {isa = PBXBuildFile; fileRef = 1EC76C8C1C6A374000AF245F /* search */; };
 		1ECC5B6B1C736A8600183831 /* AdServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1ECC5B6A1C736A8600183831 /* AdServers.plist */; };
 		1ECC5B951C736EE400183831 /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECC5B941C736EE400183831 /* AdBlocker.swift */; };
 		1EE1C6941C60A5BA00F70C24 /* AppDelegateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */; };
@@ -388,6 +387,7 @@
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4F9FDE221C725BB9001325CC /* HumanWebSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9FDE211C725BB9001325CC /* HumanWebSettingsTableViewController.swift */; };
+		4FFCF4CB1C849E48008A9199 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 4FFCF4CA1C849E48008A9199 /* search */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
 		59A687B4A05CC772FE7E5A09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
@@ -1617,7 +1617,6 @@
 		1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
 		1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		1EA710DD1C5A4AE7005C1F11 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
-		1EC76C8C1C6A374000AF245F /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
 		1ECC5B6A1C736A8600183831 /* AdServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdServers.plist; sourceTree = "<group>"; };
 		1ECC5B941C736EE400183831 /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1EE1C6931C60A5BA00F70C24 /* AppDelegateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateExtension.swift; sourceTree = "<group>"; };
@@ -1923,6 +1922,7 @@
 		4F9FDE211C725BB9001325CC /* HumanWebSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanWebSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4FF64547AFE8630F12FA0685 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/PrivateBrowsing.strings"; sourceTree = "<group>"; };
 		4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		4FFCF4CA1C849E48008A9199 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = "../quickfixExtension/navigation-extension/build/mobile/search"; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		503644A0B0AC3F704A5124A2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50974219B055F003B549FFCF /* br */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = br; path = br.lproj/ShareTo.strings; sourceTree = "<group>"; };
@@ -4148,6 +4148,7 @@
 		F84B21B51A090F8100AAB793 = {
 			isa = PBXGroup;
 			children = (
+				4FFCF4CA1C849E48008A9199 /* search */,
 				4F0E82721C7EF7BB004EBB3E /* VideoToolbox.framework */,
 				4F0E82701C7EF7B0004EBB3E /* SystemConfiguration.framework */,
 				4F0E826E1C7EF72E004EBB3E /* QuartzCore.framework */,
@@ -4159,7 +4160,6 @@
 				4F0E82621C7EF6A4004EBB3E /* AudioToolbox.framework */,
 				4F25B4AC1C7CAAFE00B1C4B5 /* AVFoundation.framework */,
 				4FFB0A581C7602A000E965C7 /* CoreTelephony.framework */,
-				1EC76C8C1C6A374000AF245F /* search */,
 				4F52F5E71C15D1B200F6B249 /* Fabric.framework */,
 				4F52F5E81C15D1B200F6B249 /* Crashlytics.framework */,
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
@@ -5401,6 +5401,7 @@
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
+				4FFCF4CB1C849E48008A9199 /* search in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
 				2F834D161A80629A006A0B7B /* FxASignIn.js in Resources */,
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
@@ -5418,7 +5419,6 @@
 				1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */,
 				2F44FB2D1A9D5D8500FD20CC /* FiraSans-BoldItalic.ttf in Resources */,
 				95284ECAA7D30BB261B5D9C6 /* BookmarkPanel.strings in Resources */,
-				1EC76C8D1C6A374000AF245F /* search in Resources */,
 				1EA710861C5A2F99005C1F11 /* OnePasswordExtension.strings in Resources */,
 				625C436D9C5099324703385D /* ClearPrivateData.strings in Resources */,
 				0A8F4C2DA5B2F89424F53049 /* ErrorPages.strings in Resources */,
@@ -8391,7 +8391,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8548,7 +8548,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9782,7 +9782,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9818,7 +9818,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
