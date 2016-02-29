@@ -21,3 +21,31 @@ extension XCTestCase {
 		return KIFSystemTestActor(inFile: file, atLine: line, delegate: self)
 	}
 }
+
+extension KIFUITestActor {
+//	/// Looks for a view with the given accessibility hint.
+//	func tryFindingViewWithAccessibilityHint(hint: String) -> Bool {
+//		let element = UIApplication.sharedApplication().accessibilityElementMatchingBlock { element in
+//			return element.accessibilityHint == hint
+//		}
+//		
+//		return element != nil
+//	}
+//	
+//	func waitForViewWithAccessibilityHint(hint: String) -> UIView? {
+//		var view: UIView? = nil
+//		autoreleasepool {
+//			waitForAccessibilityElement(nil, view: &view, withElementMatchingPredicate: NSPredicate(format: "accessibilityHint = %@", hint), tappable: false)
+//		}
+//		return view
+//	}
+	
+	func viewExistsWithLabel(label: String) -> Bool {
+		do {
+			try self.tryFindingViewWithAccessibilityLabel(label)
+			return true
+		} catch {
+			return false
+		}
+	}
+}

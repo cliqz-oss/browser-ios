@@ -177,7 +177,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
 		Lookback.sharedLookback().shakeToRecord = true
-		Lookback.sharedLookback().feedbackBubbleVisible = false
+//		Lookback.sharedLookback() = false
 
         return true
     }

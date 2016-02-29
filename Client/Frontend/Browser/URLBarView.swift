@@ -171,6 +171,7 @@ class URLBarView: UIView {
 		historyButton.setImage(UIImage(named: "past"), forState: .Normal)
 		historyButton.addTarget(self, action: "SELdidClickHistory", forControlEvents: UIControlEvents.TouchUpInside)
 		historyButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+		historyButton.accessibilityLabel = "HistoryButton"
 		return historyButton }()
 
 	lazy var settingsButton: UIButton = { let settingsButton = UIButton()
