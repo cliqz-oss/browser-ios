@@ -222,7 +222,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	private func updateContentBlockingPreferences() {
-		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? false
+		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
 		var parameterString = ""
 		do {
