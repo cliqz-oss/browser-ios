@@ -105,13 +105,6 @@
 		1EA710C61C5A3017005C1F11 /* NSData+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710AA1C5A3017005C1F11 /* NSData+GZIP.swift */; };
 		1EA710C71C5A3017005C1F11 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710AD1C5A3017005C1F11 /* Reachability.m */; };
 		1EA710C81C5A3017005C1F11 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710B21C5A3017005C1F11 /* SessionState.swift */; };
-		1EA710D11C5A30DD005C1F11 /* DemoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CA1C5A30DD005C1F11 /* DemoServer.swift */; };
-		1EA710D21C5A30DD005C1F11 /* HttpHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CB1C5A30DD005C1F11 /* HttpHandlers.swift */; };
-		1EA710D31C5A30DD005C1F11 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CC1C5A30DD005C1F11 /* HttpParser.swift */; };
-		1EA710D41C5A30DD005C1F11 /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CD1C5A30DD005C1F11 /* HttpRequest.swift */; };
-		1EA710D51C5A30DD005C1F11 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CE1C5A30DD005C1F11 /* HttpResponse.swift */; };
-		1EA710D61C5A30DD005C1F11 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710CF1C5A30DD005C1F11 /* HttpServer.swift */; };
-		1EA710D71C5A30DD005C1F11 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710D01C5A30DD005C1F11 /* Socket.swift */; };
 		1EA710D91C5A31CD005C1F11 /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710D81C5A31CD005C1F11 /* ExtendedBrowserHistory.swift */; };
 		1EA710DB1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */; };
 		1EA710DE1C5A4AE7005C1F11 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */; };
@@ -1614,13 +1607,6 @@
 		1EA710AF1C5A3017005C1F11 /* include.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = include.h; sourceTree = "<group>"; };
 		1EA710B01C5A3017005C1F11 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		1EA710B21C5A3017005C1F11 /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
-		1EA710CA1C5A30DD005C1F11 /* DemoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoServer.swift; sourceTree = "<group>"; };
-		1EA710CB1C5A30DD005C1F11 /* HttpHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpHandlers.swift; sourceTree = "<group>"; };
-		1EA710CC1C5A30DD005C1F11 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
-		1EA710CD1C5A30DD005C1F11 /* HttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpRequest.swift; sourceTree = "<group>"; };
-		1EA710CE1C5A30DD005C1F11 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
-		1EA710CF1C5A30DD005C1F11 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
-		1EA710D01C5A30DD005C1F11 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		1EA710D81C5A31CD005C1F11 /* ExtendedBrowserHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedBrowserHistory.swift; sourceTree = "<group>"; };
 		1EA710DA1C5A31F1005C1F11 /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
 		1EA710DC1C5A4AE7005C1F11 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
@@ -3145,20 +3131,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		1EA710C91C5A30DD005C1F11 /* HTTPServer */ = {
-			isa = PBXGroup;
-			children = (
-				1EA710CA1C5A30DD005C1F11 /* DemoServer.swift */,
-				1EA710CB1C5A30DD005C1F11 /* HttpHandlers.swift */,
-				1EA710CC1C5A30DD005C1F11 /* HttpParser.swift */,
-				1EA710CD1C5A30DD005C1F11 /* HttpRequest.swift */,
-				1EA710CE1C5A30DD005C1F11 /* HttpResponse.swift */,
-				1EA710CF1C5A30DD005C1F11 /* HttpServer.swift */,
-				1EA710D01C5A30DD005C1F11 /* Socket.swift */,
-			);
-			path = HTTPServer;
-			sourceTree = "<group>";
-		};
 		1ECC5B931C736ED500183831 /* AdBlocker */ = {
 			isa = PBXGroup;
 			children = (
@@ -3187,7 +3159,6 @@
 			isa = PBXGroup;
 			children = (
 				1ECC5B931C736ED500183831 /* AdBlocker */,
-				1EA710C91C5A30DD005C1F11 /* HTTPServer */,
 				1EA7108F1C5A3017005C1F11 /* Custom UI */,
 				1EA710911C5A3017005C1F11 /* Data Structures */,
 				1EA710951C5A3017005C1F11 /* DevTools */,
@@ -5916,10 +5887,8 @@
 				1EA710C71C5A3017005C1F11 /* Reachability.m in Sources */,
 				39C5750E1BE28BAE00E1C4B1 /* OnePasswordExtension.h in Sources */,
 				D38F02D11C05127100175932 /* Authenticator.swift in Sources */,
-				1EA710D51C5A30DD005C1F11 /* HttpResponse.swift in Sources */,
 				39C5750F1BE28BAE00E1C4B1 /* OnePasswordExtension.m in Sources */,
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
-				1EA710D41C5A30DD005C1F11 /* HttpRequest.swift in Sources */,
 				E4CD9F6D1A77DD2800318571 /* ReaderModeStyleViewController.swift in Sources */,
 				E4A960061ABB9C450069AD6F /* ReaderModeUtils.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
@@ -5943,10 +5912,8 @@
 				D3BE7B481B05596800641031 /* AuroraAppDelegate.swift in Sources */,
 				E4B334551BBF2393004E2BFF /* ADJAttribution.m in Sources */,
 				DD31E0FB1B382B520077078A /* BrowserPrintPageRenderer.swift in Sources */,
-				1EA710D11C5A30DD005C1F11 /* DemoServer.swift in Sources */,
 				E4CD9E911A6897FB00318571 /* ReaderMode.swift in Sources */,
 				D38B2D371A8D96D00040E6B5 /* GCDWebServerRequest.m in Sources */,
-				1EA710D31C5A30DD005C1F11 /* HttpParser.swift in Sources */,
 				E46C51C31B41ADD800EB349F /* Try.m in Sources */,
 				1EA710BE1C5A3017005C1F11 /* EventsLogger.swift in Sources */,
 				74C027451B2A348C001B1E88 /* SessionData.swift in Sources */,
@@ -6037,7 +6004,6 @@
 				E4B334591BBF2393004E2BFF /* ADJEvent.m in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
-				1EA710D71C5A30DD005C1F11 /* Socket.swift in Sources */,
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				28EADE5D1AFC3A78007FB2FB /* UIImageViewExtensions.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
@@ -6048,7 +6014,6 @@
 				1EA710C01C5A3017005C1F11 /* TelemetryLogger.swift in Sources */,
 				D3A9949D1A3686BD008AD1AC /* Browser.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
-				1EA710D21C5A30DD005C1F11 /* HttpHandlers.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,
 				D3BE7B261B054D4400641031 /* main.swift in Sources */,
 				0BA1E02E1B046F1E007675AF /* ErrorPageHelper.swift in Sources */,
@@ -6069,7 +6034,6 @@
 				E663D5781BB341C4001EF30E /* ToggleButton.swift in Sources */,
 				E4B334571BBF2393004E2BFF /* ADJConfig.m in Sources */,
 				D38B2D521A8D96D00040E6B5 /* GCDWebServerStreamedResponse.m in Sources */,
-				1EA710D61C5A30DD005C1F11 /* HttpServer.swift in Sources */,
 				1EA7107A1C5A2F99005C1F11 /* LayerViewController.swift in Sources */,
 				E6327A641BF6438E008D12E0 /* DebugSettingsBundleOptions.swift in Sources */,
 				E4B334531BBF2393004E2BFF /* UIDevice+ADJAdditions.m in Sources */,
