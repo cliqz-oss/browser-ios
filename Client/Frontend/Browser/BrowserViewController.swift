@@ -834,6 +834,7 @@ class BrowserViewController: UIViewController {
     }
 
     private func showSearchController() {
+		self.switchToSearchMode = true
         if searchController == nil {
 //			let isPrivate = tabManager.selectedTab?.isPrivate ?? false
             searchController = CliqzSearchViewController(profile: self.profile)
@@ -876,7 +877,6 @@ class BrowserViewController: UIViewController {
 //            self.searchController = nil
 			searchController.view.hidden = true
             homePanelController?.view?.hidden = false
-			
         }
     }
 
@@ -884,7 +884,7 @@ class BrowserViewController: UIViewController {
 	private func switchToSearchModeIfNeeded() {
         if (self.switchToSearchMode) {
 			self.urlBar.enterOverlayMode("", pasted: false)
-			self.switchToSearchMode = false
+//			self.switchToSearchMode = false
             if let searchController = self.searchController {
                 searchController.resetState()
             }
@@ -1709,7 +1709,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         }
     }
     
-    private func navigateToUrl(url: NSURL, searchQuery: String?){
+    private func navigateToUrl(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
@@ -1719,6 +1719,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         }
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
+		self.switchToSearchMode = false
     }
     
 }
