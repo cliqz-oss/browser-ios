@@ -960,7 +960,7 @@ class BrowserViewController: UIViewController {
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
-
+		self.switchToSearchMode = false
         guard let tab = tabManager.selectedTab else {
             return
         }
@@ -1500,7 +1500,6 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
-
 //        if text.isEmpty {
 //            hideSearchController()
 //        } else {
@@ -1907,6 +1906,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     func didSelectURL(url: NSURL, searchQuery: String?) {
         navigateToUrl(url, searchQuery: searchQuery)
     }
+
     func didSelectURL(url: NSURL) {
         finishEditingAndSubmit(url, visitType: .Link)
     }
