@@ -10,17 +10,19 @@ import WebKit
 
 private let log = Logger.browserLogger
 
-private let SaveButtonTitle = NSLocalizedString("Save", comment: "Button to save the user's password")
 private let NotNowButtonTitle = NSLocalizedString("Not now", comment: "Button to not save the user's password")
 private let UpdateButtonTitle = NSLocalizedString("Update", comment: "Button to update the user's password")
-
-// Copied from SearchViewController.swift PromptYes
-private let PromptYes = NSLocalizedString("Yes", tableName: "Search", comment: "For search suggestions prompt. This string should be short so it fits nicely on the prompt row.")
+private let YesButtonTitle = NSLocalizedString("Yes", comment: "Button to save the user's password")
 
 class LoginsHelper: BrowserHelper {
     private weak var browser: Browser?
     private let profile: Profile
     private var snackBar: SnackBar?
+
+    // Exposed for mocking purposes
+    var logins: BrowserLogins {
+        return profile.logins
+    }
 
     class func name() -> String {
         return "LoginsHelper"
@@ -96,6 +98,14 @@ class LoginsHelper: BrowserHelper {
         return profile.logins.getLoginsForProtectionSpace(protectionSpace)
     }
 
+    func updateLoginByGUID(guid: GUID, new: LoginData, significant: Bool) -> Success {
+        return profile.logins.updateLoginByGUID(guid, new: new, significant: significant)
+    }
+
+    func removeLoginsWithGUIDs(guids: [GUID]) -> Success {
+        return profile.logins.removeLoginsWithGUIDs(guids)
+    }
+
     func setCredentials(login: LoginData) {
         if login.password.isEmpty {
             log.debug("Empty password")
@@ -125,6 +135,10 @@ class LoginsHelper: BrowserHelper {
     }
 
     private func promptSave(login: LoginData) {
+        guard login.isValid.isSuccess else {
+            return
+        }
+
         let promptMessage: NSAttributedString
         if let username = login.username {
             let promptStringFormat = NSLocalizedString("Do you want to save the password for %@ on %@?", comment: "Prompt for saving a password. The first parameter is the username being saved. The second parameter is the hostname of the site.")
@@ -147,7 +161,7 @@ class LoginsHelper: BrowserHelper {
                     return
                 }),
 
-                SnackButton(title: PromptYes, callback: { (bar: SnackBar) -> Void in
+                SnackButton(title: YesButtonTitle, callback: { (bar: SnackBar) -> Void in
                     self.browser?.removeSnackbar(bar)
                     self.snackBar = nil
                     self.profile.logins.addLogin(login)
@@ -158,6 +172,10 @@ class LoginsHelper: BrowserHelper {
     }
 
     private func promptUpdateFromLogin(login old: LoginData, toLogin new: LoginData) {
+        guard new.isValid.isSuccess else {
+            return
+        }
+
         let guid = old.guid
 
         let formatted: String

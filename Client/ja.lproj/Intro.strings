@@ -11,7 +11,7 @@
 "Customize" = "カスタマイズ";
 
 /* See http://mzl.la/1T8gxwo */
-"Easily switch between open pages with tabs." = "タブを使えば、ページの切り替えも簡単です";
+"Easily switch between open pages with tabs." = "タブの切り替えも簡単にできます。";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
 "Firefox and the cloud" = "Firefox とクラウドサービス";
@@ -37,11 +37,11 @@
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "ブラウジングをはじめる";
 
-/* ee http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1T8gxwo */
 "Sync Your Devices." = "他の端末と同期できます。";
 
 /* See http://mzl.la/1if9ODp */
-"Tap, hold and move the Firefox icon into your dock for easy access." = "Firefox のアイコンをタップして、そのままドックへ移動させれば、より簡単に Firefox を使えます";
+"Tap, hold and move the Firefox icon into your dock for easy access." = "アイコンをドックに入れておくと、Firefox を簡単に起動できます。";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
 "The Settings button is at the beginning of the Tabs Tray." = "設定ボタンは、タブトレイの左上に表示されています。";
@@ -50,5 +50,5 @@
 "The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "タブボタンはアドレスと検索を入力するテキストフィールドの隣にあり、現在開いているタブの数を表示します";
 
 /* See http://mzl.la/1if9ODp */
-"Use the share sheet to send links from other apps to Firefox." = "他のアプリで共有されたリンクも Firefox で開けます";
+"Use the share sheet to send links from other apps to Firefox." = "シェア機能を使えば、他のアプリから Firefox にリンクを送れます。";
 

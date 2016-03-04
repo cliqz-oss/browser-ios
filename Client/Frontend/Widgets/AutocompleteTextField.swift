@@ -25,6 +25,14 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
     private var completionActive = false
     private var canAutocomplete = true
+
+    // This variable is a solution to get the right behavior for refocusing
+    // the AutocompleteTextField. The initial transition into Overlay Mode 
+    // doesn't involve the user interacting with AutocompleteTextField.
+    // Thus, we update shouldApplyCompletion in touchesBegin() to reflect whether
+    // the highlight is active and then the text field is updated accordingly
+    // in touchesEnd() (eg. applyCompletion() is called or not)
+    private var shouldApplyCompletion = false
     private var enteredText = ""
     private var previousSuggestion = ""
     private var notifyTextChanged: (() -> ())? = nil
@@ -69,7 +77,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         })
 		// Cliqz: Added custom Clear button to show always event when the text is empty
 		let clearButton = UIButton()
-		let clearImg = UIImage(named: "clear")
+		let clearImg = UIImage(named: "cliqzClear")
 		clearButton.setImage(clearImg, forState: .Normal)
 		clearButton.frame = CGRectMake(0, 0, 25, 25)
 		clearButton.addTarget(self, action: "SELtextDidClear:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -231,6 +239,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        shouldApplyCompletion = completionActive
         if !completionActive {
             super.touchesBegan(touches, withEvent: event)
         }
@@ -243,13 +252,15 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if !completionActive {
+        if !shouldApplyCompletion {
             super.touchesEnded(touches, withEvent: event)
         } else {
             applyCompletion()
 
             // Set the current position to the end of the text.
             selectedTextRange = textRangeFromPosition(endOfDocument, toPosition: endOfDocument)
+
+            shouldApplyCompletion = !shouldApplyCompletion
         }
     }
 }

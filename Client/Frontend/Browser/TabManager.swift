@@ -146,6 +146,15 @@ class TabManager : NSObject {
         return nil
     }
 
+    func getTabFor(url: NSURL) -> Browser? {
+        for tab in tabs {
+            if (tab.webView?.URL == url) {
+                return tab
+            }
+        }
+        return nil
+    }
+
     func selectTab(tab: Browser?) {
         assert(NSThread.isMainThread())
 
@@ -180,6 +189,13 @@ class TabManager : NSObject {
     @available(iOS 9, *)
     func addTab(request: NSURLRequest! = nil, configuration: WKWebViewConfiguration! = nil, isPrivate: Bool) -> Browser {
         return self.addTab(request, configuration: configuration, flushToDisk: true, zombie: false, isPrivate: isPrivate)
+    }
+
+    @available(iOS 9, *)
+    func addTabAndSelect(request: NSURLRequest! = nil, configuration: WKWebViewConfiguration! = nil, isPrivate: Bool) -> Browser {
+        let tab = addTab(request, configuration: configuration, isPrivate: isPrivate)
+        selectTab(tab)
+        return tab
     }
 
     func addTabAndSelect(request: NSURLRequest! = nil, configuration: WKWebViewConfiguration! = nil) -> Browser {
@@ -341,7 +357,11 @@ class TabManager : NSObject {
         return -1
     }
 
-	func storeChanges() {
+    func getTabForURL(url: NSURL) -> Browser? {
+        return tabs.filter { $0.webView?.URL == url } .first
+    }
+
+    func storeChanges() {
         stateDelegate?.tabManagerWillStoreTabs(normalTabs)
 
         // Also save (full) tab state to disk.
@@ -441,15 +461,22 @@ extension TabManager {
         return NSURL(fileURLWithPath: documentsPath).URLByAppendingPathComponent("tabsState.archive").path!
     }
 
-    static func tabsToRestore() -> [SavedTab]? {
+    static func tabArchiveData() -> NSData? {
         let tabStateArchivePath = tabsStateArchivePath()
         if NSFileManager.defaultManager().fileExistsAtPath(tabStateArchivePath) {
-            if let data = NSData(contentsOfFile: tabStateArchivePath) {
-                let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
-                return unarchiver.decodeObjectForKey("tabs") as? [SavedTab]
-            }
+            return NSData(contentsOfFile: tabStateArchivePath)
+        } else {
+            return nil
         }
-        return nil
+    }
+
+    static func tabsToRestore() -> [SavedTab]? {
+        if let tabData = tabArchiveData() {
+            let unarchiver = NSKeyedUnarchiver(forReadingWithData: tabData)
+            return unarchiver.decodeObjectForKey("tabs") as? [SavedTab]
+        } else {
+            return nil
+        }
     }
 
     private func preserveTabsInternal() {

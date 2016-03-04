@@ -112,9 +112,11 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     }
     
     func openSettings() {
-		let settingsTableViewController = SettingsTableViewController()
-		settingsTableViewController.profile = profile
-		settingsTableViewController.tabManager = tabManager
+        let settingsTableViewController = AppSettingsTableViewController()
+        settingsTableViewController.profile = profile
+        settingsTableViewController.tabManager = tabManager
+//        settingsTableViewController.settingsDelegate = self
+
 		
 		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
 		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet

@@ -21,11 +21,12 @@ protocol BrowserHelper {
 protocol BrowserDelegate {
     func browser(browser: Browser, didAddSnackbar bar: SnackBar)
     func browser(browser: Browser, didRemoveSnackbar bar: SnackBar)
+    func browser(browser: Browser, didSelectFindInPageForSelection selection: String)
     optional func browser(browser: Browser, didCreateWebView webView: WKWebView)
     optional func browser(browser: Browser, willDeleteWebView webView: WKWebView)
 }
 
-class Browser: NSObject {
+class Browser: NSObject, BrowserWebViewDelegate {
     private var _isPrivate: Bool = false
     internal private(set) var isPrivate: Bool {
         get {
@@ -62,6 +63,10 @@ class Browser: NSObject {
 
     private var helperManager: HelperManager? = nil
     private var configuration: WKWebViewConfiguration? = nil
+
+    /// Any time a browser tries to make requests to display a Javascript Alert and we are not the active
+    /// browser instance, queue it for later until we become foregrounded.
+    private var alertQueue = [JSAlertInfo]()
 
     init(configuration: WKWebViewConfiguration) {
         self.configuration = configuration
@@ -110,7 +115,8 @@ class Browser: NSObject {
             configuration!.userContentController = WKUserContentController()
             configuration!.preferences = WKPreferences()
             configuration!.preferences.javaScriptCanOpenWindowsAutomatically = false
-            let webView = WKWebView(frame: CGRectZero, configuration: configuration!)
+            let webView = BrowserWebView(frame: CGRectZero, configuration: configuration!)
+            webView.delegate = self
             configuration = nil
 
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
@@ -225,7 +231,11 @@ class Browser: NSObject {
     }
 
     var url: NSURL? {
-        return webView?.URL ?? lastRequest?.URL
+        guard let resolvedURL = webView?.URL ?? lastRequest?.URL else {
+            guard let sessionData = sessionData else { return nil }
+            return sessionData.urls.last
+        }
+        return resolvedURL
     }
 
     var displayURL: NSURL? {
@@ -291,11 +301,14 @@ class Browser: NSObject {
 
     func reload() {
         if #available(iOS 9.0, *) {
-            webView?.customUserAgent = desktopSite ? UserAgent.desktopUserAgent() : nil
+            let userAgent: String? = desktopSite ? UserAgent.desktopUserAgent() : nil
+            if (userAgent ?? "") != webView?.customUserAgent,
+               let currentItem = webView?.backForwardList.currentItem
+            {
+                webView?.customUserAgent = userAgent
 
-            if let currentItem = webView?.backForwardList.currentItem where currentItem.URL != currentItem.initialURL {
                 // Reload the initial URL to avoid UA specific redirection
-                loadRequest(NSURLRequest(URL: currentItem.initialURL, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 60))
+                loadRequest(NSURLRequest(URL: currentItem.initialURL, cachePolicy: .ReloadIgnoringLocalCacheData, timeoutInterval: 60))
                 return
             }
         }
@@ -383,6 +396,28 @@ class Browser: NSObject {
         desktopSite = !desktopSite
         reload()
     }
+
+    func queueJavascriptAlertPrompt(alert: JSAlertInfo) {
+        alertQueue.append(alert)
+    }
+
+    func dequeueJavascriptAlertPrompt() -> JSAlertInfo? {
+        guard !alertQueue.isEmpty else {
+            return nil
+        }
+        return alertQueue.removeFirst()
+    }
+
+    func cancelQueuedAlerts() {
+        alertQueue.forEach { alert in
+            alert.cancel()
+        }
+    }
+
+    private func browserWebView(browserWebView: BrowserWebView, didSelectFindInPageForSelection selection: String) {
+        browserDelegate?.browser(self, didSelectFindInPageForSelection: selection)
+    }
+
 }
 
 private class HelperManager: NSObject, WKScriptMessageHandler {
@@ -423,26 +458,28 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
     }
 }
 
-extension WKWebView {
-    func runScriptFunction(function: String, fromScript: String, callback: (AnyObject?) -> Void) {
-        if let path = NSBundle.mainBundle().pathForResource(fromScript, ofType: "js") {
-            if let source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
-                evaluateJavaScript(source, completionHandler: { (obj, err) -> Void in
-                    if let err = err {
-                        print("Error injecting \(err)")
-                        return
-                    }
+private protocol BrowserWebViewDelegate: class {
+    func browserWebView(browserWebView: BrowserWebView, didSelectFindInPageForSelection selection: String)
+}
 
-                    self.evaluateJavaScript("__firefox__.\(fromScript).\(function)", completionHandler: { (obj, err) -> Void in
-                        self.evaluateJavaScript("delete window.__firefox__.\(fromScript)", completionHandler: { (obj, err) -> Void in })
-                        if let err = err {
-                            print("Error running \(err)")
-                            return
-                        }
-                        callback(obj)
-                    })
-                })
-            }
+private class BrowserWebView: WKWebView, MenuHelperInterface {
+    private weak var delegate: BrowserWebViewDelegate?
+
+    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        return action == MenuHelper.SelectorFindInPage
+    }
+
+    @objc func menuHelperFindInPage(sender: NSNotification) {
+        evaluateJavaScript("getSelection().toString()") { result, _ in
+            let selection = result as? String ?? ""
+            self.delegate?.browserWebView(self, didSelectFindInPageForSelection: selection)
         }
+    }
+
+    private override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        // The find-in-page selection menu only appears if the webview is the first responder.
+        becomeFirstResponder()
+
+        return super.hitTest(point, withEvent: event)
     }
 }

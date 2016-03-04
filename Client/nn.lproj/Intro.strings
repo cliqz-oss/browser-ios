@@ -37,14 +37,14 @@
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "Byrja å surfa";
 
-/* ee http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1T8gxwo */
 "Sync Your Devices." = "Synkroniser einingane dine.";
 
 /* See http://mzl.la/1if9ODp */
 "Tap, hold and move the Firefox icon into your dock for easy access." = "Trykk på, hald inne og flytt Firefox-ikonet inn i dokka for enkel tilgang.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
-"The Settings button is at the beginning of the Tabs Tray." = "Innstillings-knappen er i byrjinga av fanerada.";
+"The Settings button is at the beginning of the Tabs Tray." = "Innstillingar-knappen er i byrjinga av fanerada.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
 "The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "Knappen vis faner er ved sidan av adresse- og søkjefeltet, og viser gjeldande tal på opne faner.";

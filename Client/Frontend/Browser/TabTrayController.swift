@@ -5,6 +5,8 @@
 import Foundation
 import UIKit
 import SnapKit
+import Storage
+import ReadingList
 
 struct TabTrayControllerUX {
     static let CornerRadius = CGFloat(4.0)
@@ -15,7 +17,6 @@ struct TabTrayControllerUX {
     static let Margin = CGFloat(15)
     static let ToolbarBarTintColor = UIConstants.AppBackgroundColor
     static let ToolbarButtonOffset = CGFloat(10.0)
-    static let TabTitleTextFont = UIConstants.DefaultSmallFontBold
     static let CloseButtonSize = CGFloat(18.0)
     static let CloseButtonMargin = CGFloat(6.0)
     static let CloseButtonEdgeInset = CGFloat(10)
@@ -94,7 +95,7 @@ class TabCell: UICollectionViewCell {
         self.titleText.textAlignment = NSTextAlignment.Left
         self.titleText.userInteractionEnabled = false
         self.titleText.numberOfLines = 1
-        self.titleText.font = TabTrayControllerUX.TabTitleTextFont
+        self.titleText.font = DynamicFontHelper.defaultHelper.DefaultSmallFontBold
 
         self.closeButton = UIButton()
         self.closeButton.setImage(UIImage(named: "stop"), forState: UIControlState.Normal)
@@ -109,7 +110,7 @@ class TabCell: UICollectionViewCell {
         self.opaque = true
 
         self.animator = SwipeAnimator(animatingView: self.backgroundHolder, container: self)
-        self.closeButton.addTarget(self.animator, action: "SELcloseWithoutGesture", forControlEvents: UIControlEvents.TouchUpInside)
+        self.closeButton.addTarget(self, action: "SELclose", forControlEvents: UIControlEvents.TouchUpInside)
 
         contentView.addSubview(backgroundHolder)
         backgroundHolder.addSubview(self.background)
@@ -198,6 +199,7 @@ class TabCell: UICollectionViewCell {
         // Reset any close animations.
         backgroundHolder.transform = CGAffineTransformIdentity
         backgroundHolder.alpha = 1
+        self.titleText.font = DynamicFontHelper.defaultHelper.DefaultSmallFontBold
     }
 
     override func accessibilityScroll(direction: UIAccessibilityScrollDirection) -> Bool {
@@ -213,6 +215,11 @@ class TabCell: UICollectionViewCell {
         animator.close(right: right)
         return true
     }
+
+    @objc
+    func SELclose() {
+        self.animator.SELcloseWithoutGesture()
+    }
 }
 
 @available(iOS 9, *)
@@ -223,9 +230,17 @@ struct PrivateModeStrings {
     static let toggleAccessibilityValueOff = NSLocalizedString("Off", tableName: "PrivateBrowsing", comment: "Toggled OFF accessibility value")
 }
 
+protocol TabTrayDelegate: class {
+    func tabTrayDidDismiss(tabTray: TabTrayController)
+    func tabTrayDidAddBookmark(tab: Browser)
+    func tabTrayDidAddToReadingList(tab: Browser) -> ReadingListClientRecord?
+    func tabTrayRequestsPresentationOf(viewController viewController: UIViewController)
+}
+
 class TabTrayController: UIViewController {
     let tabManager: TabManager
     let profile: Profile
+    weak var delegate: TabTrayDelegate?
 
     var collectionView: UICollectionView!
     var navBar: UIView!
@@ -239,7 +254,7 @@ class TabTrayController: UIViewController {
                 togglePrivateMode.selected = privateMode
                 togglePrivateMode.accessibilityValue = privateMode ? PrivateModeStrings.toggleAccessibilityValueOn : PrivateModeStrings.toggleAccessibilityValueOff
                 tabDataSource.tabs = tabsToDisplay
-                collectionView.reloadData()
+                collectionView?.reloadData()
             }
         }
     }
@@ -282,13 +297,35 @@ class TabTrayController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    convenience init(tabManager: TabManager, profile: Profile, tabTrayDelegate: TabTrayDelegate) {
+        self.init(tabManager: tabManager, profile: profile)
+        self.delegate = tabTrayDelegate
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.tabManager.removeDelegate(self)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tabManager.addDelegate(self)
     }
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
+    }
+
+    func SELDynamicFontChanged(notification: NSNotification) {
+        guard notification.name == NotificationDynamicFontChanged else { return }
+
+        self.collectionView.reloadData()
     }
 
 // MARK: View Controller Callbacks
@@ -296,7 +333,6 @@ class TabTrayController: UIViewController {
         super.viewDidLoad()
 
         view.accessibilityLabel = NSLocalizedString("Tabs Tray", comment: "Accessibility label for the Tabs Tray view.")
-        tabManager.addDelegate(self)
 
         navBar = UIView()
         navBar.backgroundColor = TabTrayControllerUX.BackgroundColor
@@ -344,10 +380,16 @@ class TabTrayController: UIViewController {
             if let tab = tabManager.selectedTab where tab.isPrivate {
                 privateMode = true
             }
+
+            // register for previewing delegate to enable peek and pop if force touch feature available
+            if traitCollection.forceTouchCapability == .Available {
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
         }
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELDynamicFontChanged:", name: NotificationDynamicFontChanged, object: nil)
     }
 
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
@@ -369,15 +411,8 @@ class TabTrayController: UIViewController {
     }
 
     private func makeConstraints() {
-        let viewBindings: [String: AnyObject] = [
-            "topLayoutGuide" : topLayoutGuide,
-            "navBar" : navBar
-        ]
-
-        let topConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[topLayoutGuide][navBar]", options: [], metrics: nil, views: viewBindings)
-        view.addConstraints(topConstraints)
-
         navBar.snp_makeConstraints { make in
+            make.top.equalTo(snp_topLayoutGuideBottom)
             make.height.equalTo(UIConstants.ToolbarHeight)
             make.left.right.equalTo(self.view)
         }
@@ -404,9 +439,10 @@ class TabTrayController: UIViewController {
     }
 
     func SELdidClickSettingsItem() {
-        let settingsTableViewController = SettingsTableViewController()
+        let settingsTableViewController = AppSettingsTableViewController()
         settingsTableViewController.profile = profile
         settingsTableViewController.tabManager = tabManager
+        settingsTableViewController.settingsDelegate = self
 
         let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
         controller.popoverDelegate = self
@@ -485,6 +521,17 @@ class TabTrayController: UIViewController {
         return privateMode && tabManager.privateTabs.count == 0
     }
 
+    @available(iOS 9, *)
+    func changePrivacyMode(isPrivate: Bool) {
+        if isPrivate != privateMode {
+            guard let _ = collectionView else {
+                privateMode = isPrivate
+                return
+            }
+            SELdidTogglePrivateMode()
+        }
+    }
+
     private func openNewTab(request: NSURLRequest? = nil) {
         if #available(iOS 9, *) {
             if privateMode {
@@ -552,10 +599,9 @@ extension TabTrayController: TabManagerDelegate {
     func tabManager(tabManager: TabManager, didAddTab tab: Browser) {
         // Get the index of the added tab from it's set (private or normal)
         guard let index = tabsToDisplay.indexOf(tab) else { return }
-        
-        tabDataSource.addTab(tab)
 
-        self.collectionView.performBatchUpdates({ _ in
+        tabDataSource.addTab(tab)
+        self.collectionView?.performBatchUpdates({ _ in
             self.collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
         }, completion: { finished in
             if finished {
@@ -607,9 +653,8 @@ extension TabTrayController: UIScrollViewAccessibilityDelegate {
         bounds.size.height -= collectionView.contentInset.top + collectionView.contentInset.bottom
         // visible cells do sometimes return also not visible cells when attempting to go past the last cell with VoiceOver right-flick gesture; so make sure we have only visible cells (yeah...)
         visibleCells = visibleCells.filter { !CGRectIsEmpty(CGRectIntersection($0.frame, bounds)) }
-
-        let indexPaths = visibleCells.map { self.collectionView.indexPathForCell($0)! }
-            .sort { $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row) }
+        let cells = visibleCells.map { self.collectionView.indexPathForCell($0)! }
+        let indexPaths = cells.sort { $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row) }
 
         if indexPaths.count == 0 {
             return NSLocalizedString("No tabs", comment: "Message spoken by VoiceOver to indicate that there are no tabs in the Tabs Tray")
@@ -645,6 +690,13 @@ extension TabTrayController: TabCellDelegate {
         let indexPath = collectionView.indexPathForCell(cell)!
         let tab = tabsToDisplay[indexPath.item]
         tabManager.removeTab(tab)
+    }
+}
+
+extension TabTrayController: SettingsDelegate {
+    func settingsOpenURLInNewTab(url: NSURL) {
+        let request = NSURLRequest(URL: url)
+        openNewTab(request)
     }
 }
 
@@ -885,5 +937,73 @@ private class EmptyPrivateTabsView: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+@available(iOS 9.0, *)
+extension TabTrayController: TabPeekDelegate {
+
+    func tabPeekDidAddBookmark(tab: Browser) {
+        delegate?.tabTrayDidAddBookmark(tab)
+    }
+
+    func tabPeekDidAddToReadingList(tab: Browser) -> ReadingListClientRecord? {
+        return delegate?.tabTrayDidAddToReadingList(tab)
+    }
+
+    func tabPeekDidCloseTab(tab: Browser) {
+        if let index = self.tabDataSource.tabs.indexOf(tab),
+            let cell = self.collectionView?.cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? TabCell {
+            cell.SELclose()
+        }
+    }
+
+    func tabPeekRequestsPresentationOf(viewController viewController: UIViewController) {
+        delegate?.tabTrayRequestsPresentationOf(viewController: viewController)
+    }
+}
+
+@available(iOS 9.0, *)
+extension TabTrayController: UIViewControllerPreviewingDelegate {
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+
+        guard let collectionView = collectionView else { return nil }
+        let convertedLocation = self.view.convertPoint(location, toView: collectionView)
+
+        guard let indexPath = collectionView.indexPathForItemAtPoint(convertedLocation),
+            let cell = collectionView.cellForItemAtIndexPath(indexPath) else { return nil }
+
+        let tab = tabDataSource.tabs[indexPath.row]
+        let tabVC = TabPeekViewController(tab: tab, delegate: self)
+        if let browserProfile = profile as? BrowserProfile {
+            tabVC.setState(withProfile: browserProfile, clientPickerDelegate: self)
+        }
+        previewingContext.sourceRect = self.view.convertRect(cell.frame, fromView: collectionView)
+
+        return tabVC
+    }
+
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        guard let tpvc = viewControllerToCommit as? TabPeekViewController else { return }
+        tabManager.selectTab(tpvc.tab)
+        self.navigationController?.popViewControllerAnimated(true)
+
+        delegate?.tabTrayDidDismiss(self)
+
+    }
+}
+
+extension TabTrayController: ClientPickerViewControllerDelegate {
+
+    func clientPickerViewController(clientPickerViewController: ClientPickerViewController, didPickClients clients: [RemoteClient]) {
+        if let item = clientPickerViewController.shareItem {
+            self.profile.sendItems([item], toClients: clients)
+        }
+        clientPickerViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func clientPickerViewControllerDidCancel(clientPickerViewController: ClientPickerViewController) {
+        clientPickerViewController.dismissViewControllerAnimated(true, completion: nil)
     }
 }

@@ -22,6 +22,12 @@
 /* See http://mzl.la/1T8gxwo */
 "Organize" = "سازمان‌دهی";
 
+/* See http://mzl.la/1T8gxwo */
+"Personalize your Firefox just the way you like in Settings." = "سفارشی سازی فایرفاکس خودتان به شیوه که می پسندید در تنظیمات.";
+
+/* See http://mzl.la/1T8gxwo */
+"Personalize your default search engine and more in Settings." = "شخصی‌سازی موتور جست‌و‌جو پیش فرض شما و موارد بیشتر در تنظیمات.";
+
 /* See http://mzl.la/1if9ODp */
 "Share" = "اشتراک‌گذاری";
 
@@ -31,12 +37,18 @@
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "شروع وب‌گردی";
 
-/* ee http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1T8gxwo */
 "Sync Your Devices." = "همگام‌سازی دستگاه‌های شما.";
 
 /* See http://mzl.la/1if9ODp */
-"Tap, hold and move the Firefox icon into your dock for easy access." = "برای دسترسی آسان آیکن فایرفاکس را تپ کنید، نگه دارید و به داک خودتان منتقل کنید.";
+"Tap, hold and move the Firefox icon into your dock for easy access." = "برای دسترسی آسان بر روی آیکن فایرفاکس را تپ کنید، نگه دارید و به داک خودتان منتقل کنید.";
+
+/* Accessibility label for an image. See http://mzl.la/1T8gxwo */
+"The Settings button is at the beginning of the Tabs Tray." = "دکمه تنظیمات در ابتدا بخش زبانه‌ها.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
 "The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "دکمه نمایش زبانه‌ها کنار فیلد متنی جستجو و آدرس است و تعداد زبانه‌های باز جاری را نمایش می‌دهد.";
+
+/* See http://mzl.la/1if9ODp */
+"Use the share sheet to send links from other apps to Firefox." = "از صفحه اشتراک گذاری برای ارسال پیوندها از سایر برنامه‌ها به فایرفاکس استفاده کنید.";
 

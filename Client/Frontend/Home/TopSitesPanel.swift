@@ -68,6 +68,7 @@ class TopSitesPanel: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationDynamicFontChanged, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -82,6 +83,7 @@ class TopSitesPanel: UIViewController {
         collection.dataSource = dataSource
         collection.registerClass(ThumbnailCell.self, forCellWithReuseIdentifier: ThumbnailIdentifier)
         collection.keyboardDismissMode = .OnDrag
+        collection.accessibilityIdentifier = "Top Sites View"
         view.addSubview(collection)
         collection.snp_makeConstraints { make in
             make.edges.equalTo(self.view)
@@ -97,11 +99,12 @@ class TopSitesPanel: UIViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
     }
-    
+
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
-        case NotificationFirefoxAccountChanged, NotificationProfileDidFinishSyncing, NotificationPrivateDataClearedHistory:
+        case NotificationFirefoxAccountChanged, NotificationProfileDidFinishSyncing, NotificationPrivateDataClearedHistory, NotificationDynamicFontChanged:
             refreshTopSites(maxFrecencyLimit)
             break
         default:
@@ -295,7 +298,12 @@ private class TopSitesCollectionView: UICollectionView {
     }
 }
 
-private class TopSitesLayout: UICollectionViewLayout {
+class TopSitesLayout: UICollectionViewLayout {
+
+    var thumbnailCount: Int {
+        assertIsMainThread("layout.thumbnailCount interacts with UIKit components - cannot call from background thread.")
+        return thumbnailRows * thumbnailCols
+    }
 
     private var thumbnailRows: Int {
         assert(NSThread.isMainThread(), "Interacts with UIKit components - not thread-safe.")
@@ -330,11 +338,6 @@ private class TopSitesLayout: UICollectionViewLayout {
                 return 5;
             }
         }
-    }
-
-    private var thumbnailCount: Int {
-        assertIsMainThread("layout.thumbnailCount interacts with UIKit components - cannot call from background thread.")
-        return thumbnailRows * thumbnailCols
     }
 
     private var width: CGFloat {
@@ -396,7 +399,7 @@ private class TopSitesLayout: UICollectionViewLayout {
 
     private var layoutAttributes:[UICollectionViewLayoutAttributes]?
 
-    private override func prepareLayout() {
+    override func prepareLayout() {
         var layoutAttributes = [UICollectionViewLayoutAttributes]()
         for section in 0..<(self.collectionView?.numberOfSections() ?? 0) {
             for item in 0..<(self.collectionView?.numberOfItemsInSection(section) ?? 0) {
