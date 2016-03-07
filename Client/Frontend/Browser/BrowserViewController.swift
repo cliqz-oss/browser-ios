@@ -308,7 +308,7 @@ class BrowserViewController: UIViewController {
     }
 
     // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
-    func appDidEnterBackgroundNotification() {
+    func SELappDidEnterBackgroundNotification() {
         
         displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
         
