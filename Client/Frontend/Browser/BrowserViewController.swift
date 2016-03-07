@@ -1080,7 +1080,7 @@ class BrowserViewController: UIViewController {
 
             if let tab = tabManager.selectedTab where tab.webView === webView && !tab.restoring {
 				// Cliqz: Added if statement to avoid overridding url when search results are displayed
-				if self.searchController!.view.hidden && !tab.url!.absoluteString.contains("/cliqz/") {
+				if self.searchController != nil && self.searchController!.view.hidden && !tab.url!.absoluteString.contains("/cliqz/") {
 					updateUIForReaderHomeStateForTab(tab)
 				}
             }

@@ -23,12 +23,12 @@ class CliqzUITests: KIFTestCase {
 		tester.tapViewWithAccessibilityLabel("HistoryButton")
 		XCTAssertTrue(tester.viewExistsWithLabel("OpenSettingsButton"))
 		tester.tapViewWithAccessibilityLabel("OpenSettingsButton")
-		XCTAssertTrue(tester.viewExistsWithLabel("Done"))
-		tester.tapViewWithAccessibilityLabel("Done")
+		XCTAssertTrue(tester.viewExistsWithLabel(NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar")))
+		tester.tapViewWithAccessibilityLabel(NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar"))
 	}
 	
 	func testSearch() {
-		tester.waitForViewWithAccessibilityLabel("Address and Search")
+		tester.waitForViewWithAccessibilityLabel(NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns."))
 		tester.enterTextIntoCurrentFirstResponder("Hello")
 	}
 }
