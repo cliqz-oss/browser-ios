@@ -308,7 +308,7 @@ class BrowserViewController: UIViewController {
     }
 
     // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
-    func appDidEnterBackgroundNotification() {
+    func SELappDidEnterBackgroundNotification() {
         
         displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
         
@@ -480,16 +480,9 @@ class BrowserViewController: UIViewController {
         urlBar.snp_makeConstraints { make in
             make.edges.equalTo(self.header)
 		}
-        let viewBindings: [String: AnyObject] = [
-            "header": header,
-            "topLayoutGuide": topLayoutGuide
-        ]
-        let topConstraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide][header]", options: [], metrics: nil, views: viewBindings)
-        view.addConstraints(topConstraint)
         
-
         header.snp_makeConstraints { make in
-//            scrollController.headerTopConstraint = make.top.equalTo(snp_topLayoutGuideBottom).constraint
+            scrollController.headerTopConstraint = make.top.equalTo(snp_topLayoutGuideBottom).constraint
             make.height.equalTo(UIConstants.ToolbarHeight)
             make.left.right.equalTo(self.view)
         }
@@ -522,6 +515,8 @@ class BrowserViewController: UIViewController {
             
             if transition.isAnimating && !iphoneLandscape {
                make.top.equalTo(self.view).offset(20)
+            } else {
+                scrollController.headerTopConstraint = make.top.equalTo(snp_topLayoutGuideBottom).constraint
             }
         }
         statusBarOverlay.snp_remakeConstraints { make in
