@@ -110,7 +110,10 @@ class BrowserViewController: UIViewController {
     var navigationStep          : Int = 0
     var backNavigationStep      : Int = 0
     var navigationEndTime       : Double = NSDate.getCurrentMillis()
-    
+
+    // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
+    var headerConstraintUpdated:Bool = false
+
     // Cliqz: Furture and past layers
     
     lazy var searchHistoryContainer: UINavigationController = {
@@ -504,30 +507,14 @@ class BrowserViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         log.debug("BVC viewDidLayoutSubviews…")
         super.viewDidLayoutSubviews()
-        
-        // Cliqz: Changed the constraints for header and statusbarOverly to work properly during the animation to/from past layer
-        let currentDevice = UIDevice.currentDevice()
-        let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .Phone)
-        
-        header.snp_remakeConstraints { make in
-            make.height.equalTo(UIConstants.ToolbarHeight)
-            make.left.right.equalTo(self.view)
-            
-            if transition.isAnimating && !iphoneLandscape {
-               make.top.equalTo(self.view).offset(20)
-            } else {
-                scrollController.headerTopConstraint = make.top.equalTo(snp_topLayoutGuideBottom).constraint
-            }
-        }
         statusBarOverlay.snp_remakeConstraints { make in
             make.top.left.right.equalTo(self.view)
-            if iphoneLandscape {
-              make.height.equalTo(self.topLayoutGuide.length)
-            } else {
-                make.height.equalTo(20)
-            }
-//            make.height.equalTo(self.topLayoutGuide.length)
+            make.height.equalTo(self.topLayoutGuide.length)
         }
+        
+        // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
+        fixHeaderConstraint()
+        
         log.debug("BVC done.")
     }
 
@@ -3177,4 +3164,26 @@ extension BrowserViewController: JSPromptAlertControllerDelegate {
     func promptAlertControllerDidDismiss(alertController: JSPromptAlertController) {
         showQueuedAlertIfAvailable()
     }
+}
+extension BrowserViewController {
+    private func fixHeaderConstraint(){
+        let currentDevice = UIDevice.currentDevice()
+        let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .Phone)
+        if transition.isAnimating && !iphoneLandscape {
+            headerConstraintUpdated = true
+            
+            scrollController.headerTopConstraint?.updateOffset(20)
+
+            statusBarOverlay.snp_remakeConstraints { make in
+                make.top.left.right.equalTo(self.view)
+                make.height.equalTo(20)
+            }
+            
+        } else if(headerConstraintUpdated) {
+            headerConstraintUpdated = false
+            scrollController.headerTopConstraint?.updateOffset(0)
+        }
+
+    }
+
 }
