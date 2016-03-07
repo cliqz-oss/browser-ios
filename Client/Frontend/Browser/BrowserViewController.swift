@@ -309,58 +309,6 @@ class BrowserViewController: UIViewController {
 			self.switchToSearchModeIfNeeded()
         })
     }
-
-    // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
-    func SELappDidEnterBackgroundNotification() {
-        
-        displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
-        
-        isAppResponsive = false
-
-        if searchController?.view.hidden == true {
-            let webView = self.tabManager.selectedTab?.webView
-            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
-        } else {
-            searchController?.appDidEnterBackground()
-        }
-        
-        if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
-            if !lastVisitedWebsite.hasPrefix("http://localhost") {
-                // Cliqz: store the last visited website
-                LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
-            }
-        }
-        
-    }
-
-    // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
-    func appDidBecomeResponsive(startupType: String) {
-        if isAppResponsive == false {
-            isAppResponsive = true
-            AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
-        }
-    }
-
-    // Cliqz: Added to navigate to the last visited website (3D quick home actions)
-    func navigateToLastWebsite() {
-        guard let tab = tabManager.selectedTab else {
-            return
-        }
-        
-        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String,
-            let lastVisitedURL = NSURL(string: lastVisitedWebsite) {
-            if lastVisitedURL != tab.webView?.URL {
-                finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
-            } else {
-                urlBar.leaveOverlayMode()
-            }
-        }
-    }
-    
-    // Cliqz: Added to navigate to url (3D quick home actions)
-    func navigateToURL(url: NSURL) {
-        finishEditingAndSubmit(url, visitType: .Link)
-    }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: BookmarkStatusChangedNotification, object: nil)
@@ -473,9 +421,9 @@ class BrowserViewController: UIViewController {
 		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
 			LocationManager.sharedInstance.startUpdateingLocation()
 		}
+        
 		// Cliqz: present InroViewController each time the app start so that it can be easier to show it to the test users
 //		        presentIntroViewController(true)
-		//        log.debug("BVC intro presented.")
 		
 	}
 
@@ -1317,28 +1265,6 @@ class BrowserViewController: UIViewController {
 }
 
 /**
- * Cliqz: Add an overlay to the WKWebView to hide the old page while navigating to the new search result
- */
-extension BrowserViewController {
-    
-    private func showWebViewOverLay(selectedTab: Browser) {
-        if self.webViewOverlay == nil {
-            webViewOverlay = UIView(frame: (selectedTab.webView?.bounds)!)
-            webViewOverlay!.backgroundColor = UIColor.whiteColor()
-            selectedTab.webView?.addSubview(webViewOverlay!)
-        }
-    }
-    
-    private func hideWebViewOverlay() {
-        if webViewOverlay != nil {
-            webViewOverlay!.removeFromSuperview()
-            webViewOverlay = nil
-        }
-    }
-
-}
-
-/**
  * History visit management.
  * TODO: this should be expanded to track various visit types; see Bug 1166084.
  */
@@ -1880,46 +1806,6 @@ extension BrowserViewController: HomePanelViewControllerDelegate {
     func homePanelViewControllerDidRequestToSignIn(homePanelViewController: HomePanelViewController) {
         presentSignInViewController() // TODO UX Right now the flow for sign in and create account is the same
     }
-}
-
-// Cliqz: compined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and SearchHistoryViewControllerDelegate into one extension
-extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, SearchHistoryViewControllerDelegate {
-    
-    func didSelectURL(url: NSURL, searchQuery: String?) {
-        navigateToUrl(url, searchQuery: searchQuery)
-    }
-
-    func didSelectURL(url: NSURL) {
-        finishEditingAndSubmit(url, visitType: .Link)
-    }
-    
-    func searchForQuery(query: String) {
-        self.urlBar.enterOverlayMode(query, pasted: true)
-    }
-    
-    func autoCompeleteQuery(autoCompleteText: String) {
-        urlBar.setAutocompleteSuggestion(autoCompleteText)
-    }
-    
-    func modalViewDismissed () {
-        if AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
-            self.urlBar.enterOverlayMode(self.searchController?.searchQuery, pasted: true)
-        }
-    }
-    
-    private func navigateToUrl(url: NSURL, searchQuery: String?) {
-        let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
-        if let tab = tabManager.selectedTab,
-            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
-                self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
-                showWebViewOverLay(tab)
-        }
-        urlBar.currentURL = url
-        urlBar.leaveOverlayMode()
-		self.switchToSearchMode = false
-    }
-    
 }
 
 extension BrowserViewController: SearchViewControllerDelegate {
@@ -3015,47 +2901,6 @@ extension BrowserViewController: HomePanelDelegate {
     }
 }
 
-// Cliqz: Added extension for logging the Navigation Telemetry signals
-extension BrowserViewController {
-    private func startNavigation(webView: WKWebView, navigationAction: WKNavigationAction) {
-        // determine if the navigation is back navigation
-        if navigationAction.navigationType == .BackForward && backListSize >= webView.backForwardList.backList.count {
-            isBackNavigation = true
-        } else {
-            isBackNavigation = false
-        }
-        backListSize = webView.backForwardList.backList.count
-    }
-
-    private func finishNavigation(webView: WKWebView) {
-        // calculate times
-        let currentTime = NSDate.getCurrentMillis()
-        let displayTime = currentTime - navigationEndTime
-        navigationEndTime = currentTime
-        
-        // calculate the url length
-        let urlLength = webView.URL?.absoluteString.characters.count
-        
-        
-        // check if back navigation
-        if isBackNavigation {
-            backNavigationStep++
-            logNavigationEvent("back", step: backNavigationStep, urlLength: urlLength!, displayTime: displayTime)
-        } else {
-            // discard the first navigation (result navigation is not included)
-            if navigationStep != 0 {
-                logNavigationEvent("location_change", step: navigationStep, urlLength: urlLength!, displayTime: displayTime)
-            }
-            navigationStep++
-            backNavigationStep = 0
-        }
-    }
-    
-    private func logNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) {
-        TelemetryLogger.sharedInstance.logEvent(.Navigation(action, step, urlLength, displayTime))
-    }
-    
-}
 // MARK: Browser Chrome Theming
 extension BrowserViewController: Themeable {
 
@@ -3165,7 +3010,159 @@ extension BrowserViewController: JSPromptAlertControllerDelegate {
         showQueuedAlertIfAvailable()
     }
 }
+
+// Cliqz: compined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and SearchHistoryViewControllerDelegate into one extension
+extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, SearchHistoryViewControllerDelegate {
+    
+    func didSelectURL(url: NSURL, searchQuery: String?) {
+        navigateToUrl(url, searchQuery: searchQuery)
+    }
+    
+    func didSelectURL(url: NSURL) {
+        finishEditingAndSubmit(url, visitType: .Link)
+    }
+    
+    func searchForQuery(query: String) {
+        self.urlBar.enterOverlayMode(query, pasted: true)
+    }
+    
+    func autoCompeleteQuery(autoCompleteText: String) {
+        urlBar.setAutocompleteSuggestion(autoCompleteText)
+    }
+    
+    func modalViewDismissed () {
+        if AboutUtils.isAboutURL(self.tabManager.selectedTab?.webView?.URL) {
+            self.urlBar.enterOverlayMode(self.searchController?.searchQuery, pasted: true)
+        }
+    }
+    
+    private func navigateToUrl(url: NSURL, searchQuery: String?) {
+        let query = (searchQuery != nil) ? searchQuery! : ""
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        if let tab = tabManager.selectedTab,
+            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+                self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
+                showWebViewOverLay(tab)
+        }
+        urlBar.currentURL = url
+        urlBar.leaveOverlayMode()
+        self.switchToSearchMode = false
+    }
+    
+}
+
+// Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
+    
+    // Cliqz: Added extension for logging the Navigation Telemetry signals
+    private func startNavigation(webView: WKWebView, navigationAction: WKNavigationAction) {
+        // determine if the navigation is back navigation
+        if navigationAction.navigationType == .BackForward && backListSize >= webView.backForwardList.backList.count {
+            isBackNavigation = true
+        } else {
+            isBackNavigation = false
+        }
+        backListSize = webView.backForwardList.backList.count
+    }
+    
+    private func finishNavigation(webView: WKWebView) {
+        // calculate times
+        let currentTime = NSDate.getCurrentMillis()
+        let displayTime = currentTime - navigationEndTime
+        navigationEndTime = currentTime
+        
+        // calculate the url length
+        let urlLength = webView.URL?.absoluteString.characters.count
+        
+        
+        // check if back navigation
+        if isBackNavigation {
+            backNavigationStep++
+            logNavigationEvent("back", step: backNavigationStep, urlLength: urlLength!, displayTime: displayTime)
+        } else {
+            // discard the first navigation (result navigation is not included)
+            if navigationStep != 0 {
+                logNavigationEvent("location_change", step: navigationStep, urlLength: urlLength!, displayTime: displayTime)
+            }
+            navigationStep++
+            backNavigationStep = 0
+        }
+    }
+    
+    private func logNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) {
+        TelemetryLogger.sharedInstance.logEvent(.Navigation(action, step, urlLength, displayTime))
+    }
+    
+    
+    // Cliqz: Add an overlay to the WKWebView to hide the old page while navigating to the new search result
+    private func showWebViewOverLay(selectedTab: Browser) {
+        if self.webViewOverlay == nil {
+            webViewOverlay = UIView(frame: (selectedTab.webView?.bounds)!)
+            webViewOverlay!.backgroundColor = UIColor.whiteColor()
+            selectedTab.webView?.addSubview(webViewOverlay!)
+        }
+    }
+    
+    private func hideWebViewOverlay() {
+        if webViewOverlay != nil {
+            webViewOverlay!.removeFromSuperview()
+            webViewOverlay = nil
+        }
+    }
+    
+    // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
+    func SELappDidEnterBackgroundNotification() {
+        
+        displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
+        
+        isAppResponsive = false
+        
+        if searchController?.view.hidden == true {
+            let webView = self.tabManager.selectedTab?.webView
+            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+        } else {
+            searchController?.appDidEnterBackground()
+        }
+        
+        if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
+            if !lastVisitedWebsite.hasPrefix("http://localhost") {
+                // Cliqz: store the last visited website
+                LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
+            }
+        }
+        
+    }
+    
+    // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
+    func appDidBecomeResponsive(startupType: String) {
+        if isAppResponsive == false {
+            isAppResponsive = true
+            AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
+        }
+    }
+    
+    // Cliqz: Added to navigate to the last visited website (3D quick home actions)
+    func navigateToLastWebsite() {
+        guard let tab = tabManager.selectedTab else {
+            return
+        }
+        
+        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String,
+            let lastVisitedURL = NSURL(string: lastVisitedWebsite) {
+                if lastVisitedURL != tab.webView?.URL {
+                    finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
+                } else {
+                    urlBar.leaveOverlayMode()
+                }
+        }
+    }
+    
+    // Cliqz: Added to navigate to url (3D quick home actions)
+    func navigateToURL(url: NSURL) {
+        finishEditingAndSubmit(url, visitType: .Link)
+    }
+    
+    // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
     private func fixHeaderConstraint(){
         let currentDevice = UIDevice.currentDevice()
         let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .Phone)
