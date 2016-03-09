@@ -73,4 +73,5 @@ MozBuildID.xcconfig
 *.pyc
 
 # Cliqz Extension files
-Extension/
+Extension/*
+!Extension/.gitkeep
