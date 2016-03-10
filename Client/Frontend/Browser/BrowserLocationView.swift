@@ -41,6 +41,10 @@ struct BrowserLocationViewUX {
         theme.backgroundColor = UIColor.clearColor()
         themes[Theme.NormalMode] = theme
 
+        // TODO: to be removed
+        // Cliqz: Temporary use same mode for both Normal and Private modes
+        themes[Theme.PrivateMode] = theme
+        
         return themes
     }()
 }
