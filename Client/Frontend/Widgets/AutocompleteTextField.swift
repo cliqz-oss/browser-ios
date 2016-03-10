@@ -116,8 +116,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    // Cliqz: removed private modifier of the method to be able to call it from URLBar to fix the problem of not updating TextField text if there was autocompleted text
     /// Removes the autocomplete-highlighted text from the field.
-    private func removeCompletion() {
+    func removeCompletion() {
         if completionActive {
             // Workaround for stuck highlight bug.
             if enteredText.characters.count == 0 {

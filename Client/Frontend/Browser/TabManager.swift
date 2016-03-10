@@ -159,6 +159,8 @@ class TabManager : NSObject {
         assert(NSThread.isMainThread())
 
         if selectedTab === tab {
+            // Cliqz: post notification when swithcing back to the previous tab
+            NSNotificationCenter.defaultCenter().postNotificationName(NotificationSwitchedToPreviousTab, object: nil)
             return
         }
 

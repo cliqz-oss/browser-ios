@@ -14,7 +14,6 @@ protocol SearchHistoryViewControllerDelegate: class {
     
     func didSelectURL(url: NSURL)
     func searchForQuery(query: String)
-    func modalViewDismissed()
 }
 
 class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
@@ -67,7 +66,6 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")
         self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"), accessibilityLabel: "CloseHistoryButton")
-		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"), accessibilityLabel: "OpenSettingsButton")
 
 		
         self.setupConstraints()
@@ -105,24 +103,13 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     
     // Mark: Action handlers
     func dismiss() {
-        TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
-        self.dismissViewControllerAnimated(true) { () -> Void in
-            self.delegate?.modalViewDismissed()
-        }
+        logLayerChangeTelemetrySignal()
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func openSettings() {
-        let settingsTableViewController = AppSettingsTableViewController()
-        settingsTableViewController.profile = profile
-        settingsTableViewController.tabManager = tabManager
-//        settingsTableViewController.settingsDelegate = self
-
-		
-		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
-		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-		presentViewController(controller, animated: true, completion: nil)
-	}
-    
+    func logLayerChangeTelemetrySignal() {
+        TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
+    }
     
     // Mark: Configure Layout
     private func setupConstraints() {
@@ -158,8 +145,11 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     
     func didSelectUrl(url: NSURL) {
-        delegate?.didSelectURL(url)
-        self.dismiss()
+        
+        self.dismissViewControllerAnimated(true) { () -> Void in
+            self.delegate?.didSelectURL(url)
+        }
+        logLayerChangeTelemetrySignal()
     }
     
     func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
@@ -167,10 +157,12 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     }
     
     func searchForQuery(query: String) {
-        TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
-        self.dismissViewControllerAnimated(true, completion: {
+        
+        self.dismissViewControllerAnimated(true) { () -> Void in
             self.delegate?.searchForQuery(query)
-        })
+        }
+        logLayerChangeTelemetrySignal()
+
     }
     
     func getSearchHistoryResults(callback: String?) {

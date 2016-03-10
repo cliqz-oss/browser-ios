@@ -78,7 +78,6 @@ protocol URLBarDelegate: class {
     
     // Cliqz: Added delegate methods for new bar buttons
     func urlBarDidClickSearchHistory()
-    func urlBarDidClickSettings()
 }
 
 class URLBarView: UIView {
@@ -205,16 +204,6 @@ class URLBarView: UIView {
 		historyButton.accessibilityLabel = "HistoryButton"
 		return historyButton }()
 
-	lazy var settingsButton: UIButton = { let settingsButton = UIButton()
-//		settingsButton.backgroundColor = UIColor.redColor()
-		settingsButton.setImage(UIImage(named: "cliqzSettings"), forState: .Normal)
-		settingsButton.frame = CGRectMake(0, 0, 14, 14)
-		settingsButton.addTarget(self, action: "SELdidClickSettings", forControlEvents: UIControlEvents.TouchUpInside)
-		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
-		settingsButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Vertical)
-
-		return settingsButton }()
-
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
     private weak var clonedTabsButton: TabsButton?
 
@@ -227,7 +216,7 @@ class URLBarView: UIView {
         }
 
         set(newURL) {
-			locationView.url = newURL
+            locationView.url = newURL
         }
     }
 
@@ -249,7 +238,7 @@ class URLBarView: UIView {
 
         addSubview(progressBar)
 		// Cliqz: Removed tabsButton and cancelButton accroding to requirements.
-//        addSubview(tabsButton)
+        addSubview(tabsButton)
 //        addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -264,7 +253,6 @@ class URLBarView: UIView {
 		
 		// Cliqz: Added new buttons to the main view.
 		addSubview(historyButton)
-//		addSubview(settingsButton)
 
         helper = BrowserToolbarHelper(toolbar: self)
         setupConstraints()
@@ -283,12 +271,6 @@ class URLBarView: UIView {
 //			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
-//		settingsButton.snp_makeConstraints { make in
-//			make.centerY.equalTo(self.locationContainer)
-//			make.right.equalTo(self.recommendationsButton.snp_left).offset(-10)
-////			make.size.equalTo(UIConstants.ToolbarHeight)
-//		}
-
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
             make.left.right.equalTo(self.locationContainer)
@@ -303,17 +285,17 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-		// Cliqz: Removed tabsButton's and cancelButton's constraints along with corresponding buttons.
+		// Cliqz: Removed cancelButton along with its constraints
 //		cancelButton.snp_makeConstraints { make in
 //			make.centerY.equalTo(self.locationContainer)
 //			make.trailing.equalTo(self)
 //		}
 //		
-//        tabsButton.snp_makeConstraints { make in
-//            make.centerY.equalTo(self.locationContainer)
-//            make.trailing.equalTo(self)
-//            make.size.equalTo(UIConstants.ToolbarHeight)
-//        }
+        tabsButton.snp_makeConstraints { make in
+            make.centerY.equalTo(self.locationContainer)
+            make.trailing.equalTo(self)
+            make.size.equalTo(UIConstants.ToolbarHeight)
+        }
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
 //		curveShape.snp_makeConstraints { make in
@@ -342,18 +324,18 @@ class URLBarView: UIView {
         }
 
         shareButton.snp_makeConstraints { make in
-			// Cliqz: Changed right constraint because bookmark button is removed for now.
-            make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+            // Cliqz: Changed right constraint because bookmark button is removed for now.
+//            make.right.equalTo(self.bookmarkButton.snp_left)
+            make.right.equalTo(self.tabsButton.snp_left)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
         // Cliqz: Commented bookmarkButton constraints because it's removed from view as it covers the share button in the landscape mode
 //        bookmarkButton.snp_makeConstraints { make in
-//			// Cliqz: Changed bookmarkButton constraints because tabsButton is removed.
-//			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+//            make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
 //            make.centerY.equalTo(self)
 //            make.size.equalTo(backButton)
-//		}
+//        }
 	}
 
     override func updateConstraints() {
@@ -376,8 +358,10 @@ class URLBarView: UIView {
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
-					make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self).offset(-14)
+//                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+//                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+                    make.leading.equalTo(self.historyButton.snp_trailing)
+                    make.trailing.equalTo(self.tabsButton.snp_leading)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -448,8 +432,6 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
-		// Cliqz: Removed Updating tabs count
-		/*
         let currentCount = self.tabsButton.titleLabel.text
         // only animate a tab count change if the tab count has actually changed
         if currentCount != count.description {
@@ -458,7 +440,7 @@ class URLBarView: UIView {
                 self.clonedTabsButton?.removeFromSuperview()
                 self.tabsButton.layer.removeAllAnimations()
             }
-
+            
             // make a 'clone' of the tabs button
             let newTabsButton = self.tabsButton.clone() as! TabsButton
             self.clonedTabsButton = newTabsButton
@@ -471,54 +453,54 @@ class URLBarView: UIView {
                 make.trailing.equalTo(self)
                 make.size.equalTo(UIConstants.ToolbarHeight)
             }
-
+            
             newTabsButton.frame = tabsButton.frame
-
+            
             // Instead of changing the anchorPoint of the CALayer, lets alter the rotation matrix math to be
             // a rotation around a non-origin point
             let frame = tabsButton.insideButton.frame
             let halfTitleHeight = CGRectGetHeight(frame) / 2
-
+            
             var newFlipTransform = CATransform3DIdentity
             newFlipTransform = CATransform3DTranslate(newFlipTransform, 0, halfTitleHeight, 0)
             newFlipTransform.m34 = -1.0 / 200.0 // add some perspective
             newFlipTransform = CATransform3DRotate(newFlipTransform, CGFloat(-M_PI_2), 1.0, 0.0, 0.0)
             newTabsButton.insideButton.layer.transform = newFlipTransform
-
+            
             var oldFlipTransform = CATransform3DIdentity
             oldFlipTransform = CATransform3DTranslate(oldFlipTransform, 0, halfTitleHeight, 0)
             oldFlipTransform.m34 = -1.0 / 200.0 // add some perspective
             oldFlipTransform = CATransform3DRotate(oldFlipTransform, CGFloat(M_PI_2), 1.0, 0.0, 0.0)
-
+            
             let animate = {
                 newTabsButton.insideButton.layer.transform = CATransform3DIdentity
                 self.tabsButton.insideButton.layer.transform = oldFlipTransform
                 self.tabsButton.insideButton.layer.opacity = 0
             }
-
+            
             let completion: (Bool) -> Void = { finished in
                 // remove the clone and setup the actual tab button
                 newTabsButton.removeFromSuperview()
-
+                
                 self.tabsButton.insideButton.layer.opacity = 1
                 self.tabsButton.insideButton.layer.transform = CATransform3DIdentity
                 self.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the (top) browser toolbar")
 
-                if finished {
+                // Cliqz: always update tabs button title because finish is always equal false due to unknown reasons
+//                if finished {
                     self.tabsButton.titleLabel.text = count.description
                     self.tabsButton.accessibilityValue = count.description
-                }
+//                }
             }
-
+            
             if animated {
                 UIView.animateWithDuration(1.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: animate, completion: completion)
             } else {
                 completion(true)
+            }
         }
-        }
-*/
     }
-
+    
     func updateProgressBar(progress: Float) {
         if progress == 1.0 {
             self.progressBar.setProgress(progress, animated: !isTransitioning)
@@ -547,6 +529,9 @@ class URLBarView: UIView {
 
     func enterOverlayMode(locationText: String?, pasted: Bool) {
         createLocationTextField()
+        
+        // Cliqz: call removeCompletion on the locationTextField to fix the problem of not updating LocationTextField text to locationText if there was autocompleted text
+        locationTextField?.removeCompletion()
 
         // Show the overlay mode UI, which includes hiding the locationView and replacing it
         // with the editable locationTextField.
@@ -683,10 +668,6 @@ class URLBarView: UIView {
 	// Cliqz: Added event handler methods for new buttons
 	func SELdidClickHistory() {
         delegate?.urlBarDidClickSearchHistory()
-	}
-
-	func SELdidClickSettings() {
-        delegate?.urlBarDidClickSettings()
 	}
 
 }
