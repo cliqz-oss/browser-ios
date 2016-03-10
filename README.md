@@ -6,3 +6,6 @@ CLIQZ develops novel Internet browsers that incorporate search as primary featur
 Building the code
 -----------------
 There should be no differences to the regular [Mozilla process](https://github.com/mozilla/firefox-ios).
+
+
+# Do not merge this PR
