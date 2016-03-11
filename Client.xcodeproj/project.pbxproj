@@ -802,13 +802,6 @@
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
 		};
-		2F0624F51AE5AA1A00FA022C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
-			remoteInfo = "XCGLogger (iOS)";
-		};
 		2F11EE4F1ABCAE910083902D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
@@ -1046,6 +1039,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = EB60ECEB177F8DB3005A041A;
 			remoteInfo = "KIF Tests-OCUnit";
+		};
+		4FC023B91C91955D006EEE45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39A362B21AAF5E2B00F47390 /* XCGLogger.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 55E3EE4419D76F280068C3A7;
+			remoteInfo = "XCGLogger (iOS)";
 		};
 		7B0E83B61BF2196E00D12554 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5146,7 +5146,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2F0624F61AE5AA1A00FA022C /* PBXTargetDependency */,
+				4FC023BA1C91955D006EEE45 /* PBXTargetDependency */,
 				2FDE87561ABA3F5F005317B1 /* PBXTargetDependency */,
 			);
 			name = Shared;
@@ -6895,11 +6895,6 @@
 			target = F84B21BD1A090F8100AAB793 /* Client */;
 			targetProxy = 28ECD9BE1BA1F12B00D829DA /* PBXContainerItemProxy */;
 		};
-		2F0624F61AE5AA1A00FA022C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "XCGLogger (iOS)";
-			targetProxy = 2F0624F51AE5AA1A00FA022C /* PBXContainerItemProxy */;
-		};
 		2F11EE501ABCAE910083902D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 288A2D851AB8B3260023ABC3 /* Shared */;
@@ -7019,6 +7014,11 @@
 			isa = PBXTargetDependency;
 			name = "XCGLogger (iOS)";
 			targetProxy = 39A362DB1AAF5ECE00F47390 /* PBXContainerItemProxy */;
+		};
+		4FC023BA1C91955D006EEE45 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "XCGLogger (iOS)";
+			targetProxy = 4FC023B91C91955D006EEE45 /* PBXContainerItemProxy */;
 		};
 		7B0E83B71BF2196E00D12554 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8466,10 +8466,18 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/,
+					$SDKROOT/usr/include/libxml2,
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
 				INFOPLIST_FILE = CliqzUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -8506,6 +8514,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
@@ -8517,6 +8526,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/,
+					$SDKROOT/usr/include/libxml2,
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
 				INFOPLIST_FILE = CliqzUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -8556,6 +8572,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
@@ -8606,6 +8623,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
@@ -8877,6 +8895,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -8923,6 +8942,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -8975,6 +8995,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -9493,6 +9514,605 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = FennecNightly;
+		};
+		4FC0237B1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E60961861B62B8A700DD640F /* Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APPLICATION_EXTENSION_API_ONLY = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/,
+					$SDKROOT/usr/include/libxml2,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lxml2",
+				);
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_DEBUG";
+				PRODUCT_NAME = CLIQZ;
+				SDKROOT = iphoneos;
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
+		4FC0237C1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
+					"$(PROJECT_DIR)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				INFOPLIST_FILE = Client/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MOZ_PRODUCT_NAME = Fennec;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					Lookback,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
+				PRODUCT_MODULE_NAME = CLIQZ;
+				PRODUCT_NAME = CLIQZ;
+				PROVISIONING_PROFILE = "";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
+		4FC0237D1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ClientTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = FennecAurora;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC0237E1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Extensions/SendTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MOZ_PRODUCT_NAME = Fennec;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Test;
+		};
+		4FC0237F1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MOZ_BUNDLE_DISPLAY_NAME = "Fennec ($(USER))";
+				MOZ_PRODUCT_NAME = Fennec;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Test;
+		};
+		4FC023801C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Extensions/ViewLater/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MOZ_PRODUCT_NAME = Fennec;
+				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
+		4FC023811C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = UITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/UITests/UITests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC023821C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/ThirdParty/Lookback/Safe";
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/,
+					$SDKROOT/usr/include/libxml2,
+					"$SRCROOT/ThirdParty/**",
+				);
+				INFOPLIST_FILE = NativeRefTests/Other/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lxml2",
+					"-framework",
+					Lookback,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.mozilla.ios.Fennec.NativeRefTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/$TARGETNAME/Other/NativeRefTests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC023831C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 5;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 5;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Shared/Shared-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Test;
+		};
+		4FC023841C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 5;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 5;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/sqlcipher,
+				);
+				INFOPLIST_FILE = Storage/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Storage/Storage-Bridging-Header.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Test;
+		};
+		4FC023851C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = StorageTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Storage/Storage-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC023861C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 5;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 5;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Account/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Account/Account-Bridging-Header.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Test;
+		};
+		4FC023871C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AccountTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Account/Account-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC023881C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 5;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 5;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Sync/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Sync/Sync-Bridging-Header.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Test;
+		};
+		4FC023891C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SyncTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/SyncTests/SyncTests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC0238A1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 5;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 5;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ReadingList/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Test;
+		};
+		4FC0238B1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ReadingListTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC0238C1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SharedTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Shared/Shared-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+			};
+			name = Test;
+		};
+		4FC0238D1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = L10nSnapshotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mozilla.L10nSnapshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+			};
+			name = Test;
+		};
+		4FC0238E1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = MarketingUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mozilla.MarketingUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+			};
+			name = Test;
+		};
+		4FC0238F1C9182DF006EEE45 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(BUILD_DIR)/Release-iphonesimulator",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$SRCROOT/,
+					$SDKROOT/usr/include/libxml2,
+					"$(BUILD_DIR)/Release-iphonesimulator/**",
+				);
+				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.CliqzUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/CliqzUITests/CliqzUITests-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CLIQZ.app/CLIQZ";
+				TEST_TARGET_NAME = Client;
+				USES_XCTRUNNER = YES;
+			};
+			name = Test;
 		};
 		7B3632D91C2983F000D12AF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -10183,6 +10803,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -11690,6 +12311,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1E1119DD1C873C2800455C8C /* Debug */,
+				4FC0238F1C9182DF006EEE45 /* Test */,
 				1E1119DE1C873C2800455C8C /* FennecAurora */,
 				1E1119DF1C873C2800455C8C /* Firefox */,
 				1E1119E01C873C2800455C8C /* FennecNightly */,
@@ -11701,6 +12323,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				282731771ABC9BE800AA1954 /* Debug */,
+				4FC023881C9182DF006EEE45 /* Test */,
 				282731781ABC9BE800AA1954 /* FennecAurora */,
 				E448FCA81AEE7A6000869B6C /* Firefox */,
 				282731791ABC9BE800AA1954 /* FennecNightly */,
@@ -11712,6 +12335,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2827317A1ABC9BE800AA1954 /* Debug */,
+				4FC023891C9182DF006EEE45 /* Test */,
 				2827317B1ABC9BE800AA1954 /* FennecAurora */,
 				E448FCA91AEE7A6000869B6C /* Firefox */,
 				2827317C1ABC9BE800AA1954 /* FennecNightly */,
@@ -11723,6 +12347,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				288A2DA01AB8B3260023ABC3 /* Debug */,
+				4FC023831C9182DF006EEE45 /* Test */,
 				288A2DA11AB8B3260023ABC3 /* FennecAurora */,
 				E448FCA31AEE7A6000869B6C /* Firefox */,
 				288A2DA21AB8B3260023ABC3 /* FennecNightly */,
@@ -11734,6 +12359,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2FA436151ABB83B4008031D1 /* Debug */,
+				4FC023861C9182DF006EEE45 /* Test */,
 				2FA436161ABB83B4008031D1 /* FennecAurora */,
 				E448FCA61AEE7A6000869B6C /* Firefox */,
 				2FA436171ABB83B4008031D1 /* FennecNightly */,
@@ -11745,6 +12371,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2FA436191ABB83B4008031D1 /* Debug */,
+				4FC023871C9182DF006EEE45 /* Test */,
 				2FA4361A1ABB83B4008031D1 /* FennecAurora */,
 				E448FCA71AEE7A6000869B6C /* Firefox */,
 				2FA4361B1ABB83B4008031D1 /* FennecNightly */,
@@ -11756,6 +12383,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2FCAE2341ABB51F900877008 /* Debug */,
+				4FC023841C9182DF006EEE45 /* Test */,
 				2FCAE2351ABB51F900877008 /* FennecAurora */,
 				E448FCA41AEE7A6000869B6C /* Firefox */,
 				2FCAE2361ABB51F900877008 /* FennecNightly */,
@@ -11767,6 +12395,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2FCAE2381ABB51F900877008 /* Debug */,
+				4FC023851C9182DF006EEE45 /* Test */,
 				2FCAE2391ABB51F900877008 /* FennecAurora */,
 				E448FCA51AEE7A6000869B6C /* Firefox */,
 				2FCAE23A1ABB51F900877008 /* FennecNightly */,
@@ -11778,6 +12407,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7B3632D91C2983F000D12AF9 /* Debug */,
+				4FC0238D1C9182DF006EEE45 /* Test */,
 				7B3632DA1C2983F000D12AF9 /* FennecAurora */,
 				7B3632DB1C2983F000D12AF9 /* Firefox */,
 				7B3632DC1C2983F000D12AF9 /* FennecNightly */,
@@ -11789,6 +12419,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7B95CD1F1C3AB2EE00638E31 /* Debug */,
+				4FC0238E1C9182DF006EEE45 /* Test */,
 				7B95CD201C3AB2EE00638E31 /* FennecAurora */,
 				7B95CD211C3AB2EE00638E31 /* Firefox */,
 				7B95CD221C3AB2EE00638E31 /* FennecNightly */,
@@ -11800,6 +12431,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D39FA1681A83E0EC00EE869C /* Debug */,
+				4FC023811C9182DF006EEE45 /* Test */,
 				D39FA1691A83E0EC00EE869C /* Release */,
 				D349D7381A85977700229905 /* FennecAurora */,
 				E448FCA21AEE7A6000869B6C /* Firefox */,
@@ -11812,6 +12444,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4BA8A361B4B0A1700BC2E95 /* Debug */,
+				4FC023801C9182DF006EEE45 /* Test */,
 				E4BA8A371B4B0A1700BC2E95 /* FennecAurora */,
 				E4BA8A381B4B0A1700BC2E95 /* Firefox */,
 				E4BA8A391B4B0A1700BC2E95 /* FennecNightly */,
@@ -11823,6 +12456,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4D567311ADECE2900F1EFE7 /* Debug */,
+				4FC0238A1C9182DF006EEE45 /* Test */,
 				E4D567321ADECE2900F1EFE7 /* FennecAurora */,
 				E448FCAA1AEE7A6000869B6C /* Firefox */,
 				E4D567331ADECE2900F1EFE7 /* FennecNightly */,
@@ -11834,6 +12468,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4D567341ADECE2900F1EFE7 /* Debug */,
+				4FC0238B1C9182DF006EEE45 /* Test */,
 				E4D567351ADECE2900F1EFE7 /* FennecAurora */,
 				E448FCAB1AEE7A6000869B6C /* Firefox */,
 				E4D567361ADECE2900F1EFE7 /* FennecNightly */,
@@ -11845,6 +12480,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E65C5BCC1BEA4F6500D28BEF /* Debug */,
+				4FC023821C9182DF006EEE45 /* Test */,
 				E65C5BCD1BEA4F6500D28BEF /* FennecAurora */,
 				E65C5BCE1BEA4F6500D28BEF /* Firefox */,
 				E65C5BCF1BEA4F6500D28BEF /* FennecNightly */,
@@ -11856,6 +12492,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E6F965151B2F1CF20034B023 /* Debug */,
+				4FC0238C1C9182DF006EEE45 /* Test */,
 				E6F965161B2F1CF20034B023 /* FennecAurora */,
 				E6F965171B2F1CF20034B023 /* Firefox */,
 				E6F965181B2F1CF20034B023 /* FennecNightly */,
@@ -11867,6 +12504,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B21DB1A090F8100AAB793 /* Debug */,
+				4FC0237B1C9182DF006EEE45 /* Test */,
 				F84B21DC1A090F8100AAB793 /* FennecAurora */,
 				E448FC9D1AEE7A6000869B6C /* Firefox */,
 				E421F28B1A8D2BF300971276 /* FennecNightly */,
@@ -11878,6 +12516,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B21DE1A090F8100AAB793 /* Debug */,
+				4FC0237C1C9182DF006EEE45 /* Test */,
 				F84B21DF1A090F8100AAB793 /* FennecAurora */,
 				E448FC9E1AEE7A6000869B6C /* Firefox */,
 				E421F28C1A8D2BF300971276 /* FennecNightly */,
@@ -11889,6 +12528,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B21E11A090F8100AAB793 /* Debug */,
+				4FC0237D1C9182DF006EEE45 /* Test */,
 				F84B21E21A090F8100AAB793 /* FennecAurora */,
 				E448FC9F1AEE7A6000869B6C /* Firefox */,
 				E421F28D1A8D2BF300971276 /* FennecNightly */,
@@ -11900,6 +12540,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B22561A0920C600AAB793 /* Debug */,
+				4FC0237F1C9182DF006EEE45 /* Test */,
 				F84B22571A0920C600AAB793 /* FennecAurora */,
 				E448FCA01AEE7A6000869B6C /* Firefox */,
 				E421F28E1A8D2BF300971276 /* FennecNightly */,
@@ -11911,6 +12552,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F84B22681A09210A00AAB793 /* Debug */,
+				4FC0237E1C9182DF006EEE45 /* Test */,
 				F84B22691A09210A00AAB793 /* FennecAurora */,
 				E448FCA11AEE7A6000869B6C /* Firefox */,
 				E421F28F1A8D2BF300971276 /* FennecNightly */,
