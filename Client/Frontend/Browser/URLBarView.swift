@@ -38,6 +38,9 @@ struct URLBarViewUX {
         theme.tintColor = UIConstants.PrivateModePurple
         theme.textColor = UIColor.whiteColor()
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
+        // Cliqz: Set URLBar backgroundColor because of requirements
+        theme.backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
+        
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
@@ -46,12 +49,17 @@ struct URLBarViewUX {
         theme.activeBorderColor = UIColor.clearColor()
         theme.tintColor = ProgressTintColor
         theme.textColor = UIColor.blackColor()
-        theme.buttonTintColor = UIColor.darkGrayColor()
+        // Cliqz: Changed button tint color to white in the upper toolbar (URLBar)
+        theme.buttonTintColor = UIColor.whiteColor()
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
         
         themes[Theme.NormalMode] = theme
 
+        // TODO: to be removed
+        // Cliqz: Temporary use same mode for both Normal and Private modes
+        themes[Theme.PrivateMode] = theme
+        
         return themes
     }()
 
@@ -919,6 +927,9 @@ class ToolbarTextField: AutocompleteTextField {
         theme.textColor = UIColor.whiteColor()
         theme.buttonTintColor = UIColor.whiteColor()
         theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
+        // Cliqz: Set textField's tinColor to make cursor visible on blue background
+        theme.tintColor = UIColor.whiteColor()
+
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
@@ -931,6 +942,10 @@ class ToolbarTextField: AutocompleteTextField {
 
         themes[Theme.NormalMode] = theme
 
+        // TODO: to be removed
+        // Cliqz: Temporary use same mode for both Normal and Private modes
+        themes[Theme.PrivateMode] = theme
+        
         return themes
     }()
 
