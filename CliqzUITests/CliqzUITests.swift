@@ -32,7 +32,4 @@ class CliqzUITests: KIFTestCase {
 		tester.enterTextIntoCurrentFirstResponder("Hello")
 	}
 	
-	func testFailure() {
-		XCTAssertFalse(true, "Thank you Krzysztof!!! You are AWESOMEEEEEE!!!!")
-	}
 }
