@@ -390,6 +390,9 @@ class TabTrayController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELDynamicFontChanged:", name: NotificationDynamicFontChanged, object: nil)
+        
+        // Cliqz: log open menu telemetry signal
+        tabManager.logTabTelemetrySignal("open_menu", isPrivate: privateMode, tabIndex: nil)
     }
 
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
@@ -514,6 +517,9 @@ class TabTrayController: UIViewController {
             }
             self.collectionView.alpha = 1
         }
+        
+        // Cliqz: log switch mode telemetry signal
+        tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
     }
 
     @available(iOS 9, *)
