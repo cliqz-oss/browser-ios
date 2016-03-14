@@ -172,6 +172,9 @@ class TabManager : NSObject {
             _selectedIndex = -1
         }
 
+        // Cliqz: log telemetry signal for new tab
+        logTabTelemetrySignal("open_tab", isPrivate: tab?.isPrivate, tabIndex: _selectedIndex)
+        
 //        preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
@@ -242,6 +245,10 @@ class TabManager : NSObject {
         }
         
         let tab = Browser(configuration: configuration, isPrivate: isPrivate)
+
+        // Cliqz: log telemetry signal for new tab
+        logTabTelemetrySignal("new_tab", isPrivate: isPrivate, tabIndex: nil)
+        
         configureTab(tab, request: request, flushToDisk: flushToDisk, zombie: zombie)
         return tab
     }
@@ -250,6 +257,10 @@ class TabManager : NSObject {
         assert(NSThread.isMainThread())
 
         let tab = Browser(configuration: configuration ?? self.configuration)
+        
+        // Cliqz: log telemetry signal for new tab
+        logTabTelemetrySignal("new_tab", isPrivate: false, tabIndex: nil)
+        
         configureTab(tab, request: request, flushToDisk: flushToDisk, zombie: zombie)
         return tab
     }
@@ -280,6 +291,9 @@ class TabManager : NSObject {
     func removeTab(tab: Browser) {
         self.removeTab(tab, flushToDisk: true, notify: true)
         hideNetworkActivitySpinner()
+        
+        // Cliqz: log telemetry signal for open tab
+        logTabTelemetrySignal("close_tab", isPrivate: tab.isPrivate, tabIndex: nil)
     }
 
     /// - Parameter notify: if set to true, will call the delegate after the tab 
@@ -746,5 +760,20 @@ class TabManagerNavDelegate : NSObject, WKNavigationDelegate {
             }
 
             decisionHandler(res)
+    }
+}
+
+// Cliqz: Added for logging tab telemetry signals
+extension TabManager {
+    
+    func logTabTelemetrySignal(action: String, isPrivate: Bool?, tabIndex: Int?) {
+        if isPrivate == true {
+            let tabSignal = TelemetryLogEventType.TabSignal(action, "private", tabIndex, privateTabs.count)
+            TelemetryLogger.sharedInstance.logEvent(tabSignal)
+        } else {
+            let tabSignal = TelemetryLogEventType.TabSignal(action, "normal", tabIndex, normalTabs.count)
+            TelemetryLogger.sharedInstance.logEvent(tabSignal)
+        }
+        
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Crashlytics
 
 class EventsLogger: NSObject {
     
@@ -76,8 +77,18 @@ class EventsLogger: NSObject {
         }
     }
     internal func persistEvents() {
-        let eventsData = NSKeyedArchiver.archivedDataWithRootObject(events.getContents())
-        LocalDataStore.setObject(eventsData, forKey: self.telemetryeventsKey)
+        do {
+            let eventsContents = events.getContents()
+            if NSJSONSerialization.isValidJSONObject(eventsContents) {
+                let eventsData = try NSJSONSerialization.dataWithJSONObject(eventsContents, options: [])
+                LocalDataStore.setObject(eventsData, forKey: self.telemetryeventsKey)
+            } else {
+                Answers.logCustomEventWithName("SerializeInvalidTelemetrySignal", customAttributes: nil)
+            }
+        } catch let error as NSError {
+            Answers.logCustomEventWithName("SerializeTelemetryError", customAttributes: ["error": error.localizedDescription])
+        }
+        
     }
     
     internal func clearPersistedEvents() {
@@ -85,9 +96,13 @@ class EventsLogger: NSObject {
     }
     
     internal func loadPersistedEvents() {
-        if let eventsData = LocalDataStore.objectForKey(self.telemetryeventsKey) as? NSData {
-            let events = NSKeyedUnarchiver.unarchiveObjectWithData(eventsData) as! [AnyObject]
-            self.events.appendContentsOf(events)
+        do {
+            if let eventsData = LocalDataStore.objectForKey(self.telemetryeventsKey) as? NSData {
+                let events = try NSJSONSerialization.JSONObjectWithData(eventsData, options: []) as! [AnyObject]
+                self.events.appendContentsOf(events)
+            }
+        } catch let error as NSError {
+            Answers.logCustomEventWithName("DeserializeTelemetryError", customAttributes: ["error": error.localizedDescription])
         }
     }
     
