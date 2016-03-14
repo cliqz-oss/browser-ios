@@ -1008,7 +1008,8 @@ class BrowserViewController: UIViewController {
     }
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        let webView = object as! WKWebView
+		// Cliqz: Replaced forced unwrapping of optional (let webView = object as! WKWebView) with a guard check to avoid crashes
+		guard let webView = object as? WKWebView else { return }
         if webView !== tabManager.selectedTab?.webView {
             return
         }
