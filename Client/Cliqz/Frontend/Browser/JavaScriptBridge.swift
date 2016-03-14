@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import Crashlytics
 
 @objc protocol JavaScriptBridgeDelegate: class {
     
@@ -111,7 +112,17 @@ class JavaScriptBridge {
             
         case "pushTelemetry":
             if let telemetrySignal = data as? [String: AnyObject] {
-                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+                if NSJSONSerialization.isValidJSONObject(telemetrySignal) {
+                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+                } else {
+                    var customAttributes = [String: AnyObject]()
+                    
+                    if let action = telemetrySignal["action"],
+                        let type = telemetrySignal["type"] {
+                            customAttributes = ["acion": action,"type": type]
+                    }
+                    Answers.logCustomEventWithName("InvalidJavaScriptTelemetrySignal", customAttributes: customAttributes)
+                }
             }
             
         case "copyResult":
