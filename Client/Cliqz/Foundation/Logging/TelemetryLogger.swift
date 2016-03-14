@@ -23,6 +23,7 @@ public enum TelemetryLogEventType {
     case JavaScriptSignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
+    case TabSignal          (String, String, Int?, Int)
     
 }
 
@@ -112,6 +113,9 @@ class TelemetryLogger : EventsLogger {
                 
             case .HomeScreenShortcut(let targetType, let targetIndex):
                 event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
+            
+            case .TabSignal(let action, let mode, let tabIndex, let tabCount):
+                event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
                 
             }
             
@@ -345,5 +349,18 @@ class TelemetryLogger : EventsLogger {
         event["target_index"] = targetIndex
         return event
     }
+    
+    private func createTabSignalEvent(action: String, mode: String, tabIndex: Int?, tabCount: Int) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        event["type"] = "tab"
+        event["action"] = action
+        event["mode"] = mode
+        if let index = tabIndex {
+            event["tab_index"] = index
+        }
+        event["tab_count"] = tabCount
+        return event
+    }
+    
     
 }
