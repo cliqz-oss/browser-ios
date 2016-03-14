@@ -20,7 +20,7 @@ public enum TelemetryLogEventType {
     case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
-    case JavaScriptsignal   ([String: AnyObject])
+    case JavaScriptSignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     
@@ -104,7 +104,7 @@ class TelemetryLogger : EventsLogger {
             case .ResultEnter(let queryLength, let autocompletedLength, let autocompletedUrl, let reactionTime, let urlbarTime):
                 event = self.createResultEnterEvent(queryLength, autocompletedLength: autocompletedLength, autocompletedUrl: autocompletedUrl, reactionTime: reactionTime, urlbarTime: urlbarTime)
                 
-            case .JavaScriptsignal(let javaScriptSignal):
+            case .JavaScriptSignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
 			
             case .LocationServicesStatus(let action, let status):

@@ -113,7 +113,7 @@ class JavaScriptBridge {
         case "pushTelemetry":
             if let telemetrySignal = data as? [String: AnyObject] {
                 if NSJSONSerialization.isValidJSONObject(telemetrySignal) {
-                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptSignal(telemetrySignal))
                 } else {
                     var customAttributes = [String: AnyObject]()
                     
