@@ -24,8 +24,6 @@ public enum TelemetryLogEventType {
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     
-    //TODO: to be removed as it was added for testing
-    case AppStateChange      (String)
 }
 
 
@@ -115,9 +113,6 @@ class TelemetryLogger : EventsLogger {
             case .HomeScreenShortcut(let targetType, let targetIndex):
                 event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
                 
-            //TODO: to be removed as it was added for testing
-            case .AppStateChange(let transition):
-                event = self.createAppStateChangeEvent(transition)
             }
             
             // Always store the event
@@ -348,16 +343,6 @@ class TelemetryLogger : EventsLogger {
         event["action"] = "click"
         event["target_type"] = targetType
         event["target_index"] = targetIndex
-        return event
-    }
-
-    //TODO: to be removed as it was added for testing
-    private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "app_state_transition"
-        event["transition"] = transition
-
         return event
     }
     
