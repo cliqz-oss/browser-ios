@@ -319,8 +319,12 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 
             // creating the ActivityController and presenting it
             let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-            self.presentViewController(activityViewController, animated: true, completion: nil)
-
+			if UI_USER_INTERFACE_IDIOM() == .Phone {
+				self.presentViewController(activityViewController, animated: true, completion: nil)
+			} else {
+				let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
+				popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
+			}
         }
     }
     
