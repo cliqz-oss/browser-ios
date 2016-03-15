@@ -10,7 +10,7 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
-    case ApplicationUsage   (String, String, String, Float, Double, String?, Double?, Double?)
+    case ApplicationUsage   (String, String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
@@ -166,7 +166,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
 
         event["type"] = "app_state_change"

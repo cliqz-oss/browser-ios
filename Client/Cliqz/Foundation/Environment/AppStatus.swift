@@ -40,8 +40,8 @@ class AppStatus {
         return getAppVersion(getVersionDescriptor())
     }
 
-    func batteryLevel() -> Float {
-        return UIDevice.currentDevice().batteryLevel
+    func batteryLevel() -> Int {
+        return Int(UIDevice.currentDevice().batteryLevel * 100)
     }
 
     //MARK: - Singltone
