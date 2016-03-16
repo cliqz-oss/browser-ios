@@ -1082,6 +1082,8 @@ class BrowserViewController: UIViewController {
             return
         }
 
+		// Cliqz: commented below part of code to prevent the crash, as we don't support bookmarks this part is extra.
+		/*
         profile.bookmarks.isBookmarked(url).uponQueue(dispatch_get_main_queue()) { result in
             guard let bookmarked = result.successValue else {
                 log.error("Error getting bookmark status: \(result.failureValue).")
@@ -1089,7 +1091,7 @@ class BrowserViewController: UIViewController {
             }
 
             self.navigationToolbar.updateBookmarkStatus(bookmarked)
-        }
+        }*/
     }
     // Mark: Opening New Tabs
 
