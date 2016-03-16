@@ -68,7 +68,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
-		self.webView?.navigationDelegate = self;
+		self.webView?.navigationDelegate = self
+        self.webView?.scrollView.scrollEnabled = false
         self.view.addSubview(self.webView!)
         
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
