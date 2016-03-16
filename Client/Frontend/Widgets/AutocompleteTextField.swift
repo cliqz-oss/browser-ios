@@ -79,7 +79,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 		let clearButton = UIButton()
 		let clearImg = UIImage(named: "cliqzClear")
 		clearButton.setImage(clearImg, forState: .Normal)
-		clearButton.frame = CGRectMake(0, 0, 25, 25)
+		clearButton.frame = CGRectMake(0, 0, 30, 30)
 		clearButton.addTarget(self, action: "SELtextDidClear:", forControlEvents: UIControlEvents.TouchUpInside)
 		self.rightViewMode = .Always
 		self.rightView = clearButton
