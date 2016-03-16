@@ -20,16 +20,12 @@ struct IntroViewControllerUX {
     static let StartBrowsingButtonTitle = NSLocalizedString("Start Browsing", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     static let StartBrowsingButtonColor = UIColor(rgb: 0x363B40)
     static let StartBrowsingButtonHeight = 56
-    static let StartBrowsingButtonFont = UIFont.systemFontOfSize(18)
 
     static let SignInButtonTitle = NSLocalizedString("Sign in to Firefox", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     static let SignInButtonColor = UIColor(red: 0.259, green: 0.49, blue: 0.831, alpha: 1.0)
     static let SignInButtonHeight = 46
-    static let SignInButtonFont = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
     static let SignInButtonCornerRadius = CGFloat(4)
 
-    static let CardTextFont = UIFont.systemFontOfSize(16)
-    static let CardTitleFont = UIFont.systemFontOfSize(18, weight: UIFontWeightBold)
     static let CardTextLineHeight = CGFloat(6)
 
     static let CardTitleOrganize = NSLocalizedString("Organize", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
@@ -79,6 +75,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var slides = [UIImage]()
     var cards = [UIImageView]()
     var introViews = [UIView]()
+    var titleLabels = [UILabel]()
+    var textLabels = [UILabel]()
 
     var startBrowsingButton: UIButton!
     var introView: UIView?
@@ -122,12 +120,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             slides.append(UIImage(named: slideName)!)
         }
 
-        // Cliqz: remove start browsing button
+        // Cliqz: Commented start browsing button
 //        startBrowsingButton = UIButton()
 //        startBrowsingButton.backgroundColor = IntroViewControllerUX.StartBrowsingButtonColor
 //        startBrowsingButton.setTitle(IntroViewControllerUX.StartBrowsingButtonTitle, forState: UIControlState.Normal)
 //        startBrowsingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        startBrowsingButton.titleLabel?.font = IntroViewControllerUX.StartBrowsingButtonFont
 //        startBrowsingButton.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
 //
 //        view.addSubview(startBrowsingButton)
@@ -198,13 +195,10 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
 
         // Cliqz: removed Sync card
-        // Sync card, with sign in to sync button.
-//
 //        signInButton = UIButton()
 //        signInButton.backgroundColor = IntroViewControllerUX.SignInButtonColor
 //        signInButton.setTitle(IntroViewControllerUX.SignInButtonTitle, forState: .Normal)
 //        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-//        signInButton.titleLabel?.font = IntroViewControllerUX.SignInButtonFont
 //        signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
 //        signInButton.clipsToBounds = true
 //        signInButton.addTarget(self, action: "SELlogin", forControlEvents: UIControlEvents.TouchUpInside)
@@ -237,7 +231,24 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         // Activate the first card
         setActiveIntroView(introViews[0], forPage: 0)
-	}
+
+        setupDynamicFonts()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELDynamicFontChanged:", name: NotificationDynamicFontChanged, object: nil)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
+    }
+
+    func SELDynamicFontChanged(notification: NSNotification) {
+        guard notification.name == NotificationDynamicFontChanged else { return }
+        setupDynamicFonts()
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -421,7 +432,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
         label.numberOfLines = 0
         label.attributedText = attributedStringForLabel(text)
-        label.font = IntroViewControllerUX.CardTextFont
+        textLabels.append(label)
 
         addViewsToIntroView(introView, view: label, title: title)
     }
@@ -440,7 +451,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             // Cliqz: modified the styling for the title label
             titleLabel.attributedText = attributedStringForTitle(title)
 //            titleLabel.text = title
-//            titleLabel.font = IntroViewControllerUX.CardTitleFont
+//            titleLabels.append(titleLabel)
             introView.addSubview(titleLabel)
             titleLabel.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo(introView)
@@ -507,6 +518,21 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
         
     }
+    private func setupDynamicFonts() {
+        // Cliqz: Commented start browsing button font setting
+//        startBrowsingButton.titleLabel?.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroBigFontSize)
+        // Cliqz: Commented sing in button font setting
+//        signInButton.titleLabel?.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroStandardFontSize, weight: UIFontWeightMedium)
+        
+        for titleLabel in titleLabels {
+            titleLabel.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroBigFontSize, weight: UIFontWeightBold)
+        }
+        
+        for label in textLabels {
+            label.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroStandardFontSize)
+        }
+    }
+    
 }
 
 private class IntroOverlayScrollView: UIScrollView {

@@ -1,5 +1,5 @@
 /* Message shown in the dialog prompting users if they want to clear everything */
-"Are you sure you want to clear all of your data? This will also close all open tabs." = "データをすべて消去してもよろしいですか？消去すると、開いているタブはすべて閉じられます。";
+"Are you sure you want to clear all of your data? This will also close all open tabs." = "データをすべて消去してもよろしいですか？ 消去すると、開いているタブはすべて閉じられます。";
 
 /* Settings item for clearing browsing history */
 "Browsing History" = "閲覧履歴";
@@ -11,14 +11,14 @@
 "Cancel" = "キャンセル";
 
 /* Used as a button label in the dialog to Clear private data dialog */
-"Clear" = "消去する";
+"Clear" = "消去";
 
 /* Title of the Clear private data dialog. */
 "Clear Everything" = "全データの消去";
 
 /* Button in settings that clears private data for the selected items.
    Navigation title in settings. */
-"Clear Private Data" = "プライベートデータを消去する";
+"Clear Private Data" = "プライベートデータを消去";
 
 /* Settings item for clearing cookies */
 "Cookies" = "Cookie";

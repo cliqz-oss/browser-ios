@@ -12,5 +12,11 @@ public let NotificationPrivateDataClearedHistory = "PrivateDataClearedHistoryNot
 // Fired when the user finishes navigating to a page and the location has changed
 public let NotificationOnLocationChange = "OnLocationChange"
 
+// Fired when the login synchronizer has finished applying remote changes
+public let NotificationDataRemoteLoginChangesWereApplied = "NotificationDataRemoteLoginChangesWereApplied"
+
 // Cliqz: Fired when trying to clear local history
 public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"
+
+// Cliqz: Fired when switching back again to the previous selected tab
+public let NotificationSwitchedToPreviousTab = "SwitchedToPreviousTabNotification"

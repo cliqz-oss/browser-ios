@@ -24,7 +24,7 @@
 "Cookies" = "Cookies";
 
 /* Settings item for clearing website data */
-"Offline Website Data" = "Données de site web hors connexion";
+"Offline Website Data" = "Données hors connexion";
 
 /* Settings item for clearing passwords and login data */
 "Saved Logins" = "Identifiants enregistrés";

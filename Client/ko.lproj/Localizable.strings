@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "주소와 검색";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "항상 보내기";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "통화";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "취소";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "%@의 비밀번호를 업데이트하시겠습니까?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "보내지 않음";
 
 /* Done button label for search settings table
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "로그인";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "로그인";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "이전에 Firefox가 강제 종료되었습니다. 탭을 복구하시겠습니까?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "네비게이션 툴바";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "앞으로 보내지 않음";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "새탭: %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "확인";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "이런! Firefox가 종료됐습니다.";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "페이지 삭제";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "데스크톱 사이트 보기";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "모바일 사이트 보기";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "고딕체";
-
-/* Button to save the user's password */
-"Save" = "저장";
 
 /* Context menu item for saving an image */
 "Save Image" = "사진 저장";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "의견 보내기";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "보고서 전송";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "Mozilla가 문제를 고칠 수 있도록 보고서를 전송하시겠습니까?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "공유";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "링크 공유";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "검색 추천 보기";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "아, 이럴수가.";
+
+/* Button to save the user's password */
+"Yes" = "예";
 
 /* History tableview section header */
 "Yesterday" = "어제";

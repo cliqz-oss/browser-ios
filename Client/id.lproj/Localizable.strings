@@ -28,6 +28,9 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Alamat dan Pencarian";
 
+/* Used as a button label for crash dialog prompt */
+"Always Send" = "Selalu Kirimkan";
+
 /* Authentication prompt title */
 "Authentication required" = "Otentikasi dibutuhkan";
 
@@ -49,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Panggil";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Batal";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -108,6 +118,9 @@
    Title for default search engine settings section. */
 "Default Search Engine" = "Mesin Pencari Baku";
 
+/* Pending feature; currently unused string! Checkbox label shown after multiple alerts are shown */
+"Disable additional page dialogs" = "Tampilkan dialog laman lainnya";
+
 /* Name for display settings button in reader mode. Display in the meaning of presentation, not monitor. */
 "Display Settings" = "Setelan Tampilan";
 
@@ -123,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "Ingin memperbarui sandi di %@?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Jangan Kirim";
 
 /* Done button label for search settings table
@@ -138,6 +151,9 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Masukkan sandi untuk tersambung.";
 
+/* Tile title for App Help */
+"Firefox Help and Support" = "Bantuan dan Dukungan Firefox";
+
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox akan berhenti menyinkronkan dengan akun Anda, tetapi tidak akan menghapus data penjelajahan pada perangkat ini.";
 
@@ -150,6 +166,15 @@
 /* General settings section title */
 "General" = "Umum";
 
+/* A re-worded offer about Sync that emphasizes one-way data transfer, not syncing. */
+"Get your open tabs, bookmarks, and passwords from your other devices." = "Dapatkan tab terbuka, markah, dan sandi dari perangkat lainnya.";
+
+/* Pending feature; currently unused string! Button to browse to URL on the clipboard when browser is opened */
+"Go" = "Buka";
+
+/* Pending feature; currently unused string! Prompt message shown when browser is opened with URL on the clipboard */
+"Go to copied URL?" = "Buka ke URL yang disalin?";
+
 /* Show the SUMO support page from the Support section in the settings. see http://mzl.la/1dmM8tZ */
 "Help" = "Bantuan";
 
@@ -158,6 +183,9 @@
 
 /* Accessibility label for button increasing font size in display settings of reader mode */
 "Increase text size" = "Besarkan ukuran teks";
+
+/* Accessibility label for the introduction tour carousel */
+"Intro Tour Carousel" = "Carousel Tur";
 
 /* History tableview section header */
 "Last month" = "Bulan sebelumnya";
@@ -191,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "Masuk";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Info Masuk";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Tampaknya tadi Firefox mogok. Ingin memulihkan tab Anda?";
 
@@ -210,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Bilah Alat Navigasi";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Jangan Pernah Kirim";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Tab baru: %1$@: %2$@";
@@ -240,6 +268,9 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "Oke";
 
+/* Title for prompt displayed to user after the app crashes */
+"Oops! Firefox crashed" = "Waduh! Firefox mogok";
+
 /* Context menu item for opening a link in a new tab */
 "Open In New Tab" = "Buka di Tab Baru";
 
@@ -248,6 +279,9 @@
 
 /* See http://mzl.la/1LXbDOL */
 "Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Buka artikel di Tampilan Baca dengan mengetuk ikon buku saat tampil di bilah judul.";
+
+/* String indicating that the file can be opened in another application on the device */
+"Open in…" = "Buka di…";
 
 /* Opening an external URL */
 "Opening %@" = "Membuka %@";
@@ -291,14 +325,25 @@
 /* Name for button removing current article from reading list in reader mode */
 "Remove from Reading List" = "Hapus dari Daftar Bacaan";
 
+/* Button shown in editing mode to remove this site from the top sites panel. */
+"Remove page" = "Hapus laman";
+
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
+"Request Desktop Site" = "Minta Situs Desktop";
+
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
+"Request Mobile Site" = "Minta Situs Seluler";
+
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Sans-serif";
 
-/* Button to save the user's password */
-"Save" = "Simpan";
-
 /* Context menu item for saving an image */
 "Save Image" = "Simpan Gambar";
+
+/* Setting to enable the built-in password manager */
+"Save Logins" = "Simpan Info Masuk";
 
 /* See http://mzl.la/1LXbDOL */
 "Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Simpan laman ke Daftar Baca dengan mengetuk ikon buku di kontrol Tampilan Baca.";
@@ -322,6 +367,12 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Kirim Masukan";
 
+/* Used as a button label for crash dialog prompt */
+"Send Report" = "Kirim Laporan";
+
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
+"Send a crash report so Mozilla can fix the problem?" = "Kirimkan laporan mogok agar Mozilla bisa memperbaikinya?";
+
 /* Sepia theme setting in Reading View settings */
 "Sepia" = "Sepia";
 
@@ -335,6 +386,12 @@
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Bagikan";
 
+/* Context menu item for sharing a link URL */
+"Share Link" = "Bagikan Tautan";
+
+/* Label for show search suggestions setting. */
+"Show Search Suggestions" = "Tampilkan Saran Pencarian";
+
 /* Accessibility label for the tabs button in the (top) browser toolbar
    Accessibility Label for the tabs button in the browser toolbar */
 "Show Tabs" = "Tampilkan Tab";
@@ -344,6 +401,9 @@
 
 /* Label for show search suggestions setting. */
 "Show search suggestions" = "Tampilkan saran pencarian";
+
+/* Text message / button in the settings table view */
+"Sign In" = "Masuk";
 
 /* Text message / button in the settings table view */
 "Sign in" = "Masuk";
@@ -363,6 +423,9 @@
 /* See http://mzl.la/1Qtkf0j */
 "Sync your tabs, bookmarks, passwords and more." = "Sinkronkan tab, markah, sandi, dan yang lain.";
 
+/* See http://mzl.la/1Qtkf0j */
+"Sync your tabs, passwords and more." = "Sinkronkan tab, sandi, dan yang lain.";
+
 /* Panel accessibility label */
 "Synced tabs" = "Tab disinkronkan";
 
@@ -377,6 +440,9 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Baki Tab";
+
+/* Tile title for Mozilla */
+"The Mozilla Project" = "Proyek Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Laman ini tidak dapat ditampilkan di Tampilan Baca.";
@@ -435,6 +501,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Memalukan.";
 
+/* Button to save the user's password */
+"Yes" = "Ya";
+
 /* History tableview section header */
 "Yesterday" = "Kemarin";
 
@@ -443,6 +512,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Anda tidak memiliki tab terbuka di Firefox pada perangkat Anda lainnya.";
+
+/* Your Rights settings section title */
+"Your Rights" = "Hak Anda";
 
 /* Accessibility label for Desktop Computer (PC) image in remote tabs list */
 "computer" = "komputer";

@@ -45,6 +45,13 @@ extension KIFUITestActor {
         }
     }
 
+    func viewExistsWithLabelPrefixedBy(prefix: String) -> Bool {
+        let element = UIApplication.sharedApplication().accessibilityElementMatchingBlock { element in
+            return element.accessibilityLabel?.hasPrefix(prefix) ?? false
+        }
+        return element != nil
+    }
+
     /// Waits for and returns a view with the given accessibility value.
     func waitForViewWithAccessibilityValue(value: String) -> UIView {
         var element: UIAccessibilityElement!
@@ -103,8 +110,13 @@ extension KIFUITestActor {
      * elements with the given textContent or title.
      */
     func waitForWebViewElementWithAccessibilityLabel(text: String) {
-        let success = hasWebViewElementWithAccessibilityLabel(text)
-        XCTAssert(success, "Found accessibility label in webview: \(text)")
+        runBlock { error in
+            if (self.hasWebViewElementWithAccessibilityLabel(text)) {
+                return KIFTestStepResult.Success
+            }
+
+            return KIFTestStepResult.Wait
+        }
     }
 
     /**
@@ -157,7 +169,7 @@ extension KIFUITestActor {
 
         let escaped = text.stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
         webView.evaluateJavaScript("KIFHelper.hasElementWithAccessibilityLabel(\"\(escaped)\")") { success, _ in
-            found = success as! Bool
+            found = success as? Bool ?? false
             stepResult = KIFTestStepResult.Success
         }
 
@@ -322,7 +334,7 @@ class SimplePageServer {
             return GCDWebServerDataResponse(data: img, contentType: "image/png")
         }
 
-        for page in ["noTitle", "readablePage"] {
+        for page in ["findPage", "noTitle", "readablePage", "JSPrompt"] {
             webServer.addHandlerForMethod("GET", path: "/\(page).html", requestClass: GCDWebServerRequest.self) { (request) -> GCDWebServerResponse! in
                 return GCDWebServerDataResponse(HTML: self.getPageData(page))
             }
@@ -410,5 +422,26 @@ class SearchUtils {
     static func getDefaultSearchEngineName(tester: KIFUITestActor) -> String {
         let view = tester.waitForCellWithAccessibilityLabel("Default Search Engine")
         return view.accessibilityValue!
+    }
+}
+
+class DynamicFontUtils {
+    // Need to leave time for the notification to propagate
+    static func bumpDynamicFontSize(tester: KIFUITestActor) {
+        let value = UIContentSizeCategoryAccessibilityExtraLarge
+        UIApplication.sharedApplication().setValue(value, forKey: "preferredContentSizeCategory")
+        tester.waitForTimeInterval(0.3)
+    }
+
+    static func lowerDynamicFontSize(tester: KIFUITestActor) {
+        let value = UIContentSizeCategoryExtraSmall
+        UIApplication.sharedApplication().setValue(value, forKey: "preferredContentSizeCategory")
+        tester.waitForTimeInterval(0.3)
+    }
+
+    static func restoreDynamicFontSize(tester: KIFUITestActor) {
+        let value = UIContentSizeCategoryMedium
+        UIApplication.sharedApplication().setValue(value, forKey: "preferredContentSizeCategory")
+        tester.waitForTimeInterval(0.3)
     }
 }

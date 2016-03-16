@@ -17,9 +17,10 @@
 #import "Carthage/Checkouts/SWTableViewCell/SWTableViewCell/PodFiles/SWTableViewCell.h"
 #import "Carthage/Checkouts/RaptureXML/RaptureXML/RXMLElement.h"
 #import "Carthage/Checkouts/ios_sdk/Adjust/Adjust.h"
-#import "Client/Cliqz/Foundation/Networking/Reachability/Reachability.h"
 #import "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.h"
 
-//#import <Lookback/Lookback.h>
+// Cliqz: Import needed files to the bridge
+#import "Client/Cliqz/Foundation/Networking/Reachability/Reachability.h"
+#import <Lookback/Lookback.h>
 
 #endif

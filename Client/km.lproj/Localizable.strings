@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "អាសយដ្ឋាន និង​ស្វែងរក";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "តែងតែ​ផ្ញើ​ជានិច្ច";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "ហៅ";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "បោះបង់ចោល";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "តើ​អ្នក​ចង់​ធ្វើ​បច្ចុប្បន្នភាព​ពាក្យ​សម្ងាត់​នៅ​លើ %@ ដែរ​ ឬ​ទេ?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "កុំ​ផ្ញើ";
 
 /* Done button label for search settings table
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "ចូល";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "ចូល";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Firefox ដូចជា​បាន​គាំង​កាល​ពី​មុន។ តើ​អ្នក​ចង់​ស្ដារ​ផ្ទាំង​របស់​អ្នក​មែន​ទេ?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "របារ​ឧបករណ៍​រុករក​";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "មិន​ដែល​ផ្ញើ";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "ផ្ទាំង​ថ្មី៖ %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "យល់ព្រម";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "អូ! Firefox បាន​គាំង​ហើយ";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "ទំព័រ​យកចេញ";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "ស្នើ​តំបន់បណ្ដាញ​ផ្ទៃតុ";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "ស្នើ​តំបន់បណ្ដាញ​ចល័ត";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Sans-serif";
-
-/* Button to save the user's password */
-"Save" = "រក្សាទុក";
 
 /* Context menu item for saving an image */
 "Save Image" = "រក្សាទុក​រូបភាព";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "ផ្ញើ​មតិត្រឡប់";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "ផ្ញើ​របាយការណ៍";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "ផ្ញើ​របាយការណ៍​ជាប់​គាំង ​ដូច្នេះ Mozilla អាច​ដោះស្រាយ​បញ្ហា​បាន?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "ចែករំលែក";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "ចែករំលែក​តំណ";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "បង្ហាញ​​សំណើ​ស្វែងរក";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "នេះ​ពិតជា​ខ្មាស​គេ​មែន។";
+
+/* Button to save the user's password */
+"Yes" = "បាទ/ចាស";
 
 /* History tableview section header */
 "Yesterday" = "ម្សិលមិញ";

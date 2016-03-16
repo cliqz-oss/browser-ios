@@ -13,17 +13,22 @@ import Crashlytics
 
 private let log = Logger.browserLogger
 
+let LatestAppVersionProfileKey = "latestAppVersion"
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var browserViewController: BrowserViewController!
     var rootViewController: UINavigationController!
     weak var profile: BrowserProfile?
     var tabManager: TabManager!
+    var adjustIntegration: AdjustIntegration?
 
     weak var application: UIApplication?
     var launchOptions: [NSObject: AnyObject]?
 
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
+
+    var openInFirefoxURL: NSURL? = nil
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
@@ -57,21 +62,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Start the keyboard helper to monitor and cache keyboard state.
         KeyboardHelper.defaultHelper.startObserving()
         
-        log.debug("Creating Sync log file…")
-        let logDate = NSDate()
-        // Create a new sync log file on cold app launch. Note that this doesn't roll old logs.
-        // Naira: Removed logger inisialization because of performance considerations and also we don't need FF logger.
-//        Logger.syncLogger.newLogWithDate(NSDate())
-
-        log.debug("Creating corrupt DB logger…")
-        Logger.corruptLogger.newLogWithDate(logDate)
-
-        log.debug("Creating Browser log file…")
-        Logger.browserLogger.newLogWithDate(logDate)
-
+        log.debug("Starting dynamic font helper…")
+        // Start the keyboard helper to monitor and cache keyboard state.
+        DynamicFontHelper.defaultHelper.startObserving()
+        
+        log.debug("Setting custom menu items…")
+        MenuHelper.defaultHelper.setItems()
+        
+        // Cliqz: Removed logger inisialization because of performance considerations and also we don't need FF logger.
+//        log.debug("Creating Sync log file…")
+//        let logDate = NSDate()
+//        // Create a new sync log file on cold app launch. Note that this doesn't roll old logs.
+//        Logger.syncLogger.newLogWithDate(logDate)
+//        
+//        log.debug("Creating corrupt DB logger…")
+//        Logger.corruptLogger.newLogWithDate(logDate)
+//        
+//        log.debug("Creating Browser log file…")
+//        Logger.browserLogger.newLogWithDate(logDate)
+        
         log.debug("Getting profile…")
         let profile = getProfile(application)
-
+        
+        
         if !DebugSettingsBundleOptions.disableLocalWebServer {
             log.debug("Starting web server…")
             // Set up a web server that serves us static content. Do this early so that it is ready when the UI is presented.
@@ -125,11 +138,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
             viewURLInNewTab(localNotification)
         }
+        
+        adjustIntegration = AdjustIntegration(profile: profile)
 
+        // We need to check if the app is a clean install to use for
+        // preventing the What's New URL from appearing.
+        if getProfile(application).prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
+            getProfile(application).prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
+        }
         log.debug("Done with setting up the application.")
         return true
     }
-    
+
+    func applicationWillTerminate(application: UIApplication) {
+        log.debug("Application will terminate.")
+
+        // We have only five seconds here, so let's hope this doesn't take too long.
+        self.profile?.shutdown()
+
+        // Allow deinitializers to close our database connections.
+        self.profile = nil
+        self.tabManager = nil
+        self.browserViewController = nil
+        self.rootViewController = nil
+        
+        AppStatus.sharedInstance.appWillTerminate()
+
+    }
+
     /**
      * We maintain a weak reference to the profile so that we can pause timed
      * syncs when we're backgrounded.
@@ -148,13 +184,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.profile = p
         return p
     }
-
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+        
         AppStatus.sharedInstance.appDidFinishLaunching()
+
+        // Override point for customization after application launch.
+        var shouldPerformAdditionalDelegateHandling = true
+
         log.debug("Did finish launching.")
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-            AdjustIntegration.sharedInstance.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
-        }
+        
+        log.debug("Setting up Adjust")
+        self.adjustIntegration?.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
+        
         log.debug("Making window key and visible…")
         self.window!.makeKeyAndVisible()
 
@@ -162,24 +204,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.debug("Triggering log roll.")
 
         // Cliqz: disabled calling to syncLogger
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),
-//            Logger.syncLogger.deleteOldLogsDownToSizeLimit
-//        )
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+//            Logger.syncLogger.deleteOldLogsDownToSizeLimit()
+//            Logger.browserLogger.deleteOldLogsDownToSizeLimit()
+//        }
 
         // Cliqz: Start Crashlytics
         Fabric.with([Crashlytics.self])
-
-        log.debug("Done with applicationDidFinishLaunching.")
 
         // Cliqz: Added to confire home shortcuts
         if #available(iOS 9.0, *) {
             self.configureHomeShortCuts()
         }
-//		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
-//		Lookback.sharedLookback().shakeToRecord = true
+
+        // Cliqz: comented Firefox 3D Touch code
+//        if #available(iOS 9, *) {
+//            // If a shortcut was launched, display its information and take the appropriate action
+//            if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsShortcutItemKey] as? UIApplicationShortcutItem {
+//                
+//                QuickActions.sharedInstance.launchedShortcutItem = shortcutItem
+//                // This will block "performActionForShortcutItem:completionHandler" from being called.
+//                shouldPerformAdditionalDelegateHandling = false
+//            }
+//        }
+
+        
+        // Cliqz: Added Lookback integration
+		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
 
-        return true
+        log.debug("Done with applicationDidFinishLaunching.")
+
+        return shouldPerformAdditionalDelegateHandling
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
@@ -195,18 +252,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 default: ()
                 }
             }
-            if let url = url,
-                   newURL = NSURL(string: url.unescape()) {
-                self.browserViewController.openURLInNewTab(newURL)
+
+            if let url = url, newURL = NSURL(string: url.unescape()) {
+                // If we are active then we can ask the BVC to open the new tab right away. Else we remember the
+                // URL and we open it in applicationDidBecomeActive.
+                if application.applicationState == .Active {
+                    if #available(iOS 9, *) {
+                        self.browserViewController.switchToPrivacyMode(isPrivate: false)
+                    }
+                    self.browserViewController.openURLInNewTab(newURL)
+                } else {
+                    openInFirefoxURL = newURL
+                }
                 return true
             }
         }
         return false
     }
 
+    func application(application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: String) -> Bool {
+        return extensionPointIdentifier != UIApplicationKeyboardExtensionPointIdentifier
+    }
+
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
     // Eventually we'll sync in response to notifications.
     func applicationDidBecomeActive(application: UIApplication) {
+        
         AppStatus.sharedInstance.appDidBecomeActive(self.profile!)
 
         guard !DebugSettingsBundleOptions.launchIntoEmailComposer else {
@@ -218,6 +289,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
         self.browserViewController.loadQueuedTabs()
+
+        // handle quick actions is available
+        if #available(iOS 9, *) {
+            let quickActions = QuickActions.sharedInstance
+            if let shortcut = quickActions.launchedShortcutItem {
+                // dispatch asynchronously so that BVC is all set up for handling new tabs
+                // when we try and open them
+                quickActions.handleShortCutItem(shortcut, withBrowserViewController: browserViewController)
+                quickActions.launchedShortcutItem = nil
+            }
+        }
+
+        // If we have a URL waiting to open, switch to non-private mode and open the URL.
+        if let url = openInFirefoxURL {
+            openInFirefoxURL = nil
+            // This needs to be scheduled so that the BVC is ready.
+            dispatch_async(dispatch_get_main_queue()) {
+                if #available(iOS 9, *) {
+                    self.browserViewController.switchToPrivacyMode(isPrivate: false)
+                }
+                self.browserViewController.switchToTabForURLOrOpen(url)
+            }
+        }
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
@@ -239,15 +333,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 9.0, *) {
             self.configureHomeShortCuts()
         }
+
+        // Workaround for crashing in the background when <select> popovers are visible (rdar://24571325).
+        let jsBlurSelect = "if (document.activeElement && document.activeElement.tagName === 'SELECT') { document.activeElement.blur(); }"
+        tabManager.selectedTab?.webView?.evaluateJavaScript(jsBlurSelect, completionHandler: nil)
     }
     
     func applicationWillResignActive(application: UIApplication) {
         AppStatus.sharedInstance.appWillResignActive()
     }
     
-    func applicationWillTerminate(application: UIApplication) {
-        AppStatus.sharedInstance.appWillTerminate()
-    }
     
     func applicationWillEnterForeground(application: UIApplication) {
         AppStatus.sharedInstance.appWillEnterForeground()
@@ -260,13 +355,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
         SessionRestoreHandler.register(server)
-		// Cliqz: Registered trampolineForward to be able to load it via URLRequest
-		server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
+        // Cliqz: Registered trampolineForward to be able to load it via URLRequest
+        server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
         
         // Cliqz: starting the navigation extension
         NavigationExtension.start()
         
-		// Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
+        // Bug 1223009 was an issue whereby CGDWebserver crashed when moving to a background task
         // catching and handling the error seemed to fix things, but we're not sure why.
         // Either way, not implicitly unwrapping a try is not a great way of doing things
         // so this is better anyway.
@@ -285,11 +380,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // readable from extensions, so they can just use the cached identifier.
         let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
         defaults.registerDefaults(["UserAgent": firefoxUA])
-        FaviconFetcher.userAgent = firefoxUA
+
         SDWebImageDownloader.sharedDownloader().setValue(firefoxUA, forHTTPHeaderField: "User-Agent")
 
         // Record the user agent for use by search suggestion clients.
         SearchViewController.userAgent = firefoxUA
+
+        // Some sites will only serve HTML that points to .ico files.
+        // The FaviconFetcher is explicitly for getting high-res icons, so use the desktop user agent.
+        FaviconFetcher.userAgent = UserAgent.desktopUserAgent()
     }
 
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
@@ -341,16 +440,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if let tabStateDebugData = TabManager.tabRestorationDebugInfo().dataUsingEncoding(NSUTF8StringEncoding) {
                     mailComposeViewController.addAttachmentData(tabStateDebugData, mimeType: "text/plain", fileName: "tabState.txt")
                 }
+                if let tabStateData = TabManager.tabArchiveData() {
+                    mailComposeViewController.addAttachmentData(tabStateData, mimeType: "application/octet-stream", fileName: "tabsState.archive")
+                }
             }
 
             self.window?.rootViewController?.presentViewController(mailComposeViewController, animated: true, completion: nil)
         }
     }
 
+    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+        if let url = userActivity.webpageURL {
+            browserViewController.switchToTabForURLOrOpen(url)
+            return true
+        }
+        return false
+    }
+
     private func viewURLInNewTab(notification: UILocalNotification) {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String {
             if let urlToOpen = NSURL(string: alertURL) {
                 browserViewController.openURLInNewTab(urlToOpen)
+
+                if #available(iOS 9, *) {
+                    var userData = [QuickActions.TabURLKey: alertURL]
+                    if let title = notification.userInfo?[TabSendTitleKey] as? String where title.characters.count > 0 {
+                        userData[QuickActions.TabTitleKey] = title
+                    } else {
+                        userData[QuickActions.TabTitleKey] = alertURL
+                    }
+                    QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastTab, withUserData: userData, toApplication: UIApplication.sharedApplication())
+                }
             }
         }
     }
@@ -359,6 +479,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String,
             let title = notification.userInfo?[TabSendTitleKey] as? String {
                 browserViewController.addBookmark(alertURL, title: title)
+
+                if #available(iOS 9, *) {
+                    let userData = [QuickActions.TabURLKey: alertURL,
+                        QuickActions.TabTitleKey: title]
+                    QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastBookmark, withUserData: userData, toApplication: UIApplication.sharedApplication())
+                }
         }
     }
 
@@ -370,6 +496,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+    // Cliqz: comented Firefox 3D Touch code
+//    @available(iOS 9.0, *)
+//    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: Bool -> Void) {
+//        let handledShortCutItem = QuickActions.sharedInstance.handleShortCutItem(shortcutItem, withBrowserViewController: browserViewController)
+//
+//        completionHandler(handledShortCutItem)
+//    }
 }
 
 // MARK: - Root View Controller Animations

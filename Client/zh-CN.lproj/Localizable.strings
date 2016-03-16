@@ -11,7 +11,7 @@
 "A username and password are being requested by %@. The site says: %@" = "%1$@ 请求您输入用户名和密码。此网站说：%2$@";
 
 /* Button for reader mode font size. Keep this extremely short! This is shown in the reader mode toolbar. */
-"Aa" = "Aa";
+"Aa" = "字";
 
 /* About settings section title */
 "About" = "关于";
@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "网址与搜索";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "总是发送";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "呼叫";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "取消";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "您想要更新在 %@ 上的密码吗？";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "不发送";
 
 /* Done button label for search settings table
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "登录";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "登录信息";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "看起来 Firefox 此前崩溃了。您想恢复您的标签页吗？";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "导航工具栏";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "总不发送";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "新标签页：%1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "好的";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "啊哦！Firefox 崩溃了";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "移除页面";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "请求桌面版网站";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "请求移动版网站";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "无衬线";
-
-/* Button to save the user's password */
-"Save" = "保存";
 
 /* Context menu item for saving an image */
 "Save Image" = "保存图像";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "发送反馈";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "发送报告";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "发送一则崩溃报告给 Mozilla，以便我们修复此问题？";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "分享";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "分享链接";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "显示搜索建议";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "哎呀，出了点意外。";
+
+/* Button to save the user's password */
+"Yes" = "是";
 
 /* History tableview section header */
 "Yesterday" = "昨天";

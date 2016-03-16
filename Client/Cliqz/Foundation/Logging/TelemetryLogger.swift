@@ -10,7 +10,7 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
-    case ApplicationUsage   (String, String, String, Float, Double, String?, Double?, Double?)
+    case ApplicationUsage   (String, String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
@@ -20,12 +20,11 @@ public enum TelemetryLogEventType {
     case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
-    case JavaScriptsignal   ([String: AnyObject])
+    case JavaScriptSignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
+    case TabSignal          (String, String, Int?, Int)
     
-    //TODO: to be removed as it was added for testing
-    case AppStateChange      (String)
 }
 
 
@@ -106,7 +105,7 @@ class TelemetryLogger : EventsLogger {
             case .ResultEnter(let queryLength, let autocompletedLength, let autocompletedUrl, let reactionTime, let urlbarTime):
                 event = self.createResultEnterEvent(queryLength, autocompletedLength: autocompletedLength, autocompletedUrl: autocompletedUrl, reactionTime: reactionTime, urlbarTime: urlbarTime)
                 
-            case .JavaScriptsignal(let javaScriptSignal):
+            case .JavaScriptSignal(let javaScriptSignal):
                 event = self.creatJavaScriptSignalEvent(javaScriptSignal)
 			
             case .LocationServicesStatus(let action, let status):
@@ -114,10 +113,10 @@ class TelemetryLogger : EventsLogger {
                 
             case .HomeScreenShortcut(let targetType, let targetIndex):
                 event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
+            
+            case .TabSignal(let action, let mode, let tabIndex, let tabCount):
+                event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
                 
-            //TODO: to be removed as it was added for testing
-            case .AppStateChange(let transition):
-                event = self.createAppStateChangeEvent(transition)
             }
             
             // Always store the event
@@ -167,7 +166,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Float, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
 
         event["type"] = "app_state_change"
@@ -350,15 +349,18 @@ class TelemetryLogger : EventsLogger {
         event["target_index"] = targetIndex
         return event
     }
-
-    //TODO: to be removed as it was added for testing
-    private func createAppStateChangeEvent(transition: String) -> [String: AnyObject] {
+    
+    private func createTabSignalEvent(action: String, mode: String, tabIndex: Int?, tabCount: Int) -> [String: AnyObject] {
         var event = createBasicEvent()
-        
-        event["type"] = "app_state_transition"
-        event["transition"] = transition
-
+        event["type"] = "tab"
+        event["action"] = action
+        event["mode"] = mode
+        if let index = tabIndex {
+            event["tab_index"] = index
+        }
+        event["tab_count"] = tabCount
         return event
     }
+    
     
 }

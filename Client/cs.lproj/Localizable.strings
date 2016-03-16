@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adresa a vyhledávání";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "Vždy odeslat";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Volat";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Zrušit";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "Chcete aktualizovat uložené heslo na %@?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Neodesílat";
 
 /* Done button label for search settings table
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "Přihlásit";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Přihlášení";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Zdá se, že dříve došlo k pádu Firefoxu. Přejete si obnovit své panely?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Lišta navigace";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Nikdy neodesílat";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Nový panel: %1$@: %2$@";
@@ -261,11 +268,11 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "OK";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "Jejda! Firefox spadl";
 
 /* Context menu item for opening a link in a new tab */
-"Open In New Tab" = "Otevřít v novém panelů";
+"Open In New Tab" = "Otevřít v novém panelu";
 
 /* See http://mzl.la/1G7uHo7 */
 "Open Settings" = "Otevřít Nastavení";
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "Odebrat stránku";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "Desktopová verze stránky";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "Mobilní verze stránky";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Sans-serif";
-
-/* Button to save the user's password */
-"Save" = "Uložit";
 
 /* Context menu item for saving an image */
 "Save Image" = "Uložit obrázek";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Odeslat hodnocení";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "Poslat hlášení";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "Odeslat hlášení o pádu Mozille, aby mohla problém vyřešit?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Sdílet";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "Sdílet odkaz";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "Povolit našeptávání";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Ale toto je nepříjemné.";
+
+/* Button to save the user's password */
+"Yes" = "Ano";
 
 /* History tableview section header */
 "Yesterday" = "Včera";

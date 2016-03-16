@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Endereço e pesquisa";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "Sempre enviar";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Chamar";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Cancelar";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "Gostaria de atualizar a senha no %@?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Não enviar";
 
 /* Done button label for search settings table
@@ -148,7 +155,7 @@
 "Firefox Help and Support" = "Firefox ajuda e suporte";
 
 /* Text of the 'log out firefox account' alert */
-"Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "O Firefox irá parar a sincronização com a sua conta, mas não irá excluir seus dados de navegação neste dispositivo.";
+"Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "O Firefox deixará de sincronizar com a sua conta, mas não excluirá seus dados de navegação neste dispositivo.";
 
 /* See http://mzl.la/1G7uHo7 */
 "Firefox would like to access your Photos" = "O Firefox gostaria de acessar suas fotos";
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "Entrar";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Logins";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Parece que o Firefox travou anteriormente. Você gostaria de restaurar suas abas?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Barra de navegação";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Nunca enviar";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Nova aba: %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "Ok";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "Ops! O Firefox travou";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "Remover página";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "Requisitar site para desktop";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "Requisitar site para móvel";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Sem serifa";
-
-/* Button to save the user's password */
-"Save" = "Salvar";
 
 /* Context menu item for saving an image */
 "Save Image" = "Salvar imagem";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Enviar opinião";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "Enviar relatório";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "Enviar um relatório de travamento para que Mozilla possa corrigir o problema?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Compartilhar";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "Compartilhar link";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "Mostrar sugestões de pesquisa";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Bem, isto é embaraçoso.";
+
+/* Button to save the user's password */
+"Yes" = "Sim";
 
 /* History tableview section header */
 "Yesterday" = "Ontem";

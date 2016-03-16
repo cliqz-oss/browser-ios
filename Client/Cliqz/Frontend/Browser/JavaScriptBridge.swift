@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import Crashlytics
 
 @objc protocol JavaScriptBridgeDelegate: class {
     
@@ -33,13 +34,13 @@ class JavaScriptBridge {
     func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
         var parameterString: String = ""
         
-        if parameter != nil {
+        if let parameter = parameter {
             do {
-                if NSJSONSerialization.isValidJSONObject(parameter!) {
-                    let json = try NSJSONSerialization.dataWithJSONObject(parameter!, options: NSJSONWritingOptions(rawValue: 0))
+                if NSJSONSerialization.isValidJSONObject(parameter) {
+                    let json = try NSJSONSerialization.dataWithJSONObject(parameter, options: NSJSONWritingOptions(rawValue: 0))
                     parameterString = String(data:json, encoding: NSUTF8StringEncoding)!
                 } else {
-                    print("couldn't convert object \(parameter!) to JSON because it is not valid JSON")
+                    print("couldn't convert object \(parameter) to JSON because it is not valid JSON")
                 }
             } catch let error as NSError {
                 print("Json conversion is failed with error: \(error)")
@@ -111,7 +112,17 @@ class JavaScriptBridge {
             
         case "pushTelemetry":
             if let telemetrySignal = data as? [String: AnyObject] {
-                TelemetryLogger.sharedInstance.logEvent(.JavaScriptsignal(telemetrySignal))
+                if NSJSONSerialization.isValidJSONObject(telemetrySignal) {
+                    TelemetryLogger.sharedInstance.logEvent(.JavaScriptSignal(telemetrySignal))
+                } else {
+                    var customAttributes = [String: AnyObject]()
+                    
+                    if let action = telemetrySignal["action"],
+                        let type = telemetrySignal["type"] {
+                            customAttributes = ["acion": action,"type": type]
+                    }
+                    Answers.logCustomEventWithName("InvalidJavaScriptTelemetrySignal", customAttributes: customAttributes)
+                }
             }
             
         case "copyResult":

@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Address and Search";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "Cuir an-còmhnaidh";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Gairm";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Cancel";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "A bheil thu airson am facal-faire air %@ ùrachadh?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Na cuir";
 
 /* Done button label for search settings table
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "Clàraich a-steach";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Clàraidhean a-steach";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Tha coltas gun do thuislich Firefox roimhe. A bheil thu ag iarraidh nan tabaichean air ais?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Bàr-inneal na seòladaireachd";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Na cuir idir";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Taba ùr: %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "Ceart ma-thà";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "Ìoc! Thuislich Firefox";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "Thoir an duilleag air falbh";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "Iarr làrach nan desktop";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "Iarr làrach nan innealan-làimhe";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Sans-serif";
-
-/* Button to save the user's password */
-"Save" = "Sàbhail";
 
 /* Context menu item for saving an image */
 "Save Image" = "Sàbhail an dealbh";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Cuir thugainn do bheachdan";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "Cuir an aithisg";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "A bheil thu deònach aithisg a chur gu Mozilla mun tuisleadh ach an urrainn dhuinn a chàradh?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Share";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "Co-roinn an ceangal";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "Seall molaidhean-luirg";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "An-dà, tha seo a’ cur nàire oirnn.";
+
+/* Button to save the user's password */
+"Yes" = "Tha";
 
 /* History tableview section header */
 "Yesterday" = "Yesterday";
