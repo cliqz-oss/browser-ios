@@ -17,7 +17,9 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         
         let resultSet = db.runQuery(countSQL, args: nil, factory: SQLiteHistory.countFactory).value
         if let data = resultSet.successValue {
-            count = data[0]!
+			if let d = data[0] {
+				count = d
+			}
         }
         return count
     }
