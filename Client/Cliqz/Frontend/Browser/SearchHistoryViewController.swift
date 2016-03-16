@@ -66,7 +66,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")
         self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"), accessibilityLabel: "CloseHistoryButton")
-
+        self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"), accessibilityLabel: "OpenSettingsButton")
 		
         self.setupConstraints()
     }
@@ -107,6 +107,16 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func openSettings() {
+        let settingsTableViewController = AppSettingsTableViewController()
+        settingsTableViewController.profile = profile
+        settingsTableViewController.tabManager = tabManager        
+        
+        let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
+        controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+        presentViewController(controller, animated: true, completion: nil)
+    }
+
     func logLayerChangeTelemetrySignal() {
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
     }
