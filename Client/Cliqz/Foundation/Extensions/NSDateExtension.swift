@@ -20,7 +20,7 @@ extension NSDate {
     class func milliSecondsSinceDate(anotherDate: NSDate?)-> Double? {
         var milliSeconds: Double?
         if anotherDate != nil {
-            milliSeconds = NSDate().timeIntervalSinceDate(anotherDate!) * 1000
+            milliSeconds = round(NSDate().timeIntervalSinceDate(anotherDate!) * 1000)
         }
         return milliSeconds
     }

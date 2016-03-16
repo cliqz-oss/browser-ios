@@ -1117,23 +1117,26 @@ class BrowserViewController: UIViewController {
     }
 
     func openURLInNewTab(url: NSURL) {
-        if #available(iOS 9, *) {
-            openURLInNewTab(url, isPrivate: tabTrayController?.privateMode ?? false)
-        } else {
-            tabManager.addTabAndSelect(NSURLRequest(URL: url))
-        }
+        tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url))
+//        if #available(iOS 9, *) {
+//            openURLInNewTab(url, isPrivate: tabTrayController?.privateMode ?? false)
+//        } else {
+//            tabManager.addTabAndSelect(NSURLRequest(URL: url))
+//        }
     }
 
     @available(iOS 9, *)
     func openURLInNewTab(url: NSURL?, isPrivate: Bool) {
-        let request: NSURLRequest?
-        if let url = url {
-            request = NSURLRequest(URL: url)
-        } else {
-            request = nil
-        }
-        switchToPrivacyMode(isPrivate: isPrivate)
-        tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+        tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url!))
+        
+//        let request: NSURLRequest?
+//        if let url = url {
+//            request = NSURLRequest(URL: url)
+//        } else {
+//            request = nil
+//        }
+//        switchToPrivacyMode(isPrivate: isPrivate)
+//        tabManager.addTabAndSelect(request, isPrivate: isPrivate)
     }
 
     @available(iOS 9, *)
@@ -2188,26 +2191,29 @@ extension BrowserViewController: WKUIDelegate {
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
-        screenshotHelper.takeScreenshot(currentTab)
-
-        // If the page uses window.open() or target="_blank", open the page in a new tab.
-        // TODO: This doesn't work for window.open() without user action (bug 1124942).
-        let newTab: Browser
-        if #available(iOS 9, *) {
-            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
-        } else {
-            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
-        }
-        tabManager.selectTab(newTab)
+        currentTab.webView?.loadRequest(navigationAction.request)
+        return nil
         
-        // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
-        // get a reference to it which it can return from window.open() - this will end up as a
-        // CFErrorHTTPBadURL being presented.
-        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
-            return nil
-        }
-        
-        return newTab.webView
+//        screenshotHelper.takeScreenshot(currentTab)
+//
+//        // If the page uses window.open() or target="_blank", open the page in a new tab.
+//        // TODO: This doesn't work for window.open() without user action (bug 1124942).
+//        let newTab: Browser
+//        if #available(iOS 9, *) {
+//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
+//        } else {
+//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
+//        }
+//        tabManager.selectTab(newTab)
+//        
+//        // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
+//        // get a reference to it which it can return from window.open() - this will end up as a
+//        // CFErrorHTTPBadURL being presented.
+//        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
+//            return nil
+//        }
+//        
+//        return newTab.webView
     }
 
     private func canDisplayJSAlertForWebView(webView: WKWebView) -> Bool {
@@ -2614,9 +2620,9 @@ extension BrowserViewController: IntroViewControllerDelegate {
             if self.navigationController?.viewControllers.count > 1 {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
-//            // Cliqz: show search view after dismissing on-boarding
-//            self.urlBar.enterOverlayMode("", pasted: false)
         }
+        // Cliqz: going back from intro is the same case as switching to pervious tab
+        SELswitchToPreviousTab()
     }
 
     func presentSignInViewController() {
@@ -2689,26 +2695,26 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         if let url = elements.link, currentTab = tabManager.selectedTab {
             dialogTitle = url.absoluteString
-            let isPrivate = currentTab.isPrivate
-            if !isPrivate {
-                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
-                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-                        self.tabManager.addTab(NSURLRequest(URL: url))
-                    })
-                }
-                actionSheetController.addAction(openNewTabAction)
-            }
-
-            if #available(iOS 9, *) {
-                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
-                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
-                    })
-                }
-                actionSheetController.addAction(openNewPrivateTabAction)
-            }
+//            let isPrivate = currentTab.isPrivate
+//            if !isPrivate {
+//                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
+//                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+//                        self.tabManager.addTab(NSURLRequest(URL: url))
+//                    })
+//                }
+//                actionSheetController.addAction(openNewTabAction)
+//            }
+//
+//            if #available(iOS 9, *) {
+//                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
+//                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+//                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+//                    })
+//                }
+//                actionSheetController.addAction(openNewPrivateTabAction)
+//            }
 
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in

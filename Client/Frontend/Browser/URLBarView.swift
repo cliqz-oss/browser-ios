@@ -246,7 +246,7 @@ class URLBarView: UIView {
 
         addSubview(progressBar)
 		// Cliqz: Removed tabsButton and cancelButton accroding to requirements.
-        addSubview(tabsButton)
+//        addSubview(tabsButton)
 //        addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -299,11 +299,11 @@ class URLBarView: UIView {
 //			make.trailing.equalTo(self)
 //		}
 //		
-        tabsButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-            make.size.equalTo(UIConstants.ToolbarHeight)
-        }
+//        tabsButton.snp_makeConstraints { make in
+//            make.centerY.equalTo(self.locationContainer)
+//            make.trailing.equalTo(self)
+//            make.size.equalTo(UIConstants.ToolbarHeight)
+//        }
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
 //		curveShape.snp_makeConstraints { make in
@@ -332,9 +332,8 @@ class URLBarView: UIView {
         }
 
         shareButton.snp_makeConstraints { make in
-            // Cliqz: Changed right constraint because bookmark button is removed for now.
-//            make.right.equalTo(self.bookmarkButton.snp_left)
-            make.right.equalTo(self.tabsButton.snp_left)
+			// Cliqz: Changed right constraint because bookmark button is removed for now.
+            make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -366,10 +365,8 @@ class URLBarView: UIView {
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
-//                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-//                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
-                    make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self.tabsButton.snp_leading)
+					make.leading.equalTo(self.historyButton.snp_trailing)
+                    make.trailing.equalTo(self).offset(-14)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
