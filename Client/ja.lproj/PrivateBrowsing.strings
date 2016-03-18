@@ -14,7 +14,7 @@
 "On" = "オン";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Private Tab" = "新しいプライベートタブで開く";
+"Open In New Private Tab" = "新規プライベートタブで開く";
 
 /* Title displayed for when there are no open tabs while in private mode */
 "Private Browsing" = "プライベートブラウジング";

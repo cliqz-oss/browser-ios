@@ -1,5 +1,5 @@
 /* Message shown in the dialog prompting users if they want to clear everything */
-"Are you sure you want to clear all of your data? This will also close all open tabs." = "Bist Du sicher, dass Du alle Deine Daten löschen möchtest? Dabei werden auch alle offenen Tabs geschlossen.";
+"Are you sure you want to clear all of your data? This will also close all open tabs." = "Sollen wirklich alle Ihre Daten gelöscht werden? Dabei werden auch alle offenen Tabs geschlossen.";
 
 /* Settings item for clearing browsing history */
 "Browsing History" = "Besuchte Seiten";

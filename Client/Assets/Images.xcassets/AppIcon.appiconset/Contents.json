@@ -113,7 +113,7 @@
     {
       "size" : "83.5x83.5",
       "idiom" : "ipad",
-      "filename" : "app-icon-168.png",
+      "filename" : "icon_167.png",
       "scale" : "2x"
     },
     {
@@ -178,6 +178,13 @@
     {
       "idiom" : "mac",
       "size" : "512x512",
+      "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "app-icon-168.png",
+      "unassigned" : true,
       "scale" : "2x"
     }
   ],

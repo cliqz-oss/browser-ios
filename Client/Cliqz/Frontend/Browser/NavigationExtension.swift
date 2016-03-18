@@ -17,8 +17,6 @@ extension WebServer {
 }
 
 class NavigationExtension: NSObject {
-    // if true FireFox server will be used to host the navigation extension, else new local web server will be started to host the navigation extension
-    static let useFireFoxServer = true
     
     // the port for the local web server if used
     static let localServerPort: in_port_t = 3005
@@ -26,12 +24,8 @@ class NavigationExtension: NSObject {
 
     // base url for all resoruces
     static let baseURL: String = {
-        if useFireFoxServer {
-            let server = WebServer.sharedInstance
-            return "\(server.base)/extension"
-        } else {
-            return "http://localhost:\(localServerPort)/extension"
-        }
+        let server = WebServer.sharedInstance
+        return "\(server.base)/extension"
     }()
     
     // url for index page
@@ -51,36 +45,15 @@ class NavigationExtension: NSObject {
     
     // starting navigation extension either by hosting it to the same server that FireFox uses or start new webserver
     class func start() {
-        if useFireFoxServer {
-            registerNavigationExtensionOnFireFoxServer()
-        } else {
-            startLocalServer()
-        }
+        registerNavigationExtensionOnFireFoxServer()
     }
 
     // using the same server that Firefox have to make the navigation extension works locally
     private class func registerNavigationExtensionOnFireFoxServer() {
         let bundlePath = NSBundle.mainBundle().bundlePath
-        let extensionPath = bundlePath + "/" + "search"
+        let extensionPath = bundlePath + "/" + "Extension"
         
         let server = WebServer.sharedInstance
         server.registerMainBundlePath("/extension/", directoryPath: extensionPath)
-    }
-
-    // starting new local web server to host the navigation extension
-    private class func startLocalServer() {
-        let bundlePath = NSBundle.mainBundle().bundlePath
-        let extensionPath = bundlePath + "/" + "search"
-        
-        let httpServer = HttpServer()
-        httpServer["/extension/(.+)"] = HttpHandlers.directory(extensionPath)
-        
-        httpServer["/myproxy"] = { (request: HttpRequest) in
-            let u: String = request.urlParams[0].1
-            let data = NSData(contentsOfURL: NSURL(string:u)!)
-            return HttpResponse.RAW(200, data!)
-        }
-        httpServer.start(localServerPort)
-        
     }
 }

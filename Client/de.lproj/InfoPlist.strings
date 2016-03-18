@@ -1,3 +1,6 @@
-/* (No Commment) */
-"NSLocationWhenInUseUsageDescription" = "Dadurch können wir die nächsten Restaurants, Kinos, Banken, usw. für Dich finden.";
+"NSLocationWhenInUseUsageDescription" = "Von Ihnen besuchte Websites können Ihren Standort abfragen.";
+
+"ShortcutItemTitleNewPrivateTab" = "Neuer privater Tab";
+
+"ShortcutItemTitleNewTab" = "Neuer Tab";
 

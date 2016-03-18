@@ -20,7 +20,8 @@ public let ProfileRemoteTabsSyncDelay: NSTimeInterval = 0.1
 public protocol SyncManager {
     var isSyncing: Bool { get }
     var lastSyncFinishTime: Timestamp? { get set }
-
+    func hasSyncedHistory() -> Deferred<Maybe<Bool>>
+    func hasSyncedLogins() -> Deferred<Maybe<Bool>>
     func syncClients() -> SyncResult
     func syncClientsThenTabs() -> SyncResult
     func syncHistory() -> SyncResult
@@ -541,6 +542,11 @@ public class BrowserProfile: Profile {
 
         func applicationDidBecomeActive() {
             self.backgrounded = false
+
+            guard self.profile.hasAccount() else {
+                return
+            }
+
             self.beginTimedSyncs()
 
             // Sync now if it's been more than our threshold.
@@ -683,6 +689,7 @@ public class BrowserProfile: Profile {
         }
 
         func onAddedAccount() -> Success {
+            self.beginTimedSyncs();
             return self.syncEverything()
         }
 
@@ -914,6 +921,14 @@ public class BrowserProfile: Profile {
 
         @objc func syncOnTimer() {
             self.syncEverything()
+        }
+
+        func hasSyncedHistory() -> Deferred<Maybe<Bool>> {
+            return self.profile.history.hasSyncedHistory()
+        }
+
+        func hasSyncedLogins() -> Deferred<Maybe<Bool>> {
+            return self.profile.logins.hasSyncedLogins()
         }
 
         func syncClients() -> SyncResult {

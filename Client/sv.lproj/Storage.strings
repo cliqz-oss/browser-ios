@@ -5,10 +5,10 @@
 "Bookmarks Toolbar" = "Bokmärkesverktygsrad";
 
 /* The title of the folder that contains mobile bookmarks. This should match bookmarks.folder.mobile.label on Android. */
-"Mobile Bookmarks" = "Mobila-Bokmärken";
+"Mobile Bookmarks" = "Mobila Bokmärken";
 
 /* The name of the folder that contains unsorted desktop bookmarks. This should match bookmarks.folder.unfiled.label on Android. */
-"Unsorted Bookmarks" = "Icke Sorterade Bookmärken";
+"Unsorted Bookmarks" = "Osorterade Bokmärken";
 
 /* The default name for bookmark folders without titles.
    The default name for bookmark nodes without titles. */

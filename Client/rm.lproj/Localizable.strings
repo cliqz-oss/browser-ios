@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adressa e tschertga";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "Adina trametter";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Clom";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Interrumper";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "Vuls ti actualisar il pled-clav per %@?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Betg trametter";
 
 /* Done button label for search settings table
@@ -204,13 +211,16 @@
 
 /* Button in settings screen to disconnect from your account
    Disconnect button in the 'log out firefox account' alert */
-"Log Out" = "Sortir";
+"Log Out" = "Deconnectar";
 
 /* Title of the 'log out firefox account' alert */
-"Log Out?" = "Sortir?";
+"Log Out?" = "Deconnectar?";
 
 /* Authentication prompt log in button */
 "Log in" = "S'annunziar";
+
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Infurmaziuns d'annunzia";
 
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "I para che Firefox saja collabà dacurt. Vuls ti restaurar tes tabs?";
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Trav d'utensils da navigaziun";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Mai trametter";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Nov tab: %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "OK";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "Oha! Firefox è collabà";
 
 /* Context menu item for opening a link in a new tab */
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "Allontanar la pagina";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "Chargiar la pagina per visurs gronds";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "Chargiar la pagina per visurs pitschens";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Senza serifas";
-
-/* Button to save the user's password */
-"Save" = "Memorisar";
 
 /* Context menu item for saving an image */
 "Save Image" = "Memorisar la grafica";
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Trametter in resun";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "Trametter l'annunzia";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "Trametter in rapport da collaps per che Mozilla possia schliar il problem?";
 
 /* Sepia theme setting in Reading View settings */
@@ -379,6 +385,9 @@
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Cundivider";
+
+/* Context menu item for sharing a link URL */
+"Share Link" = "Cundivider la colliaziun";
 
 /* Label for show search suggestions setting. */
 "Show Search Suggestions" = "Mussar propostas da tschertga";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Gea, quai è penibel.";
+
+/* Button to save the user's password */
+"Yes" = "Gea";
 
 /* History tableview section header */
 "Yesterday" = "Ier";

@@ -28,7 +28,7 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Адреса і пошук";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Always Send" = "Завжди надсилати";
 
 /* Authentication prompt title */
@@ -52,7 +52,14 @@
 /* Alert Call Button */
 "Call" = "Виклик";
 
-/* Cancel button title in share dialog */
+/* Action Sheet Cancel Button
+   Alert Cancel Button
+   Authentication prompt cancel button
+   Button label to cancel entering a URL or search query
+   Cancel alert view
+   Cancel button
+   Cancel button in the 'log out firefox account' alert
+   Cancel title from search engine picker */
 "Cancel" = "Скасувати";
 
 /* Accessibility hint for the color theme setting buttons in reader mode display settings */
@@ -129,7 +136,7 @@
 /* Prompt for updating a password with on username. The parameter is the hostname of the site. */
 "Do you want to update the password on %@?" = "Ви хочете оновити пароль на %@?";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Don't Send" = "Не надсилати";
 
 /* Done button label for search settings table
@@ -185,7 +192,7 @@
 
 /* Last synced time label beside Sync Now setting option. Argument is the relative date string.
    Remote tabs last synced time. Argument is the relative date string. */
-"Last synced: %@" = "Востаннє синхронізовано: %@";
+"Last synced: %@" = "Синхронізовано: %@";
 
 /* History tableview section header */
 "Last week" = "Останній тиждень";
@@ -212,6 +219,9 @@
 /* Authentication prompt log in button */
 "Log in" = "Увійти";
 
+/* Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager. */
+"Logins" = "Логіни";
+
 /* Restore Tabs Prompt Description */
 "Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Схоже, минулого разу Firefox впав. Бажаєте відновити свої вкладки?";
 
@@ -231,9 +241,6 @@
 
 /* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
 "Navigation Toolbar" = "Панель навігації";
-
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
-"Never Send" = "Ніколи не надсилати";
 
 /* New tab [title] [url] */
 "New tab: %@: %@" = "Нова вкладка: %1$@: %2$@";
@@ -261,7 +268,7 @@
 /* Restore Tabs Affirmative Action */
 "Okay" = "Згода";
 
-/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+/* Title for prompt displayed to user after the app crashes */
 "Oops! Firefox crashed" = "Ой! Firefox впав";
 
 /* Context menu item for opening a link in a new tab */
@@ -271,7 +278,7 @@
 "Open Settings" = "Налаштування";
 
 /* See http://mzl.la/1LXbDOL */
-"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Відкривайте статті в режимі читача, торкнувшись іконки книги, коли вона з'являється в панелі заголовка.";
+"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Відкривайте статті в режимі читача, торкнувшись піктограми книги, коли вона з'являється в панелі заголовка.";
 
 /* String indicating that the file can be opened in another application on the device */
 "Open in…" = "Відкрити в…";
@@ -321,17 +328,16 @@
 /* Button shown in editing mode to remove this site from the top sites panel. */
 "Remove page" = "Вилучити сторінку";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+/* Action Sheet Button for Requesting the Desktop Site
+   Share action title */
 "Request Desktop Site" = "Запитувати десктопний сайт";
 
-/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+/* Action Sheet Button for Requesting the Mobile Site
+   Share action title */
 "Request Mobile Site" = "Запитувати мобільний сайт";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Без зарубок";
-
-/* Button to save the user's password */
-"Save" = "Зберегти";
 
 /* Context menu item for saving an image */
 "Save Image" = "Зберегти зображення";
@@ -340,7 +346,7 @@
 "Save Logins" = "Зберігати логіни";
 
 /* See http://mzl.la/1LXbDOL */
-"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Зберігайте статті до свого списку читання, торкнувшись іконки книги з плюсом в керуванні режиму читача.";
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Зберігайте статті до свого списку читання, торкнувшись піктограми книги з плюсом в керуванні режиму читача.";
 
 /* Navigation title for search settings.
    Open search section of settings */
@@ -361,10 +367,10 @@
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Надіслати відгук";
 
-/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+/* Used as a button label for crash dialog prompt */
 "Send Report" = "Надіслати звіт";
 
-/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+/* Message displayed in the crash dialog above the buttons used to select when sending reports */
 "Send a crash report so Mozilla can fix the problem?" = "Надіслати звіт про падіння, щоб Mozilla змогла виправити проблему?";
 
 /* Sepia theme setting in Reading View settings */
@@ -380,8 +386,11 @@
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Поділитися";
 
+/* Context menu item for sharing a link URL */
+"Share Link" = "Поділитись посиланням";
+
 /* Label for show search suggestions setting. */
-"Show Search Suggestions" = "Показувати пошукові пропозиції";
+"Show Search Suggestions" = "Пошукові пропозиції";
 
 /* Accessibility label for the tabs button in the (top) browser toolbar
    Accessibility Label for the tabs button in the browser toolbar */
@@ -391,7 +400,7 @@
 "Show Tour" = "Показати знайомство";
 
 /* Label for show search suggestions setting. */
-"Show search suggestions" = "Показувати пошукові пропозиції";
+"Show search suggestions" = "Пошукові пропозиції";
 
 /* Text message / button in the settings table view */
 "Sign In" = "Увійти";
@@ -409,7 +418,7 @@
 "Swipe right or left with three fingers to close the tab." = "Проведіть трьома пальцями вправо чи вліво для закриття вкладки.";
 
 /* Sync Firefox Account */
-"Sync Now" = "Синхронізувати зараз";
+"Sync Now" = "Синхронізувати";
 
 /* See http://mzl.la/1Qtkf0j */
 "Sync your tabs, bookmarks, passwords and more." = "Синхронізуйте свої вкладки, закладки, паролі та інше.";
@@ -466,7 +475,7 @@
 "Upgrade Firefox to connect." = "Оновіть Firefox, щоб з'єднатись.";
 
 /* Setting to enable compact tabs in the tab overview */
-"Use Compact Tabs" = "Показати стислі вкладки";
+"Use Compact Tabs" = "Показувати стислі вкладки";
 
 /* Username textbox in Authentication prompt */
 "Username" = "Ім'я користувача";
@@ -491,6 +500,9 @@
 
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Ой, оце так халепа.";
+
+/* Button to save the user's password */
+"Yes" = "Так";
 
 /* History tableview section header */
 "Yesterday" = "Вчора";

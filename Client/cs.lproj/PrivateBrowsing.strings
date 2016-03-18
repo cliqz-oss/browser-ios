@@ -14,7 +14,7 @@
 "On" = "Zapnuto";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Private Tab" = "Otevřít v novém anonymním panelu";
+"Open In New Private Tab" = "Otevřít v anonymním panelu";
 
 /* Title displayed for when there are no open tabs while in private mode */
 "Private Browsing" = "Anonymní prohlížení";

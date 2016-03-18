@@ -1,5 +1,5 @@
 /* Message shown in the dialog prompting users if they want to clear everything */
-"Are you sure you want to clear all of your data? This will also close all open tabs." = "Ha sur oc'h e fell deoc'h skarzhañ holl ho roadennoù ? Serret e vo an holl ivinelloù digor.";
+"Are you sure you want to clear all of your data? This will also close all open tabs." = "Ha sur oc'h e fell deoc'h skarzhañ ho holl roadennoù ? Serret e vo an holl ivinelloù digor.";
 
 /* Settings item for clearing browsing history */
 "Browsing History" = "Roll istor ar merdeiñ";

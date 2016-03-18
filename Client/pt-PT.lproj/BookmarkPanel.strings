@@ -1,5 +1,5 @@
 /* Action button for deleting bookmarks in the bookmarks panel. */
-"Delete" = "Apagar";
+"Delete" = "Eliminar";
 
 /* The folder name for the virtual folder that contains all desktop bookmarks. */
 "Desktop Bookmarks" = "Marcadores do computador";

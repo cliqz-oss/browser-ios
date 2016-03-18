@@ -41,8 +41,8 @@ class AppStatus {
         return getAppVersion(getVersionDescriptor())
     }
 
-    func batteryLevel() -> Float {
-        return UIDevice.currentDevice().batteryLevel
+    func batteryLevel() -> Int {
+        return Int(UIDevice.currentDevice().batteryLevel * 100)
     }
 
     //MARK: - Singltone
@@ -54,7 +54,6 @@ class AppStatus {
 
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
-		TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_finish_launch"))
         
         lastOpenedDate = NSDate()
         NetworkReachability.sharedInstance.startMonitoring()
@@ -62,7 +61,6 @@ class AppStatus {
     }
 
     internal func appDidFinishLaunching() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_finish_launch"))
         
         dispatch_async(dispatchQueue) {
             
@@ -85,15 +83,12 @@ class AppStatus {
     }
     
     internal func appWillEnterForeground() {
+        
         SessionState.sessionResumed()
-        
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_enter_foreground"))
-        
         lastOpenedDate = NSDate()
     }
     
     internal func appDidBecomeActive(profile: Profile) {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_become_active"))
         
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
@@ -111,7 +106,6 @@ class AppStatus {
     }
     
     internal func appWillResignActive() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_resign_active"))
         
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
@@ -120,8 +114,6 @@ class AppStatus {
     internal func appDidEnterBackground() {
         SessionState.sessionPaused()
         
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("did_enter_background"))
-        
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
@@ -129,7 +121,6 @@ class AppStatus {
 	}
 
     internal func appWillTerminate() {
-        TelemetryLogger.sharedInstance.logEvent(.AppStateChange("will_terminate"))
         
         logApplicationUsageEvent("Terminate")
     }

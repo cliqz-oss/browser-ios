@@ -167,7 +167,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4F0E82441C7DE4E9004EBB3E"
+               BlueprintIdentifier = "1E1119D41C873C2700455C8C"
                BuildableName = "CliqzUITests.xctest"
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">

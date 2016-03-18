@@ -1,8 +1,8 @@
 /* Setting for closing private tabs */
-"Close Private Tabs" = "Fechar abas privativas";
+"Close Private Tabs" = "Fechar abas privadas";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "O Firefox não salvará o seu histórico ou cookies, mas novos favoritos serão salvos.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "O Firefox não salvará seu histórico ou cookies, mas novos favoritos serão salvos.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Saiba mais";
@@ -14,17 +14,17 @@
 "On" = "Ligado";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Private Tab" = "Abrir em uma nova aba privativa";
+"Open In New Private Tab" = "Abrir em uma nova aba privada";
 
 /* Title displayed for when there are no open tabs while in private mode */
-"Private Browsing" = "Navegação privativa";
+"Private Browsing" = "Navegação privada";
 
 /* Accessibility label for toggling on/off private mode */
-"Private Mode" = "Modo privativo";
+"Private Mode" = "Modo privado";
 
 /* Accessiblity hint for toggling on/off private mode */
-"Turns private mode on or off" = "Ativa ou desativa o modo privativo";
+"Turns private mode on or off" = "Ligar ou desligar o modo privado";
 
 /* Will be displayed in Settings under 'Close Private Tabs' */
-"When Leaving Private Browsing" = "Quando deixar a navegação privativa";
+"When Leaving Private Browsing" = "Quando deixar a navegação privada";
 

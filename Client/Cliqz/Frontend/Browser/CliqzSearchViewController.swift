@@ -68,7 +68,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
-		self.webView?.navigationDelegate = self;
+		self.webView?.navigationDelegate = self
+        self.webView?.scrollView.scrollEnabled = false
         self.view.addSubview(self.webView!)
         
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
@@ -295,7 +296,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
     
     func getSearchHistoryResults(callback: String?) {
-        let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
+		let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
@@ -319,8 +320,12 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 
             // creating the ActivityController and presenting it
             let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-            self.presentViewController(activityViewController, animated: true, completion: nil)
-
+			if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
+				self.presentViewController(activityViewController, animated: true, completion: nil)
+			} else {
+				let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
+				popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
+			}
         }
     }
     

@@ -50,6 +50,7 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             fromView.frame = middelFrame
         }
 
+        self.isAnimating = false
         
         UIView.animateWithDuration(duration,
             animations: {
@@ -64,7 +65,6 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 }
             }, completion:{_ in
                 transitionContext.completeTransition(true)
-                self.isAnimating = false
         })
 
         
