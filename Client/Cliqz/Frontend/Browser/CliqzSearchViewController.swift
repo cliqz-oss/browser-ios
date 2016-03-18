@@ -296,7 +296,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
     
     func getSearchHistoryResults(callback: String?) {
-        let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery!], forKeys: ["results", "query"])
+		let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
@@ -320,7 +320,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 
             // creating the ActivityController and presenting it
             let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-			if UI_USER_INTERFACE_IDIOM() == .Phone {
+			if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
 				self.presentViewController(activityViewController, animated: true, completion: nil)
 			} else {
 				let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)

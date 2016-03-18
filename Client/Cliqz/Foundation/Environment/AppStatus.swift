@@ -22,14 +22,15 @@ class AppStatus {
     var lastEnvironmentEventDate: NSDate?
     
     lazy var isRelease: Bool  = self.isReleasedVersion()
-    lazy var isDebug: Bool  = _isDebugAssertConfiguration()
+    lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
     
     private func isReleasedVersion() -> Bool {
-        let infoDict = NSBundle.mainBundle().infoDictionary;
-        if let isRelease = infoDict!["Release"] {
-            return isRelease.boolValue
-        }
-        return false
+//        let infoDict = NSBundle.mainBundle().infoDictionary;
+//        if let isRelease = infoDict!["Release"] {
+//            return isRelease.boolValue
+//        }
+//        return false
+        return true
     }
     
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
