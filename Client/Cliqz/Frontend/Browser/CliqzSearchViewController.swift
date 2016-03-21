@@ -296,7 +296,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
     
     func getSearchHistoryResults(callback: String?) {
-		let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
+	let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
