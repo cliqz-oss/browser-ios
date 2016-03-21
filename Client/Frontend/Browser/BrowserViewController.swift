@@ -855,6 +855,7 @@ class BrowserViewController: UIViewController {
     }
 
     private func showSearchController() {
+		self.switchToSearchMode = true
         if searchController == nil {
             // Cliqz: replaced SearchViewController by searchController
 //            let isPrivate = tabManager.selectedTab?.isPrivate ?? false
