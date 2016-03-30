@@ -138,8 +138,8 @@ class ClearPrivateDataTableViewController: UITableViewController {
                 .allSucceed()
                 .upon { result in
                     assert(result.isSuccess, "Private data cleared successfully")
-
-                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+					//Cliqz Moved updating preferences part to toggles switch handler method to save changes immedietely.
+//                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
 
                     dispatch_async(dispatch_get_main_queue()) {
                         // Disable the Clear Private Data button after it's clicked.
@@ -193,6 +193,9 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if toggles[clearHistoryCellIndex] == false {
            toggles[clearFavoriteHistoryCellIndex] = false
         }
+		//Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
+		self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+
         self.tableView.reloadData()
     }
     
