@@ -70,7 +70,7 @@ class JavaScriptBridge {
     }
 
 	func setDefaultSearchEngine() {
-		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("")?.absoluteString.componentsSeparatedByString("=")
+		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.componentsSeparatedByString("=queryString")
 		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
 			"url": searchComps![0] + "="]
 		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
