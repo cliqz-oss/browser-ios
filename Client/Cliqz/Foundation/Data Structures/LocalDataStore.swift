@@ -15,10 +15,6 @@ class LocalDataStore {
     static let dispatchQueue = dispatch_get_main_queue()
 
     class func setObject(value: AnyObject?, forKey: String) {
-        
-        // [TO_BE_REMOVED] Add logging to get more details to identify why the app crashes when dealing with NSUserDefaults
-        CLSLogv("[LocalDataStore] setObjectForKey: %@", getVaList([forKey]))
-        
         dispatch_async(dispatchQueue) {
             defaults.setObject(value, forKey: forKey)
             defaults.synchronize()
@@ -30,9 +26,6 @@ class LocalDataStore {
     }
     
     class func removeObjectForKey(key: String) {
-        // [TO_BE_REMOVED] Add logging to get more details to identify why the app crashes when dealing with NSUserDefaults
-        CLSLogv("[LocalDataStore] removeObjectForKey: %@", getVaList([key]))
-        
         dispatch_async(dispatchQueue) {
             defaults.removeObjectForKey(key)
             defaults.synchronize()
