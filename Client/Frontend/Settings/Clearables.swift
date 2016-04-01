@@ -39,6 +39,7 @@ class HistoryClearable: Clearable {
 
     func clear() -> Success {
         // Cliqz: clear unfavorite history itmes
+		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 0)
         return profile.history.clearHistory(0).bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
@@ -70,6 +71,7 @@ class FavoriteHistoryClearable: Clearable {
     
     func clear() -> Success {
         // clear favorite history itmes
+		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 1)
         return profile.history.clearHistory(1).bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()

@@ -70,3 +70,6 @@
 
 /* Settings item for clearing favorite history */
 "Include favorites" = "Inklusive Favoriten";
+
+/* Settings item for clearing private data on termination */
+"Clear Private data on termination" = "Private Daten beim Verlassen löschen";
