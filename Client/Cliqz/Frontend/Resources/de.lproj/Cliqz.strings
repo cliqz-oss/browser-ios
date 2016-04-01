@@ -66,7 +66,10 @@
 "Human Web" = "Human Web";
 
 /* Block Ads setting */
-"Block Ads" = "Werbung blockieren";
+"Block Ads" = "Bekannte Ad-Server blockieren";
 
 /* Settings item for clearing favorite history */
 "Include favorites" = "Inklusive Favoriten";
+
+/* Settings item for clearing private data on termination */
+"Clear Private data on termination" = "Private Daten beim Verlassen löschen";

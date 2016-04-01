@@ -13,7 +13,9 @@ import Crashlytics
 
 private let log = Logger.browserLogger
 
-let LatestAppVersionProfileKey = "latestAppVersion"
+public let LatestAppVersionProfileKey = "latestAppVersion"
+
+public let IsAppTerminated = "isAppTerminated"
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -147,13 +149,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             getProfile(application).prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
         }
         log.debug("Done with setting up the application.")
+		self.clearLocalDataIfNeeded()
+
         return true
     }
 
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
+		// Cliqz added preference in UserDefaults for keeping the state when app is terminated to clean-up on launch if needed
+		NSUserDefaults.standardUserDefaults().setBool(true, forKey: IsAppTerminated)
+		NSUserDefaults.standardUserDefaults().synchronize()
 
-        // We have only five seconds here, so let's hope this doesn't take too long.
+		// We have only five seconds here, so let's hope this doesn't take too long.
         self.profile?.shutdown()
 
         // Allow deinitializers to close our database connections.
@@ -161,7 +168,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.tabManager = nil
         self.browserViewController = nil
         self.rootViewController = nil
-        
+
         AppStatus.sharedInstance.appWillTerminate()
 
     }
@@ -315,6 +322,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+		
+		NSUserDefaults.standardUserDefaults().setBool(false, forKey: IsAppTerminated)
+		NSUserDefaults.standardUserDefaults().synchronize()
+
         AppStatus.sharedInstance.appDidEnterBackground()
         self.profile?.syncManager.applicationDidEnterBackground()
 
@@ -496,6 +507,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+	// Cliqz: Added method to clear Data if the application was closed before and
+	private func clearLocalDataIfNeeded() {
+		guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
+			return
+		}
+
+		guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true else {
+			return
+		}
+		profile.clearPrivateData(self.tabManager)
+	}
 
     // Cliqz: comented Firefox 3D Touch code
 //    @available(iOS 9.0, *)
