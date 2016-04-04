@@ -105,7 +105,6 @@
 		1E8E0F851C873CB500C2A186 /* CliqzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8E0F811C873CB500C2A186 /* CliqzUITests.swift */; };
 		1E8E0F861C873CB500C2A186 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8E0F821C873CB500C2A186 /* Global.swift */; };
 		1E8E0F871C873CB500C2A186 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E8E0F831C873CB500C2A186 /* Info.plist */; };
-		1E8E0F901C873E1C00C2A186 /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1E8E0F8C1C873E1C00C2A186 /* Lookback.bundle */; };
 		1EEFC6FE1C884042004CE6E4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC6FC1C884042004CE6E4 /* Crashlytics.framework */; };
 		1EEFC6FF1C884042004CE6E4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC6FD1C884042004CE6E4 /* Fabric.framework */; };
 		1EEFC7011C884E1A004CE6E4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC7001C884E1A004CE6E4 /* VideoToolbox.framework */; };
@@ -321,6 +320,7 @@
 		4F5F7C691CAD3BF4001912D9 /* BrowserProfileExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5F7C681CAD3BF4001912D9 /* BrowserProfileExtension.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
+		4FCF81611CAECD5F000A5B5B /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FCF81601CAECD5F000A5B5B /* Lookback.bundle */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		505B47F0B050D3C912C7AB02 /* ShareTo.strings in Resources */ = {isa = PBXBuildFile; fileRef = C30B463AB905B7D87BAEF83E /* ShareTo.strings */; };
 		556B404BBDA3FFA67665C2AF /* SendAnonymousUsageData.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8D53497B977E361780274CF8 /* SendAnonymousUsageData.strings */; };
@@ -1628,7 +1628,6 @@
 		1E8E0F821C873CB500C2A186 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		1E8E0F831C873CB500C2A186 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E8E0F8A1C873E1C00C2A186 /* Lookback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Lookback.framework; sourceTree = "<group>"; };
-		1E8E0F8C1C873E1C00C2A186 /* Lookback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Lookback.bundle; sourceTree = "<group>"; };
 		1E8E0F8E1C873E1C00C2A186 /* Lookback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Lookback.framework; sourceTree = "<group>"; };
 		1EEFC6FC1C884042004CE6E4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		1EEFC6FD1C884042004CE6E4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
@@ -2010,6 +2009,7 @@
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9F45129D2660461B63A6F5 /* dsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = dsb; path = dsb.lproj/Search.strings; sourceTree = "<group>"; };
 		4FCE4EEF80441D1239ECCC59 /* hsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hsb; path = hsb.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4FCF81601CAECD5F000A5B5B /* Lookback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Lookback.bundle; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		503548A79E2AE8E7BA89B942 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Shared.strings"; sourceTree = "<group>"; };
 		50744BA9B840269DF9BC8EA5 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/FindInPage.strings; sourceTree = "<group>"; };
@@ -3662,8 +3662,8 @@
 		1E8E0F881C873E1C00C2A186 /* Lookback */ = {
 			isa = PBXGroup;
 			children = (
+				4FCF815F1CAECD5F000A5B5B /* Lookback-Resources */,
 				1E8E0F891C873E1C00C2A186 /* HD */,
-				1E8E0F8B1C873E1C00C2A186 /* Lookback-Resources */,
 				1E8E0F8D1C873E1C00C2A186 /* Safe */,
 			);
 			name = Lookback;
@@ -3676,14 +3676,6 @@
 				1E8E0F8A1C873E1C00C2A186 /* Lookback.framework */,
 			);
 			path = HD;
-			sourceTree = "<group>";
-		};
-		1E8E0F8B1C873E1C00C2A186 /* Lookback-Resources */ = {
-			isa = PBXGroup;
-			children = (
-				1E8E0F8C1C873E1C00C2A186 /* Lookback.bundle */,
-			);
-			path = "Lookback-Resources";
 			sourceTree = "<group>";
 		};
 		1E8E0F8D1C873E1C00C2A186 /* Safe */ = {
@@ -4112,6 +4104,14 @@
 				39C5750D1BE28BAE00E1C4B1 /* OnePasswordExtension.m */,
 			);
 			name = OnePasswordExtension;
+			sourceTree = "<group>";
+		};
+		4FCF815F1CAECD5F000A5B5B /* Lookback-Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FCF81601CAECD5F000A5B5B /* Lookback.bundle */,
+			);
+			path = "Lookback-Resources";
 			sourceTree = "<group>";
 		};
 		7B0B1B9C1C1B69F500DF4AB5 /* Extensions */ = {
@@ -5957,7 +5957,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E8E0F871C873CB500C2A186 /* Info.plist in Resources */,
-				1E8E0F901C873E1C00C2A186 /* Lookback.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6146,6 +6145,7 @@
 				73644E1D8A9D44FE236EA0A2 /* HistoryPanel.strings in Resources */,
 				1E18DD071C873A4000664724 /* Cliqz.strings in Resources */,
 				0C474E6281EC2A314F1932B2 /* Intro.strings in Resources */,
+				4FCF81611CAECD5F000A5B5B /* Lookback.bundle in Resources */,
 				65924E71B05777A8C1A260DB /* LightweightThemes.strings in Resources */,
 				3CC04195B1407057F56A1C56 /* Localizable.strings in Resources */,
 				D1FB4646A5E8A839DD170093 /* LoginManager.strings in Resources */,
@@ -12116,6 +12116,7 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 					"$(PROJECT_DIR)",
 				);
