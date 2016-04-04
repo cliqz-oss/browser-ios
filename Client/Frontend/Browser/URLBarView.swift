@@ -245,8 +245,8 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
-		// Cliqz: Removed tabsButton and cancelButton accroding to requirements.
-//        addSubview(tabsButton)
+        addSubview(tabsButton)
+		// Cliqz: Removed cancelButton accroding to requirements.
 //        addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -299,11 +299,11 @@ class URLBarView: UIView {
 //			make.trailing.equalTo(self)
 //		}
 //		
-//        tabsButton.snp_makeConstraints { make in
-//            make.centerY.equalTo(self.locationContainer)
-//            make.trailing.equalTo(self)
-//            make.size.equalTo(UIConstants.ToolbarHeight)
-//        }
+        tabsButton.snp_makeConstraints { make in
+            make.centerY.equalTo(self.locationContainer)
+            make.trailing.equalTo(self)
+            make.size.equalTo(UIConstants.ToolbarHeight)
+        }
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
 //		curveShape.snp_makeConstraints { make in
@@ -332,8 +332,9 @@ class URLBarView: UIView {
         }
 
         shareButton.snp_makeConstraints { make in
-			// Cliqz: Changed right constraint because bookmark button is removed for now.
-            make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+            // Cliqz: Changed right constraint because bookmark button is removed for now.
+//            make.right.equalTo(self.bookmarkButton.snp_left)
+            make.right.equalTo(self.tabsButton.snp_left)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -351,8 +352,14 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
+                /*
+                make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                make.trailing.equalTo(self.cancelButton.snp_leading)
+                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.centerY.equalTo(self)
+                */
 				make.leading.equalTo(self.historyButton.snp_trailing)
-                make.trailing.equalTo(self).offset(-15)
+                make.trailing.equalTo(self.tabsButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -365,8 +372,12 @@ class URLBarView: UIView {
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
-					make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self).offset(-14)
+                    /*
+                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+                    */
+                    make.leading.equalTo(self.historyButton.snp_trailing)
+                    make.trailing.equalTo(self.tabsButton.snp_leading)
                 }
 
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -604,10 +615,11 @@ class URLBarView: UIView {
         if inOverlayMode {
 			// Cliqz: Commented out cancelButton as we've removed it
 //            self.cancelButton.transform = CGAffineTransformIdentity
-            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
-            self.tabsButton.transform = tabsButtonTransform
-            self.clonedTabsButton?.transform = tabsButtonTransform
-            self.rightBarConstraint?.updateOffset(URLBarViewUX.URLBarCurveOffset + URLBarViewUX.URLBarCurveBounceBuffer + tabsButton.frame.width)
+            // Cliqz: Commented out tabsButton transition as it will be always visible
+//            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
+//            self.tabsButton.transform = tabsButtonTransform
+//            self.clonedTabsButton?.transform = tabsButtonTransform
+//            self.rightBarConstraint?.updateOffset(URLBarViewUX.URLBarCurveOffset + URLBarViewUX.URLBarCurveBounceBuffer + tabsButton.frame.width)
 
             // Make the editable text field span the entire URL bar, covering the lock and reader icons.
             self.locationTextField?.snp_remakeConstraints { make in
