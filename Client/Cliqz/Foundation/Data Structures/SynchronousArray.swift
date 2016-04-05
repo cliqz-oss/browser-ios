@@ -20,7 +20,11 @@ class SynchronousArray {
     }
     
     internal func getContents() -> [AnyObject] {
-        return self.array
+		var result = [AnyObject]()
+		dispatch_sync(dispatchQueue) {
+			result = [AnyObject](self.array)
+		}
+		return result
     }
     
     internal func append(newElement: AnyObject){
