@@ -17,6 +17,3 @@ public let NotificationDataRemoteLoginChangesWereApplied = "NotificationDataRemo
 
 // Cliqz: Fired when trying to clear local history
 public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"
-
-// Cliqz: Fired when switching back again to the previous selected tab
-public let NotificationSwitchedToPreviousTab = "SwitchedToPreviousTabNotification"

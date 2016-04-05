@@ -98,8 +98,7 @@ class BrowserViewController: UIViewController {
     
     // Cliqz: webViewOverlay to cover the wkwebview when navigating from search result
     var webViewOverlay: UIView?
-    // Cliqz: Added private variables to handle session timeout and initial view
-    private var switchToSearchMode = false
+    
     private var needsNewTab = true
     
     private var isAppResponsive = false
@@ -307,10 +306,12 @@ class BrowserViewController: UIViewController {
             self.view.backgroundColor = UIColor.clearColor()
         }, completion: { _ in
             self.webViewContainerBackdrop.alpha = 0
+
             // Cliqz Added functionality for session timeout and telemtery logging when app becomes active
 			self.appDidBecomeResponsive("warm")
-			self.switchToSearchMode = SessionState.isSessionExpired()
-			self.switchToSearchModeIfNeeded()
+            if SessionState.isSessionExpired() {
+                self.resetState()
+            }
         })
     }
     
@@ -319,7 +320,6 @@ class BrowserViewController: UIViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationSwitchedToPreviousTab, object: nil)
     }
 
     override func viewDidLoad() {
@@ -330,7 +330,6 @@ class BrowserViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidEnterBackgroundNotification", name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELswitchToPreviousTab", name: NotificationSwitchedToPreviousTab, object: nil)
 
         KeyboardHelper.defaultHelper.addDelegate(self)
 
@@ -419,9 +418,6 @@ class BrowserViewController: UIViewController {
         log.debug("BVC setting up constraints…")
         setupConstraints()
         log.debug("BVC done.")
-
-        // Cliqz: open the app in search mode
-        self.switchToSearchMode = true
 		
         // Cliqz: start listening for user location changes
 		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
@@ -661,6 +657,10 @@ class BrowserViewController: UIViewController {
         screenshotHelper.viewIsVisible = false
 
         super.viewWillDisappear(animated)
+        
+        // Cliqz: preserve search state when dimissing view
+        preserveSearchState()
+        
     }
 
     func resetBrowserChrome() {
@@ -887,6 +887,7 @@ class BrowserViewController: UIViewController {
         // Cliqz: reset navigation steps
         navigationStep = 0
         backNavigationStep = 0
+        
     }
 
     private func hideSearchController() {
@@ -1856,8 +1857,6 @@ extension BrowserViewController: TabManagerDelegate {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
                 if AboutUtils.isAboutURL(webView.URL) {
                     // Indeed, because we don't show the toolbar at all, don't even blank the star.
-                    // Cliqz: switch to search mode creating new tab or switiching to empty tab
-                    switchToSearchMode = true
                 } else {
                     profile.bookmarks.isBookmarked(url).uponQueue(dispatch_get_main_queue()) {
                         guard let isBookmarked = $0.successValue else {
@@ -2615,8 +2614,6 @@ extension BrowserViewController: IntroViewControllerDelegate {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
         }
-        // Cliqz: going back from intro is the same case as switching to pervious tab
-        SELswitchToPreviousTab()
     }
 
     func presentSignInViewController() {
@@ -3042,25 +3039,54 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
 
 // Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
-    /// Cliqz: Added to set switchToSearchMode if user switched to previous tab empty tab as `didSelectedTabChange` is not fired in this case
-    func SELswitchToPreviousTab() {
-        if let _ = tabManager.selectedTab?.webView?.URL?.absoluteString {
-            if AboutUtils.isAboutURL(tabManager.selectedTab?.webView?.URL) {
-                // Cliqz: switch to search mode when switiching to empty tab
-                switchToSearchMode = true
-            }
+
+    // Cliqz: preserve search state when dimissing view
+    private func preserveSearchState() {
+        guard let selectedTab = self.tabManager.selectedTab else {
+            return
         }
+        
+        if self.searchController?.view.hidden == false {
+            urlBar.leaveOverlayMode()
+            selectedTab.lastSearchQuery = searchController?.searchQuery ?? ""
+            selectedTab.inSearchMode = true
+        } else {
+            selectedTab.inSearchMode = false
+        }
+    }
+    
+    // reset searchview state when session expire
+    private func resetState() {
+        
+        if let selectedTab = self.tabManager.selectedTab,
+            let searchController = self.searchController {
+                
+                selectedTab.inSearchMode = true
+                selectedTab.lastSearchQuery = ""
+                
+                switchToSearchModeIfNeeded()
+
+                // added delay before calling resetState to ensure that it is called after calling search with empty string
+                let time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+                dispatch_after(time, dispatch_get_main_queue(), {
+                    searchController.resetState()
+                    
+                })
+
+        }
+        
+
     }
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
-        if (self.switchToSearchMode) {
-            self.urlBar.enterOverlayMode("", pasted: false)
-			self.switchToSearchMode = false
-            if let searchController = self.searchController {
-                searchController.resetState()
+        if let selectedTab = self.tabManager.selectedTab {
+            if (selectedTab.inSearchMode) {
+                self.urlBar.enterOverlayMode(selectedTab.lastSearchQuery, pasted: true)
+                selectedTab.lastSearchQuery = ""
+                scrollController.showToolbars(animated: false)
             }
-            scrollController.showToolbars(animated: false)
         }
+        
     }
     
     // Cliqz: Added extension for logging the Navigation Telemetry signals
