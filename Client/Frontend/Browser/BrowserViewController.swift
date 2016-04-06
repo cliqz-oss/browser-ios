@@ -1323,8 +1323,14 @@ extension BrowserViewController: URLBarDelegate {
 
         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
 
+        // Cliqz: Take screenshot of search view instead of browser view if tabs button is clicked while search is in progress
+//        screenshotHelper.takeScreenshot(tab)
         if let tab = tabManager.selectedTab {
-            screenshotHelper.takeScreenshot(tab)
+            if searchController?.view.hidden == false {
+                screenshotHelper.takeScreenshot(tab, searchView: searchController!.view)
+            } else {
+                screenshotHelper.takeScreenshot(tab)
+            }
         }
 
         self.navigationController?.pushViewController(tabTrayController, animated: true)
