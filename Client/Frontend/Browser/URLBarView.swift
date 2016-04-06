@@ -251,7 +251,7 @@ class URLBarView: UIView {
 
         addSubview(shareButton)
         // Cliqz: Removed bookmarkButton from view as it covers the share button in the landscape mode
-//        addSubview(bookmarkButton)
+        addSubview(bookmarkButton)
         addSubview(forwardButton)
         addSubview(backButton)
         addSubview(stopReloadButton)
@@ -338,12 +338,12 @@ class URLBarView: UIView {
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
-        // Cliqz: Commented bookmarkButton constraints because it's removed from view as it covers the share button in the landscape mode
-//        bookmarkButton.snp_makeConstraints { make in
-//            make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-//            make.centerY.equalTo(self)
-//            make.size.equalTo(backButton)
-//        }
+        // Cliqz: Placed bookmarkButton next to stopReloadButton
+        bookmarkButton.snp_makeConstraints { make in
+            make.left.equalTo(self.stopReloadButton.snp_right)
+            make.centerY.equalTo(self)
+            make.size.equalTo(backButton)
+        }
 	}
 
     override func updateConstraints() {
@@ -367,7 +367,7 @@ class URLBarView: UIView {
             self.locationContainer.snp_remakeConstraints { make in
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
-                    make.leading.equalTo(self.stopReloadButton.snp_trailing)
+                    make.leading.equalTo(self.bookmarkButton.snp_trailing)
                     make.trailing.equalTo(self.shareButton.snp_leading)
                 } else {
                     // Otherwise, left align the location view

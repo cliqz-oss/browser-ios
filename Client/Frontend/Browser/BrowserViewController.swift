@@ -204,7 +204,6 @@ class BrowserViewController: UIViewController {
                previousTraitCollection.horizontalSizeClass != .Regular
     }
 
-
     func toggleSnackBarVisibility(show show: Bool) {
         if show {
             UIView.animateWithDuration(0.1, animations: { self.snackBars.hidden = false })
@@ -1083,7 +1082,15 @@ class BrowserViewController: UIViewController {
             return
         }
 
-		// Cliqz: commented below part of code to prevent the crash, as we don't support bookmarks this part is extra.
+		// Cliqz: Replaced FF bookmark's button state initialization corresponding to our requirements
+		profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
+			guard let data = result.successValue where data.count > 0  else { return }
+			guard let site: Site = data[0] where site.url == url else {
+				self.navigationToolbar.updateBookmarkStatus(false)
+				return
+			}
+			self.navigationToolbar.updateBookmarkStatus(site.favorite ?? false)
+		}
 		/*
         profile.bookmarks.isBookmarked(url).uponQueue(dispatch_get_main_queue()) { result in
             guard let bookmarked = result.successValue else {
@@ -1542,6 +1549,17 @@ extension BrowserViewController: BrowserToolbarDelegate {
     }
 
     func browserToolbarDidPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
+		// Cliqz: Replaced FF bookmarks handling according to our requirements
+		profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
+			guard let data = result.successValue where data.count > 0  else { return }
+			guard let site: Site = data[0], siteID = site.id else { return }
+			
+			site.favorite = site.favorite != nil ? !site.favorite! : true
+			self.profile.history.setHistoryFavorite([siteID], value: site.favorite!)
+
+			self.navigationToolbar.updateBookmarkStatus(site.favorite!)
+		}
+		/*
         guard let tab = tabManager.selectedTab,
               let url = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
@@ -1557,7 +1575,7 @@ extension BrowserViewController: BrowserToolbarDelegate {
             } else {
                 self.addBookmark(url, title: tab.title)
             }
-        }
+        }*/
     }
 
     func browserToolbarDidLongPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {

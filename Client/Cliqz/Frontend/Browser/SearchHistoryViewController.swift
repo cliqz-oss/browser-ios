@@ -46,7 +46,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearQueries:", name: NotificationPrivateDataClearQueries, object: nil)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
