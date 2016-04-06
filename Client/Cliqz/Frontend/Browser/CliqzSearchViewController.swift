@@ -225,19 +225,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateContentBlockingPreferences() {
 		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-		var parameterString = ""
-		do {
-			if NSJSONSerialization.isValidJSONObject(params) {
-				let json = try NSJSONSerialization.dataWithJSONObject(params, options: NSJSONWritingOptions(rawValue: 0))
-				parameterString = String(data:json, encoding: NSUTF8StringEncoding)!
-			} else {
-				print("couldn't convert object \(params) to JSON because it is not valid JSON")
-			}
-		} catch let error as NSError {
-			print("JSON conversion is failed with error: \(error)")
-		}
-		let JSString = "CLIQZEnvironment.setClientPreferences(\(parameterString))"
-		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
+        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
 	}
 }
 
