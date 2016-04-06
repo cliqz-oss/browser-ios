@@ -14,8 +14,7 @@ private let log = Logger.browserLogger
 protocol BrowserToolbarProtocol {
     weak var browserToolbarDelegate: BrowserToolbarDelegate? { get set }
     var shareButton: UIButton { get }
-	// Cliqz: removed Bookmark button as we don't need according to requirements
-//    var bookmarkButton: UIButton { get }
+    var bookmarkButton: UIButton { get }
     var forwardButton: UIButton { get }
     var backButton: UIButton { get }
     var stopReloadButton: UIButton { get }
@@ -112,18 +111,17 @@ public class BrowserToolbarHelper: NSObject {
 //        toolbar.shareButton.setImage(UIImage(named: "sendPressed"), forState: .Highlighted)
         toolbar.shareButton.accessibilityLabel = NSLocalizedString("Share", comment: "Accessibility Label for the browser toolbar Share button")
         toolbar.shareButton.addTarget(self, action: "SELdidClickShare", forControlEvents: UIControlEvents.TouchUpInside)
-		// Cliqz: removed Bookmark button as we don't need according to requirements
-		/*
-        toolbar.bookmarkButton.contentMode = UIViewContentMode.Center
 
-        toolbar.bookmarkButton.setImage(UIImage(named: "bookmark"), forState: .Normal)
-        toolbar.bookmarkButton.setImage(UIImage(named: "bookmarked"), forState: UIControlState.Selected)
-        toolbar.bookmarkButton.setImage(UIImage(named: "bookmarkHighlighted"), forState: UIControlState.Highlighted)
+        toolbar.bookmarkButton.contentMode = UIViewContentMode.Center
+        toolbar.bookmarkButton.setImage(UIImage(named: "cliqzFavorite"), forState: .Normal)
+        toolbar.bookmarkButton.setImage(UIImage(named: "cliqzFavorited"), forState: UIControlState.Selected)
+		// Cliqz: Removed highlighted state - discussed with Sven
+//        toolbar.bookmarkButton.setImage(UIImage(named: "bookmarkHighlighted"), forState: UIControlState.Highlighted)
         toolbar.bookmarkButton.accessibilityLabel = NSLocalizedString("Bookmark", comment: "Accessibility Label for the browser toolbar Bookmark button")
         let longPressGestureBookmarkButton = UILongPressGestureRecognizer(target: self, action: "SELdidLongPressBookmark:")
         toolbar.bookmarkButton.addGestureRecognizer(longPressGestureBookmarkButton)
         toolbar.bookmarkButton.addTarget(self, action: "SELdidClickBookmark", forControlEvents: UIControlEvents.TouchUpInside)
-*/
+
         setTintColor(buttonTintColor, forButtons: toolbar.actionButtons)
     }
 
@@ -152,8 +150,7 @@ public class BrowserToolbarHelper: NSObject {
     }
 
     func SELdidClickBookmark() {
-		// Cliqz: removed Bookmark button as we don't need according to requirements
-//        toolbar.browserToolbarDelegate?.browserToolbarDidPressBookmark(toolbar, button: toolbar.bookmarkButton)
+        toolbar.browserToolbarDelegate?.browserToolbarDidPressBookmark(toolbar, button: toolbar.bookmarkButton)
     }
 
     func SELdidLongPressBookmark(recognizer: UILongPressGestureRecognizer) {
@@ -189,8 +186,7 @@ class BrowserToolbar: Toolbar, BrowserToolbarProtocol {
     weak var browserToolbarDelegate: BrowserToolbarDelegate?
 
     let shareButton: UIButton
-	// Cliqz: removed Bookmark button as we don't need according to requirementsl
-//    let bookmarkButton: UIButton
+    let bookmarkButton: UIButton
     let forwardButton: UIButton
     let backButton: UIButton
     let stopReloadButton: UIButton
@@ -222,16 +218,15 @@ class BrowserToolbar: Toolbar, BrowserToolbarProtocol {
         forwardButton = UIButton()
         stopReloadButton = UIButton()
         shareButton = UIButton()
-		// Cliqz: removed Bookmark button as we don't need according to requirements
-//        bookmarkButton = UIButton()
-        actionButtons = [backButton, forwardButton, stopReloadButton, shareButton]
+        bookmarkButton = UIButton()
+        actionButtons = [backButton, forwardButton, stopReloadButton, bookmarkButton, shareButton]
 
         super.init(frame: frame)
 
         self.helper = BrowserToolbarHelper(toolbar: self)
 
 		// Cliqz: removed Bookmark button as we don't need according to requirements
-        addButtons(backButton, forwardButton, stopReloadButton, shareButton)
+        addButtons(backButton, forwardButton, stopReloadButton, bookmarkButton, shareButton)
 
         accessibilityNavigationStyle = .Combined
         accessibilityLabel = NSLocalizedString("Navigation Toolbar", comment: "Accessibility label for the navigation toolbar displayed at the bottom of the screen.")
@@ -250,8 +245,7 @@ class BrowserToolbar: Toolbar, BrowserToolbarProtocol {
     }
 
     func updateBookmarkStatus(isBookmarked: Bool) {
-		// Cliqz: removed Bookmark button as we don't need according to requirements
-//        bookmarkButton.selected = isBookmarked
+        bookmarkButton.selected = isBookmarked
     }
 
     func updateReloadStatus(isLoading: Bool) {
