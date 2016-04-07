@@ -32,6 +32,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	var webView: WKWebView?
     
+    var privateMode: Bool?
+    
     lazy var javaScriptBridge: JavaScriptBridge = {
         let javaScriptBridge = JavaScriptBridge(profile: self.profile)
         javaScriptBridge.delegate = self
@@ -132,7 +134,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             lastQuery = query
         }
 	}
-
+    
+    func updatePrivateMode(privateMode: Bool) {
+        if privateMode != self.privateMode {
+            self.privateMode = privateMode
+            updatePrivateModePreferences()
+        }
+    }
+    
+    //MARK: - WKWebView Delegate
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
 		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
@@ -227,6 +237,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
         javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
 	}
+    
+    private func updatePrivateModePreferences() {
+        let params = ["incognito" : self.privateMode!]
+        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+    }
 }
 
 // Handling communications with JavaScript
