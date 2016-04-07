@@ -519,7 +519,14 @@ class TabTrayController: UIViewController {
         }
         
         // Cliqz: log switch mode telemetry signal
-        tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        if privateMode {
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+        } else {
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        }
+
     }
 
     @available(iOS 9, *)

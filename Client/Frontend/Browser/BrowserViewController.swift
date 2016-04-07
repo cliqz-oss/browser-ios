@@ -864,6 +864,10 @@ class BrowserViewController: UIViewController {
             
             searchController = CliqzSearchViewController(profile: self.profile)
             searchController!.delegate = self
+            if let selectedTab = tabManager.selectedTab {
+                searchController?.updatePrivateMode(selectedTab.isPrivate)
+            }
+
             
 			
             searchLoader.addListener(searchController!)
@@ -1897,6 +1901,8 @@ extension BrowserViewController: TabManagerDelegate {
                 // When this happens, the URL is nil, so try restoring the page upon selection.
                 tab.reload()
             }
+            //Cliqz: update private mode in search view to notify JavaScript when switching between normal and private mode
+            searchController?.updatePrivateMode(tab.isPrivate)
         }
 
         if let selected = selected, previous = previous where selected.isPrivate != previous.isPrivate {
