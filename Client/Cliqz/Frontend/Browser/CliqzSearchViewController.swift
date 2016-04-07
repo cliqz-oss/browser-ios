@@ -103,6 +103,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.historyResults = data
 	}
 
+/*
 	func getHistory() -> Array<Dictionary<String, String>> {
 		var results = Array<Dictionary<String, String>>()
 		if let r = self.historyResults {
@@ -115,7 +116,19 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		}
 		return results
 	}
-	
+*/
+
+	func getHistory() -> NSArray {
+		let results = NSMutableArray()
+		if let r = self.historyResults {
+			for site in r {
+				let d: NSDictionary = ["url": site!.url, "title": site!.title]
+				results.addObject(d)
+			}
+		}
+		return NSArray(array: results)
+	}
+
 	func isHistoryUptodate() -> Bool {
 		return true
 	}
