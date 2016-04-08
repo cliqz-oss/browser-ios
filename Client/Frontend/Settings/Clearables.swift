@@ -141,7 +141,8 @@ private func deleteLibraryFolderContents(folder: String) throws {
     for content in contents {
         do {
             try manager.removeItemAtURL(dir.URLByAppendingPathComponent(content))
-        } catch where ((error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError)?.code == Int(EPERM) {
+        // Cliqz: catch any error instead of only `EPERM` so to prevent app from crashing when it couldn't delete the file for any reason
+        } catch { // where ((error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError)?.code == Int(EPERM) {
             // "Not permitted". We ignore this.
             log.debug("Couldn't delete some library contents.")
         }
