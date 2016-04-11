@@ -228,10 +228,13 @@ class BrowserViewController: UIViewController {
             footerBackground = BlurWrapper(view: toolbar!)
             footerBackground?.translatesAutoresizingMaskIntoConstraints = false
 
+            // Cliqz: Use the same BlurWrapper footer style for both private and normal modes
+            /*
             // Need to reset the proper blur style
             if let selectedTab = tabManager.selectedTab where selectedTab.isPrivate {
                 footerBackground!.blurStyle = .Dark
             }
+            */
             footer.addSubview(footerBackground!)
         }
 
@@ -2911,7 +2914,9 @@ extension BrowserViewController: Themeable {
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
-            footerBackground?.blurStyle = .Dark
+            // Cliqz: Use same blurStyle for both normal and private modes
+//            footerBackground?.blurStyle = .Dark
+            footerBackground?.blurStyle = .ExtraLight
         default:
             log.debug("Unknown Theme \(themeName)")
         }

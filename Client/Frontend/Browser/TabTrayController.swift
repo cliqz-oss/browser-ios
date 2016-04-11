@@ -757,7 +757,10 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.delegate = cellDelegate
 
         let tab = tabs[indexPath.item]
-        tabCell.style = tab.isPrivate ? .Dark : .Light
+        // Cliqz: Use the Light cell style for both private and normal modes
+//        tabCell.style = tab.isPrivate ? .Dark : .Light
+        tabCell.style = .Light
+        
         tabCell.titleText.text = tab.displayTitle
 
         if !tab.displayTitle.isEmpty {
