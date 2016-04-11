@@ -3085,10 +3085,17 @@ extension BrowserViewController {
         }
     }
     
-    // reset searchview state when session expire
+    // reset App state when session expire
     private func resetState() {
         
-        if let selectedTab = self.tabManager.selectedTab,
+        // remove all tabs except the first tab
+        let lastIndex = tabManager.tabs.count-1
+        for index in lastIndex.stride(to: 0, by: -1) {
+            let tab = tabManager.tabs[index]
+            tabManager.removeTab(tab)
+        }
+        
+        if let selectedTab = tabManager.selectedTab,
             let searchController = self.searchController {
                 
                 selectedTab.inSearchMode = true
