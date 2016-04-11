@@ -82,7 +82,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-        lastQuery = LocalDataStore.objectForKey(lastQueryKey) as? String
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -143,9 +142,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		JSString = "search_mobile('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 
-        if query.characters.count > 0 {
-            lastQuery = query
-        }
+        lastQuery = query
 	}
     
     func updatePrivateMode(privateMode: Bool) {
@@ -283,7 +280,7 @@ extension CliqzSearchViewController {
                 configs["title"] = lastTitle
             }
             javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
-        } else if let query = lastQuery { // the app was closed while searching
+        } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
             if let currentLocation = LocationManager.sharedInstance.location {

@@ -283,6 +283,11 @@ class TabManager : NSObject {
         if flushToDisk {
 //        	storeChanges()
         }
+        
+        // Cliqz: reset `inSearchMode` if the tab was created to open specific url
+        if request != nil {
+            tab.inSearchMode = false
+        }
     }
 
     // This method is duplicated to hide the flushToDisk option from consumers.

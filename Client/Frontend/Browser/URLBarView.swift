@@ -212,6 +212,9 @@ class URLBarView: UIView {
 		historyButton.accessibilityLabel = "HistoryButton"
 		return historyButton }()
 
+    // Cliqz: Added to maintain tab count
+    private var tabCount = 1
+    
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
     private weak var clonedTabsButton: TabsButton?
 
@@ -448,6 +451,9 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
+        tabCount = count
+        
         let currentCount = self.tabsButton.titleLabel.text
         // only animate a tab count change if the tab count has actually changed
         if currentCount != count.description {
@@ -502,11 +508,16 @@ class URLBarView: UIView {
                 self.tabsButton.insideButton.layer.transform = CATransform3DIdentity
                 self.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the (top) browser toolbar")
 
-                // Cliqz: always update tabs button title because finish is always equal false due to unknown reasons
-//                if finished {
+                // Cliqz: always update tabs button title because finish is always equal false due to unknown reasons, and display last tab count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
+                /*
+                if finished {
                     self.tabsButton.titleLabel.text = count.description
                     self.tabsButton.accessibilityValue = count.description
-//                }
+                }
+                */
+                self.tabsButton.titleLabel.text = self.tabCount.description
+                self.tabsButton.accessibilityValue = self.tabCount.description
+
             }
             
             if animated {
