@@ -25,10 +25,13 @@ class JavaScriptBridge {
     weak var delegate: JavaScriptBridgeDelegate?
     var profile: Profile
     private let maxFrecencyLimit: Int = 30
+    private let backgorundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
     init(profile: Profile) {
         self.profile = profile
-        self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
+        dispatch_async(backgorundQueue) {
+            self.profile.history.setTopSitesCacheSize(Int32(self.maxFrecencyLimit))
+        }
     }
     
     func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
@@ -70,10 +73,18 @@ class JavaScriptBridge {
     }
 
 	func setDefaultSearchEngine() {
-		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.componentsSeparatedByString("=queryString")
-		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
-			"url": searchComps![0] + "="]
-		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+        
+        dispatch_async(backgorundQueue) {
+            
+            let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.componentsSeparatedByString("=queryString")
+            let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
+                "url": searchComps![0] + "="]
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+            }
+        }
+		
 	}
 
     // Mark: Handle JavaScript Action
