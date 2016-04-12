@@ -637,12 +637,15 @@ class BrowserViewController: UIViewController {
         self.appDidBecomeResponsive("cold")
         log.debug("BVC done.")
 
+        // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
+        /*
         if profile.prefs.stringForKey(LatestAppVersionProfileKey) != AppInfo.appVersion && DeviceInfo.hasConnectivity() {
             if let whatsNewURL = SupportUtils.URLForTopic("new-ios") {
                 self.openURLInNewTab(whatsNewURL)
                 profile.prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
             }
         }
+        */
 
         showQueuedAlertIfAvailable()
     }
