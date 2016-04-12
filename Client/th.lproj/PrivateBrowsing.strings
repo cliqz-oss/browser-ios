@@ -2,7 +2,7 @@
 "Close Private Tabs" = "ปิดแท็บส่วนตัว";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox จะไม่จดจำประวัติหรือคุกกี้ใด ๆ ของคุณ แต่ที่คั่นหน้าใหม่จะถูกบันทึกไว้";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ จะไม่จดจำประวัติหรือคุกกี้ใด ๆ ของคุณ แต่ที่คั่นหน้าใหม่จะถูกบันทึกไว้";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "เรียนรู้เพิ่มเติม";

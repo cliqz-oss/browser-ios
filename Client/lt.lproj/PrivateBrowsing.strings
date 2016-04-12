@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Užverti privačias korteles";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "„Firefox“ neįsimins jokios naršymo istorijos ar slapukų, tačiau nauji adresyno įrašai bus išsaugoti.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "„CLIQZ“ neįsimins jokios naršymo istorijos ar slapukų, tačiau nauji adresyno įrašai bus išsaugoti.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Sužinoti daugiau";
