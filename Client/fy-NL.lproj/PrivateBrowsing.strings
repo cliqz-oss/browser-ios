@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Priveeljepblêden slute";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox sil gjin skiednis of cookies ûnthâlde, mar nije blêdwizers sille bewarre wurde.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ sil gjin skiednis of cookies ûnthâlde, mar nije blêdwizers sille bewarre wurde.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Mear ynfo";

@@ -61,7 +61,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         loadHistory()
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 246.0/255.0, green: 90.0/255.0, blue: 42.0/255.0, alpha: 1)
+        self.navigationController?.navigationBar.barTintColor = UIConstants.OrangeColor
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")

@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Cerrar pestañas privadas";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox no recordará tu historial ni cookies, pero los marcadores nuevos se guardarán.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ no recordará tu historial ni cookies, pero los marcadores nuevos se guardarán.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Saber más";

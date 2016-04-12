@@ -2,7 +2,7 @@
 "Close Private Tabs" = "關閉隱私分頁";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox 將不會記住瀏覽紀錄或 cookie，但還是會留下新建立的書籤。";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ 將不會記住瀏覽紀錄或 cookie，但還是會留下新建立的書籤。";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "瞭解更多";

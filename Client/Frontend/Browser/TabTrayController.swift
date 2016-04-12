@@ -757,7 +757,10 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.delegate = cellDelegate
 
         let tab = tabs[indexPath.item]
-        tabCell.style = tab.isPrivate ? .Dark : .Light
+        // Cliqz: Use the Light cell style for both private and normal modes
+//        tabCell.style = tab.isPrivate ? .Dark : .Light
+        tabCell.style = .Light
+        
         tabCell.titleText.text = tab.displayTitle
 
         if !tab.displayTitle.isEmpty {
@@ -926,7 +929,8 @@ private class EmptyPrivateTabsView: UIView {
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(iconImageView)
-        addSubview(learnMoreButton)
+        // Cliqz: takeout learn more button in the private mode
+//        addSubview(learnMoreButton)
 
         titleLabel.snp_makeConstraints { make in
             make.center.equalTo(self)
@@ -941,11 +945,11 @@ private class EmptyPrivateTabsView: UIView {
             make.top.equalTo(titleLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.TextMargin)
             make.centerX.equalTo(self)
         }
-
-        learnMoreButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
-            make.centerX.equalTo(self)
-        }
+        // Cliqz: takeout learn more button in the private mode
+//        learnMoreButton.snp_makeConstraints { (make) -> Void in
+//            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
+//            make.centerX.equalTo(self)
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {
