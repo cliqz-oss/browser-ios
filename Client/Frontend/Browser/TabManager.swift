@@ -281,7 +281,7 @@ class TabManager : NSObject {
         tab.loadRequest(request ?? defaultNewTabRequest)
 
         if flushToDisk {
-//        	storeChanges()
+        	storeChanges()
         }
         
         // Cliqz: reset `inSearchMode` if the tab was created to open specific url
@@ -528,12 +528,15 @@ extension TabManager {
     }
 
     func preserveTabs() {
+        // Cliqz: disable preserving tabs to enhance startup time
+        /*
         // This is wrapped in an Objective-C @try/@catch handler because NSKeyedArchiver may throw exceptions which Swift cannot handle
         _ = Try(withTry: { () -> Void in
             self.preserveTabsInternal()
             }) { (exception) -> Void in
             print("Failed to preserve tabs: \(exception)")
         }
+        */
     }
 
     private func restoreTabsInternal() {

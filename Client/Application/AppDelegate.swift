@@ -217,8 +217,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 
         // Cliqz: Start Crashlytics
-        Fabric.with([Crashlytics.self])
-
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            Fabric.with([Crashlytics.self])
+        }
+        
         // Cliqz: Added to confire home shortcuts
         if #available(iOS 9.0, *) {
             self.configureHomeShortCuts()

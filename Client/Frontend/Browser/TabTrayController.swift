@@ -760,8 +760,14 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         // Cliqz: Use the Light cell style for both private and normal modes
 //        tabCell.style = tab.isPrivate ? .Dark : .Light
         tabCell.style = .Light
-        
-        tabCell.titleText.text = tab.displayTitle
+
+        // Cliqz: show lastSearchQuery as cell title if tab was in search mode
+//        tabCell.titleText.text = tab.displayTitle
+        if (tab.inSearchMode) {
+            tabCell.titleText.text = tab.lastSearchQuery
+        } else {
+            tabCell.titleText.text = tab.displayTitle
+        }
 
         if !tab.displayTitle.isEmpty {
             tabCell.accessibilityLabel = tab.displayTitle
@@ -772,7 +778,9 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.isAccessibilityElement = true
         tabCell.accessibilityHint = NSLocalizedString("Swipe right or left with three fingers to close the tab.", comment: "Accessibility hint for tab tray's displayed tab.")
 
-        if let favIcon = tab.displayFavicon {
+        // Cliqz: display default fav icon if tab was in search mode
+//        if let favIcon = tab.displayFavicon {
+        if let favIcon = tab.displayFavicon where tab.inSearchMode == false {
             tabCell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
         } else {
             var defaultFavicon = UIImage(named: "defaultFavicon")
