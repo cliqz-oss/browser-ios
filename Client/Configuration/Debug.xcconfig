@@ -4,9 +4,9 @@
 
 #include "BaseConfig.xcconfig"
 
-MOZ_BUNDLE_DISPLAY_NAME = Cliqz Beta
+MOZ_BUNDLE_DISPLAY_NAME = CLIQZ
 
-MOZ_PRODUCT_NAME = Cliqz Beta
+MOZ_PRODUCT_NAME = CLIQZ
 
 MOZ_RELEASE_CHANNEL = debug
 
