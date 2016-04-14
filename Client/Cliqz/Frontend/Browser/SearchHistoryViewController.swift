@@ -46,7 +46,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearQueries:", name: NotificationPrivateDataClearQueries, object: nil)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -61,12 +61,12 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         loadHistory()
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 246.0/255.0, green: 90.0/255.0, blue: 42.0/255.0, alpha: 1)
+        self.navigationController?.navigationBar.barTintColor = UIConstants.OrangeColor
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search history", tableName: "Cliqz", comment: "Search history title")
         self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"), accessibilityLabel: "CloseHistoryButton")
-        self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"), accessibilityLabel: "OpenSettingsButton")
+
 		
         self.setupConstraints()
     }
@@ -90,7 +90,15 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     
     // Mark: Navigation delegate
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-
+		guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
+			return
+		}
+		guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true && profile.historyTypeShouldBeCleared() != .None else {
+			return
+		}
+		clearQueries(includeFavorites: profile.historyTypeShouldBeCleared() == .All)
+		NSUserDefaults.standardUserDefaults().setBool(false, forKey: IsAppTerminated)
+		NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -107,16 +115,6 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func openSettings() {
-        let settingsTableViewController = AppSettingsTableViewController()
-        settingsTableViewController.profile = profile
-        settingsTableViewController.tabManager = tabManager        
-        
-        let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
-        controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-        presentViewController(controller, animated: true, completion: nil)
-    }
-
     func logLayerChangeTelemetrySignal() {
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("past", "present"))
     }
@@ -198,9 +196,12 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     
     
     // MARK: - Clear History
-    func clearQueries(notification: NSNotification) {
+	func clearQueries(notification: NSNotification) {
         let includeFavorites: Bool = (notification.object as? Bool) ?? false
-        
+		self.clearQueries(includeFavorites: includeFavorites)
+	}
+
+	func clearQueries(includeFavorites includeFavorites: Bool) {
         self.evaluateJavaScript("clearQueries(\(includeFavorites))", completionHandler: nil)
     }
 

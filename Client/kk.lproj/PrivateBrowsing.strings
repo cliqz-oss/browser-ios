@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Жекелік беттерді жабу";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox сіздің шолу таризыңызды немесе cookies сақтамайды, бірақ, жаңа бетбелгілер сақталатын болады.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ сіздің шолу таризыңызды немесе cookies сақтамайды, бірақ, жаңа бетбелгілер сақталатын болады.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Көбірек білу";

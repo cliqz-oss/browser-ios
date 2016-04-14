@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Закривати приватні вкладки";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox не буде пам'ятати будь-яку історію чи куки, але нові закладки будуть збережені.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ не буде пам'ятати будь-яку історію чи куки, але нові закладки будуть збережені.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Докладніше";

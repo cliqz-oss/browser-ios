@@ -35,6 +35,8 @@ class TelemetryLogger : EventsLogger {
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
     
+    var privateMode = false
+    
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
         loadTelemetrySeq()
@@ -58,10 +60,18 @@ class TelemetryLogger : EventsLogger {
     func storeCurrentTelemetrySeq() {
         LocalDataStore.setObject(telemetrySeq!.get(), forKey: self.telementrySequenceKey)
     }
+    //MARK: - private mode
+    func changePrivateMode(privateMode: Bool) {
+        self.privateMode = privateMode
+    }
     
     //MARK: - Log events
     internal func logEvent(eventType: TelemetryLogEventType){
-
+        // disable sending any signals during private mode
+        guard privateMode == false else {
+            return
+        }
+        
         dispatch_async(dispatchQueue) {
             var event: [String: AnyObject]
             var disableSendingEvent = false

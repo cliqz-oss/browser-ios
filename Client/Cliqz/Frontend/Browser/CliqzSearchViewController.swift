@@ -32,6 +32,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	var webView: WKWebView?
     
+    var privateMode: Bool?
+    
     lazy var javaScriptBridge: JavaScriptBridge = {
         let javaScriptBridge = JavaScriptBridge(profile: self.profile)
         javaScriptBridge.delegate = self
@@ -80,7 +82,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-        lastQuery = LocalDataStore.objectForKey(lastQueryKey) as? String
 	}
 
     override func viewWillAppear(animated: Bool) {
@@ -101,6 +102,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.historyResults = data
 	}
 
+/*
 	func getHistory() -> Array<Dictionary<String, String>> {
 		var results = Array<Dictionary<String, String>>()
 		if let r = self.historyResults {
@@ -113,7 +115,19 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		}
 		return results
 	}
-	
+*/
+
+	func getHistory() -> NSArray {
+		let results = NSMutableArray()
+		if let r = self.historyResults {
+			for site in r {
+				let d: NSDictionary = ["url": site!.url, "title": site!.title]
+				results.addObject(d)
+			}
+		}
+		return NSArray(array: results)
+	}
+
 	func isHistoryUptodate() -> Bool {
 		return true
 	}
@@ -128,11 +142,17 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		JSString = "search_mobile('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 
-        if query.characters.count > 0 {
-            lastQuery = query
-        }
+        lastQuery = query
 	}
-
+    
+    func updatePrivateMode(privateMode: Bool) {
+        if privateMode != self.privateMode {
+            self.privateMode = privateMode
+            updatePrivateModePreferences()
+        }
+    }
+    
+    //MARK: - WKWebView Delegate
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
 		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
@@ -225,20 +245,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateContentBlockingPreferences() {
 		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-		var parameterString = ""
-		do {
-			if NSJSONSerialization.isValidJSONObject(params) {
-				let json = try NSJSONSerialization.dataWithJSONObject(params, options: NSJSONWritingOptions(rawValue: 0))
-				parameterString = String(data:json, encoding: NSUTF8StringEncoding)!
-			} else {
-				print("couldn't convert object \(params) to JSON because it is not valid JSON")
-			}
-		} catch let error as NSError {
-			print("JSON conversion is failed with error: \(error)")
-		}
-		let JSString = "CLIQZEnvironment.setClientPreferences(\(parameterString))"
-		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
+        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
 	}
+    
+    private func updatePrivateModePreferences() {
+        let params = ["incognito" : self.privateMode!]
+        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+    }
 }
 
 // Handling communications with JavaScript
@@ -267,7 +280,7 @@ extension CliqzSearchViewController {
                 configs["title"] = lastTitle
             }
             javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
-        } else if let query = lastQuery { // the app was closed while searching
+        } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
             if let currentLocation = LocationManager.sharedInstance.location {
@@ -296,7 +309,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
     
     func getSearchHistoryResults(callback: String?) {
-		let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
+	let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results", "query"])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     

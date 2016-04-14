@@ -519,7 +519,14 @@ class TabTrayController: UIViewController {
         }
         
         // Cliqz: log switch mode telemetry signal
-        tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        if privateMode {
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+        } else {
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        }
+
     }
 
     @available(iOS 9, *)
@@ -750,8 +757,17 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.delegate = cellDelegate
 
         let tab = tabs[indexPath.item]
-        tabCell.style = tab.isPrivate ? .Dark : .Light
-        tabCell.titleText.text = tab.displayTitle
+        // Cliqz: Use the Light cell style for both private and normal modes
+//        tabCell.style = tab.isPrivate ? .Dark : .Light
+        tabCell.style = .Light
+
+        // Cliqz: show lastSearchQuery as cell title if tab was in search mode
+//        tabCell.titleText.text = tab.displayTitle
+        if (tab.inSearchMode) {
+            tabCell.titleText.text = tab.lastSearchQuery
+        } else {
+            tabCell.titleText.text = tab.displayTitle
+        }
 
         if !tab.displayTitle.isEmpty {
             tabCell.accessibilityLabel = tab.displayTitle
@@ -762,7 +778,9 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.isAccessibilityElement = true
         tabCell.accessibilityHint = NSLocalizedString("Swipe right or left with three fingers to close the tab.", comment: "Accessibility hint for tab tray's displayed tab.")
 
-        if let favIcon = tab.displayFavicon {
+        // Cliqz: display default fav icon if tab was in search mode
+//        if let favIcon = tab.displayFavicon {
+        if let favIcon = tab.displayFavicon where tab.inSearchMode == false {
             tabCell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
         } else {
             var defaultFavicon = UIImage(named: "defaultFavicon")
@@ -919,7 +937,8 @@ private class EmptyPrivateTabsView: UIView {
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(iconImageView)
-        addSubview(learnMoreButton)
+        // Cliqz: takeout learn more button in the private mode
+//        addSubview(learnMoreButton)
 
         titleLabel.snp_makeConstraints { make in
             make.center.equalTo(self)
@@ -934,11 +953,11 @@ private class EmptyPrivateTabsView: UIView {
             make.top.equalTo(titleLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.TextMargin)
             make.centerX.equalTo(self)
         }
-
-        learnMoreButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
-            make.centerX.equalTo(self)
-        }
+        // Cliqz: takeout learn more button in the private mode
+//        learnMoreButton.snp_makeConstraints { (make) -> Void in
+//            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
+//            make.centerX.equalTo(self)
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -98,8 +98,7 @@ class BrowserViewController: UIViewController {
     
     // Cliqz: webViewOverlay to cover the wkwebview when navigating from search result
     var webViewOverlay: UIView?
-    // Cliqz: Added private variables to handle session timeout and initial view
-    private var switchToSearchMode = false
+    
     private var needsNewTab = true
     
     private var isAppResponsive = false
@@ -205,7 +204,6 @@ class BrowserViewController: UIViewController {
                previousTraitCollection.horizontalSizeClass != .Regular
     }
 
-
     func toggleSnackBarVisibility(show show: Bool) {
         if show {
             UIView.animateWithDuration(0.1, animations: { self.snackBars.hidden = false })
@@ -230,10 +228,13 @@ class BrowserViewController: UIViewController {
             footerBackground = BlurWrapper(view: toolbar!)
             footerBackground?.translatesAutoresizingMaskIntoConstraints = false
 
+            // Cliqz: Use the same BlurWrapper footer style for both private and normal modes
+            /*
             // Need to reset the proper blur style
             if let selectedTab = tabManager.selectedTab where selectedTab.isPrivate {
                 footerBackground!.blurStyle = .Dark
             }
+            */
             footer.addSubview(footerBackground!)
         }
 
@@ -307,10 +308,12 @@ class BrowserViewController: UIViewController {
             self.view.backgroundColor = UIColor.clearColor()
         }, completion: { _ in
             self.webViewContainerBackdrop.alpha = 0
+
             // Cliqz Added functionality for session timeout and telemtery logging when app becomes active
 			self.appDidBecomeResponsive("warm")
-			self.switchToSearchMode = SessionState.isSessionExpired()
-			self.switchToSearchModeIfNeeded()
+            if SessionState.isSessionExpired() {
+                self.resetState()
+            }
         })
     }
     
@@ -319,7 +322,6 @@ class BrowserViewController: UIViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationSwitchedToPreviousTab, object: nil)
     }
 
     override func viewDidLoad() {
@@ -330,7 +332,6 @@ class BrowserViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidEnterBackgroundNotification", name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELswitchToPreviousTab", name: NotificationSwitchedToPreviousTab, object: nil)
 
         KeyboardHelper.defaultHelper.addDelegate(self)
 
@@ -419,9 +420,6 @@ class BrowserViewController: UIViewController {
         log.debug("BVC setting up constraints…")
         setupConstraints()
         log.debug("BVC done.")
-
-        // Cliqz: open the app in search mode
-        self.switchToSearchMode = true
 		
         // Cliqz: start listening for user location changes
 		if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
@@ -639,12 +637,15 @@ class BrowserViewController: UIViewController {
         self.appDidBecomeResponsive("cold")
         log.debug("BVC done.")
 
+        // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
+        /*
         if profile.prefs.stringForKey(LatestAppVersionProfileKey) != AppInfo.appVersion && DeviceInfo.hasConnectivity() {
             if let whatsNewURL = SupportUtils.URLForTopic("new-ios") {
                 self.openURLInNewTab(whatsNewURL)
                 profile.prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
             }
         }
+        */
 
         showQueuedAlertIfAvailable()
     }
@@ -661,6 +662,10 @@ class BrowserViewController: UIViewController {
         screenshotHelper.viewIsVisible = false
 
         super.viewWillDisappear(animated)
+        
+        // Cliqz: preserve search state when dimissing view
+        preserveSearchState()
+        
     }
 
     func resetBrowserChrome() {
@@ -855,7 +860,6 @@ class BrowserViewController: UIViewController {
     }
 
     private func showSearchController() {
-		self.switchToSearchMode = true
         if searchController == nil {
             // Cliqz: replaced SearchViewController by searchController
 //            let isPrivate = tabManager.selectedTab?.isPrivate ?? false
@@ -866,6 +870,10 @@ class BrowserViewController: UIViewController {
             
             searchController = CliqzSearchViewController(profile: self.profile)
             searchController!.delegate = self
+            if let selectedTab = tabManager.selectedTab {
+                searchController?.updatePrivateMode(selectedTab.isPrivate)
+            }
+
             
 			
             searchLoader.addListener(searchController!)
@@ -888,6 +896,7 @@ class BrowserViewController: UIViewController {
         // Cliqz: reset navigation steps
         navigationStep = 0
         backNavigationStep = 0
+        
     }
 
     private func hideSearchController() {
@@ -1083,7 +1092,15 @@ class BrowserViewController: UIViewController {
             return
         }
 
-		// Cliqz: commented below part of code to prevent the crash, as we don't support bookmarks this part is extra.
+		// Cliqz: Replaced FF bookmark's button state initialization corresponding to our requirements
+		profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
+			guard let data = result.successValue where data.count > 0  else { return }
+			guard let site: Site = data[0] where site.url == url else {
+				self.navigationToolbar.updateBookmarkStatus(false)
+				return
+			}
+			self.navigationToolbar.updateBookmarkStatus(site.favorite ?? false)
+		}
 		/*
         profile.bookmarks.isBookmarked(url).uponQueue(dispatch_get_main_queue()) { result in
             guard let bookmarked = result.successValue else {
@@ -1118,26 +1135,23 @@ class BrowserViewController: UIViewController {
     }
 
     func openURLInNewTab(url: NSURL) {
-        tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url))
-//        if #available(iOS 9, *) {
-//            openURLInNewTab(url, isPrivate: tabTrayController?.privateMode ?? false)
-//        } else {
-//            tabManager.addTabAndSelect(NSURLRequest(URL: url))
-//        }
+        if #available(iOS 9, *) {
+            openURLInNewTab(url, isPrivate: tabTrayController?.privateMode ?? false)
+        } else {
+            tabManager.addTabAndSelect(NSURLRequest(URL: url))
+        }
     }
 
     @available(iOS 9, *)
     func openURLInNewTab(url: NSURL?, isPrivate: Bool) {
-        tabManager.selectedTab?.webView?.loadRequest(NSURLRequest(URL: url!))
-        
-//        let request: NSURLRequest?
-//        if let url = url {
-//            request = NSURLRequest(URL: url)
-//        } else {
-//            request = nil
-//        }
-//        switchToPrivacyMode(isPrivate: isPrivate)
-//        tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+        let request: NSURLRequest?
+        if let url = url {
+            request = NSURLRequest(URL: url)
+        } else {
+            request = nil
+        }
+        switchToPrivacyMode(isPrivate: isPrivate)
+        tabManager.addTabAndSelect(request, isPrivate: isPrivate)
     }
 
     @available(iOS 9, *)
@@ -1326,8 +1340,14 @@ extension BrowserViewController: URLBarDelegate {
 
         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
 
+        // Cliqz: Take screenshot of search view instead of browser view if tabs button is clicked while search is in progress
+//        screenshotHelper.takeScreenshot(tab)
         if let tab = tabManager.selectedTab {
-            screenshotHelper.takeScreenshot(tab)
+            if searchController?.view.hidden == false {
+                screenshotHelper.takeScreenshot(tab, searchView: searchController!.view)
+            } else {
+                screenshotHelper.takeScreenshot(tab)
+            }
         }
 
         self.navigationController?.pushViewController(tabTrayController, animated: true)
@@ -1539,6 +1559,17 @@ extension BrowserViewController: BrowserToolbarDelegate {
     }
 
     func browserToolbarDidPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
+		// Cliqz: Replaced FF bookmarks handling according to our requirements
+		profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
+			guard let data = result.successValue where data.count > 0  else { return }
+			guard let site: Site = data[0], siteID = site.id else { return }
+			
+			site.favorite = site.favorite != nil ? !site.favorite! : true
+			self.profile.history.setHistoryFavorite([siteID], value: site.favorite!)
+
+			self.navigationToolbar.updateBookmarkStatus(site.favorite!)
+		}
+		/*
         guard let tab = tabManager.selectedTab,
               let url = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
@@ -1554,7 +1585,7 @@ extension BrowserViewController: BrowserToolbarDelegate {
             } else {
                 self.addBookmark(url, title: tab.title)
             }
-        }
+        }*/
     }
 
     func browserToolbarDidLongPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
@@ -1860,8 +1891,6 @@ extension BrowserViewController: TabManagerDelegate {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
                 if AboutUtils.isAboutURL(webView.URL) {
                     // Indeed, because we don't show the toolbar at all, don't even blank the star.
-                    // Cliqz: switch to search mode creating new tab or switiching to empty tab
-                    switchToSearchMode = true
                 } else {
                     profile.bookmarks.isBookmarked(url).uponQueue(dispatch_get_main_queue()) {
                         guard let isBookmarked = $0.successValue else {
@@ -1878,6 +1907,8 @@ extension BrowserViewController: TabManagerDelegate {
                 // When this happens, the URL is nil, so try restoring the page upon selection.
                 tab.reload()
             }
+            //Cliqz: update private mode in search view to notify JavaScript when switching between normal and private mode
+            searchController?.updatePrivateMode(tab.isPrivate)
         }
 
         if let selected = selected, previous = previous where selected.isPrivate != previous.isPrivate {
@@ -2192,29 +2223,26 @@ extension BrowserViewController: WKUIDelegate {
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
-        currentTab.webView?.loadRequest(navigationAction.request)
-        return nil
+        screenshotHelper.takeScreenshot(currentTab)
+
+        // If the page uses window.open() or target="_blank", open the page in a new tab.
+        // TODO: This doesn't work for window.open() without user action (bug 1124942).
+        let newTab: Browser
+        if #available(iOS 9, *) {
+            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
+        } else {
+            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
+        }
+        tabManager.selectTab(newTab)
         
-//        screenshotHelper.takeScreenshot(currentTab)
-//
-//        // If the page uses window.open() or target="_blank", open the page in a new tab.
-//        // TODO: This doesn't work for window.open() without user action (bug 1124942).
-//        let newTab: Browser
-//        if #available(iOS 9, *) {
-//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration, isPrivate: currentTab.isPrivate)
-//        } else {
-//            newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
-//        }
-//        tabManager.selectTab(newTab)
-//        
-//        // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
-//        // get a reference to it which it can return from window.open() - this will end up as a
-//        // CFErrorHTTPBadURL being presented.
-//        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
-//            return nil
-//        }
-//        
-//        return newTab.webView
+        // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
+        // get a reference to it which it can return from window.open() - this will end up as a
+        // CFErrorHTTPBadURL being presented.
+        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
+            return nil
+        }
+        
+        return newTab.webView
     }
 
     private func canDisplayJSAlertForWebView(webView: WKWebView) -> Bool {
@@ -2622,8 +2650,6 @@ extension BrowserViewController: IntroViewControllerDelegate {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
         }
-        // Cliqz: going back from intro is the same case as switching to pervious tab
-        SELswitchToPreviousTab()
     }
 
     func presentSignInViewController() {
@@ -2696,26 +2722,26 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         if let url = elements.link, currentTab = tabManager.selectedTab {
             dialogTitle = url.absoluteString
-//            let isPrivate = currentTab.isPrivate
-//            if !isPrivate {
-//                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
-//                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-//                        self.tabManager.addTab(NSURLRequest(URL: url))
-//                    })
-//                }
-//                actionSheetController.addAction(openNewTabAction)
-//            }
-//
-//            if #available(iOS 9, *) {
-//                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
-//                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-//                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-//                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
-//                    })
-//                }
-//                actionSheetController.addAction(openNewPrivateTabAction)
-//            }
+            let isPrivate = currentTab.isPrivate
+            if !isPrivate {
+                let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
+                let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.tabManager.addTab(NSURLRequest(URL: url))
+                    })
+                }
+                actionSheetController.addAction(openNewTabAction)
+            }
+
+            if #available(iOS 9, *) {
+                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
+                let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                    self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+                    })
+                }
+                actionSheetController.addAction(openNewPrivateTabAction)
+            }
 
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
@@ -2891,7 +2917,9 @@ extension BrowserViewController: Themeable {
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
-            footerBackground?.blurStyle = .Dark
+            // Cliqz: Use same blurStyle for both normal and private modes
+//            footerBackground?.blurStyle = .Dark
+            footerBackground?.blurStyle = .ExtraLight
         default:
             log.debug("Unknown Theme \(themeName)")
         }
@@ -3049,25 +3077,61 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
 
 // Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
-    /// Cliqz: Added to set switchToSearchMode if user switched to previous tab empty tab as `didSelectedTabChange` is not fired in this case
-    func SELswitchToPreviousTab() {
-        if let _ = tabManager.selectedTab?.webView?.URL?.absoluteString {
-            if AboutUtils.isAboutURL(tabManager.selectedTab?.webView?.URL) {
-                // Cliqz: switch to search mode when switiching to empty tab
-                switchToSearchMode = true
-            }
+
+    // Cliqz: preserve search state when dimissing view
+    private func preserveSearchState() {
+        guard let selectedTab = self.tabManager.selectedTab else {
+            return
         }
+        
+        if self.searchController?.view.hidden == false {
+            urlBar.leaveOverlayMode()
+            selectedTab.lastSearchQuery = searchController?.searchQuery ?? ""
+            selectedTab.inSearchMode = true
+        } else {
+            selectedTab.inSearchMode = false
+        }
+    }
+    
+    // reset App state when session expire
+    private func resetState() {
+        
+        // remove all tabs except the first tab
+        let lastIndex = tabManager.tabs.count-1
+        for index in lastIndex.stride(to: 0, by: -1) {
+            let tab = tabManager.tabs[index]
+            tabManager.removeTab(tab)
+        }
+        
+        if let selectedTab = tabManager.selectedTab,
+            let searchController = self.searchController {
+                
+                selectedTab.inSearchMode = true
+                selectedTab.lastSearchQuery = ""
+                
+                switchToSearchModeIfNeeded()
+
+                // added delay before calling resetState to ensure that it is called after calling search with empty string
+                let time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+                dispatch_after(time, dispatch_get_main_queue(), {
+                    searchController.resetState()
+                    
+                })
+
+        }
+        
+
     }
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
-        if (self.switchToSearchMode) {
-            self.urlBar.enterOverlayMode("", pasted: false)
-			self.switchToSearchMode = false
-            if let searchController = self.searchController {
-                searchController.resetState()
+        if let selectedTab = self.tabManager.selectedTab {
+            if (selectedTab.inSearchMode) {
+                self.urlBar.enterOverlayMode(selectedTab.lastSearchQuery, pasted: true)
+                selectedTab.lastSearchQuery = ""
+                scrollController.showToolbars(animated: false)
             }
-            scrollController.showToolbars(animated: false)
         }
+        
     }
     
     // Cliqz: Added extension for logging the Navigation Telemetry signals

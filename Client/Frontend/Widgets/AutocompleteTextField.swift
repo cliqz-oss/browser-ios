@@ -17,7 +17,8 @@ protocol AutocompleteTextFieldDelegate: class {
 }
 
 struct AutocompleteTextFieldUX {
-    static let HighlightColor = UIColor(rgb: 0xccdded)
+	// Cliqz: Changed URLBar textfield background selection color to make it darker and more readable - Commented out original value
+	static let HighlightColor = UIColor(rgb: 0x104B82) //UIColor(rgb: 0xccdded)
 }
 
 class AutocompleteTextField: UITextField, UITextFieldDelegate {

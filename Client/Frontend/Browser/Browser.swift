@@ -68,6 +68,12 @@ class Browser: NSObject, BrowserWebViewDelegate {
     /// browser instance, queue it for later until we become foregrounded.
     private var alertQueue = [JSAlertInfo]()
 
+    // Cliqz: preserve lastsearch query when moving out of browser view while search in progress
+    var lastSearchQuery = ""
+    
+    // Cliqz: flag to know whether the current tab is in search mode or not
+    var inSearchMode = true
+    
     init(configuration: WKWebViewConfiguration) {
         self.configuration = configuration
     }

@@ -2,7 +2,7 @@
 "Close Private Tabs" = "사생활 보호 탭 닫기";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox가 탐색기록이나 쿠키는 저장하지 않지만 새로 추가되는 즐겨찾기는 저장이 됩니다.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ가 탐색기록이나 쿠키는 저장하지 않지만 새로 추가되는 즐겨찾기는 저장이 됩니다.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "자세히 보기";
