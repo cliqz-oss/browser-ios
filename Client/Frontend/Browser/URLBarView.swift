@@ -852,6 +852,14 @@ extension URLBarView: Themeable {
         tabsButton.applyTheme(themeName)
     }
 }
+// Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
+extension URLBarView {
+    override func resignFirstResponder() -> Bool {
+        
+        locationTextField?.enforceResignFirstResponder()
+        return super.resignFirstResponder()
+    }
+}
 
 /* Code for drawing the urlbar curve */
 // Curve's aspect ratio
