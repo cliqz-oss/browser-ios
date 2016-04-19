@@ -16,10 +16,10 @@ protocol SearchViewDelegate: class {
     func didSelectURL(url: NSURL, searchQuery: String?)
     func searchForQuery(query: String)
     func autoCompeleteQuery(autoCompleteText: String)
-	
+	func dismissKeyboard()
 }
 
-class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate, UIAlertViewDelegate  {
+class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate  {
 	
     private var searchLoader: SearchLoader!
     private let cliqzSearch = CliqzSearch()
@@ -33,6 +33,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	var webView: WKWebView?
     
     var privateMode: Bool?
+    
+    var inSelectionMode = false
     
     lazy var javaScriptBridge: JavaScriptBridge = {
         let javaScriptBridge = JavaScriptBridge(profile: self.profile)
@@ -82,8 +84,9 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-	}
-
+        installLongPressGuesture()
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 		javaScriptBridge.setDefaultSearchEngine()
@@ -252,6 +255,22 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         let params = ["incognito" : self.privateMode!]
         javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
     }
+    
+    //MARK: - Guestures
+    func installLongPressGuesture() {
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
+        gestureRecognizer.delegate = self
+        self.webView?.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    func onLongPress(gestureRecognizer: UIGestureRecognizer) {
+        inSelectionMode = true
+        delegate?.dismissKeyboard()
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
 
 // Handling communications with JavaScript
@@ -297,7 +316,11 @@ extension CliqzSearchViewController {
 extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     
     func didSelectUrl(url: NSURL) {
-        delegate?.didSelectURL(url, searchQuery: self.searchQuery)
+        if !inSelectionMode {
+            delegate?.didSelectURL(url, searchQuery: self.searchQuery)
+        } else {
+            inSelectionMode = false
+        }
     }
     
     func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {

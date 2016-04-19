@@ -3060,7 +3060,9 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     func autoCompeleteQuery(autoCompleteText: String) {
         urlBar.setAutocompleteSuggestion(autoCompleteText)
     }
-    
+    func dismissKeyboard() {
+        urlBar.resignFirstResponder()
+    }
     private func navigateToUrl(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
