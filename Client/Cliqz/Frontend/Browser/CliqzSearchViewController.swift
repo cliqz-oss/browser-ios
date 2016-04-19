@@ -84,7 +84,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-        installLongPressGuesture()
+        addLongPressGuestureRecognizer()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -257,7 +257,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
     
     //MARK: - Guestures
-    func installLongPressGuesture() {
+    func addLongPressGuestureRecognizer() {
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
         gestureRecognizer.delegate = self
         self.webView?.addGestureRecognizer(gestureRecognizer)
