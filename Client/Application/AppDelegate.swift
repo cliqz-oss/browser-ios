@@ -45,7 +45,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
 
-        // Short circuit the app if we want to email logs from the debug menu
+		let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
+
+		UIApplication.sharedApplication().registerForRemoteNotifications()
+		UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+		
+		AWSSNSManager.configureCongnitoPool()
+
+        // Short c ircuit the app if we want to email logs from the debug menu
         if DebugSettingsBundleOptions.launchIntoEmailComposer {
             self.window?.rootViewController = UIViewController()
             presentEmailComposerWithLogs()
@@ -53,7 +60,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             return startApplication(application, withLaunchOptions: launchOptions)
         }
+
     }
+
+	func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+		let deviceTokenString = "\(deviceToken)"
+			.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString:"<>"))
+			.stringByReplacingOccurrencesOfString(" ", withString: "")
+		AWSSNSManager.createPlatformEndpoint(deviceTokenString)
+	}
+
+	func application(application: UIApplication,didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+		print("Register for Notifications is failed with error: \(error)")
+	}
 
     private func startApplication(application: UIApplication,  withLaunchOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         log.debug("Setting UA…")
