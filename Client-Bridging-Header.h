@@ -23,4 +23,8 @@
 #import "Client/Cliqz/Foundation/Networking/Reachability/Reachability.h"
 #import <Lookback/Lookback.h>
 
+#import "AWSCore.h"
+#import "AWSSNSService.h"
+#import "AWSSNS.h"
+
 #endif
