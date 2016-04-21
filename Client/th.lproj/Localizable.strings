@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "ที่อยู่และการค้นหา";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "อนุญาตแป้นพิมพ์จากบุคคลที่สาม";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "ส่งเสมอ";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "ต้องการการยืนยันตัวตน";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "ที่คั่นหน้า";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "ที่คั่นหน้าที่คุณบันทึกไว้จะแสดงที่นี่";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "ความสว่าง";
@@ -101,6 +110,15 @@
 /* Dark theme setting in Reading View settings */
 "Dark" = "มืด";
 
+/* Debug option */
+"Debug: forget Sync auth state" = "ดีบั๊ก: ไม่จำสถานะการยืนยันตัวตนของ Sync";
+
+/* Debug option */
+"Debug: require password" = "ดีบั๊ก: ต้องการรหัสผ่าน";
+
+/* Debug option */
+"Debug: require upgrade" = "ดีบั๊ก: ต้องการการปรับรุ่น";
+
 /* Accessibility label for button decreasing font size in display settings of reader mode */
 "Decrease text size" = "ลดขนาดตัวอักษร";
 
@@ -142,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "ป้อนรหัสผ่านของคุณเพื่อเชื่อมต่อ";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "การช่วยเหลือและสนับสนุนของ Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox จำเป็นต้องเปิดใหม่เพื่อให้การเปลี่ยนแปลงนี้มีผล";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox จะหยุดการผสานกับบัญชีของคุณ แต่จะไม่ลบข้อมูลการท่องเว็บใด ๆ ของคุณบนอุปกรณ์นี้";
@@ -175,11 +196,13 @@
 /* Accessibility label for button increasing font size in display settings of reader mode */
 "Increase text size" = "เพิ่มขนาดตัวอักษร";
 
+/* Accessibility label for the introduction tour carousel */
+"Intro Tour Carousel" = "เที่ยวชมการเกริ่นนำแบบวนรอบ";
+
 /* History tableview section header */
 "Last month" = "เดือนที่แล้ว";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "ผสานล่าสุด: %@";
 
 /* History tableview section header */
@@ -266,7 +289,7 @@
 "Open Settings" = "เปิดการตั้งค่า";
 
 /* See http://mzl.la/1LXbDOL */
-"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "เปิดบทความในมุมมองตัวอ่านโดยแตะที่ไอคอนหนังสือเมื่อปรากฏบนแถบหัวข้อ";
+"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "เปิดบทความในมุมมองผู้อ่านโดยแตะที่ไอคอนหนังสือเมื่อปรากฏบนแถบหัวข้อ";
 
 /* String indicating that the file can be opened in another application on the device */
 "Open in…" = "เปิดใน…";
@@ -299,7 +322,7 @@
 "Quick-search Engines" = "เครื่องมือค้นหาด่วน";
 
 /* Accessibility label for the Reader View button */
-"Reader View" = "มุมมองตัวอ่าน";
+"Reader View" = "มุมมองผู้อ่าน";
 
 /* Panel accessibility label */
 "Reading list" = "รายการอ่าน";
@@ -334,7 +357,7 @@
 "Save Logins" = "บันทึกการเข้าสู่ระบบ";
 
 /* See http://mzl.la/1LXbDOL */
-"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "บันทึกหน้าไปยังรายการอ่านของคุณโดยการแตะไอคอนหนังสือที่มีเครื่องหมายบวกในตัวควบคุมมุมมองตัวอ่าน";
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "บันทึกหน้าไปยังรายการอ่านของคุณโดยการแตะไอคอนหนังสือที่มีเครื่องหมายบวกในตัวควบคุมมุมมองผู้อ่าน";
 
 /* Navigation title for search settings.
    Open search section of settings */
@@ -391,10 +414,14 @@
 "Show search suggestions" = "แสดงคำแนะนำการค้นหา";
 
 /* Text message / button in the settings table view */
-"Sign In" = "เข้าสู่ระบบ";
+"Sign In to Firefox" = "เข้าสู่ระบบ Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "เข้าสู่ระบบ";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "เข้าสู่ระบบเพื่อรับแท็บ ที่คั่นหน้า และรหัสผ่านของคุณจากอุปกรณ์อื่น ๆ ของคุณ";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "หยุด";
@@ -408,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "ผสานตอนนี้";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "ผสานแท็บ ที่คั่นหน้า รหัสผ่าน และอื่น ๆ ของคุณ";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "ผสานแท็บ รหัสผ่าน และอื่น ๆ ของคุณ";
 
 /* Panel accessibility label */
@@ -429,11 +456,8 @@
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "ถาดแท็บ";
 
-/* Tile title for Mozilla */
-"The Mozilla Project" = "โครงการ Mozilla";
-
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
-"The page could not be displayed in Reader View." = "หน้านี้ไม่สามารถแสดงผลในมุมมองตัวอ่าน";
+"The page could not be displayed in Reader View." = "หน้านี้ไม่สามารถแสดงผลในมุมมองผู้อ่าน";
 
 /* Prompt message for application update */
 "There is a new version available of Firefox Aurora. Tap OK to go to the download page." = "มี Firefox Aurora รุ่นใหม่ที่ใช้งานได้ แตะ ตกลง เพื่อไปที่หน้าดาวน์โหลด";
@@ -454,7 +478,10 @@
 "Today" = "วันนี้";
 
 /* Panel accessibility label */
-"Top sites" = "ไซต์ยอดนิยม";
+"Top sites" = "ไซต์เด่น";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "ปรับปรุง";
@@ -489,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "เราเสียใจอย่างสุดซึ้ง";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "ใช่";
 
@@ -500,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "คุณไม่มีแท็บใด ๆ ที่เปิดอยู่ใน Firefox บนอุปกรณ์อื่น ๆ ของคุณ";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "สิทธิของคุณ";

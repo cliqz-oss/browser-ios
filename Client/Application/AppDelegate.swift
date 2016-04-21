@@ -10,10 +10,14 @@ import Breakpad
 import MessageUI
 import Fabric
 import Crashlytics
+import WebImage
+import SwiftKeychainWrapper
+import LocalAuthentication
 
 private let log = Logger.browserLogger
 
-public let LatestAppVersionProfileKey = "latestAppVersion"
+let LatestAppVersionProfileKey = "latestAppVersion"
+let AllowThirdPartyKeyboardsKey = "settings.allowThirdPartyKeyboards"
 
 public let IsAppTerminated = "isAppTerminated"
 
@@ -167,6 +171,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if getProfile(application).prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
             getProfile(application).prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
         }
+
+        log.debug("Updating authentication keychain state to reflect system state")
+        self.updateAuthenticationInfo()
+
         log.debug("Done with setting up the application.")
 		self.clearLocalDataIfNeeded()
 
@@ -206,7 +214,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let profile = self.profile {
             return profile
         }
-        let p = BrowserProfile(localName: "profile", app: application)
+        let clearProfile = NSProcessInfo.processInfo().environment["MOZ_WIPE_PROFILE"] != nil
+        let p = BrowserProfile(localName: "profile", app: application, clear: clearProfile)
         self.profile = p
         return p
     }
@@ -299,7 +308,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: String) -> Bool {
-        return extensionPointIdentifier != UIApplicationKeyboardExtensionPointIdentifier
+        if let thirdPartyKeyboardSettingBool = getProfile(application).prefs.boolForKey(AllowThirdPartyKeyboardsKey) where extensionPointIdentifier == UIApplicationKeyboardExtensionPointIdentifier {
+            return thirdPartyKeyboardSettingBool
+        }
+
+        return true
     }
 
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.
@@ -327,6 +340,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 quickActions.handleShortCutItem(shortcut, withBrowserViewController: browserViewController)
                 quickActions.launchedShortcutItem = nil
             }
+
+            // we've removed the Last Tab option, so we should remove any quick actions that we already have that are last tabs
+            // we do this after we've handled any quick actions that have been used to open the app so that we don't b0rk if
+            // the user has opened the app for the first time after upgrade with a Last Tab quick action
+            QuickActions.sharedInstance.removeDynamicApplicationShortcutItemOfType(ShortcutType.OpenLastTab, fromApplication: application)
         }
 
         // If we have a URL waiting to open, switch to non-private mode and open the URL.
@@ -375,13 +393,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppStatus.sharedInstance.appWillResignActive()
     }
     
-    
     func applicationWillEnterForeground(application: UIApplication) {
+        // The reason we need to call this method here instead of `applicationDidBecomeActive`
+        // is that this method is only invoked whenever the application is entering the foreground where as 
+        // `applicationDidBecomeActive` will get called whenever the Touch ID authentication overlay disappears.
+        self.updateAuthenticationInfo()
+        
+        // Cliqz: call AppStatus
         AppStatus.sharedInstance.appWillEnterForeground()
-	}
 
-	private func setUpWebServer(profile: Profile) {
-		let server = WebServer.sharedInstance
+    }
+
+    private func updateAuthenticationInfo() {
+        if let authInfo = KeychainWrapper.authenticationInfo() {
+            if !LAContext().canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: nil) {
+                authInfo.useTouchID = false
+                KeychainWrapper.setAuthenticationInfo(authInfo)
+            }
+        }
+    }
+
+    private func setUpWebServer(profile: Profile) {
+        let server = WebServer.sharedInstance
         ReaderModeHandlers.register(server, profile: profile)
         ErrorPageHelper.register(server)
         AboutHomeHandler.register(server)
@@ -493,16 +526,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String {
             if let urlToOpen = NSURL(string: alertURL) {
                 browserViewController.openURLInNewTab(urlToOpen)
-
-                if #available(iOS 9, *) {
-                    var userData = [QuickActions.TabURLKey: alertURL]
-                    if let title = notification.userInfo?[TabSendTitleKey] as? String where title.characters.count > 0 {
-                        userData[QuickActions.TabTitleKey] = title
-                    } else {
-                        userData[QuickActions.TabTitleKey] = alertURL
-                    }
-                    QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastTab, withUserData: userData, toApplication: UIApplication.sharedApplication())
-                }
             }
         }
     }

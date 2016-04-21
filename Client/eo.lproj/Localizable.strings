@@ -28,6 +28,9 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adreso kaj serĉo";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Permesi klavarojn de aliaj";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Ĉiam sendi";
 
@@ -45,6 +48,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Legosignoj";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Konservitaj legosignoj aperos ĉi tie.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Brileco";
@@ -151,8 +157,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Tajpu vian pasvorton por konekti.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Helpo kaj subteno de Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox devas esti malfermita de nove por ke tiu ĉi ŝanĝo ekefiku.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox ne plu spegulos vian konton, sed ĝi ne forigos iun ajn el viaj retumaj datumoj en tiu ĉi aparato.";
@@ -190,8 +199,7 @@
 /* History tableview section header */
 "Last month" = "Lasta monato";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Laste aktualigita: %@";
 
 /* History tableview section header */
@@ -403,10 +411,14 @@
 "Show search suggestions" = "Montri sugestojn de serĉilo";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Komenci seancon";
+"Sign In to Firefox" = "Komenci seancon en Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Komenci seancon";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Komenci seancon por ricevi viajn langetojn, legosignojn kaj pasvortojn el viaj aliaj aparatoj.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Haltigi";
@@ -420,10 +432,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Speguli nun";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Speguli viajn langetojn, legosignojn, pasvortojn kaj pli.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Speguli viajn langetojn, pasvortojn, kaj pli.";
 
 /* Panel accessibility label */
@@ -440,9 +452,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Pleto de langetoj";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "La projekto Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Tiu ĉi paĝo ne povis esti montrita en legila vido.";
@@ -467,6 +476,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Plej vizititaj";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Ĝisdatigi";
@@ -501,6 +513,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Nu, tio estas hontiga";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Vikipedio";
+
 /* Button to save the user's password */
 "Yes" = "Jes";
 
@@ -512,6 +527,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Vi ne havas langetojn malfermitajn en Firefox en viaj aliaj aparatoj.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Viaj rajtoj";

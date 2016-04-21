@@ -8,6 +8,7 @@
 
 import Foundation
 import Shared
+import Deferred
 
 public protocol ExtendedBrowserHistory {
     

@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "អាសយដ្ឋាន និង​ស្វែងរក";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "អនុញ្ញាត​ក្ដារ​ចុច​ភាគី​ទី​បី";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "តែងតែ​ផ្ញើ​ជានិច្ច";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "ទាមទារ​​ការ​ផ្ដល់​សិទ្ធិ​អនុញ្ញាត";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "ចំណាំ";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "ចំណាំ​ដែល​អ្នក​រក្សា​ទុក នឹង​បង្ហាញ​ទីនេះ។";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "ពន្លឺ";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "បញ្ចូល​ពាក្យ​សម្ងាត់​របស់​អ្នក​ដើម្បី​តភ្ជាប់។";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "ជំនួយ និង​ការ​គាំទ្រ Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox ត្រូវការ​បើក​ឡើងវិញ​ដើម្បី​ឲ្យ​ការ​ផ្លាស់ប្ដូរ​នេះ​មាន​ប្រសិទ្ធិភាព។";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox នឹង​ឈប់​ធ្វើ​សមកាលកម្ម​ជាមួយ​គណនី​របស់​អ្នក ប៉ុន្តែ​នឹង​មិន​លុប​ទិន្នន័យ​​ដែល​រក​មើល​​របស់​អ្នក​ណា​មួយ​​នៅ​លើ​ឧបករណ៍​នេះ​ទេ។";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "ខែ​មុន";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "បាន​ធ្វើ​សមកាល​កម្ម​ចុងក្រោយ៖ %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "បង្ហាញ​ការ​ស្នើ​ស្វែងរក";
 
 /* Text message / button in the settings table view */
-"Sign In" = "ចូល";
+"Sign In to Firefox" = "ចូល​ទៅ Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "ចូល";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "ចូល​ដើម្បី​ទទួល​បាន​ផ្ទាំង ចំណាំ និង​ពាក្យ​សម្ងាត់​ពី​ឧបករណ៍​ផ្សេង​ទៀត​របស់​អ្នក។";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "ឈប់";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "ធ្វើ​សមកាលកម្ម​ឥឡូវ";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "ធ្វើ​សមកាលកម្ម​ផ្ទាំង ចំណាំ ពាក្យ​សម្ងាត់​របស់​អ្នក និង​អ្វី​​ច្រើន​ទៀត។";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "ធ្វើ​សមកាលកម្ម​ផ្ទាំង​របស់​អ្នក ពាក្យ​សម្ងាត់ និង​ច្រើន​ទៀត។";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "បន្ទះ​ផ្ទាំង";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "គម្រោង Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "មិន​អាច​បង្ហាញ​ទំព័រ​នៅ​ក្នុង​ទិដ្ឋភាព​អ្នក​អាន​បាន​ទេ។";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "តំបន់បណ្ដាញ​ពេញ​និយម​បំផុត";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "ធ្វើ​បច្ចុប្បន្នភាព";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "នេះ​ពិតជា​ខ្មាស​គេ​មែន។";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "វីគីភីឌៀ";
+
 /* Button to save the user's password */
 "Yes" = "បាទ/ចាស";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "អ្នក​មិន​មាន​ផ្ទាំង​ណា​មួយ​បើក​ក្នុង Firefox លើ​ឧបករណ៍​ផ្សេង​របស់​អ្នក​ទេ។";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "សិទ្ធិ​របស់​អ្នក";

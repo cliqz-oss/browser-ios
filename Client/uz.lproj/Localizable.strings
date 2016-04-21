@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adres ve arama";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Uchinchi tomon klaviaturalariga ruxsat berish";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Doimo jo‘natish";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Kimlik doğrulaması gerekli";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Yer imleri";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Saqlangan xatcho‘plar bu yerda ko‘rinadi.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Parlaklık";
@@ -90,7 +99,7 @@
 "Could not add page to Reading List. Maybe it's already there?" = "Sahifani \"O‘qish ro‘yxati\"ga qo‘sha olmadingizmi? Balkim, ilgari qo‘shilgandir?";
 
 /* Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed. */
-"Could not add page to Reading list" = "Sahi \"O‘qish ro‘yxati\"ga qo‘shilmadi";
+"Could not add page to Reading list" = "Sahifa \"O‘qish ro‘yxati\"ga qo‘shilmadi";
 
 /* Error message that is shown in settings when there was a problem loading */
 "Could not load page." = "Sahifasi yuklanmadi.";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Ulanish uchun parolingizni kiriting.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox yordami va qo‘llab-quvvatlash";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "O‘zgarish kuchga kirishi uchun Firefox qayta ochilishi kerak.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox hisobingiz bilan sinxronlashni to‘xtatadi, ammo qurilmangizdagi ko‘rish tarixingizni o‘chirmaydi.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "O‘tgan oy";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "So‘nggi marta sinxornlangan: %@";
 
 /* History tableview section header */
@@ -311,7 +322,7 @@
 "Quick-search Engines" = "Tezkor qidiruv tizimlari";
 
 /* Accessibility label for the Reader View button */
-"Reader View" = "O‘qish usuli";
+"Reader View" = "O‘qish rejimi";
 
 /* Panel accessibility label */
 "Reading list" = "O‘qish ro‘yxati";
@@ -346,7 +357,7 @@
 "Save Logins" = "Loginlarni saqlash";
 
 /* See http://mzl.la/1LXbDOL */
-"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "\"O‘qish usuli\" boshqaruvlaridagi \"kitob +\" rasmchasi ustiga bosib, sahifalarni \"O‘qish ro‘yxati\"ga qo‘shishingiz mumkin.";
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "\"O‘qish rejimi\" boshqaruvlaridagi \"kitob +\" rasmchasi ustiga bosib, sahifalarni \"O‘qish ro‘yxati\"ga qo‘shishingiz mumkin.";
 
 /* Navigation title for search settings.
    Open search section of settings */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Izlash bo‘yicha tavsiyalarni ko‘rsatish";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Kirish";
+"Sign In to Firefox" = "Firefox hisobiga kirish";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Kirish";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Ichki oynalar, xatcho‘plar va parollarni boshqa qurilmalardan olish uchun hisobingizga kiring.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "To‘xtatish";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Hozir sinxronlash";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Ichki oynalar, xatcho‘plar, parollar va boshqalarni sinxronlang.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Ichki oynalar, parollar va boshqalarni sinxronlang.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Ichki oynalar vositasi";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Mozilla loyihasi";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Sahifani \"Ko‘rish usuli\"da ko‘rsatib bo‘lmaydi.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Yuqori reytingli saytlar";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Yangilash";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Uzr, bu sharmandali holat.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Ha";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Bosha qurilmalarda Firefox’da ochilgan hech qanday ichki oynalaringiz yo‘q.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Huquqlaringiz";

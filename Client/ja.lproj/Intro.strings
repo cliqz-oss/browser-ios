@@ -5,12 +5,12 @@
 "Choose" = "普段使いのブラウザに";
 
 /* See http://mzl.la/1T8gxwo */
-"Connect Firefox everywhere you use it." = "Firefox アカウントにサインインすれば、家や職場のブックマークやパスワード、履歴などを同期できます";
+"Connect Firefox everywhere you use it." = "Firefox アカウントにログインすれば、家や職場のブックマークやパスワード、履歴などを同期できます。";
 
 /* See http://mzl.la/1T8gxwo */
 "Customize" = "カスタマイズ";
 
-/* See http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1if9ODp */
 "Easily switch between open pages with tabs." = "タブの切り替えも簡単にできます。";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
@@ -23,22 +23,22 @@
 "Organize" = "整理・整頓";
 
 /* See http://mzl.la/1T8gxwo */
-"Personalize your Firefox just the way you like in Settings." = "設定を変えれば、Firefox を自分好みにカスタマイズできます";
+"Personalize your Firefox just the way you like in Settings." = "Firefox を自分好みの設定にカスタマイズできます。";
 
-/* See http://mzl.la/1T8gxwo */
-"Personalize your default search engine and more in Settings." = "設定を変えれば、Firefox を自分好みにカスタマイズできます。いつも使う検索エンジンも設定から変更できます";
+/* See http://mzl.la/1if9ODp */
+"Personalize your default search engine and more in Settings." = "Firefox でいつも使う検索エンジンなど、設定を自分好みにカスタマイズできます。";
 
 /* See http://mzl.la/1if9ODp */
 "Share" = "アプリ間共有";
 
 /* See http://mzl.la/1T8gxwo */
-"Sign in to Firefox" = "Firefox へサインイン";
+"Sign in to Firefox" = "Firefox にログイン";
 
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "ブラウジングをはじめる";
 
-/* See http://mzl.la/1T8gxwo */
-"Sync Your Devices." = "他の端末と同期できます。";
+/* See http://mzl.la/1if9ODp */
+"Sync your Devices." = "端末間で同期";
 
 /* See http://mzl.la/1if9ODp */
 "Tap, hold and move the Firefox icon into your dock for easy access." = "アイコンをドックに入れておくと、Firefox を簡単に起動できます。";

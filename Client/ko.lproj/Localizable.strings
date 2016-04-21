@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "주소와 검색";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "제 3자 키보드 허용";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "항상 보내기";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "인증 필요";
@@ -41,10 +47,13 @@
 "Block Pop-up Windows" = "팝업창 차단";
 
 /* Bookmark a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
-"Bookmark" = "북마크";
+"Bookmark" = "즐겨찾기";
 
 /* Panel accessibility label */
-"Bookmarks" = "북마크";
+"Bookmarks" = "즐겨찾기";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "저장된 즐겨찾기가 여기에 나타납니다.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "밝기";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "연결하기 위해서 비밀번호를 입력해 주세요.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox 도움말과 지원 정보";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox를 재시작 해야 변경사항이 적용됩니다.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox가 계정의 동기화를 중지하지만 기기의 브라우징 데이터는 삭제하지 않습니다.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "지난달";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "최종 동기화: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "검색 추천 보기";
 
 /* Text message / button in the settings table view */
-"Sign In" = "로그인";
+"Sign In to Firefox" = "Firefox에 로그인";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "로그인";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "다른 기기의 탭과 즐겨찾기, 비밀번호를 가져오기 위해서 로그인해 주세요.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "정지";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "지금 동기화";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "탭과 북마크, 비밀번호 등을 동기화하세요.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "탭과 비밀번호 등을 동기화하세요.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "탭 트레이";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Mozilla 프로젝트";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "읽기 모드에서 볼 수 없는 페이지 입니다.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "상위 사이트";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "업데이트";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "아, 이럴수가.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "예";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "다른 기기에서 연 탭이 없습니다.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "사용자 권리";

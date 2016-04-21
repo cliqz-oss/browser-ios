@@ -226,6 +226,13 @@
                BuildableName = "CliqzUITests.xctest"
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">
+               </BuildableReference>
+               <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E65C5BC31BEA4F6500D28BEF"
+               BuildableName = "NativeRefTests.xctest"
+               BlueprintName = "NativeRefTests"
+               ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

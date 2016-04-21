@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Адреси и търсене";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Позволете други клавиатури";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Винаги изпрати";
+
+/* Tile title for Amazon */
+"Amazon" = "Амазон";
 
 /* Authentication prompt title */
 "Authentication required" = "Изисква се удостоверяване";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Отметки";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Отметки, които запазвате ще се покажат тук.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Яркост";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Въведете паролата си, за да се свържете.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Помощ и поддръжка на Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Фейсбук";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox трябва да се рестартира, за да се отрази тази промяна.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox ще спре синхронизацията с вашия профил, но няма да изтрива данни за сърфирането от устройството.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Миналия месец";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Последна синхронизация: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Показване на подсказки";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Впиши се";
+"Sign In to Firefox" = "Вписване във Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Вписване";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Впишете се, за да вземете подпрозорци, отметки и пароли от другите ви устройства.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Стоп";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Синхронизиране";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Синхронизирйте своите подпрозорци, отметки, пароли и други.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Синхронизирйте своите подпрозорци, пароли и други.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Лента с подпрозорци";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Проектът Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Страницата не можа да бъде показана в изгледа за четене.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Най-посещавани";
+
+/* Tile title for Twitter */
+"Twitter" = "Туитър";
 
 /* Button to update the user's password */
 "Update" = "Обновяване";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Извинявайте за невъзстановената предишна сесия.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Уикипидия";
+
 /* Button to save the user's password */
 "Yes" = "Да";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Нямате отворени във Firefox подпрозорци на другите си устройства.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Вашите права";

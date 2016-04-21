@@ -5,6 +5,8 @@
 import Foundation
 import Shared
 import Account
+import SwiftKeychainWrapper
+import LocalAuthentication
 
 // This file contains all of the settings available in the main settings screen of the app.
 
@@ -30,8 +32,10 @@ class ConnectSetting: WithoutAccountSetting {
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
 
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Sign In", comment: "Text message / button in the settings table view"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Sign In to Firefox", comment: "Text message / button in the settings table view"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
+
+    override var accessibilityIdentifier: String? { return "SignInToFirefox" }
 
     override func onClick(navigationController: UINavigationController?) {
         let viewController = FxAContentViewController()
@@ -44,10 +48,13 @@ class ConnectSetting: WithoutAccountSetting {
 // Sync setting for disconnecting a Firefox Account.  Shown when we have an account.
 class DisconnectSetting: WithAccountSetting {
     override var accessoryType: UITableViewCellAccessoryType { return .None }
+    override var textAlignment: NSTextAlignment { return .Center }
 
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Log Out", comment: "Button in settings screen to disconnect from your account"), attributes: [NSForegroundColorAttributeName: UIConstants.DestructiveRed])
     }
+
+    override var accessibilityIdentifier: String? { return "LogOut" }
 
     override func onClick(navigationController: UINavigationController?) {
         let alertController = UIAlertController(
@@ -61,6 +68,8 @@ class DisconnectSetting: WithAccountSetting {
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("Log Out", comment: "Disconnect button in the 'log out firefox account' alert"), style: .Destructive) { (action) in
                 self.settings.profile.removeAccount()
+                self.settings.settings = self.settings.generateSettings()
+                self.settings.SELfirefoxAccountDidChange()
             })
         navigationController?.presentViewController(alertController, animated: true, completion: nil)
     }
@@ -405,7 +414,7 @@ class SendAnonymousUsageDataSetting: BoolSetting {
         super.init(
             prefs: prefs, prefKey: "settings.sendUsageData", defaultValue: true,
             attributedTitleText: NSAttributedString(string: NSLocalizedString("Send Anonymous Usage Data", tableName: "SendAnonymousUsageData", comment: "See http://bit.ly/1SmEXU1")),
-            attributedStatusText: NSAttributedString(string: NSLocalizedString("More Info…", tableName: "SendAnonymousUsageData", comment: "See http://bit.ly/1SmEXU1"), attributes: [NSForegroundColorAttributeName: UIColor.blueColor()]),
+            attributedStatusText: NSAttributedString(string: NSLocalizedString("More Info…", tableName: "SendAnonymousUsageData", comment: "See http://bit.ly/1SmEXU1"), attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]),
             settingDidChange: { AdjustIntegration.setEnabled($0) }
         )
     }
@@ -460,22 +469,51 @@ class SearchSetting: Setting {
 class LoginsSetting: Setting {
     let profile: Profile
     var tabManager: TabManager!
+    weak var navigationController: UINavigationController?
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
 
     init(settings: SettingsTableViewController, delegate: SettingsDelegate?) {
         self.profile = settings.profile
         self.tabManager = settings.tabManager
+        self.navigationController = settings.navigationController
 
         let loginsTitle = NSLocalizedString("Logins", comment: "Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager.")
         super.init(title: NSAttributedString(string: loginsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]),
                    delegate: delegate)
     }
 
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_: UINavigationController?) {
+        guard let authInfo = KeychainWrapper.authenticationInfo() else {
+            navigateToLoginsList()
+            return
+        }
+
+        if AppConstants.MOZ_AUTHENTICATION_MANAGER && authInfo.requiresValidation() {
+            AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
+            success: {
+                self.navigateToLoginsList()
+            },
+            fallback: {
+                AppAuthenticator.presentPasscodeAuthentication(self.navigationController, delegate: self)
+            })
+        } else {
+            self.navigateToLoginsList()
+        }
+    }
+
+    private func navigateToLoginsList() {
         let viewController = LoginListViewController(profile: profile)
         viewController.settingsDelegate = delegate
         navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+extension LoginsSetting: PasscodeEntryDelegate {
+    @objc func passcodeValidationDidSucceed() {
+        navigationController?.dismissViewControllerAnimated(true) {
+            self.navigateToLoginsList()
+        }
     }
 }
 
@@ -489,7 +527,12 @@ class TouchIDPasscodeSetting: Setting {
         self.profile = settings.profile
         self.tabManager = settings.tabManager
 
-        let title = NSLocalizedString("Touch ID & Passcode", tableName: "AuthenticationManager", comment: "Title for Touch ID/Passcode settings option")
+        let title: String
+        if LAContext().canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: nil) {
+            title = AuthenticationStrings.touchIDPasscodeSetting
+        } else {
+            title = AuthenticationStrings.passcode
+        }
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]),
                    delegate: delegate)
     }
@@ -506,6 +549,8 @@ class ClearPrivateDataSetting: Setting {
     var tabManager: TabManager!
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+    override var accessibilityIdentifier: String? { return "ClearPrivateData" }
 
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile

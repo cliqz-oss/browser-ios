@@ -1,7 +1,10 @@
 /* Prompt title when deleting logins */
 "Are you sure?" = "Är du säker?";
 
-/* Clears the search input field and exits out of input mode */
+/* Prompt option for cancelling out of deletion */
+"Cancel" = "Avbryt";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user taps the close button in the search field to clear the search and exit search mode */
 "Clear Search" = "Töm sökfältet";
 
 /* Copy password text selection menu item */
@@ -32,7 +35,7 @@
 "Logins will be removed from all connected devices." = "Inloggningar kommer att tas bort från alla anslutna enheter.";
 
 /* Title displayed when no logins are found after searching */
-"No logins found" = "Inga Inloggningar funna";
+"No logins found" = "Inga inloggningar hittades";
 
 /* Open and Fill website text selection menu item */
 "Open & Fill" = "Öppna & Fyll";

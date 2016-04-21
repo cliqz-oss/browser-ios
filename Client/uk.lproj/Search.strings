@@ -5,7 +5,7 @@
 "No" = "Ні";
 
 /* Label for search settings button. */
-"Search Settings" = "Налаштування пошуку";
+"Search Settings" = "Параметри пошуку";
 
 /* Accessibility label for image of default search engine displayed left to the actual search suggestions from the engine. The parameter substituted for \"%@\" is the name of the search engine. E.g.: Search suggestions from Google */
 "Search suggestions from %@" = "Пошукові пропозиції від %@";

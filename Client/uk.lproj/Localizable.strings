@@ -5,10 +5,10 @@
 "-" = "-";
 
 /* Authentication prompt message with no realm. Parameter is the hostname of the site */
-"A username and password are being requested by %@." = "Ім'я користувача та пароль наразі запитані %@.";
+"A username and password are being requested by %@." = "%@ запитує ім'я користувача і пароль.";
 
 /* Authentication prompt message with a realm. First parameter is the hostname. Second is the realm string */
-"A username and password are being requested by %@. The site says: %@" = "Ім'я користувача і пароль наразі запитані %1$@. Сайт каже: %2$@";
+"A username and password are being requested by %@. The site says: %@" = "%1$@ запитує ім'я користувача і пароль. Повідомлення сайту: %2$@";
 
 /* Button for reader mode font size. Keep this extremely short! This is shown in the reader mode toolbar. */
 "Aa" = "Aa";
@@ -28,11 +28,17 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Адреса і пошук";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Дозв. сторонні клавіатури";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Завжди надсилати";
 
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
+
 /* Authentication prompt title */
-"Authentication required" = "Потрібна перевірка";
+"Authentication required" = "Потрібна ідентифікація";
 
 /* Accessibility Label for the browser toolbar Back button */
 "Back" = "Назад";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Закладки";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Ваші збережені закладки з’являтимуться тут.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Яскравість";
@@ -122,7 +131,7 @@
 "Disable additional page dialogs" = "Вимкнути додаткові діалоги сторінки";
 
 /* Name for display settings button in reader mode. Display in the meaning of presentation, not monitor. */
-"Display Settings" = "Показати налаштування";
+"Display Settings" = "Параметри відображення";
 
 /* Prompt for saving a password. The first parameter is the username being saved. The second parameter is the hostname of the site. */
 "Do you want to save the password for %@ on %@?" = "Ви хочете зберегти пароль для %1$@ на %2$@?";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Введіть свій пароль, щоб з'єднатися.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Довідка та підтримка Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Для застосування потрібно перезапустити Firefox.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox припинить синхронізацію з вашим обліковим записом, але не вилучить жодних даних перегляду на цьому пристрої.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Останній місяць";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Синхронізовано: %@";
 
 /* History tableview section header */
@@ -275,7 +286,7 @@
 "Open In New Tab" = "Відкрити у новій вкладці";
 
 /* See http://mzl.la/1G7uHo7 */
-"Open Settings" = "Налаштування";
+"Open Settings" = "Відкрити параметри";
 
 /* See http://mzl.la/1LXbDOL */
 "Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Відкривайте статті в режимі читача, торкнувшись піктограми книги, коли вона з'являється в панелі заголовка.";
@@ -330,11 +341,11 @@
 
 /* Action Sheet Button for Requesting the Desktop Site
    Share action title */
-"Request Desktop Site" = "Запитувати десктопний сайт";
+"Request Desktop Site" = "Повна версія сайту";
 
 /* Action Sheet Button for Requesting the Mobile Site
    Share action title */
-"Request Mobile Site" = "Запитувати мобільний сайт";
+"Request Mobile Site" = "Мобільна версія сайту";
 
 /* Font type setting in the reading view settings */
 "Sans-serif" = "Без зарубок";
@@ -381,7 +392,7 @@
 
 /* Accessibility label for the Settings button in the Tab Tray.
    Settings */
-"Settings" = "Налаштування";
+"Settings" = "Параметри";
 
 /* Accessibility Label for the browser toolbar Share button */
 "Share" = "Поділитися";
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Пошукові пропозиції";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Увійти";
+"Sign In to Firefox" = "Увійти в Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Увійти";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Увійдіть, щоб отримати доступ до вкладок, закладок і паролів з інших пристроїв.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Стоп";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Синхронізувати";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Синхронізуйте свої вкладки, закладки, паролі та інше.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Синхронізуйте свої вкладки, паролі та інше.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Лоток вкладок";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Проект Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Сторінка не може бути показана в режимі читача.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Популярні сайти";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Оновити";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Ой, оце так халепа.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Так";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "У вас немає вкладок, відкритих в Firefox на інших пристроях.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Ваші права";

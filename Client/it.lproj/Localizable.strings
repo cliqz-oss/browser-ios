@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Indirizzo e ricerca";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Consenti tastiere di terze parti";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Invia sempre";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Autenticazione richiesta";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Segnalibri";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "In questa sezione verranno visualizzati i segnalibri salvati.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Luminosità";
@@ -143,7 +152,7 @@
    Done button label on back forward list screen
    Done button on left side of the Settings view controller title bar
    Done editing button */
-"Done" = "Fine";
+"Done" = "Fatto";
 
 /* No comment provided by engineer. */
 "Double tap and hold to open history" = "Tocca due volte e tieni premuto per aprire la cronologia";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Inserire la password per connettersi.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Aiuto per Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Riaprire Firefox per attivare questa impostazione.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Verrà interrotta la sincronizzazione con l’account, ma non verrà eliminata alcuna informazione relativa alla navigazione da questo dispositivo.";
@@ -167,7 +179,7 @@
 "General" = "Generale";
 
 /* A re-worded offer about Sync that emphasizes one-way data transfer, not syncing. */
-"Get your open tabs, bookmarks, and passwords from your other devices." = "Utilizza le schede aperte, i segnalibri e le password salvati in altri dispositivi.";
+"Get your open tabs, bookmarks, and passwords from your other devices." = "Utilizza le schede aperte, le password e i segnalibri salvati in altri dispositivi.";
 
 /* Pending feature; currently unused string! Button to browse to URL on the clipboard when browser is opened */
 "Go" = "Vai";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Ultimo mese";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Ultima sinc.: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Visualizza suggerimenti";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Accedi";
+"Sign In to Firefox" = "Accedi a Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Accedi";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Accedi per avere a disposizione schede, segnalibri e password da tutti i tuoi dispositivi.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Interrompi";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sincronizza adesso";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sincronizza schede, segnalibri, password e altro ancora.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sincronizza schede, password e altro ancora.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Barra delle schede";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Il progetto Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Impossibile visualizzare la pagina in Modalità lettura.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Siti principali";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Aggiorna";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Oops, questo è imbarazzante.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Sì";
 
@@ -508,10 +526,13 @@
 "Yesterday" = "Ieri";
 
 /* Error message in the remote tabs panel */
-"You don't have any other devices connected to this Firefox Account available to sync." = "Non risulta alcun dispositivo disponibile per la sincronizzazione tra quelli connessi a questo account Firefox.";
+"You don't have any other devices connected to this Firefox Account available to sync." = "Al momento non risultano disponibili per la sincronizzazione ulteriori dispositivi connessi a questo account Firefox.";
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Non risulta alcuna scheda aperta in Firefox negli altri dispositivi.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "I tuoi diritti";

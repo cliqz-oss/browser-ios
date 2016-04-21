@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Seoladh agus Cuardach";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Ceadaigh Méarchláir Tríú Páirtí";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Seol i gcónaí";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Fíordheimhniú de dhíth";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Leabharmharcanna";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Léirítear leabharmharcanna a shábháil tú anseo.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Gile";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Cuir isteach d'fhocal faire le ceangal.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox: Cabhair agus Tacaíocht";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Caithfear Firefox a athoscailt leis an athrú seo a chur i bhfeidhm.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Stopfaidh Firefox sioncrónú le do chuntas, ach ní scriosfaimid aon sonraí brabhsála ar an ngléas seo.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "An mhí seo caite";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Sioncrónú is déanaí: %@";
 
 /* History tableview section header */
@@ -299,7 +310,7 @@
 "Paste" = "Greamaigh";
 
 /* Paste the URL into the location bar and visit */
-"Paste & Go" = "Greamaigh agus Téigh";
+"Paste & Go" = "Greamaigh agus Lean Ort";
 
 /* Privacy section title */
 "Privacy" = "Príobháideachas";
@@ -330,7 +341,7 @@
 
 /* Action Sheet Button for Requesting the Desktop Site
    Share action title */
-"Request Desktop Site" = "Iarr Suíomh don Ríomhaire";
+"Request Desktop Site" = "Iarr Suíomh an Ríomhaire";
 
 /* Action Sheet Button for Requesting the Mobile Site
    Share action title */
@@ -346,7 +357,7 @@
 "Save Logins" = "Sábháil Focail Fhaire";
 
 /* See http://mzl.la/1LXbDOL */
-"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Tapáil an deilbhín leabhair leis an gcomhartha móide sna rialtáin Amharc Léitheoireachta le leathanach a chur ar do Liosta Léitheoireachta.";
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Tá deilbhín leabhair a bhfuil an móide air sna rialtáin Amharc Léitheoireachta; tapáil an deilbhín seo chun leathanaigh a shábháil le do Liosta Léitheoireachta.";
 
 /* Navigation title for search settings.
    Open search section of settings */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Taispeáin moltaí cuardaigh";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Logáil Isteach";
+"Sign In to Firefox" = "Logáil Isteach in Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Logáil isteach";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Logáil Isteach chun do chluaisíní, leabharmharcanna, agus fhocail faire a fháil ó ghléasanna eile.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Stad";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sioncrónaigh Anois";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sioncrónaigh cluaisíní, leabharmharcanna, focail fhaire agus tuilleadh.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sioncrónaigh cluaisíní, focail fhaire, agus tuilleadh.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Tráidire na gCluaisíní";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Tionscadal Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Níorbh fhéidir an leathanach seo a thaispeáint san Amharc Léitheoireachta.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Barrshuímh";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Nuashonraigh";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Bhuel, cuireann sé seo náire orainn.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Vicipéid";
+
 /* Button to save the user's password */
 "Yes" = "Tá";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Níl aon chluaisíní oscailte agat i bhFirefox ar do ghléasanna eile.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Do Chearta";

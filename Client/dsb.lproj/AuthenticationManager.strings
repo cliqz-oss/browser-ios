@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Pó 15 minutach";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Gronidłowy kod změniś";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Gronidłowy kod zapódaś";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Nowy gronidłowy kod zapódaś";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Gronidłowy kod zapódaś";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Gronidłowy kod zapódaś";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Ned";
 
-/* List item for Logins */
-"Logins" = "Pśizjawjenja";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Wopacny gronidłowy kod. Wopytajśo hyšći raz (zbytne wopyty: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Wopacny gronidłowy kod. Wopytajśo hyšći raz.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Maksimalna licba wopytow dojśpita. Pšosym wopytajśo hyšći raz za jadnu gódźinu.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Maksimalna licba wopytow dojśpita. Pšosym wopytajśo pózdźej hyšći raz.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Nowy gronidłowy kod musy se wót eksistěrujucego koda rozeznawaś.";
 
 /* List section title for passcode settings */
 "Passcode" = "Gronidłowy kod";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Priwatny modus";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Gronidłowej koda se njemakatej. Wopytajśo hyšći raz.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Gronidłowy kod znowego zapódaś";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Znjemóžniśo swój gronidłowy kod.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Touch ID wužywaś za";
+"Use Touch ID" = "Touch ID wužywaś";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Wužywajśo swój palcowy wótśišć, aby něnto na pśizjawjenja pśistup měł.";

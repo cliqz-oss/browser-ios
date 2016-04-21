@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Address and Search";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Pahintulutan ang mga Third-Party Keyboard";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Laging Ipadala";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Kinakailangan ang Pagpapatunay";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Mga Bookmark";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Narito ang mga Bookmark na iyong ini-save.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Tinkad";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Ilagay ang iyong password para makakonek.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "FirefoxHelp at Support";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Kailangang buksan muli ang Firefox para mangyari ang iyong binago.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Titigil mag-sync ang Firefox sa iyong account, pero hindi nito buburahin ang browsing data nitong device.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Nakaraang buwan";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Huling na-sync: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Ipakita ang mga suhestyon";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Sign In";
+"Sign In to Firefox" = "Sign in sa Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Sign in";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Mag sign-in upang kunin ang mga tab, bookmark, at password mula sa iba pang mga device.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Tumigil";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "I-sync ngayon";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "I-Sync ang iyong mga tab, bookmark, password, atbp.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "I-Sync ang iyong mga tab, bookmark, password atbp.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Tray ng mga Tab";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Ang Mozilla Project";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Ang pahinang ito ay hindi maipakita sa Reader View.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Pangunahing mga site.";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Update";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Pasensya na.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Oo";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Walang ibang bukas na mga tab sa Firefox sa ibang device.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Ang iyong mga Karapatan";

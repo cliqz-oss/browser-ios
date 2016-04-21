@@ -10,7 +10,7 @@
 /* See http://mzl.la/1T8gxwo */
 "Customize" = "Налаштовуйте";
 
-/* See http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1if9ODp */
 "Easily switch between open pages with tabs." = "Легко перемикайтеся між відкритими сторінками за допомогою вкладок.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
@@ -23,10 +23,10 @@
 "Organize" = "Організовуйте";
 
 /* See http://mzl.la/1T8gxwo */
-"Personalize your Firefox just the way you like in Settings." = "Персоналізуйте свій Firefox так, як вам зручно в Налаштуваннях.";
+"Personalize your Firefox just the way you like in Settings." = "Налаштуйте Firefox на свій смак в Параметрах.";
 
-/* See http://mzl.la/1T8gxwo */
-"Personalize your default search engine and more in Settings." = "Персоналізуйте свій типовий засіб пошуку та інші параметри в налаштуваннях.";
+/* See http://mzl.la/1if9ODp */
+"Personalize your default search engine and more in Settings." = "Налаштуйте типовий засіб пошуку й багато іншого в Параметрах.";
 
 /* See http://mzl.la/1if9ODp */
 "Share" = "Діліться";
@@ -37,14 +37,14 @@
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "Почати перегляд";
 
-/* See http://mzl.la/1T8gxwo */
-"Sync Your Devices." = "Синхронізуйте свої пристрої.";
+/* See http://mzl.la/1if9ODp */
+"Sync your Devices." = "Синхронізуйте свої пристрої.";
 
 /* See http://mzl.la/1if9ODp */
 "Tap, hold and move the Firefox icon into your dock for easy access." = "Торкніться, утримайте й перемістіть піктограму Firefox у свій док для легкого доступу.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
-"The Settings button is at the beginning of the Tabs Tray." = "Кнопка налаштувань знаходиться на початку лотка вкладок.";
+"The Settings button is at the beginning of the Tabs Tray." = "Кнопка параметрів знаходиться на початку лотка вкладок.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
 "The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "Кнопка показу вкладок знаходиться поруч з текстовим полем адреси та пошуку і показує поточну кількість відкритих вкладок.";

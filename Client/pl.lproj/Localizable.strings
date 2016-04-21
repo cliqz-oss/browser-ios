@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Pasek adresu i wyszukiwania";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Klawiatury innych podmiotów";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Zawsze wysyłaj";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Podaj nazwę użytkownika i hasło";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Zakładki";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Dodawane zakładki będą tutaj wyświetlane.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Jasność";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Wprowadź hasło, aby połączyć";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Pomoc Firefoksa";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox musi zostać otworzony ponownie, aby ta zmiana przyniosła skutek.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox zaprzestanie synchronizacji z Twoim kontem ale nie usunie żadnych danych przeglądania z tego urządzenia.";
@@ -259,8 +271,7 @@
 /* Button to not save the user's password */
 "Not now" = "Nie teraz";
 
-/* Alert OK Button
-          Label for OK button in the application update prompt
+/* Label for OK button in the application update prompt
           OK button */
 "OK" = "OK";
 
@@ -281,9 +292,6 @@
 
 /* String indicating that the file can be opened in another application on the device */
 "Open in…" = "Otwórz w…";
-
-/* Opening an external URL */
-"Opening %@" = "Otwieranie %@";
 
 /* See http://bit.ly/1I7Do4b */
 "Pages you have visited recently will show up here." = "Ostatnio odwiedzane strony będą wyświetlane w tym miejscu";
@@ -402,11 +410,14 @@
 "Show search suggestions" = "Podpowiedzi wyszukiwania";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Zaloguj się";
+"Sign In to Firefox" = "Zaloguj się do Firefoksa";
 
 /* See http://mzl.la/1Qtkf0j
           Text message / button in the settings table view */
 "Sign in" = "Zaloguj się";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Zaloguj się, aby synchronizować karty, zakładki i hasła pomiędzy urządzeniami.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Zatrzymaj";
@@ -420,10 +431,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Synchronizuj";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Synchronizuj karty, zakładki, hasła i inne";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Synchronizuj karty, hasła i więcej";
 
 /* Panel accessibility label */
@@ -441,9 +452,6 @@
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Otwarte karty";
 
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Projekt Mozilla";
-
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Strona nie może zostać wyświetlona w widoku poprawionej czytelności";
 
@@ -459,14 +467,14 @@
 /* See http://mzl.la/1G7uHo7 */
 "This allows you to save the image to your Camera Roll." = "Pozwoli to zachować obrazek w albumie Wszystkie zdjęcia.";
 
-/* Opening an external app */
-"This will open in another application" = "Otworzy inną aplikację";
-
 /* History tableview section header */
 "Today" = "Dzisiaj";
 
 /* Panel accessibility label */
 "Top sites" = "Popularne";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Aktualizuj";
@@ -501,6 +509,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Przepraszamy!";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Tak";
 
@@ -508,10 +519,13 @@
 "Yesterday" = "Wczoraj";
 
 /* Error message in the remote tabs panel */
-"You don't have any other devices connected to this Firefox Account available to sync." = "Do tego konta Firefoksa nie są podłączone żadne inne urządzenia dostępne do synchronizacji.";
+"You don't have any other devices connected to this Firefox Account available to sync." = "Brak innych urządzeń połączonych z tym kontem Firefoksa dostępnych do synchronizacji.";
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Brak otwartych kart w Firefoksach na innych urządzeniach.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "O prawach użytkownika";

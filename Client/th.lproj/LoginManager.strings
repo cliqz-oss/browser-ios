@@ -1,7 +1,10 @@
 /* Prompt title when deleting logins */
 "Are you sure?" = "คุณแน่ใจหรือไม่?";
 
-/* Clears the search input field and exits out of input mode */
+/* Prompt option for cancelling out of deletion */
+"Cancel" = "ยกเลิก";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user taps the close button in the search field to clear the search and exit search mode */
 "Clear Search" = "ล้างการค้นหา";
 
 /* Copy password text selection menu item */
