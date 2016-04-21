@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adresas ir paieška";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Leisti trečiųjų šalių klaviatūras";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Visada perduoti";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Reikalingas tapatumo nustatymas";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Adresynas";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Įrašyti adresai atsiras čia.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Skaistis";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Norėdami prisijungti įveskite slaptažodį.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "„Firefox“ žinynas ir pagalba";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "„Firefox“ turi būti perleista, kad šis pakeitimas įsigaliotų.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "„Firefox“ nebesinchronizuos duomenų su jūsų paskyra, bet šiame įrenginyje jau esančių naršymo duomenų nepašalins.";
@@ -164,7 +176,7 @@
 "Forward" = "Pirmyn";
 
 /* General settings section title */
-"General" = "Bendros";
+"General" = "Bendrosios";
 
 /* A re-worded offer about Sync that emphasizes one-way data transfer, not syncing. */
 "Get your open tabs, bookmarks, and passwords from your other devices." = "Gaukite atvertas korteles, adresyną bei slaptažodžius iš kitų savo įrenginių.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Praėjęs mėnuo";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Paskiausiai sinchronizuota: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Rodyti paieškos žodžių siūlymus";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Prisijungti";
+"Sign In to Firefox" = "Prisijungti prie „Firefox“";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Prisijungti";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Prisijungę galėsite gauti korteles, adresyną ir slaptažodžius iš kitų savo įrenginių.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Stabdyti";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sinchronizuoti dabar";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sinchronizuokite savo korteles, adresyną, slaptažodžius ir kitką.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sinchronizuokite savo korteles, slaptažodžius ir kitką.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Kortelių dėklas";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "„Mozilla“ projektas";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Šio tinklalapio atvaizduoti skaitymo veiksenoje nepavyko.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Lankomiausios svetainės";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Atnaujinti";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Et, nemalonu…";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Vikipedija";
+
 /* Button to save the user's password */
 "Yes" = "Taip";
 
@@ -511,7 +529,10 @@
 "You don't have any other devices connected to this Firefox Account available to sync." = "Su šia „Firefox“ paskyra nesate susieję jokių kitų sinchronizuoti galinčių įrenginių";
 
 /* Error message in the remote tabs panel */
-"You don't have any tabs open in Firefox on your other devices." = "Kituose savo įrenginiuose su „Firefox“ neturite atvirų kortelių.";
+"You don't have any tabs open in Firefox on your other devices." = "Kituose savo įrenginiuose su „Firefox“ neturite atvertų kortelių.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Jūsų teisės";

@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Po 15 minutách";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Změna hesla";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Zadejte heslo";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Zadejte nové heslo";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Zadejte heslo";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Zadejte heslo";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Okamžitě";
 
-/* List item for Logins */
-"Logins" = "Přihlášení";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Nesprávné heslo. Zkuste to znovu (zbývá pokusů: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Nesprávné heslo. Zkuste to znovu.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Vyčerpali jste všechny pokusy. Zkuste to prosím znovu za hodinu.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Vyčerpali jste všechny pokusy. Zkuste to prosím znovu později.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Nové heslo musí být odlišné od současného hesla.";
 
 /* List section title for passcode settings */
 "Passcode" = "Heslo";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Anonymní prohlížení";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Hesla nesouhlasí. Zkuste to znovu.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Zopakujte heslo";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Vypněte své heslo.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Použít Touch ID pro";
+"Use Touch ID" = "Použít Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Použijte svůj otisk prstu pro otevření Přihlášení.";

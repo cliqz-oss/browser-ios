@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adresse und Suche";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Tastaturen von Drittanbietern zulassen";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Immer senden";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Authentifizierung erforderlich";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Lesezeichen";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Gespeicherte Lesezeichen erscheinen hier.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Helligkeit";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Geben Sie Ihr Passwort ein, um eine Verbindung herzustellen.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Hilfe und Unterstützung zu Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox muss erneut geöffnet werden, um diese Änderungen anzuwenden.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox beendet die Synchronisation mit Ihrem Konto, löscht aber keine Surf-Daten auf diesem Gerät.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Letzter Monat";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Letzte Synchronisation: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Suchvorschläge anzeigen";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Bei Firefox-Sync anmelden";
+"Sign In to Firefox" = "Melden Sie sich bei Firefox an";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Anmelden";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Melden Sie sich an, um Ihre Tabs, Lesezeichen und Passwörter von Ihren anderen Geräten zu übernehmen.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Stopp";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Jetzt synchronisieren";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Synchronisieren Sie Ihre Tabs, Lesezeichen, Passwörter und mehr.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Synchronisieren Sie Ihre Tabs, Passwörter und mehr.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Tab-Ablage";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Das Mozilla-Projekt";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Die Seite konnte nicht in der Leseansicht dargestellt werden.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Meistbesuchte Seiten";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Aktualisieren";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Entschuldigung, das hätte nicht passieren dürfen.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Ja";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Sie haben keine offenen Tabs in Firefox auf Ihren anderen Geräten.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Ihre Rechte";

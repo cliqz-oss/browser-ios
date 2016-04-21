@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Address and Search";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Ceadaich meur-chlàran treas phàrtaidhean";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Cuir an-còmhnaidh";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Feum air dearbhadh";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Bookmarks";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Nochdaidh na comharran-lìn a shàbhaileas tu an-seo.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Soilleireachd";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Enter your password to connect.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Cobhair ⁊ taic Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Feumaidh Firefox ath-fhosgladh gus an t-atharrachadh seo a chur an sàs.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Last month";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "An sioncronachadh mu dheireadh: %@";
 
 /* History tableview section header */
@@ -343,7 +354,7 @@
 "Save Image" = "Sàbhail an dealbh";
 
 /* Setting to enable the built-in password manager */
-"Save Logins" = "Sàbhail na clàraidhean a-steach";
+"Save Logins" = "Sàbhail clàraidhean a-steach";
 
 /* See http://mzl.la/1LXbDOL */
 "Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Sàbhail duilleagan air an liosta leughaidh le gnogag air ìomhaigheag an leabhair ann an uidheaman-smachd an t-seallaidh leughaidh.";
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Show search suggestions";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Clàraich a-steach";
+"Sign In to Firefox" = "Clàraich a-steach gu Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Sign in";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Clàraich a-steach gus na tabaichean, comharra-lìn ’s faclan-faire agad fhaighinn o na h-uidheaman eile agad.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Sguir dheth";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sioncronaich an-dràsta";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sioncronaich na tabaichean, comharran-lìn, faclan-faire is mòran a bharrachd.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sioncronaich na tabaichean, faclan-faire is mòran a bharrachd.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Tabs Tray";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Pròiseact Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Cha b’ urrainn dhuinn an duilleag a thaisbeanadh ann an sealladh an leughadair.";
@@ -468,6 +480,9 @@
 /* Panel accessibility label */
 "Top sites" = "Top sites";
 
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
+
 /* Button to update the user's password */
 "Update" = "Ùraich";
 
@@ -475,7 +490,7 @@
 "Upgrade Firefox to connect." = "Upgrade Firefox to connect.";
 
 /* Setting to enable compact tabs in the tab overview */
-"Use Compact Tabs" = "Cleachd tabaichean dùmhlaichte";
+"Use Compact Tabs" = "Dùmhlaich na tabaichean";
 
 /* Username textbox in Authentication prompt */
 "Username" = "Ainm-cleachdaiche";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "An-dà, tha seo a’ cur nàire oirnn.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Uicipeid";
+
 /* Button to save the user's password */
 "Yes" = "Tha";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Chan eil taba sam bith fosgailte agad ann am Firefox air uidheaman eile.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Do chòraichean";

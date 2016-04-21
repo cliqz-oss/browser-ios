@@ -1,14 +1,17 @@
 /* Prompt title when deleting logins */
 "Are you sure?" = "¿Estás seguro?";
 
-/* Clears the search input field and exits out of input mode */
+/* Prompt option for cancelling out of deletion */
+"Cancel" = "Cancelar";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user taps the close button in the search field to clear the search and exit search mode */
 "Clear Search" = "Borrar búsqueda";
 
 /* Copy password text selection menu item */
 "Copy" = "Copiar";
 
 /* Button in login detail screen that deletes the current login */
-"Delete" = "Eliminar";
+"Delete" = "Borrar";
 
 /* Title for deselecting all selected logins */
 "Deselect All" = "Desmarcar todo";
@@ -35,7 +38,7 @@
 "No logins found" = "No se han encontrado inicios de sesión";
 
 /* Open and Fill website text selection menu item */
-"Open & Fill" = "Abrir & completar";
+"Open & Fill" = "Abrir y completar";
 
 /* Reveal password text selection menu item */
 "Reveal" = "Mostrar";

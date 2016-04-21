@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Naslov in iskanje";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Omogoči tipkovnice neodvisnih razvijalcev";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Vedno pošlji";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Zahtevana je overitev";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Zaznamki";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Tukaj bodo prikazani shranjeni zaznamki.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Svetlost";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Vnesite geslo za povezavo.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Pomoč in podpora za Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Za uveljavljanje sprememb morate znova odpreti Firefox.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox se bo prenehal sinhronizirati z vašim računom, vendar ne bo izbrisal podatkov o brskanju na tej napravi.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Zadnji mesec";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Zadnja sinhronizacija: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Prikaži predloge iskanja";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Prijava";
+"Sign In to Firefox" = "Prijavite se v Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Prijava";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Prijavite se, da dobite zavihke, zaznamke in gesla iz drugih naprav.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Ustavi";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sinhroniziraj zdaj";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sinhronizirajte zavihke, zaznamke, gesla in drugo.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sinhronizirajte zavihke, gesla in drugo.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Predal zavihkov";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Projekt Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Strani ni mogoče prikazati v bralnem pogledu.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Glavne strani";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Posodobi";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "No, to je pa nerodno.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedija";
+
 /* Button to save the user's password */
 "Yes" = "Da";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "V Firefoxu na drugih napravah nimate odprtih drugih zavihkov.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Vaše pravice";

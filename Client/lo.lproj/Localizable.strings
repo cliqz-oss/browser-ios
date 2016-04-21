@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "ທີ່ຢູ່ ແລະ ການຄົ້ນຫາ";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "ອະນຸຍາດແປ້ນພິມທີ່ພັດທະນາຈາກນັກພັດທະນາທີ່ສາມ";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "ສົ່ງຕະຫລອດເວລາ";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "ຕ້ອງການການພິສູດຕົວຕົນ";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "ບຸກມາກ";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "ບຸກມາກທີ່ທ່ານບັນທຶກໄວ້ຈະສະແດງຂື້ນຢູ່ທີ່ນີ້.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "ຄວາມສະຫວ່າງ";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "ປ້ອນລະຫັດຜ່ານຂອງທ່ານໃສ່ເພືອເຊື່ອມຕໍ່.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "ວິທີນຳໃຊ້ ແລະ ຊ່ວຍເຫລືອຂອງ Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox ຈຳເປັນຕ້ອງໄດ້ມີການປິດ ແລ້ວເປີດນຳໃຊ້ໃຫມ່ເພື່ອເຮັດໃຫ້ການປ່ຽນແປງນີ້ມີຜົນ.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox ຈະຢຸດການ Sync ກັບບັນຊີຂອງທ່ານ, ແຕວ່າຈະບໍ່ລຶບປະຫວັດການຄົ້ນຫາຂອງທ່ານໃນອຸປະກອນນີ້.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "ເດືອນທີ່ຜ່ານມາ";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Synced ຄັ້ງຫລ່າສຸດ: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "ສະແດງຜົນການແນະນຳການຄົ້ນຫາ";
 
 /* Text message / button in the settings table view */
-"Sign In" = "ເຂົ້າສູ່ລະບົບ";
+"Sign In to Firefox" = "ເຂົ້າສູ່ລະບົບ Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "ເຂົ້າສູ່ລະບົບ";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "ເຂົ້າສູ່ລະບົບເພື່ອຮັບເອົາແທັບຂອງທ່ານ, ບຸກມາກ ແລະ ລະຫັດຜ່ານຂອງທ່ານຈາກອຸປະກອນອື່ນໆຂອງທ່ານ.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "ຢຸດ";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sync ດຽວນີ້";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sync ແທັບ, ບຸກມາກ, ລະຫັດຜ່ານ ແລະ ອື່ນຂອງທ່ານ.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sync ແທັບ, ລະຫັດຜ່ານ ແລະ ອື່ນຂອງທ່ານ.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "ແທັບ Tray";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "ໂຄງການ Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "ຫນ້າເວັບນີ້ບໍ່ສາມາດສະແດງຢູ່ໃນ Reader View.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "ເວັບໄຊຕ໌ຍອດນິຍົມ";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "ອັບເດດ";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "ເກີດມີຂໍ້ຜິດພາດ.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "ຕົກລົງ";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "ທ່ານບໍ່ມີແທັບໃດທີ່ເປີດໃນ Firefox ໃນອຸປະກອນອື່ນໆຂອງທ່ານ.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "ສິດທິຂອງທ່ານ";

@@ -9,6 +9,7 @@
 import UIKit
 import Shared
 import Crashlytics
+import WebKit
 
 @objc protocol JavaScriptBridgeDelegate: class {
     

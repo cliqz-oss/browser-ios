@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Efter 15 minuter";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Byt lösenkod";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Ange lösenkod";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Ange en ny lösenkod";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Ange en lösenkod";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Ange lösenkod";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Genast";
 
-/* List item for Logins */
-"Logins" = "Inloggningar";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Felaktig lösenkod. Försök igen (Återstående försök: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Felaktigt lösenkod. Försök igen.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Maximalt antal försök nått. Försök igen om en timme.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Maximalt antal försök nått. Vänligen försök igen senare.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Ny lösenkod måste vara annorlunda än den nuvarande lösenkoden.";
 
 /* List section title for passcode settings */
 "Passcode" = "Lösenkod";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Privat webbläsning";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Lösenkod stämmer inte överens. Försök igen.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Bekräfta lösenkod";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Stäng av din lösenkod.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Använd Touch ID för";
+"Use Touch ID" = "Använd Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Använd ditt fingeravtryck för att få tillgång till inloggningar nu.";

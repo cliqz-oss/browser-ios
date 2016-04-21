@@ -309,9 +309,6 @@ class FailedSQLiteDBConnection: SQLiteDBConnection {
     func executeQuery<T>(sqlStr: String, factory: ((SDRow) -> T), withArgs args: [AnyObject?]?) -> Cursor<T> {
         return Cursor<T>(err: self.fail("Non-open connection; can't execute query."))
     }
-    func executeQueryUnsafe<T>(sqlStr: String, factory: ((SDRow) -> T)) -> Cursor<T> {
-        return self.executeQueryUnsafe(sqlStr, factory: factory, withArgs: nil)
-    }
     func executeQueryUnsafe<T>(sqlStr: String, factory: ((SDRow) -> T), withArgs args: [AnyObject?]?) -> Cursor<T> {
         return Cursor<T>(err: self.fail("Non-open connection; can't execute query."))
     }
@@ -608,6 +605,7 @@ public class ConcreteSQLiteDBConnection: SQLiteDBConnection {
         } catch let error1 as NSError {
             error = error1
             statement = nil
+            log.error("SQL error: \(error1.localizedDescription) for SQL \(sqlStr).")
         }
 
         // Close, not reset -- this isn't going to be reused.

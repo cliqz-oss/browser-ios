@@ -4,9 +4,9 @@
 
 #include "BaseConfig.xcconfig"
 
-MOZ_BUNDLE_DISPLAY_NAME = Cliqz Beta
+MOZ_BUNDLE_DISPLAY_NAME = Firefox
 
-MOZ_PRODUCT_NAME = Cliqz Beta
+MOZ_PRODUCT_NAME = Firefox
 
 MOZ_RELEASE_CHANNEL = release
 
@@ -14,3 +14,4 @@ ADJUST_ENVIRONMENT = production
 ADJUST_APP_TOKEN = gqrwnbypw28p
 
 INCLUDE_SETTINGS_BUNDLE = NO
+

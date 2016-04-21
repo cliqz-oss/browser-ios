@@ -23,7 +23,7 @@
 "Preview" = "Vista previa";
 
 /* Pending feature; currently unused string! Accessibility label for theme preview button */
-"Preview Theme" = "Tema previo";
+"Preview Theme" = "Previsualizar tema";
 
 /* Pending feature; currently unused string! Button to set selected theme as current theme */
 "Set" = "Establecer";

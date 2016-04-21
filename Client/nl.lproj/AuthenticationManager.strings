@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Na 15 minuten";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Toegangscode wijzigen";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Voer toegangscode in";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Voer een nieuwe toegangscode in";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Voer een toegangscode in";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Voer toegangscode in";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Onmiddellijk";
 
-/* List item for Logins */
-"Logins" = "Aanmeldingen";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Onjuiste toegangscode. Probeer het opnieuw (Resterende pogingen: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Onjuiste toegangscode. Probeer het opnieuw.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Maximale aantal pogingen bereikt. Probeer het over een uur opnieuw.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Maximale aantal pogingen bereikt. Probeer het later opnieuw.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Nieuwe toegangscode moet anders zijn dan bestaande code.";
 
 /* List section title for passcode settings */
 "Passcode" = "Toegangscode";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Privénavigatie";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Toegangscodes kwamen niet overeen. Probeer het opnieuw.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Voer toegangscode nogmaals in";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Zet uw toegangscode uit.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Touch ID gebruiken voor";
+"Use Touch ID" = "Touch ID gebruiken";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Gebruik uw vingerafdruk voor toegang tot Aanmeldingen.";

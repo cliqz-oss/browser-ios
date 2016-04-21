@@ -5,7 +5,7 @@
 "Close" = "Stäng";
 
 /* See http://mzl.la/1ISlXnU */
-"Please open Firefox, go to Settings and sign in to continue." = "Vänligen öppna Firefox, gå till Inställningar och logga in för att fortsätta.";
+"Please open Firefox, go to Settings and sign in to continue." = "Vänligen öppna Firefox, gå till inställningar och logga in för att fortsätta.";
 
 /* Navigation bar button to Send the current page to a device */
 "Send" = "Skicka";
@@ -14,7 +14,7 @@
 "Send Tab" = "Skicka flik";
 
 /* See http://mzl.la/1ISlXnU */
-"You are not signed in to your Firefox Account." = "Du är inte inloggad med ditt Firefox Konto.";
+"You are not signed in to your Firefox Account." = "Du är inte inloggad med ditt Firefox-konto.";
 
 /* Error message shown in the remote tabs panel */
 "You don't have any other devices connected to this Firefox Account available to sync." = "Du har inte några andra enheter anslutna till detta Firefox-konto tillgängliga för synkronisering.";
