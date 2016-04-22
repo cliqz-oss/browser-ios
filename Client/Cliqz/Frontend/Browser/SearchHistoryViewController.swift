@@ -9,6 +9,7 @@
 import UIKit
 import Shared
 import Storage
+import WebKit
 
 protocol SearchHistoryViewControllerDelegate: class {
     

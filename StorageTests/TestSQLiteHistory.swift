@@ -5,6 +5,7 @@
 import Foundation
 import Shared
 @testable import Storage
+import Deferred
 
 import XCTest
 
@@ -1214,7 +1215,7 @@ class TestSQLiteHistory: XCTestCase {
         }
 
         func removeBookmark() -> Success {
-            return bookmarks.removeByURL("http://bookmarkedurl/")
+            return bookmarks.testFactory.removeByURL("http://bookmarkedurl/")
         }
 
         func checkFaviconWasRemovedForBookmark() -> Success {

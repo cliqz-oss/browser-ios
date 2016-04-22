@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Alamat dan Pencarian";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Izinkan Papan Ketik Pihak Ketiga";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Selalu Kirimkan";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Otentikasi dibutuhkan";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Markah";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Markah yang Anda simpan akan muncul di sini.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Kecerahan";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Masukkan sandi untuk tersambung.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Bantuan dan Dukungan Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox harus dibuka ulang untuk menerapkan perubahan ini.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox akan berhenti menyinkronkan dengan akun Anda, tetapi tidak akan menghapus data penjelajahan pada perangkat ini.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Bulan sebelumnya";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Disinkronkan terakhir: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Tampilkan saran pencarian";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Masuk";
+"Sign In to Firefox" = "Masuk ke Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Masuk";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Masuk untuk mendapatkan tab, markah, dan sandi dari perangkat Anda yang lain.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Hentikan";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sinkronkan Sekarang";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Sinkronkan tab, markah, sandi, dan yang lain.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Sinkronkan tab, sandi, dan yang lain.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Baki Tab";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Proyek Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Laman ini tidak dapat ditampilkan di Tampilan Baca.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Situs teratas";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Perbarui";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Memalukan.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Ya";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Anda tidak memiliki tab terbuka di Firefox pada perangkat Anda lainnya.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Hak Anda";

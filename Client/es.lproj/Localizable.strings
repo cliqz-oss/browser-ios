@@ -20,7 +20,7 @@
 "Add Tab" = "Añadir pestaña";
 
 /* Add URL to the reading list - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
-"Add to Reading List" = "Añadir a la lista de lectura";
+"Add to Reading List" = "Añadir a lista de lectura";
 
 /* Accessibility message e.g. spoken by VoiceOver after the current page gets added to the Reading List using the Reader View button, e.g. by long-pressing it or by its accessibility custom action. */
 "Added page to Reading List" = "Página añadida a la lista de lectura";
@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Direcciones y búsqueda";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Permitir teclados de terceros";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Enviar siempre";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Identificación requerida";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Marcadores";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Tus marcadores guardados aparecerán aquí.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Brillo";
@@ -69,7 +78,7 @@
 "Changes font type." = "Cambia la fuente.";
 
 /* Label used as an item in Settings. When touched it will open a dialog prompting the user to make sure they want to clear all of their private data. */
-"Clear Private Data" = "Limpiar datos privados";
+"Clear Private Data" = "Borrar datos privados";
 
 /* Accessibility label for action denoting closing a tab in tab list (tray) */
 "Close" = "Cerrar";
@@ -146,13 +155,16 @@
 "Done" = "Listo";
 
 /* No comment provided by engineer. */
-"Double tap and hold to open history" = "Toca dos veces y deja mantenido para abrir el historial";
+"Double tap and hold to open history" = "Toca dos veces y mantén pulsado para abrir el historial";
 
 /* Text message in the settings table view */
 "Enter your password to connect." = "Escribe tu contraseña para conectarte.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Ayuda de Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox necesita reiniciarse para que el cambio sea efectivo.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox detendrá la sincronización con tu cuenta, pero no borrará ninguno de tus datos de navegación en este dispositivo.";
@@ -167,7 +179,7 @@
 "General" = "General";
 
 /* A re-worded offer about Sync that emphasizes one-way data transfer, not syncing. */
-"Get your open tabs, bookmarks, and passwords from your other devices." = "Accede a las pestañas abiertas, marcadores y contraseñas de tus otros dispositivos.";
+"Get your open tabs, bookmarks, and passwords from your other devices." = "Accede a los marcadores, pestañas abiertas y contraseñas de tus otros dispositivos.";
 
 /* Pending feature; currently unused string! Button to browse to URL on the clipboard when browser is opened */
 "Go" = "Ir";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Último mes";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Última sincronización: %@";
 
 /* History tableview section header */
@@ -346,7 +357,7 @@
 "Save Logins" = "Guardar inicios de sesión";
 
 /* See http://mzl.la/1LXbDOL */
-"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Guarda páginas en tu lista de lectura tocando el ícono del libro en los controles de vista de lectura.";
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "Guarda páginas en tu lista de lectura tocando el ícono de libro en los controles de vista de lectura.";
 
 /* Navigation title for search settings.
    Open search section of settings */
@@ -371,7 +382,7 @@
 "Send Report" = "Enviar un informe";
 
 /* Message displayed in the crash dialog above the buttons used to select when sending reports */
-"Send a crash report so Mozilla can fix the problem?" = "¿Enviar un informe del fallo para que Mozilla pueda resolver el problema?";
+"Send a crash report so Mozilla can fix the problem?" = "¿Enviar un informe del fallo para que Mozilla resuelva el problema?";
 
 /* Sepia theme setting in Reading View settings */
 "Sepia" = "Sepia";
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Mostrar sugerencias de búsqueda";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Iniciar sesión";
+"Sign In to Firefox" = "Inicia sesión en Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Iniciar sesión";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Inicia sesión y accede a los marcadores, pestañas abiertas y contraseñas de tus otros dispositivos.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Detener";
@@ -420,11 +435,11 @@
 /* Sync Firefox Account */
 "Sync Now" = "Sincronizar ahora";
 
-/* See http://mzl.la/1Qtkf0j */
-"Sync your tabs, bookmarks, passwords and more." = "Sincroniza tus pestañas, marcadores, contraseñas y más.";
+/* Sync tabs, bookmarks, passwords empty state instructions. */
+"Sync your tabs, bookmarks, passwords and more." = "Sincroniza tus pestañas, marcadores, contraseñas y mucho más.";
 
-/* See http://mzl.la/1Qtkf0j */
-"Sync your tabs, passwords and more." = "Sincroniza tus pestañas, contraseñas y más.";
+/* Sync tabs and passwords empty state instructions. */
+"Sync your tabs, passwords and more." = "Sincroniza tus pestañas, contraseñas y mucho más.";
 
 /* Panel accessibility label */
 "Synced tabs" = "Pestañas sincronizadas";
@@ -441,11 +456,8 @@
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Bandeja de pestañas";
 
-/* Tile title for Mozilla */
-"The Mozilla Project" = "El proyecto Mozilla";
-
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
-"The page could not be displayed in Reader View." = "La página no pudo ser mostrada en vista de lectura.";
+"The page could not be displayed in Reader View." = "La página no se pudo mostrar en vista de lectura.";
 
 /* Prompt message for application update */
 "There is a new version available of Firefox Aurora. Tap OK to go to the download page." = "Hay una nueva versión disponible de Firefox Aurora. Toca aceptar para ir a la página de descargas.";
@@ -460,13 +472,16 @@
 "This allows you to save the image to your Camera Roll." = "Esto te permite guardar la imagen en tu carrete.";
 
 /* Opening an external app */
-"This will open in another application" = "Esto abrirá en otra aplicación";
+"This will open in another application" = "Se abrirá en otra aplicación";
 
 /* History tableview section header */
 "Today" = "Hoy";
 
 /* Panel accessibility label */
 "Top sites" = "Sitios frecuentes";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Actualizar";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Bueno, esto es embarazoso.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Sí";
 
@@ -508,10 +526,13 @@
 "Yesterday" = "Ayer";
 
 /* Error message in the remote tabs panel */
-"You don't have any other devices connected to this Firefox Account available to sync." = "No tienes ningún otro dispositivo conectado a esta cuenta disponible en Firefox Sync.";
+"You don't have any other devices connected to this Firefox Account available to sync." = "No tienes ningún otro dispositivo conectado a esta cuenta de Firefox disponible para sincronizarse.";
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "No tienes ninguna pestaña abierta en Firefox en tus demás dispositivos.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Tus derechos";

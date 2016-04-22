@@ -20,7 +20,7 @@
 "Add Tab" = "Ouzhpennañ un ivinell";
 
 /* Add URL to the reading list - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
-"Add to Reading List" = "Ouzhpennañ d'ar roll lennadurioù";
+"Add to Reading List" = "Ouzhpennañ er roll lennadurioù";
 
 /* Accessibility message e.g. spoken by VoiceOver after the current page gets added to the Reading List using the Reader View button, e.g. by long-pressing it or by its accessibility custom action. */
 "Added page to Reading List" = "Ouzhpennet eo bet ar bajenn d'ar roll lennadurioù";
@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Chomlec'h ha Klask";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Aotren klavieroù un trede";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Kas bepred";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Dilesa azgoulennet";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Sinedoù";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Amañ vo diskouezet ar sinedoù enrollet ganeoc'h";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Lintr";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Enlakait ho ker-tremen evit kennaskañ.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Skor ha skoazell Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox a rank adloc'hañ evit ma vefe arloet ar c'hemmoù.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Paouezet e vo goubredañ gant ho kont, met ne vo ket dilamet ho roadennoù merdeiñ war an trevnad-mañ.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Er miz tremenet";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Goubredet en diwezh: %@";
 
 /* History tableview section header */
@@ -278,7 +289,7 @@
 "Open Settings" = "Digeriñ an arventennoù";
 
 /* See http://mzl.la/1LXbDOL */
-"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Digorit ar pennadoù er mod lenn en ur stekiñ ouzh an arlun levr p'eo skrammet er varenn-ditl.";
+"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Digorit ar pennadoù er mod lenn en ur stekiñ ouzh an arlun levr p'eo skrammet er varrenn-ditl.";
 
 /* String indicating that the file can be opened in another application on the device */
 "Open in…" = "Digeriñ e...";
@@ -287,7 +298,7 @@
 "Opening %@" = "O tigeriñ %@";
 
 /* See http://bit.ly/1I7Do4b */
-"Pages you have visited recently will show up here." = "Aze e vo skrammet ar pajennoù bet gweladennet nevez 'zo.";
+"Pages you have visited recently will show up here." = "Aze e vo diskouezet ar pajennoù bet gweladennet nevez 'zo.";
 
 /* Accessibility label for the Home panel's top toolbar containing list of the home panels (top sites, bookmarsk, history, remote tabs, reading list). */
 "Panel Chooser" = "Dibaber penel";
@@ -362,7 +373,7 @@
 "Secure connection" = "Kennask diarvar";
 
 /* Setting to enable the sending of crash reports */
-"Send Crash Reports" = "Kas an danevelloù sac'hadennoù";
+"Send Crash Reports" = "Kas danevelloù sac'hadenn";
 
 /* Show an input.mozilla.org page where people can submit feedback */
 "Send Feedback" = "Kas ho meno";
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Skrammañ an alioù klask";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Kennaskañ";
+"Sign In to Firefox" = "Kennaskañ da Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Kennaskañ";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Kennaskit evit kaout hoc'h ivinelloù, ho sinedoù hag ho kerioù-tremen adalek ho trevnadoù all.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Harz";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Goubredañ bremañ";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Goubredit ho ivinelloù, sinedoù, gerioù-tremen, ha muioc'h c'hoazh.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Goubredit ho ivinelloù, gerioù-tremen ha muioc'h c'hoazh.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Roll ivinelloù";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Raktres Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "N'haller ket skrammañ ar bajenn-mañ er mod lenn.";
@@ -468,14 +480,17 @@
 /* Panel accessibility label */
 "Top sites" = "Lec'hiennoù wellañ";
 
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
+
 /* Button to update the user's password */
-"Update" = "Hizivadenn";
+"Update" = "Hizivaat";
 
 /* Text message in the settings table view */
 "Upgrade Firefox to connect." = "Hizivait Firefox evit kennaskañ.";
 
 /* Setting to enable compact tabs in the tab overview */
-"Use Compact Tabs" = "Arverañ ivinelloù strizh";
+"Use Compact Tabs" = "Arverañ ivinelloù fetis";
 
 /* Username textbox in Authentication prompt */
 "Username" = "Anv arveriad";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Hum, nec'hus eo.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Ya";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "N'ho peus ivinell digor ebet e Firefox war ho trevnadoù all.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Ho kwirioù";

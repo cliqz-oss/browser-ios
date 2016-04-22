@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Pēc 15 minūtēm";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Mainīt kodu";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Ievadi paroli";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Ievadiet jauno paroli";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Ievadiet kodu";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Ievadiet paroli";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Uzreiz";
 
-/* List item for Logins */
-"Logins" = "Lietotājvārdi";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Nepareiza parole. Mēģiniet vēlreiz (atlikuši %d meģinājumi).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Nepareiza parole. Mēģiniet vēlreiz.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Sasniegts maksimālais mēģinājumu skaits. Lūdzu mēģiniet vēlreiz pēc stundas.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Sasniegts maksimālais mēģinājumu skaits. Lūdzu mēģiniet vēlreiz vēlāk.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Jaunajai parolei jābūt atšķirīgai no esošās.";
 
 /* List section title for passcode settings */
 "Passcode" = "Kods";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Privātā pārlūkošana";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Paroles nesakrīt! Pamēģiniet vēlreiz.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Vēlreiz ievadiet kodu";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Izslēdziet savu kodu.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Izmantot Touch ID";
+"Use Touch ID" = "Izmantot Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Izmantot pirkstu nospiedumu, lai piekļūtu lietotājvārdiem.";

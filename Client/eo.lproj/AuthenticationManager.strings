@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Post 15 minutoj";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Ŝanĝi paskodon";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Tajpu la paskodon";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Tajpu novan paskodon";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Tajpu paskodon";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Tajpu la paskodon";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Tuj";
 
-/* List item for Logins */
-"Logins" = "Akreditiloj";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Malĝusta paskodo. Provu denove (restas %d klopodoj).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Malĝusta paskodo. Provu denove.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Maksimuma nombro de klopodoj atingita. Bonvolu provi denove post horo.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Maksimuma nombro de klopodoj atingita. Bonvolu provi denove poste.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Nova paskodo devas estis malsama ol la ekzistanta kodo.";
 
 /* List section title for passcode settings */
 "Passcode" = "Paskodo";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Privata retumo";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Paskodoj ne kongruas. Provu denove.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Retajpu paskodon";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Malŝalti vian paskodon.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Uzi Touch ID por";
+"Use Touch ID" = "Uzi Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Uzi vian fingrospuron por aliri la kreditilojn nun.";

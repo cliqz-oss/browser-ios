@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adres en Sykje";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Toetseboerden fan tredden tastean";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Altyd ferstjoere";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Autentikaasje fereaske";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Blêdwizers";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Hjir ferskine blêdwizers dy't jo bewarje.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Helderheid";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Fier jo wachtwurd yn om ferbining te meitsjen.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox-help en -stipe";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox moat opnij iepene wurde om dizze wiziging troch te fieren.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox sil it syngronisearjen mei jo account stopje, mar gjin navigaasjegegevens op dit apparaat fuortsmite.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Foarige moanne";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Lêst syngronisearre: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Sykfoarstellen toane";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Oanmelde";
+"Sign In to Firefox" = "Oanmelde by Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Oanmelde";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Meld jo oan om jo ljepblêden, blêdwizers en wachtwurden fan jo oare apparaten op te heljen.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Stopje";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "No syngronisearje";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Syngronisearje jo ljepblêden, blêdwizers, wachtwurden en mear.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Syngronisearje jo ljepblêden, wachtwurden en mear.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Ljepblêdefek";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "It Mozilla-projekt";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "De side koe net yn de lêzerwerjefte werjûn wurde.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Topwebsites";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Bywurkje";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Us ekskuses foar it ûngemak.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedia";
+
 /* Button to save the user's password */
 "Yes" = "Ja";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Jo hawwe gjin ljepblêden iepene yn Firefox op jo oare apparaten.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Jo rjochten";

@@ -10,7 +10,7 @@
 /* See http://mzl.la/1T8gxwo */
 "Customize" = "Tilpass";
 
-/* See http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1if9ODp */
 "Easily switch between open pages with tabs." = "Bytt enkelt mellom åpne sider med faner.";
 
 /* Accessibility label for an image. See http://mzl.la/1T8gxwo */
@@ -25,7 +25,7 @@
 /* See http://mzl.la/1T8gxwo */
 "Personalize your Firefox just the way you like in Settings." = "Tilpass Firefox akkurat slik du vil ha den i Innstillinger.";
 
-/* See http://mzl.la/1T8gxwo */
+/* See http://mzl.la/1if9ODp */
 "Personalize your default search engine and more in Settings." = "Endre din standardsøkemotor og mer i innstillingene.";
 
 /* See http://mzl.la/1if9ODp */
@@ -37,8 +37,8 @@
 /* See http://mzl.la/1T8gxwo */
 "Start Browsing" = "Begynn å surfe";
 
-/* See http://mzl.la/1T8gxwo */
-"Sync Your Devices." = "Synkroniser dine enheter.";
+/* See http://mzl.la/1if9ODp */
+"Sync your Devices." = "Synkroniser dine enheter.";
 
 /* See http://mzl.la/1if9ODp */
 "Tap, hold and move the Firefox icon into your dock for easy access." = "Trykk på, hold inne og flytt Firefox-ikonet inn i dokken for enkel tilgang.";
@@ -50,5 +50,5 @@
 "The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "Knappen vis faner er ved siden av adresse- og søketekstfeltet og viser gjeldende antall åpne faner.";
 
 /* See http://mzl.la/1if9ODp */
-"Use the share sheet to send links from other apps to Firefox." = "Bruk delemenyen for å sende linker fra andre apper til Firefox.";
+"Use the share sheet to send links from other apps to Firefox." = "Bruk delemenyen for å sende lenker fra andre apper til Firefox.";
 

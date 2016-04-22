@@ -28,9 +28,11 @@ public struct UIConstants {
     // Static fonts
     static let DefaultChromeSize: CGFloat = 14
     static let DefaultChromeSmallSize: CGFloat = 11
+    static let PasscodeEntryFontSize: CGFloat = 36
     static let DefaultChromeFont: UIFont = UIFont.systemFontOfSize(DefaultChromeSize, weight: UIFontWeightRegular)
     static let DefaultChromeBoldFont = UIFont.boldSystemFontOfSize(DefaultChromeSize)
     static let DefaultChromeSmallFontBold = UIFont.boldSystemFontOfSize(DefaultChromeSmallSize)
+    static let PasscodeEntryFont = UIFont.systemFontOfSize(PasscodeEntryFontSize, weight: UIFontWeightBold)
 
     // These highlight colors are currently only used on Snackbar buttons when they're pressed
     static let HighlightColor = UIColor(red: 205/255, green: 223/255, blue: 243/255, alpha: 0.9)
@@ -49,6 +51,7 @@ public struct UIConstants {
     static let TableViewRowTextColor = UIColor(red: 53.55/255, green: 53.55/255, blue: 53.55/255, alpha: 1.0)
     static let TableViewDisabledRowTextColor = UIColor.lightGrayColor()
     static let TableViewSeparatorColor = UIColor(rgb: 0xD1D1D4)
+    static let TableViewHeaderFooterHeight = CGFloat(44)
 
     // Firefox Orange
     static let ControlTintColor = UIColor(red: 240.0 / 255, green: 105.0 / 255, blue: 31.0 / 255, alpha: 1)
@@ -87,11 +90,7 @@ private struct TempStrings {
     let backToThemesAccessibilityString = NSLocalizedString("Back to Themes", tableName: "LightweightThemes", comment: "Pending feature; currently unused string! Accessibility label for back button to theme chooser")
 
     // Bug 1198418 - Touch ID Passcode Strings
-    let setPasscode             = NSLocalizedString("Set Passcode", tableName: "AuthenticationManager", comment: "Screen title for Set Passcode")
-    let enterPasscode           = NSLocalizedString("Enter a passcode", tableName: "AuthenticationManager", comment: "Title for entering a passcode")
-    let reenterPasscode         = NSLocalizedString("Re-enter passcode", tableName: "AuthenticationManager", comment: "Title for re-entering a passcode")
     let turnOffYourPasscode     = NSLocalizedString("Turn off your passcode.", tableName: "AuthenticationManager", comment: "Touch ID prompt subtitle when turning off passcode")
-    let accessLogins            = NSLocalizedString("Use your fingerprint to access Logins now.", tableName: "AuthenticationManager", comment: "Touch ID prompt subtitle when accessing logins")
     let accessPBMode            = NSLocalizedString("Use your fingerprint to access Private Browsing now.", tableName: "AuthenticationManager", comment: "Touch ID prompt subtitle when accessing private browsing")
 }
 
@@ -102,4 +101,7 @@ private struct ObsoleteStrings {
     let introConnect = NSLocalizedString("Connect Firefox everywhere you use it.", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
     let settingsSearchSuggestions = NSLocalizedString("Show search suggestions", comment: "Label for show search suggestions setting.")
     let settingsSignIn = NSLocalizedString("Sign in", comment: "Text message / button in the settings table view")
+    let clearPrivateHistoryData =  NSLocalizedString("History will be removed from all your connected devices. This cannot be undone.", tableName: "ClearHistoryConfirm", comment: "Description of the confirmation dialog shown when a user tries to clear history that's synced to another device.")
+    let clearPrivateHistoryTitle = NSLocalizedString("Remove history from your Firefox Account?", tableName: "ClearHistoryConfirm", comment: "Title of the confirmation dialog shown when a user tries to clear history that's synced to another device.")
+    let clearButtonPrivateHistory = NSLocalizedString("Clear", tableName: "ClearHistoryConfirm", comment: "The button that clears history even when Sync is connected.")
 }

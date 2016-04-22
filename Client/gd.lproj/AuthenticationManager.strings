@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "An dèidh cairteal na h-uarach";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Atharraich an còd-faire";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Cuir a-steach abairt-fhaire";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Cuir a-steach abairt-fhaire ùr";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Cuir a-steach còd-faire";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Cuir a-steach abairt-fhaire";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Sa bhad";
 
-/* List item for Logins */
-"Logins" = "Clàraidhean a-steach";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Abairt-fhaire chearr. Feuch ris a-rithist (oidhirpean air fhàgail: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Abairt-fhaire chearr. Feuch ris a-rithist.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Cus oidhirpean air. Feuch ris a-rithist an ceann uair a thìde.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Cus oidhirpean air. Feuch ris a-rithist an ceann uair a thìde.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Chan fhaod an còd-faire ùr a bhith co-ionnan ris a' chòd làithreach.";
 
 /* List section title for passcode settings */
 "Passcode" = "Còd-faire";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Brabhsadh prìobhaideach";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Cha robh an dà chòd co-ionnan. Feuch ris a-rithist";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Cuir a-steach an còd-faire a‑rithist";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Cuir dheth an còd‑faire agad";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Cleachd Touch ID airson";
+"Use Touch ID" = "Cleachd Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Dèan clàradh a‑steach slighe lorg do mheòir.";

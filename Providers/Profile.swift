@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import Alamofire
 import Foundation
 import Account
 import ReadingList
@@ -10,6 +11,8 @@ import Storage
 import Sync
 import XCGLogger
 import UIKit
+import SwiftKeychainWrapper
+import Deferred
 
 private let log = Logger.syncLogger
 
@@ -129,7 +132,7 @@ class BrowserProfileSyncDelegate: SyncDelegate {
  * A Profile manages access to the user's data.
  */
 protocol Profile: class {
-    var bookmarks: protocol<BookmarksModelFactory, ShareToDestination, ResettableSyncStorage, AccountRemovalDelegate> { get }
+    var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource> { get }
     // var favicons: Favicons { get }
     var prefs: Prefs { get }
     var queue: TabQueue { get }
@@ -186,11 +189,19 @@ public class BrowserProfile: Profile {
      * subsequently — and asynchronously — expects the profile to stick around:
      * see Bug 1218833. Be sure to only perform synchronous actions here.
      */
-    init(localName: String, app: UIApplication?) {
+    init(localName: String, app: UIApplication?, clear: Bool = false) {
         log.debug("Initing profile \(localName) on thread \(NSThread.currentThread()).")
         self.name = localName
         self.files = ProfileFileAccessor(localName: localName)
         self.app = app
+        
+        if clear {
+            do {
+                try NSFileManager.defaultManager().removeItemAtPath(self.files.rootPath as String)
+            } catch {
+                log.info("Cannot clear profile: \(error)")
+            }
+        }
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
         notificationCenter.addObserver(self, selector: Selector("onLocationChange:"), name: NotificationOnLocationChange, object: nil)
@@ -209,6 +220,7 @@ public class BrowserProfile: Profile {
             log.info("New profile. Removing old account metadata.")
             self.removeAccountMetadata()
             self.syncManager.onNewProfile()
+            self.removeExistingAuthenticationInfo()
             prefs.clearAll()
         }
 
@@ -317,7 +329,7 @@ public class BrowserProfile: Profile {
         return self.places
     }
 
-    lazy var bookmarks: protocol<BookmarksModelFactory, ShareToDestination, ResettableSyncStorage, AccountRemovalDelegate> = {
+    lazy var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource> = {
         // Make sure the rest of our tables are initialized before we try to read them!
         // This expression is for side-effects only.
         withExtendedLifetime(self.places) {
@@ -325,7 +337,7 @@ public class BrowserProfile: Profile {
         }
     }()
 
-    lazy var mirrorBookmarks: BookmarkMirrorStorage = {
+    lazy var mirrorBookmarks: protocol<BookmarkBufferStorage, BufferItemSource> = {
         // Yeah, this is lazy. Sorry.
         return self.bookmarks as! MergedSQLiteBookmarks
     }()
@@ -456,6 +468,10 @@ public class BrowserProfile: Profile {
     func removeAccountMetadata() {
         self.prefs.removeObjectForKey(PrefsKeys.KeyLastRemoteTabSyncTime)
         KeychainWrapper.removeObjectForKey(self.name + ".account")
+    }
+
+    func removeExistingAuthenticationInfo() {
+        KeychainWrapper.setAuthenticationInfo(nil)
     }
 
     func removeAccount() {
@@ -594,6 +610,58 @@ public class BrowserProfile: Profile {
             center.addObserver(self, selector: "onDatabaseWasRecreated:", name: NotificationDatabaseWasRecreated, object: nil)
             center.addObserver(self, selector: "onLoginDidChange:", name: NotificationDataLoginDidChange, object: nil)
             center.addObserver(self, selector: "onFinishSyncing:", name: NotificationProfileDidFinishSyncing, object: nil)
+            center.addObserver(self, selector: "onBookmarkBufferValidated:", name: NotificationBookmarkBufferValidated, object: nil)
+        }
+
+        func onBookmarkBufferValidated(notification: NSNotification) {
+            // We don't send this ad hoc telemetry on the release channel.
+            guard AppConstants.BuildChannel != AppBuildChannel.Release else {
+                return
+            }
+
+            guard profile.prefs.boolForKey("settings.sendUsageData") ?? true else {
+                log.debug("Profile isn't sending usage data. Not sending bookmark event.")
+                return
+            }
+
+            guard let validations = (notification.object as? Box<[String: Bool]>)?.value else {
+                log.warning("Notification didn't have validations.")
+                return
+            }
+
+            let attempt: Int32 = self.prefs.intForKey("bookmarkvalidationattempt") ?? 1
+            self.prefs.setInt(attempt + 1, forKey: "bookmarkvalidationattempt")
+
+            // Capture the buffer count ASAP, not in the delayed op, because the merge could wipe it!
+            let bufferRows = (self.profile.bookmarks as? MergedSQLiteBookmarks)?.synchronousBufferCount()
+
+            self.doInBackgroundAfter(millis: 300) {
+                self.profile.remoteClientsAndTabs.getClientGUIDs() >>== { clients in
+                    // We would love to include the version and OS etc. of each remote client,
+                    // but we don't store that information. For now, just do a count.
+                    let clientCount = clients.count
+
+                    let id = DeviceInfo.clientIdentifier(self.prefs)
+                    let ping = makeAdHocBookmarkMergePing(NSBundle.mainBundle(), clientID: id, attempt: attempt, bufferRows: bufferRows, valid: validations, clientCount: clientCount)
+                    let payload = ping.toString()
+
+                    log.debug("Payload is: \(payload)")
+                    guard let body = payload.dataUsingEncoding(NSUTF8StringEncoding) else {
+                        log.debug("Invalid JSON!")
+                        return
+                    }
+
+                    let url = "https://mozilla-anonymous-sync-metrics.moo.mx/post/bookmarkvalidation".asURL!
+                    let request = NSMutableURLRequest(URL: url)
+                    request.HTTPMethod = "POST"
+                    request.HTTPBody = body
+                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+                    Alamofire.Manager.sharedInstance.request(request).response { (request, response, data, error) in
+                        log.debug("Bookmark validation upload response: \(response?.statusCode ?? -1).")
+                    }
+                }
+            }
         }
 
         deinit {
@@ -602,6 +670,7 @@ public class BrowserProfile: Profile {
             center.removeObserver(self, name: NotificationDatabaseWasRecreated, object: nil)
             center.removeObserver(self, name: NotificationDataLoginDidChange, object: nil)
             center.removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
+            center.removeObserver(self, name: NotificationBookmarkBufferValidated, object: nil)
         }
 
         private func handleRecreationOfDatabaseNamed(name: String?) -> Success {
@@ -700,7 +769,7 @@ public class BrowserProfile: Profile {
         func locallyResetCollection(collection: String) -> Success {
             switch collection {
             case "bookmarks":
-                return MirroringBookmarksSynchronizer.resetSynchronizerWithStorage(self.profile.bookmarks, basePrefs: self.prefsForSync, collection: "bookmarks")
+                return BufferingBookmarksSynchronizer.resetSynchronizerWithStorage(self.profile.bookmarks, basePrefs: self.prefsForSync, collection: "bookmarks")
 
             case "clients":
                 fallthrough
@@ -813,9 +882,9 @@ public class BrowserProfile: Profile {
         }
 
         private func mirrorBookmarksWithDelegate(delegate: SyncDelegate, prefs: Prefs, ready: Ready) -> SyncResult {
-            log.debug("Mirroring server bookmarks to storage.")
-            let bookmarksMirrorer = ready.synchronizer(MirroringBookmarksSynchronizer.self, delegate: delegate, prefs: prefs)
-            return bookmarksMirrorer.mirrorBookmarksToStorage(self.profile.mirrorBookmarks, withServer: ready.client, info: ready.info, greenLight: self.greenLight())
+            log.debug("Synchronizing server bookmarks to storage.")
+            let bookmarksMirrorer = ready.synchronizer(BufferingBookmarksSynchronizer.self, delegate: delegate, prefs: prefs)
+            return bookmarksMirrorer.synchronizeBookmarksToStorage(self.profile.bookmarks, usingBuffer: self.profile.mirrorBookmarks, withServer: ready.client, info: ready.info, greenLight: self.greenLight())
         }
 
         func takeActionsOnEngineStateChanges<T: EngineStateChanges>(changes: T) -> Deferred<Maybe<T>> {

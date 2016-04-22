@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Au bout de 15 minutes";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Changer le code d’accès";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Saisissez le code d’accès";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Saisir un nouveau code d’accès";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Saisir un code d’accès";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Saisissez le code d’accès";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Immédiatement";
 
-/* List item for Logins */
-"Logins" = "Identifiants";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Code d’accès incorrect. Veuillez réessayer (Essais restants : %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Code d’accès incorrect. Veuillez réessayer.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Nombre maximum d’essais atteint. Veuillez réessayer dans une heure.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Nombre maximum d’essais atteint. Veuillez réessayer plus tard.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Le nouveau code d’accès doit être différent du code actuel.";
 
 /* List section title for passcode settings */
 "Passcode" = "Code d’accès";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Navigation privée";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Les codes d’accès ne correspondent pas. Veuillez réessayer.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Saisir à nouveau le code d’accès";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Désactive votre code d’accès.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Utiliser Touch ID pour";
+"Use Touch ID" = "Utiliser Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Utilisez votre empreinte digitale pour accéder aux identifiants.";

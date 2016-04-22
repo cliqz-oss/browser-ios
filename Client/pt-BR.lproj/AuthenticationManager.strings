@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Após 15 minutos";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Alterar código";
 
-/* Title for entering a passcode */
-"Enter a passcode" = "Digite um código";
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Digitar código";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Digitar um novo código";
+
+/* Title above input for entering a passcode */
+"Enter a passcode" = "Digitar um código";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Digitar código";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Imediatamente";
 
-/* List item for Logins */
-"Logins" = "Logins";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Código incorreto. Tente novamente (tentativas restante: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Código incorreto. Tente novamente.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Máximo de tentativas alcançada. Por favor, tente novamente em uma hora.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Máximo de tentativas alcançada. Por favor, tente novamente mais tarde.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "O novo código deve ser diferente do código existente.";
 
 /* List section title for passcode settings */
 "Passcode" = "Código";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Navegação privada";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Os códigos não coincidem. Tente novamente.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Confirme o código";
@@ -53,11 +74,11 @@
 "Turn off your passcode." = "Desliga seu código.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Use o Touch ID para";
+"Use Touch ID" = "Usar Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Use sua digital para acessar logins agora.";
 
 /* Touch ID prompt subtitle when accessing private browsing */
-"Use your fingerprint to access Private Browsing now." = "Use sua digital para acessar a navegação privada agora.";
+"Use your fingerprint to access Private Browsing now." = "Use sua digital para acessar a navegação privativa agora.";
 
