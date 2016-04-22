@@ -181,6 +181,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+		guard let notificationData = (userInfo["aps"] as? NSDictionary) else {
+			return
+		}
+		guard let urlString = (notificationData.valueForKey("url") as? String) else {
+			return
+		}
+		guard let url = NSURL(string: urlString) else {
+			return
+		}
+		self.browserViewController.didSelectURL(url)
+	}
+
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
 		// Cliqz added preference in UserDefaults for keeping the state when app is terminated to clean-up on launch if needed
