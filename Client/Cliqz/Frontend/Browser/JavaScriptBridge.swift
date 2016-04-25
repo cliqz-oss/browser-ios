@@ -18,7 +18,7 @@ import WebKit
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
-    optional func shareCard(cardData: [String: AnyObject])
+    optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
 }
 
@@ -143,8 +143,8 @@ class JavaScriptBridge {
             }
             
         case "shareCard":
-            if let cardData = data as? [String: AnyObject] {
-                delegate?.shareCard?(cardData)
+            if let cardURL = data as? String {
+                delegate?.shareCard?(cardURL)
             }
             
         case "autocomplete":

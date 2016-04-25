@@ -336,32 +336,25 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
-    func shareCard(cardData: [String: AnyObject]) {
+    func shareCard(cardURL: String) {
 
-        if let url = NSURL(string: cardData["url"] as! String) {
-            
-            // start by empty activity items
-            var activityItems = [AnyObject]()
-            
-            // add the title to activity items if it exists
-            if let title = cardData["title"] as? String {
-                activityItems.append(TitleActivityItemProvider(title: title))
-            }
-            // add the url to activity items
-            activityItems.append(url)
-            
-            // add cliqz footer to activity items
-            let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
-            activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
-
-            // creating the ActivityController and presenting it
-            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-			if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
-				self.presentViewController(activityViewController, animated: true, completion: nil)
-			} else {
-				let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
-				popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
-			}
+        // start by empty activity items
+        var activityItems = [AnyObject]()
+        
+        // add the url to activity items
+        activityItems.append(cardURL)
+        
+        // add cliqz footer to activity items
+        let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+        activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+        
+        // creating the ActivityController and presenting it
+        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+        } else {
+            let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
+            popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
         }
     }
     
