@@ -73,3 +73,6 @@
 
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
+
+/* Enable News Push Notifications */
+"Enable News Push Notifications" = "Schlagzeilen Benachrichtigungen";

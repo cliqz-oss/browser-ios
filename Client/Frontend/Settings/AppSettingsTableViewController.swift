@@ -42,6 +42,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
             //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
 //            SearchSetting(settings: self),
             CliqzSearchSetting(settings: self),
+            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
+				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,

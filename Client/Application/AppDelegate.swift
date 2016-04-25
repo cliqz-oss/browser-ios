@@ -48,11 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
-
-		let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
-
-		UIApplication.sharedApplication().registerForRemoteNotifications()
-		UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
 		
 		AWSSNSManager.configureCongnitoPool()
 
