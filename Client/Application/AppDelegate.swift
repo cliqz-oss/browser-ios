@@ -316,11 +316,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: String) -> Bool {
+		// Cliqz: Commented third party keyboard handler. We shouldn't allow any third party keyboard.
+		/*
         if let thirdPartyKeyboardSettingBool = getProfile(application).prefs.boolForKey(AllowThirdPartyKeyboardsKey) where extensionPointIdentifier == UIApplicationKeyboardExtensionPointIdentifier {
             return thirdPartyKeyboardSettingBool
         }
 
         return true
+*/
+		return false
     }
 
     // We sync in the foreground only, to avoid the possibility of runaway resource usage.

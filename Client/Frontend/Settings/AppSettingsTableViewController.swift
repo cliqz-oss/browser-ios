@@ -48,8 +48,11 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
                 titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
+            // Cliqz: Commented settings for enabling third party keyboards according to our policy.
+			/*
             BoolSetting(prefs: prefs, prefKey: AllowThirdPartyKeyboardsKey, defaultValue: false,
                 titleText: NSLocalizedString("Allow Third-Party Keyboards", comment: "Setting to enable third-party keyboards"), statusText: NSLocalizedString("Firefox needs to reopen for this change to take effect.", comment: "Setting value prop to enable third-party keyboards")),
+			*/
             BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: true, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             BoolSetting(prefs: prefs, prefKey: "blockAds", defaultValue: false, titleText: NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads setting")),
             ImprintSetting(),
