@@ -1048,7 +1048,12 @@ class ToolbarTextField: AutocompleteTextField {
     }
     
     override func resignFirstResponder() -> Bool {
-        return false
+        // override resignFirstResponder only in iPhone as doing that on iPad disables the hide button on the keyboard
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            return false
+        } else {
+            return super.resignFirstResponder()
+        }
     }
 }
 
