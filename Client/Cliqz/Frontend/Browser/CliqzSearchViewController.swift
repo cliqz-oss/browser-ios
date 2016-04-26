@@ -142,7 +142,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if let l = LocationManager.sharedInstance.location {
 			coordinates += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
 		}
-		JSString = "search_mobile('\(q)'\(coordinates))"
+		JSString = "jsAPI.search('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 
         lastQuery = query
@@ -248,12 +248,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateContentBlockingPreferences() {
 		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
 	}
     
     private func updatePrivateModePreferences() {
         let params = ["incognito" : self.privateMode!]
-        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
     }
     
     //MARK: - Guestures
@@ -298,7 +298,7 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
+            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
         } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -306,7 +306,7 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
+            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
         }
         
     }

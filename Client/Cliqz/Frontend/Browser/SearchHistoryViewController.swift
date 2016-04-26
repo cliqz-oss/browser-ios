@@ -203,7 +203,7 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 	}
 
 	func clearQueries(includeFavorites includeFavorites: Bool) {
-        self.evaluateJavaScript("clearQueries(\(includeFavorites))", completionHandler: nil)
+        self.evaluateJavaScript("jsAPI.clearQueries(\(includeFavorites))", completionHandler: nil)
     }
 
 }
