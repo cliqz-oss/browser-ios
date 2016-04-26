@@ -94,3 +94,19 @@ class SendCliqzFeedbackSetting: SendFeedbackSetting, MFMailComposeViewController
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
 }
+
+// Cliqz: Custom Bool settings for News Push Notifications
+class EnablePushNotifications: BoolSetting {
+	
+	@objc override func switchValueChanged(control: UISwitch) {
+		super.switchValueChanged(control)
+		if control.on {
+			let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
+			UIApplication.sharedApplication().registerForRemoteNotifications()
+			UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+		} else {
+			UIApplication.sharedApplication().unregisterForRemoteNotifications()
+		}
+	}
+
+}
