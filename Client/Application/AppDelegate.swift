@@ -176,6 +176,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    // Cliqz: handel remote notifications
 	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
 		guard let notificationData = (userInfo["aps"] as? NSDictionary) else {
 			return
@@ -187,6 +188,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return
 		}
 		self.browserViewController.didSelectURL(url)
+        TelemetryLogger.sharedInstance.logEvent(.NewsNotification("click"))
 	}
 
     func applicationWillTerminate(application: UIApplication) {
