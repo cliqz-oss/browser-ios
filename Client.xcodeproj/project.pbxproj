@@ -9426,7 +9426,7 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MOZ_PRODUCT_NAME = Fennec;
+				MOZ_PRODUCT_NAME = "Cliqz Beta";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
@@ -10387,7 +10387,7 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MOZ_PRODUCT_NAME = FennecNightly;
+				MOZ_PRODUCT_NAME = "Cliqz Beta";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
@@ -10564,7 +10564,7 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MOZ_PRODUCT_NAME = Firefox;
+				MOZ_PRODUCT_NAME = "Cliqz Beta";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
@@ -12085,7 +12085,7 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MOZ_PRODUCT_NAME = Fennec;
+				MOZ_PRODUCT_NAME = "Cliqz Beta";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
@@ -12122,7 +12122,7 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MOZ_PRODUCT_NAME = FennecAurora;
+				MOZ_PRODUCT_NAME = "Cliqz Beta";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-framework",
