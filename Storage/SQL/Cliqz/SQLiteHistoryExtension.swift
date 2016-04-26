@@ -8,6 +8,8 @@
 
 import Foundation
 import Shared
+import Deferred
+
 extension SQLiteHistory: ExtendedBrowserHistory {
     
     public func count() -> Int {

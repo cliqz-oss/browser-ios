@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Через 15 минут";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Сменить пароль";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Введите пароль";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Введите новый пароль";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Введите пароль";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Введите пароль";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Сразу";
 
-/* List item for Logins */
-"Logins" = "Логины";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Неверный пароль. Попробуйте снова (Осталось попыток: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Неверный пароль. Попробуйте снова.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Достигнуто максимальное число попыток. Пожалуйста, попробуйте снова через час.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Достигнуто максимальное число попыток. Пожалуйста, попробуйте снова позже.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Новый код должен отличаться от текущего.";
 
 /* List section title for passcode settings */
 "Passcode" = "Пароль";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Приватный просмотр";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Пароли не совпадают. Попробуйте снова.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Повторите пароль";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Отключение вашего пароля.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Использовать Touch ID для";
+"Use Touch ID" = "Использовать Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Для доступа к Логинам теперь используйте отпечаток.";

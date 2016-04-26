@@ -24,7 +24,7 @@
 "Cookies" = "Cookie";
 
 /* Settings item for clearing website data */
-"Offline Website Data" = "Web サイトのオフライン作業用データ";
+"Offline Website Data" = "オフライン Web サイトデータ";
 
 /* Settings item for clearing passwords and login data */
 "Saved Logins" = "保存されたログイン情報";

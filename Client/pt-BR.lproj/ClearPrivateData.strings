@@ -18,7 +18,7 @@
 
 /* Button in settings that clears private data for the selected items.
    Navigation title in settings. */
-"Clear Private Data" = "Limpar dados privados";
+"Clear Private Data" = "Limpar dados privativos";
 
 /* Settings item for clearing cookies */
 "Cookies" = "Cookies";

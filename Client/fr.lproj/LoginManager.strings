@@ -1,7 +1,10 @@
 /* Prompt title when deleting logins */
 "Are you sure?" = "Poursuivre la suppression ?";
 
-/* Clears the search input field and exits out of input mode */
+/* Prompt option for cancelling out of deletion */
+"Cancel" = "Annuler";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user taps the close button in the search field to clear the search and exit search mode */
 "Clear Search" = "Effacer les recherches";
 
 /* Copy password text selection menu item */

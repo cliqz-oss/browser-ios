@@ -156,6 +156,7 @@ class URLBarView: UIView {
         let tabsButton = TabsButton()
         tabsButton.titleLabel.text = "0"
         tabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
+        tabsButton.accessibilityIdentifier = "ShowTabs"
         tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the browser toolbar")
         return tabsButton
     }()
@@ -850,6 +851,14 @@ extension URLBarView: Themeable {
         backgroundColor = theme.backgroundColor
         
         tabsButton.applyTheme(themeName)
+    }
+}
+// Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
+extension URLBarView {
+    override func resignFirstResponder() -> Bool {
+        
+        locationTextField?.enforceResignFirstResponder()
+        return super.resignFirstResponder()
     }
 }
 

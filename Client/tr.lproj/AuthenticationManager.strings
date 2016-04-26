@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "15 dakika sonra";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Parolayı değiştir";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Parolayı girin";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Yeni parolayı girin";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Bir parola girin";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Parolayı girin";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Hemen";
 
-/* List item for Logins */
-"Logins" = "Hesaplar";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Yanlış parola. Yeniden deneyin. (kalan deneme: %d)";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Yanlış parola. Yeniden deneyin.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Maksimum deneme sayısına ulaşıldı. Lütfen bir saat sonra yeniden deneyin.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Maksimum deneme sayısına ulaşıldı. Lütfen daha sonra yeniden deneyin.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Yeni parola mevcut paroladan farklı olmalıdır.";
 
 /* List section title for passcode settings */
 "Passcode" = "Parola";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Gizli Gezinti";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Parolalar eşleşmedi. Yeniden deneyin.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Parolayı yeniden girin";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Parolanızı kapatın.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Touch ID'yi bunlar için kullan";
+"Use Touch ID" = "Touch ID kullan";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Hesaplara şimdi erişmek için parmak izinizi kullanın.";

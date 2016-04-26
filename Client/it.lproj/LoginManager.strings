@@ -1,7 +1,10 @@
 /* Prompt title when deleting logins */
 "Are you sure?" = "Procedere con l’eliminazione?";
 
-/* Clears the search input field and exits out of input mode */
+/* Prompt option for cancelling out of deletion */
+"Cancel" = "Annulla";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user taps the close button in the search field to clear the search and exit search mode */
 "Clear Search" = "Azzera ricerca";
 
 /* Copy password text selection menu item */
@@ -41,7 +44,7 @@
 "Reveal" = "Mostra";
 
 /* Title for the search field at the top of the Logins list screen */
-"Search" = "Cerca";
+"Search" = "Ricerca";
 
 /* Accessibility label for the search input field in the Logins list */
 "Search Input Field" = "Campo di ricerca";

@@ -9,6 +9,7 @@ import Account
 
 /// App Settings Screen (triggered by tapping the 'Gear' in the Tab Tray Controller)
 class AppSettingsTableViewController: SettingsTableViewController {
+    private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,26 +42,35 @@ class AppSettingsTableViewController: SettingsTableViewController {
             //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
 //            SearchSetting(settings: self),
             CliqzSearchSetting(settings: self),
+            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
+				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
                 titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
+            // Cliqz: Commented settings for enabling third party keyboards according to our policy.
+			/*
+            BoolSetting(prefs: prefs, prefKey: AllowThirdPartyKeyboardsKey, defaultValue: false,
+                titleText: NSLocalizedString("Allow Third-Party Keyboards", comment: "Setting to enable third-party keyboards"), statusText: NSLocalizedString("Firefox needs to reopen for this change to take effect.", comment: "Setting value prop to enable third-party keyboards")),
+			*/
             BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: true, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             BoolSetting(prefs: prefs, prefKey: "blockAds", defaultValue: false, titleText: NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads setting")),
             ImprintSetting(),
             HumanWebSetting(settings: self)
+
         ]
         
-        let accountChinaSyncSetting: [Setting]
-        let locale = NSLocale.currentLocale()
-        if locale.localeIdentifier != "zh_CN" {
-            accountChinaSyncSetting = []
-        } else {
-            accountChinaSyncSetting = [
-                // Show China sync service setting:
-                ChinaSyncServiceSetting(settings: self)
-            ]
-        }
+        //Cliqz: removed unused sections from Settings table
+//        let accountChinaSyncSetting: [Setting]
+//        let locale = NSLocale.currentLocale()
+//        if locale.localeIdentifier != "zh_CN" {
+//            accountChinaSyncSetting = []
+//        } else {
+//            accountChinaSyncSetting = [
+//                // Show China sync service setting:
+//                ChinaSyncServiceSetting(settings: self)
+//            ]
+//        }
         // There is nothing to show in the Customize section if we don't include the compact tab layout
         // setting on iPad. When more options are added that work on both device types, this logic can
         // be changed.
@@ -71,18 +81,25 @@ class AppSettingsTableViewController: SettingsTableViewController {
             ]
         }
 
-        settings += [
-            //Cliqz: removed unused sections from Settings table
+        //Cliqz: removed unused sections from Settings table
+//        settings += [
 //            SettingSection(title: nil, children: [
 //                // Without a Firefox Account:
 //                ConnectSetting(settings: self),
 //                // With a Firefox Account:
 //                AccountStatusSetting(settings: self),
 //                SyncNowSetting(settings: self)
-//            ] + accountChinaSyncSetting + accountDebugSettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)
-        ]
+//            ] + accountChinaSyncSetting + accountDebugSettings)
+//        ]
 
+        //Cliqz: removed unused sections from Settings table
+//        if !profile.hasAccount() {
+//            settings += [SettingSection(title: NSAttributedString(string: NSLocalizedString("Sign in to get your tabs, bookmarks, and passwords from your other devices.", comment: "Clarify value prop under Sign In to Firefox in Settings.")), children: [])]
+//        }
+
+        settings += [ SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)]
+
+        
         var privacySettings = [Setting]()
         if AppConstants.MOZ_LOGIN_MANAGER {
             privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
@@ -95,16 +112,15 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         privacySettings.append(ClearPrivateDataSetting(settings: self))
 
-        //Cliqz: removed unused sections from Settings table
-//        if #available(iOS 9, *) {
-//            privacySettings += [
-//                BoolSetting(prefs: prefs,
-//                    prefKey: "settings.closePrivateTabs",
-//                    defaultValue: false,
-//                    titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
-//                    statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
-//            ]
-//        }
+        if #available(iOS 9, *) {
+            privacySettings += [
+                BoolSetting(prefs: prefs,
+                    prefKey: "settings.closePrivateTabs",
+                    defaultValue: false,
+                    titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
+                    statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
+            ]
+        }
 
         //Cliqz: removed unused sections from Settings table
         privacySettings += [
@@ -132,24 +148,46 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 LicenseAndAcknowledgementsSetting(),
                 //Cliqz: removed unused sections from Settings table
 //                YourRightsSetting(),
-//                DisconnectSetting(settings: self),
 //                ExportBrowserDataSetting(settings: self),
 //                DeleteExportedDataSetting(settings: self),
-            ])
-        ]
+            ])]
+        //Cliqz: removed unused sections from Settings table
+//            if (profile.hasAccount()) {
+//                settings += [
+//                    SettingSection(title: nil, children: [
+//                        DisconnectSetting(settings: self),
+//                        ])
+//                ]
+//            }
 
         return settings
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        // Make account/sign-in and close private tabs rows taller, as per design specs.
-        let section = settings[indexPath.section]
-        if let setting = section[indexPath.row] as? BoolSetting where setting.prefKey == "settings.closePrivateTabs" {
-            return 64
-        } else if section[indexPath.row] is ConnectSetting {
-            return 64
-        }
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if !profile.hasAccount() {
+            let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
+            let sectionSetting = settings[section]
+            headerView.titleLabel.text = sectionSetting.title?.string
 
-        return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+            switch section {
+                // Hide the bottom border for the Sign In to Firefox value prop
+                case 1:
+                    headerView.titleAlignment = .Top
+                    headerView.titleLabel.numberOfLines = 0
+                    headerView.showBottomBorder = false
+                    headerView.titleLabel.snp_updateConstraints { make in
+                        make.right.equalTo(headerView).offset(-50)
+                    }
+
+                // Hide the top border for the General section header when the user is not signed in.
+                case 2:
+                    headerView.showTopBorder = false
+                default:
+                    return super.tableView(tableView, viewForHeaderInSection: section)
+            }
+            return headerView
+        }
+        
+        return super.tableView(tableView, viewForHeaderInSection: section)
     }
 }

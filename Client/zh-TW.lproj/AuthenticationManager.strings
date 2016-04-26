@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "15 分鐘後";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "變更密碼";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "輸入解鎖碼";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "輸入新的解鎖碼";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "輸入密碼";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "輸入解鎖碼";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "立即";
 
-/* List item for Logins */
-"Logins" = "登入資訊";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "解鎖碼不正確，請再試一次。（剩下 %d 次機會）";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "解鎖碼不正確，請再試一次。";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "已達最大嘗試次數，請等一小時後再試試看。";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "已達最大嘗試次數，請稍後再試試看。";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "新的解鎖碼必須與目前的不同。";
 
 /* List section title for passcode settings */
 "Passcode" = "密碼";
 
-/* List item for Private Browsing */
-"Private Browsing" = "隱私瀏覽";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "解鎖碼不符合，請再試一次。";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "重新輸入密碼";
@@ -41,7 +62,7 @@
 "Set Passcode" = "設定密碼";
 
 /* Title for Touch ID/Passcode settings option */
-"Touch ID & Passcode" = "Touch ID 或密碼";
+"Touch ID & Passcode" = "Touch ID 與解鎖碼";
 
 /* Title for setting to turn off passcode */
 "Turn Passcode Off" = "關閉密碼鎖定";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "刪除您的密碼。";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "使用 Touch ID";
+"Use Touch ID" = "使用 Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "掃描指紋，開啟儲存的登入資訊。";

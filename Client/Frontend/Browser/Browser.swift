@@ -86,7 +86,7 @@ class Browser: NSObject, BrowserWebViewDelegate {
     }
 
     class func toTab(browser: Browser) -> RemoteTab? {
-        if let displayURL = browser.displayURL {
+        if let displayURL = browser.displayURL where RemoteTab.shouldIncludeURL(displayURL) {
             let history = Array(browser.historyList.filter(RemoteTab.shouldIncludeURL).reverse())
             return RemoteTab(clientGUID: nil,
                 URL: displayURL,
@@ -95,13 +95,15 @@ class Browser: NSObject, BrowserWebViewDelegate {
                 lastUsed: NSDate.now(),
                 icon: nil)
         } else if let sessionData = browser.sessionData where !sessionData.urls.isEmpty {
-            let history = Array(sessionData.urls.reverse())
-            return RemoteTab(clientGUID: nil,
-                URL: history[0],
-                title: browser.displayTitle,
-                history: history,
-                lastUsed: sessionData.lastUsedTime,
-                icon: nil)
+            let history = Array(sessionData.urls.filter(RemoteTab.shouldIncludeURL).reverse())
+            if let displayURL = history.first {
+                return RemoteTab(clientGUID: nil,
+                    URL: displayURL,
+                    title: browser.displayTitle,
+                    history: history,
+                    lastUsed: sessionData.lastUsedTime,
+                    icon: nil)
+            }
         }
 
         return nil
@@ -139,10 +141,6 @@ class Browser: NSObject, BrowserWebViewDelegate {
 
             self.webView = webView
             browserDelegate?.browser?(self, didCreateWebView: webView)
-
-            // lastTitle is used only when showing zombie tabs after a session restore.
-            // Since we now have a web view, lastTitle is no longer useful.
-            lastTitle = nil
         }
     }
 
@@ -214,7 +212,12 @@ class Browser: NSObject, BrowserWebViewDelegate {
                 return title
             }
         }
-        return displayURL?.absoluteString ?? lastTitle ?? ""
+
+        guard let lastTitle = lastTitle where !lastTitle.isEmpty else {
+            return displayURL?.absoluteString ??  ""
+        }
+
+        return lastTitle
     }
 
     var currentInitialURL: NSURL? {

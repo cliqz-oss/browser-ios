@@ -8,7 +8,7 @@
 "Search Settings" = "Configuración de búsqueda";
 
 /* Accessibility label for image of default search engine displayed left to the actual search suggestions from the engine. The parameter substituted for \"%@\" is the name of the search engine. E.g.: Search suggestions from Google */
-"Search suggestions from %@" = "Sugestiones de búsqueda de %@";
+"Search suggestions from %@" = "Sugerencias de búsqueda de %@";
 
 /* Prompt shown before enabling provider search queries */
 "Turn on search suggestions?" = "¿Mostrar sugerencias de búsqueda?";

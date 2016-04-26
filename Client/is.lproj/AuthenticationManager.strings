@@ -13,23 +13,44 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Eftir 15 mínútur";
 
-/* Title for setting to change passcode */
+/* Title for screen when changing your passcode */
 "Change Passcode" = "Breyta aðgangskóða";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Færðu inn aðgangskóða";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Færðu inn nýjan aðgangskóða";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Skrá aðgangskóða";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Færðu inn aðgangskóða";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Strax";
 
-/* List item for Logins */
-"Logins" = "Innskráningar";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Rangur aðgangskóðinn. Reyndu aftur (%d tilraunir eftir).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Rangur aðgangskóði. Reyndu aftur.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Ekki eru fleiri tilraunir leyfðar núna. Reyndu aftur eftir eina klukkustund.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Ekki eru fleiri tilraunir leyfðar núna. Reyndu aftur seinna.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Nýr aðgangskóði verður að vera frábreyttur núverandi kóða.";
 
 /* List section title for passcode settings */
 "Passcode" = "Aðgangskóði";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Vafra í einkaglugga";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Aðgangskóðar eru ekki samir. Reyndu aftur.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Slá aftur inn aðgangskóða";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Slökkva á aðgangskóða.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Nota snerti auðkenningu fyrir";
+"Use Touch ID" = "Notaðu Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Nota fingraförin þín núna til að tengjast innskráningu.";
