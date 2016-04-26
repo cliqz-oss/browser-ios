@@ -82,7 +82,7 @@ class JavaScriptBridge {
                 "url": searchComps![0] + "="]
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+                self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
             }
         }
 		
