@@ -19,7 +19,7 @@ class WebServer {
 
     func start() throws -> Bool{
         if !server.running {
-            try server.startWithOptions([GCDWebServerOption_Port: 6571, GCDWebServerOption_BindToLocalhost: true, GCDWebServerOption_AutomaticallySuspendInBackground: true])
+            try server.startWithOptions([GCDWebServerOption_Port: 6577, GCDWebServerOption_BindToLocalhost: true, GCDWebServerOption_AutomaticallySuspendInBackground: true])
         }
         return server.running
     }
