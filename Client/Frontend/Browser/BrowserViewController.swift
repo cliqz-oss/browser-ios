@@ -3242,12 +3242,15 @@ extension BrowserViewController {
         
         isAppResponsive = false
         
-        if searchController?.view.hidden == true {
-            let webView = self.tabManager.selectedTab?.webView
-            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
-        } else {
-            searchController?.appDidEnterBackground()
+        if self.tabManager.selectedTab?.isPrivate == false {
+            if searchController?.view.hidden == true {
+                let webView = self.tabManager.selectedTab?.webView
+                searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+            } else {
+                searchController?.appDidEnterBackground()
+            }
         }
+        
         
         if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
             if !lastVisitedWebsite.hasPrefix("http://localhost") {

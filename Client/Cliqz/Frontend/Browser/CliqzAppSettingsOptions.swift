@@ -104,8 +104,10 @@ class EnablePushNotifications: BoolSetting {
 			let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
 			UIApplication.sharedApplication().registerForRemoteNotifications()
 			UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+            TelemetryLogger.sharedInstance.logEvent(.NewsNotification("enable"))
 		} else {
 			UIApplication.sharedApplication().unregisterForRemoteNotifications()
+            TelemetryLogger.sharedInstance.logEvent(.NewsNotification("disalbe"))
 		}
 	}
 
