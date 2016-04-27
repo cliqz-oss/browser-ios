@@ -91,15 +91,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     
     // Mark: Navigation delegate
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-		guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
-			return
-		}
-		guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true && profile.historyTypeShouldBeCleared() != .None else {
-			return
-		}
-		clearQueries(includeFavorites: profile.historyTypeShouldBeCleared() == .All)
-		NSUserDefaults.standardUserDefaults().setBool(false, forKey: IsAppTerminated)
-		NSUserDefaults.standardUserDefaults().synchronize()
+		
     }
     
     func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -195,6 +187,17 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
         }
     }
     
+    func isReady() {
+        guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
+            return
+        }
+        guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true && profile.historyTypeShouldBeCleared() != .None else {
+            return
+        }
+        clearQueries(includeFavorites: profile.historyTypeShouldBeCleared() == .All)
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: IsAppTerminated)
+        NSUserDefaults.standardUserDefaults().synchronize()
+    }
     
     // MARK: - Clear History
 	func clearQueries(notification: NSNotification) {
