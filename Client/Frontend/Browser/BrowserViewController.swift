@@ -2396,12 +2396,18 @@ extension BrowserViewController: WKUIDelegate {
             currentResponseStatusCode = response.statusCode
         }
         
+        // Cliqz: hide overlay after webview delay as some links does not call didFinishNavigation
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            self.hideWebViewOverlay()
+        }
+        
         if navigationResponse.canShowMIMEType {
             decisionHandler(WKNavigationResponsePolicy.Allow)
             return
         }
 
-        let error = NSError(domain: ErrorPageHelper.MozDomain, code: Int(ErrorPageHelper.MozErrorDownloadsNotEnabled), userInfo: [NSLocalizedDescriptionKey: "Downloads aren't supported in Firefox yet (but we're working on it)."])
+        let error = NSError(domain: ErrorPageHelper.MozDomain, code: Int(ErrorPageHelper.MozErrorDownloadsNotEnabled), userInfo: [NSLocalizedDescriptionKey: "Downloads aren't supported in CLIQZ yet (but we're working on it)."])
         ErrorPageHelper().showPage(error, forUrl: navigationResponse.response.URL!, inWebView: webView)
         decisionHandler(WKNavigationResponsePolicy.Allow)
     }
