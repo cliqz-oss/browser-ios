@@ -18,7 +18,7 @@ import WebKit
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
-    optional func shareCard(cardData: [String: AnyObject])
+    optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
 }
 
@@ -82,7 +82,7 @@ class JavaScriptBridge {
                 "url": searchComps![0] + "="]
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+                self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
             }
         }
 		
@@ -143,8 +143,8 @@ class JavaScriptBridge {
             }
             
         case "shareCard":
-            if let cardData = data as? [String: AnyObject] {
-                delegate?.shareCard?(cardData)
+            if let cardURL = data as? String {
+                delegate?.shareCard?(cardURL)
             }
             
         case "autocomplete":

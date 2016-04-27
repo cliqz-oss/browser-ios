@@ -142,7 +142,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if let l = LocationManager.sharedInstance.location {
 			coordinates += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
 		}
-		JSString = "search_mobile('\(q)'\(coordinates))"
+		JSString = "jsAPI.search('\(q)'\(coordinates))"
 		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
 
         lastQuery = query
@@ -248,12 +248,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateContentBlockingPreferences() {
 		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
 	}
     
     private func updatePrivateModePreferences() {
         let params = ["incognito" : self.privateMode!]
-        javaScriptBridge.callJSMethod("CLIQZEnvironment.setClientPreferences", parameter: params, completionHandler: nil)
+        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
     }
     
     //MARK: - Guestures
@@ -298,7 +298,7 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
+            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
         } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -306,7 +306,7 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            javaScriptBridge.callJSMethod("resetState", parameter: configs, completionHandler: nil)
+            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
         }
         
     }
@@ -336,32 +336,25 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
-    func shareCard(cardData: [String: AnyObject]) {
+    func shareCard(cardURL: String) {
 
-        if let url = NSURL(string: cardData["url"] as! String) {
-            
-            // start by empty activity items
-            var activityItems = [AnyObject]()
-            
-            // add the title to activity items if it exists
-            if let title = cardData["title"] as? String {
-                activityItems.append(TitleActivityItemProvider(title: title))
-            }
-            // add the url to activity items
-            activityItems.append(url)
-            
-            // add cliqz footer to activity items
-            let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
-            activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
-
-            // creating the ActivityController and presenting it
-            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-			if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
-				self.presentViewController(activityViewController, animated: true, completion: nil)
-			} else {
-				let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
-				popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
-			}
+        // start by empty activity items
+        var activityItems = [AnyObject]()
+        
+        // add the url to activity items
+        activityItems.append(cardURL)
+        
+        // add cliqz footer to activity items
+        let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
+        activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
+        
+        // creating the ActivityController and presenting it
+        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone {
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+        } else {
+            let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
+            popup.presentPopoverFromRect(CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 2, 0, 0), inView: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
         }
     }
     
