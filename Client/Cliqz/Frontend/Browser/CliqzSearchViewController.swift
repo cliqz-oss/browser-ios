@@ -309,6 +309,11 @@ extension CliqzSearchViewController {
             javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
         }
         
+        // reset local stored values
+        LocalDataStore.setObject(nil, forKey: lastQueryKey)
+        LocalDataStore.setObject(nil, forKey: lastURLKey)
+        LocalDataStore.setObject(nil, forKey: lastTitleKey)
+        
     }
     
 }

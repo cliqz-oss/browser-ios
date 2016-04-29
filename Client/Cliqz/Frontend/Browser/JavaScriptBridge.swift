@@ -20,6 +20,7 @@ import WebKit
     optional func getSearchHistoryResults(callback: String?)
     optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
+    optional func isReady()
 }
 
 class JavaScriptBridge {
@@ -163,6 +164,8 @@ class JavaScriptBridge {
             if let ids = data as? [Int] {
                 self.profile.history.removeHistory(ids)
             }
+        case "isReady":
+            delegate?.isReady?()
         default:
 			print("Unhandles JS action")
 //            print("Unhandles JS action: \(action), with data: \(data)")
