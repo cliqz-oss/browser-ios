@@ -270,15 +270,16 @@ extension SQLiteHistory: BrowserHistory {
         let topSitesQuery = "select mzh.id as historyID, mzh.guid as guid, mzh.url as url, mzh.title as title, sum(mzh.days_count) as total_count " +
                                     "from ( " +
                                         "select \(TableHistory).id , \(TableHistory).guid, \(TableHistory).url, \(TableHistory).title, \(TableVisits).siteID, " +
-                                                "(\(TableVisits).date /(86400* 1000000) - (strftime('%s', date('now', '-6 months'))/86400) ) as days_count " +
+                                                "(\(TableVisits).date /(86400* 1000000) - (strftime('%s', date('now', '-6 months'))/86400) ) as days_count, " +
+                                                "MAX(\(TableHistory).local_modified, ifnull(\(TableHistory).server_modified,0)) as last_visit_date " +
                                         "from \(TableVisits), \(TableHistory) " +
                                         "where \(TableVisits).date > (strftime('%s', date('now', '-6 months'))*1000000) " +
                                                 "and \(TableVisits).siteID == \(TableHistory).id " +
                                                 "and \(TableHistory).is_deleted == 0 " +
-                                                "and \(TableVisits).type < 4 " +
+                                                "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +
                                     ") as mzh " +
                             "group by mzh.siteID " +
-                            "order by total_count desc " +
+                            "order by total_count desc, mzh.last_visit_date desc " +
                             "limit (?)"
         
         

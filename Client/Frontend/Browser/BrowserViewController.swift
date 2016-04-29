@@ -2410,12 +2410,18 @@ extension BrowserViewController: WKUIDelegate {
             currentResponseStatusCode = response.statusCode
         }
         
+        // Cliqz: hide overlay after webview delay as some links does not call didFinishNavigation
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            self.hideWebViewOverlay()
+        }
+        
         if navigationResponse.canShowMIMEType {
             decisionHandler(WKNavigationResponsePolicy.Allow)
             return
         }
 
-        let error = NSError(domain: ErrorPageHelper.MozDomain, code: Int(ErrorPageHelper.MozErrorDownloadsNotEnabled), userInfo: [NSLocalizedDescriptionKey: "Downloads aren't supported in Firefox yet (but we're working on it)."])
+        let error = NSError(domain: ErrorPageHelper.MozDomain, code: Int(ErrorPageHelper.MozErrorDownloadsNotEnabled), userInfo: [NSLocalizedDescriptionKey: "Downloads aren't supported in CLIQZ yet (but we're working on it)."])
         ErrorPageHelper().showPage(error, forUrl: navigationResponse.response.URL!, inWebView: webView)
         decisionHandler(WKNavigationResponsePolicy.Allow)
     }
@@ -3256,12 +3262,15 @@ extension BrowserViewController {
         
         isAppResponsive = false
         
-        if searchController?.view.hidden == true {
-            let webView = self.tabManager.selectedTab?.webView
-            searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
-        } else {
-            searchController?.appDidEnterBackground()
+        if self.tabManager.selectedTab?.isPrivate == false {
+            if searchController?.view.hidden == true {
+                let webView = self.tabManager.selectedTab?.webView
+                searchController?.appDidEnterBackground(webView?.URL, lastTitle:webView?.title)
+            } else {
+                searchController?.appDidEnterBackground()
+            }
         }
+        
         
         if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
             if !lastVisitedWebsite.hasPrefix("http://localhost") {

@@ -24,7 +24,7 @@ public enum TelemetryLogEventType {
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     case TabSignal          (String, String, Int?, Int)
-    
+    case NewsNotification   (String)
 }
 
 
@@ -126,6 +126,9 @@ class TelemetryLogger : EventsLogger {
             
             case .TabSignal(let action, let mode, let tabIndex, let tabCount):
                 event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
+                
+            case .NewsNotification(let action):
+                event = self.createNewsNotificationEvent(action)
                 
             }
             
@@ -372,5 +375,10 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    
+    private func createNewsNotificationEvent(action: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        event["type"] = "news_notification"
+        event["action"] = action
+        return event
+    }
 }
