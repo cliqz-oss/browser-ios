@@ -14,7 +14,7 @@ class AWSSNSManager {
 	
 	static let cognitoIdentityPoolID = "us-east-1:81faca92-4d48-437c-ad68-e28ca03411fe"
 //	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS_SANDBOX/Cliqz_Beta_for_iOS"
-	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS/Cliqz_Beta_Production_for_iOS"
+	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS/CLIQZ_Browser_for_iOS"
 	static let cognitoRegionID = AWSRegionType.USEast1
 	
 	class func configureCongnitoPool() {
