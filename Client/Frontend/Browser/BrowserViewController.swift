@@ -148,14 +148,15 @@ class BrowserViewController: UIViewController {
     let adBlocker: AdBlocker
 
 	// Cliqz: Added data member for push notification URL string in the case when the app isn't in background to load URL on viewDidAppear.
-	var initialURL: String? {
-		didSet {
-			if self.urlBar != nil {
-				self.loadInitialURL()
-			}
-		}
-	}
-		
+	var initialURL: String?
+//    var initialURL: String? {
+//        didSet {
+//            if self.urlBar != nil {
+//                self.loadInitialURL()
+//            }
+//        }
+//    }
+
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -321,7 +322,12 @@ class BrowserViewController: UIViewController {
 
             // Cliqz Added functionality for session timeout and telemtery logging when app becomes active
             self.appDidBecomeResponsive("warm")
-            if SessionState.isSessionExpired() {
+            
+            if self.initialURL != nil {
+                // Cliqz: Added call for initial URL if one exists
+                self.loadInitialURL()
+            } else if SessionState.isSessionExpired() {
+                // Cliqz: Added call for reset state in case of session timeout
                 self.resetState()
             }
         })
@@ -628,8 +634,8 @@ class BrowserViewController: UIViewController {
         // Cliqz: cold start finished (for telemetry signals)
         self.appDidBecomeResponsive("cold")
 
-		// Cliqz: Added call for initial URL if one exists
-		self.loadInitialURL()
+//		// Cliqz: Added call for initial URL if one exists
+//		self.loadInitialURL()
 
         // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
         /*
@@ -953,15 +959,16 @@ class BrowserViewController: UIViewController {
     func addBookmark(url: String, title: String?) {
         let shareItem = ShareItem(url: url, title: title, favicon: nil)
         profile.bookmarks.shareItem(shareItem)
-        if #available(iOS 9, *) {
-            var userData = [QuickActions.TabURLKey: shareItem.url]
-            if let title = shareItem.title {
-                userData[QuickActions.TabTitleKey] = title
-            }
-            QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastBookmark,
-                withUserData: userData,
-                toApplication: UIApplication.sharedApplication())
-        }
+        // Cliqz: comented Firefox 3D Touch code
+//        if #available(iOS 9, *) {
+//            var userData = [QuickActions.TabURLKey: shareItem.url]
+//            if let title = shareItem.title {
+//                userData[QuickActions.TabTitleKey] = title
+//            }
+//            QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastBookmark,
+//                withUserData: userData,
+//                toApplication: UIApplication.sharedApplication())
+//        }
 
         // Dispatch to the main thread to update the UI
         dispatch_async(dispatch_get_main_queue()) { _ in
@@ -3272,13 +3279,12 @@ extension BrowserViewController {
         }
         
         
-        if let lastVisitedWebsite = self.tabManager.selectedTab?.webView?.URL?.absoluteString {
-            if !lastVisitedWebsite.hasPrefix("http://localhost") {
+        if let selectedTab = self.tabManager.selectedTab,
+            let lastVisitedWebsite = selectedTab.webView?.URL?.absoluteString
+            where selectedTab.isPrivate == false && !lastVisitedWebsite.hasPrefix("http://localhost") {
                 // Cliqz: store the last visited website
                 LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
             }
-        }
-        
     }
     
     // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
@@ -3291,17 +3297,8 @@ extension BrowserViewController {
     
     // Cliqz: Added to navigate to the last visited website (3D quick home actions)
     func navigateToLastWebsite() {
-        guard let tab = tabManager.selectedTab else {
-            return
-        }
-        
-        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String,
-            let lastVisitedURL = NSURL(string: lastVisitedWebsite) {
-            if lastVisitedURL != tab.webView?.URL {
-                finishEditingAndSubmit(lastVisitedURL, visitType: .Link)
-            } else {
-                urlBar.leaveOverlayMode()
-            }
+        if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
+            self.initialURL = lastVisitedWebsite
         }
     }
     

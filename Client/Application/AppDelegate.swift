@@ -242,11 +242,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             Fabric.with([Crashlytics.self])
         }
-        
-        // Cliqz: Added to confire home shortcuts
-        if #available(iOS 9.0, *) {
-            self.configureHomeShortCuts()
-        }
 
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
@@ -356,6 +351,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.browserViewController.switchToTabForURLOrOpen(url)
             }
         }
+        
+        // Cliqz: Added to confire home shortcuts
+        if #available(iOS 9.0, *) {
+            self.configureHomeShortCuts()
+        }
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
@@ -377,11 +377,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             application.endBackgroundTask(taskId)
 		}
         
-        // Cliqz: Added to confire home shortcuts
-        if #available(iOS 9.0, *) {
-            self.configureHomeShortCuts()
-        }
-
         // Workaround for crashing in the background when <select> popovers are visible (rdar://24571325).
         let jsBlurSelect = "if (document.activeElement && document.activeElement.tagName === 'SELECT') { document.activeElement.blur(); }"
         tabManager.selectedTab?.webView?.evaluateJavaScript(jsBlurSelect, completionHandler: nil)
@@ -532,12 +527,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String,
             let title = notification.userInfo?[TabSendTitleKey] as? String {
                 browserViewController.addBookmark(alertURL, title: title)
-
-                if #available(iOS 9, *) {
-                    let userData = [QuickActions.TabURLKey: alertURL,
-                        QuickActions.TabTitleKey: title]
-                    QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastBookmark, withUserData: userData, toApplication: UIApplication.sharedApplication())
-                }
+            
+            // Cliqz: comented Firefox 3D Touch code
+//                if #available(iOS 9, *) {
+//                    let userData = [QuickActions.TabURLKey: alertURL,
+//                        QuickActions.TabTitleKey: title]
+//                    QuickActions.sharedInstance.addDynamicApplicationShortcutItemOfType(.OpenLastBookmark, withUserData: userData, toApplication: UIApplication.sharedApplication())
+//                }
         }
     }
 
