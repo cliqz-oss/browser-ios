@@ -422,6 +422,7 @@
 		4F85723C1CC65F9D002AE768 /* AWSSNSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85723B1CC65F9D002AE768 /* AWSSNSManager.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
+		4FA4E1861CD258D400E9BAE3 /* BrowserViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4E1851CD258D400E9BAE3 /* BrowserViewControllerExtension.swift */; };
 		4FCF81611CAECD5F000A5B5B /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FCF81601CAECD5F000A5B5B /* Lookback.bundle */; };
 		4FCF817A1CB6794C000A5B5B /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; };
 		4FCF817B1CB6794F000A5B5B /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39999A81AA01D65005AED21 /* KeyboardHelper.swift */; };
@@ -1947,6 +1948,7 @@
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9F45129D2660461B63A6F5 /* dsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = dsb; path = dsb.lproj/Search.strings; sourceTree = "<group>"; };
+		4FA4E1851CD258D400E9BAE3 /* BrowserViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerExtension.swift; sourceTree = "<group>"; };
 		4FCE4EEF80441D1239ECCC59 /* hsb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hsb; path = hsb.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4FCF81601CAECD5F000A5B5B /* Lookback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Lookback.bundle; sourceTree = "<group>"; };
 		4FCF817E1CBCED9A000A5B5B /* UIConstantsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstantsExtension.swift; sourceTree = "<group>"; };
@@ -3455,6 +3457,7 @@
 				1E18DCDB1C873A4000664724 /* TransitionAnimator.swift */,
 				1EF529381C898AAF00310761 /* CliqzAppSettingsOptions.swift */,
 				4FCF817E1CBCED9A000A5B5B /* UIConstantsExtension.swift */,
+				4FA4E1851CD258D400E9BAE3 /* BrowserViewControllerExtension.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -6621,6 +6624,7 @@
 				4F3BE1FB1CC51B470028C92F /* AWSURLRequestSerialization.m in Sources */,
 				1E18DCFF1C873A4000664724 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E6327A641BF6438E008D12E0 /* DebugSettingsBundleOptions.swift in Sources */,
+				4FA4E1861CD258D400E9BAE3 /* BrowserViewControllerExtension.swift in Sources */,
 				4F3BE1D71CC51B470028C92F /* AWSSignature.m in Sources */,
 				4F3BE2041CC51B470028C92F /* AWSTMDiskCache.m in Sources */,
 				4F3BE1DE1CC51B470028C92F /* AWSTaskCompletionSource.m in Sources */,

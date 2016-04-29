@@ -146,7 +146,16 @@ class BrowserViewController: UIViewController {
     
     // Cliqz: Added AdBlocker to detect and block ads
     let adBlocker: AdBlocker
-    
+
+	// Cliqz: Added data member for push notification URL string in the case when the app isn't in background to load URL on viewDidAppear.
+	var initialURL: String? {
+		didSet {
+			if self.urlBar != nil {
+				self.loadInitialURL()
+			}
+		}
+	}
+		
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -603,7 +612,7 @@ class BrowserViewController: UIViewController {
 //        presentIntroViewController()
         if (!presentIntroViewController()) {
             switchToSearchModeIfNeeded()
-        }
+		}
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
@@ -618,7 +627,10 @@ class BrowserViewController: UIViewController {
         
         // Cliqz: cold start finished (for telemetry signals)
         self.appDidBecomeResponsive("cold")
-        
+
+		// Cliqz: Added call for initial URL if one exists
+		self.loadInitialURL()
+
         // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
         /*
         if shouldShowWhatsNewTab() {
@@ -1528,7 +1540,9 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
         hideSearchController()
-        updateInContentHomePanel(tabManager.selectedTab?.url)
+		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
+        updateInContentHomePanel(urlBar.currentURL)
+//		updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     
     // Cliqz: Added delegate methods implementation for new bar buttons
@@ -3294,6 +3308,7 @@ extension BrowserViewController {
     // Cliqz: Added to navigate to url (3D quick home actions)
     func navigateToURL(url: NSURL) {
         finishEditingAndSubmit(url, visitType: .Link)
+		self.initialURL = nil
     }
     
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
