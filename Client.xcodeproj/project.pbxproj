@@ -10577,7 +10577,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz;
 				PRODUCT_MODULE_NAME = CLIQZ;
 				PRODUCT_NAME = CLIQZ;
-				PROVISIONING_PROFILE = "8b76d0b5-5bf1-4e2f-8fae-a8a8f77b023b";
+				PROVISIONING_PROFILE = "9fe9a1e2-de69-4970-b497-2c28f1e3d19b";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";

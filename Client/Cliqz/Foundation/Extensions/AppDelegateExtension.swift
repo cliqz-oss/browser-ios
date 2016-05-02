@@ -26,16 +26,7 @@ extension AppDelegate {
 	@available(iOS 9.0, *)
 	func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
 		
-		var delay = 0.0
-		if application.applicationState == .Inactive {
-			// if the app is inactive we add delay to be sure that UI is ready to handel the action
-			delay = 0.5 * Double(NSEC_PER_SEC)
-		}
-		
-		let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-		dispatch_after(time, dispatch_get_main_queue(), {
-			completionHandler(self.handleShortcut(shortcutItem))
-		})
+        completionHandler(self.handleShortcut(shortcutItem))
 	}
 	
 	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
@@ -77,9 +68,9 @@ extension AppDelegate {
 	// MARK:- Private methods
     // append top sites shortcuts to the application shortcut items
 	@available(iOS 9.0, *)
-    private func appendTopSitesWithLimit(limit: Int, var shortcutItems: [UIApplicationShortcutItem]) -> Success {
+    private func appendTopSitesWithLimit(limit: Int, shortcutItems: [UIApplicationShortcutItem]) -> Success {
         let topSitesIcon =  UIApplicationShortcutIcon(templateImageName: "topSites")
-
+        var allShortcutItems = shortcutItems
         return self.profile!.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
             if let r = result.successValue {
                 for site in r {
@@ -89,13 +80,14 @@ extension AppDelegate {
                         let domainName = self.extractDomainName(url) {
                             let userInfo = ["url" : domainURL]
                             let topSiteShortcutItem = UIApplicationShortcutItem(type: self.topSitesIdentifier, localizedTitle: domainName, localizedSubtitle: nil, icon: topSitesIcon, userInfo: userInfo)
-                            shortcutItems.append(topSiteShortcutItem)
+                            allShortcutItems.append(topSiteShortcutItem)
                     }
                 }
             }
-            
-            // assign the applicaiton shortcut items
-            UIApplication.sharedApplication().shortcutItems = shortcutItems
+            dispatch_async(dispatch_get_main_queue(), { 
+                // assign the applicaiton shortcut items
+                UIApplication.sharedApplication().shortcutItems = allShortcutItems
+            })
             return succeed()
         }
     }
@@ -135,10 +127,9 @@ extension AppDelegate {
             TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_news", index!))
             succeeded = true
         } else if shortcutItem.type == topSitesIdentifier {
-            if let url = shortcutItem.userInfo?["url"] as? String,
-                let topSiteURL = NSURL(string: url) {
-                    browserViewController.navigateToURL(topSiteURL)
-                    TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_site", index!))
+            if let topSiteURL = shortcutItem.userInfo?["url"] as? String {
+                browserViewController.initialURL = topSiteURL
+                TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_site", index!))
                 succeeded = true
             }
         } else {
@@ -157,9 +148,8 @@ extension AppDelegate {
                 let articles = results[0]["articles"] as! [AnyObject]
                 let randomIndex = Int(arc4random_uniform(UInt32(articles.count)))
                 let randomArticle  = articles[randomIndex] as! [String : AnyObject]
-                let urlString = randomArticle["url"] as! String
-                let randomURl = NSURL(string: urlString)
-                self.browserViewController.navigateToURL(randomURl!)
+                let randomURl = randomArticle["url"] as! String
+                self.browserViewController.initialURL = randomURl
             },
             onFailure: { (data, error) in
                 let eventAttributes = ["url" : self.topNewsURL, "error" : "\(error)"]
