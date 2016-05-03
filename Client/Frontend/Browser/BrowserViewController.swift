@@ -2227,7 +2227,7 @@ extension BrowserViewController: WKNavigationDelegate {
 
         // Cliqz: hide the webViewOverlay when finis navigating to a url
         hideWebViewOverlay()
-        
+
         //Cliqz: Navigation telemetry signal
         if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
             finishNavigation(webView)
