@@ -1725,6 +1725,9 @@ extension BrowserViewController: BrowserDelegate {
         }
         let spotlightHelper = SpotlightHelper(browser: browser, openURL: openURL)
         browser.addHelper(spotlightHelper, name: SpotlightHelper.name())
+        
+        // Cliqz: Add custom user scripts
+        addCustomUserScripts(browser)
     }
 
     func browser(browser: Browser, willDeleteWebView webView: WKWebView) {
@@ -3329,4 +3332,13 @@ extension BrowserViewController {
         
     }
     
+    // Cliqz: Add custom user scripts
+    func addCustomUserScripts(browser: Browser) {
+        // Wikipedia scripts to clear expanded sections from local storage
+        if let path = NSBundle.mainBundle().pathForResource("wikipediaUserScript", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
+            let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentStart, forMainFrameOnly: false)
+            browser.webView!.configuration.userContentController.addUserScript(userScript)
+        }
+        
+    }
 }
