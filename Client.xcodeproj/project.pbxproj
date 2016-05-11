@@ -177,6 +177,7 @@
 		1E95F7C41CC8CB8C0023E369 /* RequirePasscodeIntervalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95F7BD1CC8CB8C0023E369 /* RequirePasscodeIntervalViewController.swift */; };
 		1E95F7C51CC8CBE40023E369 /* AuthenticationKeychainInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95F7A91CC8C5810023E369 /* AuthenticationKeychainInfo.swift */; };
 		1E95F7C61CC8CC280023E369 /* SystemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95F7AA1CC8C5810023E369 /* SystemUtils.swift */; };
+		1EC52C451CE3225E001EA374 /* wikipediaUserScript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EC52C441CE3225E001EA374 /* wikipediaUserScript.js */; };
 		1EEFC6FE1C884042004CE6E4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC6FC1C884042004CE6E4 /* Crashlytics.framework */; };
 		1EEFC6FF1C884042004CE6E4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC6FD1C884042004CE6E4 /* Fabric.framework */; };
 		1EEFC7011C884E1A004CE6E4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEFC7001C884E1A004CE6E4 /* VideoToolbox.framework */; };
@@ -1445,6 +1446,7 @@
 		1E95F7BB1CC8CB8C0023E369 /* PasscodeEntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeEntryViewController.swift; sourceTree = "<group>"; };
 		1E95F7BC1CC8CB8C0023E369 /* PasscodeViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeViews.swift; sourceTree = "<group>"; };
 		1E95F7BD1CC8CB8C0023E369 /* RequirePasscodeIntervalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequirePasscodeIntervalViewController.swift; sourceTree = "<group>"; };
+		1EC52C441CE3225E001EA374 /* wikipediaUserScript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = wikipediaUserScript.js; sourceTree = "<group>"; };
 		1EEFC6FC1C884042004CE6E4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		1EEFC6FD1C884042004CE6E4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1EEFC7001C884E1A004CE6E4 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
@@ -3471,6 +3473,7 @@
 				1E18DCDE1C873A4000664724 /* Cliqz.strings */,
 				1E18DCE01C873A4000664724 /* OnePasswordExtension.strings */,
 				1E18DCE31C873A4000664724 /* trampolineForward.html */,
+				1EC52C441CE3225E001EA374 /* wikipediaUserScript.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5910,6 +5913,7 @@
 				4F03B36D1C89C5A5005CBAA1 /* Extension in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				1E7B5C961C88540D006736F6 /* Lato-Light.ttf in Resources */,
+				1EC52C451CE3225E001EA374 /* wikipediaUserScript.js in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,

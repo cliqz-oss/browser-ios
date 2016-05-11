@@ -634,8 +634,8 @@ class BrowserViewController: UIViewController {
         // Cliqz: cold start finished (for telemetry signals)
         self.appDidBecomeResponsive("cold")
 
-//		// Cliqz: Added call for initial URL if one exists
-//		self.loadInitialURL()
+		// Cliqz: Added call for initial URL if one exists
+		self.loadInitialURL()
 
         // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
         /*
@@ -1725,6 +1725,9 @@ extension BrowserViewController: BrowserDelegate {
         }
         let spotlightHelper = SpotlightHelper(browser: browser, openURL: openURL)
         browser.addHelper(spotlightHelper, name: SpotlightHelper.name())
+        
+        // Cliqz: Add custom user scripts
+        addCustomUserScripts(browser)
     }
 
     func browser(browser: Browser, willDeleteWebView webView: WKWebView) {
@@ -3329,4 +3332,13 @@ extension BrowserViewController {
         
     }
     
+    // Cliqz: Add custom user scripts
+    func addCustomUserScripts(browser: Browser) {
+        // Wikipedia scripts to clear expanded sections from local storage
+        if let path = NSBundle.mainBundle().pathForResource("wikipediaUserScript", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
+            let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentStart, forMainFrameOnly: false)
+            browser.webView!.configuration.userContentController.addUserScript(userScript)
+        }
+        
+    }
 }
