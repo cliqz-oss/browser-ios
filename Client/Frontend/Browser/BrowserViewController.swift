@@ -634,8 +634,8 @@ class BrowserViewController: UIViewController {
         // Cliqz: cold start finished (for telemetry signals)
         self.appDidBecomeResponsive("cold")
 
-//		// Cliqz: Added call for initial URL if one exists
-//		self.loadInitialURL()
+		// Cliqz: Added call for initial URL if one exists
+		self.loadInitialURL()
 
         // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
         /*
