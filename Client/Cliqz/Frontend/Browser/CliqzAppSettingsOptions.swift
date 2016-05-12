@@ -8,6 +8,7 @@
 
 import Foundation
 import MessageUI
+import Shared
 
 
 //Cliqz: Added to modify the behavior of changing default search engine 
@@ -111,4 +112,30 @@ class EnablePushNotifications: BoolSetting {
 		}
 	}
 
+}
+
+// Cliqz: setting to reset top sites
+class ShowBlockedTopSitesSetting: Setting {
+    
+    init() {
+        super.init(title: NSAttributedString(string: NSLocalizedString("Show blocked topsites", tableName: "Cliqz", comment: "Show blocked top-sites from settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let alertController = UIAlertController(
+            title: NSLocalizedString("Show blocked topsites", tableName: "Cliqz", comment: "Title of the 'Show blocked top-sites' alert"),
+            message: NSLocalizedString("All blocked topsites will be shown on the start page again.", tableName: "Cliqz", comment: "Text of the 'Show blocked top-sites' alert"),
+            preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(
+            UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .Cancel) { (action) in
+                // Do nothing.
+            })
+        alertController.addAction(
+            UIAlertAction(title: NSLocalizedString("OK", tableName: "Cliqz", comment: "OK button in the 'Show blocked top-sites' alert"), style: .Default) { (action) in
+                // reset top-sites
+                NSNotificationCenter.defaultCenter().postNotificationName(NotificationShowBlockedTopSites, object: nil)
+
+            })
+        navigationController?.presentViewController(alertController, animated: true, completion: nil)
+    }
 }

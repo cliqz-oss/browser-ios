@@ -60,10 +60,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showBlockedTopSites:", name: NotificationShowBlockedTopSites, object: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationShowBlockedTopSites, object: nil)
     }
 
 	override func viewDidLoad() {
@@ -249,6 +255,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     private func updatePrivateModePreferences() {
         let params = ["incognito" : self.privateMode!]
         javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
+    }
+    
+    
+    //MARK: - Reset TopSites
+    func showBlockedTopSites(notification: NSNotification) {
+        javaScriptBridge.callJSMethod("jsAPI.restoreBlockedTopSites", parameter: nil, completionHandler: nil)
     }
     
     //MARK: - Guestures
