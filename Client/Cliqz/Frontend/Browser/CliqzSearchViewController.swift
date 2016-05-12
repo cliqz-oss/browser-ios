@@ -169,7 +169,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
 		stopLoadingAnimation()
-		provideDefaultSearchEngine()
 	}
 
 	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -239,10 +238,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func stopLoadingAnimation() {
 		self.spinnerView.removeFromSuperview()
 		self.spinnerView.stopAnimating()
-	}
-	
-	private func provideDefaultSearchEngine() {
-		javaScriptBridge.setDefaultSearchEngine()
 	}
 	
 	private func updateContentBlockingPreferences() {
@@ -366,4 +361,9 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     func autoCompeleteQuery(autoCompleteText: String) {
         delegate?.autoCompeleteQuery(autoCompleteText)
     }
+	
+	func isReady() {
+		javaScriptBridge.setDefaultSearchEngine()
+	}
+
 }
