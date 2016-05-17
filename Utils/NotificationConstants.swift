@@ -17,3 +17,6 @@ public let NotificationDataRemoteLoginChangesWereApplied = "NotificationDataRemo
 
 // Cliqz: Fired when trying to clear local history
 public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"
+
+// Cliqz: Fired when tryting to reset top-sites from settings
+public let NotificationShowBlockedTopSites = "NotificationShowBlockedTopSitesNotification"

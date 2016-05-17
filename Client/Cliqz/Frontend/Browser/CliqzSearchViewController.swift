@@ -60,10 +60,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showBlockedTopSites:", name: NotificationShowBlockedTopSites, object: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationShowBlockedTopSites, object: nil)
     }
 
 	override func viewDidLoad() {
@@ -84,7 +90,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
-        addLongPressGuestureRecognizer()
+        addGuestureRecognizers()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -251,15 +257,33 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
     }
     
+    
+    //MARK: - Reset TopSites
+    func showBlockedTopSites(notification: NSNotification) {
+        javaScriptBridge.callJSMethod("jsAPI.restoreBlockedTopSites", parameter: nil, completionHandler: nil)
+    }
+    
     //MARK: - Guestures
-    func addLongPressGuestureRecognizer() {
-        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
-        gestureRecognizer.delegate = self
-        self.webView?.addGestureRecognizer(gestureRecognizer)
+    func addGuestureRecognizers() {
+        // longPress gesture recognizer
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
+        longPressGestureRecognizer.delegate = self
+        self.webView?.addGestureRecognizer(longPressGestureRecognizer)
+        
+        
+        // swiper up gesture recognizer
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "onSwipeUp:")
+        swipeGestureRecognizer.direction = .Up
+        swipeGestureRecognizer.delegate = self
+        self.webView?.addGestureRecognizer(swipeGestureRecognizer)
     }
     
     func onLongPress(gestureRecognizer: UIGestureRecognizer) {
         inSelectionMode = true
+        delegate?.dismissKeyboard()
+    }
+    
+    func onSwipeUp(gestureRecognizer: UIGestureRecognizer) {
         delegate?.dismissKeyboard()
     }
     
