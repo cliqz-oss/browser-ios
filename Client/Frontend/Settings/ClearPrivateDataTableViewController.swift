@@ -4,17 +4,19 @@
 
 import UIKit
 import Shared
-
-private let SectionToggles = 0
-private let SectionButton = 1
-private let NumberOfSections = 2
+// Cliqz: changed the section indexes due to adding clear private data on termination at the beginning
+private let SectionToggles = 1
+private let SectionButton = 2
+private let NumberOfSections = 3
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
-private let HeaderFooterHeight: CGFloat = 44
 private let TogglesPrefKey = "clearprivatedata.toggles"
 
 private let log = Logger.browserLogger
 
 private let HistoryClearableIndex = 0
+// Cliqz: added for clear private data on termination
+private let SectionClearOnTermination = 0
+public let ClearDataOnTerminatingPrefKey = "clearprivatedata.onterminate"
 
 class ClearPrivateDataTableViewController: UITableViewController {
     private var clearButton: UITableViewCell?
@@ -38,12 +40,12 @@ class ClearPrivateDataTableViewController: UITableViewController {
     // Cliqz: Clear histroy and favorite items cell indexes
     let clearHistoryCellIndex = 0
     let clearFavoriteHistoryCellIndex = 1
-
+    
     private lazy var toggles: [Bool] = {
         if var savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
             // Cliqz: Added option to include favorite history items
             if savedToggles.count == 4 {
-                savedToggles.insert(false, atIndex:1)
+                savedToggles.insert(true, atIndex:1)
             }
             return savedToggles
         }
@@ -66,7 +68,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
 
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
-        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: HeaderFooterHeight))
+        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: UIConstants.TableViewHeaderFooterHeight))
         footer.showBottomBorder = false
         tableView.tableFooterView = footer
     }
@@ -83,18 +85,30 @@ class ClearPrivateDataTableViewController: UITableViewController {
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
-
+            
             // Cliqz: disalble include favorite history itmes
             if indexPath.row == clearFavoriteHistoryCellIndex && toggles[clearHistoryCellIndex] == false {
                 cell.userInteractionEnabled = false
                 cell.textLabel?.textColor = UIColor.grayColor()
             }
+        } else if indexPath.section == SectionClearOnTermination {
+            // Cliqz: clear private data on termination
+            cell.textLabel?.text = NSLocalizedString("Clear Private data on termination", tableName: "Cliqz", comment: "Settings item for clearing private data on termination")
+            let control = UISwitch()
+            control.onTintColor = UIConstants.ControlTintColor
+            control.addTarget(self, action: "clearDataOnTerminationChangedValue:", forControlEvents: UIControlEvents.ValueChanged)
+            control.on = self.profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false
+            cell.accessoryView = control
+            cell.selectionStyle = .None
+            control.tag = indexPath.item
+
         } else {
             assert(indexPath.section == SectionButton)
             cell.textLabel?.text = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Button in settings that clears private data for the selected items.")
             cell.textLabel?.textAlignment = NSTextAlignment.Center
             cell.textLabel?.textColor = UIConstants.DestructiveRed
             cell.accessibilityTraits = UIAccessibilityTraitButton
+            cell.accessibilityIdentifier = "ClearPrivateData"
             clearButton = cell
         }
 
@@ -109,8 +123,8 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if section == SectionToggles {
             return clearables.count
         }
-
-        assert(section == SectionButton)
+        // Cliqz: check for clear private data on termination
+        assert(section == SectionButton || section == SectionClearOnTermination)
         return 1
     }
 
@@ -124,7 +138,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard indexPath.section == SectionButton else { return }
 
-        func clearPrivateData() {
+        func clearPrivateData(action: UIAlertAction) {
             let toggles = self.toggles
             self.clearables
                 .enumerate()
@@ -139,8 +153,9 @@ class ClearPrivateDataTableViewController: UITableViewController {
                 .upon { result in
                     assert(result.isSuccess, "Private data cleared successfully")
 
-                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
-
+                    // Cliqz Moved updating preferences part to toggles switch handler method to save changes immedietely.
+                    //                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+                    
                     dispatch_async(dispatch_get_main_queue()) {
                         // Disable the Clear Private Data button after it's clicked.
                         self.clearButtonEnabled = false
@@ -154,25 +169,23 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if self.toggles[HistoryClearableIndex] && profile.hasAccount() {
             profile.syncManager.hasSyncedHistory().uponQueue(dispatch_get_main_queue()) { yes in
                 // Err on the side of warning, but this shouldn't fail.
+                let alert: UIAlertController
                 if yes.successValue ?? true {
                     // Our local database contains some history items that have been synced.
                     // Warn the user before clearing.
-                    let alert = UIAlertController.clearSyncedHistoryAlert(clearPrivateData)
-                    self.presentViewController(alert, animated: true, completion: nil)
-                    return
+                    alert = UIAlertController.clearSyncedHistoryAlert(clearPrivateData)
+                } else {
+                    alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
                 }
-
-                // Otherwise, just clear directly.
-                clearPrivateData()
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
             }
         } else {
-            clearPrivateData()
+            let alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
+            self.presentViewController(alert, animated: true, completion: nil)
         }
 
-        // Cliqz: Clear queries history
-        if toggles[clearHistoryCellIndex] == true {
-            clearQueries()
-        }
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -180,7 +193,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return HeaderFooterHeight
+        return UIConstants.TableViewHeaderFooterHeight
     }
 
     @objc func switchValueChanged(toggle: UISwitch) {
@@ -191,9 +204,17 @@ class ClearPrivateDataTableViewController: UITableViewController {
         
         // Cliqz: disable include favorite history items cell in case browsing history was disabled and refresh table to adjust cells
         if toggles[clearHistoryCellIndex] == false {
-           toggles[clearFavoriteHistoryCellIndex] = false
+            toggles[clearFavoriteHistoryCellIndex] = false
         }
+        // Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
+        self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+        
         self.tableView.reloadData()
+    }
+    
+    // Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
+    func clearDataOnTerminationChangedValue(sender: UISwitch) {
+        self.profile.prefs.setBool(sender.on, forKey: ClearDataOnTerminatingPrefKey)
     }
     
     private func clearQueries() {

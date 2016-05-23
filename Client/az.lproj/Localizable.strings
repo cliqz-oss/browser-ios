@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Ünvan və Axtarış";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Üçüncü tərəf klaviaturalara icazə ver";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Həmişə Göndər";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Təsdiqləmə tələb edilir";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Əlfəcinlər";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Saxladığınız əlfəcinlər burada göstəriləcək.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Parlaqlıq";
@@ -143,7 +152,7 @@
    Done button label on back forward list screen
    Done button on left side of the Settings view controller title bar
    Done editing button */
-"Done" = "Tamamlandı";
+"Done" = "Tamam";
 
 /* No comment provided by engineer. */
 "Double tap and hold to open history" = "Tarixçəni açmaq üçün iki dəfə basın və basılı saxlayın";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Qoşulmaq üçün parolunuzu daxil edin.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox Kömək və Dəstək";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Bu dəyişikliyin nəticəsini görmək üçün Firefox yenidən açılmalıdır.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox sizin hesabla sinxronlaşdırmanı dayandıracaq, amma bu cihazınızdakı heç bir səyahət məlumatını silməyəcək.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Son ay";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Son sinxronlaşdırma: %@";
 
 /* History tableview section header */
@@ -278,7 +289,7 @@
 "Open Settings" = "Tənzimləmələri aç";
 
 /* See http://mzl.la/1LXbDOL */
-"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Kitab ikonu başlıq sətrində görünəndə ona basaraq məqalələri Oxuyucu Görünüşündə açın.";
+"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "Kitab ikonu başlıq sətrində göründüyündə ona basaraq məqalələri Oxuyucu Görünüşündə açın.";
 
 /* String indicating that the file can be opened in another application on the device */
 "Open in…" = "Bununla aç…";
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Axtarış təkliflərini göstər";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Daxil ol";
+"Sign In to Firefox" = "Firefox-a daxil ol";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Daxil ol";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Digər cihazlarınızdakı vərəq, əlfəcin və parollarınız üçün daxil olun.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Dayandır";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "İndi Sinxronlaşdır";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Vərəq, əlfəcin, parol və bir çox məlumatlarınızı sinxronlaşdırın.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Vərəq, parol və bir çox məlumatlarınızı sinxronlaşdırın.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Vərəq Altlığı";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Mozilla Proyekti";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Bu səhifə Oxuyucu Görünüşündə göstərilə bilməz.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Ən məşhur saytlar";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Yenilə";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Belə, bu çaşdırıcıdır.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Vikipediya";
+
 /* Button to save the user's password */
 "Yes" = "Bəli";
 
@@ -513,8 +531,11 @@
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Digər cihazlarınızdaki Firefox-da heç bir açıq vərəq yoxdur.";
 
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
+
 /* Your Rights settings section title */
-"Your Rights" = "Sizin Haqlarınız";
+"Your Rights" = "Hüquqlarınız";
 
 /* Accessibility label for Desktop Computer (PC) image in remote tabs list */
 "computer" = "kompüter";

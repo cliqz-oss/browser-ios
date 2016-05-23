@@ -9,6 +9,7 @@
 import UIKit
 import Shared
 import Crashlytics
+import WebKit
 
 @objc protocol JavaScriptBridgeDelegate: class {
     
@@ -17,18 +18,22 @@ import Crashlytics
 
     optional func searchForQuery(query: String)
     optional func getSearchHistoryResults(callback: String?)
-    optional func shareCard(cardData: [String: AnyObject])
+    optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
+    optional func isReady()
 }
 
 class JavaScriptBridge {
     weak var delegate: JavaScriptBridgeDelegate?
     var profile: Profile
     private let maxFrecencyLimit: Int = 30
+    private let backgorundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
     init(profile: Profile) {
         self.profile = profile
-        self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
+        dispatch_async(backgorundQueue) {
+            self.profile.history.setTopSitesCacheSize(Int32(self.maxFrecencyLimit))
+        }
     }
     
     func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
@@ -70,10 +75,18 @@ class JavaScriptBridge {
     }
 
 	func setDefaultSearchEngine() {
-		let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("")?.absoluteString.componentsSeparatedByString("=")
-		let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
-			"url": searchComps![0] + "="]
-		self.callJSMethod("setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+        
+        dispatch_async(backgorundQueue) {
+            
+            let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.componentsSeparatedByString("=queryString")
+            let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
+                "url": searchComps![0] + "="]
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+            }
+        }
+		
 	}
 
     // Mark: Handle JavaScript Action
@@ -131,8 +144,8 @@ class JavaScriptBridge {
             }
             
         case "shareCard":
-            if let cardData = data as? [String: AnyObject] {
-                delegate?.shareCard?(cardData)
+            if let cardURL = data as? String {
+                delegate?.shareCard?(cardURL)
             }
             
         case "autocomplete":
@@ -151,6 +164,8 @@ class JavaScriptBridge {
             if let ids = data as? [Int] {
                 self.profile.history.removeHistory(ids)
             }
+        case "isReady":
+            delegate?.isReady?()
         default:
 			print("Unhandles JS action")
 //            print("Unhandles JS action: \(action), with data: \(data)")

@@ -3,14 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+import GCDWebServers
 @testable import Client
 import UIKit
 
 import XCTest
 
 class SearchTests: XCTestCase {
-    private let uriFixup = URIFixup()
-
     func testParsing() {
         let parser = OpenSearchParser(pluginMode: true)
         let file = NSBundle.mainBundle().pathForResource("google", ofType: "xml", inDirectory: "SearchPlugins/en")
@@ -46,11 +45,11 @@ class SearchTests: XCTestCase {
     }
 
     private func checkValidURL(beforeFixup: String, afterFixup: String) {
-        XCTAssertEqual(uriFixup.getURL(beforeFixup)!.absoluteString, afterFixup)
+        XCTAssertEqual(URIFixup.getURL(beforeFixup)!.absoluteString, afterFixup)
     }
 
     private func checkInvalidURL(beforeFixup: String) {
-        XCTAssertNil(uriFixup.getURL(beforeFixup))
+        XCTAssertNil(URIFixup.getURL(beforeFixup))
     }
 
     func testSuggestClient() {

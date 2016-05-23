@@ -107,7 +107,8 @@
 		<string>Lato-Light.ttf</string>
 		<string>Lato-Medium.ttf</string>
 	</array>
-	<key>UIApplicationShortcutItems</key>
+	<!-- // Cliqz: comented Firefox 3D Touch code -->
+	<!-- <key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
@@ -125,7 +126,7 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>$(PRODUCT_BUNDLE_IDENTIFIER).NewPrivateTab</string>
 		</dict>
-	</array>
+	</array> -->
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -171,5 +172,7 @@
 	</array>
 	<key>Vendor</key>
 	<string>$(MOZ_VENDOR)</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>

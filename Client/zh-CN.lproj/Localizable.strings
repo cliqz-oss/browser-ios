@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "网址与搜索";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "允许第三方键盘";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "总是发送";
+
+/* Tile title for Amazon */
+"Amazon" = "亚马逊";
 
 /* Authentication prompt title */
 "Authentication required" = "需要验证身份";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "书签";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "您保存的书签将显示在这里。";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "亮度";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "请输入您的密码以连接。";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Firefox 帮助和支持";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "需要重新打开 Firefox 才能使此更改生效。";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox 将停止与您账号间的同步，但不会删除此设备上的任何浏览数据。";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "上个月";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "最近同步：%@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "显示搜索建议";
 
 /* Text message / button in the settings table view */
-"Sign In" = "登录";
+"Sign In to Firefox" = "登录 Firefox";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "登录";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "登录以获取您在其他设备上的标签页、书签和密码。";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "停止";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "立即同步";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "同步您的标签页、书签、密码等等。";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "同步您的标签页、密码等信息。";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "标签页托盘";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Mozilla 项目";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "此页面无法在阅读模式下显示。";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "常用网站";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "更新";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "哎呀，出了点意外。";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "维基百科";
+
 /* Button to save the user's password */
 "Yes" = "是";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "您没有在其他设备的 Firefox 上已经打开的标签页。";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "您的权利";

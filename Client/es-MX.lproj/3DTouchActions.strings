@@ -8,7 +8,7 @@
 "Close Tab" = "Cerrar pestaña";
 
 /* Label for preview action on Tab Tray Tab to copy the URL of the current tab to clipboard */
-"Copy URL" = "Copiar dirección";
+"Copy URL" = "Copiar URL";
 
 /* String describing the action of opening the last added bookmark from the home screen Quick Actions via 3D Touch */
 "Open Last Bookmark" = "Abrir último marcador";

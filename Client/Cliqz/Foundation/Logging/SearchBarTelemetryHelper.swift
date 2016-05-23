@@ -9,7 +9,6 @@
 import Foundation
 
 class SearchBarTelemetryHelper: NSObject {
-    let uriFixup = URIFixup()
     var lastTypingTime = NSDate.getCurrentMillis()
     var urlbarFocusTime = NSDate.getCurrentMillis()
     
@@ -62,7 +61,7 @@ class SearchBarTelemetryHelper: NSObject {
     func logResultEnterEvent(enteredText: String, autoCompletedText: String) {
         let queryLength = enteredText.characters.count
         let autocompletedLength = autoCompletedText.characters.count
-        let autocompletedUrl = uriFixup.getURL(autoCompletedText)?.absoluteString
+        let autocompletedUrl = URIFixup.getURL(autoCompletedText)?.absoluteString
         let now = NSDate.getCurrentMillis()
         let reactionTime = now - lastTypingTime
         let urlbarTime = now - urlbarFocusTime

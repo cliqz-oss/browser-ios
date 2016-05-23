@@ -11,10 +11,10 @@
 "Copy URL" = "复制网址";
 
 /* String describing the action of opening the last added bookmark from the home screen Quick Actions via 3D Touch */
-"Open Last Bookmark" = "打开最后的书签";
+"Open Last Bookmark" = "打开最近的书签";
 
 /* String describing the action of opening the last tab sent to Firefox from the home screen Quick Actions via 3D Touch */
-"Open Last Tab" = "打开最后的标签页";
+"Open Last Tab" = "打开最近的标签页";
 
 /* Accessibility Label for preview in Tab Tray of current tab */
 "Preview of %@" = "%@ 的预览";

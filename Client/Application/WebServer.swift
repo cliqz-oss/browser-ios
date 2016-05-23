@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+import GCDWebServers
 
 class WebServer {
     static let WebServerSharedInstance = WebServer()
@@ -19,7 +20,7 @@ class WebServer {
 
     func start() throws -> Bool{
         if !server.running {
-            try server.startWithOptions([GCDWebServerOption_Port: 6571, GCDWebServerOption_BindToLocalhost: true, GCDWebServerOption_AutomaticallySuspendInBackground: true])
+            try server.startWithOptions([GCDWebServerOption_Port: 6577, GCDWebServerOption_BindToLocalhost: true, GCDWebServerOption_AutomaticallySuspendInBackground: true])
         }
         return server.running
     }

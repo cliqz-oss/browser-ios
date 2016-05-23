@@ -12,7 +12,6 @@ import Crashlytics
 
 
 // Cliqz: handel home screen quick actions
-@available(iOS 9.0, *)
 extension AppDelegate {
 
     // identifier for the shortcuts
@@ -22,9 +21,25 @@ extension AppDelegate {
 
     var topNewsURL              : String { get { return "https://newbeta.cliqz.com/api/v1/rich-header?path=/map&bmresult=rotated-top-news.cliqz.com"    } }
     
-    
-    // MARK:- configure Home actions
+	// MARK:- Delegate methods
+	// Handeling user action when opening the app from home quick action
+	@available(iOS 9.0, *)
+	func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+		
+        completionHandler(self.handleShortcut(shortcutItem))
+	}
+	
+	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+		if let notificationData = (userInfo["aps"] as? NSDictionary),
+			let urlString = (notificationData.valueForKey("url") as? String) {
+			self.browserViewController.initialURL = urlString
+		}
+		completionHandler(.NoData)
+	}
+
+    // MARK:- Public API
     // configure the dynamic shortcuts
+	@available(iOS 9.0, *)
     func configureHomeShortCuts() {
         var shortcutItems = [UIApplicationShortcutItem]()
         
@@ -49,11 +64,13 @@ extension AppDelegate {
             
         }
     }
-    
+	
+	// MARK:- Private methods
     // append top sites shortcuts to the application shortcut items
-    private func appendTopSitesWithLimit(limit: Int, var shortcutItems: [UIApplicationShortcutItem]) -> Success {
+	@available(iOS 9.0, *)
+    private func appendTopSitesWithLimit(limit: Int, shortcutItems: [UIApplicationShortcutItem]) -> Success {
         let topSitesIcon =  UIApplicationShortcutIcon(templateImageName: "topSites")
-
+        var allShortcutItems = shortcutItems
         return self.profile!.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
             if let r = result.successValue {
                 for site in r {
@@ -63,17 +80,18 @@ extension AppDelegate {
                         let domainName = self.extractDomainName(url) {
                             let userInfo = ["url" : domainURL]
                             let topSiteShortcutItem = UIApplicationShortcutItem(type: self.topSitesIdentifier, localizedTitle: domainName, localizedSubtitle: nil, icon: topSitesIcon, userInfo: userInfo)
-                            shortcutItems.append(topSiteShortcutItem)
+                            allShortcutItems.append(topSiteShortcutItem)
                     }
                 }
             }
-            
-            // assign the applicaiton shortcut items
-            UIApplication.sharedApplication().shortcutItems = shortcutItems
+            dispatch_async(dispatch_get_main_queue(), { 
+                // assign the applicaiton shortcut items
+                UIApplication.sharedApplication().shortcutItems = allShortcutItems
+            })
             return succeed()
         }
     }
-    
+
     // getting the domain name of the url to be used as title for the shortcut
     private func extractDomainName(urlString: String) -> String? {
         if let url = NSURL(string: urlString),
@@ -91,24 +109,9 @@ extension AppDelegate {
         }
         return nil
     }
-    
-    // MARK:- Handle Home actions
-    // Handeling user action when opening the app from home quick action
-    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
-        
-        var delay = 0.0
-        if application.applicationState == .Inactive {
-            // if the app is inactive we add delay to be sure that UI is ready to handel the action
-            delay = 0.5 * Double(NSEC_PER_SEC)
-        }
-        
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(time, dispatch_get_main_queue(), {
-            completionHandler(self.handleShortcut(shortcutItem))
-        })
-    }
-    
+
     // handel shortcut action
+	@available(iOS 9.0, *)
     private func handleShortcut(shortcutItem:UIApplicationShortcutItem) -> Bool {
         let index = UIApplication.sharedApplication().shortcutItems?.indexOf(shortcutItem)
         var succeeded = false
@@ -124,10 +127,9 @@ extension AppDelegate {
             TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_news", index!))
             succeeded = true
         } else if shortcutItem.type == topSitesIdentifier {
-            if let url = shortcutItem.userInfo?["url"] as? String,
-                let topSiteURL = NSURL(string: url) {
-                    browserViewController.navigateToURL(topSiteURL)
-                    TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_site", index!))
+            if let topSiteURL = shortcutItem.userInfo?["url"] as? String {
+                browserViewController.initialURL = topSiteURL
+                TelemetryLogger.sharedInstance.logEvent(.HomeScreenShortcut("top_site", index!))
                 succeeded = true
             }
         } else {
@@ -146,9 +148,8 @@ extension AppDelegate {
                 let articles = results[0]["articles"] as! [AnyObject]
                 let randomIndex = Int(arc4random_uniform(UInt32(articles.count)))
                 let randomArticle  = articles[randomIndex] as! [String : AnyObject]
-                let urlString = randomArticle["url"] as! String
-                let randomURl = NSURL(string: urlString)
-                self.browserViewController.navigateToURL(randomURl!)
+                let randomURl = randomArticle["url"] as! String
+                self.browserViewController.initialURL = randomURl
             },
             onFailure: { (data, error) in
                 let eventAttributes = ["url" : self.topNewsURL, "error" : "\(error)"]

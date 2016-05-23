@@ -159,8 +159,6 @@ class TabManager : NSObject {
         assert(NSThread.isMainThread())
 
         if selectedTab === tab {
-            // Cliqz: post notification when swithcing back to the previous tab
-            NSNotificationCenter.defaultCenter().postNotificationName(NotificationSwitchedToPreviousTab, object: nil)
             return
         }
 
@@ -283,7 +281,12 @@ class TabManager : NSObject {
         tab.loadRequest(request ?? defaultNewTabRequest)
 
         if flushToDisk {
-//        	storeChanges()
+        	storeChanges()
+        }
+        
+        // Cliqz: reset `inSearchMode` if the tab was created to open specific url
+        if request != nil {
+            tab.inSearchMode = false
         }
     }
 
@@ -525,12 +528,15 @@ extension TabManager {
     }
 
     func preserveTabs() {
+        // Cliqz: disable preserving tabs to enhance startup time
+        /*
         // This is wrapped in an Objective-C @try/@catch handler because NSKeyedArchiver may throw exceptions which Swift cannot handle
         _ = Try(withTry: { () -> Void in
             self.preserveTabsInternal()
             }) { (exception) -> Void in
             print("Failed to preserve tabs: \(exception)")
         }
+        */
     }
 
     private func restoreTabsInternal() {
@@ -708,17 +714,16 @@ class TabManagerNavDelegate : NSObject, WKNavigationDelegate {
     func webView(webView: WKWebView, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge,
         completionHandler: (NSURLSessionAuthChallengeDisposition,
         NSURLCredential?) -> Void) {
-            var disp: NSURLSessionAuthChallengeDisposition? = nil
-            for delegate in delegates {
-                delegate.webView?(webView, didReceiveAuthenticationChallenge: challenge) { (disposition, credential) in
-                    // Whoever calls this method first wins. All other calls are ignored.
-                    if disp != nil {
-                        return
-                    }
+            let authenticatingDelegates = delegates.filter {
+                $0.respondsToSelector("webView:didReceiveAuthenticationChallenge:completionHandler:")
+            }
 
-                    disp = disposition
-                    completionHandler(disposition, credential)
-                }
+            guard let firstAuthenticatingDelegate = authenticatingDelegates.first else {
+                return completionHandler(NSURLSessionAuthChallengeDisposition.PerformDefaultHandling, nil)
+            }
+
+            firstAuthenticatingDelegate.webView?(webView, didReceiveAuthenticationChallenge: challenge) { (disposition, credential) in
+                completionHandler(disposition, credential)
             }
     }
 

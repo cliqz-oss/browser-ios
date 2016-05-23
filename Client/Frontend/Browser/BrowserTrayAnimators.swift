@@ -305,9 +305,12 @@ private func createTransitionCellFromBrowser(browser: Browser?, withFrame frame:
     cell.background.image = browser?.screenshot
     cell.titleText.text = browser?.displayTitle
 
+    // Cliz: disable dark cell style in private mode
+    /*
     if let browser = browser where browser.isPrivate {
         cell.style = .Dark
     }
+    */
 
     if let favIcon = browser?.displayFavicon {
         cell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
@@ -316,7 +319,9 @@ private func createTransitionCellFromBrowser(browser: Browser?, withFrame frame:
         if browser?.isPrivate ?? false {
             defaultFavicon = defaultFavicon?.imageWithRenderingMode(.AlwaysTemplate)
             cell.favicon.image = defaultFavicon
-            cell.favicon.tintColor = (browser?.isPrivate ?? false) ? UIColor.whiteColor() : UIColor.darkGrayColor()
+            // Cliz: Use white collor for favicon tint color in both Normal and Private modes
+//            cell.favicon.tintColor = (browser?.isPrivate ?? false) ? UIColor.whiteColor() : UIColor.darkGrayColor()
+            cell.favicon.tintColor = UIColor.whiteColor()
         } else {
             cell.favicon.image = defaultFavicon
         }

@@ -14,34 +14,35 @@ struct TabsButtonUX {
     static let TitleBackgroundColor: UIColor = UIColor.whiteColor()
     static let CornerRadius: CGFloat = 2
     static let TitleFont: UIFont = UIConstants.DefaultChromeSmallFontBold
-    static let BorderStrokeWidth: CGFloat = 0
-    static let BorderColor: UIColor = UIColor.clearColor()
-    static let TitleInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+	// Cliqz: Changed BorderColor and width for Normal mode according to requirements
+    static let BorderStrokeWidth: CGFloat = 1 // 0
+    static let BorderColor: UIColor = UIColor.whiteColor() // UIColor.clearColor()
+	// Cliqz: Changed Insets to make Tabs button as big as UITextField
+    static let TitleInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8) // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
 
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
         theme.borderColor = UIConstants.PrivateModePurple
-        theme.borderWidth = 1
+		// Cliqz: Removed Border in Private Mode
+        theme.borderWidth = 0 // 1
         theme.font = UIConstants.DefaultChromeBoldFont
-        theme.backgroundColor = UIConstants.AppBackgroundColor
-        theme.textColor = UIConstants.PrivateModePurple
-        theme.insets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+		// Cliqz: Changed background&text colors and insets of TabsButton in Private Mode according to requirements (Commented out original color)
+        theme.backgroundColor = UIConstants.OrangeColor // UIConstants.AppBackgroundColor
+        theme.textColor = UIColor.whiteColor() // UIConstants.PrivateModePurple
+		theme.insets = TitleInsets // UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
         theme.borderColor = BorderColor
         theme.borderWidth = BorderStrokeWidth
         theme.font = TitleFont
-        theme.backgroundColor = TitleBackgroundColor
-        theme.textColor = TitleColor
+		// Cliqz: Changed text colors and backgroundColor of TabsButton in Normal Mode according to requirements (Commented out original color)
+        theme.backgroundColor = UIColor.clearColor() //TitleBackgroundColor
+        theme.textColor = UIColor.whiteColor() // TitleColor
         theme.insets = TitleInsets
         themes[Theme.NormalMode] = theme
 
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
-        
         return themes
     }()
 }

@@ -2,7 +2,7 @@
 "Close Private Tabs" = "Lukk private faner";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox vil ikke huske noe av din historikk eller infokapsler, men nye bokmerker blir lagret.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ vil ikke huske noe av din historikk eller infokapsler, men nye bokmerker blir lagret.";
 
 /* Text button displayed when there are no tabs open while in private mode */
 "Learn More" = "Lær mer";

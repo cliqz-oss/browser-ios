@@ -83,6 +83,7 @@ class BrowserLocationView: UIView {
                 let wasHidden = readerModeButton.hidden
                 self.readerModeButton.readerModeState = newReaderModeState
 //                readerModeButton.hidden = (newReaderModeState == ReaderModeState.Unavailable)
+				readerModeButton.hidden = true
                 if wasHidden != readerModeButton.hidden {
                     UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
                 }

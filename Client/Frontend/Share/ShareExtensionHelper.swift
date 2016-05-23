@@ -4,6 +4,7 @@
 
 import Foundation
 import Shared
+import OnePasswordExtension
 
 private let log = Logger.browserLogger
 
@@ -123,6 +124,10 @@ private extension ShareExtensionHelper {
 
     func findLoginExtensionItem() {
         guard let selectedWebView = selectedTab?.webView else {
+            return
+        }
+
+        if selectedWebView.URL?.absoluteString == nil {
             return
         }
 

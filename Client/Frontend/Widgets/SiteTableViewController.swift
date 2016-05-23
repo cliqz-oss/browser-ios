@@ -52,9 +52,13 @@ class SiteTableViewHeader : UITableViewHeaderFooterView {
             make.height.equalTo(0.5)
         }
 
+        // A table view will initialize the header with CGSizeZero before applying the actual size. Hence, the label's constraints
+        // must not impose a minimum width on the content view.
         titleLabel.snp_makeConstraints { make in
-            make.left.equalTo(contentView).offset(SiteTableViewControllerUX.HeaderTextMargin)
-            make.right.equalTo(contentView).offset(-SiteTableViewControllerUX.HeaderTextMargin)
+            make.left.equalTo(contentView).offset(SiteTableViewControllerUX.HeaderTextMargin).priorityHigh()
+            make.right.equalTo(contentView).offset(-SiteTableViewControllerUX.HeaderTextMargin).priorityHigh()
+            make.left.greaterThanOrEqualTo(contentView) // Fallback for when the left space constraint breaks
+            make.right.lessThanOrEqualTo(contentView) // Fallback for when the right space constraint breaks
             make.centerY.equalTo(contentView)
         }
     }
@@ -125,7 +129,11 @@ class SiteTableViewController: UIViewController, UITableViewDelegate, UITableVie
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCellWithIdentifier(CellIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier, forIndexPath: indexPath)
+        if self.tableView(tableView, hasFullWidthSeparatorForRowAtIndexPath: indexPath) {
+            cell.separatorInset = UIEdgeInsetsZero
+        }
+        return cell
     }
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -138,5 +146,9 @@ class SiteTableViewController: UIViewController, UITableViewDelegate, UITableVie
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return SiteTableViewControllerUX.RowHeight
+    }
+
+    func tableView(tableView: UITableView, hasFullWidthSeparatorForRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return false
     }
 }

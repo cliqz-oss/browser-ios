@@ -295,6 +295,8 @@ class TabTrayController: UIViewController {
         self.tabManager = tabManager
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
+
+        tabManager.addDelegate(self)
     }
 
     convenience init(tabManager: TabManager, profile: Profile, tabTrayDelegate: TabTrayDelegate) {
@@ -306,20 +308,11 @@ class TabTrayController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.tabManager.removeDelegate(self)
-    }
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        tabManager.addDelegate(self)
-    }
-
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
+        self.tabManager.removeDelegate(self)
     }
 
     func SELDynamicFontChanged(notification: NSNotification) {
@@ -346,6 +339,7 @@ class TabTrayController: UIViewController {
         settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
         settingsButton.addTarget(self, action: "SELdidClickSettingsItem", forControlEvents: .TouchUpInside)
         settingsButton.accessibilityLabel = NSLocalizedString("Settings", comment: "Accessibility label for the Settings button in the Tab Tray.")
+        settingsButton.accessibilityIdentifier = "Settings"
 
         let flowLayout = TabTrayCollectionViewLayout()
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: flowLayout)
@@ -519,7 +513,14 @@ class TabTrayController: UIViewController {
         }
         
         // Cliqz: log switch mode telemetry signal
-        tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        if privateMode {
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+        } else {
+            TelemetryLogger.sharedInstance.changePrivateMode(privateMode)
+            tabManager.logTabTelemetrySignal("switch_mode", isPrivate: privateMode, tabIndex: nil)
+        }
+
     }
 
     @available(iOS 9, *)
@@ -660,7 +661,13 @@ extension TabTrayController: UIScrollViewAccessibilityDelegate {
         // visible cells do sometimes return also not visible cells when attempting to go past the last cell with VoiceOver right-flick gesture; so make sure we have only visible cells (yeah...)
         visibleCells = visibleCells.filter { !CGRectIsEmpty(CGRectIntersection($0.frame, bounds)) }
         let cells = visibleCells.map { self.collectionView.indexPathForCell($0)! }
-        let indexPaths = cells.sort { $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row) }
+        
+        // Cliq: fixed compilation error
+//        let indexPaths = cells.sort { $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row) }
+        let indexPaths = cells.sort {
+            let temp = $0.section == $1.section && $0.row < $1.row
+            return $0.section < $1.section || temp
+        }
 
         if indexPaths.count == 0 {
             return NSLocalizedString("No tabs", comment: "Message spoken by VoiceOver to indicate that there are no tabs in the Tabs Tray")
@@ -681,7 +688,7 @@ extension TabTrayController: UIScrollViewAccessibilityDelegate {
 }
 
 extension TabTrayController: SwipeAnimatorDelegate {
-    func swipeAnimator(animator: SwipeAnimator, viewDidExitContainerBounds: UIView) {
+    func swipeAnimator(animator: SwipeAnimator, viewWillExitContainerBounds: UIView) {
         let tabCell = animator.container as! TabCell
         if let indexPath = collectionView.indexPathForCell(tabCell) {
             let tab = tabsToDisplay[indexPath.item]
@@ -750,8 +757,17 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.delegate = cellDelegate
 
         let tab = tabs[indexPath.item]
-        tabCell.style = tab.isPrivate ? .Dark : .Light
-        tabCell.titleText.text = tab.displayTitle
+        // Cliqz: Use the Light cell style for both private and normal modes
+//        tabCell.style = tab.isPrivate ? .Dark : .Light
+        tabCell.style = .Light
+
+        // Cliqz: show lastSearchQuery as cell title if tab was in search mode
+//        tabCell.titleText.text = tab.displayTitle
+        if (tab.inSearchMode) {
+            tabCell.titleText.text = tab.lastSearchQuery
+        } else {
+            tabCell.titleText.text = tab.displayTitle
+        }
 
         if !tab.displayTitle.isEmpty {
             tabCell.accessibilityLabel = tab.displayTitle
@@ -762,7 +778,9 @@ private class TabManagerDataSource: NSObject, UICollectionViewDataSource {
         tabCell.isAccessibilityElement = true
         tabCell.accessibilityHint = NSLocalizedString("Swipe right or left with three fingers to close the tab.", comment: "Accessibility hint for tab tray's displayed tab.")
 
-        if let favIcon = tab.displayFavicon {
+        // Cliqz: display default fav icon if tab was in search mode
+//        if let favIcon = tab.displayFavicon {
+        if let favIcon = tab.displayFavicon where tab.inSearchMode == false {
             tabCell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
         } else {
             var defaultFavicon = UIImage(named: "defaultFavicon")
@@ -919,7 +937,8 @@ private class EmptyPrivateTabsView: UIView {
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(iconImageView)
-        addSubview(learnMoreButton)
+        // Cliqz: takeout learn more button in the private mode
+//        addSubview(learnMoreButton)
 
         titleLabel.snp_makeConstraints { make in
             make.center.equalTo(self)
@@ -934,11 +953,11 @@ private class EmptyPrivateTabsView: UIView {
             make.top.equalTo(titleLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.TextMargin)
             make.centerX.equalTo(self)
         }
-
-        learnMoreButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
-            make.centerX.equalTo(self)
-        }
+        // Cliqz: takeout learn more button in the private mode
+//        learnMoreButton.snp_makeConstraints { (make) -> Void in
+//            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
+//            make.centerX.equalTo(self)
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -24,7 +24,7 @@ public enum TelemetryLogEventType {
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     case TabSignal          (String, String, Int?, Int)
-    
+    case NewsNotification   (String)
 }
 
 
@@ -34,6 +34,8 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
+    
+    var privateMode = false
     
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
@@ -58,10 +60,18 @@ class TelemetryLogger : EventsLogger {
     func storeCurrentTelemetrySeq() {
         LocalDataStore.setObject(telemetrySeq!.get(), forKey: self.telementrySequenceKey)
     }
+    //MARK: - private mode
+    func changePrivateMode(privateMode: Bool) {
+        self.privateMode = privateMode
+    }
     
     //MARK: - Log events
     internal func logEvent(eventType: TelemetryLogEventType){
-
+        // disable sending any signals during private mode
+        guard privateMode == false else {
+            return
+        }
+        
         dispatch_async(dispatchQueue) {
             var event: [String: AnyObject]
             var disableSendingEvent = false
@@ -116,6 +126,9 @@ class TelemetryLogger : EventsLogger {
             
             case .TabSignal(let action, let mode, let tabIndex, let tabCount):
                 event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
+                
+            case .NewsNotification(let action):
+                event = self.createNewsNotificationEvent(action)
                 
             }
             
@@ -362,5 +375,10 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    
+    private func createNewsNotificationEvent(action: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        event["type"] = "news_notification"
+        event["action"] = action
+        return event
+    }
 }

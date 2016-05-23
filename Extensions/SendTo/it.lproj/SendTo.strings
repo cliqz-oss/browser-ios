@@ -5,7 +5,7 @@
 "Close" = "Chiudi";
 
 /* See http://mzl.la/1ISlXnU */
-"Please open Firefox, go to Settings and sign in to continue." = "Aprire Firefox, effettuare l’accesso nelle impostazioni per continuare.";
+"Please open Firefox, go to Settings and sign in to continue." = "Aprire le impostazioni di Firefox ed effettuare l’accesso per continuare.";
 
 /* Navigation bar button to Send the current page to a device */
 "Send" = "Invia";

@@ -28,8 +28,14 @@
 /* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
 "Address and Search" = "Adresa a pytanje";
 
+/* Setting to enable third-party keyboards */
+"Allow Third-Party Keyboards" = "Tastatury tśeśich póbitowarjow dowólis";
+
 /* Used as a button label for crash dialog prompt */
 "Always Send" = "Pśecej pósłaś";
+
+/* Tile title for Amazon */
+"Amazon" = "Amazon";
 
 /* Authentication prompt title */
 "Authentication required" = "Awtentifikacija trěbna";
@@ -45,6 +51,9 @@
 
 /* Panel accessibility label */
 "Bookmarks" = "Cytańske znamjenja";
+
+/* Status label for the empty Bookmarks state. */
+"Bookmarks you save will show up here." = "Cytańske znamjenja, kótarež składujośo, se how zjewiju.";
 
 /* Accessibility label for brightness adjustment slider in Reader Mode display settings */
 "Brightness" = "Swětłosć";
@@ -87,7 +96,7 @@
 "Copy Link" = "Wótkaz kopěrowaś";
 
 /* Accessibility message e.g. spoken by VoiceOver after the user wanted to add current page to the Reading List and this was not done, likely because it already was in the Reading List, but perhaps also because of real failures. */
-"Could not add page to Reading List. Maybe it's already there?" = "Bok njedajo se cytańskej lisćinje pśidaś.Snaź jo wón južo wopśimjony?";
+"Could not add page to Reading List. Maybe it's already there?" = "Bok njedajo se cytańskej lisćinje pśidaś. Snaź jo wón južo wopśimjony?";
 
 /* Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed. */
 "Could not add page to Reading list" = "Bok njedajo se cytańskej lisćinje pśidaś";
@@ -151,8 +160,11 @@
 /* Text message in the settings table view */
 "Enter your password to connect." = "Zapódajśo swójo gronidło, aby zwězał.";
 
-/* Tile title for App Help */
-"Firefox Help and Support" = "Pomoc Firefox";
+/* Tile title for Facebook */
+"Facebook" = "Facebook";
+
+/* Setting value prop to enable third-party keyboards */
+"Firefox needs to reopen for this change to take effect." = "Firefox musy se znowego startowaś, aby se to wustatkowało.";
 
 /* Text of the 'log out firefox account' alert */
 "Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "Firefox pśestanjo z wašym kontom synchronizěrowaś, ale njewulašujo pśeglědowańske daty na toś tom rěźe.";
@@ -190,8 +202,7 @@
 /* History tableview section header */
 "Last month" = "Slědny mjasec";
 
-/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
-   Remote tabs last synced time. Argument is the relative date string. */
+/* Remote tabs last synced time. Argument is the relative date string. */
 "Last synced: %@" = "Slědna synchronizacija: %@";
 
 /* History tableview section header */
@@ -403,10 +414,14 @@
 "Show search suggestions" = "Pytańske naraźenja pokazaś";
 
 /* Text message / button in the settings table view */
-"Sign In" = "Pśizjawiś";
+"Sign In to Firefox" = "Pla Firefox pśizjawiś";
 
-/* Text message / button in the settings table view */
+/* See http://mzl.la/1Qtkf0j
+   Text message / button in the settings table view */
 "Sign in" = "Pśizjawiś";
+
+/* Clarify value prop under Sign In to Firefox in Settings. */
+"Sign in to get your tabs, bookmarks, and passwords from your other devices." = "Pśizjawśo se, aby swóje rejtarki, cytańske znamjenjai a gronidła ze swójich drugich rědow dostał.";
 
 /* Accessibility Label for the browser toolbar Stop button */
 "Stop" = "Stoj";
@@ -420,10 +435,10 @@
 /* Sync Firefox Account */
 "Sync Now" = "Něnto synchronizěrowaś";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs, bookmarks, passwords empty state instructions. */
 "Sync your tabs, bookmarks, passwords and more." = "Synchronizěrujśo swóje rejtarki, cytańske znamjenja a wěcej.";
 
-/* See http://mzl.la/1Qtkf0j */
+/* Sync tabs and passwords empty state instructions. */
 "Sync your tabs, passwords and more." = "Synchronizěrujśo swóje rejtarki, gronidła a wěcej.";
 
 /* Panel accessibility label */
@@ -440,9 +455,6 @@
 
 /* Accessibility label for the Tabs Tray view. */
 "Tabs Tray" = "Wótkładnica rejtarkow";
-
-/* Tile title for Mozilla */
-"The Mozilla Project" = "Projekt Mozilla";
 
 /* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
 "The page could not be displayed in Reader View." = "Bok njedajo se w cytańskem naglěźe zwobrazniś.";
@@ -467,6 +479,9 @@
 
 /* Panel accessibility label */
 "Top sites" = "Nejwěcej woblubowane sedła";
+
+/* Tile title for Twitter */
+"Twitter" = "Twitter";
 
 /* Button to update the user's password */
 "Update" = "Aktualizěrowaś";
@@ -501,6 +516,9 @@
 /* Restore Tabs Prompt Title */
 "Well, this is embarrassing." = "Wódajśo, to jo nam njelubo.";
 
+/* Tile title for Wikipedia */
+"Wikipedia" = "Wikipedija";
+
 /* Button to save the user's password */
 "Yes" = "Jo";
 
@@ -512,6 +530,9 @@
 
 /* Error message in the remote tabs panel */
 "You don't have any tabs open in Firefox on your other devices." = "Njamaśo žedne wócynjone rejtarki na swójich drugich rědach.";
+
+/* Tile title for YouTube */
+"YouTube" = "YouTube";
 
 /* Your Rights settings section title */
 "Your Rights" = "Waše pšawa";

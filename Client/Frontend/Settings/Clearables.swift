@@ -5,6 +5,8 @@
 import Foundation
 import Shared
 import WebKit
+import Deferred
+import WebImage
 
 private let log = Logger.browserLogger
 
@@ -39,6 +41,7 @@ class HistoryClearable: Clearable {
 
     func clear() -> Success {
         // Cliqz: clear unfavorite history itmes
+		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 0)
         return profile.history.clearHistory(0).bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
@@ -70,6 +73,7 @@ class FavoriteHistoryClearable: Clearable {
     
     func clear() -> Success {
         // clear favorite history itmes
+		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 1)
         return profile.history.clearHistory(1).bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
@@ -139,7 +143,8 @@ private func deleteLibraryFolderContents(folder: String) throws {
     for content in contents {
         do {
             try manager.removeItemAtURL(dir.URLByAppendingPathComponent(content))
-        } catch where ((error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError)?.code == Int(EPERM) {
+        // Cliqz: catch any error instead of only `EPERM` so to prevent app from crashing when it couldn't delete the file for any reason
+        } catch { // where ((error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError)?.code == Int(EPERM) {
             // "Not permitted". We ignore this.
             log.debug("Couldn't delete some library contents.")
         }

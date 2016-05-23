@@ -13,32 +13,53 @@
 /* 'After 15 minutes' interval item for selecting when to require passcode */
 "After 15 minutes" = "Setelah 15 menit";
 
-/* Title for setting to change passcode */
-"Change Passcode" = "Ubah kode akses";
+/* Title for screen when changing your passcode */
+"Change Passcode" = "Ubah Kode Akses";
 
-/* Title for entering a passcode */
+/* Screen title for entering a passcode */
+"Enter Passcode" = "Masukkan Kode Akses";
+
+/* Title for screen when updating your existin passcode */
+"Enter a new passcode" = "Masukkan kode akses baru";
+
+/* Title above input for entering a passcode */
 "Enter a passcode" = "Masukkan kode akses";
+
+/* Title above input for entering passcode while removing/changing */
+"Enter passcode" = "Masukkan kode akses";
 
 /* 'Immediately' interval item for selecting when to require passcode */
 "Immediately" = "Segera";
 
-/* List item for Logins */
-"Logins" = "Info Masuk";
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app with attempts remaining */
+"Incorrect passcode. Try again (Attempts remaining: %d)." = "Kode akses salah. Coba lagi (Percobaan tersisa: %d).";
+
+/* Error message displayed when user enters incorrect passcode when trying to enter a protected section of the app */
+"Incorrect passcode. Try again." = "Kode akses salah. Coba lagi.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again in an hour." = "Upaya maksimum tercapai. Mohon coba lagi dalam satu jam.";
+
+/* Error message displayed when user enters incorrect passcode and has reached the maximum number of attempts. */
+"Maximum attempts reached. Please try again later." = "Upaya maksimum tercapai. Mohon coba lagi nanti.";
+
+/* Error message displayed when user tries to enter the same passcode as their existing code when changing it. */
+"New passcode must be different than existing code." = "Kode akses baru harus berbeda dengan kode akses yang ada.";
 
 /* List section title for passcode settings */
-"Passcode" = "Kode Masuk";
+"Passcode" = "Kode Akses";
 
-/* List item for Private Browsing */
-"Private Browsing" = "Penjelajahan Pribadi";
+/* Error message displayed to user when their confirming passcode doesn't match the first code. */
+"Passcodes didn't match. Try again." = "Kode akses tidak cocok. Coba lagi.";
 
 /* Title for re-entering a passcode */
 "Re-enter passcode" = "Masukkan kembali kode akses";
 
 /* Title for setting to require a passcode */
-"Require Passcode" = "Membutuhkan kode akses";
+"Require Passcode" = "Membutuhkan Kode Akses";
 
 /* Screen title for Set Passcode */
-"Set Passcode" = "Setel kode akses";
+"Set Passcode" = "Setel Kode Akses";
 
 /* Title for Touch ID/Passcode settings option */
 "Touch ID & Passcode" = "Touch ID dan Kode Akses";
@@ -53,7 +74,7 @@
 "Turn off your passcode." = "Nonaktifkan kode akses Anda.";
 
 /* List section title for when to use Touch ID */
-"Use Touch ID for" = "Gunakan Touch ID untuk";
+"Use Touch ID" = "Gunakan Touch ID";
 
 /* Touch ID prompt subtitle when accessing logins */
 "Use your fingerprint to access Logins now." = "Gunakan sidik jari Anda untuk mengakses Info Masuk sekarang.";

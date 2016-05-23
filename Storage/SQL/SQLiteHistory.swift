@@ -5,6 +5,7 @@
 import Foundation
 import Shared
 import XCGLogger
+import Deferred
 
 private let log = Logger.syncLogger
 
@@ -269,15 +270,16 @@ extension SQLiteHistory: BrowserHistory {
         let topSitesQuery = "select mzh.id as historyID, mzh.guid as guid, mzh.url as url, mzh.title as title, sum(mzh.days_count) as total_count " +
                                     "from ( " +
                                         "select \(TableHistory).id , \(TableHistory).guid, \(TableHistory).url, \(TableHistory).title, \(TableVisits).siteID, " +
-                                                "(\(TableVisits).date /(86400* 1000000) - (strftime('%s', date('now', '-6 months'))/86400) ) as days_count " +
+                                                "(\(TableVisits).date /(86400* 1000000) - (strftime('%s', date('now', '-6 months'))/86400) ) as days_count, " +
+                                                "MAX(\(TableHistory).local_modified, ifnull(\(TableHistory).server_modified,0)) as last_visit_date " +
                                         "from \(TableVisits), \(TableHistory) " +
                                         "where \(TableVisits).date > (strftime('%s', date('now', '-6 months'))*1000000) " +
                                                 "and \(TableVisits).siteID == \(TableHistory).id " +
                                                 "and \(TableHistory).is_deleted == 0 " +
-                                                "and \(TableVisits).type < 4 " +
+                                                "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +
                                     ") as mzh " +
                             "group by mzh.siteID " +
-                            "order by total_count desc " +
+                            "order by total_count desc, mzh.last_visit_date desc " +
                             "limit (?)"
         
         
@@ -548,7 +550,15 @@ extension SQLiteHistory: Favicons {
     }
 
     func getFaviconsForBookmarkedURL(url: String) -> Deferred<Maybe<Cursor<Favicon?>>> {
-        let sql = "SELECT \(TableFavicons).id AS id, \(TableFavicons).url AS url, \(TableFavicons).date AS date, \(TableFavicons).type AS type, \(TableFavicons).width AS width FROM \(TableFavicons), \(TableBookmarks) WHERE \(TableBookmarks).faviconID = \(TableFavicons).id AND \(TableBookmarks).url IS ?"
+        let sql =
+        "SELECT " +
+        "  \(TableFavicons).id AS id" +
+        ", \(TableFavicons).url AS url" +
+        ", \(TableFavicons).date AS date" +
+        ", \(TableFavicons).type AS type" +
+        ", \(TableFavicons).width AS width" +
+        " FROM \(TableFavicons), \(ViewBookmarksLocalOnMirror) AS bm" +
+        " WHERE bm.faviconID = \(TableFavicons).id AND bm.bmkUri IS ?"
         let args: Args = [url]
         return db.runQuery(sql, args: args, factory: SQLiteHistory.iconColumnFactory)
     }
@@ -602,10 +612,12 @@ extension SQLiteHistory: Favicons {
                     return 0
                 }
 
-                // Try to update the favicon ID column in the bookmarks table as well for this favicon
-                // if this site has been bookmarked
+                // Try to update the favicon ID column in each bookmarks table. There can be
+                // multiple bookmarks with a particular URI, and a mirror bookmark can be
+                // locally changed, so either or both of these statements can update multiple rows.
                 if let id = id {
-                    conn.executeChange("UPDATE \(TableBookmarks) SET faviconID = ? WHERE url = ?", withArgs: [id, site.url])
+                    conn.executeChange("UPDATE \(TableBookmarksLocal) SET faviconID = ? WHERE bmkUri = ?", withArgs: [id, site.url])
+                    conn.executeChange("UPDATE \(TableBookmarksMirror) SET faviconID = ? WHERE bmkUri = ?", withArgs: [id, site.url])
                 }
 
                 return id ?? 0
