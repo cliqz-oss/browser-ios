@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let appVersion = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 
-    var openInFirefoxURL: NSURL? = nil
+    var openInFirefoxParams: LaunchParams? = nil
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
@@ -119,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             log.error("Failed to assign AVAudioSession category to allow playing with silent switch on for aural progress bar")
         }
 
-        let defaultRequest = NSURLRequest(URL: UIConstants.DefaultHomePage)
+        let defaultRequest = PrivilegedRequest(URL: UIConstants.DefaultHomePage)
         let imageStore = DiskImageStore(files: profile.files, namespace: "TabManagerScreenshots", quality: UIConstants.ScreenshotQuality)
 
         log.debug("Configuring tabManager…")
@@ -169,7 +169,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log.debug("Updating authentication keychain state to reflect system state")
         self.updateAuthenticationInfo()
+        SystemUtils.onFirstRun()
 
+        sendCorePing()
+
+        
         log.debug("Done with setting up the application.")
 		self.clearLocalDataIfNeeded()
 
@@ -209,8 +213,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let profile = self.profile {
             return profile
         }
-        let clearProfile = NSProcessInfo.processInfo().environment["MOZ_WIPE_PROFILE"] != nil
-        let p = BrowserProfile(localName: "profile", app: application, clear: clearProfile)
+        let p = BrowserProfile(localName: "profile", app: application)
         self.profile = p
         return p
     }
@@ -266,34 +269,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        if let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) {
-            if components.scheme != "firefox" && components.scheme != "firefox-x-callback" {
-                return false
-            }
-            var url: String?
-            for item in (components.queryItems ?? []) as [NSURLQueryItem] {
-                switch item.name {
-                case "url":
-                    url = item.value
-                default: ()
-                }
-            }
-
-            if let url = url, newURL = NSURL(string: url.unescape()) {
-                // If we are active then we can ask the BVC to open the new tab right away. Else we remember the
-                // URL and we open it in applicationDidBecomeActive.
-                if application.applicationState == .Active {
-                    if #available(iOS 9, *) {
-                        self.browserViewController.switchToPrivacyMode(isPrivate: false)
-                    }
-                    self.browserViewController.openURLInNewTab(newURL)
-                } else {
-                    openInFirefoxURL = newURL
-                }
-                return true
+        guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
+            return false
+        }
+        if components.scheme != "firefox" && components.scheme != "firefox-x-callback" {
+            return false
+        }
+        var url: String?
+        var isPrivate: Bool = false
+        for item in (components.queryItems ?? []) as [NSURLQueryItem] {
+            switch item.name {
+            case "url":
+                url = item.value
+            case "private":
+                isPrivate = NSString(string: item.value ?? "false").boolValue
+            default: ()
             }
         }
-        return false
+
+        let params: LaunchParams
+
+        if let url = url, newURL = NSURL(string: url.unescape()) {
+            params = LaunchParams(url: newURL, isPrivate: isPrivate)
+        } else {
+            params = LaunchParams(url: nil, isPrivate: isPrivate)
+        }
+
+        if application.applicationState == .Active {
+            // If we are active then we can ask the BVC to open the new tab right away. 
+            // Otherwise, we remember the URL and we open it in applicationDidBecomeActive.
+            launchFromURL(params)
+        } else {
+            openInFirefoxParams = params
+        }
+
+        return true
+    }
+
+    func launchFromURL(params: LaunchParams) {
+        let isPrivate = params.isPrivate ?? false
+        if let newURL = params.url {
+            self.browserViewController.switchToTabForURLOrOpen(newURL, isPrivate: isPrivate)
+        } else {
+            self.browserViewController.openBlankNewTabAndFocus(isPrivate: isPrivate)
+        }
     }
 
     func application(application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: String) -> Bool {
@@ -340,15 +359,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             QuickActions.sharedInstance.removeDynamicApplicationShortcutItemOfType(ShortcutType.OpenLastTab, fromApplication: application)
         }
 
-        // If we have a URL waiting to open, switch to non-private mode and open the URL.
-        if let url = openInFirefoxURL {
-            openInFirefoxURL = nil
-            // This needs to be scheduled so that the BVC is ready.
+        // Check if we have a URL from an external app or extension waiting to launch,
+        // then launch it on the main thread.
+        if let params = openInFirefoxParams {
+            openInFirefoxParams = nil
             dispatch_async(dispatch_get_main_queue()) {
-                if #available(iOS 9, *) {
-                    self.browserViewController.switchToPrivacyMode(isPrivate: false)
-                }
-                self.browserViewController.switchToTabForURLOrOpen(url)
+                self.launchFromURL(params)
             }
         }
         
@@ -369,10 +385,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var taskId: UIBackgroundTaskIdentifier = 0
         taskId = application.beginBackgroundTaskWithExpirationHandler { _ in
             log.warning("Running out of background time, but we have a profile shutdown pending.")
+            self.profile?.shutdown()
             application.endBackgroundTask(taskId)
         }
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+        self.profile?.syncManager.syncEverything().uponQueue(backgroundQueue) { _ in
             self.profile?.shutdown()
             application.endBackgroundTask(taskId)
 		}
@@ -392,9 +410,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // `applicationDidBecomeActive` will get called whenever the Touch ID authentication overlay disappears.
         self.updateAuthenticationInfo()
         
+        sendCorePing()
+        
         // Cliqz: call AppStatus
         AppStatus.sharedInstance.appWillEnterForeground()
 
+    }
+
+    /// Send a telemetry ping if the user hasn't disabled reporting.
+    /// We still create and log the ping for non-release channels, but we don't submit it.
+    private func sendCorePing() {
+        if let profile = profile where (profile.prefs.boolForKey("settings.sendUsageData") ?? true) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+                let ping = CorePing(profile: profile)
+                Telemetry.sendPing(ping)
+            }
+        }
     }
 
     private func updateAuthenticationInfo() {
@@ -409,10 +440,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setUpWebServer(profile: Profile) {
         let server = WebServer.sharedInstance
         ReaderModeHandlers.register(server, profile: profile)
-        ErrorPageHelper.register(server)
+        ErrorPageHelper.register(server, certStore: profile.certStore)
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
-        SessionRestoreHandler.register(server)
+
         // Cliqz: Registered trampolineForward to be able to load it via URLRequest
         server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
         
@@ -603,6 +634,11 @@ extension AppDelegate: MFMailComposeViewControllerDelegate {
         controller.dismissViewControllerAnimated(true, completion: nil)
         startApplication(application!, withLaunchOptions: self.launchOptions)
     }
+}
+
+struct LaunchParams {
+    let url: NSURL?
+    let isPrivate: Bool?
 }
 
 var activeCrashReporter: CrashReporter?

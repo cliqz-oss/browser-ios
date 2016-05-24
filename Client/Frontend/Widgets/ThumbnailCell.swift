@@ -13,6 +13,7 @@ struct ThumbnailCellUX {
     static let LabelColor = UIAccessibilityDarkerSystemColorsEnabled() ? UIColor.blackColor() : UIColor(rgb: 0x353535)
     static let LabelBackgroundColor = UIColor(white: 1.0, alpha: 0.5)
     static let LabelAlignment: NSTextAlignment = .Center
+    static let SelectedOverlayColor = UIColor(white: 0.0, alpha: 0.25)
     static let InsetSize: CGFloat = 20
     static let InsetSizeCompact: CGFloat = 6
     static func insetsForCollectionViewSize(size: CGSize, traitCollection: UITraitCollection) -> UIEdgeInsets {
@@ -126,7 +127,7 @@ class ThumbnailCell: UICollectionViewCell {
     }
 
     lazy var longPressGesture: UILongPressGestureRecognizer = {
-        return UILongPressGestureRecognizer(target: self, action: "SELdidLongPress")
+        return UILongPressGestureRecognizer(target: self, action: #selector(ThumbnailCell.SELdidLongPress))
     }()
 
     lazy var textWrapper: UIView = {
@@ -167,7 +168,7 @@ class ThumbnailCell: UICollectionViewCell {
         let removeButton = UIButton()
         removeButton.exclusiveTouch = true
         removeButton.setImage(UIImage(named: "TileCloseButton"), forState: UIControlState.Normal)
-        removeButton.addTarget(self, action: "SELdidRemove", forControlEvents: UIControlEvents.TouchUpInside)
+        removeButton.addTarget(self, action: #selector(ThumbnailCell.SELdidRemove), forControlEvents: UIControlEvents.TouchUpInside)
         removeButton.accessibilityLabel = NSLocalizedString("Remove page", comment: "Button shown in editing mode to remove this site from the top sites panel.")
         removeButton.hidden = true
         removeButton.imageEdgeInsets = ThumbnailCellUX.RemoveButtonInsets
@@ -179,6 +180,19 @@ class ThumbnailCell: UICollectionViewCell {
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         return backgroundImage
     }()
+
+    lazy var selectedOverlay: UIView = {
+        let selectedOverlay = UIView()
+        selectedOverlay.backgroundColor = ThumbnailCellUX.SelectedOverlayColor
+        selectedOverlay.hidden = true
+        return selectedOverlay
+    }()
+
+    override var selected: Bool {
+        didSet {
+            self.selectedOverlay.hidden = !selected
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -196,12 +210,17 @@ class ThumbnailCell: UICollectionViewCell {
         }
         imageWrapper.addSubview(imageView)
         imageWrapper.addSubview(textWrapper)
+        imageWrapper.addSubview(selectedOverlay)
         textWrapper.addSubview(textLabel)
         contentView.addSubview(removeButton)
 
         textWrapper.snp_makeConstraints { make in
             make.bottom.equalTo(self.imageWrapper.snp_bottom) // .offset(ThumbnailCellUX.BorderWidth)
             make.left.right.equalTo(self.imageWrapper) // .offset(ThumbnailCellUX.BorderWidth)
+        }
+
+        selectedOverlay.snp_makeConstraints { make in
+            make.edges.equalTo(self.imageWrapper)
         }
 
         textLabel.snp_remakeConstraints { make in

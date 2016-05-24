@@ -10,6 +10,11 @@ import LocalAuthentication
 
 private let logger = Logger.browserLogger
 
+private func presentNavAsFormSheet(presented: UINavigationController, presenter: UINavigationController?) {
+    presented.modalPresentationStyle = .FormSheet
+    presenter?.presentViewController(presented, animated: true, completion: nil)
+}
+
 class TurnPasscodeOnSetting: Setting {
     init(settings: SettingsTableViewController, delegate: SettingsDelegate? = nil) {
         super.init(title: NSAttributedString.tableRowTitle(AuthenticationStrings.turnOnPasscode),
@@ -17,12 +22,8 @@ class TurnPasscodeOnSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        // Navigate to passcode configuration screen
-        let passcodeVC = PasscodeConfirmViewController.newPasscodeVC()
-        passcodeVC.title = AuthenticationStrings.setPasscode
-        let passcodeNav = UINavigationController(rootViewController: passcodeVC)
-        passcodeNav.modalPresentationStyle = .FormSheet
-        navigationController?.presentViewController(passcodeNav, animated: true, completion: nil)
+        presentNavAsFormSheet(UINavigationController(rootViewController: SetupPasscodeViewController()),
+                              presenter: navigationController)
     }
 }
 
@@ -33,11 +34,8 @@ class TurnPasscodeOffSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        let passcodeVC = PasscodeConfirmViewController.removePasscodeVC()
-        passcodeVC.title = AuthenticationStrings.turnOffPasscode
-        let passcodeNav = UINavigationController(rootViewController: passcodeVC)
-        passcodeNav.modalPresentationStyle = .FormSheet
-        navigationController?.presentViewController(passcodeNav, animated: true, completion: nil)
+        presentNavAsFormSheet(UINavigationController(rootViewController: RemovePasscodeViewController()),
+                              presenter: navigationController)
     }
 }
 
@@ -53,11 +51,8 @@ class ChangePasscodeSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        let passcodeVC = PasscodeConfirmViewController.changePasscodeVC()
-        passcodeVC.title = AuthenticationStrings.changePasscode
-        let passcodeNav = UINavigationController(rootViewController: passcodeVC)
-        passcodeNav.modalPresentationStyle = .FormSheet
-        navigationController?.presentViewController(passcodeNav, animated: true, completion: nil)
+        presentNavAsFormSheet(UINavigationController(rootViewController: ChangePasscodeViewController()),
+                              presenter: navigationController)
     }
 }
 
@@ -94,6 +89,7 @@ class RequirePasscodeSetting: Setting {
 
         if AppConstants.MOZ_AUTHENTICATION_MANAGER && authInfo.requiresValidation() {
             AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
+            touchIDReason: AuthenticationStrings.requirePasscodeTouchReason,
             success: {
                 self.navigateToRequireInterval()
             },
@@ -157,7 +153,7 @@ class TouchIDSetting: Setting {
         let accessoryContainer = UIView(frame: control.frame)
         accessoryContainer.addSubview(control)
 
-        let gesture = UITapGestureRecognizer(target: self, action: "switchTapped")
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(TouchIDSetting.switchTapped))
         accessoryContainer.addGestureRecognizer(gesture)
 
         cell.accessoryView = accessoryContainer
@@ -172,6 +168,7 @@ class TouchIDSetting: Setting {
         if authInfo.useTouchID {
             AppAuthenticator.presentAuthenticationUsingInfo(
                 authInfo,
+                touchIDReason: AuthenticationStrings.disableTouchReason,
                 success: self.touchIDSuccess,
                 fallback: self.touchIDFallback
             )
@@ -193,9 +190,9 @@ class AuthenticationSettingsViewController: SettingsTableViewController {
         updateTitleForTouchIDState()
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: Selector("refreshSettings:"), name: NotificationPasscodeDidRemove, object: nil)
-        notificationCenter.addObserver(self, selector: Selector("refreshSettings:"), name: NotificationPasscodeDidCreate, object: nil)
-        notificationCenter.addObserver(self, selector: Selector("refreshSettings:"), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(AuthenticationSettingsViewController.refreshSettings(_:)), name: NotificationPasscodeDidRemove, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(AuthenticationSettingsViewController.refreshSettings(_:)), name: NotificationPasscodeDidCreate, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(AuthenticationSettingsViewController.refreshSettings(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
 
         tableView.accessibilityIdentifier = "AuthenticationManager.settingsTableView"
     }

@@ -134,6 +134,15 @@ extension NSURL {
         }
         return nil
     }
+
+    public var origin: String? {
+        guard isWebPage(),
+              let hostPort = self.hostPort else {
+            return nil
+        }
+
+        return "\(scheme)://\(hostPort)"
+    }
     
     public func normalizedHostAndPath() -> String? {
         if let normalizedHost = self.normalizedHost() {
@@ -222,6 +231,10 @@ extension NSURL {
         }
 
         return false
+    }
+
+    public var isLocal: Bool {
+        return host?.lowercaseString == "localhost" || host == "127.0.0.1" || host == "::1"
     }
 }
 
