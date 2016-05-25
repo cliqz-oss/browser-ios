@@ -196,7 +196,7 @@ class AppStatus {
         
         dispatch_async(dispatchQueue) {
             self.lastEnvironmentEventDate = NSDate()
-            let device: Model = UIDevice.currentDevice().deviceType
+            let device: String = UIDevice.currentDevice().deviceType
             let language = self.getAppLanguage()
             let version = self.getCurrentAppVersion()
             let osVersion = UIDevice.currentDevice().systemVersion
@@ -206,7 +206,7 @@ class AppStatus {
             //TODO `prefs`
             let prefs = [String: AnyObject]()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device.rawValue, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }
