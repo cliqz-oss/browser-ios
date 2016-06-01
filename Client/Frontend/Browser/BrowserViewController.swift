@@ -2282,6 +2282,10 @@ extension BrowserViewController: WKUIDelegate {
         } else {
             newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
         }
+
+        // Cliqz: preserve search state before switching to the newly created tab
+        preserveSearchState()
+        
         tabManager.selectTab(newTab)
         
         // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
