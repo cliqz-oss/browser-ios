@@ -101,6 +101,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
+            cell.textLabel?.numberOfLines = 2
 
         } else {
             assert(indexPath.section == SectionButton)
