@@ -1539,7 +1539,8 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
-        showHomePanelController(inline: false)
+        // Cliqz: disable showing home panel when entering overlay mode
+//        showHomePanelController(inline: false)
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
@@ -1990,7 +1991,8 @@ extension BrowserViewController: TabManagerDelegate {
             urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         }
 
-        updateInContentHomePanel(selected?.url)
+        //Cliqz: disable updating home panel when switching between tabs as we already preserve tab status and for new tabs we initially show the search view
+//        updateInContentHomePanel(selected?.url)
     }
 
     func tabManager(tabManager: TabManager, didCreateTab tab: Browser) {
