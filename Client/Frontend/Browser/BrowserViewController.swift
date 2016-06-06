@@ -961,7 +961,9 @@ class BrowserViewController: UIViewController {
     }
 
     func addBookmark(url: String, title: String?) {
-        let shareItem = ShareItem(url: url, title: title, favicon: nil)
+		// Cliqz: replaced ShareItem with CliqzShareItem to extend bookmarks behaviour
+		let shareItem = CliqzShareItem(url: url, title: title, favicon: nil, bookmarkedDate: NSDate.now())
+//        let shareItem = ShareItem(url: url, title: title, favicon: nil)
         profile.bookmarks.shareItem(shareItem)
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
