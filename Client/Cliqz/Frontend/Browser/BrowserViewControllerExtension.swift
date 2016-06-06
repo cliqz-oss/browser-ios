@@ -16,4 +16,17 @@ extension BrowserViewController {
 			self.navigateToURL(url)
 		}
 	}
+    
+    
+    func askForNewsNotificationPermissionIfNeeded () {
+        if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
+            self.urlBar.leaveOverlayMode()
+            let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
+            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+                controller.preferredContentSize = CGSize(width: NewsNotificationPermissionViewControllerUX.Width, height: NewsNotificationPermissionViewControllerUX.Height)
+                controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+            }
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+    }
 }

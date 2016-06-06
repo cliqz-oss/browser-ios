@@ -330,6 +330,8 @@ class BrowserViewController: UIViewController {
                 // Cliqz: Added call for reset state in case of session timeout
                 self.resetState()
             }
+            // Cliqz: ask for news notification permission according to our workflow
+            self.askForNewsNotificationPermissionIfNeeded()
         })
     }
 
@@ -618,6 +620,8 @@ class BrowserViewController: UIViewController {
 //        presentIntroViewController()
         if (!presentIntroViewController()) {
             switchToSearchModeIfNeeded()
+            // Cliqz: ask for news notification permission according to our workflow
+            askForNewsNotificationPermissionIfNeeded()
 		}
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
