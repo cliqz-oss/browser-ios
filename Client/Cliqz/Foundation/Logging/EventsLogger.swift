@@ -114,6 +114,16 @@ class EventsLogger: NSObject {
     }
     
     
+    internal func getLastStoredSeq() -> Int? {
+        guard events.count > 0 else {
+            return nil
+        }
+        
+        let lastEvent = events.getContents()[events.count-1]
+        let lastStoredSeq = lastEvent["seq"] as? Int
+        return lastStoredSeq
+    }
+    
     //MARK: - Sending events to server
     internal func sendEvent(event: [String: AnyObject]){
         // dispatch_async in a serial thread so as not to send same events twice

@@ -105,6 +105,9 @@ class AppStatus {
         
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
+        
+        TelemetryLogger.sharedInstance.persistState()
+        
     }
     
     internal func appDidEnterBackground() {
@@ -113,8 +116,8 @@ class AppStatus {
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
         
-        TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
-        TelemetryLogger.sharedInstance.persistEvents()
+        
+        TelemetryLogger.sharedInstance.persistState()
         
         NewsNotificationPermissionHelper.sharedInstance.onAppEnterBackground()
 	}
@@ -122,6 +125,8 @@ class AppStatus {
     internal func appWillTerminate() {
         
         logApplicationUsageEvent("Terminate")
+        
+        TelemetryLogger.sharedInstance.persistState()
     }
     
     //MARK:- Private Helper Methods
