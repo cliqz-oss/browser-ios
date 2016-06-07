@@ -115,10 +115,9 @@ class AppStatus {
         
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
-        
-        
-        TelemetryLogger.sharedInstance.persistState()
-        
+
+        TelemetryLogger.sharedInstance.appDidEnterBackground()
+
         NewsNotificationPermissionHelper.sharedInstance.onAppEnterBackground()
 	}
 
