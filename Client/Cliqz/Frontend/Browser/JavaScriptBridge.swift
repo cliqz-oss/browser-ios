@@ -206,6 +206,7 @@ class JavaScriptBridge {
 					if !bookmarked {
 						let shareItem = CliqzShareItem(url: u, title: t, favicon: nil, bookmarkedDate: d.unsignedLongLongValue)
 						self.profile.bookmarks.shareItem(shareItem)
+						NSNotificationCenter.defaultCenter().postNotificationName(BookmarkStatusChangedNotification, object: u, userInfo:["added": true])
 					}
 				}
 			}
@@ -217,6 +218,7 @@ class JavaScriptBridge {
 			profile.bookmarks.modelFactory >>== {
 				$0.removeByURL(u)
 			}
+			NSNotificationCenter.defaultCenter().postNotificationName(BookmarkStatusChangedNotification, object: u, userInfo:["added": false])
 		}
 	}
 

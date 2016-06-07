@@ -1028,9 +1028,10 @@ class BrowserViewController: UIViewController {
         }
     }
 
+	// Cliqz: Changed bookmarkItem to String, because for Cliqz Bookmarks status change notifications only URL is sent
     func SELBookmarkStatusDidChange(notification: NSNotification) {
-        if let bookmark = notification.object as? BookmarkItem {
-            if bookmark.url == urlBar.currentURL?.absoluteString {
+        if let bookmarkUrl = notification.object as? String {
+            if bookmarkUrl == urlBar.currentURL?.absoluteString {
                 if let userInfo = notification.userInfo as? Dictionary<String, Bool>{
                     if let added = userInfo["added"]{
                         self.toolbar?.updateBookmarkStatus(added)
