@@ -1134,16 +1134,7 @@ class BrowserViewController: UIViewController {
         guard let url = tab.displayURL?.absoluteString else {
             return
         }
-        
-        // Cliqz: Replaced FF bookmark's button state initialization corresponding to our requirements
-//        profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
-//            guard let data = result.successValue where data.count > 0  else { return }
-//            guard let site: Site = data[0] where site.url == url else {
-//                self.navigationToolbar.updateBookmarkStatus(false)
-//                return
-//            }
-//            self.navigationToolbar.updateBookmarkStatus(site.favorite ?? false)
-//        }
+
         profile.bookmarks.modelFactory >>== {
             $0.isBookmarked(url).uponQueue(dispatch_get_main_queue()) { result in
                 guard let bookmarked = result.successValue else {
@@ -1625,16 +1616,6 @@ extension BrowserViewController: BrowserToolbarDelegate {
     }
 
     func browserToolbarDidPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
-        // Cliqz: Replaced FF bookmarks handling according to our requirements
-//        profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
-//            guard let data = result.successValue where data.count > 0  else { return }
-//            guard let site: Site = data[0], siteID = site.id else { return }
-//            
-//            site.favorite = site.favorite != nil ? !site.favorite! : true
-//            self.profile.history.setHistoryFavorite([siteID], value: site.favorite!)
-//            
-//            self.navigationToolbar.updateBookmarkStatus(site.favorite!)
-//        }
 
         guard let tab = tabManager.selectedTab,
               let url = tab.displayURL?.absoluteString else {

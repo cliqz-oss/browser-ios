@@ -218,7 +218,6 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 						d["url"] = site!.url
 						d["title"] = site!.title
 						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-						d["favorite"] = site!.favorite
 						historyResults.append(d)
 					}
 					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
