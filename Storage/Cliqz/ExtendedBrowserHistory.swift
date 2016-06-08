@@ -16,10 +16,6 @@ public protocol ExtendedBrowserHistory {
     func count() -> Int
     func getOldestVisitDate() -> NSDate? 
 
-    // Cliqz: history favorites
-    func alterVisitsTableAddFavoriteColumn()
-    func setHistoryFavorite(ids: [Int], value: Bool) -> Success
-
     // Cliqz: clear/remove history
     func clearHistory(favorite: Int) -> Success
     func removeHistory(ids: [Int]) -> Success

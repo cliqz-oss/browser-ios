@@ -628,7 +628,9 @@ class BookmarkFactory {
         if let typeCode = row["type"] as? Int, type = BookmarkNodeType(rawValue: typeCode) {
             switch type {
             case .Bookmark:
-                return itemFactory(row)
+				// Cliqz: Replaced itemFactory with CliqzItemFactory for extended bookmark items
+//                return itemFactory(row)
+				  return cliqzItemFactory(row)
             case .DynamicContainer:
                 // This should never be hit: we exclude dynamic containers from our models.
                 fallthrough
@@ -840,4 +842,70 @@ public class MergedSQLiteBookmarks: BookmarksModelFactorySource {
         self.local = SQLiteBookmarks(db: db)
         self.buffer = SQLiteBookmarkBufferStorage(db: db)
     }
+}
+
+// Cliqz: Extended SQLiteBookmarksModelFactory to support Cliqz bookmark items with extra field bookmarked_date: Because of necessity of private API have to extend in the same file
+extension SQLiteBookmarksModelFactory {
+
+	public func modelForCliqz() -> Deferred<Maybe<Cursor<BookmarkNode>>> {
+		log.debug("Getting model for fallback root.")
+		let sqlQuery =
+			"SELECT id, guid, type, " +
+				"       is_deleted, " +
+				"       feedUri, siteUri, " +
+				"       title, bmkUri, " +
+				"       folderName, " +
+				"       bookmarked_date " +
+				"FROM (\(TableBookmarksLocal)) WHERE is_deleted = 0"
+		
+		return self.bookmarks.db.runQuery(sqlQuery, args: nil, factory: BookmarkFactory.itemFactory)
+	}
+
+	private func cliqzFolder(result: Deferred<Maybe<Cursor<BookmarkNode>>>) -> Deferred<Maybe<BookmarkFolder>> {
+		return result >>== { cursor in
+
+			if cursor.status == .Failure {
+				return deferMaybe(DatabaseError(description: "Cliqz: Couldn't get bookmarks: \(cursor.statusMessage)."))
+			}
+
+			return deferMaybe(SQLiteBookmarkFolder(guid: BookmarkRoots.MobileFolderGUID, title: BookmarksFolderTitleMobile, children: cursor))
+		}
+	}
+	
+}
+
+// Cliqz: Extended MergedSQLiteBookmarks to support Cliqz bookmark items with extra field bookmarked_date: Because of necessity of private API have to extend in the same file
+extension MergedSQLiteBookmarks: CliqzSQLiteBookmarks {
+
+	public func getBookmarks() -> Deferred<Maybe<Cursor<BookmarkNode>>> {
+		log.debug("Getting model for fallback root.")
+		let sqlQuery =
+			"SELECT id, guid, type, " +
+				"       is_deleted, " +
+				"       feedUri, siteUri, " +
+				"       title, bmkUri, " +
+				"       folderName, " +
+				"       bookmarked_date " +
+				"FROM (\(TableBookmarksLocal)) WHERE is_deleted = 0"
+
+		return self.local.db.runQuery(sqlQuery, args: nil, factory: BookmarkFactory.factory)
+	}
+}
+
+// Cliqz: Extended BookmarkFactory to generate Cliqz bookmark items from sql results: Because of necessity of private API have to extend in the same file
+extension BookmarkFactory {
+	
+	private class func cliqzItemFactory(row: SDRow) -> CliqzBookmarkItem {
+		let id = row["id"] as! Int
+		let guid = row["guid"] as! String
+		let url = row["bmkUri"] as! String
+		let title = row["title"] as? String ?? url
+		let bookmarkedDate = row.getTimestamp("bookmarked_date")
+		let isEditable = row.getBoolean("isEditable")           // Defaults to false.
+		let bookmark = CliqzBookmarkItem(guid: guid, title: title, url: url, bookmarkedDate: bookmarkedDate!, isEditable: isEditable)
+		bookmark.id = id
+		BookmarkFactory.addIcon(bookmark, row: row)
+		return bookmark
+	}
+	
 }
