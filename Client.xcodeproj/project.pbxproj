@@ -11320,7 +11320,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -12258,7 +12258,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = CLIQZ;
 				PRODUCT_NAME = CLIQZ;
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "Client-Bridging-Header.h";
@@ -12364,7 +12364,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -12415,7 +12415,7 @@
 				MOZ_PRODUCT_NAME = Fennec;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
