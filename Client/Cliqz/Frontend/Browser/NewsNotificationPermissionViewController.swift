@@ -113,7 +113,7 @@ class NewsNotificationPermissionViewController: UIViewController {
         let height = (getDeviceType() == .iPhone6Plus) ? 1000 : backgroundImageView.frame.height
         
         backgroundImageView.snp_makeConstraints{ make in
-            make.top.equalTo(snp_topLayoutGuideBottom)
+            make.top.equalTo(0)
             make.left.right.equalTo(self.view)
             make.size.height.equalTo(height/2)
         }

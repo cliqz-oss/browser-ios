@@ -20,13 +20,15 @@ extension BrowserViewController {
     
     func askForNewsNotificationPermissionIfNeeded () {
         if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
-            self.urlBar.leaveOverlayMode()
             let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
             if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
                 controller.preferredContentSize = CGSize(width: NewsNotificationPermissionViewControllerUX.Width, height: NewsNotificationPermissionViewControllerUX.Height)
                 controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
             }
-            self.presentViewController(controller, animated: true, completion: nil)
+            
+            self.presentViewController(controller, animated: true, completion: {
+                self.urlBar.leaveOverlayMode()
+            })
         }
     }
 }

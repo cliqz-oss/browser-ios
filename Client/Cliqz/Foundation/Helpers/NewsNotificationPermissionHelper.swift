@@ -28,7 +28,9 @@ class NewsNotificationPermissionHelper: NSObject {
     
     //MARK: - Public APIs
     
-    func onAppOpened() {
+    func onAppEnterBackground() {
+//        return
+        
         let numberOfOpenings = getNumerOfOpenings()
         LocalDataStore.setObject(numberOfOpenings + 1, forKey: numberOfOpeningsKey)
         askingDisabled = LocalDataStore.objectForKey(disableAskingKey) as? Bool
@@ -62,6 +64,8 @@ class NewsNotificationPermissionHelper: NSObject {
     }
     
     func shouldAskForPermission() -> Bool {
+//        return false
+        
         if isAskingForPermissionDisabled() || UIApplication.sharedApplication().isRegisteredForRemoteNotifications()  {
             return false
         }
@@ -113,7 +117,7 @@ class NewsNotificationPermissionHelper: NSObject {
     
     private func getNumberOfDaysSinceLastAction() -> Int {
         
-        if isNewInstall() {
+        if isNewInstall() && !isAksedForPermissionBefore() {
             return getNumberOfDaysSinceInstall()
         } else {
             return getNumberOfDaysSinceLastAsk()
@@ -126,7 +130,8 @@ class NewsNotificationPermissionHelper: NSObject {
             return 0
         }
         
-        return NSDate.getDay() - installDay
+        let daysSinceInstal = NSDate.getDay() - installDay
+        return daysSinceInstal
     }
     
     
@@ -136,7 +141,8 @@ class NewsNotificationPermissionHelper: NSObject {
             return 0
         }
         
-        return NSDate.getDay() - lastAskDay
+        let daysSinceLastAsk = NSDate.getDay() - lastAskDay
+        return daysSinceLastAsk
     }
     
     private func getNumerOfOpenings() -> Int {

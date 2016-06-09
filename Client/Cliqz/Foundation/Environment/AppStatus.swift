@@ -94,7 +94,6 @@ class AppStatus {
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
 
-        NewsNotificationPermissionHelper.sharedInstance.onAppOpened()
     }
     
     internal func appDidBecomeResponsive(startupType: String) {
@@ -113,8 +112,11 @@ class AppStatus {
         
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
+        
         TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
         TelemetryLogger.sharedInstance.persistEvents()
+        
+        NewsNotificationPermissionHelper.sharedInstance.onAppEnterBackground()
 	}
 
     internal func appWillTerminate() {
