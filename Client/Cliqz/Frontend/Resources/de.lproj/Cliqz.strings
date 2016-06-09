@@ -75,7 +75,7 @@
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "Schlagzeilen Benachrichtigungen";
+"Enable News Push Notifications" = "Eilmeldungen";
 
 /* Show blocked top-sites from settings */
 "Show blocked topsites" = "Entfernte Topseiten anzeigen";
