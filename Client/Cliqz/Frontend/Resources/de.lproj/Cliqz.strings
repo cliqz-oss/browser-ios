@@ -69,13 +69,13 @@
 "Block Ads" = "Bekannte Ad-Server blockieren";
 
 /* Settings item for clearing favorite history */
-"Include favorites" = "Inklusive Favoriten";
+"Favorites" = "Favoriten";
 
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "Schlagzeilen Benachrichtigungen";
+"Enable News Push Notifications" = "Eilmeldungen";
 
 /* Show blocked top-sites from settings */
 "Show blocked topsites" = "Entfernte Topseiten anzeigen";

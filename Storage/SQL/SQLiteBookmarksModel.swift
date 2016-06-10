@@ -890,6 +890,14 @@ extension MergedSQLiteBookmarks: CliqzSQLiteBookmarks {
 
 		return self.local.db.runQuery(sqlQuery, args: nil, factory: BookmarkFactory.factory)
 	}
+    
+    public func clearBookmarks() -> Success {
+        log.warning("CALLING clearBookmarks -- this should only be used from tests.")
+        return self.local.db.run([
+            ("DELETE FROM \(TableBookmarksLocal) WHERE parentid IS NOT ?", [BookmarkRoots.RootGUID]),
+            self.local.favicons.getCleanupCommands()
+            ])
+    }
 }
 
 // Cliqz: Extended BookmarkFactory to generate Cliqz bookmark items from sql results: Because of necessity of private API have to extend in the same file

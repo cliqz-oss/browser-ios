@@ -18,5 +18,6 @@ private let log = Logger.syncLogger
 public protocol CliqzSQLiteBookmarks {
 
 	func getBookmarks() -> Deferred<Maybe<Cursor<BookmarkNode>>>
+    func clearBookmarks() -> Success
 
 }
