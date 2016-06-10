@@ -1539,7 +1539,8 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
-        showHomePanelController(inline: false)
+        // Cliqz: disable showing home panel when entering overlay mode
+//        showHomePanelController(inline: false)
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
@@ -1990,7 +1991,8 @@ extension BrowserViewController: TabManagerDelegate {
             urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         }
 
-        updateInContentHomePanel(selected?.url)
+        //Cliqz: disable updating home panel when switching between tabs as we already preserve tab status and for new tabs we initially show the search view
+//        updateInContentHomePanel(selected?.url)
     }
 
     func tabManager(tabManager: TabManager, didCreateTab tab: Browser) {
@@ -2282,6 +2284,10 @@ extension BrowserViewController: WKUIDelegate {
         } else {
             newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
         }
+
+        // Cliqz: preserve search state before switching to the newly created tab
+        preserveSearchState()
+        
         tabManager.selectTab(newTab)
         
         // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
@@ -2704,6 +2710,10 @@ extension BrowserViewController: IntroViewControllerDelegate {
             if self.navigationController?.viewControllers.count > 1 {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
+        }
+        // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
+        if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
+            self.urlBar.enterOverlayMode("", pasted: false)
         }
     }
 

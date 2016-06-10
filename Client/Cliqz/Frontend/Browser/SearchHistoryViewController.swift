@@ -76,7 +76,8 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-		self.historyWebView.evaluateJavaScript("jsAPI.onShow()", completionHandler: nil)
+		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
+        self.historyWebView.scrollView.contentInset = UIEdgeInsetsMake(0,0,0,0)
 
         if self.reload == true {
             self.reload = false;
@@ -119,7 +120,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     // Mark: Configure Layout
     private func setupConstraints() {
         self.historyWebView.snp_remakeConstraints { make in
-            make.top.equalTo(0)
+            make.top.equalTo(snp_topLayoutGuideBottom)
             make.left.right.bottom.equalTo(self.view)
         }
     }
