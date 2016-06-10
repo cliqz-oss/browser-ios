@@ -69,7 +69,7 @@
 "Block Ads" = "Bekannte Ad-Server blockieren";
 
 /* Settings item for clearing favorite history */
-"Favorites" = "Favoriten";
+"Favorites" = "Inklusive Favoriten";
 
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
