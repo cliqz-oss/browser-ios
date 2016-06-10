@@ -42,43 +42,36 @@ class HistoryClearable: Clearable {
     func clear() -> Success {
         // Cliqz: clear unfavorite history itmes
 		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 0)
-        return profile.history.clearHistory(0).bind { success in
+
+        return profile.history.clearHistory().bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
             NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
-            log.debug("UnStarredHistoryClearable succeeded: \(success).")
+            log.debug("HistoryClearable succeeded: \(success).")
             return Deferred(value: success)
         }
-
-//        return profile.history.clearHistory().bind { success in
-//            SDImageCache.sharedImageCache().clearDisk()
-//            SDImageCache.sharedImageCache().clearMemory()
-//            NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
-//            log.debug("HistoryClearable succeeded: \(success).")
-//            return Deferred(value: success)
-//        }
     }
 }
 
-// Cliqz: For Clearing favorite history items.
-class FavoriteHistoryClearable: Clearable {
+// Cliqz: For Clearing bookmarked items.
+class BookmarksClearable: Clearable {
     let profile: Profile
     init(profile: Profile) {
         self.profile = profile
     }
 
     var label: String {
-        return NSLocalizedString("Include favorites", tableName: "Cliqz", comment: "Settings item for clearing favorite history")
+        return NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Settings item for clearing favorite history")
     }
     
     func clear() -> Success {
-        // clear favorite history itmes
+        // clear bookmarked itmes
 		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 1)
-        return profile.history.clearHistory(1).bind { success in
+        return profile.bookmarks.clearBookmarks().bind { success in
             SDImageCache.sharedImageCache().clearDisk()
             SDImageCache.sharedImageCache().clearMemory()
             NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
-            log.debug("FavoriteHistoryClearable succeeded: \(success).")
+            log.debug("BookmarksClearable succeeded: \(success).")
             return Deferred(value: success)
         }
     }

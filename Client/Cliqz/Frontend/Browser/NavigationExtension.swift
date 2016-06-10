@@ -51,7 +51,7 @@ class NavigationExtension: NSObject {
     // using the same server that Firefox have to make the navigation extension works locally
     private class func registerNavigationExtensionOnFireFoxServer() {
         let bundlePath = NSBundle.mainBundle().bundlePath
-        let extensionPath = bundlePath + "/" + "Extension"
+        let extensionPath = bundlePath + "/" + "Extension/build/mobile/search"
         
         let server = WebServer.sharedInstance
         server.registerMainBundlePath("/extension/", directoryPath: extensionPath)

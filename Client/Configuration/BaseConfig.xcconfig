@@ -9,7 +9,7 @@ MOZ_APP_ID = Cliqz
 MOZ_BUNDLE_ID = com.$(MOZ_PRODUCT_NAME)
 
 // App Version
-MOZ_VERSION = 0.7.0
+MOZ_VERSION = 0.7.1
 
 // Build ID
 MOZ_BUILD_ID = 1035

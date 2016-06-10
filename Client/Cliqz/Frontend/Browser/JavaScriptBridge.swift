@@ -10,6 +10,7 @@ import UIKit
 import Shared
 import Crashlytics
 import WebKit
+import Storage
 
 @objc protocol JavaScriptBridgeDelegate: class {
     
@@ -17,6 +18,9 @@ import WebKit
     func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?)
 
     optional func searchForQuery(query: String)
+
+	optional func getFavorites(callback: String?)
+	optional func getSearchHistory(callback: String?)
     optional func getSearchHistoryResults(callback: String?)
     optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
@@ -115,7 +119,13 @@ class JavaScriptBridge {
             
         case "searchHistory":
             delegate?.getSearchHistoryResults?(callback)
-            
+			
+		case "getHistoryItems":
+			delegate?.getSearchHistory?(callback)
+			
+		case "getFavorites":
+			delegate?.getFavorites?(callback)
+			
         case "browserAction":
             if let actionData = data as? [String: AnyObject], let actionType = actionData["type"] as? String {
                 if actionType == "phoneNumber" {
@@ -153,14 +163,10 @@ class JavaScriptBridge {
                 delegate?.autoCompeleteQuery?(autoCompleteText)
             }
             
-        case "setHistoryFavorite":
-            if let historyData = data as? [String: AnyObject],
-                let ids = historyData["ids"] as? [Int],
-                let value = historyData["value"] as? Bool {
-                self.profile.history.setHistoryFavorite(ids, value:value)
-            }
-            
-        case "removeHistory":
+        case "setFavorites":
+			setFavorites(data)
+			
+        case "removeHistoryItems":
             if let ids = data as? [Int] {
                 self.profile.history.removeHistory(ids)
             }
@@ -168,12 +174,54 @@ class JavaScriptBridge {
             delegate?.isReady?()
         default:
 			print("Unhandles JS action")
-//            print("Unhandles JS action: \(action), with data: \(data)")
         }
     }
     
     // Mark: Helper methods
-    
+	
+	private func setFavorites(data: AnyObject?) {
+		if let bookmarkedData = data as? [String: AnyObject],
+			let favorites = bookmarkedData["favorites"] as? [[String: AnyObject]],
+			let value = bookmarkedData["value"] as? Bool {
+			for item in favorites {
+				let url = item["url"] as? String
+				let title = item["title"] as? String
+				let timestamp = item["timestamp"] as? NSNumber
+				if (value) {
+					addURLToBookmarks(url, title: title, bookmarkedDate: timestamp)
+				} else {
+					removeURLFromBookmarks(url)
+				}
+			}
+		}
+	}
+
+	private func addURLToBookmarks(url: String?, title: String?, bookmarkedDate: NSNumber?) {
+		if let u = url, t = title, d = bookmarkedDate {
+			self.profile.bookmarks.modelFactory >>== {
+				$0.isBookmarked(u).uponQueue(dispatch_get_main_queue()) { result in
+					guard let bookmarked = result.successValue else {
+						return
+					}
+					if !bookmarked {
+						let shareItem = CliqzShareItem(url: u, title: t, favicon: nil, bookmarkedDate: d.unsignedLongLongValue)
+						self.profile.bookmarks.shareItem(shareItem)
+						NSNotificationCenter.defaultCenter().postNotificationName(BookmarkStatusChangedNotification, object: u, userInfo:["added": true])
+					}
+				}
+			}
+		}
+	}
+	
+	private func removeURLFromBookmarks(url: String?) {
+		if let u = url {
+			profile.bookmarks.modelFactory >>== {
+				$0.removeByURL(u)
+			}
+			NSNotificationCenter.defaultCenter().postNotificationName(BookmarkStatusChangedNotification, object: u, userInfo:["added": false])
+		}
+	}
+
     private func refreshTopSites(frecencyLimit: Int, callback: String) {
         // Reload right away with whatever is in the cache, then check to see if the cache is invalid. If it's invalid,
         // invalidate the cache and requery. This allows us to always show results right away if they are cached but
