@@ -69,13 +69,13 @@
 "Block Ads" = "Bekannte Ad-Server blockieren";
 
 /* Settings item for clearing favorite history */
-"Include favorites" = "Inklusive Favoriten";
+"Favorites" = "Favoriten";
 
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "Schlagzeilen Benachrichtigungen";
+"Enable News Push Notifications" = "Eilmeldungen";
 
 /* Show blocked top-sites from settings */
 "Show blocked topsites" = "Entfernte Topseiten anzeigen";
@@ -87,7 +87,17 @@
 "All blocked topsites will be shown on the start page again." = "Alle entfernten Topseiten werden wieder auf der Startseite angezeigt.";
 
 /* OK button in the 'Show blocked top-sites' alert */
+/* Button label to `OK` in news notification permission screen */
 "OK" = "OK";
 
 /* Cancel button in the 'Show blocked top-sites' alert */
 "Cancel" = "Abbrechen";
+
+/* Button label to `Yes please!` in news notification permission screen */
+"Yes please!" = "Jetzt aktivieren";
+
+/* Button label to `Later` in news notification permission screen */
+"Remind me later" = "Später vielleicht";
+
+/* Button label to `No` in news notification permission screen */
+"No thanks" = "Nein, danke";

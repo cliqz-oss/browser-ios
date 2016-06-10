@@ -174,7 +174,8 @@ class BoolSetting: Setting {
         super.onConfigureCell(cell)
 
         let control = UISwitch()
-        control.onTintColor = UIConstants.ControlTintColor
+        // Cliqz: Revert the tint color of the UISwitch to the default color for iOS (green color)
+//        control.onTintColor = UIConstants.ControlTintColor
         control.addTarget(self, action: #selector(BoolSetting.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         control.on = prefs.boolForKey(prefKey) ?? defaultValue
         if let title = title {

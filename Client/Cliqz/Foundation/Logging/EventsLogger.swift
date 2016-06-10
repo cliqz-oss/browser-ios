@@ -17,7 +17,7 @@ class EventsLogger: NSObject {
     private let sessionIdKey = "SessionId"
     private let telemetryeventsKey = "TelemetryEvents"
     let serialDispatchQueue = dispatch_queue_create("com.cliqz.EventsLogger", DISPATCH_QUEUE_SERIAL);
-
+    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     //MARK: - Instant Variables
     private var events = SynchronousArray()
@@ -59,6 +59,13 @@ class EventsLogger: NSObject {
         LocalDataStore.setObject(sessionId, forKey: self.sessionIdKey)
     }
     
+    func getInstallDay() -> Int? {
+        guard sessionId.contains("|") else {
+            return nil
+        }
+        let installDay = sessionId.componentsSeparatedByString("|")[1]
+        return Int(installDay)
+    }
     
     //MARK: - Initialization
     init (endPoint: String){
@@ -107,15 +114,50 @@ class EventsLogger: NSObject {
     }
     
     
+    internal func getLastStoredSeq() -> Int? {
+        guard events.count > 0 else {
+            return nil
+        }
+        
+        let lastEvent = events.getContents()[events.count-1]
+        let lastStoredSeq = lastEvent["seq"] as? Int
+        return lastStoredSeq
+    }
+    //MARK: - background tasks
+    internal func appDidEnterBackground() {
+        registerBackgroundTask()
+        
+        TelemetryLogger.sharedInstance.persistState()
+        
+        if NetworkReachability.sharedInstance.networkReachabilityStatus == .ReachableViaWiFi {
+            dispatch_async(serialDispatchQueue) {
+                self.publishCurrentEvents()
+            }
+        } else {
+            endBackgroundTask()
+        }
+    }
+    func registerBackgroundTask() {
+        backgroundTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler {
+            [unowned self] in
+            self.endBackgroundTask()
+        }
+        assert(backgroundTask != UIBackgroundTaskInvalid)
+    }
+    
+    func endBackgroundTask() {
+        if backgroundTask != UIBackgroundTaskInvalid {
+            UIApplication.sharedApplication().endBackgroundTask(backgroundTask)
+            backgroundTask = UIBackgroundTaskInvalid
+        }
+    }
+    
     //MARK: - Sending events to server
     internal func sendEvent(event: [String: AnyObject]){
         // dispatch_async in a serial thread so as not to send same events twice
         dispatch_async(serialDispatchQueue) {
             if self.shoudPublishEvents() {
-                let publishedEvents = self.events.getContents()
-                self.events.removeAll()
-                self.publishEvents(publishedEvents)
-                self.clearPersistedEvents()
+                self.publishCurrentEvents()
             }
         }
     }
@@ -131,6 +173,13 @@ class EventsLogger: NSObject {
         return false;
     }
     
+    private func publishCurrentEvents() {
+        let publishedEvents = self.events.getContents()
+        self.events.removeAll()
+        self.publishEvents(publishedEvents)
+        self.clearPersistedEvents()
+    }
+    
     private func publishEvents(publishedEvents: [AnyObject]){
 
         ConnectionManager.sharedInstance.sendPostRequest(loggerEndPoint, body: publishedEvents, enableCompression: true,
@@ -139,12 +188,12 @@ class EventsLogger: NSObject {
                 if let newSessionId = jsonDict["new_session"] as? String {
                     self.storeSessoinId(newSessionId)
                 }
-                DebugLogger.log("push telemetry succeded: \(publishedEvents.count) elements ")
+                self.endBackgroundTask()
             },
             onFailure: { (data, error) in
-                DebugLogger.log("push telemetry failed: \(publishedEvents.count) elements with error: \(error)")
                 self.events.appendContentsOf(publishedEvents)
                 self.persistEvents()
+                self.endBackgroundTask()
         })
     }
 }

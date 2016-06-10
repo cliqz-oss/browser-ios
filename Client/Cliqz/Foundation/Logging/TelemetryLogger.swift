@@ -49,7 +49,9 @@ class TelemetryLogger : EventsLogger {
 
     private func loadTelemetrySeq() {
         dispatch_sync(serialDispatchQueue) {
-            if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
+            if let lastStoredSeq = self.getLastStoredSeq() {
+                self.telemetrySeq = AtomicInt(initialValue: lastStoredSeq)
+            } else if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
                 self.telemetrySeq = AtomicInt(initialValue: storedSeq)
             } else {
                 self.telemetrySeq = AtomicInt(initialValue: 0)
@@ -63,6 +65,12 @@ class TelemetryLogger : EventsLogger {
     //MARK: - private mode
     func changePrivateMode(privateMode: Bool) {
         self.privateMode = privateMode
+    }
+    
+    //MARK: - Presisting events and sequence
+    internal func persistState() {
+        self.storeCurrentTelemetrySeq()
+        self.persistEvents()
     }
     
     //MARK: - Log events

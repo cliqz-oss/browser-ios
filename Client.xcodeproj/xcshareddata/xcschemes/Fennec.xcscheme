@@ -110,6 +110,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Fennec"
+      customArchiveName = "CliqzBeta"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

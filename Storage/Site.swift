@@ -75,9 +75,6 @@ public class Site: Identifiable {
     public var icon: Favicon?
     public var latestVisit: Visit?
     public let bookmarked: Bool?
-
-    // Cliqz: added to mark a site as favorite from JavaScript
-    public var favorite: Bool? = false
     
     public convenience init(url: String, title: String) {
         self.init(url: url, title: title, bookmarked: false)

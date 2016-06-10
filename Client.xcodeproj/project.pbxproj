@@ -183,6 +183,21 @@
 		1E98D97F1CF30622009FC489 /* Lookback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1E98D93C1CF30621009FC489 /* Lookback.bundle */; };
 		1E98D9941CF36228009FC489 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E98D9881CF341DB009FC489 /* CoreVideo.framework */; };
 		1E98D9951CF36257009FC489 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E98D98E1CF342BE009FC489 /* VideoToolbox.framework */; };
+		1EBF47D31D0B059700CD95F7 /* NewsNotificationPermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47D21D0B059700CD95F7 /* NewsNotificationPermissionHelper.swift */; };
+		1EBF47D51D0B059F00CD95F7 /* NewsNotificationPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47D41D0B059F00CD95F7 /* NewsNotificationPermissionViewController.swift */; };
+		1EBF47EF1D0B05A800CD95F7 /* NewsPermissionAsking-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47D71D0B05A800CD95F7 /* NewsPermissionAsking-4.png */; };
+		1EBF47F01D0B05A800CD95F7 /* NewsPermissionAsking-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47D91D0B05A800CD95F7 /* NewsPermissionAsking-5.png */; };
+		1EBF47F11D0B05A800CD95F7 /* NewsPermissionAsking-6.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47DB1D0B05A800CD95F7 /* NewsPermissionAsking-6.png */; };
+		1EBF47F21D0B05A800CD95F7 /* NewsPermissionAsking-6Plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47DD1D0B05A800CD95F7 /* NewsPermissionAsking-6Plus.png */; };
+		1EBF47F31D0B05A800CD95F7 /* NewsPermissionSettings-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47DF1D0B05A800CD95F7 /* NewsPermissionSettings-4.png */; };
+		1EBF47F41D0B05A800CD95F7 /* NewsPermissionSettings-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47E11D0B05A800CD95F7 /* NewsPermissionSettings-5.png */; };
+		1EBF47F51D0B05A800CD95F7 /* NewsPermissionSettings-6.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47E31D0B05A800CD95F7 /* NewsPermissionSettings-6.png */; };
+		1EBF47F61D0B05A800CD95F7 /* NewsPermissionSettings-6Plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBF47E51D0B05A800CD95F7 /* NewsPermissionSettings-6Plus.png */; };
+		1EBF47F81D0B05E100CD95F7 /* CliqzShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47F71D0B05E100CD95F7 /* CliqzShareItem.swift */; };
+		1EBF47FD1D0B05F000CD95F7 /* BookmarksModelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47F91D0B05F000CD95F7 /* BookmarksModelExtension.swift */; };
+		1EBF47FE1D0B05F000CD95F7 /* BrowserDBExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47FA1D0B05F000CD95F7 /* BrowserDBExtension.swift */; };
+		1EBF47FF1D0B05F000CD95F7 /* SQLiteBookmarksExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47FB1D0B05F000CD95F7 /* SQLiteBookmarksExtension.swift */; };
+		1EBF48001D0B05F000CD95F7 /* SQLiteBookmarksModelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBF47FC1D0B05F000CD95F7 /* SQLiteBookmarksModelExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		280CB1371C20E0A3005AF147 /* BookmarksSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */; };
@@ -1457,6 +1472,29 @@
 		1E98D9881CF341DB009FC489 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		1E98D98E1CF342BE009FC489 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		1E98D9911CF34507009FC489 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		1EBF47D21D0B059700CD95F7 /* NewsNotificationPermissionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsNotificationPermissionHelper.swift; sourceTree = "<group>"; };
+		1EBF47D41D0B059F00CD95F7 /* NewsNotificationPermissionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsNotificationPermissionViewController.swift; sourceTree = "<group>"; };
+		1EBF47D81D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-4.png"; sourceTree = "<group>"; };
+		1EBF47DA1D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-5.png"; sourceTree = "<group>"; };
+		1EBF47DC1D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-6.png"; sourceTree = "<group>"; };
+		1EBF47DE1D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-6Plus.png"; sourceTree = "<group>"; };
+		1EBF47E01D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionSettings-4.png"; sourceTree = "<group>"; };
+		1EBF47E21D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionSettings-5.png"; sourceTree = "<group>"; };
+		1EBF47E41D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionSettings-6.png"; sourceTree = "<group>"; };
+		1EBF47E61D0B05A800CD95F7 /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionSettings-6Plus.png"; sourceTree = "<group>"; };
+		1EBF47E71D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionAsking-4.png"; sourceTree = "<group>"; };
+		1EBF47E81D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionAsking-5.png"; sourceTree = "<group>"; };
+		1EBF47E91D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionAsking-6.png"; sourceTree = "<group>"; };
+		1EBF47EA1D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionAsking-6Plus.png"; sourceTree = "<group>"; };
+		1EBF47EB1D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionSettings-4.png"; sourceTree = "<group>"; };
+		1EBF47EC1D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionSettings-5.png"; sourceTree = "<group>"; };
+		1EBF47ED1D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionSettings-6.png"; sourceTree = "<group>"; };
+		1EBF47EE1D0B05A800CD95F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/NewsPermissionSettings-6Plus.png"; sourceTree = "<group>"; };
+		1EBF47F71D0B05E100CD95F7 /* CliqzShareItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzShareItem.swift; sourceTree = "<group>"; };
+		1EBF47F91D0B05F000CD95F7 /* BookmarksModelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksModelExtension.swift; sourceTree = "<group>"; };
+		1EBF47FA1D0B05F000CD95F7 /* BrowserDBExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserDBExtension.swift; sourceTree = "<group>"; };
+		1EBF47FB1D0B05F000CD95F7 /* SQLiteBookmarksExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksExtension.swift; sourceTree = "<group>"; };
+		1EBF47FC1D0B05F000CD95F7 /* SQLiteBookmarksModelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModelExtension.swift; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
 		28126F6D1C2F94F9006466CC /* SQLiteBookmarksModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModel.swift; sourceTree = "<group>"; };
@@ -2266,6 +2304,7 @@
 		1E98D7FC1CF2F907009FC489 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				1EBF47D11D0B059700CD95F7 /* Helpers */,
 				1E98D7FD1CF2F907009FC489 /* AdBlocker */,
 				1E98D7FF1CF2F907009FC489 /* Custom UI */,
 				1E98D8011CF2F907009FC489 /* Data Structures */,
@@ -2407,6 +2446,7 @@
 		1E98D8271CF2F907009FC489 /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				1EBF47D41D0B059F00CD95F7 /* NewsNotificationPermissionViewController.swift */,
 				1E98D8281CF2F907009FC489 /* BrowserViewControllerExtension.swift */,
 				1E98D8291CF2F907009FC489 /* CliqzAppSettingsOptions.swift */,
 				1E98D82A1CF2F907009FC489 /* CliqzSearch.swift */,
@@ -2427,6 +2467,7 @@
 		1E98D8351CF2F907009FC489 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1EBF47D61D0B05A800CD95F7 /* Breaking News Screens */,
 				1E98D8361CF2F907009FC489 /* AdServers.plist */,
 				1E98D8371CF2F907009FC489 /* Cliqz.strings */,
 				1E98D8391CF2F907009FC489 /* OnePasswordExtension.strings */,
@@ -2441,6 +2482,7 @@
 		1E98D8921CF301DD009FC489 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
+				1EBF47F71D0B05E100CD95F7 /* CliqzShareItem.swift */,
 				1E98D8931CF301DD009FC489 /* ExtendedBrowserHistory.swift */,
 			);
 			path = Cliqz;
@@ -2449,6 +2491,10 @@
 		1E98D8951CF301EA009FC489 /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
+				1EBF47F91D0B05F000CD95F7 /* BookmarksModelExtension.swift */,
+				1EBF47FA1D0B05F000CD95F7 /* BrowserDBExtension.swift */,
+				1EBF47FB1D0B05F000CD95F7 /* SQLiteBookmarksExtension.swift */,
+				1EBF47FC1D0B05F000CD95F7 /* SQLiteBookmarksModelExtension.swift */,
 				1E98D8961CF301EA009FC489 /* SQLiteHistoryExtension.swift */,
 			);
 			path = Cliqz;
@@ -2801,6 +2847,29 @@
 				1E98D93E1CF30621009FC489 /* Lookback.framework */,
 			);
 			path = Safe;
+			sourceTree = "<group>";
+		};
+		1EBF47D11D0B059700CD95F7 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1EBF47D21D0B059700CD95F7 /* NewsNotificationPermissionHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1EBF47D61D0B05A800CD95F7 /* Breaking News Screens */ = {
+			isa = PBXGroup;
+			children = (
+				1EBF47D71D0B05A800CD95F7 /* NewsPermissionAsking-4.png */,
+				1EBF47D91D0B05A800CD95F7 /* NewsPermissionAsking-5.png */,
+				1EBF47DB1D0B05A800CD95F7 /* NewsPermissionAsking-6.png */,
+				1EBF47DD1D0B05A800CD95F7 /* NewsPermissionAsking-6Plus.png */,
+				1EBF47DF1D0B05A800CD95F7 /* NewsPermissionSettings-4.png */,
+				1EBF47E11D0B05A800CD95F7 /* NewsPermissionSettings-5.png */,
+				1EBF47E31D0B05A800CD95F7 /* NewsPermissionSettings-6.png */,
+				1EBF47E51D0B05A800CD95F7 /* NewsPermissionSettings-6Plus.png */,
+			);
+			path = "Breaking News Screens";
 			sourceTree = "<group>";
 		};
 		282731601ABC9BE600AA1954 /* Supporting Files */ = {
@@ -4935,6 +5004,7 @@
 				D38A1EE01CB458EC0080C842 /* CertError.html in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				1E98D9771CF30621009FC489 /* LICENSE in Resources */,
+				1EBF47F01D0B05A800CD95F7 /* NewsPermissionAsking-5.png in Resources */,
 				1E98D7FA1CF2F8D6009FC489 /* Extension in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
@@ -4949,6 +5019,7 @@
 				E4B7B7611A793CF20022C5E0 /* CharisSILB.ttf in Resources */,
 				D37524871C6E8B5A00A5F6C2 /* topdomains.txt in Resources */,
 				1E98D97C1CF30621009FC489 /* LICENSE in Resources */,
+				1EBF47EF1D0B05A800CD95F7 /* NewsPermissionAsking-4.png in Resources */,
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
 				1E98D86A1CF2F907009FC489 /* Lato-Light.ttf in Resources */,
@@ -4957,6 +5028,7 @@
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
 				1E98D8671CF2F907009FC489 /* AdServers.plist in Resources */,
 				2F44FB2C1A9D5D8500FD20CC /* Home.xcassets in Resources */,
+				1EBF47F11D0B05A800CD95F7 /* NewsPermissionAsking-6.png in Resources */,
 				E4ECCD8D1AB091470005E717 /* Reader.xcassets in Resources */,
 				E4B7B77D1A793CF20022C5E0 /* FiraSans-Regular.ttf in Resources */,
 				39409A841C90EF2000DAE683 /* Today.entitlements in Resources */,
@@ -4970,23 +5042,28 @@
 				D30684F11C84F12A002D8D82 /* SearchPlugins in Resources */,
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
+				1EBF47F21D0B05A800CD95F7 /* NewsPermissionAsking-6Plus.png in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
 				2F834D161A80629A006A0B7B /* FxASignIn.js in Resources */,
 				1E98D8681CF2F907009FC489 /* Cliqz.strings in Resources */,
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
 				E4B7B7681A793CF20022C5E0 /* FiraSans-Bold.ttf in Resources */,
+				1EBF47F31D0B05A800CD95F7 /* NewsPermissionSettings-4.png in Resources */,
 				E4B7B7781A793CF20022C5E0 /* FiraSans-Italic.ttf in Resources */,
+				1EBF47F51D0B05A800CD95F7 /* NewsPermissionSettings-6.png in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
 				E4A961381AC06FA50069AD6F /* ReaderViewLoading.html in Resources */,
 				E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */,
 				1E98D86D1CF2F907009FC489 /* wikipediaUserScript.js in Resources */,
 				E4424B3C1AC71FB400F44C38 /* FiraSans-Book.ttf in Resources */,
+				1EBF47F41D0B05A800CD95F7 /* NewsPermissionSettings-5.png in Resources */,
 				0BF42D391A7C0E8900889E28 /* Favicons.js in Resources */,
 				39A35AED1C0662A3006B9E87 /* SpotlightHelper.js in Resources */,
 				E4D6BEB91A0930EC00F538BD /* LaunchScreen.xib in Resources */,
 				E49C0EB11B46109C009092BB /* WindowCloseHelper.js in Resources */,
 				E4D8F3B01ACDD5150005A2E4 /* InfoPlist.strings in Resources */,
 				2F44FB2D1A9D5D8500FD20CC /* FiraSans-BoldItalic.ttf in Resources */,
+				1EBF47F61D0B05A800CD95F7 /* NewsPermissionSettings-6Plus.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5245,8 +5322,11 @@
 				0BDA56B41B26B203008C9B96 /* SQLiteLogins.swift in Sources */,
 				2829D3A01C2F0AD400DCF931 /* Sharing.swift in Sources */,
 				2FCAE2751ABB531100877008 /* SQLiteRemoteClientsAndTabs.swift in Sources */,
+				1EBF47FD1D0B05F000CD95F7 /* BookmarksModelExtension.swift in Sources */,
 				2FCAE26A1ABB531100877008 /* GenericTable.swift in Sources */,
 				285F2DC11AF80B4600211843 /* SQLiteBookmarksSyncing.swift in Sources */,
+				1EBF47FE1D0B05F000CD95F7 /* BrowserDBExtension.swift in Sources */,
+				1EBF48001D0B05F000CD95F7 /* SQLiteBookmarksModelExtension.swift in Sources */,
 				28C4AB721AD42D4300D9ACE3 /* Clients.swift in Sources */,
 				28126F741C2F96F1006466CC /* SQLiteBookmarksResetting.swift in Sources */,
 				28B62ACE1BC745E7004A585A /* Syncable.swift in Sources */,
@@ -5262,6 +5342,7 @@
 				2FCAE2781ABB531100877008 /* Visit.swift in Sources */,
 				2FCAE2701ABB531100877008 /* SchemaTable.swift in Sources */,
 				D3BF8CBB1B7425570007AFE6 /* DiskImageStore.swift in Sources */,
+				1EBF47FF1D0B05F000CD95F7 /* SQLiteBookmarksExtension.swift in Sources */,
 				1E98D8971CF301EA009FC489 /* SQLiteHistoryExtension.swift in Sources */,
 				2FCAE2611ABB531100877008 /* FileAccessor.swift in Sources */,
 				28126F481C2F948E006466CC /* SQLiteBookmarksHelpers.swift in Sources */,
@@ -5280,6 +5361,7 @@
 				28126F771C2F9833006466CC /* SQLiteBookmarksBase.swift in Sources */,
 				0B5A93041B1E60B4004F47A2 /* DeferredDBOperation.swift in Sources */,
 				2FCAE2771ABB531100877008 /* SwiftData.swift in Sources */,
+				1EBF47F81D0B05E100CD95F7 /* CliqzShareItem.swift in Sources */,
 				28E8BE9D1B792B23002CC733 /* ExtensionUtils.swift in Sources */,
 				2FCAE25F1ABB531100877008 /* Cursor.swift in Sources */,
 				28302E401AF0747800521E2E /* DatabaseError.swift in Sources */,
@@ -5660,6 +5742,7 @@
 				E69E06D01C765BB900D0F926 /* NSAttributedStringExtensions.swift in Sources */,
 				1E98D94B1CF30621009FC489 /* AWSCognitoIdentityService.m in Sources */,
 				1E98D8461CF2F907009FC489 /* StatisticsCollector.swift in Sources */,
+				1EBF47D51D0B059F00CD95F7 /* NewsNotificationPermissionViewController.swift in Sources */,
 				D30B0F301AA7D66300C01CA3 /* ThumbnailCell.swift in Sources */,
 				E68E7ADA1CAC207400FDCA76 /* ChangePasscodeViewController.swift in Sources */,
 				E640E85E1C73A45A00C5F072 /* PasscodeEntryViewController.swift in Sources */,
@@ -5676,6 +5759,7 @@
 				7B0B1B791C1B69C900DF4AB5 /* ClientPickerViewController.swift in Sources */,
 				1E98D97A1CF30621009FC489 /* AWSSNSResources.m in Sources */,
 				1E98D8491CF2F907009FC489 /* BrowserProfileExtension.swift in Sources */,
+				1EBF47D31D0B059700CD95F7 /* NewsNotificationPermissionHelper.swift in Sources */,
 				7B844E3D1BBDDB9D00E733A2 /* ChevronView.swift in Sources */,
 				1E98D9551CF30621009FC489 /* AWSMTLModel.m in Sources */,
 				1E98D94F1CF30621009FC489 /* AWSFMDatabaseQueue.m in Sources */,
@@ -5989,6 +6073,78 @@
 			name = OnePasswordExtension.strings;
 			sourceTree = "<group>";
 		};
+		1EBF47D71D0B05A800CD95F7 /* NewsPermissionAsking-4.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47D81D0B05A800CD95F7 /* de */,
+				1EBF47E71D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionAsking-4.png";
+			sourceTree = "<group>";
+		};
+		1EBF47D91D0B05A800CD95F7 /* NewsPermissionAsking-5.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47DA1D0B05A800CD95F7 /* de */,
+				1EBF47E81D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionAsking-5.png";
+			sourceTree = "<group>";
+		};
+		1EBF47DB1D0B05A800CD95F7 /* NewsPermissionAsking-6.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47DC1D0B05A800CD95F7 /* de */,
+				1EBF47E91D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionAsking-6.png";
+			sourceTree = "<group>";
+		};
+		1EBF47DD1D0B05A800CD95F7 /* NewsPermissionAsking-6Plus.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47DE1D0B05A800CD95F7 /* de */,
+				1EBF47EA1D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionAsking-6Plus.png";
+			sourceTree = "<group>";
+		};
+		1EBF47DF1D0B05A800CD95F7 /* NewsPermissionSettings-4.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47E01D0B05A800CD95F7 /* de */,
+				1EBF47EB1D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionSettings-4.png";
+			sourceTree = "<group>";
+		};
+		1EBF47E11D0B05A800CD95F7 /* NewsPermissionSettings-5.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47E21D0B05A800CD95F7 /* de */,
+				1EBF47EC1D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionSettings-5.png";
+			sourceTree = "<group>";
+		};
+		1EBF47E31D0B05A800CD95F7 /* NewsPermissionSettings-6.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47E41D0B05A800CD95F7 /* de */,
+				1EBF47ED1D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionSettings-6.png";
+			sourceTree = "<group>";
+		};
+		1EBF47E51D0B05A800CD95F7 /* NewsPermissionSettings-6Plus.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EBF47E61D0B05A800CD95F7 /* de */,
+				1EBF47EE1D0B05A800CD95F7 /* en */,
+			);
+			name = "NewsPermissionSettings-6Plus.png";
+			sourceTree = "<group>";
+		};
 		E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -6072,7 +6228,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6097,7 +6253,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6197,7 +6353,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6230,7 +6386,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6364,7 +6520,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
@@ -6384,7 +6540,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
@@ -6404,7 +6560,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
@@ -6423,7 +6579,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
@@ -6442,7 +6598,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
@@ -6553,7 +6709,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6565,7 +6721,8 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				MOZ_PRODUCT_NAME = "Cliqz Beta";
+				MOZ_PRODUCT_NAME = CliqzBeta;
+				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -6603,7 +6760,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6627,7 +6784,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6722,7 +6879,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6734,7 +6891,8 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				MOZ_PRODUCT_NAME = "Cliqz Beta";
+				MOZ_PRODUCT_NAME = Cliqz;
+				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -6779,7 +6937,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6804,7 +6962,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6892,7 +7050,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -6945,7 +7103,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7033,7 +7191,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7056,7 +7214,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7079,7 +7237,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7435,7 +7593,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7447,7 +7605,8 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				MOZ_PRODUCT_NAME = "Cliqz Beta";
+				MOZ_PRODUCT_NAME = CliqzBeta;
+				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -7469,7 +7628,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7490,7 +7649,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7514,7 +7673,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7578,7 +7737,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7612,7 +7771,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7911,7 +8070,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7923,7 +8082,8 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				MOZ_PRODUCT_NAME = "Cliqz Beta";
+				MOZ_PRODUCT_NAME = CliqzBeta;
+				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -7962,7 +8122,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -7983,7 +8143,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8007,7 +8167,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8123,7 +8283,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8176,7 +8336,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8347,7 +8507,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8359,7 +8519,8 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				MOZ_PRODUCT_NAME = "Cliqz Beta";
+				MOZ_PRODUCT_NAME = CliqzBeta;
+				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -8369,7 +8530,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Client-Bridging-Header.h";
 			};
@@ -8398,7 +8559,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -8423,7 +8584,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",

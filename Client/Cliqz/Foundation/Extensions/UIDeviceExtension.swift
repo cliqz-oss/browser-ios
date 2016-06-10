@@ -33,11 +33,15 @@ public enum Model : String {
     iPhone6plus    = "iPhone 6 Plus",
     iPhone6S       = "iPhone 6S",
     iPhone6Splus   = "iPhone 6S Plus",
-    unrecognized   = "?unrecognized?"
+	iPadMini4	   = "iPad Mini 4",
+	iPadPro9_7	   = "iPad Pro 9.7-inch",
+	iPadPro12_9	   = "iPad Pro 12.9-inch",
+	iPhoneSE	   = "iPhone SE",
+	iPod6		   = "iPod7,1"
 }
 
 public extension UIDevice {
-    public var deviceType: Model {
+    public var deviceType: String {
         var systemInfo = utsname()
         uname(&systemInfo)
         let modelCode = withUnsafeMutablePointer(&systemInfo.machine) {
@@ -51,6 +55,7 @@ public extension UIDevice {
             "iPod3,1"   : .iPod3,
             "iPod4,1"   : .iPod4,
             "iPod5,1"   : .iPod5,
+            "iPod7,1"	: .iPod6,
             "iPad2,1"   : .iPad2,
             "iPad2,2"   : .iPad2,
             "iPad2,3"   : .iPad2,
@@ -76,21 +81,31 @@ public extension UIDevice {
             "iPhone6,2" : .iPhone5S,
             "iPad4,1"   : .iPadAir1,
             "iPad4,2"   : .iPadAir2,
+            "iPad4,3"	: .iPadAir2,
             "iPad4,4"   : .iPadMini2,
             "iPad4,5"   : .iPadMini2,
             "iPad4,6"   : .iPadMini2,
             "iPad4,7"   : .iPadMini3,
             "iPad4,8"   : .iPadMini3,
             "iPad4,9"   : .iPadMini3,
+            "iPad5,1"   : .iPadMini4,
+			"iPad5,2"   : .iPadMini4,
+			"iPad5,3"   : .iPadAir2,
+			"iPad5,4"   : .iPadAir2,
+			"iPad6,3"   : .iPadPro9_7,
+			"iPad6,4"   : .iPadPro9_7,
+			"iPad6,7"   : .iPadPro12_9,
+			"iPad6,8"   : .iPadPro12_9,
             "iPhone7,1" : .iPhone6plus,
             "iPhone7,2" : .iPhone6,
             "iPhone8,1" : .iPhone6S,
-            "iPhone8,2" : .iPhone6Splus
+            "iPhone8,2" : .iPhone6Splus,
+            "iPhone8,4" : .iPhoneSE
         ]
-        
-        if let model = modelMap[String.fromCString(modelCode!)!] {
-            return model
+		let code = String.fromCString(modelCode!)!
+        if let model = modelMap[code] {
+            return model.rawValue
         }
-        return Model.unrecognized
+        return code
     }
 }

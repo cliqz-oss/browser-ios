@@ -62,6 +62,9 @@ public class BrowserDB {
 
         // Create or update will also delete and create the database if our key was incorrect.
         self.createOrUpdate(self.schemaTable)
+		
+		// Cliqz: new method call to extend tables if needed
+		self.extendTables()
     }
 
     // Creates a table and writes its table info into the table-table database.
@@ -167,6 +170,10 @@ public class BrowserDB {
                     return false
                 }
             }
+			// Cliqz: Added notification to notify when db creation is finished
+			let notify = NSNotification(name: NotificationDatabaseWasCreated, object: self.filename)
+			NSNotificationCenter.defaultCenter().postNotification(notify)
+
             return success
         }) {
             // Err getting a transaction
@@ -270,7 +277,8 @@ public class BrowserDB {
 
     func transaction(synchronous synchronous: Bool=true, inout err: NSError?, callback: (connection: SQLiteDBConnection, inout err: NSError?) -> Bool) -> NSError? {
         return db.transaction(synchronous: synchronous) { connection in
-            var err: NSError? = nil
+			// Cliqz: Fixed bug: extra declaration of local variable which overrides method argument and cause wrong behaviour in the case of failing query
+//            var err: NSError? = nil
             return callback(connection: connection, err: &err)
         }
     }

@@ -330,6 +330,8 @@ class BrowserViewController: UIViewController {
                 // Cliqz: Added call for reset state in case of session timeout
                 self.resetState()
             }
+            // Cliqz: ask for news notification permission according to our workflow
+            self.askForNewsNotificationPermissionIfNeeded()
         })
     }
 
@@ -618,6 +620,8 @@ class BrowserViewController: UIViewController {
 //        presentIntroViewController()
         if (!presentIntroViewController()) {
             switchToSearchModeIfNeeded()
+            // Cliqz: ask for news notification permission according to our workflow
+            askForNewsNotificationPermissionIfNeeded()
 		}
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
@@ -857,7 +861,8 @@ class BrowserViewController: UIViewController {
 
     private func updateInContentHomePanel(url: NSURL?) {
         if !urlBar.inOverlayMode {
-            if AboutUtils.isAboutHomeURL(url){
+            // Cliqz: Added check to test if url is nul due to changing the method parameter to urlBar.url instead of selectedTab.url inside urlBarDidLeaveOverlayMode
+            if url == nil || AboutUtils.isAboutHomeURL(url){
                 showHomePanelController(inline: (tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
             } else {
                 hideHomePanelController()
@@ -957,7 +962,9 @@ class BrowserViewController: UIViewController {
     }
 
     func addBookmark(url: String, title: String?) {
-        let shareItem = ShareItem(url: url, title: title, favicon: nil)
+		// Cliqz: replaced ShareItem with CliqzShareItem to extend bookmarks behaviour
+		let shareItem = CliqzShareItem(url: url, title: title, favicon: nil, bookmarkedDate: NSDate.now())
+//        let shareItem = ShareItem(url: url, title: title, favicon: nil)
         profile.bookmarks.shareItem(shareItem)
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
@@ -1022,9 +1029,10 @@ class BrowserViewController: UIViewController {
         }
     }
 
+	// Cliqz: Changed bookmarkItem to String, because for Cliqz Bookmarks status change notifications only URL is sent
     func SELBookmarkStatusDidChange(notification: NSNotification) {
-        if let bookmark = notification.object as? BookmarkItem {
-            if bookmark.url == urlBar.currentURL?.absoluteString {
+        if let bookmarkUrl = notification.object as? String {
+            if bookmarkUrl == urlBar.currentURL?.absoluteString {
                 if let userInfo = notification.userInfo as? Dictionary<String, Bool>{
                     if let added = userInfo["added"]{
                         self.toolbar?.updateBookmarkStatus(added)
@@ -1135,17 +1143,7 @@ class BrowserViewController: UIViewController {
         guard let url = tab.displayURL?.absoluteString else {
             return
         }
-        
-        // Cliqz: Replaced FF bookmark's button state initialization corresponding to our requirements
-        profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
-            guard let data = result.successValue where data.count > 0  else { return }
-            guard let site: Site = data[0] where site.url == url else {
-                self.navigationToolbar.updateBookmarkStatus(false)
-                return
-            }
-            self.navigationToolbar.updateBookmarkStatus(site.favorite ?? false)
-        }
-        /*
+
         profile.bookmarks.modelFactory >>== {
             $0.isBookmarked(url).uponQueue(dispatch_get_main_queue()) { result in
                 guard let bookmarked = result.successValue else {
@@ -1156,7 +1154,6 @@ class BrowserViewController: UIViewController {
                 self.navigationToolbar.updateBookmarkStatus(bookmarked)
             }
         }
-        */
     }
     // Mark: Opening New Tabs
 
@@ -1541,7 +1538,8 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
-        showHomePanelController(inline: false)
+        // Cliqz: disable showing home panel when entering overlay mode
+//        showHomePanelController(inline: false)
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
@@ -1623,17 +1621,7 @@ extension BrowserViewController: BrowserToolbarDelegate {
     }
 
     func browserToolbarDidPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
-        // Cliqz: Replaced FF bookmarks handling according to our requirements
-        profile.history.getHistoryVisits(1).uponQueue(dispatch_get_main_queue()) { result in
-            guard let data = result.successValue where data.count > 0  else { return }
-            guard let site: Site = data[0], siteID = site.id else { return }
-            
-            site.favorite = site.favorite != nil ? !site.favorite! : true
-            self.profile.history.setHistoryFavorite([siteID], value: site.favorite!)
-            
-            self.navigationToolbar.updateBookmarkStatus(site.favorite!)
-        }
-        /*
+
         guard let tab = tabManager.selectedTab,
               let url = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
@@ -1649,7 +1637,6 @@ extension BrowserViewController: BrowserToolbarDelegate {
                 }
             }
         }
-        */
     }
 
     func browserToolbarDidLongPressBookmark(browserToolbar: BrowserToolbarProtocol, button: UIButton) {
@@ -2007,7 +1994,8 @@ extension BrowserViewController: TabManagerDelegate {
             urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         }
 
-        updateInContentHomePanel(selected?.url)
+        //Cliqz: disable updating home panel when switching between tabs as we already preserve tab status and for new tabs we initially show the search view
+//        updateInContentHomePanel(selected?.url)
     }
 
     func tabManager(tabManager: TabManager, didCreateTab tab: Browser) {
@@ -2335,6 +2323,10 @@ extension BrowserViewController: WKUIDelegate {
         } else {
             newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
         }
+
+        // Cliqz: preserve search state before switching to the newly created tab
+        preserveSearchState()
+        
         tabManager.selectTab(newTab)
         
         // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
@@ -2728,6 +2720,10 @@ extension BrowserViewController: IntroViewControllerDelegate {
             if self.navigationController?.viewControllers.count > 1 {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
+        }
+        // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
+        if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
+            self.urlBar.enterOverlayMode("", pasted: false)
         }
     }
 

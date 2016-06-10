@@ -93,11 +93,7 @@ class AppStatus {
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
         logEnvironmentEventIfNecessary(profile)
-        
-         dispatch_async(dispatchQueue) {
-            // Alter Visits Table to add `favorite` column if it does not exit
-            profile.history.alterVisitsTableAddFavoriteColumn()
-        }
+
     }
     
     internal func appDidBecomeResponsive(startupType: String) {
@@ -109,6 +105,9 @@ class AppStatus {
         
         logApplicationUsageEvent("Inactive")
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
+        
+        TelemetryLogger.sharedInstance.persistState()
+        
     }
     
     internal func appDidEnterBackground() {
@@ -116,13 +115,17 @@ class AppStatus {
         
         let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
-        TelemetryLogger.sharedInstance.storeCurrentTelemetrySeq()
-        TelemetryLogger.sharedInstance.persistEvents()
+
+        TelemetryLogger.sharedInstance.appDidEnterBackground()
+
+        NewsNotificationPermissionHelper.sharedInstance.onAppEnterBackground()
 	}
 
     internal func appWillTerminate() {
         
         logApplicationUsageEvent("Terminate")
+        
+        TelemetryLogger.sharedInstance.persistState()
     }
     
     //MARK:- Private Helper Methods
@@ -196,7 +199,7 @@ class AppStatus {
         
         dispatch_async(dispatchQueue) {
             self.lastEnvironmentEventDate = NSDate()
-            let device: Model = UIDevice.currentDevice().deviceType
+            let device: String = UIDevice.currentDevice().deviceType
             let language = self.getAppLanguage()
             let version = self.getCurrentAppVersion()
             let osVersion = UIDevice.currentDevice().systemVersion
@@ -206,7 +209,7 @@ class AppStatus {
             //TODO `prefs`
             let prefs = [String: AnyObject]()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device.rawValue, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }

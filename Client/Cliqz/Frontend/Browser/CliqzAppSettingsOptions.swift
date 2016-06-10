@@ -79,7 +79,7 @@ class SendCliqzFeedbackSetting: SendFeedbackSetting, MFMailComposeViewController
             emailViewController.setToRecipients(["feedback@cliqz.com"])
             emailViewController.mailComposeDelegate = self
             let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
-            emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType.rawValue), isHTML: false)
+            emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType), isHTML: false)
             navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
         } else {
             let alertController = UIAlertController(
@@ -102,13 +102,9 @@ class EnablePushNotifications: BoolSetting {
 	@objc override func switchValueChanged(control: UISwitch) {
 		super.switchValueChanged(control)
 		if control.on {
-			let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
-			UIApplication.sharedApplication().registerForRemoteNotifications()
-			UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
-            TelemetryLogger.sharedInstance.logEvent(.NewsNotification("enable"))
-		} else {
-			UIApplication.sharedApplication().unregisterForRemoteNotifications()
-            TelemetryLogger.sharedInstance.logEvent(.NewsNotification("disalbe"))
+			NewsNotificationPermissionHelper.sharedInstance.enableNewsNotifications()
+        } else {
+			NewsNotificationPermissionHelper.sharedInstance.disableNewsNotifications()
 		}
 	}
 
