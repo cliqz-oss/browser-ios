@@ -2711,6 +2711,10 @@ extension BrowserViewController: IntroViewControllerDelegate {
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }
         }
+        // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
+        if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
+            self.urlBar.enterOverlayMode("", pasted: false)
+        }
     }
 
     func presentSignInViewController() {
