@@ -13,6 +13,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	let manager = CLLocationManager()
 	var location: CLLocation?
+    let locationStatusKey = "currentLocationStatus"
 
 	public static let sharedInstance: LocationManager = {
 		let m = LocationManager()
@@ -45,7 +46,12 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 			}
             break
         }
-		TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("status_change", status.stringValue()))
+        
+        let currentLocationStatus = LocalDataStore.objectForKey(locationStatusKey)
+        if currentLocationStatus == nil || currentLocationStatus as! String != status.stringValue() {
+            TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("status_change", status.stringValue()))
+            LocalDataStore.setObject(status.stringValue(), forKey: locationStatusKey)
+        }
     }
 
 }
