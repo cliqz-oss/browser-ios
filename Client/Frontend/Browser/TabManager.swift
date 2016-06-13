@@ -47,7 +47,7 @@ class TabManager : NSObject {
 
     func removeDelegate(delegate: TabManagerDelegate) {
         assert(NSThread.isMainThread())
-        for var i = 0; i < delegates.count; i++ {
+        for i in 0 ..< delegates.count {
             let del = delegates[i]
             if delegate === del.get() {
                 delegates.removeAtIndex(i)
@@ -86,10 +86,14 @@ class TabManager : NSObject {
     var selectedIndex: Int { return _selectedIndex }
 
     var normalTabs: [Browser] {
+        assert(NSThread.isMainThread())
+
         return tabs.filter { !$0.isPrivate }
     }
 
     var privateTabs: [Browser] {
+        assert(NSThread.isMainThread())
+
         if #available(iOS 9, *) {
             return tabs.filter { $0.isPrivate }
         } else {
@@ -98,6 +102,8 @@ class TabManager : NSObject {
     }
 
     init(defaultNewTabRequest: NSURLRequest, prefs: Prefs, imageStore: DiskImageStore?) {
+        assert(NSThread.isMainThread())
+
         self.prefs = prefs
         self.defaultNewTabRequest = defaultNewTabRequest
         self.navDelegate = TabManagerNavDelegate()
@@ -106,7 +112,7 @@ class TabManager : NSObject {
 
         addNavigationDelegate(self)
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "prefsDidChange", name: NSUserDefaultsDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TabManager.prefsDidChange), name: NSUserDefaultsDidChangeNotification, object: nil)
     }
 
     deinit {
@@ -114,14 +120,20 @@ class TabManager : NSObject {
     }
 
     func addNavigationDelegate(delegate: WKNavigationDelegate) {
+        assert(NSThread.isMainThread())
+
         self.navDelegate.insert(delegate)
     }
 
     var count: Int {
+        assert(NSThread.isMainThread())
+
         return tabs.count
     }
 
     var selectedTab: Browser? {
+        assert(NSThread.isMainThread())
+
         if !(0..<count ~= _selectedIndex) {
             return nil
         }
@@ -130,6 +142,8 @@ class TabManager : NSObject {
     }
 
     subscript(index: Int) -> Browser? {
+        assert(NSThread.isMainThread())
+
         if index >= tabs.count {
             return nil
         }
@@ -137,6 +151,8 @@ class TabManager : NSObject {
     }
 
     subscript(webView: WKWebView) -> Browser? {
+        assert(NSThread.isMainThread())
+
         for tab in tabs {
             if tab.webView === webView {
                 return tab
@@ -147,6 +163,8 @@ class TabManager : NSObject {
     }
 
     func getTabFor(url: NSURL) -> Browser? {
+        assert(NSThread.isMainThread())
+
         for tab in tabs {
             if (tab.webView?.URL == url) {
                 return tab
@@ -170,10 +188,7 @@ class TabManager : NSObject {
             _selectedIndex = -1
         }
 
-        // Cliqz: log telemetry signal for new tab
-        logTabTelemetrySignal("open_tab", isPrivate: tab?.isPrivate, tabIndex: _selectedIndex)
-        
-//        preserveTabs()
+        preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
         selectedTab?.createWebview()
@@ -184,6 +199,8 @@ class TabManager : NSObject {
     }
 
     func expireSnackbars() {
+        assert(NSThread.isMainThread())
+
         for tab in tabs {
             tab.expireSnackbars()
         }
@@ -213,6 +230,8 @@ class TabManager : NSObject {
     }
 
     func addTabsForURLs(urls: [NSURL], zombie: Bool) {
+        assert(NSThread.isMainThread())
+
         if urls.isEmpty {
             return
         }
@@ -235,35 +254,28 @@ class TabManager : NSObject {
     }
 
     @available(iOS 9, *)
-    private func addTab(request: NSURLRequest? = nil, var configuration: WKWebViewConfiguration! = nil, flushToDisk: Bool, zombie: Bool, isPrivate: Bool) -> Browser {
+    private func addTab(request: NSURLRequest? = nil, configuration: WKWebViewConfiguration? = nil, flushToDisk: Bool, zombie: Bool, isPrivate: Bool) -> Browser {
         assert(NSThread.isMainThread())
 
-        if configuration == nil {
-            configuration = isPrivate ? privateConfiguration : self.configuration
-        }
+        // Take the given configuration. Or if it was nil, take our default configuration for the current browsing mode.
+        let configuration: WKWebViewConfiguration = configuration ?? (isPrivate ? privateConfiguration : self.configuration)
         
         let tab = Browser(configuration: configuration, isPrivate: isPrivate)
-
-        // Cliqz: log telemetry signal for new tab
-        logTabTelemetrySignal("new_tab", isPrivate: isPrivate, tabIndex: nil)
-        
         configureTab(tab, request: request, flushToDisk: flushToDisk, zombie: zombie)
         return tab
     }
 
-    private func addTab(request: NSURLRequest? = nil, configuration: WKWebViewConfiguration! = nil, flushToDisk: Bool, zombie: Bool) -> Browser {
+    private func addTab(request: NSURLRequest? = nil, configuration: WKWebViewConfiguration? = nil, flushToDisk: Bool, zombie: Bool) -> Browser {
         assert(NSThread.isMainThread())
 
         let tab = Browser(configuration: configuration ?? self.configuration)
-        
-        // Cliqz: log telemetry signal for new tab
-        logTabTelemetrySignal("new_tab", isPrivate: false, tabIndex: nil)
-        
         configureTab(tab, request: request, flushToDisk: flushToDisk, zombie: zombie)
         return tab
     }
 
     func configureTab(tab: Browser, request: NSURLRequest?, flushToDisk: Bool, zombie: Bool) {
+        assert(NSThread.isMainThread())
+
         for delegate in delegates {
             delegate.get()?.tabManager(self, didCreateTab: tab)
         }
@@ -283,20 +295,12 @@ class TabManager : NSObject {
         if flushToDisk {
         	storeChanges()
         }
-        
-        // Cliqz: reset `inSearchMode` if the tab was created to open specific url
-        if request != nil {
-            tab.inSearchMode = false
-        }
     }
 
     // This method is duplicated to hide the flushToDisk option from consumers.
     func removeTab(tab: Browser) {
         self.removeTab(tab, flushToDisk: true, notify: true)
         hideNetworkActivitySpinner()
-        
-        // Cliqz: log telemetry signal for open tab
-        logTabTelemetrySignal("close_tab", isPrivate: tab.isPrivate, tabIndex: nil)
     }
 
     /// - Parameter notify: if set to true, will call the delegate after the tab 
@@ -366,6 +370,8 @@ class TabManager : NSObject {
     }
 
     func getIndex(tab: Browser) -> Int {
+        assert(NSThread.isMainThread())
+
         for i in 0..<count {
             if tabs[i] === tab {
                 return i
@@ -377,6 +383,8 @@ class TabManager : NSObject {
     }
 
     func getTabForURL(url: NSURL) -> Browser? {
+        assert(NSThread.isMainThread())
+
         return tabs.filter { $0.webView?.URL == url } .first
     }
 
@@ -388,19 +396,23 @@ class TabManager : NSObject {
     }
 
     func prefsDidChange() {
-        let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
-        // Each tab may have its own configuration, so we should tell each of them in turn.
-        for tab in tabs {
-            tab.webView?.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
+        dispatch_async(dispatch_get_main_queue()) {
+            let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
+            // Each tab may have its own configuration, so we should tell each of them in turn.
+            for tab in self.tabs {
+                tab.webView?.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
+            }
+            // The default tab configurations also need to change.
+            self.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
+            if #available(iOS 9, *) {
+                self.privateConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
+            }
         }
-        // The default tab configurations also need to change.
-        self.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
-        if #available(iOS 9, *) {
-            self.privateConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
-		}
-	}
+    }
 
     func resetProcessPool() {
+        assert(NSThread.isMainThread())
+
         configuration.processPool = WKProcessPool()
     }
 }
@@ -433,6 +445,8 @@ extension TabManager {
         }
 
         init?(browser: Browser, isSelected: Bool) {
+            assert(NSThread.isMainThread())
+
             self.screenshotUUID = browser.screenshotUUID
             self.isSelected = isSelected
             self.title = browser.displayTitle
@@ -499,6 +513,8 @@ extension TabManager {
     }
 
     private func preserveTabsInternal() {
+        assert(NSThread.isMainThread())
+
         guard !isRestoring else { return }
 
         let path = TabManager.tabsStateArchivePath()
@@ -528,15 +544,12 @@ extension TabManager {
     }
 
     func preserveTabs() {
-        // Cliqz: disable preserving tabs to enhance startup time
-        /*
         // This is wrapped in an Objective-C @try/@catch handler because NSKeyedArchiver may throw exceptions which Swift cannot handle
         _ = Try(withTry: { () -> Void in
             self.preserveTabsInternal()
             }) { (exception) -> Void in
             print("Failed to preserve tabs: \(exception)")
         }
-        */
     }
 
     private func restoreTabsInternal() {
@@ -605,10 +618,10 @@ extension TabManager {
         if count == 0 && !AppConstants.IsRunningTest && !DebugSettingsBundleOptions.skipSessionRestore {
             // This is wrapped in an Objective-C @try/@catch handler because NSKeyedUnarchiver may throw exceptions which Swift cannot handle
             let _ = Try(
-                `withTry`: { () -> Void in
+                withTry: { () -> Void in
                     self.restoreTabsInternal()
                 },
-                `catch`: { exception in
+                catch: { exception in
                     print("Failed to restore tabs: \(exception)")
                 }
             )
@@ -668,6 +681,8 @@ extension TabManager : WKNavigationDelegate {
 
 extension TabManager {
     class func tabRestorationDebugInfo() -> String {
+        assert(NSThread.isMainThread())
+
         let tabs = TabManager.tabsToRestore()?.map { $0.jsonDictionary } ?? []
         do {
             let jsonData = try NSJSONSerialization.dataWithJSONObject(tabs, options: [.PrettyPrinted])
@@ -715,7 +730,7 @@ class TabManagerNavDelegate : NSObject, WKNavigationDelegate {
         completionHandler: (NSURLSessionAuthChallengeDisposition,
         NSURLCredential?) -> Void) {
             let authenticatingDelegates = delegates.filter {
-                $0.respondsToSelector("webView:didReceiveAuthenticationChallenge:completionHandler:")
+                $0.respondsToSelector(#selector(WKNavigationDelegate.webView(_:didReceiveAuthenticationChallenge:completionHandler:)))
             }
 
             guard let firstAuthenticatingDelegate = authenticatingDelegates.first else {
@@ -765,20 +780,5 @@ class TabManagerNavDelegate : NSObject, WKNavigationDelegate {
             }
 
             decisionHandler(res)
-    }
-}
-
-// Cliqz: Added for logging tab telemetry signals
-extension TabManager {
-    
-    func logTabTelemetrySignal(action: String, isPrivate: Bool?, tabIndex: Int?) {
-        if isPrivate == true {
-            let tabSignal = TelemetryLogEventType.TabSignal(action, "private", tabIndex, privateTabs.count)
-            TelemetryLogger.sharedInstance.logEvent(tabSignal)
-        } else {
-            let tabSignal = TelemetryLogEventType.TabSignal(action, "normal", tabIndex, normalTabs.count)
-            TelemetryLogger.sharedInstance.logEvent(tabSignal)
-        }
-        
     }
 }

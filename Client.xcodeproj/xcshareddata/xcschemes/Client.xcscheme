@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-               BuildableName = "CLIQZ.app"
+               BuildableName = "Client.app"
                BlueprintName = "Client"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F84B21D21A090F8100AAB793"
-               BuildableName = "FennecAurora.xctest"
+               BuildableName = "ClientTests.xctest"
                BlueprintName = "ClientTests"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
@@ -140,7 +140,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7B3632D01C2983F000D12AF9"
+               BlueprintIdentifier = "7BEB64401C7345600092C02E"
                BuildableName = "L10nSnapshotTests.xctest"
                BlueprintName = "L10nSnapshotTests"
                ReferencedContainer = "container:Client.xcodeproj">
@@ -154,7 +154,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7B95CD161C3AB2EE00638E31"
+               BlueprintIdentifier = "7BEB644F1C7345990092C02E"
                BuildableName = "MarketingUITests.xctest"
                BlueprintName = "MarketingUITests"
                ReferencedContainer = "container:Client.xcodeproj">
@@ -186,7 +186,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1E1119D41C873C2700455C8C"
+               BlueprintIdentifier = "1E32B4271CF5A81C00412468"
                BuildableName = "CliqzUITests.xctest"
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">
@@ -197,7 +197,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "CLIQZ.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
@@ -220,7 +220,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "CLIQZ.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>
@@ -239,7 +239,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F84B21BD1A090F8100AAB793"
-            BuildableName = "CLIQZ.app"
+            BuildableName = "Client.app"
             BlueprintName = "Client"
             ReferencedContainer = "container:Client.xcodeproj">
          </BuildableReference>

@@ -20,9 +20,17 @@ extension CGSize {
     }
 }
 
+struct TopSitesPanelUX {
+    private static let EmptyStateTitleTextColor = UIColor.darkGrayColor()
+    private static let EmptyStateTopPaddingInBetweenItems: CGFloat = 15
+    private static let WelcomeScreenPadding: CGFloat = 15
+    private static let WelcomeScreenItemTextColor = UIColor.grayColor()
+    private static let WelcomeScreenItemWidth = 170
+}
+
 class TopSitesPanel: UIViewController {
     weak var homePanelDelegate: HomePanelDelegate?
-
+    private lazy var emptyStateOverlayView: UIView = self.createEmptyStateOverlayView()
     private var collection: TopSitesCollectionView? = nil
     private lazy var dataSource: TopSitesDataSource = {
         return TopSitesDataSource(profile: self.profile)
@@ -67,10 +75,10 @@ class TopSitesPanel: UIViewController {
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationProfileDidFinishSyncing, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationDynamicFontChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TopSitesPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TopSitesPanel.notificationReceived(_:)), name: NotificationProfileDidFinishSyncing, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TopSitesPanel.notificationReceived(_:)), name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TopSitesPanel.notificationReceived(_:)), name: NotificationDynamicFontChanged, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -95,6 +103,8 @@ class TopSitesPanel: UIViewController {
         self.dataSource.collectionView = self.collection
         self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
         self.refreshTopSites(maxFrecencyLimit)
+
+        self.updateEmptyPanelState()
     }
 
     deinit {
@@ -116,11 +126,72 @@ class TopSitesPanel: UIViewController {
         }
     }
 
+    private func createEmptyStateOverlayView() -> UIView {
+        let overlayView = UIView()
+        overlayView.backgroundColor = UIColor.whiteColor()
+
+        let logoImageView = UIImageView(image: UIImage(named: "emptyTopSites"))
+        overlayView.addSubview(logoImageView)
+
+        let titleLabel = UILabel()
+        titleLabel.font = DynamicFontHelper.defaultHelper.DeviceFont
+        titleLabel.text = Strings.TopSitesEmptyStateTitle
+        titleLabel.textAlignment = NSTextAlignment.Center
+        titleLabel.textColor = TopSitesPanelUX.EmptyStateTitleTextColor
+        overlayView.addSubview(titleLabel)
+
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = Strings.TopSitesEmptyStateDescription
+        descriptionLabel.textAlignment = NSTextAlignment.Center
+        descriptionLabel.font = DynamicFontHelper.defaultHelper.DeviceFontLight
+        descriptionLabel.textColor = TopSitesPanelUX.WelcomeScreenItemTextColor
+        descriptionLabel.numberOfLines = 2
+        descriptionLabel.adjustsFontSizeToFitWidth = true
+        overlayView.addSubview(descriptionLabel)
+
+        logoImageView.snp_makeConstraints { make in
+            make.centerX.equalTo(overlayView)
+
+            // Sets proper top constraint for iPhone 6 in portait and for iPad.
+            make.centerY.equalTo(overlayView).offset(HomePanelUX.EmptyTabContentOffset).priorityMedium()
+
+            // Sets proper top constraint for iPhone 4, 5 in portrait.
+            make.top.greaterThanOrEqualTo(overlayView).offset(50)
+        }
+
+        titleLabel.snp_makeConstraints { make in
+            make.top.equalTo(logoImageView.snp_bottom).offset(TopSitesPanelUX.EmptyStateTopPaddingInBetweenItems)
+            make.centerX.equalTo(logoImageView)
+        }
+
+        descriptionLabel.snp_makeConstraints { make in
+            make.centerX.equalTo(overlayView)
+            make.top.equalTo(titleLabel.snp_bottom).offset(TopSitesPanelUX.WelcomeScreenPadding)
+            make.width.equalTo(TopSitesPanelUX.WelcomeScreenItemWidth)
+        }
+
+        return overlayView
+    }
+
+    private func updateEmptyPanelState() {
+        if dataSource.count() == 0 {
+            if self.emptyStateOverlayView.superview == nil {
+                self.view.addSubview(self.emptyStateOverlayView)
+                self.emptyStateOverlayView.snp_makeConstraints { make -> Void in
+                    make.edges.equalTo(self.view)
+                }
+            }
+        } else {
+            self.emptyStateOverlayView.removeFromSuperview()
+        }
+    }
+
     //MARK: Private Helpers
     private func updateDataSourceWithSites(result: Maybe<Cursor<Site>>) {
         if let data = result.successValue {
             self.dataSource.setHistorySites(data.asArray())
             self.dataSource.profile = self.profile
+            self.updateEmptyPanelState()
         }
     }
 
@@ -586,7 +657,7 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         }
     }
 
-    private func setHistorySites(var historySites: [Site]) {
+    private func setHistorySites(historySites: [Site]) {
         // Sites are invalidated and we have a new data set, so do a replace.
         if (sitesInvalidated) {
             self.sites = []
@@ -604,6 +675,7 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         // index, post-deletion, will always be a new site. Of course, this is temporary;
         // whenever the panel is reloaded, our transient, ordered state will be lost. But
         // that's OK: top sites change frequently anyway.
+        var historySites: [Site] = historySites
         self.sites = self.sites.filter { site in
             if let index = historySites.indexOf({ extractDomainURL($0.url) == extractDomainURL(site.url) }) {
                 historySites.removeAtIndex(index)

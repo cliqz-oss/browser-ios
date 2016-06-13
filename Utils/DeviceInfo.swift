@@ -34,7 +34,7 @@ public class DeviceInfo {
         // E.g., "Fennec Nightly".
         return localizedDict?[key] as? String ??
                infoDict?[key] as? String ??
-               "Firefox"
+               "Cliqz"
     }
 
     // I'd land a test for this, but it turns out it's hardly worthwhile -- both the

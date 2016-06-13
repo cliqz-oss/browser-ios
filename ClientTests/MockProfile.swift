@@ -86,7 +86,8 @@ public class MockProfile: Profile {
      * Favicons, history, and bookmarks are all stored in one intermeshed
      * collection of tables.
      */
-    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage> = {
+    // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
+    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
         return SQLiteHistory(db: self.db, prefs: MockProfilePrefs())!
     }()
 
@@ -97,13 +98,18 @@ public class MockProfile: Profile {
     lazy var queue: TabQueue = {
         return MockTabQueue()
     }()
-
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage> {
+    
+    // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
+    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> {
         return self.places
     }
 
     lazy var syncManager: SyncManager = {
         return MockSyncManager()
+    }()
+
+    lazy var certStore: CertStore = {
+        return CertStore()
     }()
 
     lazy var bookmarks: protocol<BookmarksModelFactorySource, SyncableBookmarks, LocalItemSource, MirrorItemSource, ShareToDestination> = {

@@ -9,7 +9,6 @@ dsb
 en-US
 eo
 es
-es-CL
 es-MX
 fr
 fy-NL
@@ -35,6 +34,7 @@ pt-PT
 rm
 ro
 ru
+ses
 sk
 sl
 sv-SE

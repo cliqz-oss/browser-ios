@@ -346,10 +346,10 @@ class BrowserViewController: UIViewController {
         log.debug("BVC viewDidLoad…")
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELBookmarkStatusDidChange:", name: BookmarkStatusChangedNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELappDidEnterBackgroundNotification", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBookmarkStatusDidChange(_:)), name: BookmarkStatusChangedNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELappDidEnterBackgroundNotification), name: UIApplicationDidEnterBackgroundNotification, object: nil)
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         log.debug("BVC adding footer and header…")
@@ -379,7 +379,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC setting up top touch area…")
         topTouchArea = UIButton()
         topTouchArea.isAccessibilityElement = false
-        topTouchArea.addTarget(self, action: "SELtappedTopArea", forControlEvents: UIControlEvents.TouchUpInside)
+        topTouchArea.addTarget(self, action: #selector(BrowserViewController.SELtappedTopArea), forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(topTouchArea)
 
         log.debug("BVC setting up URL bar…")
@@ -644,7 +644,7 @@ class BrowserViewController: UIViewController {
         // Cliqz: Prevent the app from opening a new tab at startup to show whats new in FireFox
         /*
         if shouldShowWhatsNewTab() {
-            if let whatsNewURL = SupportUtils.URLForTopic("new-ios-30") {
+            if let whatsNewURL = SupportUtils.URLForTopic("new-ios-40") {
                 self.openURLInNewTab(whatsNewURL)
                 profile.prefs.setString(AppInfo.appVersion, forKey: LatestAppVersionProfileKey)
             }
@@ -953,7 +953,7 @@ class BrowserViewController: UIViewController {
             resetSpoofedUserAgentIfRequired(webView, newURL: url)
         }
 
-        if let nav = tab.loadRequest(NSURLRequest(URL: url)) {
+        if let nav = tab.loadRequest(PrivilegedRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
             
             // Cliqz: add webViewOverlay to the wkwebview to hide the old page while navigating to a new page
@@ -1073,14 +1073,16 @@ class BrowserViewController: UIViewController {
                 runScriptsOnWebView(webView)
             }
         case KVOURL:
-            if let tab = tabManager.selectedTab where tab.webView?.URL == nil {
-                log.debug("URL is nil!")
-            }
+            guard let tab = tabManager[webView] else { break }
 
-            if let tab = tabManager.selectedTab where tab.webView === webView && !tab.restoring {
-                // Cliqz: Added if statement to avoid overridding url when search results are displayed
-                if self.searchController != nil && self.searchController!.view.hidden && !tab.url!.absoluteString.contains("/cliqz/") {
-                    updateUIForReaderHomeStateForTab(tab)
+            // To prevent spoofing, only change the URL immediately if the new URL is on
+            // the same origin as the current URL. Otherwise, do nothing and wait for
+            // didCommitNavigation to confirm the page load.
+            if tab.url?.origin == webView.URL?.origin {
+                tab.url = webView.URL
+                
+                if let tab = tabManager.selectedTab {
+                        updateUIForReaderHomeStateForTab(tab)
                 }
             }
         case KVOCanGoBack:
@@ -1099,13 +1101,19 @@ class BrowserViewController: UIViewController {
     }
     
     private func updateUIForReaderHomeStateForTab(tab: Browser) {
+        
+        // Cliqz: Added gaurd statement to avoid overridding url when search results are displayed
+        guard self.searchController != nil && self.searchController!.view.hidden && tab.url != nil && !tab.url!.absoluteString.contains("/cliqz/") else {
+            return
+        }
+        
         updateURLBarDisplayURL(tab)
         scrollController.showToolbars(animated: false)
 
         if let url = tab.url {
             if ReaderModeUtils.isReaderModeURL(url) {
                 showReaderModeBar(animated: false)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELDynamicFontChanged:", name: NotificationDynamicFontChanged, object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELDynamicFontChanged(_:)), name: NotificationDynamicFontChanged, object: nil)
             } else {
                 hideReaderModeBar(animated: false)
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
@@ -1160,53 +1168,44 @@ class BrowserViewController: UIViewController {
         self.tabTrayController = tabTrayController
     }
 
-    func switchToTabForURLOrOpen(url: NSURL) {
-        let tab = tabManager.getTabForURL(url)
-        popToBrowser(tab)
-        if let tab = tab {
+    func switchToTabForURLOrOpen(url: NSURL, isPrivate: Bool = false) {
+        popToBVC()
+        if let tab = tabManager.getTabForURL(url) {
             tabManager.selectTab(tab)
         } else {
-            openURLInNewTab(url)
+            openURLInNewTab(url, isPrivate: isPrivate)
         }
     }
 
-    func openURLInNewTab(url: NSURL) {
-        if #available(iOS 9, *) {
-            openURLInNewTab(url, isPrivate: tabTrayController?.privateMode ?? false)
-        } else {
-            tabManager.addTabAndSelect(NSURLRequest(URL: url))
-        }
-    }
-
-    @available(iOS 9, *)
-    func openURLInNewTab(url: NSURL?, isPrivate: Bool) {
+    func openURLInNewTab(url: NSURL?, isPrivate: Bool = false) {
         let request: NSURLRequest?
         if let url = url {
             request = NSURLRequest(URL: url)
         } else {
             request = nil
         }
-        switchToPrivacyMode(isPrivate: isPrivate)
-        tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+        if #available(iOS 9, *) {
+            switchToPrivacyMode(isPrivate: isPrivate)
+            tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+        } else {
+            tabManager.addTabAndSelect(request)
+        }
     }
 
-    @available(iOS 9, *)
     func openBlankNewTabAndFocus(isPrivate isPrivate: Bool = false) {
-        popToBrowser()
+        popToBVC()
         openURLInNewTab(nil, isPrivate: isPrivate)
         urlBar.browserLocationViewDidTapLocation(urlBar.locationView)
     }
 
-    private func popToBrowser(forTab: Browser? = nil) {
+    private func popToBVC() {
         guard let currentViewController = navigationController?.topViewController else {
                 return
         }
         if let presentedViewController = currentViewController.presentedViewController {
             presentedViewController.dismissViewControllerAnimated(false, completion: nil)
         }
-        // if a tab already exists and the top VC is not the BVC then pop the top VC, otherwise don't.
-        if currentViewController != self,
-            let _ = forTab {
+        if currentViewController != self {
             self.navigationController?.popViewControllerAnimated(true)
         }
     }
@@ -1545,6 +1544,10 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
         hideSearchController()
+        // Cliqz: update URL bar when leaving overlay
+        if let tab = tabManager.selectedTab {
+            updateUIForReaderHomeStateForTab(tab)
+        }
 		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
         updateInContentHomePanel(urlBar.currentURL)
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
@@ -1698,20 +1701,20 @@ extension BrowserViewController: BrowserDelegate {
         windowCloseHelper.delegate = self
         browser.addHelper(windowCloseHelper, name: WindowCloseHelper.name())
 
-        let sessionRestoreHelper = SessionRestoreHelper(browser: browser)
-        sessionRestoreHelper.delegate = self
-        browser.addHelper(sessionRestoreHelper, name: SessionRestoreHelper.name())
-
         let findInPageHelper = FindInPageHelper(browser: browser)
         findInPageHelper.delegate = self
         browser.addHelper(findInPageHelper, name: FindInPageHelper.name())
+
+        let printHelper = PrintHelper(browser: browser)
+        browser.addHelper(printHelper, name: PrintHelper.name())
 
         let openURL = {(url: NSURL) -> Void in
             self.switchToTabForURLOrOpen(url)
         }
         let spotlightHelper = SpotlightHelper(browser: browser, openURL: openURL)
         browser.addHelper(spotlightHelper, name: SpotlightHelper.name())
-        
+        browser.addHelper(LocalRequestHelper(), name: LocalRequestHelper.name())
+
         // Cliqz: Add custom user scripts
         addCustomUserScripts(browser)
     }
@@ -2083,6 +2086,17 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }
+        // Fixes 1261457 - Rich text editor fails because requests to about:blank are blocked
+        if url.scheme == "about" && url.resourceSpecifier == "blank" {
+            decisionHandler(WKNavigationActionPolicy.Allow)
+            return
+        }
+        
+        if !navigationAction.isAllowed {
+            log.warning("Denying unprivileged request: \(navigationAction.request)")
+            decisionHandler(WKNavigationActionPolicy.Cancel)
+            return
+        }
         
         // Cliqz: Check if url is an ad server block it
         if adBlocker.isAdServer(url) {
@@ -2126,6 +2140,7 @@ extension BrowserViewController: WKNavigationDelegate {
         // always allow this.
 
         if url.scheme == "http" || url.scheme == "https" {
+            print(url.absoluteString)
             // Cliqz: Added handling for back/forward functionality
             if url.absoluteString.contains("cliqz/goto.html") {
                 if let q = url.query {
@@ -2157,6 +2172,15 @@ extension BrowserViewController: WKNavigationDelegate {
 
     func webView(webView: WKWebView, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
 
+        // If this is a certificate challenge, see if the certificate has previously been
+        // accepted by the user.
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+           let trust = challenge.protectionSpace.serverTrust,
+           let cert = SecTrustGetCertificateAtIndex(trust, 0) where profile.certStore.containsCertificate(cert) {
+            completionHandler(NSURLSessionAuthChallengeDisposition.UseCredential, NSURLCredential(forTrust: trust))
+            return
+        }
+
         guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPBasic ||
               challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodHTTPDigest ||
               challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodNTLM,
@@ -2175,6 +2199,16 @@ extension BrowserViewController: WKNavigationDelegate {
             } else {
                 completionHandler(NSURLSessionAuthChallengeDisposition.RejectProtectionSpace, nil)
             }
+        }
+    }
+
+    func webView(webView: WKWebView, didCommitNavigation navigation: WKNavigation!) {
+        guard let tab = tabManager[webView] else { return }
+
+        tab.url = webView.URL
+
+        if tabManager.selectedTab === tab {
+            updateUIForReaderHomeStateForTab(tab)
         }
     }
 
@@ -2274,6 +2308,11 @@ extension BrowserViewController: WKUIDelegate {
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
+        if !navigationAction.isAllowed {
+            log.warning("Denying unprivileged request: \(navigationAction.request)")
+            return nil
+        }
+
         screenshotHelper.takeScreenshot(currentTab)
 
         // If the page uses window.open() or target="_blank", open the page in a new tab.
@@ -2340,27 +2379,6 @@ extension BrowserViewController: WKUIDelegate {
         }
     }
 
-    /// Invoked when an error occurs during a committed main frame navigation.
-    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-        if error.code == Int(CFNetworkErrors.CFURLErrorCancelled.rawValue) {
-            return
-        }
-
-        // Ignore the "Plug-in handled load" error. Which is more like a notification than an error.
-        // Note that there are no constants in the SDK for the WebKit domain or error codes.
-        if error.domain == "WebKitErrorDomain" && error.code == 204 {
-            return
-        }
-
-        if checkIfWebContentProcessHasCrashed(webView, error: error) {
-            return
-        }
-
-        if let url = error.userInfo["NSErrorFailingURLKey"] as? NSURL {
-            ErrorPageHelper().showPage(error, forUrl: url, inWebView: webView)
-        }
-    }
-
     /// Invoked when an error occurs while starting to load data for the main frame.
     func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
         // Ignore the "Frame load interrupted" error that is triggered when we cancel a request
@@ -2384,14 +2402,6 @@ extension BrowserViewController: WKUIDelegate {
 
         if let url = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
             ErrorPageHelper().showPage(error, forUrl: url, inWebView: webView)
-
-            // If the local web server isn't working for some reason (Firefox cellular data is
-            // disabled in settings, for example), we'll fail to load the session restore URL.
-            // We rely on loading that page to get the restore callback to reset the restoring
-            // flag, so if we fail to load that page, reset it here.
-            if AboutUtils.getAboutComponent(url) == "sessionrestore" {
-                tabManager.tabs.filter { $0.webView == webView }.first?.restoring = false
-            }
         }
     }
 
@@ -2444,7 +2454,7 @@ extension BrowserViewController: ReaderModeDelegate {
 
     // Returning None here makes sure that the Popover is actually presented as a Popover and
     // not as a full-screen modal, which is the default on compact device classes.
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.None
     }
 }
@@ -2547,7 +2557,7 @@ extension BrowserViewController {
                         try self.readerModeCache.put(currentURL, readabilityResult)
                     } catch _ {
                     }
-                    if let nav = webView.loadRequest(NSURLRequest(URL: readerModeURL)) {
+                    if let nav = webView.loadRequest(PrivilegedRequest(URL: readerModeURL)) {
                         self.ignoreNavigationInTab(tab, navigation: nav)
                     }
                 }
@@ -2729,7 +2739,7 @@ extension BrowserViewController: IntroViewControllerDelegate {
             let signInVC = FxAContentViewController()
             signInVC.delegate = self
             signInVC.url = profile.accountConfiguration.signInURL
-            signInVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "dismissSignInViewController")
+            signInVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(BrowserViewController.dismissSignInViewController))
             vcToPresent = signInVC
         }
 
@@ -2865,14 +2875,8 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                         // Only set the image onto the pasteboard if the pasteboard hasn't changed since
                         // fetching the image; otherwise, in low-bandwidth situations,
                         // we might be overwriting something that the user has subsequently added.
-                        if changeCount == pasteboard.changeCount,
-                           let imageData = responseData where responseError == nil,
-                           let image = UIImage.imageFromDataThreadSafe(imageData) {
-                            // Setting pasteboard.items allows us to set multiple representations for the same item.
-                            pasteboard.items = [[
-                                kUTTypeURL as String: url,
-                                kUTTypePNG as String: image
-                            ]]
+                        if changeCount == pasteboard.changeCount, let imageData = responseData where responseError == nil {
+                            pasteboard.addImageWithData(imageData, forURL: url)
                         }
 
                         application.endBackgroundTask(taskId)
@@ -2899,7 +2903,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             .validate(statusCode: 200..<300)
             .response { _, _, data, _ in
                 if let data = data,
-                   let image = UIImage.imageFromDataThreadSafe(data) {
+                   let image = UIImage.dataIsGIF(data) ? UIImage.imageFromGIFDataThreadSafe(data) : UIImage.imageFromDataThreadSafe(data) {
                     success(image)
                 }
             }
@@ -2929,16 +2933,6 @@ extension BrowserViewController: KeyboardHelperDelegate {
             UIView.setAnimationCurve(state.animationCurve)
             self.findInPageContainer.layoutIfNeeded()
             self.snackBars.layoutIfNeeded()
-        }
-    }
-}
-
-extension BrowserViewController: SessionRestoreHelperDelegate {
-    func sessionRestoreHelper(helper: SessionRestoreHelper, didRestoreSessionForBrowser browser: Browser) {
-        browser.restoring = false
-
-        if let tab = tabManager.selectedTab where tab.webView === browser.webView {
-            updateUIForReaderHomeStateForTab(tab)
         }
     }
 }
@@ -3076,6 +3070,14 @@ extension BrowserViewController: JSPromptAlertControllerDelegate {
         showQueuedAlertIfAvailable()
     }
 }
+    
+private extension WKNavigationAction {
+    /// Allow local requests only if the request is privileged.
+    private var isAllowed: Bool {
+        return !(request.URL?.isLocal ?? false) || request.isPrivileged
+    }
+}
+
 
 // CLiqz: Added extension for HomePanelDelegate to react for didSelectURL from SearchHistoryViewController
 extension BrowserViewController: HomePanelDelegate {
@@ -3135,7 +3137,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
-            let u = forwardUrl, let nav = tab.loadRequest(NSURLRequest(URL: u)) {
+            let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(URL: u)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
             showWebViewOverLay(tab)
         }
