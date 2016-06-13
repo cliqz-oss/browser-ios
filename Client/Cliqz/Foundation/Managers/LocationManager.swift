@@ -22,12 +22,19 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 		return m
 	}()
 
+    public func askForLocationAccess () {
+        TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
+        self.manager.requestWhenInUseAuthorization()
+    }
+    
 	public func startUpdateingLocation() {
-		if !CLLocationManager.locationServicesEnabled() || CLLocationManager.authorizationStatus() == .NotDetermined {
-			TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
-			self.manager.requestWhenInUseAuthorization()
-		}
-		self.manager.startUpdatingLocation()
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        
+		if CLLocationManager.locationServicesEnabled() &&  authorizationStatus == .NotDetermined {
+			askForLocationAccess()
+		} else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+            self.manager.startUpdatingLocation()
+        }
 	}
 
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
