@@ -442,7 +442,9 @@ class BrowserViewController: UIViewController {
         if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
             LocationManager.sharedInstance.startUpdateingLocation()
         }
-        
+		
+		// Cliqz: Invalidate cache for the next update to force load extension 
+		invalidateCache()
     }
 
     private func setupConstraints() {

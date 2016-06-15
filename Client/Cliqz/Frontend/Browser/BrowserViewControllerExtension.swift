@@ -16,9 +16,8 @@ extension BrowserViewController {
 			self.navigateToURL(url)
 		}
 	}
-    
-    
-    func askForNewsNotificationPermissionIfNeeded () {
+
+    func askForNewsNotificationPermissionIfNeeded() {
         if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
             let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
             if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
@@ -31,4 +30,15 @@ extension BrowserViewController {
             })
         }
     }
+
+	func invalidateCache() {
+		let invalidateCacheKey = "invalidateCache"
+		
+		guard LocalDataStore.objectForKey(invalidateCacheKey) == nil else {
+			return
+		}
+		let cacheClearable = CacheClearable(tabManager: tabManager)
+		cacheClearable.clear()
+		LocalDataStore.setObject(true, forKey: invalidateCacheKey)
+	}
 }
