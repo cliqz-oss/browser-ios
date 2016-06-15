@@ -37,7 +37,7 @@ class NavigationExtension: NSObject {
     static let historyURL: String =  {
         return "\(baseURL)/history.html"
     }()
-    
+
     // url for fresh tab page
     static let freshtabURL: String =  {
         return "\(baseURL)/freshtab.html"
