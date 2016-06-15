@@ -80,7 +80,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return date
     }
 	
-    private class func historyVisitsFactory(row: SDRow) -> Site {
+    internal class func historyVisitsFactory(row: SDRow) -> Site {
         let id = row["id"] as! Int
         let url = row["url"] as! String
         let title = row["title"] as! String
