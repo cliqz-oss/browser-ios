@@ -61,15 +61,16 @@ class TabsButton: UIControl {
     
     override var highlighted: Bool {
         didSet {
-            if highlighted {
-                borderColor = theme.highlightBorderColor!
-                titleBackgroundColor = theme.highlightButtonColor
-                textColor = theme.highlightTextColor
-            } else {
+            //Cliqz: disable highlighting effect for tabs button
+//            if highlighted {
+//                borderColor = theme.highlightBorderColor!
+//                titleBackgroundColor = theme.highlightButtonColor
+//                textColor = theme.highlightTextColor
+//            } else {
                 borderColor = theme.borderColor!
                 titleBackgroundColor = theme.backgroundColor
                 textColor = theme.textColor
-            }
+//            }
         }
     }
 
