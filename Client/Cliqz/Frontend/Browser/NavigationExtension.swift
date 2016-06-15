@@ -12,7 +12,7 @@ extension WebServer {
 
     /// Convenience method to register a folder in the main bundle.
     func registerMainBundlePath(basePath: String, directoryPath: String) {
-        server.addGETHandlerForBasePath(basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:3600, allowRangeRequests:true)
+        server.addGETHandlerForBasePath(basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:0, allowRangeRequests:true)
     }
 }
 
