@@ -29,11 +29,13 @@ class NewsNotificationPermissionHelper: NSObject {
     //MARK: - Public APIs
     
     func onAppEnterBackground() {
-//        return
-        
+        return
+		// TODO: Commented till push notifications will be available
+		/*
         let numberOfOpenings = getNumerOfOpenings()
         LocalDataStore.setObject(numberOfOpenings + 1, forKey: numberOfOpeningsKey)
         askingDisabled = LocalDataStore.objectForKey(disableAskingKey) as? Bool
+		*/
     }
     
     func onAskForPermission() {
@@ -64,8 +66,10 @@ class NewsNotificationPermissionHelper: NSObject {
     }
     
     func shouldAskForPermission() -> Bool {
-//        return false
-        
+        return false
+
+		// TODO: Commented till push notifications will be available
+		/*
         if isAskingForPermissionDisabled() || UIApplication.sharedApplication().isRegisteredForRemoteNotifications()  {
             return false
         }
@@ -79,6 +83,7 @@ class NewsNotificationPermissionHelper: NSObject {
         }
         
         return shouldAskForPermission
+		*/
     }
     
     
