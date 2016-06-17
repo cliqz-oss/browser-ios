@@ -214,20 +214,12 @@ class TabManager : NSObject {
     @available(iOS 9, *)
     func addTabAndSelect(request: NSURLRequest! = nil, configuration: WKWebViewConfiguration! = nil, isPrivate: Bool) -> Browser {
         let tab = addTab(request, configuration: configuration, isPrivate: isPrivate)
-        // Cliqz: set inSearchMode of the created tab to false if there is url to open
-        if request != nil {
-            tab.inSearchMode = false
-        }
         selectTab(tab)
         return tab
     }
 
     func addTabAndSelect(request: NSURLRequest! = nil, configuration: WKWebViewConfiguration! = nil) -> Browser {
         let tab = addTab(request, configuration: configuration)
-        // Cliqz: set inSearchMode of the created tab to false if there is url to open
-        if request != nil {
-            tab.inSearchMode = false
-        }
         selectTab(tab)
         return tab
     }
@@ -302,6 +294,11 @@ class TabManager : NSObject {
 
         if flushToDisk {
         	storeChanges()
+        }
+        
+        // Cliqz: set inSearchMode of the created tab to false if there is request to open
+        if request != nil {
+            tab.inSearchMode = false
         }
     }
 
