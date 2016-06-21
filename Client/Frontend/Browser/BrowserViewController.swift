@@ -1169,6 +1169,8 @@ class BrowserViewController: UIViewController {
     }
 
     func switchToTabForURLOrOpen(url: NSURL, isPrivate: Bool = false) {
+        // Cliqz: preserve search state for the current tab before switching to the new tab
+        preserveSearchState()
         popToBVC()
         if let tab = tabManager.getTabForURL(url) {
             tabManager.selectTab(tab)
@@ -1994,8 +1996,7 @@ extension BrowserViewController: TabManagerDelegate {
             urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         }
 
-        //Cliqz: disable updating home panel when switching between tabs as we already preserve tab status and for new tabs we initially show the search view
-//        updateInContentHomePanel(selected?.url)
+        updateInContentHomePanel(selected?.url)
     }
 
     func tabManager(tabManager: TabManager, didCreateTab tab: Browser) {

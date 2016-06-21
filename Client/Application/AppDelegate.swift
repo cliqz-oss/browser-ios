@@ -272,7 +272,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
             return false
         }
-        if components.scheme != "firefox" && components.scheme != "firefox-x-callback" {
+        if components.scheme != "cliqz" && components.scheme != "firefox-x-callback" {
             return false
         }
         var url: String?

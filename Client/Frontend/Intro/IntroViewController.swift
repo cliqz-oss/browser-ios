@@ -409,7 +409,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
         }
 		if page == pageControl.numberOfPages - 1 {
-			LocationManager.sharedInstance.startUpdateingLocation()
+			LocationManager.sharedInstance.askForLocationAccess()
 		}
     }
 

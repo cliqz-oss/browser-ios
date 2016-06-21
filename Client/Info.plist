@@ -43,11 +43,13 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>org.mozilla.Client</string>
+			<string>org.cliqz.Client</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>firefox</string>
+				<string>cliqz</string>
 			</array>
 		</dict>
 	</array>

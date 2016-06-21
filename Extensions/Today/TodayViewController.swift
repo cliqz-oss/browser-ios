@@ -184,11 +184,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     // MARK: Button behaviour
 
     @objc func onPressNewTab(view: UIView) {
-        openContainingApp("firefox://")
+        openContainingApp("cliqz://")
     }
 
     @objc func onPressNewPrivateTab(view: UIView) {
-        openContainingApp("firefox://?private=true")
+        openContainingApp("cliqz://?private=true")
     }
 
     private func openContainingApp(urlString: String) {
@@ -202,7 +202,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             _ = NSURL(string: urlString) {
             let encodedString =
                 urlString.escape()
-            openContainingApp("firefox://?url=\(encodedString)")
+            openContainingApp("cliqz://?url=\(encodedString)")
         }
     }
 }

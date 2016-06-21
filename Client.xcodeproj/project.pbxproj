@@ -48,6 +48,7 @@
 		0BF42D4F1A7CD09600889E28 /* TestFavicons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */; };
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
+		1E157C201D100A5700995A27 /* viewport.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E157C1F1D100A5700995A27 /* viewport.js */; };
 		1E32B4491CF5A81C00412468 /* Deferred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BA4A9631C4CFE840091D032 /* Deferred.framework */; };
 		1E32B44A1CF5A81C00412468 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6231C001B90A44F005ABB0D /* libz.tbd */; };
 		1E32B44B1CF5A81C00412468 /* KIF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B604F981C494F74006EEEC3 /* KIF.framework */; };
@@ -1257,6 +1258,7 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E157C1F1D100A5700995A27 /* viewport.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = viewport.js; sourceTree = "<group>"; };
 		1E32B4621CF5A81C00412468 /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E32B4771CF5A93800412468 /* asdf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = asdf.m; sourceTree = "<group>"; };
 		1E32B4781CF5A93800412468 /* CliqzUITests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CliqzUITests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -2475,6 +2477,7 @@
 				1E98D83D1CF2F907009FC489 /* Lato-Medium.ttf */,
 				1E98D83E1CF2F907009FC489 /* trampolineForward.html */,
 				1E98D83F1CF2F907009FC489 /* wikipediaUserScript.js */,
+				1E157C1F1D100A5700995A27 /* viewport.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5023,6 +5026,7 @@
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityBrowserHelper.js in Resources */,
 				1E98D86A1CF2F907009FC489 /* Lato-Light.ttf in Resources */,
+				1E157C201D100A5700995A27 /* viewport.js in Resources */,
 				1E98D97F1CF30622009FC489 /* Lookback.bundle in Resources */,
 				1E98D8691CF2F907009FC489 /* OnePasswordExtension.strings in Resources */,
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
@@ -6530,7 +6534,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MOZ_BUNDLE_ID).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Today;
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 			};
 			name = Fennec;
 		};
@@ -7202,7 +7206,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MOZ_BUNDLE_ID).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 			};
 			name = Fennec;
@@ -8570,7 +8574,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MOZ_BUNDLE_ID).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8595,7 +8599,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MOZ_BUNDLE_ID).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e1f1ced9-ee57-45be-add4-86c38d3b6fed";
+				PROVISIONING_PROFILE = "9ffa9a35-e942-4d7c-a8a9-9117ef724842";
 				SKIP_INSTALL = YES;
 			};
 			name = Fennec;

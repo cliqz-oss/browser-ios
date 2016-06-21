@@ -904,15 +904,22 @@ private class EmptyPrivateTabsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        titleLabel.text =  NSLocalizedString("Private Browsing",
-            tableName: "PrivateBrowsing", comment: "Title displayed for when there are no open tabs while in private mode")
-        descriptionLabel.text = NSLocalizedString("Firefox won't remember any of your history or cookies, but new bookmarks will be saved.",
-            tableName: "PrivateBrowsing", comment: "Description text displayed when there are no open tabs while in private mode")
+        // Cliqz: Changed the localization for title and description
+//        titleLabel.text =  NSLocalizedString("Private Browsing",
+//            tableName: "PrivateBrowsing", comment: "Title displayed for when there are no open tabs while in private mode")
+//        descriptionLabel.text = NSLocalizedString("Firefox won't remember any of your history or cookies, but new bookmarks will be saved.",
+//            tableName: "PrivateBrowsing", comment: "Description text displayed when there are no open tabs while in private mode")
+
+        titleLabel.text =  NSLocalizedString("Forget Mode",
+            tableName: "Cliqz", comment: "Title displayed for when there are no open tabs while in Forget mode")
+        descriptionLabel.text = NSLocalizedString("Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.",
+            tableName: "Cliqz", comment: "Description text displayed when there are no open tabs while in Forget mode")
 
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(iconImageView)
-        addSubview(learnMoreButton)
+        // Cliqz: remove learn more button
+//        addSubview(learnMoreButton)
 
         titleLabel.snp_makeConstraints { make in
             make.center.equalTo(self)
@@ -922,16 +929,17 @@ private class EmptyPrivateTabsView: UIView {
             make.bottom.equalTo(titleLabel.snp_top).offset(-EmptyPrivateTabsViewUX.TextMargin)
             make.centerX.equalTo(self)
         }
-
+        
         descriptionLabel.snp_makeConstraints { make in
             make.top.equalTo(titleLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.TextMargin)
             make.centerX.equalTo(self)
         }
-
-        learnMoreButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
-            make.centerX.equalTo(self)
-        }
+        
+        // Cliqz: remove learn more label constraints
+//        learnMoreButton.snp_makeConstraints { (make) -> Void in
+//            make.top.equalTo(descriptionLabel.snp_bottom).offset(EmptyPrivateTabsViewUX.LearnMoreMargin)
+//            make.centerX.equalTo(self)
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {
