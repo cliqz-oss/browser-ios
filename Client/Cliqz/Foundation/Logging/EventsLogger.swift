@@ -59,6 +59,13 @@ class EventsLogger: NSObject {
         LocalDataStore.setObject(sessionId, forKey: self.sessionIdKey)
     }
     
+    func getInstallDay() -> Int? {
+        guard sessionId.contains("|") else {
+            return nil
+        }
+        let installDay = sessionId.componentsSeparatedByString("|")[1]
+        return Int(installDay)
+    }
     
     //MARK: - Initialization
     init (endPoint: String){

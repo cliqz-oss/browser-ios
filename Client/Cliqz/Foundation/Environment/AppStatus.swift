@@ -98,6 +98,8 @@ class AppStatus {
             // Alter Visits Table to add `favorite` column if it does not exit
             profile.history.alterVisitsTableAddFavoriteColumn()
         }
+        
+        NewsNotificationPermissionHelper.sharedInstance.onAppOpened()
     }
     
     internal func appDidBecomeResponsive(startupType: String) {
