@@ -39,7 +39,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
     var tabManager: TabManager!
     weak var delegate: SearchHistoryViewControllerDelegate?
-    let QueryLimit = 50
+    let QueryLimit = 100
     var reload = false
     
 	init(profile: Profile, tabManager: TabManager) {
@@ -221,7 +221,7 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
 						historyResults.append(d)
 					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
+					self.javaScriptBridge.callJSMethod(c, parameter: historyResults.reverse(), completionHandler: nil)
 				}
 			}
 		}
