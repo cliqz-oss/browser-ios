@@ -15,6 +15,9 @@ extension BrowserViewController {
 		if let urlString = self.initialURL,
 		   let url = NSURL(string: urlString) {
 			self.navigateToURL(url)
+            if let tab = tabManager.selectedTab {
+                tab.url = url
+            }
 		}
 	}
     

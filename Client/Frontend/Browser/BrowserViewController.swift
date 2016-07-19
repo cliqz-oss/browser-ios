@@ -2267,6 +2267,9 @@ extension BrowserViewController: WKNavigationDelegate {
             finishNavigation(webView)
         }
 
+        // Cliqz: save last visited website for 3D touch action
+        saveLastVisitedWebSite()
+        
         // Remember whether or not a desktop site was requested
         if #available(iOS 9.0, *) {
             tab.desktopSite = webView.customUserAgent?.isEmpty == false
@@ -3297,15 +3300,17 @@ extension BrowserViewController {
             }
         }
         
-        
+        saveLastVisitedWebSite()
+    }
+    
+    private func saveLastVisitedWebSite() {
         if let selectedTab = self.tabManager.selectedTab,
             let lastVisitedWebsite = selectedTab.webView?.URL?.absoluteString
             where selectedTab.isPrivate == false && !lastVisitedWebsite.hasPrefix("http://localhost") {
-                // Cliqz: store the last visited website
-                LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
-            }
+            // Cliqz: store the last visited website
+            LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
+        }
     }
-    
     // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
