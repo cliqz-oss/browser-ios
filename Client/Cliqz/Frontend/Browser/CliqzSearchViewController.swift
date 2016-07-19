@@ -73,7 +73,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
 
 	override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 
         let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 

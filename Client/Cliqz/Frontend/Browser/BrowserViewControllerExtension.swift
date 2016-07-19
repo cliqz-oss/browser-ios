@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import JavaScriptCore
 
 extension BrowserViewController {
 	
@@ -31,4 +32,41 @@ extension BrowserViewController {
             })
         }
     }
+	
+	func downloadVideoFromURL(url: String) {
+		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
+			do {
+				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)
+				let context = JSContext()
+				let httpRequest = XMLHttpRequest()
+				httpRequest.extendJSContext(context)
+				context.exceptionHandler = { context, exception in
+					print("JS Error: \(exception)")
+				}
+				context.evaluateScript(jsString as String)
+				let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
+					self?.downloadVideoOfSelectedFormat(urls)
+				}
+				let callbackName = "URLReceived"
+				context.setObject(unsafeBitCast(callback, AnyObject.self), forKeyedSubscript: callbackName)
+				context.evaluateScript("window.ytdownloader.getUrls('\(url)', \(callbackName))")
+			} catch {
+				print("Couldn't load file")
+			}
+		}
+	}
+	
+	func downloadVideoOfSelectedFormat(urls: [AnyObject]) {
+ 		let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+		for url in urls {
+			if let f = url["label"] as? String, u = url["url"] as? String {
+				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
+					YoutubeDownloader.downloadFromURL(u)
+				}))
+			}
+		}
+		actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: nil))
+		self.presentViewController(actionSheet, animated: true, completion: nil)
+	}
+
 }

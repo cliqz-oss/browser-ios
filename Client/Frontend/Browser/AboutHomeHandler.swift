@@ -26,8 +26,8 @@ struct AboutLicenseHandler {
                 print("Unable to register webserver \(error)")
             }
             return GCDWebServerResponse(statusCode: 200)
-        }
-    }
+		}
+	}
 }
 
 extension GCDWebServerDataResponse {
