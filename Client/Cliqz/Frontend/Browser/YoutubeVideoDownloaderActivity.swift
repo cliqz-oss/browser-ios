@@ -1,5 +1,5 @@
 //
-//  YoutubeDownloaderActivity.swift
+//  YoutubeVideoDownloaderActivity.swift
 //  Client
 //
 //  Created by Sahakyan on 7/15/16.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class YoutubeDownloaderActivity: UIActivity {
+class YoutubeVideoDownloaderActivity: UIActivity {
 
 	private let callback: () -> ()
 

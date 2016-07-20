@@ -1,5 +1,5 @@
 //
-//  YoutubeDownloader.swift
+//  YoutubeVideoDownloader.swift
 //  Client
 //
 //  Created by Sahakyan on 7/14/16.
@@ -11,7 +11,7 @@ import Photos
 import JavaScriptCore
 import Alamofire
 
-class YoutubeDownloader {
+class YoutubeVideoDownloader {
 
 	class func isYoutubeURL(url: NSURL) -> Bool {
 		let pattern = "https?://(m\\.|www\\.)?youtube.+/watch\\?v=.*"
@@ -35,13 +35,16 @@ class YoutubeDownloader {
 						PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(localPath)}) { completed, error in
 							if completed {
 								// TODO: Postponed showing status info for the next release
+								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "download", "is_success", "true"))
 								print("Video asset created")
 							} else {
+								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "download", "is_success", "false"))
 								// TODO: Postponed showing status info for the next release
-								print(error)
+								print("Download failed: \(error)")
 							}
 					}
 					print(response)
+					print("Error: \(error)")
 				}
 			})
 		}

@@ -57,11 +57,16 @@ extension BrowserViewController {
 	}
 	
 	func downloadVideoOfSelectedFormat(urls: [AnyObject]) {
+		if urls.count > 0 {
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "page_load", "is_downloadable", "true"))
+		} else {
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "page_load", "is_downloadable", "false"))
+		}
  		let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
 		for url in urls {
 			if let f = url["label"] as? String, u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
-					YoutubeDownloader.downloadFromURL(u)
+					YoutubeVideoDownloader.downloadFromURL(u)
 				}))
 			}
 		}
