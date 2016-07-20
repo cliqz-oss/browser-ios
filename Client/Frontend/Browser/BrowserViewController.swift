@@ -1238,6 +1238,15 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Browser? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
+		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
+			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
+				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "click", "target_type", "download_page"))
+
+				self.downloadVideoFromURL(url.absoluteString)
+			}
+			activities.append(youtubeDownloader)
+		}
+
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
         }
@@ -2808,6 +2817,15 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 }
                 actionSheetController.addAction(openNewTabAction)
             }
+
+			if YoutubeVideoDownloader.isYoutubeURL(url) {
+				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
+				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+					self.downloadVideoFromURL(dialogTitle!)
+					TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "click", "target_type", "download_link"))
+				}
+				actionSheetController.addAction(downloadVideo)
+			}
 
             if #available(iOS 9, *) {
                 let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")

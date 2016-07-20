@@ -58,7 +58,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         "SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
             "FROM \(TableHistory) " +
             "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
-            "ORDER BY \(TableVisits).id ASC " +
+            "ORDER BY \(TableVisits).id DESC " +
         "LIMIT \(limit) "
         
         // TODO countFactory
@@ -80,7 +80,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return date
     }
 	
-    private class func historyVisitsFactory(row: SDRow) -> Site {
+    internal class func historyVisitsFactory(row: SDRow) -> Site {
         let id = row["id"] as! Int
         let url = row["url"] as! String
         let title = row["title"] as! String

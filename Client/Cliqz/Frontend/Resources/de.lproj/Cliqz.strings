@@ -107,3 +107,6 @@
 
 /* Description text displayed when there are no open tabs while in Forget mode */
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Webseiten-Verlauf und Cookies werden nicht gespeichert. Neue Downloads und Lesezeichen werden jedoch gespeichert.";
+
+/* Context/Sharing menu item for downloading youtube videos */
+"Download youtube video" = "Offline verfügbar machen";
