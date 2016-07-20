@@ -150,6 +150,7 @@ extension AppDelegate {
                 let randomArticle  = articles[randomIndex] as! [String : AnyObject]
                 let randomURl = randomArticle["url"] as! String
                 self.browserViewController.initialURL = randomURl
+                self.browserViewController.loadInitialURL()
             },
             onFailure: { (data, error) in
                 let eventAttributes = ["url" : self.topNewsURL, "error" : "\(error)"]

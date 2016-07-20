@@ -146,6 +146,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             }
             make.height.equalTo(buttonSpacer.snp_height).offset(extraHeight)
         }
+        
+        // Cliqz: Hide new private tab button on iOS8
+        guard #available(iOS 9, *) else {
+            newPrivateTabButton.hidden = true
+            return
+        }
     }
 
     override func viewDidLayoutSubviews() {
