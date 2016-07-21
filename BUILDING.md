@@ -1,17 +1,15 @@
-> These are the instructions for building the *master* branch which is focussed on iOS 9 and Xcode 7 for our upcoming v1.1 and v2.0 releases. If you instead want to work on v1.0 then please follow the README.md in that branch.
+> These are the instructions for building the *master* branch which contains a stable version just before releasing. If you need up to date version user development branch.
 
-Building Firefox for iOS
+Building Cliqz for iOS
 ========================
 
-Prerequisites, as of *September 4, 2015*:
+Prerequisites, as of *July 21, 2016*:
 
 * Mac OS X 10.10.5
 * Xcode 7.0 GM with the iOS 9.0 GM SDK (Newer betas not supported)
 * Carthage 0.8 via Homebrew
 
 > There are issues with Carthage on OS X 10.11 El Capitan. We recommend to use OS X 10.10 Yosemite instead.
-
-(For the v1.1 release, we try to keep up to date with the most recent beta versions of Xcode and the iOS SDK.)
 
 When running on a device:
 
