@@ -22,8 +22,8 @@ Get the Code
 -----------
 
 ```
-git clone https://github.com/mozilla/firefox-ios
-cd firefox-ios
+git clone https://github.com/cliqz-oss/browser-ios
+cd browser-ios
 ```
 
 (If you have forked the repository, substitute the URL with your own repository location.)
