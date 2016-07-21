@@ -79,23 +79,18 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if indexPath.section == SectionToggles {
             cell.textLabel?.text = clearables[indexPath.item].clearable.label
             let control = UISwitch()
-            control.onTintColor = UIConstants.ControlTintColor
+            // Cliqz: Used default tint color for UIControl instead of the custom orange one
+//            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
             control.on = toggles[indexPath.item]
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
             
-            // Cliqz: disalble include favorite history itmes
-            if indexPath.row == clearFavoriteHistoryCellIndex && toggles[clearHistoryCellIndex] == false {
-                cell.userInteractionEnabled = false
-                cell.textLabel?.textColor = UIColor.grayColor()
-            }
         } else if indexPath.section == SectionClearOnTermination {
             // Cliqz: clear private data on termination
             cell.textLabel?.text = NSLocalizedString("Clear Private data on termination", tableName: "Cliqz", comment: "Settings item for clearing private data on termination")
             let control = UISwitch()
-            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: "clearDataOnTerminationChangedValue:", forControlEvents: UIControlEvents.ValueChanged)
             control.on = self.profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false
             cell.accessoryView = control
@@ -203,10 +198,6 @@ class ClearPrivateDataTableViewController: UITableViewController {
         // Dim the clear button if no clearables are selected.
         clearButtonEnabled = toggles.contains(true)
         
-        // Cliqz: disable include favorite history items cell in case browsing history was disabled and refresh table to adjust cells
-        if toggles[clearHistoryCellIndex] == false {
-            toggles[clearFavoriteHistoryCellIndex] = false
-        }
         // Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
         self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
         

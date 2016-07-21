@@ -10,7 +10,8 @@ import SnapKit
 private let log = Logger.browserLogger
 
 struct TodayUX {
-    static let privateBrowsingColor = UIColor(colorString: "CE6EFC")
+    // Cliqz: changed privateBrowsingColor to orange
+    static let privateBrowsingColor = UIColor(colorString: "FC2818") //UIColor(colorString: "CE6EFC")
     static let backgroundHightlightColor = UIColor(white: 216.0/255.0, alpha: 44.0/255.0)
 
     static let linkTextSize: CGFloat = 10.0

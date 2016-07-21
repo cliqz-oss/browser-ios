@@ -40,7 +40,8 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     var tabManager: TabManager!
     weak var delegate: SearchHistoryViewControllerDelegate?
     let QueryLimit = 100
-    var reload = false
+    
+    var queuedScripts = [String]()
     
 	init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
@@ -73,20 +74,17 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 		
         self.setupConstraints()
     }
-
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
         self.historyWebView.scrollView.contentInset = UIEdgeInsetsMake(0,0,0,0)
-
-        if self.reload == true {
-            self.reload = false;
-//            self.getSearchHistory("History.showHistory")
-		}
     }
-
-    override func viewWillDisappear(animated: Bool) {
-        self.reload = true;
+    
+    private func evaluateQueuedScripts() {
+        for script in queuedScripts {
+            self.evaluateJavaScript(script, completionHandler: nil)
+        }
+        queuedScripts.removeAll()
     }
     
     // Mark: WKScriptMessageHandler
@@ -159,6 +157,10 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     }
     
     func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        guard self.isViewLoaded() == true else {
+            queuedScripts.append(javaScriptString)
+            return
+        }
         self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
@@ -228,6 +230,8 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 	}
 
     func isReady() {
+        evaluateQueuedScripts()
+        
         guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
             return
         }
@@ -246,7 +250,11 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 	}
 
 	func clearQueries(includeFavorites includeFavorites: Bool) {
-        self.evaluateJavaScript("jsAPI.clearQueries(\(includeFavorites))", completionHandler: nil)
+        if includeFavorites == true {
+            self.evaluateJavaScript("jsAPI.clearFavorites()", completionHandler: nil)
+        } else {
+            self.evaluateJavaScript("jsAPI.clearHistory()", completionHandler: nil)
+        }
     }
 
 }

@@ -119,14 +119,14 @@ class BrowserViewController: UIViewController {
     
     // Cliqz: Furture and past layers
     
-    lazy var searchHistoryContainer: UINavigationController = {
+    var searchHistoryContainer: UINavigationController?
+    private func initSearchHistoryContainer() {
         let searchHistoryViewController = SearchHistoryViewController(profile: self.profile, tabManager: self.tabManager)
         searchHistoryViewController.delegate = self
         
-        let containerViewController = UINavigationController(rootViewController: searchHistoryViewController)
-        containerViewController.transitioningDelegate = self
-        return containerViewController
-    }()
+        searchHistoryContainer = UINavigationController(rootViewController: searchHistoryViewController)
+        searchHistoryContainer!.transitioningDelegate = self
+    }
     
     lazy var recommendationsContainer: UINavigationController = {
         let recommendationsViewController = RecommendationsViewController(profile: self.profile)
@@ -164,6 +164,7 @@ class BrowserViewController: UIViewController {
         // Cliqz: Initialized AdBlocker object
         self.adBlocker = AdBlocker(profile: profile)
         super.init(nibName: nil, bundle: nil)
+        initSearchHistoryContainer()
         didInit()
     }
 
@@ -1568,7 +1569,7 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidClickSearchHistory() {
         
         transition.transitionDirection = TransitionDirection.Down
-        self.presentViewController(searchHistoryContainer, animated: true, completion: nil)
+        self.presentViewController(searchHistoryContainer!, animated: true, completion: nil)
         
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
     }
