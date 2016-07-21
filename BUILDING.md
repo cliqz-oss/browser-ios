@@ -46,7 +46,6 @@ You can now execute our `checkout.sh` script:
 ./checkout.sh
 ```
 
-> If checkout fails with an error like `fatal: Not a git repository (or any of the parent directories): .git` you may have to remove the `~/Library/Caches/org.carthage.CarthageKit` directory first. See [this Carthage issue](https://github.com/Carthage/Carthage/issues/407)
 
 At this point you have checked out the source code for both the Firefox for iOS project and it's dependencies. You can now build and run the application.
 
