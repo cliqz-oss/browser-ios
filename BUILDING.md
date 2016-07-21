@@ -39,7 +39,6 @@ brew upgrade
 brew install carthage
 ```
 
-> OS X 10.11 El Capitan note: At time of writing it was not possible to install Carthage via homebrew. Instead, install the latest Carthage release manually from their [https://github.com/Carthage/Carthage/releases](releases page)
 
 You can now execute our `checkout.sh` script:
 
