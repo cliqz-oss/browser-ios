@@ -5,15 +5,14 @@ Building Cliqz for iOS
 
 Prerequisites, as of *July 21, 2016*:
 
-* Mac OS X 10.10.5
-* Xcode 7.0 GM with the iOS 9.0 GM SDK (Newer betas not supported)
-* Carthage 0.8 via Homebrew
+* Mac OS X 10.11.4
+* Xcode 7.3 GM with the iOS 9.3 GM SDK (Newer betas not supported)
+* Carthage 0.15 or newer
 
-> There are issues with Carthage on OS X 10.11 El Capitan. We recommend to use OS X 10.10 Yosemite instead.
 
 When running on a device:
 
-* A device that supports iOS 9.0 GM
+* A device that supports iOS 8.2 GM
 * One of the following:
  * A developer account and Admin access to the *Certificates, Identifiers & Profiles* section of the *iOS DevCenter*
  * A free developer account, new with Xcode 7
@@ -31,7 +30,7 @@ cd browser-ios
 Pull in Dependencies
 --------------------
 
-We use Carthage to manage projects that we depend on. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
+We use Carthage to manage projects that we depend on. __The build will currently only work with Carthage v0.15 or newer__. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
 
 ```
 brew update
@@ -47,7 +46,7 @@ You can now execute our `checkout.sh` script:
 ```
 
 
-At this point you have checked out the source code for both the Firefox for iOS project and it's dependencies. You can now build and run the application.
+At this point you have checked out the source code for both the Cliqz for iOS project and it's dependencies. You can now build and run the application.
 
 Everything after this point is done from within Xcode.
 
