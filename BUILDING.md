@@ -61,19 +61,14 @@ Run on a Device with Xcode 7 and a Free Developer Account
 
 > Only follow these instructions if you are using the new free personal developer accounts that Apple enabled with Xcode 7.
 
-In the following files, replace occurrences of `org.mozilla.ios` with your own unique reverse domain like for example `se.mydomain.ios`. If you do not own a domain, just use your full name like for example `jane.appleseed`.  
+Since the bundle identifier we use for Cliqz is tied to our developer account, you'll need to generate your own identifier and update the existing configuration.
 
-Make sure you expand all the fields of the `.entitlements` files. Make sure you just replace the `org.mozilla.ios` part and keep prefixes like `group.` that some files contain.
-
-* `Client/Configuration/BaseConfig.xcconfig`
-* `Client/Info.plist`
-* `Client/Fennec.entitlements`
-* `Extensions/ShareTo/Info.plist`
-* `Extensions/ShareTo/Fennec.entitlements`
-* `Extensions/SendTo/Info.plist`
-* `Extensions/SendTo/Fennec.entitlements`
-* `Extensions/ViewLater/Info.plist`
-* `Extensions/ViewLater/Fennec.entitlements`
+1. Open Client/Configuration/Fennec.xcconfig
+2. Change MOZ_BUNDLE_ID to your own bundle identifier.
+3. Navigate to each of the application targets (Client/SendTo/ShareTo/ViewLater) and for each one:
+  1. select your personal development account
+  2. remove the code signing entitlements
+  3. change Bundle Identifier to your own identifier.
 
 If you submit a patch, be sure to exclude these files because they are only relevant for your personal build.
 
