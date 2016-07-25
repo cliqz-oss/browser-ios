@@ -29,8 +29,8 @@ class ClearPrivateDataTableViewController: UITableViewController {
     private lazy var clearables: [(clearable: Clearable, checked: DefaultCheckedState)] = {
         return [
             (HistoryClearable(profile: self.profile), true),
-            // Cliqz: Added option to clear favorite history
-            (FavoriteHistoryClearable(profile: self.profile), true),
+            // Cliqz: Added option to clear bookmarks
+            (BookmarksClearable(profile: self.profile), true),
             (CacheClearable(tabManager: self.tabManager), true),
             (CookiesClearable(tabManager: self.tabManager), true),
             (SiteDataClearable(tabManager: self.tabManager), true),
@@ -43,7 +43,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
     
     private lazy var toggles: [Bool] = {
         if var savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
-            // Cliqz: Added option to include favorite history items
+            // Cliqz: Added option to include bookmarks items
             if savedToggles.count == 4 {
                 savedToggles.insert(true, atIndex:1)
             }

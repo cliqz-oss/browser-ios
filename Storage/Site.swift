@@ -74,9 +74,6 @@ public class Site : Identifiable {
      // Sites may have multiple favicons. We'll return the largest.
     public var icon: Favicon?
     public var latestVisit: Visit?
-
-    // Cliqz: added to mark a site as favorite from JavaScript
-    public var favorite: Bool? = false
     
     public init(url: String, title: String) {
         self.url = url

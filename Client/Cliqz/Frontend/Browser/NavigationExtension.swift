@@ -12,7 +12,7 @@ extension WebServer {
 
     /// Convenience method to register a folder in the main bundle.
     func registerMainBundlePath(basePath: String, directoryPath: String) {
-        server.addGETHandlerForBasePath(basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:3600, allowRangeRequests:true)
+        server.addGETHandlerForBasePath(basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:0, allowRangeRequests:true)
     }
 }
 
@@ -37,7 +37,7 @@ class NavigationExtension: NSObject {
     static let historyURL: String =  {
         return "\(baseURL)/history.html"
     }()
-    
+
     // url for fresh tab page
     static let freshtabURL: String =  {
         return "\(baseURL)/freshtab.html"
@@ -51,7 +51,7 @@ class NavigationExtension: NSObject {
     // using the same server that Firefox have to make the navigation extension works locally
     private class func registerNavigationExtensionOnFireFoxServer() {
         let bundlePath = NSBundle.mainBundle().bundlePath
-        let extensionPath = bundlePath + "/" + "Extension"
+        let extensionPath = bundlePath + "/" + "Extension/build/mobile/search"
         
         let server = WebServer.sharedInstance
         server.registerMainBundlePath("/extension/", directoryPath: extensionPath)

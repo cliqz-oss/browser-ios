@@ -127,6 +127,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //            BoolSetting(prefs: prefs, prefKey: "crashreports.send.always", defaultValue: false,
 //                titleText: NSLocalizedString("Send Crash Reports", comment: "Setting to enable the sending of crash reports"),
 //                settingDidChange: { configureActiveCrashReporter($0) }),
+            ShowBlockedTopSitesSetting(),
             PrivacyPolicySetting()
         ]
 
@@ -168,7 +169,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
             let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
             let sectionSetting = settings[section]
             headerView.titleLabel.text = sectionSetting.title?.string
-
+            
+            // Cliqz: remove all FireFox header customizations due to hiding unneeded sections
+            return super.tableView(tableView, viewForHeaderInSection: section)
+            /*
             switch section {
                 // Hide the bottom border for the Sign In to Firefox value prop
                 case 1:
@@ -186,6 +190,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                     return super.tableView(tableView, viewForHeaderInSection: section)
             }
             return headerView
+            */
         }
         
         return super.tableView(tableView, viewForHeaderInSection: section)

@@ -35,6 +35,8 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
         }()
     
     var profile: Profile!
+	var bookmarkSource: BookmarksModel?
+
     var tabManager: TabManager!
     weak var delegate: SearchHistoryViewControllerDelegate?
     let QueryLimit = 50
@@ -74,9 +76,11 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+		self.historyWebView.evaluateJavaScript("jsAPI.onShow()", completionHandler: nil)
+
         if self.reload == true {
             self.reload = false;
-            self.getSearchHistoryResults("History.showHistory")
+//            self.getSearchHistory("History.showHistory")
 		}
     }
 
@@ -165,28 +169,63 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
         logLayerChangeTelemetrySignal()
 
     }
-    
-    func getSearchHistoryResults(callback: String?) {
+	
+	func getFavorites(callback: String?) {
+		self.profile.bookmarks.getBookmarks().uponQueue(dispatch_get_main_queue()) { result in
+			if let bookmarks = result.successValue {
+				var favorites = [[String: AnyObject]]()
+				for i in bookmarks {
+					switch (i) {
+					case let item as CliqzBookmarkItem:
+						var bm = [String: AnyObject]()
+						bm["title"] = item.title
+						bm["url"] = item.url
+						bm["timestamp"] = Double(item.bookmarkedDate)
+						favorites.append(bm)
+					default:
+						print("Not a bookmark item")
+					}
+				}
+				self.javaScriptBridge.callJSMethod(callback!, parameter: favorites, completionHandler: nil)
+			}
+		}
+	}
 
-        if callback != nil {
-            self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
-                if let sites = result.successValue {
-                    var historyResults = [[String: AnyObject]]()
-                    for site in sites {
-                        var d = [String: AnyObject]()
-                        d["id"] = site!.id
-                        d["url"] = site!.url
-                        d["title"] = site!.title
-                        d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-                        d["favorite"] = site!.favorite
-                        historyResults.append(d)
-                    }
-                    self.javaScriptBridge.callJSMethod(callback!, parameter: ["results": historyResults], completionHandler: nil)
-                }
-            }
-        }
-    }
-    
+	private func onModelFetched(result: Maybe<BookmarksModel>) {
+		guard let model = result.successValue else {
+			print("Error: failed to get data: \(result.failureValue)")
+			return
+		}
+
+		if NSThread.currentThread().isMainThread {
+			self.bookmarkSource = model
+			return
+		}
+
+		dispatch_async(dispatch_get_main_queue()) {
+			self.bookmarkSource = model
+		}
+	}
+
+	func getSearchHistory(callback: String?) {
+		if let c = callback {
+			self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
+				if let sites = result.successValue {
+					var historyResults = [[String: AnyObject]]()
+					for site in sites {
+						var d = [String: AnyObject]()
+						d["id"] = site!.id
+						d["url"] = site!.url
+						d["title"] = site!.title
+						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
+						historyResults.append(d)
+					}
+					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
+				}
+			}
+		}
+	}
+
     func isReady() {
         guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
             return
