@@ -53,7 +53,7 @@ Everything after this point is done from within Xcode.
 Run on the Simulator
 -----------------
 
-* Open `Client.xcodeproj` and make sure you have the *Client* scheme and a simulated device selected. The app should run on any simulator. We just have not tested very well on the *Resizable iPad* and *Resizable iPhone* simulators.
+* Open `Client.xcodeproj` and make sure you have the *Fennec* scheme and a simulated device selected. The app should run on any simulator. We just have not tested very well on the *Resizable iPad* and *Resizable iPhone* simulators.
 * Select *Product -> Run* and the application should build and run on the selected simulator.
 
 Run on a Device with Xcode 7 and a Free Developer Account
