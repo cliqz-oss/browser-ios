@@ -89,19 +89,21 @@ Before you can run the application on your device, you need to setup a few thing
 
 > _Note_: When we mention `YOURREVEREDOMAIN` below, use your own domain in reverse notation like `com.example` or if you do not have your own domain, just use something unique and personal like `io.github.yourgithubusername`. Please do not use existing domain names which you do not own.
 
-1. Create a Application Group. Name this group 'Fennec' and for its Identifier use `group.YOURREVERSEDOMAIN.Fennec`
-2. Create a new App Id. Name it 'Fennec'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec`. In the App Services section, select *App Groups*.
-3. Create a new App Id. Name it 'Fennec ShareTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ShareTo`. In the App Services section, select *App Groups*.
-4. Create a new App Id. Name it 'Fennec SendTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.SendTo`. In the App Services section, select *App Groups*.
-5. Create a new App Id. Name it 'Fennec ViewLater'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ViewLater`. In the App Services section, select *App Groups*.
-6. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
+1. Create a Application Group. Name this group whatever you want e.g. 'XXX' and for its Identifier use `group.YOURREVERSEDOMAIN.XXX`
+2. Create a new App Id. Name it 'XXX'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX`. In the App Services section, select *App Groups*.
+3. Create a new App Id. Name it 'XXX ShareTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.ShareTo`. In the App Services section, select *App Groups*.
+4. Create a new App Id. Name it 'XXX SendTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.SendTo`. In the App Services section, select *App Groups*.
+5. Create a new App Id. Name it 'XXX ViewLater'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.ViewLater`. In the App Services section, select *App Groups*.
+6. Create a new App Id. Name it 'XXX Today'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.Today`. In the App Services section, select *App Groups*.
+7. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
 
 Now we are going to create three Provisioning Profiles that are linked to the App Ids that we just created:
 
-1. Create a new *Development Provisioning Profile* and link it to the *Fennec* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec*.
-2. Create a new *Development Provisioning Profile* and link it to the *Fennec SendTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec SendTo*.
-3. Create a new *Development Provisioning Profile* and link it to the *Fennec ShareTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ShareTo*.
-4. Create a new *Development Provisioning Profile* and link it to the *Fennec ViewLater* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ViewLater*.
+1. Create a new *Development Provisioning Profile* and link it to the *XXX* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX*.
+2. Create a new *Development Provisioning Profile* and link it to the *XXX SendTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX SendTo*.
+3. Create a new *Development Provisioning Profile* and link it to the *XXX ShareTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX ShareTo*.
+4. Create a new *Development Provisioning Profile* and link it to the *XXX ViewLater* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX ViewLater*.
+5. Create a new *Development Provisioning Profile* and link it to the *XXX Today* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX Today*.
 
 Now go to Xcode, *Preferences -> Accounts* and select your developer account. Hit the *View Details* button and then press the little reload button in the bottom left corner. This should sync the Provisioning Profiles and you should see the three profiles appear that you creates earlier.
 
