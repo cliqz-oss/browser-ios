@@ -17,8 +17,9 @@ class SearchEnginePicker: UITableViewController {
         super.viewDidLoad()
 
         navigationItem.title = NSLocalizedString("Default Search Engine", comment: "Title for default search engine picker.")
+
 		// Cliqz: Removed LeftBarButton as we need just back button.
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title from search engine picker"), style: .Plain, target: self, action: "SELcancel")
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title from search engine picker"), style: .Plain, target: self, action: #selector(SearchEnginePicker.SELcancel))
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

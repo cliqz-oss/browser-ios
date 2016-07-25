@@ -56,7 +56,7 @@ class HumanWebSetting: Setting {
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let humanWebTitle = NSLocalizedString("Human Web", tableName: "", comment: "Label used as an item in Settings. When touched it will open a Human Web settings")
+        let humanWebTitle = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Human Web settings")
         super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
@@ -64,6 +64,26 @@ class HumanWebSetting: Setting {
     
     override func onClick(navigationController: UINavigationController?) {
         let viewController = HumanWebSettingsTableViewController()
+        viewController.profile = self.profile
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+//Cliqz: Added new settings item for Ad Blocker
+class AdBlockerSetting: Setting {
+    
+    let profile: Profile
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let humanWebTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
+        super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = AdBlockerSettingsTableViewController()
         viewController.profile = self.profile
         navigationController?.pushViewController(viewController, animated: true)
     }

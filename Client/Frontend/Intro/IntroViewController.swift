@@ -121,17 +121,20 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
 
         // Cliqz: Commented start browsing button
-//        startBrowsingButton = UIButton()
-//        startBrowsingButton.backgroundColor = IntroViewControllerUX.StartBrowsingButtonColor
-//        startBrowsingButton.setTitle(IntroViewControllerUX.StartBrowsingButtonTitle, forState: UIControlState.Normal)
-//        startBrowsingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-//        startBrowsingButton.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
-//
-//        view.addSubview(startBrowsingButton)
-//        startBrowsingButton.snp_makeConstraints { (make) -> Void in
-//            make.left.right.bottom.equalTo(self.view)
-//            make.height.equalTo(IntroViewControllerUX.StartBrowsingButtonHeight)
-//        }
+    /*
+        startBrowsingButton = UIButton()
+        startBrowsingButton.backgroundColor = IntroViewControllerUX.StartBrowsingButtonColor
+        startBrowsingButton.setTitle(IntroViewControllerUX.StartBrowsingButtonTitle, forState: UIControlState.Normal)
+        startBrowsingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        startBrowsingButton.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), forControlEvents: UIControlEvents.TouchUpInside)
+        startBrowsingButton.accessibilityIdentifier = "IntroViewController.startBrowsingButton"
+
+        view.addSubview(startBrowsingButton)
+        startBrowsingButton.snp_makeConstraints { (make) -> Void in
+            make.left.right.bottom.equalTo(self.view)
+            make.height.equalTo(IntroViewControllerUX.StartBrowsingButtonHeight)
+        }
+     */
 
         scrollView = IntroOverlayScrollView()
         scrollView.backgroundColor = UIColor.clearColor()
@@ -167,7 +170,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //        pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
         pageControl.numberOfPages = IntroViewControllerUX.NumberOfCards
         pageControl.accessibilityIdentifier = "pageControl"
-        pageControl.addTarget(self, action: Selector("changePage"), forControlEvents: UIControlEvents.ValueChanged)
+        pageControl.addTarget(self, action: #selector(IntroViewController.changePage), forControlEvents: UIControlEvents.ValueChanged)
 
         view.addSubview(pageControl)
         pageControl.snp_makeConstraints { (make) -> Void in
@@ -184,33 +187,40 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             self.addLabelsToIntroView(introView, text: text, title: title)
         }
 
+
         // Cliqz: changed titles and texts of the cards
         addCard("", title: IntroViewControllerUX.CardTitleCliqzBrowser)
         addTextCard(IntroViewControllerUX.CardTextTyping)
         addTextCard(IntroViewControllerUX.CardTextLocationSearch, additionalView: gettingStartedButton)
-        
-//        addCard(IntroViewControllerUX.CardTextOrganize, title: IntroViewControllerUX.CardTitleOrganize)
-//        addCard(IntroViewControllerUX.CardTextCustomize, title: IntroViewControllerUX.CardTitleCustomize)
-//        addCard(IntroViewControllerUX.CardTextShare, title: IntroViewControllerUX.CardTitleShare)
-//        addCard(IntroViewControllerUX.CardTextChoose, title: IntroViewControllerUX.CardTitleChoose)
+            
+        /*
+        addCard(IntroViewControllerUX.CardTextOrganize, title: IntroViewControllerUX.CardTitleOrganize)
+        addCard(IntroViewControllerUX.CardTextCustomize, title: IntroViewControllerUX.CardTitleCustomize)
+        addCard(IntroViewControllerUX.CardTextShare, title: IntroViewControllerUX.CardTitleShare)
+        addCard(IntroViewControllerUX.CardTextChoose, title: IntroViewControllerUX.CardTitleChoose)
+        */
 
 
         // Cliqz: removed Sync card
-//        signInButton = UIButton()
-//        signInButton.backgroundColor = IntroViewControllerUX.SignInButtonColor
-//        signInButton.setTitle(IntroViewControllerUX.SignInButtonTitle, forState: .Normal)
-//        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-//        signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
-//        signInButton.clipsToBounds = true
-//        signInButton.addTarget(self, action: "SELlogin", forControlEvents: UIControlEvents.TouchUpInside)
-//        signInButton.snp_makeConstraints { (make) -> Void in
-//            make.height.equalTo(IntroViewControllerUX.SignInButtonHeight)
-//        }
-//
-//        let syncCardView =  UIView()
-//        addViewsToIntroView(syncCardView, view: signInButton, title: IntroViewControllerUX.CardTitleSync)
-//        introViews.append(syncCardView)
+        /*
+        // Sync card, with sign in to sync button.
 
+        signInButton = UIButton()
+        signInButton.backgroundColor = IntroViewControllerUX.SignInButtonColor
+        signInButton.setTitle(IntroViewControllerUX.SignInButtonTitle, forState: .Normal)
+        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
+        signInButton.clipsToBounds = true
+        signInButton.addTarget(self, action: #selector(IntroViewController.SELlogin), forControlEvents: UIControlEvents.TouchUpInside)
+        signInButton.snp_makeConstraints { (make) -> Void in
+            make.height.equalTo(IntroViewControllerUX.SignInButtonHeight)
+        }
+
+        let syncCardView =  UIView()
+        addViewsToIntroView(syncCardView, view: signInButton, title: IntroViewControllerUX.CardTitleSync)
+        introViews.append(syncCardView)
+        */
+        
         // Add all the cards to the view, make them invisible with zero alpha
 
         for introView in introViews {
@@ -238,7 +248,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELDynamicFontChanged:", name: NotificationDynamicFontChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IntroViewController.SELDynamicFontChanged(_:)), name: NotificationDynamicFontChanged, object: nil)
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -399,7 +409,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
         }
 		if page == pageControl.numberOfPages - 1 {
-			LocationManager.sharedInstance.startUpdateingLocation()
+			LocationManager.sharedInstance.askForLocationAccess()
 		}
     }
 

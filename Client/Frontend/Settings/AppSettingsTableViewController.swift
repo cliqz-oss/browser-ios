@@ -18,7 +18,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar"),
             style: UIBarButtonItemStyle.Done,
-            target: navigationController, action: "SELdone")
+            target: navigationController, action: Selector("SELdone"))
+        navigationItem.leftBarButtonItem?.accessibilityIdentifier = "AppSettingsTableViewController.navigationItem.leftBarButtonItem"
+
+        tableView.accessibilityIdentifier = "AppSettingsTableViewController.tableView"
     }
 
     override func generateSettings() -> [SettingSection] {
@@ -54,7 +57,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 titleText: NSLocalizedString("Allow Third-Party Keyboards", comment: "Setting to enable third-party keyboards"), statusText: NSLocalizedString("Firefox needs to reopen for this change to take effect.", comment: "Setting value prop to enable third-party keyboards")),
 			*/
             BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: true, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
-            BoolSetting(prefs: prefs, prefKey: "blockAds", defaultValue: false, titleText: NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads setting")),
+            AdBlockerSetting(settings: self),
             ImprintSetting(),
             HumanWebSetting(settings: self)
 

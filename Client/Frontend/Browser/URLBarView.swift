@@ -155,8 +155,8 @@ class URLBarView: UIView {
     private lazy var tabsButton: TabsButton = {
         let tabsButton = TabsButton()
         tabsButton.titleLabel.text = "0"
-        tabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
-        tabsButton.accessibilityIdentifier = "ShowTabs"
+        tabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
+        tabsButton.accessibilityIdentifier = "URLBarView.tabsButton"
         tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the browser toolbar")
         return tabsButton
     }()
@@ -175,7 +175,7 @@ class URLBarView: UIView {
         let cancelTitle = NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Button label to cancel entering a URL or search query")
         cancelButton.setTitle(cancelTitle, forState: UIControlState.Normal)
         cancelButton.titleLabel?.font = UIConstants.DefaultChromeFont
-        cancelButton.addTarget(self, action: "SELdidClickCancel", forControlEvents: UIControlEvents.TouchUpInside)
+        cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         cancelButton.titleEdgeInsets = UIEdgeInsetsMake(10, 12, 10, 12)
         cancelButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
@@ -187,7 +187,7 @@ class URLBarView: UIView {
 
     private lazy var scrollToTopButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: "SELtappedScrollToTopArea", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(URLBarView.SELtappedScrollToTopArea), forControlEvents: UIControlEvents.TouchUpInside)
         return button
     }()
 
@@ -467,7 +467,7 @@ class URLBarView: UIView {
             // make a 'clone' of the tabs button
             let newTabsButton = self.tabsButton.clone() as! TabsButton
             self.clonedTabsButton = newTabsButton
-            newTabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
+            newTabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
             newTabsButton.titleLabel.text = count.description
             newTabsButton.accessibilityValue = count.description
             addSubview(newTabsButton)

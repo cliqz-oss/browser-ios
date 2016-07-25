@@ -65,8 +65,16 @@
 /* Navigation title in settings */
 "Human Web" = "Human Web";
 
-/* Block Ads setting */
-"Block Ads" = "Block known ad servers";
+/* Block Ads setting
+ Block Ads toogle title in Block Ads settings */
+"Block Ads" = "Block Ads";
+
+/* Fair Blocking toogle title in Block Ads settings
+  Title of navigation controller of Fair Blocking */
+"Fair Blocking" = "Fair Blocking";
+
+/* More details about Fair Blocking */
+"What is 'fair'?" = "What is 'fair'?";
 
 /* Settings item for clearing favorite history */
 "Favorites" = "Include Favorites";
@@ -101,3 +109,12 @@
 
 /* Button label to `No` in news notification permission screen */
 "No thanks" = "No thanks";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Forget Mode" = "Forget Mode";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
+
+/* Context/Sharing menu item for downloading youtube videos */
+"Download youtube video" = "Make available offline";

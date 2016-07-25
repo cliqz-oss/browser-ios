@@ -196,7 +196,8 @@ public class BrowserDB {
             var bakCounter = 0
             var bak: String
             repeat {
-                bak = "\(self.filename).bak.\(++bakCounter)"
+                bakCounter += 1
+                bak = "\(self.filename).bak.\(bakCounter)"
             } while self.files.exists(bak)
 
             do {
