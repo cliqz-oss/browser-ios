@@ -3,12 +3,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Mozilla Application ID
-MOZ_APP_ID = CliqzBeta
+MOZ_APP_ID = Cliqz
 
-MOZ_BUNDLE_DISPLAY_NAME = Cliqz Beta
+MOZ_BUNDLE_DISPLAY_NAME = CLIQZ
 
 // The name of the product. Generally used as the prefix/name of all files associated with this build configuration.
-MOZ_PRODUCT_NAME = CliqzBeta
+MOZ_PRODUCT_NAME = CLIQZ
 
 // Bundle Identifier
 MOZ_BUNDLE_ID = cliqz.ios.$(MOZ_PRODUCT_NAME)
