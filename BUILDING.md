@@ -107,23 +107,15 @@ Now we are going to create three Provisioning Profiles that are linked to the Ap
 
 Now go to Xcode, *Preferences -> Accounts* and select your developer account. Hit the *View Details* button and then press the little reload button in the bottom left corner. This should sync the Provisioning Profiles and you should see the three profiles appear that you creates earlier.
 
-Almost done. The one thing missing is that we need to adjust the following files in the project:
+Almost done. The one thing missing is that we need to adjust the build configuration to use your new bundle identifier.
 
-* `Client/Configuration/BaseConfig.xcconfig`
-* `Client/Info.plist`
-* `Client/Fennec.entitlements`
-* `Extensions/ShareTo/Info.plist`
-* `Extensions/ShareTo/Fennec.entitlements`
-* `Extensions/SendTo/Info.plist`
-* `Extensions/SendTo/Fennec.entitlements`
-* `Extensions/ViewLater/Info.plist`
-* `Extensions/ViewLater/Fennec.entitlements`
-
-In all these files, replace occurrences of `org.mozilla.ios` with `YOURREVERSEDOMAIN`. Make sure you expand all the fields of the `.entitlements` files. Make sure you just replace the `org.mozilla.ios` part and keep prefixes like `group.` that some files contain.
+1. Open Client/Configuration/Fennec.xcconfig
+2. Change MOZ_BUNDLE_ID to `YOURREVERSEDOMAIN`.
+3. Navigate to each of the application targets (Client/SendTo/ShareTo/ViewLater) and your developer account.
 
 Before building, do *Product -> Clean Build Folder* (option-shift-command-k)
 
-You should now be able to build the *Client* scheme and run on your device.
+You should now be able to build the *Fennec* scheme and run on your device.
 
 We would love a Pull Request for a smarter Xcode project configuration or even a shell script that makes this process simpler.
 
