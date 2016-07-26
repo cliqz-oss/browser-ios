@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Account
-import Base32
 import Shared
 import UIKit
 import XCGLogger
@@ -54,7 +53,15 @@ class Setting: NSObject {
         cell.accessoryView = nil
         cell.selectionStyle = enabled ? .Default : .None
         cell.accessibilityIdentifier = accessibilityIdentifier
-        cell.accessibilityLabel = title?.string
+        if let title = title?.string {
+            if let detailText = cell.detailTextLabel?.text {
+                cell.accessibilityLabel = "\(title), \(detailText)"
+            } else if let status = status?.string {
+                cell.accessibilityLabel = "\(title), \(status)"
+            } else {
+                cell.accessibilityLabel = title
+            }
+        }
         cell.accessibilityTraits = UIAccessibilityTraitButton
         cell.indentationWidth = 0
         cell.layoutMargins = UIEdgeInsetsZero
@@ -95,7 +102,7 @@ class SettingSection : Setting {
         var count = 0
         for setting in children {
             if !setting.hidden {
-                count++
+                count += 1
             }
         }
         return count
@@ -108,7 +115,7 @@ class SettingSection : Setting {
                 if i == val {
                     return setting
                 }
-                i++
+                i += 1
             }
         }
         return nil
@@ -169,8 +176,15 @@ class BoolSetting: Setting {
         let control = UISwitch()
         // Cliqz: Revert the tint color of the UISwitch to the default color for iOS (green color)
 //        control.onTintColor = UIConstants.ControlTintColor
-        control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        control.addTarget(self, action: #selector(BoolSetting.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         control.on = prefs.boolForKey(prefKey) ?? defaultValue
+        if let title = title {
+            if let status = status {
+                control.accessibilityLabel = "\(title.string), \(status.string)"
+            } else {
+                control.accessibilityLabel = title.string
+            }
+        }
         cell.accessoryView = PaddedSwitch(switchView: control)
         cell.selectionStyle = .None
     }
@@ -283,9 +297,9 @@ class SettingsTableViewController: UITableViewController {
 
         settings = generateSettings()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: NotificationProfileDidStartSyncing, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELsyncDidChangeState", name: NotificationProfileDidFinishSyncing, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELfirefoxAccountDidChange", name: NotificationFirefoxAccountChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SettingsTableViewController.SELsyncDidChangeState), name: NotificationProfileDidStartSyncing, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SettingsTableViewController.SELsyncDidChangeState), name: NotificationProfileDidFinishSyncing, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SettingsTableViewController.SELfirefoxAccountDidChange), name: NotificationFirefoxAccountChanged, object: nil)
 
         tableView.reloadData()
     }
@@ -421,6 +435,7 @@ class SettingsTableFooterView: UIView {
     var logo: UIImageView = {
         var image =  UIImageView(image: UIImage(named: "settingsFlatfox"))
         image.contentMode = UIViewContentMode.Center
+        image.accessibilityIdentifier = "SettingsTableFooterView.logo"
         return image
     }()
 

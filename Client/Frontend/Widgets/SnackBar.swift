@@ -29,7 +29,7 @@ class SnackButton : UIButton {
         return UIImage.createWithColor(size, color: UIConstants.HighlightColor)
     }()
 
-    init(title: String, callback: (bar: SnackBar) -> Void) {
+    init(title: String, accessibilityIdentifier: String, callback: (bar: SnackBar) -> Void) {
         self.callback = callback
 
         super.init(frame: CGRectZero)
@@ -39,7 +39,9 @@ class SnackButton : UIButton {
         setBackgroundImage(highlightImg, forState: .Highlighted)
         setTitleColor(UIConstants.HighlightText, forState: .Highlighted)
 
-        addTarget(self, action: "onClick", forControlEvents: .TouchUpInside)
+        addTarget(self, action: #selector(SnackButton.onClick), forControlEvents: .TouchUpInside)
+
+        self.accessibilityIdentifier = accessibilityIdentifier
     }
 
     override init(frame: CGRect) {
@@ -280,7 +282,7 @@ class TimerSnackBar: SnackBar {
     }
 
     override func show() {
-        self.timer = NSTimer(timeInterval: timeout, target: self, selector: "SELTimerDone", userInfo: nil, repeats: false)
+        self.timer = NSTimer(timeInterval: timeout, target: self, selector: #selector(TimerSnackBar.SELTimerDone), userInfo: nil, repeats: false)
         NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
         super.show()
     }

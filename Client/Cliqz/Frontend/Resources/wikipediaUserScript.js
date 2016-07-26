@@ -3,7 +3,7 @@
   Client
 
   Created by Mahmoud Adam on 5/11/16.
-  Copyright © 2016 Mozilla. All rights reserved.
+  Copyright © 2016 CLIQZ. All rights reserved.
 */
 
 

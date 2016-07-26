@@ -81,27 +81,31 @@ def downloadLocales():
 
 def copyOverrides():
     for locale in os.listdir("SearchOverrides"):
-        print("copying overrides for %s..." % locale)
-        localeSrc = os.path.join("SearchOverrides", locale)
-        localeDst = os.path.join("SearchPlugins", locale)
-        if not os.path.exists(localeDst):
-            os.makedirs(localeDst)
+        if not locale.startswith("."):
+            print("copying overrides for %s..." % locale)
+            localeSrc = os.path.join("SearchOverrides", locale)
+            localeDst = os.path.join("SearchPlugins", locale)
+            if not os.path.exists(localeDst):
+                os.makedirs(localeDst)
 
-        for file in os.listdir(localeSrc):
-            overrideSrc = os.path.join(localeSrc, file)
-            overrideDst = os.path.join(localeDst, file)
-            print("  overriding: %s..." % file)
-            shutil.copy(overrideSrc, overrideDst)
+            for file in os.listdir(localeSrc):
+                if localeSrc.startswith("."): continue
+                overrideSrc = os.path.join(localeSrc, file)
+                overrideDst = os.path.join(localeDst, file)
+                print("  overriding: %s..." % file)
+                shutil.copy(overrideSrc, overrideDst)
 
 def verifyEngines():
     print("verifying engines...")
     enDir = os.path.join("SearchPlugins", "en")
     for locale in os.listdir("SearchPlugins"):
+        if locale.startswith("."): continue
         localeDir = os.path.join("SearchPlugins", locale)
         with open(os.path.join(localeDir, "list.txt")) as f:
             engineList = f.read().splitlines()
 
         for engine in engineList:
+            if engine.endswith(":hidden"): continue
             path = os.path.join(localeDir, engine + ".xml")
             enPath = os.path.join(enDir, engine + ".xml")
             if not os.path.exists(path) and not os.path.exists(enPath):

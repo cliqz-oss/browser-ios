@@ -38,7 +38,7 @@ class SearchEngines {
         self.disabledEngineNames = getDisabledEngineNames()
         self.orderedEngines = getOrderedEngines()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "SELdidResetPrompt:", name: "SearchEnginesPromptReset", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SearchEngines.SELdidResetPrompt(_:)), name: "SearchEnginesPromptReset", object: nil)
     }
 
     deinit {
@@ -216,6 +216,10 @@ class SearchEngines {
         var engines = [OpenSearchEngine]()
         let parser = OpenSearchParser(pluginMode: true)
         for engineName in engineNames {
+            // Ignore hidden engines in list.txt
+            if (engineName.endsWith(":hidden")) {
+                continue;
+            }
             // Search the current localized search plugins directory for the search engine.
             // If it doesn't exist, fall back to English.
             var fullPath = (searchDirectory as NSString).stringByAppendingPathComponent("\(engineName).xml")
@@ -224,7 +228,7 @@ class SearchEngines {
             }
             assert(NSFileManager.defaultManager().fileExistsAtPath(fullPath), "\(fullPath) exists")
 
-            let engine = parser.parse(fullPath)
+            let engine = parser.parse(fullPath, id: engineName)
             assert(engine != nil, "Engine at \(fullPath) successfully parsed")
 
             engines.append(engine!)

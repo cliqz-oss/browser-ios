@@ -73,7 +73,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
 
 	override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 
         let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 
@@ -81,6 +81,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.webView?.navigationDelegate = self
         self.webView?.scrollView.scrollEnabled = false
         self.view.addSubview(self.webView!)
+        
+
+        self.webView!.snp_makeConstraints { make in
+            make.top.equalTo(0)
+            make.bottom.left.right.equalTo(self.view)
+        }
         
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
@@ -91,6 +97,29 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
         addGuestureRecognizers()
+        
+        UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: UIDeviceOrientationDidChangeNotification, object: UIDevice.currentDevice())
+
+    }
+    func fixViewport() {
+        if #available(iOS 9.0, *) {
+            return
+        }
+        
+        var currentWidth = "device-width"
+        var currentHeight = "device-height"
+        if UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight {
+            currentWidth = "device-height"
+            currentHeight = "device-width"
+        }
+        if let path = NSBundle.mainBundle().pathForResource("viewport", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
+            var modifiedSource = source.stringByReplacingOccurrencesOfString("device-height", withString: currentHeight)
+            modifiedSource = modifiedSource.stringByReplacingOccurrencesOfString("device-width", withString: currentWidth)
+            
+            
+            self.webView?.evaluateJavaScript(modifiedSource, completionHandler: nil)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -203,11 +232,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	private func layoutSearchEngineScrollView() {
 		let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(self.view) ?? 0
-		self.webView!.snp_remakeConstraints { make in
-			make.top.equalTo(0)
-			make.left.right.equalTo(self.view)
-			make.bottom.equalTo(self.view).offset(-keyboardHeight)
-		}
 		if let _ = self.spinnerView.superview {
 			self.spinnerView.snp_makeConstraints { make in
 				make.centerX.equalTo(self.view)
@@ -218,10 +242,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	private func animateSearchEnginesWithKeyboard(keyboardState: KeyboardState) {
 		layoutSearchEngineScrollView()
-		UIView.animateWithDuration(keyboardState.animationDuration, animations: {
-			UIView.setAnimationCurve(keyboardState.animationCurve)
-			self.view.layoutIfNeeded()
-		})
+        self.view.layoutIfNeeded()
 	}
 
 	// Mark Keyboard delegate methods

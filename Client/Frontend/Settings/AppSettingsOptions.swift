@@ -380,13 +380,7 @@ class ShowIntroductionSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        // Cliqz: dismiss the SettingsViewController without animation because we display it from History (i.e. we need to dismiss both settings and history views)
-//        navigationController?.dismissViewControllerAnimated(true, completion: {
-//            if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-//                appDelegate.browserViewController.presentIntroViewController(true)
-//            }
-//        })
-        navigationController?.dismissViewControllerAnimated(false, completion: {
+        navigationController?.dismissViewControllerAnimated(true, completion: {
             if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
                 appDelegate.browserViewController.presentIntroViewController(true)
             }
@@ -454,6 +448,8 @@ class SearchSetting: Setting {
 
     override var status: NSAttributedString { return NSAttributedString(string: profile.searchEngines.defaultEngine.shortName) }
 
+    override var accessibilityIdentifier: String? { return "Search" }
+
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         super.init(title: NSAttributedString(string: NSLocalizedString("Search", comment: "Open search section of settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
@@ -473,6 +469,8 @@ class LoginsSetting: Setting {
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
 
+    override var accessibilityIdentifier: String? { return "Logins" }
+
     init(settings: SettingsTableViewController, delegate: SettingsDelegate?) {
         self.profile = settings.profile
         self.tabManager = settings.tabManager
@@ -491,6 +489,7 @@ class LoginsSetting: Setting {
 
         if AppConstants.MOZ_AUTHENTICATION_MANAGER && authInfo.requiresValidation() {
             AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
+            touchIDReason: AuthenticationStrings.loginsTouchReason,
             success: {
                 self.navigateToLoginsList()
             },
@@ -522,6 +521,8 @@ class TouchIDPasscodeSetting: Setting {
     var tabManager: TabManager!
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+    override var accessibilityIdentifier: String? { return "TouchIDPasscode" }
 
     init(settings: SettingsTableViewController, delegate: SettingsDelegate? = nil) {
         self.profile = settings.profile
@@ -556,7 +557,7 @@ class ClearPrivateDataSetting: Setting {
         self.profile = settings.profile
         self.tabManager = settings.tabManager
 
-        let clearTitle = NSLocalizedString("Clear Private Data", comment: "Label used as an item in Settings. When touched it will open a dialog prompting the user to make sure they want to clear all of their private data.")
+        let clearTitle = Strings.SettingsClearPrivateDataSectionName
         super.init(title: NSAttributedString(string: clearTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
 
@@ -574,9 +575,7 @@ class PrivacyPolicySetting: Setting {
     }
 
     override var url: NSURL? {
-        //Cliqz: replaced FireFox Privacy Policy URL with Cliqz one
-//        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
-        return NSURL(string: "http://cdn.cliqz.com/mobile/extension/static/privacy.html")
+        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -601,7 +600,7 @@ class ChinaSyncServiceSetting: WithoutAccountSetting {
         super.onConfigureCell(cell)
         let control = UISwitch()
         control.onTintColor = UIConstants.ControlTintColor
-        control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        control.addTarget(self, action: #selector(ChinaSyncServiceSetting.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         control.on = prefs.boolForKey(prefKey) ?? true
         cell.accessoryView = control
         cell.selectionStyle = .None

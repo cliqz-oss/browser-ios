@@ -25,6 +25,7 @@ public enum TelemetryLogEventType {
     case HomeScreenShortcut (String, Int)
     case TabSignal          (String, String, Int?, Int)
     case NewsNotification   (String)
+	case YoutubeVideoDownloader	(String, String, String, String)
 }
 
 
@@ -49,7 +50,9 @@ class TelemetryLogger : EventsLogger {
 
     private func loadTelemetrySeq() {
         dispatch_sync(serialDispatchQueue) {
-            if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
+            if let lastStoredSeq = self.getLastStoredSeq() {
+                self.telemetrySeq = AtomicInt(initialValue: lastStoredSeq)
+            } else if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
                 self.telemetrySeq = AtomicInt(initialValue: storedSeq)
             } else {
                 self.telemetrySeq = AtomicInt(initialValue: 0)
@@ -63,6 +66,12 @@ class TelemetryLogger : EventsLogger {
     //MARK: - private mode
     func changePrivateMode(privateMode: Bool) {
         self.privateMode = privateMode
+    }
+    
+    //MARK: - Presisting events and sequence
+    internal func persistState() {
+        self.storeCurrentTelemetrySeq()
+        self.persistEvents()
     }
     
     //MARK: - Log events
@@ -129,7 +138,9 @@ class TelemetryLogger : EventsLogger {
                 
             case .NewsNotification(let action):
                 event = self.createNewsNotificationEvent(action)
-                
+			
+			case .YoutubeVideoDownloader(let type, let action, let statusKey, let statusValue):
+				event = self.createYoutubeVideoDownloaderEvent(type, action: action, statusKey: statusKey, statusValue: statusValue)
             }
             
             // Always store the event
@@ -381,4 +392,12 @@ class TelemetryLogger : EventsLogger {
         event["action"] = action
         return event
     }
+	
+	private func createYoutubeVideoDownloaderEvent(type: String, action: String, statusKey: String, statusValue: String) -> [String: AnyObject] {
+		var event = createBasicEvent()
+		event["type"] = type
+		event["action"] = action
+		event[statusKey] = statusValue
+		return event
+	}
 }

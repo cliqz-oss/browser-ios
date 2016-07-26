@@ -56,9 +56,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationDynamicFontChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationDynamicFontChanged, object: nil)
     }
 
     override func viewDidLoad() {
@@ -113,7 +113,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
 
     func addRefreshControl() {
         let refresh = UIRefreshControl()
-        refresh.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        refresh.addTarget(self, action: #selector(HistoryPanel.refresh), forControlEvents: UIControlEvents.ValueChanged)
         self.refreshControl = refresh
         self.tableView.addSubview(refresh)
     }
@@ -219,7 +219,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         welcomeLabel.textAlignment = NSTextAlignment.Center
         welcomeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontLight
         welcomeLabel.textColor = HistoryPanelUX.WelcomeScreenItemTextColor
-        welcomeLabel.numberOfLines = 2
+        welcomeLabel.numberOfLines = 0
         welcomeLabel.adjustsFontSizeToFitWidth = true
 
         welcomeLabel.snp_makeConstraints { make in
@@ -267,7 +267,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         var count = 0
         for category in self.categories {
             if category.rows > 0 {
-                count++
+                count += 1
             }
         }
         return count
@@ -310,7 +310,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         // Loop over all the data. Record the start of each "section" of our list.
         for i in 0..<data.count {
             if let site = data[i] {
-                counts[categoryForDate(site.latestVisit!.date)]++
+                counts[categoryForDate(site.latestVisit!.date)] += 1
             }
         }
 
@@ -324,7 +324,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
                 self.categories.append((section: section, rows: count, offset: offset))
                 sectionLookup[section] = i
                 offset += count
-                section++
+                section += 1
             } else {
                 log.debug("Category \(i) has 0 rows, and thus has no section.")
                 self.categories.append((section: nil, rows: 0, offset: offset))

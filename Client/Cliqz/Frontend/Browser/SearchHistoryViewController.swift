@@ -39,8 +39,9 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 
     var tabManager: TabManager!
     weak var delegate: SearchHistoryViewControllerDelegate?
-    let QueryLimit = 50
-    var reload = false
+    let QueryLimit = 100
+    
+    var queuedScripts = [String]()
     
 	init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
@@ -73,19 +74,17 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 		
         self.setupConstraints()
     }
-
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-		self.historyWebView.evaluateJavaScript("jsAPI.onShow()", completionHandler: nil)
-
-        if self.reload == true {
-            self.reload = false;
-//            self.getSearchHistory("History.showHistory")
-		}
+		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
+        self.historyWebView.scrollView.contentInset = UIEdgeInsetsMake(0,0,0,0)
     }
-
-    override func viewWillDisappear(animated: Bool) {
-        self.reload = true;
+    
+    private func evaluateQueuedScripts() {
+        for script in queuedScripts {
+            self.evaluateJavaScript(script, completionHandler: nil)
+        }
+        queuedScripts.removeAll()
     }
     
     // Mark: WKScriptMessageHandler
@@ -119,7 +118,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     // Mark: Configure Layout
     private func setupConstraints() {
         self.historyWebView.snp_remakeConstraints { make in
-            make.top.equalTo(0)
+            make.top.equalTo(snp_topLayoutGuideBottom)
             make.left.right.bottom.equalTo(self.view)
         }
     }
@@ -158,6 +157,10 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
     }
     
     func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        guard self.isViewLoaded() == true else {
+            queuedScripts.append(javaScriptString)
+            return
+        }
         self.historyWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
     }
     
@@ -220,13 +223,15 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
 						historyResults.append(d)
 					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
+					self.javaScriptBridge.callJSMethod(c, parameter: historyResults.reverse(), completionHandler: nil)
 				}
 			}
 		}
 	}
 
     func isReady() {
+        evaluateQueuedScripts()
+        
         guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
             return
         }
@@ -245,7 +250,11 @@ extension SearchHistoryViewController: JavaScriptBridgeDelegate {
 	}
 
 	func clearQueries(includeFavorites includeFavorites: Bool) {
-        self.evaluateJavaScript("jsAPI.clearQueries(\(includeFavorites))", completionHandler: nil)
+        if includeFavorites == true {
+            self.evaluateJavaScript("jsAPI.clearFavorites()", completionHandler: nil)
+        } else {
+            self.evaluateJavaScript("jsAPI.clearHistory()", completionHandler: nil)
+        }
     }
 
 }

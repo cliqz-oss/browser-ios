@@ -13,6 +13,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	let manager = CLLocationManager()
 	var location: CLLocation?
+    let locationStatusKey = "currentLocationStatus"
 
 	public static let sharedInstance: LocationManager = {
 		let m = LocationManager()
@@ -21,12 +22,19 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 		return m
 	}()
 
+    public func askForLocationAccess () {
+        TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
+        self.manager.requestWhenInUseAuthorization()
+    }
+    
 	public func startUpdateingLocation() {
-		if !CLLocationManager.locationServicesEnabled() || CLLocationManager.authorizationStatus() == .NotDetermined {
-			TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
-			self.manager.requestWhenInUseAuthorization()
-		}
-		self.manager.startUpdatingLocation()
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        
+		if CLLocationManager.locationServicesEnabled() &&  authorizationStatus == .NotDetermined {
+			askForLocationAccess()
+		} else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+            self.manager.startUpdatingLocation()
+        }
 	}
 
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -45,7 +53,12 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 			}
             break
         }
-		TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("status_change", status.stringValue()))
+        
+        let currentLocationStatus = LocalDataStore.objectForKey(locationStatusKey)
+        if currentLocationStatus == nil || currentLocationStatus as! String != status.stringValue() {
+            TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("status_change", status.stringValue()))
+            LocalDataStore.setObject(status.stringValue(), forKey: locationStatusKey)
+        }
     }
 
 }
