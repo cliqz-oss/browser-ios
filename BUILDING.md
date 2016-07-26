@@ -1,4 +1,4 @@
-> These are the instructions for building the *master* branch which contains a stable version just before releasing. If you need up to date version user development branch.
+> These are the instructions for building the *master* branch which contains a stable version just before releasing. If you need an up-to-date version user development branch.
 
 Building Cliqz for iOS
 ========================
