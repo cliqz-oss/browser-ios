@@ -11,10 +11,10 @@ import UIKit
 private let SectionToggle = 0
 private let SectionDetails = 1
 private let HeaderFooterHeight: CGFloat = 44
-private let AdBlockerPrefKey = "blockAds"
 private let FairBlockingPrefKey = "fairBlocking"
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 
+public let AdBlockerPrefKey = "blockAds"
 
 class AdBlockerSettingsTableViewController: UITableViewController {
 
