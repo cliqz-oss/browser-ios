@@ -80,8 +80,7 @@ private extension TrayToBrowserAnimator {
             container.layoutIfNeeded()
             cell.title.transform = CGAffineTransformMakeTranslation(0, -cell.title.frame.height)
 
-            resetTransformsForViews([bvc.header, bvc.footer, bvc.readerModeBar, bvc.footerBackdrop, bvc.headerBackdrop])
-            bvc.urlBar.updateAlphaForSubviews(1)
+            bvc.tabTrayDidDismiss(tabTray)
 
             tabCollectionViewSnapshot.transform = CGAffineTransformMakeScale(0.9, 0.9)
             tabCollectionViewSnapshot.alpha = 0
@@ -98,7 +97,6 @@ private extension TrayToBrowserAnimator {
             cell.removeFromSuperview()
             tabCollectionViewSnapshot.removeFromSuperview()
             bvc.footer.alpha = 1
-            bvc.startTrackingAccessibilityStatus()
             bvc.toggleSnackBarVisibility(show: true)
             toggleWebViewVisibility(show: true, usingTabManager: bvc.tabManager)
             bvc.webViewContainerBackdrop.hidden = false
@@ -201,7 +199,6 @@ private extension BrowserToTrayAnimator {
                 bvc.toggleSnackBarVisibility(show: true)
                 toggleWebViewVisibility(show: true, usingTabManager: bvc.tabManager)
                 bvc.homePanelController?.view.hidden = false
-                bvc.stopTrackingAccessibilityStatus()
 
                 bvc.urlBar.isTransitioning = false
                 transitionContext.completeTransition(true)
@@ -221,8 +218,8 @@ private func transformHeaderFooterForBVC(bvc: BrowserViewController, toFrame fin
     bvc.headerBackdrop.transform = headerForTransform
 }
 
-private func footerTransform(var frame: CGRect, toFrame finalFrame: CGRect, container: UIView) -> CGAffineTransform {
-    frame = container.convertRect(frame, toView: container)
+private func footerTransform( frame: CGRect, toFrame finalFrame: CGRect, container: UIView) -> CGAffineTransform {
+    let frame = container.convertRect(frame, toView: container)
     let endY = CGRectGetMaxY(finalFrame) - (frame.size.height / 2)
     let endX = CGRectGetMidX(finalFrame)
     let translation = CGPoint(x: endX - CGRectGetMidX(frame), y: endY - CGRectGetMidY(frame))
@@ -235,8 +232,8 @@ private func footerTransform(var frame: CGRect, toFrame finalFrame: CGRect, cont
     return transform
 }
 
-private func headerTransform(var frame: CGRect, toFrame finalFrame: CGRect, container: UIView) -> CGAffineTransform {
-    frame = container.convertRect(frame, toView: container)
+private func headerTransform(frame: CGRect, toFrame finalFrame: CGRect, container: UIView) -> CGAffineTransform {
+    let frame = container.convertRect(frame, toView: container)
     let endY = CGRectGetMinY(finalFrame) + (frame.size.height / 2)
     let endX = CGRectGetMidX(finalFrame)
     let translation = CGPoint(x: endX - CGRectGetMidX(frame), y: endY - CGRectGetMidY(frame))
@@ -308,9 +305,12 @@ private func createTransitionCellFromBrowser(browser: Browser?, withFrame frame:
     cell.background.image = browser?.screenshot
     cell.titleText.text = browser?.displayTitle
 
+    // Cliz: disable dark cell style in private mode
+    /*
     if let browser = browser where browser.isPrivate {
         cell.style = .Dark
     }
+    */
 
     if let favIcon = browser?.displayFavicon {
         cell.favicon.sd_setImageWithURL(NSURL(string: favIcon.url)!)
@@ -319,7 +319,9 @@ private func createTransitionCellFromBrowser(browser: Browser?, withFrame frame:
         if browser?.isPrivate ?? false {
             defaultFavicon = defaultFavicon?.imageWithRenderingMode(.AlwaysTemplate)
             cell.favicon.image = defaultFavicon
-            cell.favicon.tintColor = (browser?.isPrivate ?? false) ? UIColor.whiteColor() : UIColor.darkGrayColor()
+            // Cliz: Use white collor for favicon tint color in both Normal and Private modes
+//            cell.favicon.tintColor = (browser?.isPrivate ?? false) ? UIColor.whiteColor() : UIColor.darkGrayColor()
+            cell.favicon.tintColor = UIColor.whiteColor()
         } else {
             cell.favicon.image = defaultFavicon
         }

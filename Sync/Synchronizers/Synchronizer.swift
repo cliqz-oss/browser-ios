@@ -6,6 +6,7 @@ import Foundation
 import Shared
 import Storage
 import XCGLogger
+import Deferred
 
 private let log = Logger.syncLogger
 
@@ -77,6 +78,7 @@ public protocol Synchronizer {
 public enum SyncStatus {
     case Completed                 // TODO: we pick up a bunch of info along the way. Pass it along.
     case NotStarted(SyncNotStartedReason)
+    case Partial
 
     public var description: String {
         switch self {
@@ -84,6 +86,8 @@ public enum SyncStatus {
             return "Completed"
         case let .NotStarted(reason):
             return "Not started: \(reason.description)"
+        case .Partial:
+            return "Partial"
         }
     }
 }
@@ -102,6 +106,8 @@ public enum SyncNotStartedReason {
     case StorageFormatOutdated(needs: Int)
     case StorageFormatTooNew(expected: Int)  // This'll disappear eventually; we'll wipe the server and upload m/g.
     case StateMachineNotReady                // Because we're not done implementing.
+    case RedLight
+    case Unknown                             // Likely a programming error.
 
     var description: String {
         switch self {
@@ -227,6 +233,10 @@ extension BaseCollectionSynchronizer: ResettableSynchronizer {
     public static func resetSynchronizerWithStorage(storage: ResettableSyncStorage, basePrefs: Prefs, collection: String) -> Success {
         let synchronizerPrefs = BaseCollectionSynchronizer.prefsForCollection(collection, withBasePrefs: basePrefs)
         synchronizerPrefs.removeObjectForKey("lastFetched")
+
+        // Not all synchronizers use a batching downloader, but it's
+        // convenient to just always reset it here.
         return storage.resetClient()
+           >>> effect({ BatchingDownloader.resetDownloaderWithPrefs(synchronizerPrefs, collection: collection) })
     }
 }

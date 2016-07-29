@@ -3,6 +3,7 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import UIKit
+import Shared
 import Storage
 import SnapKit
 
@@ -37,12 +38,23 @@ class ClientPickerViewController: UITableViewController {
     var clients: [RemoteClient] = []
     var selectedClients = NSMutableSet()
 
+    // ShareItem has been added as we are now using this class outside of the ShareTo extension to provide Share To functionality
+    // And in this case we need to be able to store the item we are sharing as we may not have access to the 
+    // url later. Currently used only when sharing an item from the Tab Tray from a Preview Action.
+    var shareItem: ShareItem?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Send Tab", tableName: "SendTo", comment: "Title of the dialog that allows you to send a tab to a different device")
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancel")
+        refreshControl?.addTarget(self, action: #selector(ClientPickerViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: Strings.SendToCancelButton,
+            style: .Plain,
+            target: self,
+            action:  #selector(ClientPickerViewController.cancel)
+        )
+
         tableView.registerClass(ClientPickerTableViewHeaderCell.self, forCellReuseIdentifier: ClientPickerTableViewHeaderCell.CellIdentifier)
         tableView.registerClass(ClientPickerTableViewCell.self, forCellReuseIdentifier: ClientPickerTableViewCell.CellIdentifier)
         tableView.registerClass(ClientPickerNoClientsTableViewCell.self, forCellReuseIdentifier: ClientPickerNoClientsTableViewCell.CellIdentifier)
@@ -149,7 +161,7 @@ class ClientPickerViewController: UITableViewController {
                     if self.clients.count == 0 {
                         self.navigationItem.rightBarButtonItem = nil
                     } else {
-                        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Send", tableName: "SendTo", comment: "Navigation bar button to Send the current page to a device"), style: UIBarButtonItemStyle.Done, target: self, action: "send")
+                        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Send", tableName: "SendTo", comment: "Navigation bar button to Send the current page to a device"), style: UIBarButtonItemStyle.Done, target: self, action: #selector(ClientPickerViewController.send))
                         self.navigationItem.rightBarButtonItem?.enabled = false
                     }
                     self.selectedClients.removeAllObjects()
@@ -259,7 +271,7 @@ class ClientPickerNoClientsTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupHelpView(contentView,
-            introText: NSLocalizedString("You don't have any other devices connected to this Firefox Account available to sync.", tableName: "SendTo", comment: "Error message shown in the remote tabs panel"),
+            introText: NSLocalizedString("You don't have any other devices connected to this Cliqz Account available to sync.", tableName: "SendTo", comment: "Error message shown in the remote tabs panel"),
             showMeText: "") // TODO We used to have a 'show me how to ...' text here. But, we cannot open web pages from the extension. So this is clear for now until we decide otherwise.
         // Move the separator off screen
         separatorInset = UIEdgeInsetsMake(0, 1000, 0, 0)

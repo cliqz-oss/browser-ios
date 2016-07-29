@@ -38,6 +38,7 @@ protocol HomePanelDelegate: class {
     func homePanelDidRequestToSignIn(homePanel: HomePanel)
     func homePanelDidRequestToCreateAccount(homePanel: HomePanel)
     func homePanel(homePanel: HomePanel, didSelectURL url: NSURL, visitType: VisitType)
+    func homePanel(homePanel: HomePanel, didSelectURLString url: String, visitType: VisitType)
     optional func homePanelWillEnterEditingMode(homePanel: HomePanel)
 }
 
@@ -102,7 +103,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         updateButtons()
 
         // Gesture recognizer to dismiss the keyboard in the URLBarView when the buttonContainerView is tapped
-        let dismissKeyboardGestureRecognizer = UITapGestureRecognizer(target: self, action: "SELhandleDismissKeyboardGestureRecognizer:")
+        let dismissKeyboardGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(HomePanelViewController.SELhandleDismissKeyboardGestureRecognizer(_:)))
         dismissKeyboardGestureRecognizer.cancelsTouchesInView = false
         buttonContainerView.addGestureRecognizer(dismissKeyboardGestureRecognizer)
     }
@@ -204,7 +205,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         for panel in panels {
             let button = UIButton()
             buttonContainerView.addSubview(button)
-            button.addTarget(self, action: "SELtappedButton:", forControlEvents: UIControlEvents.TouchUpInside)
+            button.addTarget(self, action: #selector(HomePanelViewController.SELtappedButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             if let image = UIImage(named: "panelIcon\(panel.imageName)") {
                 button.setImage(image, forState: UIControlState.Normal)
             }
@@ -212,6 +213,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
                 button.setImage(image, forState: UIControlState.Selected)
             }
             button.accessibilityLabel = panel.accessibilityLabel
+            button.accessibilityIdentifier = panel.accessibilityIdentifier
             buttons.append(button)
 
             button.snp_remakeConstraints { make in
@@ -223,6 +225,22 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
 
             prev = button
         }
+    }
+
+    func homePanel(homePanel: HomePanel, didSelectURLString url: String, visitType: VisitType) {
+        // If we can't get a real URL out of what should be a URL, we let the user's
+        // default search engine give it a shot.
+        // Typically we'll be in this state if the user has tapped a bookmarked search template
+        // (e.g., "http://foo.com/bar/?query=%s"), and this will get them the same behavior as if
+        // they'd copied and pasted into the URL bar.
+        // See BrowserViewController.urlBar:didSubmitText:.
+        guard let url = URIFixup.getURL(url) ??
+                        profile.searchEngines.defaultEngine.searchURLForQuery(url) else {
+            Logger.browserLogger.warning("Invalid URL, and couldn't generate a search URL for it.")
+            return
+        }
+
+        return self.homePanel(homePanel, didSelectURL: url, visitType: visitType)
     }
 
     func homePanel(homePanel: HomePanel, didSelectURL url: NSURL, visitType: VisitType) {
@@ -250,7 +268,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         if editing {
             let button = UIButton(type: UIButtonType.System)
             button.setTitle(NSLocalizedString("Done", comment: "Done editing button"), forState: UIControlState.Normal)
-            button.addTarget(self, action: "endEditing:", forControlEvents: UIControlEvents.TouchUpInside)
+            button.addTarget(self, action: #selector(HomePanelViewController.endEditing(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             button.transform = translateDown
             button.titleLabel?.textAlignment = .Right
             self.buttonContainerView.addSubview(button)

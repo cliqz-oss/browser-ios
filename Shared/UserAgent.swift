@@ -6,6 +6,8 @@ import AVFoundation
 import UIKit
 
 public class UserAgent {
+    private static var defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
+
     public static var syncUserAgent: String {
         let appName = DeviceInfo.appName()
         return "Firefox-iOS-Sync/\(AppInfo.appVersion) (\(appName))"
@@ -25,12 +27,16 @@ public class UserAgent {
      * Use this if you know that a value must have been computed before your
      * code runs, or you don't mind failure.
      */
-    public static func cachedUserAgent(defaults: NSUserDefaults, checkiOSVersion: Bool = true) -> String? {
+    public static func cachedUserAgent(checkiOSVersion checkiOSVersion: Bool = true, checkFirefoxVersion: Bool = true) -> String? {
         let currentiOSVersion = UIDevice.currentDevice().systemVersion
         let lastiOSVersion = defaults.stringForKey("LastDeviceSystemVersionNumber")
 
+        let currentFirefoxVersion = AppInfo.appVersion
+        let lastFirefoxVersion = defaults.stringForKey("LastFirefoxVersionNumber")
+
         if let firefoxUA = defaults.stringForKey("UserAgent") {
-            if !checkiOSVersion || (lastiOSVersion == currentiOSVersion) {
+            if (!checkiOSVersion || (lastiOSVersion == currentiOSVersion))
+                && (!checkFirefoxVersion || (lastFirefoxVersion == currentFirefoxVersion)){
                 return firefoxUA
             }
         }
@@ -42,10 +48,10 @@ public class UserAgent {
      * This will typically return quickly, but can require creation of a UIWebView.
      * As a result, it must be called on the UI thread.
      */
-    public static func defaultUserAgent(defaults: NSUserDefaults) -> String {
+    public static func defaultUserAgent() -> String {
         assert(NSThread.currentThread().isMainThread, "This method must be called on the main thread.")
 
-        if let firefoxUA = UserAgent.cachedUserAgent(defaults, checkiOSVersion: true) {
+        if let firefoxUA = UserAgent.cachedUserAgent(checkiOSVersion: true) {
             return firefoxUA
         }
 
@@ -54,6 +60,7 @@ public class UserAgent {
         let appVersion = AppInfo.appVersion
         let currentiOSVersion = UIDevice.currentDevice().systemVersion
         defaults.setObject(currentiOSVersion,forKey: "LastDeviceSystemVersionNumber")
+        defaults.setObject(appVersion, forKey: "LastFirefoxVersionNumber")
         let userAgent = webView.stringByEvaluatingJavaScriptFromString("navigator.userAgent")!
 
         // Extract the WebKit version and use it as the Safari version.
@@ -84,5 +91,27 @@ public class UserAgent {
         defaults.setObject(firefoxUA, forKey: "UserAgent")
 
         return firefoxUA
+    }
+
+    public static func desktopUserAgent() -> String {
+        let userAgent = NSMutableString(string: defaultUserAgent())
+
+        // Spoof platform section
+        let platformRegex = try! NSRegularExpression(pattern: "\\([^\\)]+\\)", options: [])
+        guard let platformMatch = platformRegex.firstMatchInString(userAgent as String, options:[], range: NSMakeRange(0, userAgent.length)) else {
+            print("Error: Unable to determine platform in UA.")
+            return String(userAgent)
+        }
+        userAgent.replaceCharactersInRange(platformMatch.range, withString: "(Macintosh; Intel Mac OS X 10_11_1)")
+
+        // Strip mobile section
+        let mobileRegex = try! NSRegularExpression(pattern: " FxiOS/[^ ]+ Mobile/[^ ]+", options: [])
+        guard let mobileMatch = mobileRegex.firstMatchInString(userAgent as String, options:[], range: NSMakeRange(0, userAgent.length)) else {
+            print("Error: Unable to find Mobile section in UA.")
+            return String(userAgent)
+        }
+        userAgent.replaceCharactersInRange(mobileMatch.range, withString: "")
+
+        return String(userAgent)
     }
 }

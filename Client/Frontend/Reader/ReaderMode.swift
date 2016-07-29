@@ -66,7 +66,24 @@ enum ReaderModeFontSize: Int {
     }
 
     static var defaultSize: ReaderModeFontSize {
-        return .Size5
+        switch UIApplication.sharedApplication().preferredContentSizeCategory {
+        case UIContentSizeCategoryExtraSmall:
+            return .Size1
+        case UIContentSizeCategorySmall:
+            return .Size3
+        case UIContentSizeCategoryMedium:
+            return .Size5
+        case UIContentSizeCategoryLarge:
+            return .Size7
+        case UIContentSizeCategoryExtraLarge:
+            return .Size9
+        case UIContentSizeCategoryExtraExtraLarge:
+            return .Size11
+        case UIContentSizeCategoryExtraExtraExtraLarge:
+            return .Size13
+        default:
+            return .Size5
+        }
     }
 
     func bigger() -> ReaderModeFontSize {
@@ -232,7 +249,9 @@ class ReaderMode: BrowserHelper {
     private func handleReaderPageEvent(readerPageEvent: ReaderPageEvent) {
         switch readerPageEvent {
             case .PageShow:
-                delegate?.readerMode(self, didDisplayReaderizedContentForBrowser: browser!)
+                if let browser = browser {
+                    delegate?.readerMode(self, didDisplayReaderizedContentForBrowser: browser)
+                }
         }
     }
 

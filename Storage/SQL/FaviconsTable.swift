@@ -8,7 +8,7 @@ import Foundation
 class FaviconsTable<T>: GenericTable<Favicon> {
     override var name: String { return TableFavicons }
     override var rows: String { return "" }
-    override func create(db: SQLiteDBConnection, version: Int) -> Bool {
+    override func create(db: SQLiteDBConnection) -> Bool {
         // Nothing to do: BrowserTable does it all.
         return true
     }
@@ -94,7 +94,9 @@ class FaviconsTable<T>: GenericTable<Favicon> {
             "WHERE \(TableFavicons).id NOT IN (" +
                 "SELECT faviconID FROM \(TableFaviconSites) " +
                 "UNION ALL " +
-                "SELECT faviconID FROM \(TableBookmarks) WHERE faviconID IS NOT NULL" +
+                "SELECT faviconID FROM \(TableBookmarksLocal) WHERE faviconID IS NOT NULL " +
+                "UNION ALL " +
+                "SELECT faviconID FROM \(TableBookmarksMirror) WHERE faviconID IS NOT NULL" +
             ")", nil)
     }
 }

@@ -1,0 +1,54 @@
+/* See http://mzl.la/1T8gxwo */
+"Browse multiple Web pages at the same time with tabs." = "تصفح العديد من صفحات الويب في نفس الوقت باستخدام التبويبات.";
+
+/* See http://mzl.la/1if9ODp */
+"Choose" = "اختر";
+
+/* See http://mzl.la/1T8gxwo */
+"Connect Firefox everywhere you use it." = "اربط فيرفكس في كل مكان تستخدمه.";
+
+/* See http://mzl.la/1T8gxwo */
+"Customize" = "خصّص";
+
+/* See http://mzl.la/1T8gxwo */
+"Easily switch between open pages with tabs." = "سهولة التبديل بين الصفحات المفتوحة مع التبويبات.";
+
+/* Accessibility label for an image. See http://mzl.la/1T8gxwo */
+"Firefox and the cloud" = "فيرفكس و cloud";
+
+/* String spoken by assistive technology (like VoiceOver) stating on which page of the intro wizard we currently are. E.g. Introductory slide 1 of 3 */
+"Introductory slide %@ of %@" = "الشريحة التعريفية %1$@ من %2$@";
+
+/* See http://mzl.la/1T8gxwo */
+"Organize" = "نظّم";
+
+/* See http://mzl.la/1T8gxwo */
+"Personalize your Firefox just the way you like in Settings." = "خصص فيرفكس الخاص بك على الطريقة التي تعجبك من خلال الإعدادات.";
+
+/* See http://mzl.la/1T8gxwo */
+"Personalize your default search engine and more in Settings." = "خصص محرك البحث الافتراضي الخاص بك و الكثير من خلال الإعدادات.";
+
+/* See http://mzl.la/1if9ODp */
+"Share" = "مُشاركة";
+
+/* See http://mzl.la/1T8gxwo */
+"Sign in to Firefox" = "تسجيل الدخول إلى حساب فَيَرفُكس";
+
+/* See http://mzl.la/1T8gxwo */
+"Start Browsing" = "ابدأ التصفح";
+
+/* ee http://mzl.la/1T8gxwo */
+"Sync Your Devices." = "مُزامَنَة أجهزتك";
+
+/* See http://mzl.la/1if9ODp */
+"Tap, hold and move the Firefox icon into your dock for easy access." = "اضغط مع الاستمرار, امسك و حرك أيقونة فيرفكس إلى شريطك لسهولة الوصول إليها.";
+
+/* Accessibility label for an image. See http://mzl.la/1T8gxwo */
+"The Settings button is at the beginning of the Tabs Tray." = "زر الإعدادات في بداية منطقة التبويب.";
+
+/* Accessibility label for an image. See http://mzl.la/1T8gxwo */
+"The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs." = "زر عرض التبويبات يوجد بعد منطقة كتابة العنوان و البحث و يعرض العدد الحالي للتبويبات المفتوحة.";
+
+/* See http://mzl.la/1if9ODp */
+"Use the share sheet to send links from other apps to Firefox." = "استخدم ورقة المشاركة لإرسال الروابط من تطبيقات أُخرى إلى فيرفكس.";
+

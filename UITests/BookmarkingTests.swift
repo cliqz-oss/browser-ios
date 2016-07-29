@@ -60,10 +60,26 @@ class BookmarkingTests: KIFTestCase, UITextFieldDelegate {
         tester().tapViewWithAccessibilityIdentifier("url")
         tester().tapViewWithAccessibilityLabel("Bookmarks")
         tester().waitForAbsenceOfViewWithAccessibilityLabel("Page 1")
+    }
 
-        // The "default" bookmarks (suggested sites) should now show here.
-        tester().waitForViewWithAccessibilityLabel("The Mozilla Project")
-        tester().tapViewWithAccessibilityLabel("Cancel")
+    func testChangingDynamicFontOnBookmarks() {
+        DynamicFontUtils.restoreDynamicFontSize(tester())
+
+        tester().tapViewWithAccessibilityIdentifier("url")
+        tester().tapViewWithAccessibilityLabel("Bookmarks")
+
+        let cell = tester().waitForCellAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), inTableViewWithAccessibilityIdentifier: "SiteTable")
+
+        let size = cell.textLabel?.font.pointSize
+
+        DynamicFontUtils.bumpDynamicFontSize(tester())
+        let bigSize = cell.textLabel?.font.pointSize
+
+        DynamicFontUtils.lowerDynamicFontSize(tester())
+        let smallSize = cell.textLabel?.font.pointSize
+
+        XCTAssertGreaterThan(bigSize!, size!)
+        XCTAssertGreaterThanOrEqual(size!, smallSize!)
     }
 
     func testBookmarkNoTitle() {
@@ -90,6 +106,7 @@ class BookmarkingTests: KIFTestCase, UITextFieldDelegate {
     }
 
     override func tearDown() {
+        DynamicFontUtils.restoreDynamicFontSize(tester())
         BrowserUtils.clearHistoryItems(tester())
     }
 }

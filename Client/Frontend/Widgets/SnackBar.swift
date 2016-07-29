@@ -29,17 +29,19 @@ class SnackButton : UIButton {
         return UIImage.createWithColor(size, color: UIConstants.HighlightColor)
     }()
 
-    init(title: String, callback: (bar: SnackBar) -> Void) {
+    init(title: String, accessibilityIdentifier: String, callback: (bar: SnackBar) -> Void) {
         self.callback = callback
 
         super.init(frame: CGRectZero)
 
         setTitle(title, forState: .Normal)
-        titleLabel?.font = UIConstants.DefaultMediumFont
+        titleLabel?.font = DynamicFontHelper.defaultHelper.DefaultMediumFont
         setBackgroundImage(highlightImg, forState: .Highlighted)
         setTitleColor(UIConstants.HighlightText, forState: .Highlighted)
 
-        addTarget(self, action: "onClick", forControlEvents: .TouchUpInside)
+        addTarget(self, action: #selector(SnackButton.onClick), forControlEvents: .TouchUpInside)
+
+        self.accessibilityIdentifier = accessibilityIdentifier
     }
 
     override init(frame: CGRect) {
@@ -81,7 +83,7 @@ class SnackBar: UIView {
 
     convenience init(text: String, img: UIImage?, buttons: [SnackButton]?) {
         var attributes = [String: AnyObject]()
-        attributes[NSFontAttributeName] = UIConstants.DefaultMediumFont
+        attributes[NSFontAttributeName] = DynamicFontHelper.defaultHelper.DefaultMediumFont
         attributes[NSBackgroundColorAttributeName] = UIColor.clearColor()
         let attrText = NSAttributedString(string: text, attributes: attributes)
         self.init(attrText: attrText, img: img, buttons: buttons)
@@ -132,7 +134,7 @@ class SnackBar: UIView {
 
         imageView.contentMode = UIViewContentMode.Left
 
-        textLabel.font = UIConstants.DefaultMediumFont
+        textLabel.font = DynamicFontHelper.defaultHelper.DefaultMediumFont
         textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         textLabel.numberOfLines = 0
         textLabel.backgroundColor = UIColor.clearColor()
@@ -280,7 +282,7 @@ class TimerSnackBar: SnackBar {
     }
 
     override func show() {
-        self.timer = NSTimer(timeInterval: timeout, target: self, selector: "SELTimerDone", userInfo: nil, repeats: false)
+        self.timer = NSTimer(timeInterval: timeout, target: self, selector: #selector(TimerSnackBar.SELTimerDone), userInfo: nil, repeats: false)
         NSRunLoop.currentRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
         super.show()
     }

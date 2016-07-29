@@ -7,6 +7,7 @@ import UIKit
 import Shared
 import Storage
 import XCGLogger
+import Deferred
 
 private let log = Logger.browserLogger
 
@@ -23,7 +24,6 @@ private typealias CategorySpec = (section: SectionNumber?, rows: Int, offset: In
 
 private struct HistoryPanelUX {
     static let WelcomeScreenPadding: CGFloat = 15
-    static let WelcomeScreenItemFont = UIFont.systemFontOfSize(UIConstants.DeviceFontSize, weight: UIFontWeightLight) // Changes font size based on device.
     static let WelcomeScreenItemTextColor = UIColor.grayColor()
     static let WelcomeScreenItemWidth = 170
 }
@@ -50,16 +50,23 @@ class HistoryPanel: SiteTableViewController, HomePanel {
     }()
 
     var refreshControl: UIRefreshControl?
+    
+    // Cliqz record time history when history page opened for telementry signal
+    var openDatetime: Double?
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistoryPanel.notificationReceived(_:)), name: NotificationDynamicFontChanged, object: nil)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.accessibilityIdentifier = "History List"
+        
+        // Cliqz record time history when history page opened for telementry signal
+        openDatetime = NSDate.getCurrentMillis()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -82,11 +89,19 @@ class HistoryPanel: SiteTableViewController, HomePanel {
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearedHistory, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
     }
 
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
         case NotificationFirefoxAccountChanged, NotificationPrivateDataClearedHistory:
+            resyncHistory()
+            break
+        case NotificationDynamicFontChanged:
+            if emptyStateOverlayView.superview != nil {
+                emptyStateOverlayView.removeFromSuperview()
+            }
+            emptyStateOverlayView = createEmptyStateOverview()
             resyncHistory()
             break
         default:
@@ -98,7 +113,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
 
     func addRefreshControl() {
         let refresh = UIRefreshControl()
-        refresh.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        refresh.addTarget(self, action: #selector(HistoryPanel.refresh), forControlEvents: UIControlEvents.ValueChanged)
         self.refreshControl = refresh
         self.tableView.addSubview(refresh)
     }
@@ -202,9 +217,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         overlayView.addSubview(welcomeLabel)
         welcomeLabel.text = NSLocalizedString("Pages you have visited recently will show up here.", comment: "See http://bit.ly/1I7Do4b")
         welcomeLabel.textAlignment = NSTextAlignment.Center
-        welcomeLabel.font = HistoryPanelUX.WelcomeScreenItemFont
+        welcomeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontLight
         welcomeLabel.textColor = HistoryPanelUX.WelcomeScreenItemTextColor
-        welcomeLabel.numberOfLines = 2
+        welcomeLabel.numberOfLines = 0
         welcomeLabel.adjustsFontSizeToFitWidth = true
 
         welcomeLabel.snp_makeConstraints { make in
@@ -239,6 +254,9 @@ class HistoryPanel: SiteTableViewController, HomePanel {
            let url = NSURL(string: site.url) {
             let visitType = VisitType.Typed    // Means History, too.
             homePanelDelegate?.homePanel(self, didSelectURL: url, visitType: visitType)
+            
+            // Cliqz log history tap telemery signal
+            logHistoryTapTelemetrySignal(site)
             return
         }
         log.warning("No site or no URL when selecting row.")
@@ -249,7 +267,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         var count = 0
         for category in self.categories {
             if category.rows > 0 {
-                count++
+                count += 1
             }
         }
         return count
@@ -292,7 +310,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
         // Loop over all the data. Record the start of each "section" of our list.
         for i in 0..<data.count {
             if let site = data[i] {
-                counts[categoryForDate(site.latestVisit!.date)]++
+                counts[categoryForDate(site.latestVisit!.date)] += 1
             }
         }
 
@@ -306,7 +324,7 @@ class HistoryPanel: SiteTableViewController, HomePanel {
                 self.categories.append((section: section, rows: count, offset: offset))
                 sectionLookup[section] = i
                 offset += count
-                section++
+                section += 1
             } else {
                 log.debug("Category \(i) has 0 rows, and thus has no section.")
                 self.categories.append((section: nil, rows: 0, offset: offset))
@@ -424,5 +442,34 @@ class HistoryPanel: SiteTableViewController, HomePanel {
             }
         })
         return [delete]
+    }
+}
+
+// Cliqz log history tap telemery signal
+extension HistoryPanel {
+    private func logHistoryTapTelemetrySignal(site: Site) {
+        let pastType = "web"
+        let queryLength = site.url.characters.count
+        let positionAge = getPositionAge(site)
+        let lengthAge = self.getHistoryHours(profile)
+        let displayTime = NSDate.getCurrentMillis() - openDatetime!
+        
+        TelemetryLogger.sharedInstance.logEvent(.PastTap(pastType, queryLength, positionAge, lengthAge, displayTime))
+    }
+    private func getPositionAge(site: Site) -> Double {
+        var positionAge = 0.0
+        if let visitDateMicroseconds = site.latestVisit?.date {
+            let visitDate = NSDate.fromTimestamp(visitDateMicroseconds/1000)
+            positionAge = NSDate().timeIntervalSinceDate(visitDate) / 3600
+        }
+        return positionAge
+    }
+    
+    private func getHistoryHours(profile: Profile) -> Double {
+        var historyHours = 0.0
+        if let oldestVisitDate = profile.history.getOldestVisitDate() {
+            historyHours = NSDate().timeIntervalSinceDate(oldestVisitDate) / 3600
+        }
+        return historyHours
     }
 }

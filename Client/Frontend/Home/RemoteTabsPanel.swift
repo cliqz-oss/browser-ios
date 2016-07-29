@@ -18,25 +18,21 @@ private struct RemoteTabsPanelUX {
     static let RowHeight = SiteTableViewControllerUX.RowHeight
     static let HeaderBackgroundColor = UIColor(rgb: 0xf8f8f8)
 
-    static let EmptyStateTitleFont = UIFont.systemFontOfSize(UIConstants.DeviceFontSize, weight: UIFontWeightMedium)
     static let EmptyStateTitleTextColor = UIColor.darkGrayColor()
 
-    static let EmptyStateInstructionsFont = UIFont.systemFontOfSize(UIConstants.DeviceFontSize - 1, weight: UIFontWeightLight)
     static let EmptyStateInstructionsTextColor = UIColor.grayColor()
     static let EmptyStateInstructionsWidth = 252
     static let EmptyStateTopPaddingInBetweenItems: CGFloat = 15 // UX TODO I set this to 8 so that it all fits on landscape
     static let EmptyStateSignInButtonColor = UIColor(red:0.3, green:0.62, blue:1, alpha:1)
-    static let EmptyStateSignInButtonTitleFont = UIFont.systemFontOfSize(16)
     static let EmptyStateSignInButtonTitleColor = UIColor.whiteColor()
     static let EmptyStateSignInButtonCornerRadius: CGFloat = 4
     static let EmptyStateSignInButtonHeight = 44
     static let EmptyStateSignInButtonWidth = 200
-    static let EmptyStateCreateAccountButtonFont = UIFont.systemFontOfSize(12)
 
     // Backup and active strings added in Bug 1205294.
-    static let EmptyStateInstructionsSyncTabsPasswordsBookmarksString = NSLocalizedString("Sync your tabs, bookmarks, passwords and more.", comment: "See http://mzl.la/1Qtkf0j")
+    static let EmptyStateInstructionsSyncTabsPasswordsBookmarksString = NSLocalizedString("Sync your tabs, bookmarks, passwords and more.", comment: "Sync tabs, bookmarks, passwords empty state instructions.")
 
-    static let EmptyStateInstructionsSyncTabsPasswordsString = NSLocalizedString("Sync your tabs, passwords and more.", comment: "See http://mzl.la/1Qtkf0j")
+    static let EmptyStateInstructionsSyncTabsPasswordsString = NSLocalizedString("Sync your tabs, passwords and more.", comment: "Sync tabs and passwords empty state instructions.")
 
     static let EmptyStateInstructionsGetTabsBookmarksPasswordsString = NSLocalizedString("Get your open tabs, bookmarks, and passwords from your other devices.", comment: "A re-worded offer about Sync that emphasizes one-way data transfer, not syncing.")
 }
@@ -50,7 +46,7 @@ class RemoteTabsPanel: UITableViewController, HomePanel {
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notificationReceived:", name: NotificationFirefoxAccountChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RemoteTabsPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
     }
 
     required init!(coder aDecoder: NSCoder) {
@@ -79,13 +75,13 @@ class RemoteTabsPanel: UITableViewController, HomePanel {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        refreshControl?.addTarget(self, action: "SELrefreshTabs", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl?.addTarget(self, action: #selector(RemoteTabsPanel.SELrefreshTabs), forControlEvents: UIControlEvents.ValueChanged)
         refreshTabs()
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        refreshControl?.removeTarget(self, action: "SELrefreshTabs", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl?.removeTarget(self, action: #selector(RemoteTabsPanel.SELrefreshTabs), forControlEvents: UIControlEvents.ValueChanged)
     }
 
     func notificationReceived(notification: NSNotification) {
@@ -194,9 +190,9 @@ enum RemoteTabsError {
         case NotLoggedIn:
             return "" // This does not have a localized string because we have a whole specific screen for it.
         case NoClients:
-            return NSLocalizedString("You don't have any other devices connected to this Firefox Account available to sync.", comment: "Error message in the remote tabs panel")
+            return NSLocalizedString("You don't have any other devices connected to this Cliqz Account available to sync.", comment: "Error message in the remote tabs panel")
         case NoTabs:
-            return NSLocalizedString("You don't have any tabs open in Firefox on your other devices.", comment: "Error message in the remote tabs panel")
+            return NSLocalizedString("You don't have any tabs open in Cliqz on your other devices.", comment: "Error message in the remote tabs panel")
         case FailedToSync:
             return NSLocalizedString("There was a problem accessing tabs from your other devices. Try again in a few moments.", comment: "Error message in the remote tabs panel")
         }
@@ -362,7 +358,7 @@ class RemoteTabsErrorCell: UITableViewCell {
         }
 
         let instructionsLabel = UILabel()
-        instructionsLabel.font = RemoteTabsPanelUX.EmptyStateInstructionsFont
+        instructionsLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
         instructionsLabel.text = error.localizedString()
         instructionsLabel.textAlignment = NSTextAlignment.Center
         instructionsLabel.textColor = RemoteTabsPanelUX.EmptyStateInstructionsTextColor
@@ -416,13 +412,13 @@ class RemoteTabsNotLoggedInCell: UITableViewCell {
         imageView.image = UIImage(named: "emptySync")
         contentView.addSubview(imageView)
 
-        titleLabel.font = RemoteTabsPanelUX.EmptyStateTitleFont
+        titleLabel.font = DynamicFontHelper.defaultHelper.DeviceFont
         titleLabel.text = NSLocalizedString("Welcome to Sync", comment: "See http://mzl.la/1Qtkf0j")
         titleLabel.textAlignment = NSTextAlignment.Center
         titleLabel.textColor = RemoteTabsPanelUX.EmptyStateTitleTextColor
         contentView.addSubview(titleLabel)
 
-        instructionsLabel.font = RemoteTabsPanelUX.EmptyStateInstructionsFont
+        instructionsLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
         instructionsLabel.text = RemoteTabsPanelUX.EmptyStateInstructionsGetTabsBookmarksPasswordsString
         instructionsLabel.textAlignment = NSTextAlignment.Center
         instructionsLabel.textColor = RemoteTabsPanelUX.EmptyStateInstructionsTextColor
@@ -432,15 +428,15 @@ class RemoteTabsNotLoggedInCell: UITableViewCell {
         signInButton.backgroundColor = RemoteTabsPanelUX.EmptyStateSignInButtonColor
         signInButton.setTitle(NSLocalizedString("Sign in", comment: "See http://mzl.la/1Qtkf0j"), forState: .Normal)
         signInButton.setTitleColor(RemoteTabsPanelUX.EmptyStateSignInButtonTitleColor, forState: .Normal)
-        signInButton.titleLabel?.font = RemoteTabsPanelUX.EmptyStateSignInButtonTitleFont
+        signInButton.titleLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         signInButton.layer.cornerRadius = RemoteTabsPanelUX.EmptyStateSignInButtonCornerRadius
         signInButton.clipsToBounds = true
-        signInButton.addTarget(self, action: "SELsignIn", forControlEvents: UIControlEvents.TouchUpInside)
+        signInButton.addTarget(self, action: #selector(RemoteTabsNotLoggedInCell.SELsignIn), forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(signInButton)
 
         createAnAccountButton.setTitle(NSLocalizedString("Create an account", comment: "See http://mzl.la/1Qtkf0j"), forState: .Normal)
-        createAnAccountButton.titleLabel?.font = RemoteTabsPanelUX.EmptyStateCreateAccountButtonFont
-        createAnAccountButton.addTarget(self, action: "SELcreateAnAccount", forControlEvents: UIControlEvents.TouchUpInside)
+        createAnAccountButton.titleLabel?.font = UIFont.preferredFontForTextStyle(UIFontTextStyleCaption1)
+        createAnAccountButton.addTarget(self, action: #selector(RemoteTabsNotLoggedInCell.SELcreateAnAccount), forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(createAnAccountButton)
 
         imageView.snp_makeConstraints { (make) -> Void in
@@ -491,7 +487,7 @@ class RemoteTabsNotLoggedInCell: UITableViewCell {
                 make.left.lessThanOrEqualTo(contentView.snp_left).offset(80).priorityMedium()
 
                 // Sets proper landscape layout for smaller phones: iPhone 4 & 5.
-                make.right.lessThanOrEqualTo(contentView.snp_centerX).offset(-10).priorityHigh()
+                make.right.lessThanOrEqualTo(contentView.snp_centerX).offset(5).priorityHigh()
             }
 
             signInButton.snp_remakeConstraints { make in

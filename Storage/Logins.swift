@@ -5,6 +5,7 @@
 import Foundation
 import WebKit
 import Shared
+import Deferred
 import XCGLogger
 
 private var log = Logger.syncLogger
@@ -104,6 +105,10 @@ public protocol LoginData: class {
     var formSubmitURL: String? { get set }
     var usernameField: String? { get set }
     var passwordField: String? { get set }
+    var isValid: Maybe<()> { get }
+
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1238103
+    var hasMalformedHostname: Bool { get set }
 
     func toDict() -> [String: String]
 
@@ -120,10 +125,18 @@ public protocol LoginUsageData {
 public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatable {
     public var guid: String
 
-    public let credentials: NSURLCredential
+    public private(set) var credentials: NSURLCredential
     public let protectionSpace: NSURLProtectionSpace
 
-    public var hostname: String { return protectionSpace.host }
+    public var hostname: String {
+        if let _ = protectionSpace.`protocol` {
+            return protectionSpace.urlString()
+        }
+        return protectionSpace.host
+    }
+
+    public var hasMalformedHostname: Bool = false
+
     public var username: String? { return credentials.user }
     public var password: String { return credentials.password! }
     public var usernameField: String? = nil
@@ -168,6 +181,38 @@ public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatabl
         return "Login for \(hostname)"
     }
 
+    public var isValid: Maybe<()> {
+        // Referenced from https://mxr.mozilla.org/mozilla-central/source/toolkit/components/passwordmgr/nsLoginManager.js?rev=f76692f0fcf8&mark=280-281#271
+
+        // Logins with empty hostnames are not valid.
+        if hostname.isEmpty {
+            return Maybe(failure: LoginDataError(description: "Can't add a login with an empty hostname."))
+        }
+
+        // Logins with empty passwords are not valid.
+        if password.isEmpty {
+            return Maybe(failure: LoginDataError(description: "Can't add a login with an empty password."))
+        }
+
+        // Logins with both a formSubmitURL and httpRealm are not valid.
+        if let _ = formSubmitURL, _ = httpRealm {
+            return Maybe(failure: LoginDataError(description: "Can't add a login with both a httpRealm and formSubmitURL."))
+        }
+
+        // Login must have at least a formSubmitURL or httpRealm.
+        if (formSubmitURL == nil) && (httpRealm == nil) {
+            return Maybe(failure: LoginDataError(description: "Can't add a login without a httpRealm or formSubmitURL."))
+        }
+
+        // All good.
+        return Maybe(success: ())
+    }
+
+    public func update(password password: String, username: String) {
+        self.credentials =
+            NSURLCredential(user: username, password: password, persistence: credentials.persistence)
+    }
+
     // Essentially: should we sync a change?
     // Desktop ignores usernameField and hostnameField.
     public func isSignificantlyDifferentFrom(login: LoginData) -> Bool {
@@ -176,6 +221,13 @@ public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatabl
                login.username != self.username ||
                login.formSubmitURL != self.formSubmitURL ||
                login.httpRealm != self.httpRealm
+    }
+    
+    /* Used for testing purposes since formSubmitURL should be given back to use from the Logins.js script */
+    public class func createWithHostname(hostname: String, username: String, password: String, formSubmitURL: String?) -> LoginData {
+        let loginData = Login(hostname: hostname, username: username, password: password) as LoginData
+        loginData.formSubmitURL = formSubmitURL
+        return loginData
     }
 
     public class func createWithHostname(hostname: String, username: String, password: String) -> LoginData {
@@ -189,7 +241,19 @@ public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatabl
     public init(guid: String, hostname: String, username: String, password: String) {
         self.guid = guid
         self.credentials = NSURLCredential(user: username, password: password, persistence: NSURLCredentialPersistence.None)
-        self.protectionSpace = NSURLProtectionSpace(host: hostname, port: 0, `protocol`: nil, realm: nil, authenticationMethod: nil)
+
+        // Break down the full url hostname into its scheme/protocol and host components
+        let hostnameURL = hostname.asURL
+        let host = hostnameURL?.host ?? hostname
+        let scheme = hostnameURL?.scheme ?? ""
+
+        // We should ignore any SSL or normal web ports in the URL.
+        var port = hostnameURL?.port?.integerValue ?? 0
+        if port == 443 || port == 80 {
+            port = 0
+        }
+
+        self.protectionSpace = NSURLProtectionSpace(host: host, port: port, protocol: scheme, realm: nil, authenticationMethod: nil)
     }
 
     convenience init(hostname: String, username: String, password: String) {
@@ -500,8 +564,11 @@ class LocalLogin: Login {
 
 public protocol BrowserLogins {
     func getUsageDataForLoginByGUID(guid: GUID) -> Deferred<Maybe<LoginUsageData>>
+    func getLoginDataForGUID(guid: GUID) -> Deferred<Maybe<Login>>
     func getLoginsForProtectionSpace(protectionSpace: NSURLProtectionSpace) -> Deferred<Maybe<Cursor<LoginData>>>
     func getLoginsForProtectionSpace(protectionSpace: NSURLProtectionSpace, withUsername username: String?) -> Deferred<Maybe<Cursor<LoginData>>>
+    func getAllLogins() -> Deferred<Maybe<Cursor<Login>>>
+    func searchLoginsWithQuery(query: String?) -> Deferred<Maybe<Cursor<Login>>>
 
     // Add a new login regardless of whether other logins might match some fields. Callers
     // are responsible for querying first if they care.
@@ -512,6 +579,7 @@ public protocol BrowserLogins {
     // Add the use of a login by GUID.
     func addUseOfLoginByGUID(guid: GUID) -> Success
     func removeLoginByGUID(guid: GUID) -> Success
+    func removeLoginsWithGUIDs(guids: [GUID]) -> Success
 
     func removeAll() -> Success
 }
@@ -532,6 +600,11 @@ public protocol SyncableLogins: AccountRemovalDelegate {
      */
     func markAsSynchronized(_: [GUID], modified: Timestamp) -> Deferred<Maybe<Timestamp>>
     func markAsDeleted(guids: [GUID]) -> Success
+
+    /**
+     * For inspecting whether we're an active participant in login sync.
+     */
+    func hasSyncedLogins() -> Deferred<Maybe<Bool>>
 }
 
 public class LoginDataError: MaybeErrorType {

@@ -3,22 +3,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
-
+import GCDWebServers
+@testable import Client
 import UIKit
+
 import XCTest
 
 class SearchTests: XCTestCase {
-    private let uriFixup = URIFixup()
-
     func testParsing() {
         let parser = OpenSearchParser(pluginMode: true)
         let file = NSBundle.mainBundle().pathForResource("google", ofType: "xml", inDirectory: "SearchPlugins/en")
-        let engine: OpenSearchEngine! = parser.parse(file!)
+        let engine: OpenSearchEngine! = parser.parse(file!, id: "google")
         XCTAssertEqual(engine.shortName, "Google")
         XCTAssertNil(engine.description)
 
         // Test regular search queries.
-        XCTAssertEqual(engine.searchURLForQuery("foobar")!.absoluteString, "https://www.google.com/search?q=foobar&ie=utf-8&oe=utf-8")
+        XCTAssertEqual(engine.searchURLForQuery("foobar")!.absoluteString, "https://www.google.com/search?q=foobar&ie=utf-8&oe=utf-8&client=firefox-b")
 
         // Test search suggestion queries.
         XCTAssertEqual(engine.suggestURLForQuery("foobar")!.absoluteString, "https://www.google.com/complete/search?client=firefox&q=foobar")
@@ -45,17 +45,17 @@ class SearchTests: XCTestCase {
     }
 
     private func checkValidURL(beforeFixup: String, afterFixup: String) {
-        XCTAssertEqual(uriFixup.getURL(beforeFixup)!.absoluteString, afterFixup)
+        XCTAssertEqual(URIFixup.getURL(beforeFixup)!.absoluteString, afterFixup)
     }
 
     private func checkInvalidURL(beforeFixup: String) {
-        XCTAssertNil(uriFixup.getURL(beforeFixup))
+        XCTAssertNil(URIFixup.getURL(beforeFixup))
     }
 
     func testSuggestClient() {
         let webServerBase = startMockSuggestServer()
 
-        let engine = OpenSearchEngine(shortName: "Mock engine", description: nil, image: nil, searchTemplate: "", suggestTemplate: "\(webServerBase)?q={searchTerms}")
+        let engine = OpenSearchEngine(id: "mock", shortName: "Mock engine", description: nil, image: nil, searchTemplate: "", suggestTemplate: "\(webServerBase)?q={searchTerms}")
         let client = SearchSuggestClient(searchEngine: engine, userAgent: "Fx-testSuggestClient")
 
 
@@ -90,6 +90,36 @@ class SearchTests: XCTestCase {
             }
         })
         waitForExpectationsWithTimeout(10, handler: nil)
+    }
+
+    func testExtractingOfSearchTermsFromURL() {
+        let parser = OpenSearchParser(pluginMode: true)
+        var file = NSBundle.mainBundle().pathForResource("google", ofType: "xml", inDirectory: "SearchPlugins/en")
+        let googleEngine: OpenSearchEngine! = parser.parse(file!, id: "google")
+
+        // create URL
+        let searchTerm = "Foo Bar"
+        let encodedSeachTerm = searchTerm.stringByReplacingOccurrencesOfString(" ", withString: "+")
+        let googleSearchURL = NSURL(string: "https://www.google.com/search?q=\(encodedSeachTerm)&ie=utf-8&oe=utf-8&gws_rd=cr&ei=I0UyVp_qK4HtUoytjagM")
+        let duckDuckGoSearchURL = NSURL(string: "https://duckduckgo.com/?q=\(encodedSeachTerm)&ia=about")
+        let invalidSearchURL = NSURL(string: "https://www.google.co.uk")
+
+        // check it correctly matches google search term given google config
+        XCTAssertEqual(searchTerm, googleEngine.queryForSearchURL(googleSearchURL))
+
+        // check it doesn't match when the URL is not a search URL
+        XCTAssertNil(googleEngine.queryForSearchURL(invalidSearchURL))
+
+        // check that it matches given a different configuration
+        file = NSBundle.mainBundle().pathForResource("duckduckgo", ofType: "xml", inDirectory: "SearchPlugins/en")
+        let duckDuckGoEngine: OpenSearchEngine! = parser.parse(file!, id: "duckduckgo")
+        XCTAssertEqual(searchTerm, duckDuckGoEngine.queryForSearchURL(duckDuckGoSearchURL))
+
+        // check it doesn't match search URLs for different configurations
+        XCTAssertNil(duckDuckGoEngine.queryForSearchURL(googleSearchURL))
+
+        // check that if you pass in a nil URL that everything works
+        XCTAssertNil(duckDuckGoEngine.queryForSearchURL(nil))
     }
 
     private func startMockSuggestServer() -> String {
