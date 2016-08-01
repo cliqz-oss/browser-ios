@@ -1,19 +1,16 @@
-Cliqz for iOS 
+CLIQZ Browser for iOS 
 ===============
 
-Download on the [App Store](https://itunes.apple.com/de/app/cliqz-browser/id1065837334?mt=8).
+You can download the CLIQZ Browser from the [App Store](https://itunes.apple.com/de/app/cliqz-browser/id1065837334).
 
 The CLIQZ Browser for iOS is originally a fork of [Firefox's iOS Browser](https://github.com/mozilla/firefox-ios).
 
 This branch
 -----------
 
-This branch is a stable branch prepared for the last version AppStore release, it also contains hot fixes required for the release.
+This branch is a stable branch. It reflects the state of the last release and hot fixes of for the release.
 
-
-This branch works with Xcode 7.3.1, and supports iOS 8.2 and 9.x. Although you can only run and debug from Xcode on a 9.2.1 device.
-
-Please make sure you aim your pull requests in the right direction.
+This branch works with Xcode 7.3.1, and supports iOS 8.2 and 9.x. However, you can only run and debug from Xcode on a 9.2.1 device.
 
 Building the code
 -----------------
