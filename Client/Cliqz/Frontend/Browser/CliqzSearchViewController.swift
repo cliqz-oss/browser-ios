@@ -92,8 +92,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.view.addSubview(spinnerView)
 		spinnerView.startAnimating()
 
-		loadExtension()
-
 		KeyboardHelper.defaultHelper.addDelegate(self)
 		layoutSearchEngineScrollView()
         addGuestureRecognizers()
@@ -124,6 +122,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+		if self.webView?.URL == nil {
+			loadExtension()
+		}
+
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateContentBlockingPreferences()
     }
