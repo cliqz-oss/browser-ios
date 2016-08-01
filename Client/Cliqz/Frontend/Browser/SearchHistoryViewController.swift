@@ -61,9 +61,7 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        loadHistory()
-        
+		
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIConstants.OrangeColor
         self.navigationController?.navigationBar.titleTextAttributes = [
@@ -74,6 +72,14 @@ class SearchHistoryViewController: UIViewController, WKNavigationDelegate, WKScr
 		
         self.setupConstraints()
     }
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		if self.historyWebView.URL == nil {
+			loadHistory()
+		}
+	}
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
