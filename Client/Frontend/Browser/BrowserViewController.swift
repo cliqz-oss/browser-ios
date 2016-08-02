@@ -117,8 +117,7 @@ class BrowserViewController: UIViewController {
     // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
     var headerConstraintUpdated:Bool = false
     
-    // Cliqz: Furture and past layers
-    
+    // Cliqz: Future and past layers
     var searchHistoryContainer: UINavigationController?
     private func initSearchHistoryContainer() {
         let searchHistoryViewController = SearchHistoryViewController(profile: self.profile, tabManager: self.tabManager)
@@ -1239,10 +1238,10 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Browser? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
+		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
 				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "click", "target_type", "download_page"))
-
 				self.downloadVideoFromURL(url.absoluteString)
 			}
 			activities.append(youtubeDownloader)
@@ -1570,7 +1569,7 @@ extension BrowserViewController: URLBarDelegate {
         
         transition.transitionDirection = TransitionDirection.Down
         self.presentViewController(searchHistoryContainer!, animated: true, completion: nil)
-        
+
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
     }
 }
@@ -2822,6 +2821,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 actionSheetController.addAction(openNewTabAction)
             }
 
+			// Cliqz: Added Action handler for the long press to download Youtube videos
 			if YoutubeVideoDownloader.isYoutubeURL(url) {
 				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
 				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
@@ -3263,7 +3263,8 @@ extension BrowserViewController {
             backNavigationStep = 0
         }
     }
-    
+	
+	// Cliqz: Method for Telemetry logs
     private func logNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) {
         TelemetryLogger.sharedInstance.logEvent(.Navigation(action, step, urlLength, displayTime))
     }
@@ -3277,7 +3278,8 @@ extension BrowserViewController {
             selectedTab.webView?.addSubview(webViewOverlay!)
         }
     }
-    
+	
+	// Cliqz: Method to hide overlay
     private func hideWebViewOverlay() {
         if webViewOverlay != nil {
             webViewOverlay!.removeFromSuperview()
@@ -3303,7 +3305,8 @@ extension BrowserViewController {
         
         saveLastVisitedWebSite()
     }
-    
+	
+	// Cliqz: Method to store last visited sites
     private func saveLastVisitedWebSite() {
         if let selectedTab = self.tabManager.selectedTab,
             let lastVisitedWebsite = selectedTab.webView?.URL?.absoluteString
@@ -3312,6 +3315,7 @@ extension BrowserViewController {
             LocalDataStore.setObject(lastVisitedWebsite, forKey: lastVisitedWebsiteKey)
         }
     }
+
     // Cliqz: added to mark the app being responsive (mainly send telemetry signal)
     func appDidBecomeResponsive(startupType: String) {
         if isAppResponsive == false {
