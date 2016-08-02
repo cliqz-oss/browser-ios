@@ -19,5 +19,8 @@
 #import "AWSCore.h"
 #import "AWSSNSService.h"
 #import "AWSSNS.h"
+// Cliqz: Commented crash reporter
+#import <CrashReporter/CrashReporter.h>
+
 
 #endif

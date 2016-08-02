@@ -41,12 +41,20 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
 
         let prefs = profile.prefs
+
         var generalSettings = [
             //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
 //            SearchSetting(settings: self),
             CliqzSearchSetting(settings: self),
             EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
 				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
+        //Cliqz: remove newTabPage settings and HomePage settings
+//        if AppConstants.MOZ_NEW_TAB_CHOICES {
+//            generalSettings += [NewTabPageSetting(settings: self)]
+//        }
+//        generalSettings += [
+//            HomePageSetting(settings: self),
+
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
@@ -104,14 +112,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         
         var privacySettings = [Setting]()
-        if AppConstants.MOZ_LOGIN_MANAGER {
-            privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
-        }
-
+        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
         //Cliqz: removed passcode settings as it is not working
-//        if AppConstants.MOZ_AUTHENTICATION_MANAGER {
-//            privacySettings.append(TouchIDPasscodeSetting(settings: self))
-//        }
+//        privacySettings.append(TouchIDPasscodeSetting(settings: self))
 
         privacySettings.append(ClearPrivateDataSetting(settings: self))
 
@@ -125,12 +128,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
             ]
         }
 
-        //Cliqz: removed unused sections from Settings table
         privacySettings += [
-//            BoolSetting(prefs: prefs, prefKey: "crashreports.send.always", defaultValue: false,
-//                titleText: NSLocalizedString("Send Crash Reports", comment: "Setting to enable the sending of crash reports"),
-//                settingDidChange: { configureActiveCrashReporter($0) }),
-            ShowBlockedTopSitesSetting(),
             PrivacyPolicySetting()
         ]
 
@@ -197,5 +195,21 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
         
         return super.tableView(tableView, viewForHeaderInSection: section)
+    }
+}
+
+extension AppSettingsTableViewController {
+    func navigateToLoginsList() {
+        let viewController = LoginListViewController(profile: profile)
+        viewController.settingsDelegate = settingsDelegate
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+extension AppSettingsTableViewController: PasscodeEntryDelegate {
+    @objc func passcodeValidationDidSucceed() {
+        navigationController?.dismissViewControllerAnimated(true) {
+            self.navigateToLoginsList()
+        }
     }
 }

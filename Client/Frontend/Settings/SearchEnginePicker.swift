@@ -1,15 +1,11 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import UIKit
 
-protocol SearchEnginePickerDelegate {
-    func searchEnginePicker(searchEnginePicker: SearchEnginePicker, didSelectSearchEngine engine: OpenSearchEngine?) -> Void
-}
-
 class SearchEnginePicker: UITableViewController {
-    var delegate: SearchEnginePickerDelegate?
+    weak var delegate: SearchEnginePickerDelegate?
     var engines: [OpenSearchEngine]!
     var selectedSearchEngineName: String?
 
@@ -19,7 +15,7 @@ class SearchEnginePicker: UITableViewController {
         navigationItem.title = NSLocalizedString("Default Search Engine", comment: "Title for default search engine picker.")
 
 		// Cliqz: Removed LeftBarButton as we need just back button.
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title from search engine picker"), style: .Plain, target: self, action: #selector(SearchEnginePicker.SELcancel))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title from search engine picker"), style: .Plain, target: self, action: #selector(SearchEnginePicker.cancel))
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -30,7 +26,7 @@ class SearchEnginePicker: UITableViewController {
         let engine = engines[indexPath.item]
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
         cell.textLabel?.text = engine.shortName
-        cell.imageView?.image = engine.image?.createScaled(CGSize(width: OpenSearchEngine.PreferredIconSize, height: OpenSearchEngine.PreferredIconSize))
+        cell.imageView?.image = engine.image.createScaled(CGSize(width: OpenSearchEngine.PreferredIconSize, height: OpenSearchEngine.PreferredIconSize))
         if engine.shortName == selectedSearchEngineName {
 			// Cliqz: Mark selected the row of default search engine
 			self.tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
@@ -50,7 +46,7 @@ class SearchEnginePicker: UITableViewController {
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
 	}
 
-    func SELcancel() {
+    func cancel() {
         delegate?.searchEnginePicker(self, didSelectSearchEngine: nil)
     }
 }

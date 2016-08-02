@@ -87,12 +87,13 @@ class RequirePasscodeSetting: Setting {
             return
         }
 
-        if AppConstants.MOZ_AUTHENTICATION_MANAGER && authInfo.requiresValidation() {
+        if authInfo.requiresValidation() {
             AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
             touchIDReason: AuthenticationStrings.requirePasscodeTouchReason,
             success: {
                 self.navigateToRequireInterval()
             },
+            cancel: nil,
             fallback: {
                 AppAuthenticator.presentPasscodeAuthentication(self.navigationController, delegate: self)
             })
@@ -170,6 +171,7 @@ class TouchIDSetting: Setting {
                 authInfo,
                 touchIDReason: AuthenticationStrings.disableTouchReason,
                 success: self.touchIDSuccess,
+                cancel: nil,
                 fallback: self.touchIDFallback
             )
         } else {

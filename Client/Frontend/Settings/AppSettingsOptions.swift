@@ -15,7 +15,7 @@ private var DebugSettingsClickCount: Int = 0
 
 // For great debugging!
 class HiddenSetting: Setting {
-    let settings: SettingsTableViewController
+    unowned let settings: SettingsTableViewController
 
     init(settings: SettingsTableViewController) {
         self.settings = settings
@@ -62,7 +62,7 @@ class DisconnectSetting: WithAccountSetting {
             message: NSLocalizedString("Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device.", comment: "Text of the 'log out firefox account' alert"),
             preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
-            UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button in the 'log out firefox account' alert"), style: .Cancel) { (action) in
+            UIAlertAction(title: NSLocalizedString("Cancel", comment: "Label for Cancel button"), style: .Cancel) { (action) in
                 // Do nothing.
             })
         alertController.addAction(
@@ -76,22 +76,46 @@ class DisconnectSetting: WithAccountSetting {
 }
 
 class SyncNowSetting: WithAccountSetting {
+    static let NotificationUserInitiatedSyncManually = "NotificationUserInitiatedSyncManually"
+
     private lazy var timestampFormatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter
     }()
 
-    private let syncNowTitle = NSAttributedString(string: NSLocalizedString("Sync Now", comment: "Sync Firefox Account"), attributes: [NSForegroundColorAttributeName: UIColor.blackColor(), NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont])
+    private var syncNowTitle: NSAttributedString {
+        return NSAttributedString(
+            string: NSLocalizedString("Sync Now", comment: "Sync Firefox Account"),
+            attributes: [
+                NSForegroundColorAttributeName: self.enabled ? UIColor.blackColor() : UIColor.grayColor(),
+                NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont
+            ]
+        )
+    }
 
-    private let syncingTitle = NSAttributedString(string: NSLocalizedString("Syncing…", comment: "Syncing Firefox Account"), attributes: [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.DefaultStandardFontSize, weight: UIFontWeightRegular)])
+    private let syncingTitle = NSAttributedString(string: Strings.SyncingMessageWithEllipsis, attributes: [NSForegroundColorAttributeName: UIColor.grayColor(), NSFontAttributeName: UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.DefaultStandardFontSize, weight: UIFontWeightRegular)])
 
     override var accessoryType: UITableViewCellAccessoryType { return .None }
 
     override var style: UITableViewCellStyle { return .Value1 }
 
     override var title: NSAttributedString? {
-        return profile.syncManager.isSyncing ? syncingTitle : syncNowTitle
+        guard let syncStatus = profile.syncManager.syncDisplayState else {
+            return syncNowTitle
+        }
+
+        switch syncStatus {
+        case .Bad(let message):
+            guard let message = message else { return syncNowTitle }
+            return NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowErrorTextColor, NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont])
+        case .Stale(let message):
+            return  NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowWarningTextColor, NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont])
+        case .InProgress:
+            return syncingTitle
+        default:
+            return syncNowTitle
+        }
     }
 
     override var status: NSAttributedString? {
@@ -107,15 +131,93 @@ class SyncNowSetting: WithAccountSetting {
         return attributedString
     }
 
+    override var enabled: Bool {
+        return profile.hasSyncableAccount()
+    }
+
+    private lazy var troubleshootButton: UIButton = {
+        let troubleshootButton = UIButton(type: UIButtonType.RoundedRect)
+        troubleshootButton.setTitle(Strings.FirefoxSyncTroubleshootTitle, forState: .Normal)
+        troubleshootButton.addTarget(self, action: #selector(self.troubleshoot), forControlEvents: .TouchUpInside)
+        troubleshootButton.tintColor = UIConstants.TableViewRowActionAccessoryColor
+        troubleshootButton.titleLabel?.font = DynamicFontHelper.defaultHelper.DefaultSmallFont
+        troubleshootButton.sizeToFit()
+        return troubleshootButton
+    }()
+
+    private lazy var warningIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "AmberCaution"))
+        imageView.sizeToFit()
+        return imageView
+    }()
+
+    private lazy var errorIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "RedCaution"))
+        imageView.sizeToFit()
+        return imageView
+    }()
+
+    private let syncSUMOURL = SupportUtils.URLForTopic("sync-status-ios")
+
+    @objc private func troubleshoot() {
+        let viewController = SettingsContentViewController()
+        viewController.url = syncSUMOURL
+        settings.navigationController?.pushViewController(viewController, animated: true)
+    }
+
     override func onConfigureCell(cell: UITableViewCell) {
         cell.textLabel?.attributedText = title
-        cell.detailTextLabel?.attributedText = status
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.lineBreakMode = .ByWordWrapping
+        if let syncStatus = profile.syncManager.syncDisplayState {
+            switch syncStatus {
+            case .Bad(let message):
+                if let _ = message {
+                    // add the red warning symbol
+                    // add a link to the MANA page
+                    cell.detailTextLabel?.attributedText = nil
+                    cell.accessoryView = troubleshootButton
+                    addIcon(errorIcon, toCell: cell)
+                } else {
+                    cell.detailTextLabel?.attributedText = status
+                    cell.accessoryView = nil
+                }
+            case .Stale(_):
+                // add the amber warning symbol
+                // add a link to the MANA page
+                cell.detailTextLabel?.attributedText = nil
+                cell.accessoryView = troubleshootButton
+                addIcon(warningIcon, toCell: cell)
+            case .Good:
+                cell.detailTextLabel?.attributedText = status
+                fallthrough
+            default:
+                cell.accessoryView = nil
+            }
+        } else {
+            cell.accessoryView = nil
+        }
         cell.accessoryType = accessoryType
-        cell.accessoryView = nil
         cell.userInteractionEnabled = !profile.syncManager.isSyncing
     }
 
+    private func addIcon(image: UIImageView, toCell cell: UITableViewCell) {
+        cell.contentView.addSubview(image)
+
+        cell.textLabel?.snp_updateConstraints { make in
+            make.leading.equalTo(image.snp_trailing).offset(5)
+            make.trailing.lessThanOrEqualTo(cell.contentView)
+            make.centerY.equalTo(cell.contentView)
+        }
+
+        image.snp_makeConstraints { make in
+            make.leading.equalTo(cell.contentView).offset(17)
+            make.top.equalTo(cell.textLabel!).offset(2)
+        }
+    }
+
     override func onClick(navigationController: UINavigationController?) {
+        NSNotificationCenter.defaultCenter().postNotificationName(SyncNowSetting.NotificationUserInitiatedSyncManually, object: nil)
         profile.syncManager.syncEverything()
     }
 }
@@ -309,7 +411,7 @@ class ExportBrowserDataSetting: HiddenSetting {
 
 // Show the current version of Firefox
 class VersionSetting : Setting {
-    let settings: SettingsTableViewController
+    unowned let settings: SettingsTableViewController
 
     init(settings: SettingsTableViewController) {
         self.settings = settings
@@ -390,7 +492,7 @@ class ShowIntroductionSetting: Setting {
 
 class SendFeedbackSetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Send Feedback", comment: "Show an input.mozilla.org page where people can submit feedback"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Send Feedback", comment: "Menu item in settings used to open input.mozilla.org where people can submit feedback"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {
@@ -466,6 +568,7 @@ class LoginsSetting: Setting {
     let profile: Profile
     var tabManager: TabManager!
     weak var navigationController: UINavigationController?
+    weak var settings: AppSettingsTableViewController?
 
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
 
@@ -475,6 +578,7 @@ class LoginsSetting: Setting {
         self.profile = settings.profile
         self.tabManager = settings.tabManager
         self.navigationController = settings.navigationController
+        self.settings = settings as? AppSettingsTableViewController
 
         let loginsTitle = NSLocalizedString("Logins", comment: "Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager.")
         super.init(title: NSAttributedString(string: loginsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]),
@@ -483,35 +587,22 @@ class LoginsSetting: Setting {
 
     override func onClick(_: UINavigationController?) {
         guard let authInfo = KeychainWrapper.authenticationInfo() else {
-            navigateToLoginsList()
+            settings?.navigateToLoginsList()
             return
         }
 
-        if AppConstants.MOZ_AUTHENTICATION_MANAGER && authInfo.requiresValidation() {
+        if authInfo.requiresValidation() {
             AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
             touchIDReason: AuthenticationStrings.loginsTouchReason,
             success: {
-                self.navigateToLoginsList()
+                self.settings?.navigateToLoginsList()
             },
+            cancel: nil,
             fallback: {
-                AppAuthenticator.presentPasscodeAuthentication(self.navigationController, delegate: self)
+                AppAuthenticator.presentPasscodeAuthentication(self.navigationController, delegate: self.settings)
             })
         } else {
-            self.navigateToLoginsList()
-        }
-    }
-
-    private func navigateToLoginsList() {
-        let viewController = LoginListViewController(profile: profile)
-        viewController.settingsDelegate = delegate
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-}
-
-extension LoginsSetting: PasscodeEntryDelegate {
-    @objc func passcodeValidationDidSucceed() {
-        navigationController?.dismissViewControllerAnimated(true) {
-            self.navigateToLoginsList()
+            settings?.navigateToLoginsList()
         }
     }
 }
@@ -611,3 +702,46 @@ class ChinaSyncServiceSetting: WithoutAccountSetting {
     }
 }
 
+class HomePageSetting: Setting {
+    let profile: Profile
+    var tabManager: TabManager!
+
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+    override var accessibilityIdentifier: String? { return "HomePageSetting" }
+
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        self.tabManager = settings.tabManager
+
+        super.init(title: NSAttributedString(string: Strings.SettingsHomePageSectionName, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = HomePageSettingsViewController()
+        viewController.profile = profile
+        viewController.tabManager = tabManager
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
+}
+
+class NewTabPageSetting: Setting {
+    let profile: Profile
+
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+    override var accessibilityIdentifier: String? { return "NewTabPage.Setting" }
+
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+
+        super.init(title: NSAttributedString(string: Strings.SettingsNewTabSectionName, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = NewTabChoiceViewController(prefs: profile.prefs)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+}
