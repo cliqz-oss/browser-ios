@@ -267,8 +267,6 @@ extension SQLiteHistory: BrowserHistory {
 
     public func getTopSitesWithLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         // Cliqz: Used Cliqz customized query to get top sites instead of the regular Fire Fox one
-//        let topSitesQuery = "SELECT * FROM \(TableCachedTopSites) ORDER BY frecencies DESC LIMIT (?)"
-        
         let topSitesQuery = "select mzh.id as historyID, mzh.guid as guid, mzh.url as url, mzh.title as title, sum(mzh.days_count) as total_count, count(id) as visit_count " +  
                                     "from ( " +
                                         "select \(TableHistory).id , \(TableHistory).guid, \(TableHistory).url, \(TableHistory).title, \(TableVisits).siteID, " +
@@ -281,6 +279,7 @@ extension SQLiteHistory: BrowserHistory {
                                                 "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +
                                     ") as mzh " +
                             "group by mzh.siteID " +
+							// Cliqz: Changed next 2 lines to fix top sites logic
                             "having visit_count > 2 " +
                             "order by total_count desc,visit_count desc, mzh.last_visit_date desc " +
                             "limit (?)"
