@@ -25,9 +25,9 @@ class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
         navigationController?.pushViewController(searchEnginePicker, animated: true)
     }
     
-    func searchEnginePicker(searchEnginePicker: SearchEnginePicker, didSelectSearchEngine searchEngine: OpenSearchEngine?) {
-        if let engine = searchEngine {
-            profile.searchEngines.defaultEngine = engine
+    func searchEnginePicker(searchEnginePicker: SearchEnginePicker?, didSelectSearchEngine engine: OpenSearchEngine?) -> Void {
+        if let searchEngine = engine {
+            profile.searchEngines.defaultEngine = searchEngine
         }
     }
 }

@@ -10,10 +10,10 @@ import WebKit
 
 @available(iOS 9.0, *)
 protocol TabPeekDelegate: class {
-    func tabPeekDidAddBookmark(tab: Browser)
-    func tabPeekDidAddToReadingList(tab: Browser) -> ReadingListClientRecord?
+    func tabPeekDidAddBookmark(tab: Tab)
+    func tabPeekDidAddToReadingList(tab: Tab) -> ReadingListClientRecord?
     func tabPeekRequestsPresentationOf(viewController viewController: UIViewController)
-    func tabPeekDidCloseTab(tab: Browser)
+    func tabPeekDidCloseTab(tab: Tab)
 }
 
 @available(iOS 9.0, *)
@@ -25,7 +25,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
     private static let PreviewActionCopyURL = NSLocalizedString("Copy URL", tableName: "3DTouchActions", comment: "Label for preview action on Tab Tray Tab to copy the URL of the current tab to clipboard")
     private static let PreviewActionCloseTab = NSLocalizedString("Close Tab", tableName: "3DTouchActions", comment: "Label for preview action on Tab Tray Tab to close the current tab")
 
-    weak var tab: Browser?
+    weak var tab: Tab?
 
     private weak var delegate: TabPeekDelegate?
     private var clientPicker: UINavigationController?
@@ -78,7 +78,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
     }()
 
 
-    init(tab: Browser, delegate: TabPeekDelegate?) {
+    init(tab: Tab, delegate: TabPeekDelegate?) {
         self.tab = tab
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
@@ -91,7 +91,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let webViewAccessibilityLabel = tab?.webView?.accessibilityLabel {
-            previewAccessibilityLabel = String(format: NSLocalizedString("Preview of %@", tableName: "3DTouchActions", comment: "Accessibility Label for preview in Tab Tray of current tab"), webViewAccessibilityLabel)
+            previewAccessibilityLabel = String(format: NSLocalizedString("Preview of %@", tableName: "3DTouchActions", comment: "Accessibility label, associated to the 3D Touch action on the current tab in the tab tray, used to display a larger preview of the tab."), webViewAccessibilityLabel)
         }
         // if there is no screenshot, load the URL in a web page
         // otherwise just show the screenshot
@@ -107,7 +107,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
         imageView.snp_makeConstraints { make in
             make.edges.equalTo(self.view)
         }
-        
+
         screenShot = imageView
         screenShot?.accessibilityLabel = previewAccessibilityLabel
     }

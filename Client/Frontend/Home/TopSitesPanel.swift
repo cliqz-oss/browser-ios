@@ -62,10 +62,11 @@ class TopSitesPanel: UIViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-
-        coordinator.animateAlongsideTransition({ context in
-            self.collection?.reloadData()
-        }, completion: nil)
+        if UIApplication.sharedApplication().applicationState != .Background {
+            coordinator.animateAlongsideTransition({ context in
+                self.collection?.reloadData()
+            }, completion: nil)
+        }
     }
 
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
@@ -103,8 +104,12 @@ class TopSitesPanel: UIViewController {
         self.dataSource.collectionView = self.collection
         self.profile.history.setTopSitesCacheSize(Int32(maxFrecencyLimit))
         self.refreshTopSites(maxFrecencyLimit)
+    }
 
-        self.updateEmptyPanelState()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layout.invalidateLayout()
+        collection?.reloadData()
     }
 
     deinit {
@@ -116,13 +121,19 @@ class TopSitesPanel: UIViewController {
 
     func notificationReceived(notification: NSNotification) {
         switch notification.name {
-        case NotificationFirefoxAccountChanged, NotificationProfileDidFinishSyncing, NotificationPrivateDataClearedHistory, NotificationDynamicFontChanged:
-            refreshTopSites(maxFrecencyLimit)
-            break
+        case NotificationProfileDidFinishSyncing:
+            // Only reload top sites if there the cache is dirty since the finish syncing
+            // notification is fired everytime the user re-enters the app from the background.
+            self.profile.history.areTopSitesDirty(withLimit: self.maxFrecencyLimit) >>== { dirty in
+                if dirty {
+                    self.refreshTopSites(self.maxFrecencyLimit)
+                }
+            }
+        case NotificationFirefoxAccountChanged, NotificationPrivateDataClearedHistory, NotificationDynamicFontChanged:
+            self.refreshTopSites(self.maxFrecencyLimit)
         default:
             // no need to do anything at all
             log.warning("Received unexpected notification \(notification.name)")
-            break
         }
     }
 
@@ -191,8 +202,8 @@ class TopSitesPanel: UIViewController {
         if let data = result.successValue {
             self.dataSource.setHistorySites(data.asArray())
             self.dataSource.profile = self.profile
-            self.updateEmptyPanelState()
         }
+        self.updateEmptyPanelState()
     }
 
     private func updateAllRemoveButtonStates() {
@@ -507,7 +518,13 @@ class TopSitesLayout: UICollectionViewLayout {
 
         // Set the top thumbnail frames.
         let row = floor(Double(indexPath.item / thumbnailCols))
-        let col = indexPath.item % thumbnailCols
+        let col: Int
+        if UIApplication.sharedApplication().userInterfaceLayoutDirection == .RightToLeft {
+            // For RTL the rows are mirrored, item 0 starts at the right
+            col = thumbnailCols - (indexPath.item % thumbnailCols) - 1
+        } else {
+            col = indexPath.item % thumbnailCols
+        }
         let size = collectionView?.bounds.size ?? CGSizeZero
         let insets = ThumbnailCellUX.insetsForCollectionViewSize(size,
             traitCollection:  collectionView!.traitCollection)
@@ -610,6 +627,9 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
         cell.accessibilityLabel = cell.textLabel.text
         cell.removeButton.hidden = !editing
 
+        let removeButtonAccessibilityLabel = String(format: Strings.TopSitesRemoveButtonAccessibilityLabel, domainURL)
+        cell.removeButton.accessibilityLabel = removeButtonAccessibilityLabel
+
         guard let icon = site.icon else {
             setDefaultThumbnailBackgroundForCell(cell)
             downloadFaviconsAndUpdateForSite(site)
@@ -634,11 +654,16 @@ private class TopSitesDataSource: NSObject, UICollectionViewDataSource {
     }
 
     private func configureCell(cell: ThumbnailCell, forSuggestedSite site: SuggestedSite) {
-        cell.textLabel.text = site.title.isEmpty ? NSURL(string: site.url)?.normalizedHostAndPath() : site.title
+        let title = site.title.isEmpty ? NSURL(string: site.url)?.normalizedHostAndPath() : site.title
+        cell.textLabel.text = title
         cell.imageWrapper.backgroundColor = site.backgroundColor
         cell.imageView.contentMode = .ScaleAspectFit
         cell.imageView.layer.minificationFilter = kCAFilterTrilinear
         cell.accessibilityLabel = cell.textLabel.text
+
+        if let title = title {
+            cell.removeButton.accessibilityLabel =  String(format: Strings.TopSitesRemoveButtonAccessibilityLabel, title)
+        }
 
         guard let icon = site.wordmark.url.asURL,
             let host = icon.host else {

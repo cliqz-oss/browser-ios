@@ -271,7 +271,7 @@ class ErrorPageHelper {
     }
 }
 
-extension ErrorPageHelper: BrowserHelper {
+extension ErrorPageHelper: TabHelper {
     static func name() -> String {
         return "ErrorPageHelper"
     }
@@ -290,8 +290,10 @@ extension ErrorPageHelper: BrowserHelper {
             case ErrorPageHelper.MessageOpenInSafari:
                 UIApplication.sharedApplication().openURL(originalURL)
             case ErrorPageHelper.MessageCertVisitOnce:
-                if let cert = certFromErrorURL(errorURL) {
-                    ErrorPageHelper.certStore?.addCertificate(cert)
+                if let cert = certFromErrorURL(errorURL),
+                   let host = originalURL.host {
+                    let origin = "\(host):\(originalURL.port ?? 443)"
+                    ErrorPageHelper.certStore?.addCertificate(cert, forOrigin: origin)
                     message.webView?.reload()
                 }
             default:

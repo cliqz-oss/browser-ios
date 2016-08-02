@@ -32,9 +32,14 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	var webView: WKWebView?
     
-    var privateMode: Bool?
+    var privateMode = false
     
     var inSelectionMode = false
+    
+    // for homepanel state because we show the cliqz search as the home panel
+    var homePanelState: HomePanelState {
+        return HomePanelState(isPrivate: privateMode, selectedIndex: 0)
+    }
     
     lazy var javaScriptBridge: JavaScriptBridge = {
         let javaScriptBridge = JavaScriptBridge(profile: self.profile)
@@ -276,7 +281,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     private func updatePrivateModePreferences() {
-        let params = ["incognito" : self.privateMode!]
+        let params = ["incognito" : self.privateMode]
         javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
     }
     
