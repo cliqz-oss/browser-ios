@@ -951,9 +951,12 @@ class BrowserViewController: UIViewController {
             return
         }
 
-        if let webView = tab.webView {
-            resetSpoofedUserAgentIfRequired(webView, newURL: url)
-        }
+		// Cliqz:[UIWebView] Extra logic we might not need it
+#if !CLIQZ
+		if let webView = tab.webView {
+			resetSpoofedUserAgentIfRequired(webView, newURL: url)
+		}
+#endif
 
         if let nav = tab.loadRequest(PrivilegedRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
@@ -1993,7 +1996,9 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 
 extension BrowserViewController: TabDelegate {
 
-    func tab(tab: Tab, didCreateWebView webView: WKWebView) {
+	// Cliqz:[UIWebView] Type change
+//    func tab(tab: Tab, didCreateWebView webView: WKWebView) {
+	func tab(tab: Tab, didCreateWebView webView: CliqzWebView) {
         webView.frame = webViewContainer.frame
         // Observers that live as long as the tab. Make sure these are all cleared
         // in willDeleteWebView below!
@@ -2060,8 +2065,10 @@ extension BrowserViewController: TabDelegate {
         addCustomUserScripts(tab)
     }
 
-    func tab(tab: Tab, willDeleteWebView webView: WKWebView) {
-        tab.cancelQueuedAlerts()
+	// Cliqz:[UIWebView] Type change
+//    func tab(tab: Tab, willDeleteWebView webView: WKWebView) {
+	func tab(tab: Tab, willDeleteWebView webView: CliqzWebView) {
+		tab.cancelQueuedAlerts()
 
         webView.removeObserver(self, forKeyPath: KVOEstimatedProgress)
         webView.removeObserver(self, forKeyPath: KVOLoading)
@@ -2676,6 +2683,8 @@ extension BrowserViewController: WKNavigationDelegate {
 private let SchemesAllowedToOpenPopups = ["http", "https", "javascript", "data"]
 
 extension BrowserViewController: WKUIDelegate {
+	// Cliqz:[UIWebView] Commented delegate method, later reimplement the same feature
+#if !CLIQZ
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
@@ -2709,6 +2718,7 @@ extension BrowserViewController: WKUIDelegate {
         
         return newTab.webView
     }
+#endif
 
     private func canDisplayJSAlertForWebView(webView: WKWebView) -> Bool {
         // Only display a JS Alert if we are selected and there isn't anything being shown
@@ -2947,9 +2957,14 @@ extension BrowserViewController {
                         try self.readerModeCache.put(currentURL, readabilityResult)
                     } catch _ {
                     }
-                    if let nav = webView.loadRequest(PrivilegedRequest(URL: readerModeURL)) {
-                        self.ignoreNavigationInTab(tab, navigation: nav)
-                    }
+					// Cliqz:[UIWebView] Replaced load request with ours which doesn't return WKNavigation
+#if CLIQZ
+					webView.loadRequest(PrivilegedRequest(URL: readerModeURL))
+#else
+					if let nav = webView.loadRequest(PrivilegedRequest(URL: readerModeURL)) {
+					self.ignoreNavigationInTab(tab, navigation: nav)
+					}
+#endif
                 }
             })
         }
@@ -2973,9 +2988,14 @@ extension BrowserViewController {
                     } else if forwardList.count > 0 && forwardList.first?.URL == originalURL {
                         webView.goToBackForwardListItem(forwardList.first!)
                     } else {
-                        if let nav = webView.loadRequest(NSURLRequest(URL: originalURL)) {
-                            self.ignoreNavigationInTab(tab, navigation: nav)
-                        }
+						// Cliqz:[UIWebView] Replaced load request with ours which doesn't return WKNavigation
+#if CLIQZ
+						webView.loadRequest(NSURLRequest(URL: originalURL))
+#else
+						if let nav = webView.loadRequest(NSURLRequest(URL: originalURL)) {
+						self.ignoreNavigationInTab(tab, navigation: nav)
+						}
+#endif
                     }
                 }
             }
@@ -3319,8 +3339,10 @@ extension BrowserViewController: ContextMenuHelperDelegate {
  A third party search engine Browser extension
 **/
 extension BrowserViewController {
-
-    func addCustomSearchButtonToWebView(webView: WKWebView) {
+	
+	// Cliqz:[UIWebView] Type change
+//	func addCustomSearchButtonToWebView(webView: WKWebView) {
+    func addCustomSearchButtonToWebView(webView: CliqzWebView) {
         //check if the search engine has already been added.
         let domain = webView.URL?.domainURL().host
         let matches = self.profile.searchEngines.orderedEngines.filter {$0.shortName == domain}

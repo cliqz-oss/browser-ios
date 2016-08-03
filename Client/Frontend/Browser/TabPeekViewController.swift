@@ -95,7 +95,10 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
         }
         // if there is no screenshot, load the URL in a web page
         // otherwise just show the screenshot
+		// Cliqz:[UIWebView] Commented as we won't need this logic in  future
+#if !CLIQZ
         setupWebView(tab?.webView)
+#endif
         guard let screenshot = tab?.screenshot else { return }
         setupWithScreenshot(screenshot)
     }

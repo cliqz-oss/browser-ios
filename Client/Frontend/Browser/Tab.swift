@@ -22,8 +22,11 @@ protocol TabDelegate {
     func tab(tab: Tab, didAddSnackbar bar: SnackBar)
     func tab(tab: Tab, didRemoveSnackbar bar: SnackBar)
     func tab(tab: Tab, didSelectFindInPageForSelection selection: String)
-    optional func tab(tab: Tab, didCreateWebView webView: WKWebView)
-    optional func tab(tab: Tab, willDeleteWebView webView: WKWebView)
+	// Cliqz:[UIWebView] Type change
+	optional func tab(tab: Tab, didCreateWebView webView: CliqzWebView)
+	optional func tab(tab: Tab, willDeleteWebView webView: CliqzWebView)
+//	optional func tab(tab: Tab, didCreateWebView webView: WKWebView)
+//	optional func tab(tab: Tab, willDeleteWebView webView: WKWebView)
 }
 
 struct TabState {
@@ -57,7 +60,8 @@ class Tab: NSObject {
         return TabState(isPrivate: _isPrivate, desktopSite: desktopSite, isBookmarked: isBookmarked, url: url, title: displayTitle, favicon: displayFavicon)
     }
 
-    var webView: WKWebView? = nil
+//  Cliqz:  var webView: WKWebView? = nil
+	var webView: CliqzWebView? = nil
     var tabDelegate: TabDelegate? = nil
     weak var appStateDelegate: AppStateDelegate?
     var bars = [SnackBar]()
@@ -159,7 +163,12 @@ class Tab: NSObject {
             configuration!.preferences = WKPreferences()
             configuration!.preferences.javaScriptCanOpenWindowsAutomatically = false
             let webView = TabWebView(frame: CGRectZero, configuration: configuration!)
-            webView.delegate = self
+			// Cliqz: [UIWebView] renamed delegate to tabWebViewDelegate
+#if CLIQZ
+			webView.tabWebViewDelegate = self
+#else
+			webView.delegate = self
+#endif
             configuration = nil
 
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
@@ -180,7 +189,9 @@ class Tab: NSObject {
         }
     }
 
-    func restore(webView: WKWebView) {
+// Cliqz:[UIWebView] Changed type to CliqzWebView
+//    func restore(webView: WKWebView) {
+	func restore(webView: CliqzWebView) {
         if let sessionData = self.sessionData {
             // If the tab has session data, load the last selected URL.
             // We don't try to restore full session history due to bug 1238006.
@@ -330,7 +341,13 @@ class Tab: NSObject {
     func loadRequest(request: NSURLRequest) -> WKNavigation? {
         if let webView = webView {
             lastRequest = request
-            return webView.loadRequest(request)
+#if CLIQZ
+		// Cliqz:[UIWebView] Replaced with fake WKNavigation
+		webView.loadRequest(request)
+		return DangerousReturnWKNavigation.emptyNav
+#else
+		return webView.loadRequest(request)
+#endif
         }
         return nil
     }
@@ -483,11 +500,23 @@ extension Tab: TabWebViewDelegate {
 
 private class HelperManager: NSObject, WKScriptMessageHandler {
     private var helpers = [String: TabHelper]()
-    private weak var webView: WKWebView?
+#if CLIQZ
+	// Cliqz:[UIWebView] Type change
+    private weak var webView: CliqzWebView?
+#else
+	private weak var webView: WKWebView?
+#endif
 
-    init(webView: WKWebView) {
-        self.webView = webView
-    }
+// Cliqz:[UIWebView] Type change
+#if CLIQZ
+	init(webView: CliqzWebView) {
+		self.webView = webView
+	}
+#else
+	init(webView: WKWebView) {
+		self.webView = webView
+	}
+#endif
 
     @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         for helper in helpers.values {
@@ -523,8 +552,9 @@ private protocol TabWebViewDelegate: class {
     func tabWebView(tabWebView: TabWebView, didSelectFindInPageForSelection selection: String)
 }
 
-private class TabWebView: WKWebView, MenuHelperInterface {
-    private weak var delegate: TabWebViewDelegate?
+private class TabWebView: CliqzWebView, MenuHelperInterface {
+	// Cliqz: renamed delegate to tab
+    private weak var tabWebViewDelegate: TabWebViewDelegate?
 
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         return action == MenuHelper.SelectorFindInPage
@@ -533,7 +563,8 @@ private class TabWebView: WKWebView, MenuHelperInterface {
     @objc func menuHelperFindInPage(sender: NSNotification) {
         evaluateJavaScript("getSelection().toString()") { result, _ in
             let selection = result as? String ?? ""
-            self.delegate?.tabWebView(self, didSelectFindInPageForSelection: selection)
+			// Cliqz renamed delegate
+            self.tabWebViewDelegate?.tabWebView(self, didSelectFindInPageForSelection: selection)
         }
     }
 
