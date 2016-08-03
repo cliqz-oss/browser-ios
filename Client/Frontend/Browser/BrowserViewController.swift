@@ -548,22 +548,22 @@ class BrowserViewController: UIViewController {
             self.view.alpha = (profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil) ? 1.0 : 0.0
         }
 
+		// Cliqz: Disable FF crash reporting and restoring Tabs
+/*
         if PLCrashReporter.sharedReporter().hasPendingCrashReport() {
-            // Cliqz disable calling crash reporting
-            //PLCrashReporter.sharedReporter().purgePendingCrashReport()
+            PLCrashReporter.sharedReporter().purgePendingCrashReport()
             showRestoreTabsAlert()
         } else {
-            // Cliqz: create new tab at start
-            if (needsNewTab) {
-                self.tabManager.addTabAndSelect()
-                needsNewTab = false
-            }
-            /*
             log.debug("Restoring tabs.")
             tabManager.restoreTabs()
             log.debug("Done restoring tabs.")
-            */
         }
+*/
+		// Cliqz: create new tab at start
+		if (needsNewTab) {
+			self.tabManager.addTabAndSelect()
+			needsNewTab = false
+		}
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
