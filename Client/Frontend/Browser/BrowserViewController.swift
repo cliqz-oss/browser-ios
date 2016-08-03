@@ -882,8 +882,8 @@ class BrowserViewController: UIViewController {
             
             searchLoader.addListener(searchController!)
             
-            addChildViewController(searchController!)
             view.addSubview(searchController!.view)
+            addChildViewController(searchController!)
             searchController!.view.snp_makeConstraints { make in
                 make.top.equalTo(self.urlBar.snp_bottom)
                 make.left.right.bottom.equalTo(self.view)
