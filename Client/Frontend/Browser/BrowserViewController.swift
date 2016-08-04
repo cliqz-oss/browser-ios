@@ -107,9 +107,7 @@ class BrowserViewController: UIViewController {
     var navigationToolbar: TabToolbarProtocol {
         return toolbar ?? urlBar
     }
-    // Cliqz: webViewOverlay to cover the wkwebview when navigating from search result
-    var webViewOverlay: UIView?
-    
+	
     private var needsNewTab = true
     
     private var isAppResponsive = false
@@ -960,9 +958,6 @@ class BrowserViewController: UIViewController {
 
         if let nav = tab.loadRequest(PrivilegedRequest(URL: url)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
-            
-            // Cliqz: add webViewOverlay to the wkwebview to hide the old page while navigating to a new page
-            showWebViewOverLay(tab)
         }
     }
 
@@ -2624,10 +2619,7 @@ extension BrowserViewController: WKNavigationDelegate {
                 }
             }
         }
-
-        // Cliqz: hide the webViewOverlay when finis navigating to a url
-        hideWebViewOverlay()
-        
+		
         //Cliqz: Navigation telemetry signal
         if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
             finishNavigation(webView)
@@ -2801,12 +2793,6 @@ extension BrowserViewController: WKUIDelegate {
         // Cliqz: get the response code of the current response from the navigationResponse
         if let response = navigationResponse.response as? NSHTTPURLResponse {
             currentResponseStatusCode = response.statusCode
-        }
-        
-        // Cliqz: hide overlay after webview delay as some links does not call didFinishNavigation
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            self.hideWebViewOverlay()
         }
         
         let helperForURL = OpenIn.helperForResponse(navigationResponse.response)
@@ -3703,8 +3689,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(URL: u)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
-            showWebViewOverLay(tab)
-        }
+		}
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
     }
@@ -3809,25 +3794,7 @@ extension BrowserViewController {
     private func logNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) {
         TelemetryLogger.sharedInstance.logEvent(.Navigation(action, step, urlLength, displayTime))
     }
-    
-    
-    // Cliqz: Add an overlay to the WKWebView to hide the old page while navigating to the new search result
-    private func showWebViewOverLay(selectedTab: Tab) {
-        if self.webViewOverlay == nil {
-            webViewOverlay = UIView(frame: (selectedTab.webView?.bounds)!)
-            webViewOverlay!.backgroundColor = UIColor.whiteColor()
-            selectedTab.webView?.addSubview(webViewOverlay!)
-        }
-    }
-	
-	// Cliqz: Method to hide overlay
-    private func hideWebViewOverlay() {
-        if webViewOverlay != nil {
-            webViewOverlay!.removeFromSuperview()
-            webViewOverlay = nil
-        }
-    }
-    
+
     // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
     func SELappDidEnterBackgroundNotification() {
         
