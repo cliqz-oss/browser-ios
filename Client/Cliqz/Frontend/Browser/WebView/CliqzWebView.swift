@@ -43,13 +43,14 @@ class CliqzWebView: UIWebView {
 		} else {
 			_url.url = url
 		}
+		self.URL = _url.url
 	}
 
-	dynamic var URL: NSURL? {
+	dynamic var URL: NSURL? /*{
 		get {
 			return _url.url
 		}
-	}
+	}*/
 
 	dynamic var estimatedProgress: Double = 0
 	var title: String = "" /* {
@@ -59,7 +60,8 @@ class CliqzWebView: UIWebView {
 			}
 		}
 	}*/
-	
+
+	var prevDocumentLocation = ""
 	var internalLoadingEndedFlag: Bool = false;
 	
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
@@ -107,14 +109,17 @@ class CliqzWebView: UIWebView {
 		
 		guard let docLoc = self.stringByEvaluatingJavaScriptFromString("document.location.href") else { return }
 
-		if !(self.URL?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
-			self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
+		if docLoc != self.prevDocumentLocation {
+			if !(self.URL?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
+				self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
+			}
+			
+			if let nd = self.navigationDelegate {
+				globalContainerWebView.legacyWebView = self
+				nd.webView?(globalContainerWebView, didFinishNavigation: nullWKNavigation)
+			}
 		}
-		
-		if let nd = self.navigationDelegate {
-			globalContainerWebView.legacyWebView = self
-			nd.webView?(globalContainerWebView, didFinishNavigation: nullWKNavigation)
-		}
+		self.prevDocumentLocation = docLoc
 	}
 	
 	var customUserAgent:String? /*{
@@ -135,6 +140,11 @@ class CliqzWebView: UIWebView {
 	}
 
 	// MARK:- Private methods
+
+	private class func isTopFrameRequest(request:NSURLRequest) -> Bool {
+		return request.URL == request.mainDocumentURL
+	}
+	
 	private func commonInit() {
 		delegate = self
 		progress = WebViewProgress(parent: self)
@@ -190,11 +200,19 @@ extension CliqzWebView: UIWebViewDelegate {
 			})
 		}
 
+		let locationChanged = CliqzWebView.isTopFrameRequest(request) && url.absoluteString != URL?.absoluteString
+		if locationChanged {
+			setUrl(url, reliableSource: true)
+		}
 		return result
 	}
 	
 	func webViewDidStartLoad(webView: UIWebView) {
 		progress?.webViewDidStartLoad()
+		if let nd = self.navigationDelegate {
+			globalContainerWebView.legacyWebView = self
+			nd.webView?(globalContainerWebView, didCommitNavigation: nullWKNavigation)
+		}
 	}
 	
 	func webViewDidFinishLoad(webView: UIWebView) {
@@ -232,4 +250,5 @@ extension CliqzWebView: UIWebViewDelegate {
 		}
 		progress?.didFailLoadWithError()
 	}
+
 }

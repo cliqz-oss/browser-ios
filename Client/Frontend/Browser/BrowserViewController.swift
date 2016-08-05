@@ -2566,8 +2566,14 @@ extension BrowserViewController: WKNavigationDelegate {
         }
     }
 
-    func webView(webView: WKWebView, didCommitNavigation navigation: WKNavigation!) {
-        guard let tab = tabManager[webView] else { return }
+    func webView(_webView: WKWebView, didCommitNavigation navigation: WKNavigation!) {
+#if CLIQZ
+		guard let container = _webView as? ContainerWebView else { return }
+		guard let webView = container.legacyWebView else { return }
+		guard let tab = tabManager.tabForWebView(webView) else { return }
+#else
+		guard let tab = tabManager[webView] else { return }
+#endif
 
         tab.url = webView.URL
 
