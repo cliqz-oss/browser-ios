@@ -3755,7 +3755,7 @@ extension BrowserViewController {
         
     }
     
-    // Cliqz: Added extension for logging the Navigation Telemetry signals
+    // Cliqz: Logging the Navigation Telemetry signals
     private func startNavigation(webView: WKWebView, navigationAction: WKNavigationAction) {
         // determine if the navigation is back navigation
         if navigationAction.navigationType == .BackForward && backListSize >= webView.backForwardList.backList.count {
@@ -3765,27 +3765,29 @@ extension BrowserViewController {
         }
         backListSize = webView.backForwardList.backList.count
     }
-    
-    private func finishNavigation(webView: WKWebView) {
+
+	// Cliqz: Logging the Navigation Telemetry signals
+    private func finishNavigation(webView: CliqzWebView) {
+		// calculate the url length
+		guard let urlLength = webView.URL?.absoluteString.characters.count else {
+			return
+		}
         // calculate times
         let currentTime = NSDate.getCurrentMillis()
         let displayTime = currentTime - navigationEndTime
         navigationEndTime = currentTime
-        
-        // calculate the url length
-        let urlLength = webView.URL?.absoluteString.characters.count
-        
+		
         
         // check if back navigation
         if isBackNavigation {
-            backNavigationStep++
-            logNavigationEvent("back", step: backNavigationStep, urlLength: urlLength!, displayTime: displayTime)
+            backNavigationStep += 1
+            logNavigationEvent("back", step: backNavigationStep, urlLength: urlLength, displayTime: displayTime)
         } else {
             // discard the first navigation (result navigation is not included)
             if navigationStep != 0 {
-                logNavigationEvent("location_change", step: navigationStep, urlLength: urlLength!, displayTime: displayTime)
+                logNavigationEvent("location_change", step: navigationStep, urlLength: urlLength, displayTime: displayTime)
             }
-            navigationStep++
+            navigationStep += 1
             backNavigationStep = 0
         }
     }
