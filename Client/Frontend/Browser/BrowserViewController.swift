@@ -1061,8 +1061,8 @@ class BrowserViewController: UIViewController {
     }
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        // Cliqz: Replaced forced unwrapping of optional (let webView = object as! WKWebView) with a guard check to avoid crashes
-        guard let webView = object as? WKWebView else { return }
+        // Cliqz: Replaced forced unwrapping of optional (let webView = object as! CliqzWebView) with a guard check to avoid crashes
+        guard let webView = object as? CliqzWebView else { return }
         if webView !== tabManager.selectedTab?.webView {
             return
         }
@@ -1084,8 +1084,9 @@ class BrowserViewController: UIViewController {
                 runScriptsOnWebView(webView)
             }
         case KVOURL:
-            guard let tab = tabManager[webView] else { break }
-
+			// Cliqz: temporary solution, later we should fix subscript and replace with original code
+//            guard let tab = tabManager[webView] else { break }
+			guard let tab = tabManager.tabForWebView(webView) else { break }
             // To prevent spoofing, only change the URL immediately if the new URL is on
             // the same origin as the current URL. Otherwise, do nothing and wait for
             // didCommitNavigation to confirm the page load.
@@ -1110,7 +1111,9 @@ class BrowserViewController: UIViewController {
         }
     }
 
-    private func runScriptsOnWebView(webView: WKWebView) {
+// Cliqz:[UIWebView] Type change
+//    private func runScriptsOnWebView(webView: WKWebView) {
+	private func runScriptsOnWebView(webView: CliqzWebView) {
         webView.evaluateJavaScript("__firefox__.favicons.getFavicons()", completionHandler:nil)
     }
 
@@ -2574,8 +2577,14 @@ extension BrowserViewController: WKNavigationDelegate {
         }
     }
 
-    func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-        let tab: Tab! = tabManager[webView]
+    func webView(_webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+#if CLIQZ
+		guard let container = _webView as? ContainerWebView else { return }
+		guard let webView = container.legacyWebView else { return }
+		guard let tab = tabManager.tabForWebView(webView) else { return }
+#else
+		let tab: Tab! = tabManager[webView]
+#endif
         tabManager.expireSnackbars()
 
         if let url = webView.URL where !ErrorPageHelper.isErrorPageURL(url) && !AboutUtils.isAboutHomeURL(url) {

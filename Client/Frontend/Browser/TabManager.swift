@@ -161,6 +161,18 @@ class TabManager : NSObject {
 
         return nil
     }
+	// Cliqz: [UIWebView] Temporary Added to get the tab that contains specific WebView
+	func tabForWebView(webView: UIWebView) -> Tab? {
+		objc_sync_enter(self); defer { objc_sync_exit(self) }
+		
+		for tab in tabs {
+			if tab.webView === webView {
+				return tab
+			}
+		}
+		
+		return nil
+	}
 
     func getTabFor(url: NSURL) -> Tab? {
         assert(NSThread.isMainThread())

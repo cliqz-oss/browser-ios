@@ -9,6 +9,15 @@
 import Foundation
 import WebKit
 
+
+class ContainerWebView : WKWebView {
+	weak var legacyWebView: CliqzWebView?
+}
+
+var globalContainerWebView = ContainerWebView()
+var nullWKNavigation: WKNavigation = WKNavigation()
+
+
 class CliqzWebView: UIWebView {
 	
 	weak var navigationDelegate: WKNavigationDelegate?
@@ -16,9 +25,13 @@ class CliqzWebView: UIWebView {
 
 	lazy var configuration: WKWebViewConfiguration = { return WKWebViewConfiguration() }()
 	lazy var backForwardList: WKBackForwardList = { return WKBackForwardList() } ()
-
-	var allowsBackForwardNavigationGestures: Bool = false
 	
+	var progress: WebViewProgress?
+	
+	var allowsBackForwardNavigationGestures: Bool = false
+
+	private static var containerWebViewForCallbacks = { return ContainerWebView() }()
+
 	private var _url: (url: NSURL?, isReliableSource: Bool, prevUrl: NSURL?) = (nil, false, nil)
 	func setUrl(url: NSURL?, reliableSource: Bool) {
 		_url.prevUrl = _url.url
@@ -32,13 +45,13 @@ class CliqzWebView: UIWebView {
 		}
 	}
 
-	var URL: NSURL? {
+	dynamic var URL: NSURL? {
 		get {
 			return _url.url
 		}
 	}
 
-	var estimatedProgress: Double = 0
+	dynamic var estimatedProgress: Double = 0
 	var title: String = "" /* {
 		didSet {
 			if let item = backForwardList.currentItem {
@@ -46,6 +59,8 @@ class CliqzWebView: UIWebView {
 			}
 		}
 	}*/
+	
+	var internalLoadingEndedFlag: Bool = false;
 	
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
@@ -80,6 +95,28 @@ class CliqzWebView: UIWebView {
 		}
 	}
 	
+	override func loadRequest(request: NSURLRequest) {
+		super.loadRequest(request)
+	}
+	
+	func loadingCompleted() {
+		if internalLoadingEndedFlag {
+			return
+		}
+		internalLoadingEndedFlag = true
+		
+		guard let docLoc = self.stringByEvaluatingJavaScriptFromString("document.location.href") else { return }
+
+		if !(self.URL?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
+			self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
+		}
+		
+		if let nd = self.navigationDelegate {
+			globalContainerWebView.legacyWebView = self
+			nd.webView?(globalContainerWebView, didFinishNavigation: nullWKNavigation)
+		}
+	}
+	
 	var customUserAgent:String? /*{
 		willSet {
 			if self.customUserAgent == newValue || newValue == nil {
@@ -100,6 +137,7 @@ class CliqzWebView: UIWebView {
 	// MARK:- Private methods
 	private func commonInit() {
 		delegate = self
+		progress = WebViewProgress(parent: self)
 	}
 
 	private func convertStringToDictionary(text: String?) -> [String:AnyObject]? {
@@ -117,5 +155,81 @@ class CliqzWebView: UIWebView {
 }
 
 extension CliqzWebView: UIWebViewDelegate {
+	class LegacyNavigationAction : WKNavigationAction {
+		var writableRequest: NSURLRequest
+		var writableType: WKNavigationType
+		
+		init(type: WKNavigationType, request: NSURLRequest) {
+			writableType = type
+			writableRequest = request
+			super.init()
+		}
+		
+		override var request: NSURLRequest { get { return writableRequest} }
+		override var navigationType: WKNavigationType { get { return writableType } }
+		override var sourceFrame: WKFrameInfo {
+			get { return WKFrameInfo() }
+		}
+	}
+
+	func webView(webView: UIWebView,shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType ) -> Bool {
+		guard let url = request.URL else { return false }
+
+		internalLoadingEndedFlag = false
+
+		if let progressCheck = progress?.shouldStartLoadWithRequest(request, navigationType: navigationType) where !progressCheck {
+			return false
+		}
+
+		var result = true
+		if let nd = navigationDelegate {
+			let action = LegacyNavigationAction(type: WKNavigationType(rawValue: navigationType.rawValue)!, request: request)
+			globalContainerWebView.legacyWebView = self
+			nd.webView?(globalContainerWebView, decidePolicyForNavigationAction: action, decisionHandler: { (policy:WKNavigationActionPolicy) -> Void in
+						result = policy == .Allow
+			})
+		}
+
+		return result
+	}
 	
+	func webViewDidStartLoad(webView: UIWebView) {
+		progress?.webViewDidStartLoad()
+	}
+	
+	func webViewDidFinishLoad(webView: UIWebView) {
+		guard let pageInfo = stringByEvaluatingJavaScriptFromString("document.readyState.toLowerCase() + '|' + document.title") else {
+			return
+		}
+		let pageInfoArray = pageInfo.componentsSeparatedByString("|")
+		
+		let readyState = pageInfoArray.first // ;print("readyState:\(readyState)")
+		if let t = pageInfoArray.last where !t.isEmpty {
+			title = t
+		}
+		progress?.webViewDidFinishLoad(documentReadyState: readyState)
+	}
+	
+	func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+		// The error may not be the main document that failed to load. Check if the failing URL matches the URL being loaded
+		
+		if let error = error, errorUrl = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
+			var handled = false
+			if error.code == -1009 /*kCFURLErrorNotConnectedToInternet*/ {
+				let cache = NSURLCache.sharedURLCache().cachedResponseForRequest(NSURLRequest(URL: errorUrl))
+				if let html = cache?.data.utf8EncodedString where html.characters.count > 100 {
+					loadHTMLString(html, baseURL: errorUrl)
+					handled = true
+				}
+			}
+			
+			if !handled && URL?.absoluteString == errorUrl.absoluteString {
+				if let nd = navigationDelegate {
+					globalContainerWebView.legacyWebView = self
+					nd.webView?(globalContainerWebView, didFailNavigation: nullWKNavigation, withError: error ?? NSError.init(domain: "", code: 0, userInfo: nil))
+				}
+			}
+		}
+		progress?.didFailLoadWithError()
+	}
 }
