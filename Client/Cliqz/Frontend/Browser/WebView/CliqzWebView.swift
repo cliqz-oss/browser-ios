@@ -51,7 +51,41 @@ class CliqzWebView: UIWebView {
 			return _url.url
 		}
 	}*/
-
+    
+    var _loading: Bool = false
+    override internal dynamic var loading: Bool {
+        get {
+            if internalLoadingEndedFlag {
+                // we detected load complete internally –UIWebView sometimes stays in a loading state (i.e. bbc.com)
+                return false
+            }
+            return _loading
+        }
+        set {
+            _loading = newValue
+        }
+    }
+    
+    var _canGoBack: Bool = false
+    override internal dynamic var canGoBack: Bool {
+        get {
+            return _canGoBack
+        }
+        set {
+            _canGoBack = newValue
+        }
+    }
+    
+    var _canGoForward: Bool = false
+    override internal dynamic var canGoForward: Bool {
+        get {
+            return _canGoForward
+        }
+        set {
+            _canGoForward = newValue
+        }
+    }
+    
 	dynamic var estimatedProgress: Double = 0
 	var title: String = "" /* {
 		didSet {
@@ -60,6 +94,9 @@ class CliqzWebView: UIWebView {
 			}
 		}
 	}*/
+    
+    let internalProgressChangedNotification = "WebProgressEstimateChangedNotification"
+
 
 	var prevDocumentLocation = ""
 	var internalLoadingEndedFlag: Bool = false;
@@ -161,6 +198,13 @@ class CliqzWebView: UIWebView {
 		}
 		return nil
 	}
+    
+    func updateObservableAttributes() {
+        
+        self.loading = super.loading
+        self.canGoBack = super.canGoBack
+        self.canGoForward = super.canGoForward
+    }
 
 }
 
@@ -184,7 +228,6 @@ extension CliqzWebView: UIWebViewDelegate {
 
 	func webView(webView: UIWebView,shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType ) -> Bool {
 		guard let url = request.URL else { return false }
-
 		internalLoadingEndedFlag = false
 
 		if let progressCheck = progress?.shouldStartLoadWithRequest(request, navigationType: navigationType) where !progressCheck {
@@ -204,6 +247,8 @@ extension CliqzWebView: UIWebViewDelegate {
 		if locationChanged {
 			setUrl(url, reliableSource: true)
 		}
+        
+        updateObservableAttributes()
 		return result
 	}
 	
@@ -213,6 +258,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			globalContainerWebView.legacyWebView = self
 			nd.webView?(globalContainerWebView, didCommitNavigation: nullWKNavigation)
 		}
+        updateObservableAttributes()
 	}
 	
 	func webViewDidFinishLoad(webView: UIWebView) {
@@ -226,6 +272,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			title = t
 		}
 		progress?.webViewDidFinishLoad(documentReadyState: readyState)
+        updateObservableAttributes()
 	}
 	
 	func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
@@ -249,6 +296,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			}
 		}
 		progress?.didFailLoadWithError()
+        updateObservableAttributes()
 	}
 
 }
