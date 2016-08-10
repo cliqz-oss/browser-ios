@@ -19,6 +19,8 @@
 #import "AWSCore.h"
 #import "AWSSNSService.h"
 #import "AWSSNS.h"
+#import "LegacyJSContext.h"
+
 // Cliqz: Commented crash reporter
 //#import <CrashReporter/CrashReporter.h>
 

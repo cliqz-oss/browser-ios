@@ -47,6 +47,8 @@
 		0BF42D4F1A7CD09600889E28 /* TestFavicons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */; };
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
+		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
+		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
 		1E79DD001D4FB2C5006BEB4A /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */; };
 		1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */; };
@@ -1337,6 +1339,9 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
+		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
+		1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegacyJSContext.m; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
@@ -3516,6 +3521,9 @@
 			children = (
 				4FF239C51D52464000EEDE89 /* CliqzWebView.swift */,
 				4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */,
+				1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */,
+				1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */,
+				1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */,
 			);
 			path = WebView;
 			sourceTree = "<group>";
@@ -6049,6 +6057,7 @@
 				E4252A0E1AF01AE40028C684 /* Swizzling.m in Sources */,
 				1E79DE861D508368006BEB4A /* AWSFMResultSet.m in Sources */,
 				D3972BF41C22412B00035B87 /* TitleActivityItemProvider.swift in Sources */,
+				1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */,
 				1E79DEA71D508368006BEB4A /* AWSCategory.m in Sources */,
 				1E79DD2C1D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift in Sources */,
 				1E79DE931D508368006BEB4A /* NSObject+AWSMTLComparisonAdditions.m in Sources */,
@@ -6152,6 +6161,7 @@
 				1E79DD0D1D4FB2C5006BEB4A /* UITextFieldExtension.swift in Sources */,
 				59A68E0B4ABBF55E14819668 /* BookmarksPanel.swift in Sources */,
 				7B0B1B791C1B69C900DF4AB5 /* ClientPickerViewController.swift in Sources */,
+				1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */,
 				1E79DE991D508368006BEB4A /* AWSSerialization.m in Sources */,
 				7B844E3D1BBDDB9D00E733A2 /* ChevronView.swift in Sources */,
 				1E79DE8F1D508368006BEB4A /* AWSEXTScope.m in Sources */,

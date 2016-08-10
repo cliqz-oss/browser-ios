@@ -502,6 +502,8 @@ class TabManager : NSObject {
     }
 
     func prefsDidChange() {
+        // Cliqz: [UIWebview] CliqzWebViewConfiguration does not contain preferences 
+#if !CLIQZ
         dispatch_async(dispatch_get_main_queue()) {
             let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
             // Each tab may have its own configuration, so we should tell each of them in turn.
@@ -514,6 +516,7 @@ class TabManager : NSObject {
                 self.privateConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
             }
         }
+#endif
     }
 
     func resetProcessPool() {

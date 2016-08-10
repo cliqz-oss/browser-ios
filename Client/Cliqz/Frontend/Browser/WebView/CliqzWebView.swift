@@ -23,7 +23,7 @@ class CliqzWebView: UIWebView {
 	weak var navigationDelegate: WKNavigationDelegate?
 	weak var UIDelegate: WKUIDelegate?
 
-	lazy var configuration: WKWebViewConfiguration = { return WKWebViewConfiguration() }()
+	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
 	lazy var backForwardList: WKBackForwardList = { return WKBackForwardList() } ()
 	
 	var progress: WebViewProgress?
@@ -95,15 +95,13 @@ class CliqzWebView: UIWebView {
 		}
 	}*/
     
-    let internalProgressChangedNotification = "WebProgressEstimateChangedNotification"
-
+    var knownFrameContexts = Set<NSObject>()
 
 	var prevDocumentLocation = ""
 	var internalLoadingEndedFlag: Bool = false;
 	
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
-		self.configuration = configuration
 		commonInit()
 	}
 	
@@ -157,6 +155,7 @@ class CliqzWebView: UIWebView {
 			}
 		}
 		self.prevDocumentLocation = docLoc
+        self.configuration.userContentController.injectJsIntoPage()
 	}
 	
 	var customUserAgent:String? /*{
