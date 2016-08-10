@@ -38,9 +38,9 @@ public class WebViewProgress
 			self.webView = webView
 			super.init()
 			webView.addObserver(self, forKeyPath: kvoLoading, options: .New, context: nil)
-//			webView.removeProgressObserversOnDeinit = { [unowned self] (view) in
-//				view.removeObserver(self, forKeyPath: "loading")
-//			}
+			webView.removeProgressObserversOnDeinit = { [unowned self] (view) in
+				view.removeObserver(self, forKeyPath: "loading")
+			}
 		}
 		
 		@objc func delayedCompletionCheck() {

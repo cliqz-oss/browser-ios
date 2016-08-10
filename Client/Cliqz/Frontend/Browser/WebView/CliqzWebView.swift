@@ -24,7 +24,7 @@ class CliqzWebView: UIWebView {
 	weak var UIDelegate: WKUIDelegate?
 
 	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
-	lazy var backForwardList: WKBackForwardList = { return WKBackForwardList() } ()
+	lazy var backForwardList: WKBackForwardList = { return globalContainerWebView.backForwardList } ()
 	
 	var progress: WebViewProgress?
 	
@@ -99,7 +99,9 @@ class CliqzWebView: UIWebView {
 
 	var prevDocumentLocation = ""
 	var internalLoadingEndedFlag: Bool = false;
-	
+
+    var removeProgressObserversOnDeinit: ((UIWebView) -> Void)?
+
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
 		commonInit()
@@ -109,6 +111,13 @@ class CliqzWebView: UIWebView {
 		super.init(coder: aDecoder)
 		commonInit()
 	}
+    deinit {
+        _ = Try(withTry: {
+            self.removeProgressObserversOnDeinit?(self)
+        }) { (exception) -> Void in
+            print("Failed remove: \(exception)")
+        }
+    }
 	
 	func goToBackForwardListItem(item: WKBackForwardListItem) {
 		if let index = backForwardList.backList.indexOf(item) {
