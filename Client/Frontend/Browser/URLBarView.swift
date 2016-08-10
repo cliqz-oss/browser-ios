@@ -39,7 +39,7 @@ struct URLBarViewUX {
         theme.textColor = UIColor.whiteColor()
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
-        theme.backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
+        theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
         
         themes[Theme.PrivateMode] = theme
 
@@ -56,10 +56,6 @@ struct URLBarViewUX {
         
         themes[Theme.NormalMode] = theme
 
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
-        
         return themes
     }()
 
@@ -1005,29 +1001,21 @@ class ToolbarTextField: AutocompleteTextField {
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
-        theme.backgroundColor = UIConstants.PrivateModeLocationBackgroundColor
+		theme.backgroundColor =  UIConstants.PrivateModeLocationBackgroundColor
         theme.textColor = UIColor.whiteColor()
         theme.buttonTintColor = UIColor.whiteColor()
         theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
-        // Cliqz: Set textField's tinColor to make cursor visible on blue background
-        theme.tintColor = UIColor.whiteColor()
 
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
-        // Cliqz: Changed TextField textColor & backgroundColor because of requirements
+        // Cliqz: Changed TextField backgroundColor because of requirements
         theme.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
-        theme.textColor = UIColor.whiteColor()
+        theme.textColor = UIColor.blackColor()
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
-        // Cliqz: Set textField's tinColor to make cursor visible on blue background
-        theme.tintColor = UIColor.whiteColor()
 
         themes[Theme.NormalMode] = theme
 
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
-        
         return themes
     }()
 
@@ -1121,7 +1109,5 @@ extension ToolbarTextField: Themeable {
         textColor = theme.textColor
         clearButtonTintColor = theme.buttonTintColor
         highlightColor = theme.highlightColor!
-        // Cliqz: Set textField's tinColor to make cursor visible on blue background
-        tintColor = theme.tintColor!
     }
 }

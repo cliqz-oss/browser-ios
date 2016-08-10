@@ -41,10 +41,6 @@ struct TabLocationViewUX {
         theme.backgroundColor = UIColor.clearColor()
         themes[Theme.NormalMode] = theme
 
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
-        
         return themes
     }()
 }
@@ -101,10 +97,9 @@ class TabLocationView: UIView {
 
     lazy var placeholder: NSAttributedString = {
 		// Cliqz: Changed Placeholder text and color according to requirements
-		// TODO Naira: we should localize the string as well
 //        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
 		let placeholderText = NSLocalizedString("Search", tableName: "Cliqz", comment: "The text shown in the search field")
-        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+		return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0x9B9B9B)])
     }()
 
     lazy var urlTextField: UITextField = {
