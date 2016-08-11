@@ -15,7 +15,8 @@ protocol TabToolbarProtocol {
     weak var tabToolbarDelegate: TabToolbarDelegate? { get set }
     var shareButton: UIButton { get }
     var bookmarkButton: UIButton { get }
-    var menuButton: UIButton { get }
+	// Cliqz: Removed menu button as we don't need it
+//    var menuButton: UIButton { get }
     var forwardButton: UIButton { get }
     var backButton: UIButton { get }
     var stopReloadButton: UIButton { get }
@@ -123,11 +124,14 @@ public class TabToolbarHelper: NSObject {
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
 
         if AppConstants.MOZ_MENU {
+			// Cliqz: Removed menu button as we don't need it
+/*
             toolbar.menuButton.contentMode = UIViewContentMode.Center
             toolbar.menuButton.setImage(UIImage.templateImageNamed("bottomNav-menu"), forState: .Normal)
             toolbar.menuButton.accessibilityLabel = AppMenuConfiguration.MenuButtonAccessibilityLabel
             toolbar.menuButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickMenu), forControlEvents: UIControlEvents.TouchUpInside)
             toolbar.menuButton.accessibilityIdentifier = "TabToolbar.menuButton"
+*/
         } else {
             toolbar.bookmarkButton.contentMode = UIViewContentMode.Center
             toolbar.bookmarkButton.setImage(UIImage(named: "bookmark"), forState: .Normal)
@@ -178,7 +182,8 @@ public class TabToolbarHelper: NSObject {
     }
 
     func SELdidClickMenu() {
-        toolbar.tabToolbarDelegate?.tabToolbarDidPressMenu(toolbar, button: toolbar.menuButton)
+		// Cliqz: Removed menu button as we don't need it
+//        toolbar.tabToolbarDelegate?.tabToolbarDidPressMenu(toolbar, button: toolbar.menuButton)
     }
 
     func SELdidClickStopReload() {

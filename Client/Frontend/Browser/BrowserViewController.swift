@@ -1550,8 +1550,9 @@ extension BrowserViewController: MenuActionDelegate {
                 HomePageHelper(prefs: profile.prefs).openHomePage(inTab: tab, withNavigationController: navigationController)
             case .SharePage:
                 guard let url = tabManager.selectedTab?.url else { break }
-                let sourceView = self.navigationToolbar.menuButton
-                presentActivityViewController(url, sourceView: sourceView.superview, sourceRect: sourceView.frame, arrowDirection: .Up)
+				// Cliqz: Removed menu button as we don't need it
+//                let sourceView = self.navigationToolbar.menuButton
+//                presentActivityViewController(url, sourceView: sourceView.superview, sourceRect: sourceView.frame, arrowDirection: .Up)
             default: break
             }
         }

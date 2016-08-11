@@ -189,7 +189,8 @@ class URLBarView: UIView {
 
     lazy var shareButton: UIButton = { return UIButton() }()
 
-    lazy var menuButton: UIButton = { return UIButton() }()
+	// Cliqz: Removed menu button as we don't need it
+//    lazy var menuButton: UIButton = { return UIButton() }()
 
     lazy var bookmarkButton: UIButton = { return UIButton() }()
 
@@ -202,16 +203,9 @@ class URLBarView: UIView {
     lazy var homePageButton: UIButton = { return UIButton() }()
 
     lazy var actionButtons: [UIButton] = {
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
+		// Cliqz: Removed menu button as we don't need it
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
     }()
-
-	// Cliqz: Added 3 new buttons according  to requirements.
-	lazy var historyButton: UIButton = { let historyButton = UIButton()
-		historyButton.setImage(UIImage(named: "past"), forState: .Normal)
-		historyButton.addTarget(self, action: "SELdidClickHistory", forControlEvents: UIControlEvents.TouchUpInside)
-		historyButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
-		historyButton.accessibilityLabel = "HistoryButton"
-		return historyButton }()
 
     // Cliqz: Added to maintain tab count
     private var tabCount = 1
@@ -255,7 +249,8 @@ class URLBarView: UIView {
 
         addSubview(shareButton)
         if AppConstants.MOZ_MENU {
-            addSubview(menuButton)
+			// Cliqz: Removed menu button as we don't need it
+//            addSubview(menuButton)
             addSubview(homePageButton)
         } else {
             addSubview(bookmarkButton)
@@ -266,9 +261,6 @@ class URLBarView: UIView {
 
         locationContainer.addSubview(locationView)
         addSubview(locationContainer)
-		
-		// Cliqz: Added new buttons to the main view.
-		addSubview(historyButton)
 
         helper = TabToolbarHelper(toolbar: self)
         setupConstraints()
@@ -278,14 +270,6 @@ class URLBarView: UIView {
     }
 
     private func setupConstraints() {
-		// Cliqz: Added constraints for new buttons.
-		historyButton.snp_makeConstraints { make in
-			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self).offset(10)
-            make.width.equalTo(36)
-            make.height.equalTo(36)
-//			make.size.equalTo(UIConstants.ToolbarHeight)
-		}
 
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
@@ -306,12 +290,17 @@ class URLBarView: UIView {
 //			make.centerY.equalTo(self.locationContainer)
 //			make.trailing.equalTo(self)
 //		}
-//		
-        tabsButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-            make.size.equalTo(UIConstants.ToolbarHeight)
-        }
+
+		// Cliqz: Moved Tabs button to the left of URL bar
+		tabsButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			if self.toolbarIsShowing {
+				make.left.equalTo(self.stopReloadButton.snp_right)
+			} else {
+				make.left.equalTo(self)
+			}
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
 //		curveShape.snp_makeConstraints { make in
@@ -321,10 +310,8 @@ class URLBarView: UIView {
 //        }
 
         backButton.snp_makeConstraints { make in
-			// Cliqz: changed back button's left contraing to move next to history button.
-            make.left.equalTo(self.historyButton.snp_right)
-			make.centerY.equalTo(self)
-            make.size.equalTo(UIConstants.ToolbarHeight)
+			make.left.centerY.equalTo(self)
+				make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
         forwardButton.snp_makeConstraints { make in
@@ -341,7 +328,8 @@ class URLBarView: UIView {
 
         if AppConstants.MOZ_MENU {
             shareButton.snp_makeConstraints { make in
-                make.right.equalTo(self.menuButton.snp_left)
+				// Cliqz: Removed menu button that's why constraint should be changed
+                make.right.equalTo(self)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
@@ -351,11 +339,13 @@ class URLBarView: UIView {
                 make.size.equalTo(shareButton)
             }
 
+			// Cliqz: Removed menu button as we don't need it.
+			/*
             menuButton.snp_makeConstraints { make in
-                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-                make.centerY.equalTo(self)
+				make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
-            }
+            } */
         } else {
             shareButton.snp_makeConstraints { make in
                 make.right.equalTo(self.bookmarkButton.snp_left)
@@ -383,16 +373,22 @@ class URLBarView: UIView {
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
                 */
-				make.leading.equalTo(self.historyButton.snp_trailing)
-                make.trailing.equalTo(self.tabsButton.snp_leading)
+				make.leading.equalTo(self.tabsButton.snp_trailing)
+                make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
+			// Cliqz: Moved Tabs button to the left side of URLbar
+			tabsButton.snp_remakeConstraints { make in
+				make.centerY.equalTo(self.locationContainer)
+				make.left.equalTo(self)
+				make.size.equalTo(UIConstants.ToolbarHeight)
+			}
         } else {
             self.locationContainer.snp_remakeConstraints { make in
+				make.leading.equalTo(self.tabsButton.snp_trailing)
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
-                    make.leading.equalTo(self.stopReloadButton.snp_trailing)
                     make.trailing.equalTo(self.shareButton.snp_leading)
                 } else {
                     // Otherwise, left align the location view
@@ -401,13 +397,21 @@ class URLBarView: UIView {
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
                     */
-                    make.leading.equalTo(self.historyButton.snp_trailing)
-                    make.trailing.equalTo(self.tabsButton.snp_leading)
+                    make.trailing.equalTo(self)
                 }
-
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
+			// Cliqz: Moved Tabs button to the left side of URLbar
+			tabsButton.snp_remakeConstraints { make in
+				make.centerY.equalTo(self.locationContainer)
+				if self.toolbarIsShowing {
+					make.left.equalTo(self.stopReloadButton.snp_right)
+				} else {
+					make.left.equalTo(self)
+				}
+				make.size.equalTo(UIConstants.ToolbarHeight)
+			}
         }
 
     }
@@ -465,7 +469,6 @@ class URLBarView: UIView {
 
     func updateAlphaForSubviews(alpha: CGFloat) {
         self.tabsButton.alpha = alpha
-		self.historyButton.alpha = alpha
         self.locationContainer.alpha = alpha
 		// Cliqz: Commented because we should always have blue URLBar
 //        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
@@ -628,7 +631,8 @@ class URLBarView: UIView {
 //        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         if AppConstants.MOZ_MENU {
-            self.menuButton.hidden = !self.toolbarIsShowing
+			// Cliqz: Removed menu button as we don't need it
+//            self.menuButton.hidden = !self.toolbarIsShowing
         } else {
             self.bookmarkButton.hidden = !self.toolbarIsShowing
         }
@@ -643,7 +647,8 @@ class URLBarView: UIView {
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         if AppConstants.MOZ_MENU {
-            self.menuButton.alpha = inOverlayMode ? 0 : 1
+			// Cliqz: Removed menu button as we don't need it
+//            self.menuButton.alpha = inOverlayMode ? 0 : 1
         } else {
             self.bookmarkButton.alpha = inOverlayMode ? 0 : 1
         }
@@ -687,7 +692,8 @@ class URLBarView: UIView {
 //        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         if AppConstants.MOZ_MENU {
-            self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
+			// Cliqz: Removed menu button as we don't need it
+//            self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
         } else {
             self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
         }
@@ -774,7 +780,8 @@ extension URLBarView: TabToolbarProtocol {
                 return [locationTextField]
             } else {
                 if toolbarIsShowing {
-                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, menuButton, tabsButton, progressBar] : [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
+					// Cliqz: Removed menu button as we don't need it
+                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, tabsButton, progressBar] : [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
                 } else {
                     return [locationView, tabsButton, progressBar]
                 }
