@@ -119,7 +119,7 @@ class TabLocationView: UIView {
         urlTextField.font = UIConstants.DefaultChromeFont
 
         // Cliqz: Added text color to the location text field
-		urlTextField.textColor = UIColor.whiteColor()
+		urlTextField.textColor = UIColor.blackColor()
 
         // Cliqz: Added background color to the location text field
         urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
@@ -235,8 +235,8 @@ class TabLocationView: UIView {
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
 
             // Cliqz: Changed URL styling colors according to requirements.
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.whiteColor(), range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: UIColor.whiteColor())
+            attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: nsRange)
+            attributedString.colorSubstring(baseDomain, withColor: UIColor.blackColor())
 //            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
 //            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: TabLocationViewUX.BaseURLPitch), range: nsRange)

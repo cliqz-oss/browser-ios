@@ -49,8 +49,8 @@ struct URLBarViewUX {
         theme.activeBorderColor = UIColor.clearColor()
         theme.tintColor = ProgressTintColor
         theme.textColor = UIColor.blackColor()
-        // Cliqz: Changed button tint color to white in the upper toolbar (URLBar)
-        theme.buttonTintColor = UIColor.whiteColor()
+        // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
+        theme.buttonTintColor = UIColor.blackColor()
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
         
@@ -1013,6 +1013,8 @@ class ToolbarTextField: AutocompleteTextField {
         theme.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
         theme.textColor = UIColor.blackColor()
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
+		// Cliqz: Added Button tint color to Black
+		theme.buttonTintColor = UIColor.blackColor()
 
         themes[Theme.NormalMode] = theme
 
