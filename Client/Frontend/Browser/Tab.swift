@@ -558,7 +558,10 @@ private class TabWebView: CliqzWebView, MenuHelperInterface {
     private weak var tabWebViewDelegate: TabWebViewDelegate?
 
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        return action == MenuHelper.SelectorFindInPage
+        if action == MenuHelper.SelectorFindInPage {
+            return true
+        }
+        return super.canPerformAction(action, withSender: sender)
     }
 
     @objc func menuHelperFindInPage(sender: NSNotification) {
