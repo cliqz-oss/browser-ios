@@ -150,6 +150,8 @@ class CliqzWebView: UIWebView {
 			return
 		}
 		internalLoadingEndedFlag = true
+        
+        self.configuration.userContentController.injectJsIntoPage()
 		
 		guard let docLoc = self.stringByEvaluatingJavaScriptFromString("document.location.href") else { return }
 
@@ -164,7 +166,6 @@ class CliqzWebView: UIWebView {
 			}
 		}
 		self.prevDocumentLocation = docLoc
-        self.configuration.userContentController.injectJsIntoPage()
 	}
 	
 	var customUserAgent:String? /*{

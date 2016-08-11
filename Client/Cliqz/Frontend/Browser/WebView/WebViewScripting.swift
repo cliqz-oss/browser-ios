@@ -64,9 +64,7 @@ class LegacyUserContentController
         js.windowOpenOverride(webView, context:nil)
         
         for (name, handler) in scriptHandlersMainFrame {
-            if !name.lowercaseString.contains("reader") {
-                js.installHandlerForWebView(webView, handlerName: name, handler:handler)
-            }
+            js.installHandlerForWebView(webView, handlerName: name, handler:handler)
         }
         
         for script in scripts {

@@ -2843,6 +2843,11 @@ extension BrowserViewController: ReaderModeDelegate {
         // the button. Otherwise do nothing and the button will be updated when the tab is made active.
         if tabManager.selectedTab === tab {
             urlBar.updateReaderModeState(state)
+            // Cliqz:[UIWebView] explictly call configure reader mode as it is not called from JavaScript because of replacing WKWebView
+            if state == .Active {
+                tab.webView!.evaluateJavaScript("_firefox_ReaderMode.configureReader()", completionHandler: nil)
+            }
+
         }
     }
 
@@ -2943,8 +2948,13 @@ extension BrowserViewController {
 
         let backList = webView.backForwardList.backList
         let forwardList = webView.backForwardList.forwardList
-
+        
+        // Cliqz:[UIWebView] backForwardList are dummy and do not have any itmes at all
+#if CLIQZ
+        guard let currentURL = webView.URL, let readerModeURL = ReaderModeUtils.encodeURL(currentURL) else { return }
+#else
         guard let currentURL = webView.backForwardList.currentItem?.URL, let readerModeURL = ReaderModeUtils.encodeURL(currentURL) else { return }
+#endif
 
         if backList.count > 1 && backList.last?.URL == readerModeURL {
             webView.goToBackForwardListItem(backList.last!)
@@ -2982,7 +2992,9 @@ extension BrowserViewController {
             let backList = webView.backForwardList.backList
             let forwardList = webView.backForwardList.forwardList
 
-            if let currentURL = webView.backForwardList.currentItem?.URL {
+            // Cliqz:[UIWebView] backForwardList are dummy and do not have any itmes at all
+//            if let currentURL = webView.backForwardList.currentItem?.URL {
+            if let currentURL = webView.URL {
                 if let originalURL = ReaderModeUtils.decodeURL(currentURL) {
                     if backList.count > 1 && backList.last?.URL == originalURL {
                         webView.goToBackForwardListItem(backList.last!)
