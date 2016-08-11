@@ -135,9 +135,16 @@ class CliqzWebView: UIWebView {
 	func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
 		ensureMainThread() {
 			let wrapped = "var result = \(javaScriptString); JSON.stringify(result)"
-			let string = self.stringByEvaluatingJavaScriptFromString(wrapped)
-			let dict = self.convertStringToDictionary(string)
-			completionHandler?(dict, NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotOpenFile, userInfo: nil))
+			let evaluatedstring = self.stringByEvaluatingJavaScriptFromString(wrapped)
+            
+            var result: AnyObject?
+            if let dict = self.convertStringToDictionary(evaluatedstring) {
+                result = dict
+            } else {
+                // in case the result was not dictionary, return the original response (reverse JSON stringify)
+                result = self.reverseStringify(evaluatedstring)
+            }
+			completionHandler?(result, NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotOpenFile, userInfo: nil))
 		}
 	}
 	
@@ -207,8 +214,22 @@ class CliqzWebView: UIWebView {
 		}
 		return nil
 	}
-    
-    func updateObservableAttributes() {
+    private func reverseStringify(text: String?) -> String? {
+        
+        guard text != nil else {
+            return nil
+        }
+        let length = text!.characters.count
+        if  length > 2 {
+            let startIndex = text?.startIndex.successor()
+            let endIndex = text?.endIndex.predecessor()
+            
+            return text!.substringWithRange(Range(startIndex! ..< endIndex!))
+        } else {
+            return text
+        }
+    }
+    private func updateObservableAttributes() {
         
         self.loading = super.loading
         self.canGoBack = super.canGoBack
