@@ -148,12 +148,15 @@ class URLBarView: UIView {
         return locationContainer
     }()
 
-    private lazy var tabsButton: TabsButton = {
-        let tabsButton = TabsButton()
+	// Cliqz: Added new tabs button for custom background image
+    private lazy var tabsButton: CliqzTabsButton = {
+        let tabsButton = CliqzTabsButton()
         tabsButton.titleLabel.text = "0"
         tabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
         tabsButton.accessibilityIdentifier = "URLBarView.tabsButton"
         tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the tab toolbar")
+		// Cliqz: Added background image to the button
+		tabsButton.image = UIImage(named: "tabs")
         return tabsButton
     }()
 
@@ -209,9 +212,10 @@ class URLBarView: UIView {
 
     // Cliqz: Added to maintain tab count
     private var tabCount = 1
-    
+
+	// Cliqz: Changed tabsbutton type
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
-    private weak var clonedTabsButton: TabsButton?
+    private weak var clonedTabsButton: CliqzTabsButton?
 
     private var rightBarConstraint: Constraint?
     private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
@@ -489,9 +493,10 @@ class URLBarView: UIView {
                 self.clonedTabsButton?.removeFromSuperview()
                 self.tabsButton.layer.removeAllAnimations()
             }
-            
+			
+			// Cliqz: Changed tabsbutton type
             // make a 'clone' of the tabs button
-            let newTabsButton = self.tabsButton.clone() as! TabsButton
+            let newTabsButton = self.tabsButton.clone() as! CliqzTabsButton
             self.clonedTabsButton = newTabsButton
             newTabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
             newTabsButton.titleLabel.text = countToBe
