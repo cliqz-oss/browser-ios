@@ -509,6 +509,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ErrorPageHelper.register(server, certStore: profile.certStore)
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
+        SessionRestoreHandler.register(server)
 
         // Cliqz: Registered trampolineForward to be able to load it via URLRequest
         server.registerMainBundleResource("trampolineForward.html", module: "cliqz")

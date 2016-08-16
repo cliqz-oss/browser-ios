@@ -114,8 +114,6 @@ class BrowserViewController: UIViewController {
     var navigationToolbar: TabToolbarProtocol {
         return toolbar ?? urlBar
     }
-	
-    private var needsNewTab = true
     
     private var isAppResponsive = false
     
@@ -573,22 +571,17 @@ class BrowserViewController: UIViewController {
         }
          */
 
-		// Cliqz: Disable FF crash reporting and restoring Tabs
+		// Cliqz: Disable FF crash reporting
 /*
         if PLCrashReporter.sharedReporter().hasPendingCrashReport() {
             PLCrashReporter.sharedReporter().purgePendingCrashReport()
             showRestoreTabsAlert()
         } else {
+*/
             log.debug("Restoring tabs.")
             tabManager.restoreTabs()
             log.debug("Done restoring tabs.")
-        }
-*/
-		// Cliqz: create new tab at start
-		if (needsNewTab) {
-			self.tabManager.addTabAndSelect()
-			needsNewTab = false
-		}
+//        }
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
@@ -1170,7 +1163,8 @@ class BrowserViewController: UIViewController {
             // didCommitNavigation to confirm the page load.
             if tab.url?.origin == webView.URL?.origin {
                 tab.url = webView.URL
-                if tab === tabManager.selectedTab {
+
+                if tab === tabManager.selectedTab && !tab.restoring {
                     updateUIForReaderHomeStateForTab(tab)
                 }
             }
@@ -2260,6 +2254,10 @@ extension BrowserViewController: TabDelegate {
             tab.addHelper(windowCloseHelper, name: WindowCloseHelper.name())
         }
 
+        let sessionRestoreHelper = SessionRestoreHelper(tab: tab)
+        sessionRestoreHelper.delegate = self
+        tab.addHelper(sessionRestoreHelper, name: SessionRestoreHelper.name())
+
         let findInPageHelper = FindInPageHelper(tab: tab)
         findInPageHelper.delegate = self
         tab.addHelper(findInPageHelper, name: FindInPageHelper.name())
@@ -3071,6 +3069,14 @@ extension BrowserViewController: WKUIDelegate {
             // Cliqz: [UIWebView] use cliqz webview instead of the WKWebView for displaying the error page
 //            ErrorPageHelper().showPage(error, forUrl: url, inWebView: WebView)
             ErrorPageHelper().showPage(error, forUrl: url, inWebView: cliqzWebView)
+
+            // If the local web server isn't working for some reason (Firefox cellular data is
+            // disabled in settings, for example), we'll fail to load the session restore URL.
+            // We rely on loading that page to get the restore callback to reset the restoring
+            // flag, so if we fail to load that page, reset it here.
+            if AboutUtils.getAboutComponent(url) == "sessionrestore" {
+                tabManager.tabs.filter { $0.webView == webView }.first?.restoring = false
+            }
         }
     }
 
@@ -3808,6 +3814,16 @@ extension BrowserViewController: KeyboardHelperDelegate {
             UIView.setAnimationCurve(state.animationCurve)
             self.findInPageContainer.layoutIfNeeded()
             self.snackBars.layoutIfNeeded()
+        }
+    }
+}
+
+extension BrowserViewController: SessionRestoreHelperDelegate {
+    func sessionRestoreHelper(helper: SessionRestoreHelper, didRestoreSessionForTab tab: Tab) {
+        tab.restoring = false
+
+        if let tab = tabManager.selectedTab where tab.webView === tab.webView {
+            updateUIForReaderHomeStateForTab(tab)
         }
     }
 }
