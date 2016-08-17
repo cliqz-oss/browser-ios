@@ -129,6 +129,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
 
         privacySettings += [
+            ShowBlockedTopSitesSetting(),
             PrivacyPolicySetting()
         ]
 

@@ -666,7 +666,9 @@ class PrivacyPolicySetting: Setting {
     }
 
     override var url: NSURL? {
-        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
+        //Cliqz: replaced FireFox Privacy Policy URL with Cliqz one
+//        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
+        return NSURL(string: "http://cdn.cliqz.com/mobile/extension/static/privacy.html")
     }
 
     override func onClick(navigationController: UINavigationController?) {

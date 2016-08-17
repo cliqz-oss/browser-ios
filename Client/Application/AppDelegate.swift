@@ -374,9 +374,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NightModeHelper.restoreNightModeBrightness((self.profile?.prefs)!, toForeground: true)
         self.profile?.syncManager.applicationDidBecomeActive()
 
+        //Cliqz: disable loading queued tables
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
-        self.browserViewController.loadQueuedTabs()
+//        self.browserViewController.loadQueuedTabs()
 
         // handle quick actions is available
         if #available(iOS 9, *) {
