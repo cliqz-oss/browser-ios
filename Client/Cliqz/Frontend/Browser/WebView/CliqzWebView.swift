@@ -200,6 +200,8 @@ class CliqzWebView: UIWebView {
 	
 	private func commonInit() {
 		delegate = self
+        scalesPageToFit = true
+
 		progress = WebViewProgress(parent: self)
 	}
 

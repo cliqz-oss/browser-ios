@@ -166,6 +166,7 @@ class Tab: NSObject {
 			// Cliqz: [UIWebView] renamed delegate to tabWebViewDelegate
 #if CLIQZ
 			webView.tabWebViewDelegate = self
+            webView.scrollView.layer.masksToBounds = false
 #else
 			webView.delegate = self
 #endif
