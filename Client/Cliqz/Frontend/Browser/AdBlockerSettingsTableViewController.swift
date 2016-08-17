@@ -126,5 +126,7 @@ class AdBlockerSettingsTableViewController: UITableViewController {
     private func saveToggles() {
         self.profile.prefs.setObject(self.toggles[0], forKey: AdBlockerPrefKey)
         self.profile.prefs.setObject(self.toggles[1], forKey: FairBlockingPrefKey)
+        
+        AntiTrackingModule.sharedInstance.setAdblockEnabled(self.toggles[0])
     }
 }

@@ -49,6 +49,8 @@
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
 		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
+		1E705C391D5E052D009FAEE1 /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */; };
+		1E705C3B1D5E059E009FAEE1 /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
 		1E79DD001D4FB2C5006BEB4A /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */; };
 		1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */; };
@@ -1342,6 +1344,8 @@
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
 		1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegacyJSContext.m; sourceTree = "<group>"; };
+		1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
+		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
@@ -2470,6 +2474,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E705C2A1D5E04F3009FAEE1 /* AntiTracking */ = {
+			isa = PBXGroup;
+			children = (
+				1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */,
+				1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */,
+			);
+			path = AntiTracking;
+			sourceTree = "<group>";
+		};
 		1E79DC961D4FB2C5006BEB4A /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -2482,6 +2495,7 @@
 		1E79DC971D4FB2C5006BEB4A /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				1E705C2A1D5E04F3009FAEE1 /* AntiTracking */,
 				1E79DC981D4FB2C5006BEB4A /* AdBlocker */,
 				1E79DC9A1D4FB2C5006BEB4A /* Custom UI */,
 				1E79DC9C1D4FB2C5006BEB4A /* Data Structures */,
@@ -6068,6 +6082,7 @@
 				7B9A61CD1C3EBFAE005C83DC /* RXMLElement.m in Sources */,
 				E6D8D5E71B569D70009E5A58 /* BrowserTrayAnimators.swift in Sources */,
 				E63ED7D81BFCD9990097D08E /* LoginTableViewCell.swift in Sources */,
+				1E705C3B1D5E059E009FAEE1 /* InterceptorURLProtocol.swift in Sources */,
 				1E79DD4D1D4FB2F8006BEB4A /* UIImage+ImageEffects.m in Sources */,
 				1E79DE751D508368006BEB4A /* AWSCredentialsProvider.m in Sources */,
 				F84B22241A09122500AAB793 /* HomePanelViewController.swift in Sources */,
@@ -6094,6 +6109,7 @@
 				1E79DD111D4FB2C5006BEB4A /* SearchBarTelemetryHelper.swift in Sources */,
 				7BC68D241CC153630043562A /* AppMenuToolbarItem.swift in Sources */,
 				D3C03E471C3C7C1500A07D5C /* MenuHelper.swift in Sources */,
+				1E705C391D5E052D009FAEE1 /* AntiTrackingModule.swift in Sources */,
 				D3FEC38D1AC4B42F00494F45 /* AutocompleteTextField.swift in Sources */,
 				1E79DEA31D508368006BEB4A /* AWSTMCache.m in Sources */,
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,

@@ -288,6 +288,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
 
+        // Configure AntiTracking Module
+        AntiTrackingModule.sharedInstance.initModule()
+
         log.debug("Done with applicationDidFinishLaunching.")
 
         return shouldPerformAdditionalDelegateHandling
