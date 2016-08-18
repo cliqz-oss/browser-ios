@@ -52,7 +52,6 @@
 		1E705C391D5E052D009FAEE1 /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */; };
 		1E705C3B1D5E059E009FAEE1 /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
-		1E79DD001D4FB2C5006BEB4A /* AdBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */; };
 		1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */; };
 		1E79DD021D4FB2C5006BEB4A /* AtomicInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */; };
 		1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9E1D4FB2C5006BEB4A /* LocalDataStore.swift */; };
@@ -97,7 +96,6 @@
 		1E79DD2A1D4FB2C5006BEB4A /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */; };
 		1E79DD2B1D4FB2C5006BEB4A /* UIConstantsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */; };
 		1E79DD2C1D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */; };
-		1E79DD2D1D4FB2C5006BEB4A /* AdServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCD81D4FB2C5006BEB4A /* AdServers.plist */; };
 		1E79DD2E1D4FB2C5006BEB4A /* NewsPermissionAsking-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCDA1D4FB2C5006BEB4A /* NewsPermissionAsking-4.png */; };
 		1E79DD2F1D4FB2C5006BEB4A /* NewsPermissionAsking-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCDC1D4FB2C5006BEB4A /* NewsPermissionAsking-5.png */; };
 		1E79DD301D4FB2C5006BEB4A /* NewsPermissionAsking-6.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCDE1D4FB2C5006BEB4A /* NewsPermissionAsking-6.png */; };
@@ -1347,7 +1345,6 @@
 		1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
-		1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlocker.swift; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
 		1E79DC9E1D4FB2C5006BEB4A /* LocalDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalDataStore.swift; sourceTree = "<group>"; };
@@ -1395,7 +1392,6 @@
 		1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstantsExtension.swift; sourceTree = "<group>"; };
 		1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeVideoDownloaderActivity.swift; sourceTree = "<group>"; };
-		1E79DCD81D4FB2C5006BEB4A /* AdServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AdServers.plist; sourceTree = "<group>"; };
 		1E79DCDB1D4FB2C5006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-4.png"; sourceTree = "<group>"; };
 		1E79DCDD1D4FB2C5006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-5.png"; sourceTree = "<group>"; };
 		1E79DCDF1D4FB2C5006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-6.png"; sourceTree = "<group>"; };
@@ -2496,7 +2492,6 @@
 			isa = PBXGroup;
 			children = (
 				1E705C2A1D5E04F3009FAEE1 /* AntiTracking */,
-				1E79DC981D4FB2C5006BEB4A /* AdBlocker */,
 				1E79DC9A1D4FB2C5006BEB4A /* Custom UI */,
 				1E79DC9C1D4FB2C5006BEB4A /* Data Structures */,
 				1E79DCA01D4FB2C5006BEB4A /* DevTools */,
@@ -2509,14 +2504,6 @@
 				1E79DCC31D4FB2C5006BEB4A /* Utils */,
 			);
 			path = Foundation;
-			sourceTree = "<group>";
-		};
-		1E79DC981D4FB2C5006BEB4A /* AdBlocker */ = {
-			isa = PBXGroup;
-			children = (
-				1E79DC991D4FB2C5006BEB4A /* AdBlocker.swift */,
-			);
-			path = AdBlocker;
 			sourceTree = "<group>";
 		};
 		1E79DC9A1D4FB2C5006BEB4A /* Custom UI */ = {
@@ -2673,7 +2660,6 @@
 		1E79DCD71D4FB2C5006BEB4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1E79DCD81D4FB2C5006BEB4A /* AdServers.plist */,
 				1E79DCD91D4FB2C5006BEB4A /* Breaking News Screens */,
 				1E79DCF21D4FB2C5006BEB4A /* Cliqz.strings */,
 				1E79DCF41D4FB2C5006BEB4A /* FairBlocking.html */,
@@ -5409,7 +5395,6 @@
 				3BE7274E1CCFE8A30099189F /* CustomSearchHelper.js in Resources */,
 				E4B7B7681A793CF20022C5E0 /* FiraSans-Bold.ttf in Resources */,
 				1E79DDCB1D507D26006BEB4A /* ClearPrivateDataConfirm.strings in Resources */,
-				1E79DD2D1D4FB2C5006BEB4A /* AdServers.plist in Resources */,
 				E4B7B7781A793CF20022C5E0 /* FiraSans-Italic.ttf in Resources */,
 				1E79DDD81D507D26006BEB4A /* SendTo.strings in Resources */,
 				1E79DDCC1D507D26006BEB4A /* ErrorPages.strings in Resources */,
@@ -6181,7 +6166,6 @@
 				1E79DE991D508368006BEB4A /* AWSSerialization.m in Sources */,
 				7B844E3D1BBDDB9D00E733A2 /* ChevronView.swift in Sources */,
 				1E79DE8F1D508368006BEB4A /* AWSEXTScope.m in Sources */,
-				1E79DD001D4FB2C5006BEB4A /* AdBlocker.swift in Sources */,
 				E4C358551AF144BA00299F7E /* FSReadingList.m in Sources */,
 				3BE7275D1CCFE8B60099189F /* CustomSearchHandler.swift in Sources */,
 				1E79DD041D4FB2C5006BEB4A /* SynchronousArray.swift in Sources */,

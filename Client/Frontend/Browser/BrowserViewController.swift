@@ -151,9 +151,6 @@ class BrowserViewController: UIViewController {
     // Cliqz: the response state code of the current opened link
     var currentResponseStatusCode = 0
     
-    // Cliqz: Added AdBlocker to detect and block ads
-    let adBlocker: AdBlocker
-
 	// Cliqz: Added data member for push notification URL string in the case when the app isn't in background to load URL on viewDidAppear.
 	var initialURL: String?
 //    var initialURL: String? {
@@ -168,8 +165,6 @@ class BrowserViewController: UIViewController {
         self.profile = profile
         self.tabManager = tabManager
         self.readerModeCache = DiskReaderModeCache.sharedInstance
-        // Cliqz: Initialized AdBlocker object
-        self.adBlocker = AdBlocker(profile: profile)
         super.init(nibName: nil, bundle: nil)
         initSearchHistoryContainer()
         didInit()
@@ -2460,11 +2455,6 @@ extension BrowserViewController: WKNavigationDelegate {
 
         if !navigationAction.isAllowed && navigationAction.navigationType != .BackForward {
             log.warning("Denying unprivileged request: \(navigationAction.request)")
-            decisionHandler(WKNavigationActionPolicy.Cancel)
-            return
-        }
-        // Cliqz: Check if url is an ad server block it
-        if adBlocker.isAdServer(url) {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }

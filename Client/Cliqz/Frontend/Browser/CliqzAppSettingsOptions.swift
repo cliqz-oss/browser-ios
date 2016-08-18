@@ -76,8 +76,8 @@ class AdBlockerSetting: Setting {
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let humanWebTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
-        super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let blockAdsTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
+        super.init(title: NSAttributedString(string: blockAdsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
