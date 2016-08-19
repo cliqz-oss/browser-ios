@@ -937,7 +937,7 @@ extension TabManager {
             }
         }
         //[WORKAROUND] return the hast code of the selectedTab we couldn't detect the correct tab
-        if tabs.count > _selectedIndex {
+        if _selectedIndex > -1 && tabs.count > _selectedIndex {
             return tabs[_selectedIndex].hash
         }
         
