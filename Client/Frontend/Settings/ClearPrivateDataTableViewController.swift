@@ -79,8 +79,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if indexPath.section == SectionToggles {
             cell.textLabel?.text = clearables[indexPath.item].clearable.label
             let control = UISwitch()
-            // Cliqz: Used default tint color for UIControl instead of the custom orange one
-//            control.onTintColor = UIConstants.ControlTintColor
+            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
             control.on = toggles[indexPath.item]
             cell.accessoryView = control

@@ -44,7 +44,7 @@ class HumanWebSettingsTableViewController: UITableViewController {
 		if indexPath.section == SectionToggle {
 			cell.textLabel?.text = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "toogle title in Human web settings.")
 			let control = UISwitch()
-			control.onTintColor = UIConstants.ControlTintColor
+            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: #selector(HumanWebSettingsTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
 			control.on = toggle
 			cell.accessoryView = control

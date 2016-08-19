@@ -67,8 +67,10 @@ public struct UIConstants {
     static let TableViewRowWarningTextColor = UIColor(red: 245/255, green: 166/255, blue: 35/255, alpha: 1.0)
     static let TableViewRowActionAccessoryColor = UIColor(red: 0.29, green: 0.56, blue: 0.89, alpha: 1.0)
 
+    // Cliqz: Used default tint color for UIControl instead of the custom orange one globally on the whole app
     // Firefox Orange
-    static let ControlTintColor = UIColor(red: 240.0 / 255, green: 105.0 / 255, blue: 31.0 / 255, alpha: 1)
+//    static let ControlTintColor = UIColor(red: 240.0 / 255, green: 105.0 / 255, blue: 31.0 / 255, alpha: 1)
+    static let ControlTintColor = UIColor(red: 66.0 / 255, green: 210.0 / 255, blue: 80.0 / 255, alpha: 1)
 
     // Passcode dot gray
     static let PasscodeDotColor = UIColor(rgb: 0x4A4A4A)
