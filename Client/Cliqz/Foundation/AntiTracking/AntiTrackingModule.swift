@@ -50,7 +50,7 @@ class AntiTrackingModule: NSObject {
     
     func getModifiedRequest(originalRequest: NSURLRequest) -> NSMutableURLRequest? {
         
-        let modifiedRequest = originalRequest.mutableCopy() as! NSMutableURLRequest
+        let modifiedRequest = AntiTrackingModule.cloneRequest(originalRequest)
         
         let requestInfo = getRequestInfo(originalRequest)
         if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
@@ -83,6 +83,25 @@ class AntiTrackingModule: NSObject {
         
     }
     //MARK: - Private Helpers
+    private class func cloneRequest(request: NSURLRequest) -> NSMutableURLRequest {
+        // Reportedly not safe to use built-in cloning methods: http://openradar.appspot.com/11596316
+        let newRequest = NSMutableURLRequest(URL: request.URL!, cachePolicy: request.cachePolicy, timeoutInterval: request.timeoutInterval)
+        newRequest.allHTTPHeaderFields = request.allHTTPHeaderFields
+        if let m = request.HTTPMethod {
+            newRequest.HTTPMethod = m
+        }
+        if let b = request.HTTPBodyStream {
+            newRequest.HTTPBodyStream = b
+        }
+        if let b = request.HTTPBody {
+            newRequest.HTTPBody = b
+        }
+        newRequest.HTTPShouldUsePipelining = request.HTTPShouldUsePipelining
+        newRequest.mainDocumentURL = request.mainDocumentURL
+        newRequest.networkServiceType = request.networkServiceType
+        return newRequest
+    }
+    
     private func toJSONString(anyObject: AnyObject) -> String? {
         do {
             
