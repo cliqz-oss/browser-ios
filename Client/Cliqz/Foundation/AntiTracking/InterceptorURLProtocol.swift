@@ -39,7 +39,9 @@ class InterceptorURLProtocol: NSURLProtocol {
     }
     
     override func startLoading() {
-        if let newRequest = AntiTrackingModule.sharedInstance.getModifiedRequest(self.request) {
+        if self.request.URL == self.request.mainDocumentURL && AntiPhishingDetector.isPhishingURL(self.request.URL) {
+            returnEmptyResponse()
+        } else if let newRequest = AntiTrackingModule.sharedInstance.getModifiedRequest(self.request) {
             NSURLProtocol.setProperty(true, forKey: InterceptorURLProtocol.customURLProtocolHandledKey, inRequest: newRequest)
             self.connection = NSURLConnection(request: newRequest, delegate: self)
         } else {

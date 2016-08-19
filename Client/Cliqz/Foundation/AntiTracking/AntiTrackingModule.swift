@@ -18,7 +18,7 @@ class AntiTrackingModule: NSObject {
     private let antiTrackingDirectory = "Extension/build/mobile/search/v8"
     private let documentDirectory = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! as String
     private let fileManager = NSFileManager.defaultManager()
-    private let dispatchQueue = dispatch_queue_create("com.cliqz.AntiTracking", DISPATCH_QUEUE_CONCURRENT);
+    private let dispatchQueue = dispatch_queue_create("com.cliqz.AntiTracking", DISPATCH_QUEUE_CONCURRENT)
     
     private let adBlockABTestPrefName = "cliqz-adb-abtest"
     private let adBlockPrefName = "cliqz-adb"
@@ -209,25 +209,11 @@ class AntiTrackingModule: NSObject {
     }
     private func registerMd5NativeMethod() {
         let md5Native: @convention(block) (String) -> String = { data in
-            return self.md5(string: data)
+            return md5(data)
         }
         context.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
     }
-    
-    private func md5(string string: String) -> String {
-        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
-        if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
-            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
-        }
         
-        var digestHex = ""
-        for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
-            digestHex += String(format: "%02x", digest[index])
-        }
-        
-        return digestHex
-    }
-    
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
             print("\n\n>>>>>>>> \(key): \(message)\n\n")
