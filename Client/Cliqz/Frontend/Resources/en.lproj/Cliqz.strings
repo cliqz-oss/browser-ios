@@ -118,3 +118,36 @@
 
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Make available offline";
+
+/* History title on dashboard */
+"History" = "History";
+
+/* Add Favorites */
+"Add Favorite" = "Add Favorite";
+
+/* Setting menu title */
+"Settings" = "Settings";
+
+/* New tab title */
+"New Tab" = "New Tab";
+
+/* New private tab title */
+"New Private Tab" = "New Private Tab";
+
+/* Show images title */
+"Show Images" = "Show Images";
+
+/* Hide images title */
+"Hide Images" = "Hide Images";
+
+/* Night mode title */
+"Night Mode" = "Night Mode";
+
+/* Turn off Night mode title */
+"Night Mode off" = "Night Mode Off";
+
+/* Remove favorites title */
+"Remove Favorites" = "Remove Favorite";
+
+/* Dashboard navigation bar title */
+"Overview" = "Overview";

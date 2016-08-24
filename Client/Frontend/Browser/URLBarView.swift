@@ -193,7 +193,7 @@ class URLBarView: UIView {
     lazy var shareButton: UIButton = { return UIButton() }()
 
 	// Cliqz: Removed menu button as we don't need it
-//    lazy var menuButton: UIButton = { return UIButton() }()
+    lazy var menuButton: UIButton = { return UIButton() }()
 
     lazy var bookmarkButton: UIButton = { return UIButton() }()
 
