@@ -923,31 +923,3 @@ class TabManagerNavDelegate : NSObject, WKNavigationDelegate {
             decisionHandler(res)
     }
 }
-
-// Cliqz: extension for the TabManager to add cusom methods to it
-extension TabManager {
-    func getTabId(mainDocumentURL: NSURL?) -> Int? {
-        // first search for the tab that have same main document url
-        if let url = mainDocumentURL {
-            let filteredTabs = tabs.filter() {
-                return $0.url == url
-            }
-            if filteredTabs.count > 0 {
-                return filteredTabs.first!.hash
-            }
-        }
-        //[WORKAROUND] return the hast code of the selectedTab we couldn't detect the correct tab
-        if _selectedIndex > -1 && tabs.count > _selectedIndex {
-            return tabs[_selectedIndex].hash
-        }
-        
-        return nil
-    }
-    
-    func isTabActive(tabId: Int) -> Bool {
-        let filteredTabs = tabs.filter() {
-            return $0.hash == tabId
-        }
-        return filteredTabs.count > 0
-    }
-}

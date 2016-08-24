@@ -8,6 +8,7 @@
 
 import Foundation
 import WebKit
+import Shared
 
 
 class ContainerWebView : WKWebView {
@@ -16,6 +17,42 @@ class ContainerWebView : WKWebView {
 
 var globalContainerWebView = ContainerWebView()
 var nullWKNavigation: WKNavigation = WKNavigation()
+
+
+class WebViewToUAMapper {
+    static private let idToWebview = NSMapTable(keyOptions: .StrongMemory, valueOptions: .WeakMemory)
+    
+    static func setId(uniqueId: Int, webView: CliqzWebView) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        idToWebview.setObject(webView, forKey: uniqueId)
+    }
+    
+    static func removeWebViewWithId(uniqueId: Int) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        idToWebview.removeObjectForKey(uniqueId)
+    }
+    
+    static func idToWebView(uniqueId: Int?) -> CliqzWebView? {
+        return idToWebview.objectForKey(uniqueId) as? CliqzWebView
+    }
+    
+    static func userAgentToWebview(userAgent: String?) -> CliqzWebView? {
+        // synchronize code from this point on.
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        guard let userAgent = userAgent else { return nil }
+        guard let loc = userAgent.rangeOfString("_id/") else {
+            // the first created webview doesn't have this id set (see webviewBuiltinUserAgent to explain)
+            return idToWebview.objectForKey(1) as? CliqzWebView
+        }
+        let keyString = userAgent.substringWithRange(loc.endIndex..<loc.endIndex.advancedBy(6))
+        guard let key = Int(keyString) else { return nil }
+        return idToWebview.objectForKey(key) as? CliqzWebView
+    }
+}
 
 
 class CliqzWebView: UIWebView {
@@ -31,6 +68,9 @@ class CliqzWebView: UIWebView {
 	var allowsBackForwardNavigationGestures: Bool = false
 
 	private static var containerWebViewForCallbacks = { return ContainerWebView() }()
+    
+    // This gets set as soon as it is available from the first UIWebVew created
+    private static var webviewBuiltinUserAgent: String?
 
 	private var _url: (url: NSURL?, isReliableSource: Bool, prevUrl: NSURL?) = (nil, false, nil)
 	func setUrl(url: NSURL?, reliableSource: Bool) {
@@ -95,6 +135,8 @@ class CliqzWebView: UIWebView {
 		}
 	}*/
     
+    var uniqueId = -1
+
     var knownFrameContexts = Set<NSObject>()
 
 	var prevDocumentLocation = ""
@@ -112,6 +154,9 @@ class CliqzWebView: UIWebView {
 		commonInit()
 	}
     deinit {
+        
+        WebViewToUAMapper.removeWebViewWithId(self.uniqueId)
+        
         _ = Try(withTry: {
             self.removeProgressObserversOnDeinit?(self)
         }) { (exception) -> Void in
@@ -201,10 +246,39 @@ class CliqzWebView: UIWebView {
 	private func commonInit() {
 		delegate = self
         scalesPageToFit = true
-
+        generateUniqueUserAgent()
 		progress = WebViewProgress(parent: self)
 	}
 
+    // Needed to identify webview in url protocol
+    func generateUniqueUserAgent() {
+        // synchronize code from this point on.
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        struct StaticCounter {
+            static var counter = 0
+        }
+        
+        StaticCounter.counter += 1
+        if let webviewBuiltinUserAgent = CliqzWebView.webviewBuiltinUserAgent {
+            let userAgent = webviewBuiltinUserAgent + String(format:" _id/%06d", StaticCounter.counter)
+            let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
+            defaults.registerDefaults(["UserAgent": userAgent ])
+            self.uniqueId = StaticCounter.counter
+            WebViewToUAMapper.setId(uniqueId, webView:self)
+        } else {
+            if StaticCounter.counter > 1 {
+                // We shouldn't get here, we allow the first webview to have no user agent, and we special-case the look up. The first webview inits the UA from its built in defaults
+                // If we get to more than one, just use a hard coded user agent, to avoid major bugs
+                let device = UIDevice.currentDevice().userInterfaceIdiom == .Phone ? "iPhone" : "iPad"
+                CliqzWebView.webviewBuiltinUserAgent = "Mozilla/5.0 (\(device)) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75"
+            }
+            self.uniqueId = 1
+            WebViewToUAMapper.idToWebview.setObject(self, forKey: 1) // the first webview, we don't have the user agent just yet
+        }
+    }
+    
 	private func convertStringToDictionary(text: String?) -> [String:AnyObject]? {
 		if let data = text?.dataUsingEncoding(NSUTF8StringEncoding) where text?.characters.count > 0 {
 			do {
@@ -262,6 +336,13 @@ extension CliqzWebView: UIWebViewDelegate {
 		guard let url = request.URL else { return false }
 		internalLoadingEndedFlag = false
 
+        
+        if CliqzWebView.webviewBuiltinUserAgent == nil {
+            CliqzWebView.webviewBuiltinUserAgent = request.valueForHTTPHeaderField("User-Agent")
+            assert(CliqzWebView.webviewBuiltinUserAgent != nil)
+        }
+
+        
 		if let progressCheck = progress?.shouldStartLoadWithRequest(request, navigationType: navigationType) where !progressCheck {
 			return false
 		}

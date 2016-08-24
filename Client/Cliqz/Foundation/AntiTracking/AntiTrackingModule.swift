@@ -344,7 +344,7 @@ class AntiTrackingModule: NSObject {
     
     private func registerIsWindowActiveMethod() {
         let isWindowActive: @convention(block) (String) -> Bool = { tabId in
-            return self.isTabActive(Int(tabId)!)
+            return self.isTabActive(Int(tabId))
         }
         context.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
     }
@@ -451,9 +451,10 @@ class AntiTrackingModule: NSObject {
     
     private func getRequestInfo(request: NSURLRequest) -> [String: AnyObject] {
         let url = request.URL?.absoluteString
-        
+        let userAgent = request.allHTTPHeaderFields?["User-Agent"]
+
         let isMainDocument = request.URL == request.mainDocumentURL
-        let tabId = getTabId(request.mainDocumentURL)
+        let tabId = getTabId(userAgent)
         let isPrivate = false
         let originUrl = request.mainDocumentURL?.absoluteString
         
@@ -483,16 +484,15 @@ class AntiTrackingModule: NSObject {
         return requestInfo
     }
     
-    private func isTabActive(tabId: Int) -> Bool {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let isTabActive =  appDelegate.tabManager.isTabActive(tabId)
-        return isTabActive
+    private func isTabActive(tabId: Int?) -> Bool {
+        return WebViewToUAMapper.idToWebView(tabId) != nil
     }
     
-    private func getTabId(mainDocumentURL: NSURL?) -> Int? {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let tabId = appDelegate.tabManager.getTabId(mainDocumentURL)
-        return tabId
+    private func getTabId(userAgent: String?) -> Int? {
+        if let webView = WebViewToUAMapper.userAgentToWebview(userAgent) {
+            return webView.uniqueId
+        }
+        return nil
     }
     
     private func getBlockResponseForRequest(requestInfo: [String: AnyObject]) -> [NSObject : AnyObject]? {
