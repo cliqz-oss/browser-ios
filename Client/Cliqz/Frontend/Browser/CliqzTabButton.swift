@@ -13,10 +13,14 @@ class CliqzTabsButton: TabsButton {
 
 	let BackgroundInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
+	private var _image: UIImage?
 	var image: UIImage? {
-		didSet {
-			self.backgroundImage.image = image
-			self.backgroundImage.tintColor = UIColor.redColor()
+		set {
+			_image = newValue?.imageWithRenderingMode(.AlwaysTemplate)
+			self.backgroundImage.image = _image
+		}
+		get {
+			return _image
 		}
 	}
 
@@ -32,7 +36,7 @@ class CliqzTabsButton: TabsButton {
 		super.init(frame: frame)
 		self.addSubview(self.backgroundImage)
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -53,9 +57,9 @@ class CliqzTabsButton: TabsButton {
 		button.titleLabel.font = titleLabel.font
 		button.titleLabel.textColor = titleLabel.textColor
 		button.titleLabel.layer.cornerRadius = titleLabel.layer.cornerRadius
-		
+
 		button.titleBackgroundColor = self.titleBackgroundColor
-		
+
 		button.borderWidth = self.borderWidth
 		button.borderColor = self.borderColor
 
@@ -63,4 +67,12 @@ class CliqzTabsButton: TabsButton {
 		return button
 	}
 	
+	override dynamic var textColor: UIColor? {
+		get { return titleLabel.textColor }
+		set {
+			titleLabel.textColor = newValue
+			self.backgroundImage.tintColor = textColor
+		}
+	}
+
 }

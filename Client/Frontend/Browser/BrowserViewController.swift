@@ -125,16 +125,6 @@ class BrowserViewController: UIViewController {
     // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
     var headerConstraintUpdated:Bool = false
     
-    // Cliqz: Future and past layers
-    var searchHistoryContainer: UINavigationController?
-    private func initSearchHistoryContainer() {
-        let searchHistoryViewController = SearchHistoryViewController(profile: self.profile, tabManager: self.tabManager)
-        searchHistoryViewController.delegate = self
-        
-        searchHistoryContainer = UINavigationController(rootViewController: searchHistoryViewController)
-        searchHistoryContainer!.transitioningDelegate = self
-    }
-    
     lazy var recommendationsContainer: UINavigationController = {
         let recommendationsViewController = RecommendationsViewController(profile: self.profile)
         recommendationsViewController.delegate = self
@@ -166,7 +156,6 @@ class BrowserViewController: UIViewController {
         self.tabManager = tabManager
         self.readerModeCache = DiskReaderModeCache.sharedInstance
         super.init(nibName: nil, bundle: nil)
-        initSearchHistoryContainer()
         didInit()
     }
 
@@ -209,7 +198,8 @@ class BrowserViewController: UIViewController {
     }
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+		// Cliqz: Changed StatusBar style to the black
+        return UIStatusBarStyle.Default
     }
 
     func shouldShowFooterForTraitCollection(previousTraitCollection: UITraitCollection) -> Bool {
@@ -1645,8 +1635,13 @@ extension BrowserViewController: URLBarDelegate {
             screenshotHelper.takeScreenshot(tab)
         }
         */
-        self.navigationController?.pushViewController(tabTrayController, animated: true)
-        self.tabTrayController = tabTrayController
+		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
+//        self.navigationController?.pushViewController(tabTrayController, animated: true)
+//		self.tabTrayController = tabTrayController
+
+		let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
+		dashboard.delegate = self
+		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
     func urlBarDidPressReaderMode(urlBar: URLBarView) {
@@ -1820,7 +1815,6 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidClickSearchHistory() {
         
         transition.transitionDirection = TransitionDirection.Down
-        self.presentViewController(searchHistoryContainer!, animated: true, completion: nil)
 
         TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
     }
@@ -2387,7 +2381,9 @@ extension BrowserViewController: TabManagerDelegate {
 
     private func updateTabCountUsingTabManager(tabManager: TabManager, animated: Bool = true) {
         if let selectedTab = tabManager.selectedTab {
-            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
+			// Cliqz: Changes Tabs count on the Tabs button according to our requirements. Now we show all tabs count, no seperation between private/not private
+//            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
+			let count = tabManager.tabs.count
             urlBar.updateTabCount(max(count, 1), animated: animated)
         }
     }
@@ -3682,8 +3678,8 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-// Cliqz: compined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and SearchHistoryViewControllerDelegate into one extension
-extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, SearchHistoryViewControllerDelegate {
+// Cliqz: combined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and DashboardDelegate into one extension
+extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, DashboardDelegate {
     
     func didSelectURL(url: NSURL, searchQuery: String?) {
         navigateToUrl(url, searchQuery: searchQuery)
@@ -3693,16 +3689,22 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         finishEditingAndSubmit(url, visitType: .Link)
     }
     
-    func searchForQuery(query: String) {
+	func didSelectQuery(query: String) {
         self.urlBar.enterOverlayMode(query, pasted: true)
     }
-    
+	
+	func searchForQuery(query: String) {
+		self.urlBar.enterOverlayMode(query, pasted: true)
+	}
+	
     func autoCompeleteQuery(autoCompleteText: String) {
         urlBar.setAutocompleteSuggestion(autoCompleteText)
     }
+
     func dismissKeyboard() {
         urlBar.resignFirstResponder()
     }
+
     private func navigateToUrl(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
@@ -3713,7 +3715,7 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
     }
-    
+
 }
 
 // Cliqz: Extension for BrowserViewController to put addes methods
