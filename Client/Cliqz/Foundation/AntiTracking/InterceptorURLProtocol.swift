@@ -60,6 +60,12 @@ class InterceptorURLProtocol: NSURLProtocol {
         self.client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .NotAllowed)
     }
     
+    func connection(connection: NSURLConnection, willSendRequest request: NSURLRequest, redirectResponse response: NSURLResponse?) -> NSURLRequest? {
+        if let response = response {
+            client?.URLProtocol(self, wasRedirectedToRequest: request, redirectResponse: response)
+        }
+        return request
+    }
     func connection(connection: NSURLConnection, didReceiveData data: NSData) {
         self.client?.URLProtocol(self, didLoadData: data)
     }
