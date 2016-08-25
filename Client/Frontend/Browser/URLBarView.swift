@@ -502,9 +502,10 @@ class URLBarView: UIView {
             newTabsButton.titleLabel.text = countToBe
             newTabsButton.accessibilityValue = countToBe
             addSubview(newTabsButton)
+			// Cliqz: change tailing constraint to the left because we moved the button to the left side of
             newTabsButton.snp_makeConstraints { make in
                 make.centerY.equalTo(self.locationContainer)
-                make.trailing.equalTo(self)
+				make.left.equalTo(self)
                 make.size.equalTo(UIConstants.ToolbarHeight)
             }
             

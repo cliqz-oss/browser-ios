@@ -37,8 +37,7 @@ struct TabLocationViewUX {
         theme = Theme()
         theme.URLFontColor = BaseURLFontColor
         theme.hostFontColor = HostFontColor
-        // Cliqz: Changed LocationView backgroundColor according to requirements
-        theme.backgroundColor = UIColor.clearColor()
+        theme.backgroundColor = UIColor.whiteColor()
         themes[Theme.NormalMode] = theme
 
         return themes
@@ -121,9 +120,6 @@ class TabLocationView: UIView {
         // Cliqz: Added text color to the location text field
 		urlTextField.textColor = UIColor.blackColor()
 
-        // Cliqz: Added background color to the location text field
-        urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
-        
         // Cliqz: Added left pading to the url text field
         urlTextField.setLeftPading(5)
         
