@@ -67,6 +67,8 @@ class CliqzWebView: UIWebView {
 	
 	var allowsBackForwardNavigationGestures: Bool = false
 
+    private let lockQueue = dispatch_queue_create("com.cliqz.webView.lockQueue", nil)
+    
 	private static var containerWebViewForCallbacks = { return ContainerWebView() }()
     
     // This gets set as soon as it is available from the first UIWebVew created
@@ -135,8 +137,6 @@ class CliqzWebView: UIWebView {
 		}
 	}*/
     
-    var uniqueId = -1
-
     var knownFrameContexts = Set<NSObject>()
 
 	var prevDocumentLocation = ""
@@ -148,7 +148,12 @@ class CliqzWebView: UIWebView {
 		super.init(frame: frame)
 		commonInit()
 	}
-	
+
+    // Anti-Tracking
+    var uniqueId = -1
+    var badRequests = 0
+
+    
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
@@ -194,6 +199,7 @@ class CliqzWebView: UIWebView {
 	}
 	
 	override func loadRequest(request: NSURLRequest) {
+        badRequests = 0
 		super.loadRequest(request)
 	}
 	
@@ -236,6 +242,13 @@ class CliqzWebView: UIWebView {
 	func reloadFromOrigin() {
 		self.reload()
 	}
+    
+    func incrementBadRequestsCount() {
+        dispatch_sync(lockQueue) {
+            self.badRequests += 1
+            NSNotificationCenter.defaultCenter().postNotificationName(NotificationBadRequestDetected, object: self.uniqueId)
+        }
+    }
 
 	// MARK:- Private methods
 

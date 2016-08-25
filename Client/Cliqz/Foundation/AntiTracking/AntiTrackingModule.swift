@@ -56,13 +56,18 @@ class AntiTrackingModule: NSObject {
         if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
             
             if let block = blockResponse["cancel"] as? Bool where block == true {
-                print("[Anti-Tracking] request blocked")
+//                print("[Anti-Tracking] request blocked")
                 return nil
             }
             
             if let redirectUrl = blockResponse["redirectUrl"] as? String {
                 modifiedRequest.URL = NSURL(string: redirectUrl)!
-                print("[Anti-Tracking] request redirected")
+                
+                if let tabId = requestInfo["tabId"] as? Int,
+                    let webView = WebViewToUAMapper.idToWebView(tabId) {
+                    webView.incrementBadRequestsCount()
+                }
+//                print("[Anti-Tracking] request redirected")
             }
             if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
                 
@@ -79,10 +84,38 @@ class AntiTrackingModule: NSObject {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value));")
 
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
-                    }
+        }
+    }
+    
+    func getAntiTrackingStatistics(webViewId: Int) -> [(String, Int)] {
+        var antiTrackingStatistics = [(String, Int)]()
         
+        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
+        
+        if let companies = tabBlockInfo["companies"] as? [String: [String]],
+            let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
+            
+            for (company, trackers) in companies {
+                
+                let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
+                antiTrackingStatistics.append((company, badRequestsCount))
+            }
+        }
+        
+        return antiTrackingStatistics
     }
     //MARK: - Private Helpers
+    private func getCompanyBadRequestsCount(trackers: [String], allTrackers: [String: AnyObject]) -> Int {
+        var badRequestsCount = 0
+        for tracker in trackers {
+            if let trackerStatistics = allTrackers[tracker] as? [String: Int],
+                let badRequests = trackerStatistics["bad_qs"] {
+                badRequestsCount += badRequests
+            }
+        }
+        
+        return badRequestsCount
+    }
     private class func cloneRequest(request: NSURLRequest) -> NSMutableURLRequest {
         // Reportedly not safe to use built-in cloning methods: http://openradar.appspot.com/11596316
         let newRequest = NSMutableURLRequest(URL: request.URL!, cachePolicy: request.cachePolicy, timeoutInterval: request.timeoutInterval)
@@ -235,7 +268,7 @@ class AntiTrackingModule: NSObject {
         
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
