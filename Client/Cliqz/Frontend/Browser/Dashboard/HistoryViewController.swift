@@ -72,25 +72,20 @@ extension HistoryViewController {
     override func isReady() {
         super.isReady()
         
-        guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
-            return
+        if profile.clearQueries {
+            clearQueries(favorites: true)
+            clearQueries(favorites: false)
         }
-        guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true && profile.historyTypeShouldBeCleared() != .None else {
-            return
-        }
-        clearQueries(includeFavorites: profile.historyTypeShouldBeCleared() == .All)
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: IsAppTerminated)
-        NSUserDefaults.standardUserDefaults().synchronize()
     }
 
     // MARK: - Clear History
 	@objc func clearQueries(notification: NSNotification) {
         let includeFavorites: Bool = (notification.object as? Bool) ?? false
-		self.clearQueries(includeFavorites: includeFavorites)
+		self.clearQueries(favorites: includeFavorites)
 	}
 
-	func clearQueries(includeFavorites includeFavorites: Bool) {
-        if includeFavorites == true {
+	func clearQueries(favorites favorites: Bool) {
+        if favorites == true {
             self.evaluateJavaScript("jsAPI.clearFavorites()", completionHandler: nil)
         } else {
             self.evaluateJavaScript("jsAPI.clearHistory()", completionHandler: nil)

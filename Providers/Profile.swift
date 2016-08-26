@@ -171,6 +171,10 @@ class BrowserProfileSyncDelegate: SyncDelegate {
 protocol Profile: class {
 	// Cliqz: Added CliqzShareToDestination and CliqzSQLiteBookmarks protocols to extend bookmarks behaviour
     var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> { get }
+    
+    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
+    var clearQueries: Bool { get set }
+    
     // var favicons: Favicons { get }
     var prefs: Prefs { get }
     var queue: TabQueue { get }
@@ -220,6 +224,9 @@ public class BrowserProfile: Profile {
     private let name: String
     internal let files: FileAccessor
 
+    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
+    var clearQueries = false
+    
     weak private var app: UIApplication?
 
     /**
