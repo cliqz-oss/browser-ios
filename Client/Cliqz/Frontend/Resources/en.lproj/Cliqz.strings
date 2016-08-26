@@ -151,3 +151,6 @@
 
 /* Dashboard navigation bar title */
 "Overview" = "Overview";
+
+/* Title on the tab view, when no URL is open on the tab */
+"Topsites" = "Topsites";
