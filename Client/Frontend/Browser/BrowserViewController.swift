@@ -2635,7 +2635,33 @@ extension BrowserViewController: WKNavigationDelegate {
             tab.desktopSite = webView.customUserAgent?.isEmpty == false
         }
     }
+#if CLIQZ
+    func webView(_webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
+        
+        guard let container = _webView as? ContainerWebView else { return }
+        guard let webView = container.legacyWebView else { return }
+        guard let tab = tabManager.tabForWebView(webView) else { return }
 
+        // Ignore the "Frame load interrupted" error that is triggered when we cancel a request
+        // to open an external application and hand it over to UIApplication.openURL(). The result
+        // will be that we switch to the external app, for example the app store, while keeping the
+        // original web page in the tab instead of replacing it with an error page.
+        if error.domain == "WebKitErrorDomain" && error.code == 102 {
+            return
+        }
+        
+        if error.code == Int(CFNetworkErrors.CFURLErrorCancelled.rawValue) {
+            if tab === tabManager.selectedTab {
+                urlBar.currentURL = tab.displayURL
+            }
+            return
+        }
+        
+        if let url = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
+            ErrorPageHelper().showPage(error, forUrl: url, inWebView: webView)
+        }
+    }
+#endif
     private func addViewForOpenInHelper(openInHelper: OpenInHelper) {
         guard let view = openInHelper.openInView else { return }
         webViewContainerToolbar.addSubview(view)
@@ -2756,6 +2782,12 @@ extension BrowserViewController: WKUIDelegate {
 
     /// Invoked when an error occurs while starting to load data for the main frame.
     func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+        
+        // Cliqz: [UIWebView] use the UIWebView to display the error page
+#if CLIQZ
+        guard let container = webView as? ContainerWebView else { return }
+        guard let cliqzWebView = container.legacyWebView else { return }
+#endif
         // Ignore the "Frame load interrupted" error that is triggered when we cancel a request
         // to open an external application and hand it over to UIApplication.openURL(). The result
         // will be that we switch to the external app, for example the app store, while keeping the
@@ -2763,24 +2795,34 @@ extension BrowserViewController: WKUIDelegate {
         if error.domain == "WebKitErrorDomain" && error.code == 102 {
             return
         }
-
-        if checkIfWebContentProcessHasCrashed(webView, error: error) {
+        // Cliqz: [UIWebView] use cliqz webview instead of the WKWebView to check if the web content is creashed
+        if checkIfWebContentProcessHasCrashed(cliqzWebView, error: error) {
             return
         }
-
+        
         if error.code == Int(CFNetworkErrors.CFURLErrorCancelled.rawValue) {
+            #if Cliqz
+            if let tab = tabManager.tabForWebView(cliqzWebView) where tab === tabManager.selectedTab {
+                urlBar.currentURL = tab.displayURL
+            }
+            #else
             if let tab = tabManager[webView] where tab === tabManager.selectedTab {
                 urlBar.currentURL = tab.displayURL
             }
+            #endif
             return
         }
 
         if let url = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
-            ErrorPageHelper().showPage(error, forUrl: url, inWebView: webView)
+            // Cliqz: [UIWebView] use cliqz webview instead of the WKWebView for displaying the error page
+//            ErrorPageHelper().showPage(error, forUrl: url, inWebView: WebView)
+            ErrorPageHelper().showPage(error, forUrl: url, inWebView: cliqzWebView)
         }
     }
 
-    private func checkIfWebContentProcessHasCrashed(webView: WKWebView, error: NSError) -> Bool {
+    // Cliqz: [UIWebView] change type
+//    private func checkIfWebContentProcessHasCrashed(webView: WKWebView, error: NSError) -> Bool {
+    private func checkIfWebContentProcessHasCrashed(webView: CliqzWebView, error: NSError) -> Bool {
         if error.code == WKErrorCode.WebContentProcessTerminated.rawValue && error.domain == "WebKitErrorDomain" {
             log.debug("WebContent process has crashed. Trying to reloadFromOrigin to restart it.")
             webView.reloadFromOrigin()
@@ -2808,7 +2850,14 @@ extension BrowserViewController: WKUIDelegate {
 
         guard let openInHelper = helperForURL else {
             let error = NSError(domain: ErrorPageHelper.MozDomain, code: Int(ErrorPageHelper.MozErrorDownloadsNotEnabled), userInfo: [NSLocalizedDescriptionKey: Strings.UnableToDownloadError])
-            ErrorPageHelper().showPage(error, forUrl: navigationResponse.response.URL!, inWebView: webView)
+            // Cliqz: [UIWebView] use cliqz webview instead of the WKWebView for displaying the error page
+#if Cliqz
+//            ErrorPageHelper().showPage(error, forUrl: navigationResponse.response.URL!, inWebView: webView)
+            let container = webView as? ContainerWebView
+            let cliqzWebView = container.legacyWebView
+            ErrorPageHelper().showPage(error, forUrl: navigationResponse.response.URL!, inWebView: cliqzWebView)
+#endif
+            
             return decisionHandler(WKNavigationResponsePolicy.Allow)
         }
 
