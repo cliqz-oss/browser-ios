@@ -50,6 +50,7 @@ class AntiTrackingModule: NSObject {
     
     func getModifiedRequest(originalRequest: NSURLRequest) -> NSMutableURLRequest? {
         
+//        let modifiedRequest = originalRequest.mutableCopy() as! NSMutableURLRequest
         let modifiedRequest = AntiTrackingModule.cloneRequest(originalRequest)
         
         let requestInfo = getRequestInfo(originalRequest)

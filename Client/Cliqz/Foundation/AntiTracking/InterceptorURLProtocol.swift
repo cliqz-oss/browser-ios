@@ -43,7 +43,22 @@ class InterceptorURLProtocol: NSURLProtocol {
             returnEmptyResponse()
         } else if let newRequest = AntiTrackingModule.sharedInstance.getModifiedRequest(self.request) {
             NSURLProtocol.setProperty(true, forKey: InterceptorURLProtocol.customURLProtocolHandledKey, inRequest: newRequest)
-            self.connection = NSURLConnection(request: newRequest, delegate: self)
+
+            let userAgent = request.allHTTPHeaderFields?["User-Agent"]
+
+            if request.URL == request.mainDocumentURL {
+                returnEmptyResponse()
+                postAsyncToMain(0) {
+                    WebViewToUAMapper.userAgentToWebview(userAgent)?.loadRequest(newRequest)
+                }
+            } else if isSameOriginAsMainDocument(request) && !isResourceRequest(newRequest) {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.connection = NSURLConnection(request: newRequest, delegate: self)
+                })
+            } else {
+                self.connection = NSURLConnection(request: newRequest, delegate: self)
+            }
+
         } else {
             returnEmptyResponse()
         }
@@ -95,8 +110,8 @@ class InterceptorURLProtocol: NSURLProtocol {
         
         return false
     }
-    
-    func returnEmptyResponse() {
+    // MARK: Private helper methods
+    private func returnEmptyResponse() {
         // To block the load nicely, return an empty result to the client.
         // Nice => UIWebView's isLoading property gets set to false
         // Not nice => isLoading stays true while page waits for blocked items that never arrive
@@ -107,4 +122,28 @@ class InterceptorURLProtocol: NSURLProtocol {
         client?.URLProtocol(self, didLoadData: NSData())
         client?.URLProtocolDidFinishLoading(self)
     }
+    
+    private func isResourceRequest(request: NSURLRequest) -> Bool {
+        if let urlString = request.URL?.absoluteString {
+            // images
+            if urlString.endsWith(".jpg") || urlString.endsWith(".png") || urlString.endsWith(".gif") {
+                return true
+            }
+            // css and js
+            if urlString.endsWith(".js") || urlString.endsWith(".css") {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func isSameOriginAsMainDocument(request: NSURLRequest) -> Bool {
+        if let host = request.URL?.host,
+            let mainHost = request.mainDocumentURL?.host where host == mainHost{
+            return true
+        }
+        return false
+    }
+    
+    
 }
