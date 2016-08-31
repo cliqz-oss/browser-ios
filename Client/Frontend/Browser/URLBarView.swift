@@ -192,7 +192,6 @@ class URLBarView: UIView {
 
     lazy var shareButton: UIButton = { return UIButton() }()
 
-	// Cliqz: Removed menu button as we don't need it
     lazy var menuButton: UIButton = { return UIButton() }()
 
     lazy var bookmarkButton: UIButton = { return UIButton() }()
@@ -207,7 +206,7 @@ class URLBarView: UIView {
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed menu button as we don't need it
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -253,8 +252,7 @@ class URLBarView: UIView {
 
         addSubview(shareButton)
         if AppConstants.MOZ_MENU {
-			// Cliqz: Removed menu button as we don't need it
-//            addSubview(menuButton)
+            addSubview(menuButton)
             addSubview(homePageButton)
         } else {
             addSubview(bookmarkButton)
@@ -332,24 +330,21 @@ class URLBarView: UIView {
 
         if AppConstants.MOZ_MENU {
             shareButton.snp_makeConstraints { make in
-				// Cliqz: Removed menu button that's why constraint should be changed
-                make.right.equalTo(self)
+                make.right.equalTo(self.menuButton.snp_left)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
-
+            
             homePageButton.snp_makeConstraints { make in
                 make.center.equalTo(shareButton)
                 make.size.equalTo(shareButton)
             }
-
-			// Cliqz: Removed menu button as we don't need it.
-			/*
+            
             menuButton.snp_makeConstraints { make in
-				make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-				make.centerY.equalTo(self)
+                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+                make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
-            } */
+            }
         } else {
             shareButton.snp_makeConstraints { make in
                 make.right.equalTo(self.bookmarkButton.snp_left)
@@ -637,8 +632,7 @@ class URLBarView: UIView {
 //        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         if AppConstants.MOZ_MENU {
-			// Cliqz: Removed menu button as we don't need it
-//            self.menuButton.hidden = !self.toolbarIsShowing
+            self.menuButton.hidden = !self.toolbarIsShowing
         } else {
             self.bookmarkButton.hidden = !self.toolbarIsShowing
         }
@@ -653,8 +647,7 @@ class URLBarView: UIView {
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         if AppConstants.MOZ_MENU {
-			// Cliqz: Removed menu button as we don't need it
-//            self.menuButton.alpha = inOverlayMode ? 0 : 1
+            self.menuButton.alpha = inOverlayMode ? 0 : 1
         } else {
             self.bookmarkButton.alpha = inOverlayMode ? 0 : 1
         }
@@ -698,8 +691,7 @@ class URLBarView: UIView {
 //        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         if AppConstants.MOZ_MENU {
-			// Cliqz: Removed menu button as we don't need it
-//            self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
+            self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
         } else {
             self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
         }
@@ -786,8 +778,7 @@ extension URLBarView: TabToolbarProtocol {
                 return [locationTextField]
             } else {
                 if toolbarIsShowing {
-					// Cliqz: Removed menu button as we don't need it
-                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, tabsButton, progressBar] : [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
+                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, menuButton, tabsButton, progressBar] : [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
                 } else {
                     return [locationView, tabsButton, progressBar]
                 }

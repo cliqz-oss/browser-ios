@@ -96,69 +96,37 @@ struct AppMenuConfiguration: MenuConfiguration {
         var menuItems = [MenuItem]()
         switch appState.ui {
         case .Tab(let tabState):
-#if CLIQZ
-	menuItems.append(AppMenuConfiguration.FindInPageMenuItem)
-	if #available(iOS 9, *) {
-		menuItems.append(tabState.desktopSite ? AppMenuConfiguration.RequestMobileMenuItem : AppMenuConfiguration.RequestDesktopMenuItem)
-	}
-	
-	if !HomePageAccessors.isButtonInMenu(appState) {
-		menuItems.append(AppMenuConfiguration.SharePageMenuItem)
-	}
-	menuItems.append(tabState.isBookmarked ? AppMenuConfiguration.RemoveBookmarkMenuItem : AppMenuConfiguration.AddBookmarkMenuItem)
-	
-	menuItems.append(AppMenuConfiguration.NewTabMenuItem)
-	if #available(iOS 9, *) {
-		menuItems.append(AppMenuConfiguration.NewPrivateTabMenuItem)
-	}
-	menuItems.append(AppMenuConfiguration.SettingsMenuItem)
-	if NoImageModeHelper.isNoImageModeAvailable(appState) {
-		if NoImageModeHelper.isNoImageModeActivated(appState) {
-			menuItems.append(AppMenuConfiguration.ShowImageModeMenuItem)
-		} else {
-			menuItems.append(AppMenuConfiguration.HideImageModeMenuItem)
-		}
-	}
-	if NightModeAccessors.isNightModeAvailable(appState) {
-		if NightModeAccessors.isNightModeActivated(appState) {
-			menuItems.append(AppMenuConfiguration.ShowNightModeItem)
-		} else {
-			menuItems.append(AppMenuConfiguration.HideNightModeItem)
-		}
-	}
-#else
-	if #available(iOS 9, *) {
-		menuItems.append(tabState.desktopSite ? AppMenuConfiguration.RequestMobileMenuItem : AppMenuConfiguration.RequestDesktopMenuItem)
-	}
-	
-	if !HomePageAccessors.isButtonInMenu(appState) {
-		menuItems.append(AppMenuConfiguration.SharePageMenuItem)
-	} else if HomePageAccessors.hasHomePage(appState) {
-		menuItems.append(AppMenuConfiguration.OpenHomePageMenuItem)
-	} else {
-		menuItems.append(AppMenuConfiguration.SetHomePageMenuItem)
-	}
-	menuItems.append(AppMenuConfiguration.NewTabMenuItem)
-	if #available(iOS 9, *) {
-		menuItems.append(AppMenuConfiguration.NewPrivateTabMenuItem)
-	}
-	menuItems.append(tabState.isBookmarked ? AppMenuConfiguration.RemoveBookmarkMenuItem : AppMenuConfiguration.AddBookmarkMenuItem)
-	if NoImageModeHelper.isNoImageModeAvailable(appState) {
-		if NoImageModeHelper.isNoImageModeActivated(appState) {
-			menuItems.append(AppMenuConfiguration.ShowImageModeMenuItem)
-		} else {
-			menuItems.append(AppMenuConfiguration.HideImageModeMenuItem)
-		}
-	}
-	if NightModeAccessors.isNightModeAvailable(appState) {
-		if NightModeAccessors.isNightModeActivated(appState) {
-			menuItems.append(AppMenuConfiguration.ShowNightModeItem)
-		} else {
-			menuItems.append(AppMenuConfiguration.HideNightModeItem)
-		}
-	}
-	menuItems.append(AppMenuConfiguration.SettingsMenuItem)
-#endif
+            if #available(iOS 9, *) {
+                menuItems.append(tabState.desktopSite ? AppMenuConfiguration.RequestMobileMenuItem : AppMenuConfiguration.RequestDesktopMenuItem)
+            }
+            
+            if !HomePageAccessors.isButtonInMenu(appState) {
+                menuItems.append(AppMenuConfiguration.SharePageMenuItem)
+            } else if HomePageAccessors.hasHomePage(appState) {
+                menuItems.append(AppMenuConfiguration.OpenHomePageMenuItem)
+            } else {
+                menuItems.append(AppMenuConfiguration.SetHomePageMenuItem)
+            }
+            menuItems.append(AppMenuConfiguration.NewTabMenuItem)
+            if #available(iOS 9, *) {
+                menuItems.append(AppMenuConfiguration.NewPrivateTabMenuItem)
+            }
+            menuItems.append(tabState.isBookmarked ? AppMenuConfiguration.RemoveBookmarkMenuItem : AppMenuConfiguration.AddBookmarkMenuItem)
+            if NoImageModeHelper.isNoImageModeAvailable(appState) {
+                if NoImageModeHelper.isNoImageModeActivated(appState) {
+                    menuItems.append(AppMenuConfiguration.ShowImageModeMenuItem)
+                } else {
+                    menuItems.append(AppMenuConfiguration.HideImageModeMenuItem)
+                }
+            }
+            if NightModeAccessors.isNightModeAvailable(appState) {
+                if NightModeAccessors.isNightModeActivated(appState) {
+                    menuItems.append(AppMenuConfiguration.ShowNightModeItem)
+                } else {
+                    menuItems.append(AppMenuConfiguration.HideNightModeItem)
+                }
+            }
+            menuItems.append(AppMenuConfiguration.SettingsMenuItem)
         case .HomePanels, .Loading:
             menuItems.append(AppMenuConfiguration.NewTabMenuItem)
             if #available(iOS 9, *) {
@@ -296,25 +264,14 @@ extension AppMenuConfiguration {
         return  AppMenuToolbarItem(title: ReadingListTitleString, action:  MenuAction(action: AppMenuAction.OpenReadingList.rawValue), icon: "menu-panel-ReadingList")
     }
 
-	#if CLIQZ
-    static let NewTabTitleString = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
-	static let NewPrivateTabTitleString = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "New private tab title")
-	static let AddBookmarkTitleString = NSLocalizedString("Add Favorite", tableName: "Cliqz", comment: "Add Favorites")
-	static let RemoveBookmarkTitleString = NSLocalizedString("Remove Favorites", tableName: "Cliqz", comment: "Remove favorites title")
-	static let FindInPageTitleString = NSLocalizedString("Find in Page", tableName: "FindInPage", comment: "Text selection menu item")
-	static let ViewDesktopSiteTitleString = NSLocalizedString("Request Desktop Site", comment:"Action Sheet Button for Requesting the Mobile Site")
-	static let ViewMobileSiteTitleString = NSLocalizedString("Request Mobile Site", comment:"Action Sheet Button for Requesting the Desktop Site Share action title")
-	static let SettingsTitleString = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Setting menu title")
-	#else
-	static let NewTabTitleString = NSLocalizedString("Menu.NewTabAction.Title", value: "New Tab", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open a new tab")
-	static let NewPrivateTabTitleString = NSLocalizedString("Menu.NewPrivateTabAction.Title", value: "New Private Tab", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open a new private tab.")
-	static let AddBookmarkTitleString = NSLocalizedString("Menu.AddBookmarkAction.Title", value: "Add Bookmark", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to create a bookmark for the current website.")
-	static let RemoveBookmarkTitleString = NSLocalizedString("Menu.RemoveBookmarkAction.Title", value: "Remove Bookmark", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to delete an existing bookmark for the current website.")
-	static let FindInPageTitleString = NSLocalizedString("Menu.FindInPageAction.Title", value: "Find In Page", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open the toolbar to search for text within the current page.")
-	static let ViewDesktopSiteTitleString = NSLocalizedString("Menu.ViewDekstopSiteAction.Title", value: "Request Desktop Site", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to request the desktop version of the current website.")
-	static let ViewMobileSiteTitleString = NSLocalizedString("Menu.ViewMobileSiteAction.Title", value: "Request Mobile Site", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to request the mobile version of the current website.")
-	static let SettingsTitleString = NSLocalizedString("Menu.OpenSettingsAction.Title", value: "Settings", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open the Settings menu.")
-	#endif
+    static let NewTabTitleString = NSLocalizedString("Menu.NewTabAction.Title", value: "New Tab", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open a new tab")
+    static let NewPrivateTabTitleString = NSLocalizedString("Menu.NewPrivateTabAction.Title", value: "New Private Tab", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open a new private tab.")
+    static let AddBookmarkTitleString = NSLocalizedString("Menu.AddBookmarkAction.Title", value: "Add Bookmark", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to create a bookmark for the current website.")
+    static let RemoveBookmarkTitleString = NSLocalizedString("Menu.RemoveBookmarkAction.Title", value: "Remove Bookmark", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to delete an existing bookmark for the current website.")
+    static let FindInPageTitleString = NSLocalizedString("Menu.FindInPageAction.Title", value: "Find In Page", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open the toolbar to search for text within the current page.")
+    static let ViewDesktopSiteTitleString = NSLocalizedString("Menu.ViewDekstopSiteAction.Title", value: "Request Desktop Site", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to request the desktop version of the current website.")
+    static let ViewMobileSiteTitleString = NSLocalizedString("Menu.ViewMobileSiteAction.Title", value: "Request Mobile Site", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to request the mobile version of the current website.")
+    static let SettingsTitleString = NSLocalizedString("Menu.OpenSettingsAction.Title", value: "Settings", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to open the Settings menu.")
     static let CloseAllTabsTitleString = NSLocalizedString("Menu.CloseAllTabsAction.Title", value: "Close All Tabs", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to close all tabs currently open.")
     static let OpenHomePageTitleString = NSLocalizedString("Menu.OpenHomePageAction.Title", value: "Home", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to navigate to the home page.")
     static let SetHomePageTitleString = NSLocalizedString("Menu.SetHomePageAction.Title", value: "Set Homepage", tableName: "Menu", comment: "Label for the button, displayed in the menu, used to set the homepage if none is currently set.")

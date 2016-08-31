@@ -124,8 +124,6 @@ public class TabToolbarHelper: NSObject {
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
 
         if AppConstants.MOZ_MENU {
-			// Cliqz: Removed menu button as we don't need it
-
             toolbar.menuButton.contentMode = UIViewContentMode.Center
             toolbar.menuButton.setImage(UIImage.templateImageNamed("bottomNav-menu"), forState: .Normal)
             toolbar.menuButton.accessibilityLabel = AppMenuConfiguration.MenuButtonAccessibilityLabel
