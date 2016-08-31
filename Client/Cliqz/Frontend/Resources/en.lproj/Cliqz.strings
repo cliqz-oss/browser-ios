@@ -154,3 +154,15 @@
 
 /* Title on the tab view, when no URL is open on the tab */
 "Topsites" = "Topsites";
+
+/* Antitracking UI top title */
+"Data is protected" = "Your data is protected";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Private data points have been removed";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking companies";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Private data points";

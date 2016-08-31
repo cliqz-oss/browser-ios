@@ -87,7 +87,14 @@ class AntiTrackingModule: NSObject {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
         }
     }
-    
+	
+	func getTrackersCount(webViewId: Int) -> Int {
+		if let webView = WebViewToUAMapper.idToWebView(webViewId) {
+			return webView.badRequests
+		}
+		return 0
+	}
+
     func getAntiTrackingStatistics(webViewId: Int) -> [(String, Int)] {
         var antiTrackingStatistics = [(String, Int)]()
         
@@ -97,14 +104,16 @@ class AntiTrackingModule: NSObject {
             let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
             
             for (company, trackers) in companies {
-                
                 let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
-                antiTrackingStatistics.append((company, badRequestsCount))
+				if badRequestsCount > 0 {
+					antiTrackingStatistics.append((company, badRequestsCount))
+				}
             }
         }
         
         return antiTrackingStatistics
     }
+
     //MARK: - Private Helpers
     private func getCompanyBadRequestsCount(trackers: [String], allTrackers: [String: AnyObject]) -> Int {
         var badRequestsCount = 0
@@ -117,6 +126,7 @@ class AntiTrackingModule: NSObject {
         
         return badRequestsCount
     }
+
     private class func cloneRequest(request: NSURLRequest) -> NSMutableURLRequest {
         // Reportedly not safe to use built-in cloning methods: http://openradar.appspot.com/11596316
         let newRequest = NSMutableURLRequest(URL: request.URL!, cachePolicy: request.cachePolicy, timeoutInterval: request.timeoutInterval)
@@ -135,7 +145,7 @@ class AntiTrackingModule: NSObject {
         newRequest.networkServiceType = request.networkServiceType
         return newRequest
     }
-    
+
     private func toJSONString(anyObject: AnyObject) -> String? {
         do {
             
@@ -240,6 +250,7 @@ class AntiTrackingModule: NSObject {
             context.evaluateScript(configScript)
         }
     }
+
     private func configureExceptionHandler() {
         context.exceptionHandler = { context, exception in
             print("JS Error: \(exception)")
@@ -260,19 +271,21 @@ class AntiTrackingModule: NSObject {
         registerSendTelemetryMethod()
         registerIsWindowActiveMethod()
     }
+
     private func registerMd5NativeMethod() {
         let md5Native: @convention(block) (String) -> String = { data in
             return md5(data)
         }
         context.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
     }
-        
+
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
 //            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
+
     private func registerLoadSubscriptMethod() {
         let loadSubscript: @convention(block) String -> () = { subscriptName in
             self.loadJavascriptSource("/modules\(subscriptName)")
@@ -280,6 +293,7 @@ class AntiTrackingModule: NSObject {
         context.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
         
     }
+
     private func registerSetTimeoutMethod() {
         let setTimeout: @convention(block) (JSValue, Int) -> () = { function, timeoutMsec in
             let delay = Double(timeoutMsec) * Double(NSEC_PER_MSEC)

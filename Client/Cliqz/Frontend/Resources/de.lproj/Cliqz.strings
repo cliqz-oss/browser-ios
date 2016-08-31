@@ -153,3 +153,15 @@
 
 /* Title on the tab view, when no URL is open on the tab */
 "Topsites" = "Topseiten";
+
+/* Antitracking UI top title */
+"Data is protected" = "Deine Daten sind geschützt";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Persönliche Daten wurden entfernt";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking Unternehmen";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Persönliche Daten";

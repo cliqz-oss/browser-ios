@@ -27,7 +27,6 @@ class InterceptorURLProtocol: NSURLProtocol {
             return true
         }
         return false
-        
     }
     
     override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {

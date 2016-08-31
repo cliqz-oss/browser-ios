@@ -41,7 +41,9 @@ class BrowserViewController: UIViewController {
     
     var webViewContainer: UIView!
     var menuViewController: MenuViewController?
-    var urlBar: URLBarView!
+	// Cliqz: replace URLBarView with our custom URLBarView
+//    var urlBar: URLBarView!
+	var urlBar: CliqzURLBarView!
     var readerModeBar: ReaderModeBarView?
     var readerModeCache: ReaderModeCache
     private var statusBarOverlay: UIView!
@@ -341,6 +343,8 @@ class BrowserViewController: UIViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
+		// Cliqz: removed observer of NotificationBadRequestDetected notification
+		NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationBadRequestDetected, object: nil)
     }
 
     override func viewDidLoad() {
@@ -385,7 +389,8 @@ class BrowserViewController: UIViewController {
 
         log.debug("BVC setting up URL bar…")
         // Setup the URL bar, wrapped in a view to get transparency effect
-        urlBar = URLBarView()
+		// Cliqz: Type change
+        urlBar = CliqzURLBarView()
         urlBar.translatesAutoresizingMaskIntoConstraints = false
         urlBar.delegate = self
         urlBar.tabToolbarDelegate = self
@@ -443,6 +448,8 @@ class BrowserViewController: UIViewController {
         if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
             LocationManager.sharedInstance.startUpdateingLocation()
         }
+		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
         
     }
 
@@ -1818,13 +1825,6 @@ extension BrowserViewController: URLBarDelegate {
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     
-    // Cliqz: Added delegate methods implementation for new bar buttons
-    func urlBarDidClickSearchHistory() {
-        
-        transition.transitionDirection = TransitionDirection.Down
-
-        TelemetryLogger.sharedInstance.logEvent(.LayerChange("present", "past"))
-    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {

@@ -151,9 +151,12 @@ class CliqzWebView: UIWebView {
 
     // Anti-Tracking
     var uniqueId = -1
-    var badRequests = 0
+	var badRequests = 0 {
+		didSet {
+			NSNotificationCenter.defaultCenter().postNotificationName(NotificationBadRequestDetected, object: self.uniqueId)
+		}
+	}
 
-    
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
@@ -246,7 +249,6 @@ class CliqzWebView: UIWebView {
     func incrementBadRequestsCount() {
         dispatch_sync(lockQueue) {
             self.badRequests += 1
-            NSNotificationCenter.defaultCenter().postNotificationName(NotificationBadRequestDetected, object: self.uniqueId)
         }
     }
 
@@ -377,7 +379,7 @@ extension CliqzWebView: UIWebViewDelegate {
         updateObservableAttributes()
 		return result
 	}
-	
+
 	func webViewDidStartLoad(webView: UIWebView) {
 		progress?.webViewDidStartLoad()
 		if let nd = self.navigationDelegate {
@@ -386,7 +388,7 @@ extension CliqzWebView: UIWebViewDelegate {
 		}
         updateObservableAttributes()
 	}
-	
+
 	func webViewDidFinishLoad(webView: UIWebView) {
 		guard let pageInfo = stringByEvaluatingJavaScriptFromString("document.readyState.toLowerCase() + '|' + document.title") else {
 			return

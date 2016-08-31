@@ -21,7 +21,6 @@ extension BrowserViewController {
 		}
 	}
     
-    
     func askForNewsNotificationPermissionIfNeeded () {
         if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
             let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
@@ -75,6 +74,32 @@ extension BrowserViewController {
 		}
 		actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: nil))
 		self.presentViewController(actionSheet, animated: true, completion: nil)
+	}
+	
+	func SELBadRequestDetected(notification: NSNotification) {
+		dispatch_async(dispatch_get_main_queue()) {
+			var x = notification.object as? Int
+			if x == nil {
+				x = 0
+			}
+			if self.tabManager.selectedTab?.webView?.uniqueId == x {
+				self.urlBar.updateTrackersCount((self.tabManager.selectedTab?.webView?.badRequests)!)
+			}
+		}
+	}
+
+	func urlBarDidClickAntitracking(urlBar: URLBarView) {
+		if let tab = self.tabManager.selectedTab, webView = tab.webView {
+			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId)
+			self.addChildViewController(antitrackingVC)
+			var r = self.view.bounds
+			r.origin.y = -r.size.height
+			antitrackingVC.view.frame = r
+			self.view.addSubview(antitrackingVC.view)
+			UIView.animateWithDuration(0.5) {
+				antitrackingVC.view.center = self.view.center
+			}
+		}
 	}
 
 }

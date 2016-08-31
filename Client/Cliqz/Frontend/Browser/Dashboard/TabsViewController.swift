@@ -16,7 +16,7 @@ class TabsViewController: UIViewController {
 	let tabManager: TabManager!
 	var tabs: [Tab]!
 
-	private let TabCellIdentifier = "TabCell"
+	private let tabCellIdentifier = "TabCell"
 
 	init(tabManager: TabManager) {
 		self.tabManager = tabManager
@@ -38,7 +38,7 @@ class TabsViewController: UIViewController {
 		tabsView = UITableView()
 		tabsView.dataSource = self
 		tabsView.delegate = self
-		tabsView.registerClass(TabViewCell.self, forCellReuseIdentifier: self.TabCellIdentifier)
+		tabsView.registerClass(TabViewCell.self, forCellReuseIdentifier: self.tabCellIdentifier)
 		tabsView.separatorStyle = .None
 		tabsView.backgroundColor = UIConstants.AppBackgroundColor
 		tabsView.allowsSelection = true
@@ -87,7 +87,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = self.tabsView.dequeueReusableCellWithIdentifier(TabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
+		let cell = self.tabsView.dequeueReusableCellWithIdentifier(tabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
 		let tab = self.tabs[indexPath.row]
 		if tab.title != nil && tab.displayURL != nil {
 			cell.titleLabel.text = tab.title
@@ -115,6 +115,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		let tab = self.tabManager.tabs[indexPath.row] //tabsToDisplay[index]
 		self.tabManager.selectTab(tab)
 		self.navigationController?.popViewControllerAnimated(false)
+
 	}
 }
 
@@ -138,6 +139,7 @@ extension TabsViewController: TabManagerDelegate {
 	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
 		guard let index = tabManager.tabs.indexOf(tab) else { return }
 		self.tabs.insert(tab, atIndex: index)
+		tabManager.selectTab(tab)
 		self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
 	}
 

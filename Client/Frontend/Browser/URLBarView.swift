@@ -80,8 +80,8 @@ protocol URLBarDelegate: class {
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
     
-    // Cliqz: Added delegate methods for new bar buttons
-    func urlBarDidClickSearchHistory()
+    // Cliqz: Added delegate methods for antitracking button
+	func urlBarDidClickAntitracking(urlBar: URLBarView)
 }
 
 class URLBarView: UIView {
@@ -134,7 +134,7 @@ class URLBarView: UIView {
         return locationView
     }()
 
-    private lazy var locationContainer: UIView = {
+    lazy var locationContainer: UIView = {
         let locationContainer = UIView()
         locationContainer.translatesAutoresizingMaskIntoConstraints = false
 
@@ -734,11 +734,6 @@ class URLBarView: UIView {
     func SELtappedScrollToTopArea() {
         delegate?.urlBarDidPressScrollToTop(self)
     }
-	
-	// Cliqz: Added event handler methods for new buttons
-	func SELdidClickHistory() {
-        delegate?.urlBarDidClickSearchHistory()
-	}
 
 }
 
