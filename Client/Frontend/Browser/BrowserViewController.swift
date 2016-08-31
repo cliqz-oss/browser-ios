@@ -1273,6 +1273,11 @@ class BrowserViewController: UIViewController {
                 activities.append(requestDesktopSiteActivity)
             }
         }
+        // Cliqz: Added settings activity to sharing menu
+        let settingsActivity = SettingsActivity() {
+            self.openSettings()
+        }
+        activities.append(settingsActivity)
 
         let helper = ShareExtensionHelper(url: url, tab: tab, activities: activities)
 
