@@ -535,6 +535,9 @@ class SettingsTableViewController: UITableViewController {
         if let setting = section[indexPath.row] where setting.enabled {
             setting.onClick(navigationController)
         }
+        
+        // Cliqz: deselect the selected row after performing the required action
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
     private func calculateStatusCellHeightForSetting(setting: Setting) -> CGFloat {
