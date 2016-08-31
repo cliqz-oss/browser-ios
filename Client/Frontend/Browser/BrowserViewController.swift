@@ -846,8 +846,10 @@ class BrowserViewController: UIViewController {
         if !urlBar.inOverlayMode {
 
             // Cliqz: Added check to test if url is nul due to changing the method parameter to urlBar.url instead of selectedTab.url inside urlBarDidLeaveOverlayMode
-            if url == nil || AboutUtils.isAboutHomeURL(url){
-                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
+            if url == nil || AboutUtils.isAboutHomeURL(url) {
+                // Cliqz: always set showInline to true to show the bottom toolbar
+//                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
+                let showInline = true
                 showHomePanelController(inline: showInline)
             } else {
                 hideHomePanelController()
@@ -1945,6 +1947,42 @@ extension BrowserViewController: TabToolbarDelegate {
             backForwardViewController.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext
             backForwardViewController.backForwardTransitionDelegate = BackForwardListAnimator()
             self.presentViewController(backForwardViewController, animated: true, completion: nil)
+        }
+    }
+    
+    // Cliqz: Add delegate methods for new tab button
+    func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        preserveSearchState()
+        tabManager.addTabAndSelect()
+    }
+    
+    func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        if #available(iOS 9, *) {
+            let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+            
+            // new normal Tab option
+            let newTabTitle = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new tab")
+            let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                self.preserveSearchState()
+                self.tabManager.addTabAndSelect()
+            }
+            actionSheetController.addAction(openNewTabAction)
+            
+            // new forget tab option
+            let newForgetTabTitle = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new forget tab")
+            let openNewForgetTabAction =  UIAlertAction(title: newForgetTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                self.preserveSearchState()
+                self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+            }
+            actionSheetController.addAction(openNewForgetTabAction)
+            
+            
+            // cancel option
+            let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
+            actionSheetController.addAction(cancelAction)
+            
+            // present the action sheet
+            self.presentViewController(actionSheetController, animated: true, completion: nil)
         }
     }
 }

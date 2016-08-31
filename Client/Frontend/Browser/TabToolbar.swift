@@ -15,13 +15,14 @@ protocol TabToolbarProtocol {
     weak var tabToolbarDelegate: TabToolbarDelegate? { get set }
     var shareButton: UIButton { get }
     var bookmarkButton: UIButton { get }
-	// Cliqz: Removed menu button as we don't need it
     var menuButton: UIButton { get }
     var forwardButton: UIButton { get }
     var backButton: UIButton { get }
     var stopReloadButton: UIButton { get }
     var homePageButton: UIButton { get }
     var actionButtons: [UIButton] { get }
+    // Cliqz: Add new Tab button
+    var newTabButton: UIButton { get }
 
     func updateBackStatus(canGoBack: Bool)
     func updateForwardStatus(canGoForward: Bool)
@@ -44,6 +45,10 @@ protocol TabToolbarDelegate: class {
     func tabToolbarDidLongPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton)
     func tabToolbarDidPressShare(tabToolbar: TabToolbarProtocol, button: UIButton)
     func tabToolbarDidPressHomePage(tabToolbar: TabToolbarProtocol, button: UIButton)
+    
+    // Cliqz: Add delegate methods for new tab button
+    func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton)
+    func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton)
 }
 
 @objc
@@ -122,6 +127,15 @@ public class TabToolbarHelper: NSObject {
 //        toolbar.homePageButton.setImage(UIImage(named: "menu-Home-Engaged"), forState: .Highlighted)
         toolbar.homePageButton.accessibilityLabel = NSLocalizedString("Toolbar.OpenHomePage.AccessibilityLabel", value: "Homepage", comment: "Accessibility Label for the tab toolbar Homepage button")
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        
+        // Cliqz: Add new tab button
+        toolbar.newTabButton.setImage(UIImage.templateImageNamed("addTab-Toolbar"), forState: .Normal)
+        toolbar.newTabButton.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
+        let longPressGestureNewTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressNewTab(_:)))
+        toolbar.newTabButton.addGestureRecognizer(longPressGestureNewTabButton)
+        toolbar.newTabButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
+        
 
         if AppConstants.MOZ_MENU {
             toolbar.menuButton.contentMode = UIViewContentMode.Center
@@ -205,6 +219,17 @@ public class TabToolbarHelper: NSObject {
     func updateReloadStatus(isLoading: Bool) {
         loading = isLoading
     }
+    // Cliqz: Add actions for new tab button
+    
+    func SELdidClickNewTab() {
+        toolbar.tabToolbarDelegate?.tabToolbarDidPressNewTab(toolbar, button: toolbar.backButton)
+    }
+    
+    func SELdidLongPressNewTab(recognizer: UILongPressGestureRecognizer) {
+        if recognizer.state == UIGestureRecognizerState.Began {
+            toolbar.tabToolbarDelegate?.tabToolbarDidLongPressNewTab(toolbar, button: toolbar.backButton)
+        }
+    }
 }
 
 class TabToolbar: Toolbar, TabToolbarProtocol {
@@ -218,6 +243,8 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     let stopReloadButton: UIButton
     let homePageButton: UIButton
     let actionButtons: [UIButton]
+    // Cliqz: Add new tab button
+    let newTabButton: UIButton
 
     var helper: TabToolbarHelper?
 
@@ -255,10 +282,16 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         menuButton.accessibilityIdentifier = "TabToolbar.menuButton"
         homePageButton = UIButton()
         menuButton.accessibilityIdentifier = "TabToolbar.homePageButton"
+        // Cliqz: Add new Tab button
+        newTabButton = UIButton()
+        newTabButton.accessibilityIdentifier = "TabToolbar.newTabButton"
+        
         if AppConstants.MOZ_MENU {
             actionButtons = [backButton, forwardButton, menuButton, stopReloadButton, shareButton, homePageButton]
         } else {
-            actionButtons = [backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton]
+            // Cliqz: remove Reload button and add new tab button
+//            actionButtons = [backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton]
+            actionButtons = [backButton, forwardButton, shareButton, bookmarkButton, newTabButton]
         }
 
         super.init(frame: frame)
@@ -268,7 +301,9 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         if AppConstants.MOZ_MENU {
             addButtons(backButton, forwardButton, menuButton, stopReloadButton, shareButton, homePageButton)
         } else {
-            addButtons(backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton)
+            // Cliqz: remove Reload button and add new tab button
+//            addButtons(backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton)
+            addButtons(backButton, forwardButton, shareButton, bookmarkButton, newTabButton)
         }
 
         accessibilityNavigationStyle = .Combined
@@ -344,6 +379,8 @@ extension TabToolbar: AppStateDelegate {
         let isPrivate = Accessors.isPrivate(state)
         applyTheme(isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 
+        // Cliqz: disable home page changes as it movies share button to the end of the button list
+        /*
         let showHomepage = !HomePageAccessors.isButtonInMenu(state)
         homePageButton.removeFromSuperview()
         shareButton.removeFromSuperview()
@@ -354,6 +391,7 @@ extension TabToolbar: AppStateDelegate {
         } else {
             addButtons(shareButton)
         }
+         */
         updateConstraints()
     }
 }

@@ -128,10 +128,10 @@
 "Settings" = "Einstellungen";
 
 /* New tab title */
-"New Tab" = "Neuer Tab";
+"New Tab" = "Neuen Tab öffnen";
 
 /* New private tab title */
-"New Private Tab" = "Neuer Privater Tab";
+"New Private Tab" = "Neuen Vergessen-Tab öffnen";
 
 /* Show images title */
 "Show Images" = "Bilder anzeigen";

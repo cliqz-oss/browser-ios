@@ -203,6 +203,10 @@ class URLBarView: UIView {
     lazy var stopReloadButton: UIButton = { return UIButton() }()
 
     lazy var homePageButton: UIButton = { return UIButton() }()
+    
+    // Cliqz: Add new tab button
+    lazy var newTabButton: UIButton = { return UIButton() }()
+
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed menu button as we don't need it
