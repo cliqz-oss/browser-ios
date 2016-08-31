@@ -2635,6 +2635,12 @@ extension BrowserViewController: WKNavigationDelegate {
                 postLocationChangeNotificationForTab(tab, navigation: navigation)
             }
 
+            // Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
+            AntiPhishingDetector.scanRequest(url) { (isPhishingSite) in
+                if isPhishingSite {
+                    self.showAntiPhishingAlert(url.host!)
+                }
+            }
 
             // Fire the readability check. This is here and not in the pageShow event handler in ReaderMode.js anymore
             // because that event wil not always fire due to unreliable page caching. This will either let us know that

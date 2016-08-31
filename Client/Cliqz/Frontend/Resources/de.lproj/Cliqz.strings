@@ -165,3 +165,15 @@
 
 /* Antitracking UI title for tracked count column */
 "Trackers count title" = "Persönliche Daten";
+
+/* Antiphishing alert title */
+"Warning: deceptive website!" =  "Warnung: betrügerische Website!";
+
+/* Antiphishing alert message */
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ hat den Zugriff auf %1$ blockiert, weil diese Seite als Phishing-Website gemeldet wurde.\nPhishing-Websites geben vor, vertrauenswürdig zu sein, damit du deine Anmeldedaten, dein Passwort oder andere vertrauliche Informationen preisgibst.";
+
+/* Back to safe site buttun title in antiphishing alert title */
+"Back to safe site" = "Zurück zu sicherer";
+
+/* Continue despite warning buttun title in antiphishing alert title */
+"Continue despite warning" = "Trotz der Warnung fortfahren";

@@ -101,5 +101,25 @@ extension BrowserViewController {
 			}
 		}
 	}
+    
+    func showAntiPhishingAlert(domainName: String) {
+        let title = NSLocalizedString("Warning: deceptive website!", tableName: "Cliqz", comment: "Antiphishing alert title")
+        let message = NSLocalizedString("CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information", tableName: "Cliqz", comment: "Antiphishing alert message")
+        let personnalizedMessage = message.replace("%1$", replacement: domainName)
+        
+        let alert = UIAlertController(title: title, message: personnalizedMessage, preferredStyle: .Alert)
+        
+        let backToSafeSiteButtonTitle = NSLocalizedString("Back to safe site", tableName: "Cliqz", comment: "Back to safe site buttun title in antiphishing alert title")
+        alert.addAction(UIAlertAction(title: backToSafeSiteButtonTitle, style: .Default, handler: { (action) in
+            // go back
+            self.goBack()
+        }))
+        
+        let continueDespiteWarningButtonTitle = NSLocalizedString("Continue despite warning", tableName: "Cliqz", comment: "Continue despite warning buttun title in antiphishing alert title")
+        alert.addAction(UIAlertAction(title: continueDespiteWarningButtonTitle, style: .Destructive, handler: nil))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+        
+    }
 
 }
