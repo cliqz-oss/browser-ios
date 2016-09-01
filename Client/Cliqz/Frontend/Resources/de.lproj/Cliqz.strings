@@ -177,3 +177,6 @@
 
 /* Continue despite warning buttun title in antiphishing alert title */
 "Continue despite warning" = "Trotz der Warnung fortfahren";
+
+/* Context menu option for opening a link in a new private tab */
+"Open In New Forget Tab" = "In neuem Forget-Tab öffnen";
