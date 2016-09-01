@@ -446,6 +446,7 @@
 		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
+		4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */; };
 		5002717C41BC7C50F67F1CAD /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50027345B49B967409DDA348 /* StateTests.swift */; };
 		59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A68CCB63E2A565CB03F832 /* SearchViewController.swift */; };
 		59A68B280D62462B85CF57A4 /* HistoryPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A6825233896FC846499289 /* HistoryPanel.swift */; };
@@ -1841,6 +1842,7 @@
 		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
+		4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsPrefs.swift; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
 		59A6825233896FC846499289 /* HistoryPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HistoryPanel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		59A6839879D615FC1C0D71CE /* BookmarksPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksPanel.swift; sourceTree = "<group>"; };
@@ -2564,6 +2566,7 @@
 			isa = PBXGroup;
 			children = (
 				1E79DCA41D4FB2C5006BEB4A /* AppStatus.swift */,
+				4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */,
 			);
 			path = Environment;
 			sourceTree = "<group>";
@@ -5970,6 +5973,7 @@
 				E68E39BE1C46F42000B85F42 /* AppSettingsTableViewController.swift in Sources */,
 				1E79DD1F1D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift in Sources */,
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
+				4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */,
 				1E79DE951D508368006BEB4A /* NSValueTransformer+AWSMTLPredefinedTransformerAdditions.m in Sources */,
 				D39ABDFE1CC6F35F003A319E /* CorePing.swift in Sources */,
 				E640E86A1C73A47C00C5F072 /* PasscodeViews.swift in Sources */,

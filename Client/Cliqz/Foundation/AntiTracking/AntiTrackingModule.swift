@@ -80,7 +80,7 @@ class AntiTrackingModule: NSObject {
         }
         return modifiedRequest
     }
-    
+
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value));")
@@ -88,7 +88,7 @@ class AntiTrackingModule: NSObject {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
         }
     }
-	
+
 	func getTrackersCount(webViewId: Int) -> Int {
 		if let webView = WebViewToUAMapper.idToWebView(webViewId) {
 			return webView.badRequests
@@ -198,7 +198,7 @@ class AntiTrackingModule: NSObject {
             + "}, 100)");
         
         // block ads prefs
-        if isBlockAdsEnabled() {
+        if SettingsPrefs.getAdBlockerPref() {
             context.evaluateScript("setTimeout(function () { "
                 + "CliqzUtils.setPref(\"\(adBlockABTestPrefName)\", true);"
                 + "CliqzUtils.setPref(\"\(adBlockPrefName)\", 1);"
@@ -210,15 +210,6 @@ class AntiTrackingModule: NSObject {
             + "System.import(\"platform/startup\").then(function(startup) { startup.default() });"
             + "}, 100)")
         
-    }
-    
-    private func isBlockAdsEnabled() -> Bool {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let profile = appDelegate.profile,
-            let blockAdsPref = profile.prefs.boolForKey(AdBlockerPrefKey){
-            return blockAdsPref
-        }
-        return false
     }
     
     private func loadJavascriptSource(sourcePath: String) {

@@ -11,10 +11,8 @@ import UIKit
 private let SectionToggle = 0
 private let SectionDetails = 1
 private let HeaderFooterHeight: CGFloat = 44
-private let FairBlockingPrefKey = "fairBlocking"
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 
-public let AdBlockerPrefKey = "blockAds"
 
 class AdBlockerSettingsTableViewController: UITableViewController {
 
@@ -25,18 +23,9 @@ class AdBlockerSettingsTableViewController: UITableViewController {
          NSLocalizedString("Fair Blocking", tableName: "Cliqz", comment: "Fair Blocking toogle title in Block Ads settings")]
     
     private lazy var toggles: [Bool] = {
-        return [self.getToggleVaule(AdBlockerPrefKey, defaultValue: true),
-                self.getToggleVaule(FairBlockingPrefKey, defaultValue: true)]
+		return [SettingsPrefs.getAdBlockerPref(), SettingsPrefs.getFairBlockingPref()]
     }()
-    
-    private func getToggleVaule(preferenceKey: String, defaultValue: Bool) -> Bool {
-        var toggle = defaultValue
-        if let savedToggle = self.profile.prefs.boolForKey(AdBlockerPrefKey) {
-            toggle = savedToggle
-        }
-        return toggle
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -121,12 +110,13 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         
         saveToggles()
         self.tableView.reloadData()
-    }
-    
+	}
+
     private func saveToggles() {
-        self.profile.prefs.setObject(self.toggles[0], forKey: AdBlockerPrefKey)
-        self.profile.prefs.setObject(self.toggles[1], forKey: FairBlockingPrefKey)
-        
-        AntiTrackingModule.sharedInstance.setAdblockEnabled(self.toggles[0])
-    }
+        SettingsPrefs.updateAdBlockerPref(self.toggles[0])
+		SettingsPrefs.updateFairBlockingPref(self.toggles[1])
+		// TODO: The line below should be refactored. It isn't right design to access antitracking module from settings.
+		AntiTrackingModule.sharedInstance.setAdblockEnabled(self.toggles[0])
+	}
+
 }
