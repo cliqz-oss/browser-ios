@@ -8,12 +8,6 @@
 
 import Foundation
 
-protocol DashboardDelegate: class {
-
-	func didSelectURL(url: NSURL)
-	func didSelectQuery(query: String)
-}
-
 class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDelegate {
 	
 	var profile: Profile!
@@ -23,7 +17,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	private var panelSwitchContainerView: UIView!
 	private var panelContainerView: UIView!
 
-	weak var delegate: DashboardDelegate!
+	weak var delegate: BrowserNavigationDelegate!
 
 	private lazy var historyViewController: HistoryViewController = {
 		let historyViewController = HistoryViewController(profile: self.profile)
@@ -100,13 +94,13 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	func didSelectURL(url: NSURL) {
 		self.navigationController?.popViewControllerAnimated(false)
 		self.tabManager.selectedTab?.inSearchMode = false
-		self.delegate?.didSelectURL(url)
+		self.delegate?.navigateToURL(url)
 	}
 
 	func didSelectQuery(query: String) {
 		self.navigationController?.popViewControllerAnimated(false)
 		self.tabManager.selectedTab?.inSearchMode = false
-		self.delegate?.didSelectQuery(query)
+		self.delegate?.navigateToQuery(query)
 	}
 
 	func switchPanel(sender: UISegmentedControl) {

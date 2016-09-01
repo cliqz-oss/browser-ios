@@ -3776,21 +3776,13 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-// Cliqz: combined the two extensions for SearchViewDelegate, RecommendationsViewControllerDelegate, and DashboardDelegate into one extension
-extension BrowserViewController: SearchViewDelegate, RecommendationsViewControllerDelegate, DashboardDelegate {
-    
+// Cliqz: combined the two extensions for SearchViewDelegate and BrowserNavigationDelegate into one extension
+extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
+
     func didSelectURL(url: NSURL, searchQuery: String?) {
         navigateToUrl(url, searchQuery: searchQuery)
     }
-    
-    func didSelectURL(url: NSURL) {
-        finishEditingAndSubmit(url, visitType: .Link)
-    }
-    
-	func didSelectQuery(query: String) {
-        self.urlBar.enterOverlayMode(query, pasted: true)
-    }
-	
+
 	func searchForQuery(query: String) {
 		self.urlBar.enterOverlayMode(query, pasted: true)
 	}
@@ -3802,6 +3794,14 @@ extension BrowserViewController: SearchViewDelegate, RecommendationsViewControll
     func dismissKeyboard() {
         urlBar.resignFirstResponder()
     }
+
+	func navigateToURL(url: NSURL) {
+		finishEditingAndSubmit(url, visitType: .Link)
+	}
+	
+	func navigateToQuery(query: String) {
+		self.urlBar.enterOverlayMode(query, pasted: true)
+	}
 
     private func navigateToUrl(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
@@ -3959,12 +3959,6 @@ extension BrowserViewController {
         if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
             self.initialURL = lastVisitedWebsite
         }
-    }
-    
-    // Cliqz: Added to navigate to url (3D quick home actions)
-    func navigateToURL(url: NSURL) {
-        finishEditingAndSubmit(url, visitType: .Link)
-		self.initialURL = nil
     }
     
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer

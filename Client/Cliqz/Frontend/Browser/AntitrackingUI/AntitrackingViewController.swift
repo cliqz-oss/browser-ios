@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AntitrackingViewController: UIViewController {
+class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private var blurryBackgroundView: UIVisualEffectView!
 	private let titleLabel = UILabel()
@@ -26,6 +26,11 @@ class AntitrackingViewController: UIViewController {
 	private let trackersList: [(String, Int)]!
 
 	private let trackerCellIdentifier = "TabCell"
+
+	private static let antitrackingHelpURL = "https://cliqz.com/whycliqz/anti-tracking"
+	private static let trackerInfoURL = "https://cliqz.com/whycliqz/anti-tracking/tracker#"
+
+	weak var delegate: BrowserNavigationDelegate? = nil
 
 	init(webViewID: Int) {
 		trackedWebViewID = webViewID
@@ -73,9 +78,22 @@ class AntitrackingViewController: UIViewController {
 		trackersTableView.tableFooterView = UIView()
 		trackersTableView.separatorStyle = .None
 		trackersTableView.clipsToBounds = true
+		trackersTableView.allowsSelection = true
 		self.view.addSubview(trackersTableView)
 
+		let title = NSLocalizedString("Help", comment: "Show the SUMO support page from the Support section in the settings")
+		self.helpButton.setTitle(title, forState: .Normal)
+		self.helpButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+		self.helpButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
+		self.helpButton.layer.borderColor = UIColor.blackColor().CGColor
+		self.helpButton.layer.borderWidth = 1.5
+		self.helpButton.layer.cornerRadius = 6
+		self.helpButton.backgroundColor = UIColor.clearColor()
+		self.helpButton.addTarget(self, action: #selector(openHelp), forControlEvents: .TouchUpInside)
+		self.view.addSubview(self.helpButton)
+
 		let tap = UITapGestureRecognizer(target: self, action: #selector(tapRecognizer))
+		tap.cancelsTouchesInView = false
 		self.view.addGestureRecognizer(tap)
 	}
 
@@ -92,16 +110,7 @@ class AntitrackingViewController: UIViewController {
 	@objc func tapRecognizer(sender: UITapGestureRecognizer) {
 		let p = sender.locationInView(self.view)
 		if p.y <= 44 {
-			UIView.animateWithDuration(0.5, animations: {
-				var p = self.view.center
-				p.y -= self.view.frame.size.height
-				self.view.center = p
-				}) { (finished) in
-					if finished {
-						self.view.removeFromSuperview()
-						self.removeFromParentViewController()
-					}
-				}
+			closeAntitrackingView()
 		}
 	}
 
@@ -133,7 +142,33 @@ class AntitrackingViewController: UIViewController {
 			make.left.equalTo(self.view).offset(25)
 			make.right.equalTo(self.view).offset(-25)
 			make.top.equalTo(subtitleLabel.snp_bottom).offset(10)
-			make.bottom.equalTo(self.view)
+			make.bottom.equalTo(self.helpButton.snp_top)
+		}
+		helpButton.snp_makeConstraints { (make) in
+			make.size.equalTo(CGSizeMake(80, 35))
+			make.centerX.equalTo(self.view)
+			make.bottom.equalTo(self.view).offset(-10)
+		}
+	}
+	
+	private func closeAntitrackingView() {
+		UIView.animateWithDuration(0.5, animations: {
+			var p = self.view.center
+			p.y -= self.view.frame.size.height
+			self.view.center = p
+		}) { (finished) in
+			if finished {
+				self.view.removeFromSuperview()
+				self.removeFromParentViewController()
+			}
+		}
+	}
+
+	@objc private func openHelp(sender: UIButton) {
+		let url = NSURL(string: AntitrackingViewController.antitrackingHelpURL)
+		if let u = url {
+			self.delegate?.navigateToURL(u)
+			closeAntitrackingView()
 		}
 	}
 }
@@ -143,7 +178,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.trackersList.count
 	}
-	
+
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.trackersTableView.dequeueReusableCellWithIdentifier(trackerCellIdentifier, forIndexPath: indexPath) as! TrackerViewCell
 		let item = self.trackersList[indexPath.row]
@@ -153,7 +188,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		cell.backgroundColor = UIColor.clearColor()
 		return cell
 	}
-	
+
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		return 30
 	}
@@ -220,4 +255,13 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		return footer
 	}
 
+	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		let item = self.trackersList[indexPath.row]
+		let tracker = item.0.stringByReplacingOccurrencesOfString(" ", withString: "-")
+		let url = NSURL(string: AntitrackingViewController.trackerInfoURL.stringByAppendingString(tracker))
+		if let u = url {
+			self.delegate?.navigateToURL(u)
+			closeAntitrackingView()
+		}
+	}
 }

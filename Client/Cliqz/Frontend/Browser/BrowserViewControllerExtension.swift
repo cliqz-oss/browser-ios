@@ -18,6 +18,7 @@ extension BrowserViewController {
             if let tab = tabManager.selectedTab {
                 tab.url = url
             }
+			self.initialURL = nil
 		}
 	}
     
@@ -91,6 +92,7 @@ extension BrowserViewController {
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
 		if let tab = self.tabManager.selectedTab, webView = tab.webView {
 			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId)
+			antitrackingVC.delegate = self
 			self.addChildViewController(antitrackingVC)
 			var r = self.view.bounds
 			r.origin.y = -r.size.height
