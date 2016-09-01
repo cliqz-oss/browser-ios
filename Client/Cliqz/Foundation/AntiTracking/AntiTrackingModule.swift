@@ -56,6 +56,12 @@ class AntiTrackingModule: NSObject {
         let requestInfo = getRequestInfo(originalRequest)
         if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
             
+            // increment requests count for the webivew that issued this request
+            if let tabId = requestInfo["tabId"] as? Int,
+                let webView = WebViewToUAMapper.idToWebView(tabId) {
+                webView.incrementBadRequestsCount()
+            }
+            
             if let block = blockResponse["cancel"] as? Bool where block == true {
 //                print("[Anti-Tracking] request blocked")
                 return nil
@@ -63,11 +69,6 @@ class AntiTrackingModule: NSObject {
             
             if let redirectUrl = blockResponse["redirectUrl"] as? String {
                 modifiedRequest.URL = NSURL(string: redirectUrl)!
-                
-                if let tabId = requestInfo["tabId"] as? Int,
-                    let webView = WebViewToUAMapper.idToWebView(tabId) {
-                    webView.incrementBadRequestsCount()
-                }
 //                print("[Anti-Tracking] request redirected")
             }
             if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
@@ -117,9 +118,13 @@ class AntiTrackingModule: NSObject {
     private func getCompanyBadRequestsCount(trackers: [String], allTrackers: [String: AnyObject]) -> Int {
         var badRequestsCount = 0
         for tracker in trackers {
-            if let trackerStatistics = allTrackers[tracker] as? [String: Int],
-                let badRequests = trackerStatistics["bad_qs"] {
-                badRequestsCount += badRequests
+            if let trackerStatistics = allTrackers[tracker] as? [String: Int] {
+                if let badRequests = trackerStatistics["bad_qs"] {
+                    badRequestsCount += badRequests
+                }
+                if let adBlockRequests = trackerStatistics["adblock_block"] {
+                    badRequestsCount += adBlockRequests
+                }
             }
         }
         
