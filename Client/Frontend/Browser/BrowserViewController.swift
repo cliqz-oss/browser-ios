@@ -1967,30 +1967,18 @@ extension BrowserViewController: TabToolbarDelegate {
     
     func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
         if #available(iOS 9, *) {
-            let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-            
-            // new normal Tab option
-            let newTabTitle = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new tab")
-            let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+            let newTabHandler = { (action: UIAlertAction) in
                 self.preserveSearchState()
                 self.tabManager.addTabAndSelect()
             }
-            actionSheetController.addAction(openNewTabAction)
             
-            // new forget tab option
-            let newForgetTabTitle = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new forget tab")
-            let openNewForgetTabAction =  UIAlertAction(title: newForgetTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+            let newForgetModeTabHandler = { (action: UIAlertAction) in
                 self.preserveSearchState()
                 self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
             }
-            actionSheetController.addAction(openNewForgetTabAction)
             
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler)
             
-            // cancel option
-            let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
-            actionSheetController.addAction(cancelAction)
-            
-            // present the action sheet
             self.presentViewController(actionSheetController, animated: true, completion: nil)
         }
     }

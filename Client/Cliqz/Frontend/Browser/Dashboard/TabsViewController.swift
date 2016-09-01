@@ -50,6 +50,9 @@ class TabsViewController: UIViewController {
 		self.view.addSubview(addTabButton)
 		addTabButton.addTarget(self, action: #selector(addNewTab), forControlEvents: .TouchUpInside)
 
+        let longPressGestureAddTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabsViewController.SELdidLongPressAddTab(_:)))
+        addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
+
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
 	}
 
@@ -66,7 +69,24 @@ class TabsViewController: UIViewController {
 		self.tabManager.addTabAndSelect()
 		self.navigationController?.popViewControllerAnimated(false)
 	}
-
+    
+    @objc func SELdidLongPressAddTab(recognizer: UILongPressGestureRecognizer) {
+        if #available(iOS 9, *) {
+            let newTabHandler = { (action: UIAlertAction) in
+                self.tabManager.addTabAndSelect()
+                return
+            }
+            
+            let newForgetModeTabHandler = { (action: UIAlertAction) in
+                self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+                return
+            }
+            
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler)
+            
+            self.presentViewController(actionSheetController, animated: true, completion: nil)
+        }
+    }
 	private func setupConstraints() {
 		tabsView.snp_makeConstraints { make in
 			make.left.bottom.right.equalTo(self.view)
