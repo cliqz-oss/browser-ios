@@ -110,8 +110,7 @@ class AntiTrackingModule: NSObject {
 				}
             }
         }
-        
-        return antiTrackingStatistics
+        return antiTrackingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
 
     //MARK: - Private Helpers
