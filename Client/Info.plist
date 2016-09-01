@@ -134,5 +134,7 @@
 			<string></string>
 		</dict>
 	</array>
+	<key>HostVersion</key>
+	<string>5.0</string>
 </dict>
 </plist>

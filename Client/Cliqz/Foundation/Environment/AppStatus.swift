@@ -24,6 +24,34 @@ class AppStatus {
     lazy var isRelease: Bool  = self.isReleasedVersion()
     lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
     
+    lazy var extensionVersion: String = {
+        
+        if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "Extension/build/mobile/search"),
+            let jsonData = try? NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe) as NSData,
+            let jsonResult: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+            
+                if let extensionVersion : String = jsonResult["EXTENSION_VERSION"] as? String {
+                    return extensionVersion
+                }
+        }
+        return ""
+    }()
+    
+    lazy var distVersion: String = {
+        let versionDescription = self.getVersionDescriptor()
+        return self.getAppVersion(versionDescription)
+    }()
+    
+    lazy var hostVersion: String = {
+        // Firefox version
+        if let path = NSBundle.mainBundle().pathForResource("Info", ofType: "plist"),
+            let infoDict = NSDictionary(contentsOfFile: path),
+            let hostVersion = infoDict["HostVersion"] as? String {
+                return hostVersion
+        }
+        return ""
+    }()
+    
     private func isReleasedVersion() -> Bool {
 //        let infoDict = NSBundle.mainBundle().infoDictionary;
 //        if let isRelease = infoDict!["Release"] {
@@ -36,11 +64,7 @@ class AppStatus {
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
             return "\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
     }
-
-	func getCurrentAppVersion() -> String {
-        return getAppVersion(getVersionDescriptor())
-    }
-
+    
     func batteryLevel() -> Int {
         return Int(UIDevice.currentDevice().batteryLevel * 100)
     }
@@ -165,8 +189,7 @@ class AppStatus {
     
     //MARK: application life cycle event
     private func logLifeCycleEvent(action: String) {
-        let version = getCurrentAppVersion()
-        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, version))
+        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, extensionVersion, distVersion, hostVersion))
     }
     
     //MARK: application usage event
@@ -201,7 +224,9 @@ class AppStatus {
             self.lastEnvironmentEventDate = NSDate()
             let device: String = UIDevice.currentDevice().deviceType
             let language = self.getAppLanguage()
-            let version = self.getCurrentAppVersion()
+            let extensionVersion = self.extensionVersion
+            let distVersion = self.distVersion
+            let hostVersion = self.hostVersion
             let osVersion = UIDevice.currentDevice().systemVersion
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
             let historyUrls = profile.history.count()
@@ -209,7 +234,7 @@ class AppStatus {
             //TODO `prefs`
             let prefs = [String: AnyObject]()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }

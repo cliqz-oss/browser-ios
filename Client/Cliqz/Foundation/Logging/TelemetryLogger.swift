@@ -9,11 +9,11 @@
 import Foundation
 
 public enum TelemetryLogEventType {
-    case LifeCycle          (String, String)
+    case LifeCycle          (String, String, String, String)
     case ApplicationUsage   (String, String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
+    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
     case UrlFocusBlur       (String, String)
     case LayerChange        (String, String)
     case Onboarding         (String, Int)
@@ -87,8 +87,8 @@ class TelemetryLogger : EventsLogger {
 
             switch (eventType) {
                 
-            case .LifeCycle(let action, let version):
-                event = self.createLifeCycleEvent(action, version: version)
+            case .LifeCycle(let action, let extensionVersion, let distVersion, let hostVersion):
+                event = self.createLifeCycleEvent(action, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion)
                 
             case .ApplicationUsage(let action, let network, let context, let battery, let memory, let startupType, let startupTime, let timeUsed):
                 event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, timeUsed: timeUsed)
@@ -101,8 +101,8 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is query interaction
                 disableSendingEvent = true
                 
-            case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
-                event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
+            case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
+                event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
                 
             case .UrlFocusBlur(let action, let context):
                 event = self.createUrlFocusBlurEvent(action, context: context)
@@ -181,12 +181,15 @@ class TelemetryLogger : EventsLogger {
     }
 
     
-    private func createLifeCycleEvent(action: String, version: String) -> [String: AnyObject]{
+    private func createLifeCycleEvent(action: String, extensionVersion: String, distVersion: String, hostVersion: String) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
         event["action"] = action
-        event["version"] = version
+        event["version"] = extensionVersion
+        event["version_dist"] = distVersion
+        event["version_host"] = hostVersion
+        
         
         return event
     }
@@ -214,13 +217,15 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, version: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
+    private func createEnvironmentEvent(device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
         event["device"] = device
         event["language"] = language
-        event["version"] = version
+        event["version"] = extensionVersion
+        event["version_dist"] = distVersion
+        event["version_host"] = hostVersion
         event["os_version"] = osVersion
         event["defaultSearchEngine"] = defaultSearchEngine
         event["historyUrls"] = historyUrls

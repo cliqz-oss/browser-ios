@@ -99,7 +99,7 @@ class SendCliqzFeedbackSetting: SendFeedbackSetting, MFMailComposeViewController
             emailViewController.setToRecipients(["feedback@cliqz.com"])
             emailViewController.mailComposeDelegate = self
             let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
-            emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType), isHTML: false)
+            emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.distVersion, UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType), isHTML: false)
             navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
         } else {
             let alertController = UIAlertController(
