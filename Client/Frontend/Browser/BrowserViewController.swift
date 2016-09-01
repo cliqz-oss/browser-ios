@@ -1958,7 +1958,11 @@ extension BrowserViewController: TabToolbarDelegate {
     // Cliqz: Add delegate methods for new tab button
     func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
         preserveSearchState()
-        tabManager.addTabAndSelect()
+        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
+            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
+        } else {
+            tabManager.addTabAndSelect()
+        }
     }
     
     func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
