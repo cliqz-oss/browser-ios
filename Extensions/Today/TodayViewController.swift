@@ -96,11 +96,17 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
 
     private var scheme: String {
+        
+#if CLIQZ
+        // Cliqz: return correct scheme so that today's widget redirect to Cliqz app not firefox app
+        return "cliqz"
+#else
         guard let string = NSBundle.mainBundle().objectForInfoDictionaryKey("MozInternalURLScheme") as? String else {
             // Something went wrong/weird, but we should fallback to the public one.
             return "firefox"
         }
         return string
+#endif
     }
 
     override func viewDidLoad() {
@@ -154,6 +160,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             }
             make.height.equalTo(buttonSpacer.snp_height).offset(extraHeight).priorityHigh()
         }
+        
+        #if CLIQZ
+            // Cliqz: Hide private tab option from today's widget
+            newPrivateTabButton.hidden = true
+        #endif
     }
 
     override func viewDidLayoutSubviews() {
@@ -194,7 +205,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     // MARK: Button behaviour
 
     @objc func onPressNewTab(view: UIView) {
-        openContainingApp("cliqz://")
+        openContainingApp("")
     }
 
     @objc func onPressNewPrivateTab(view: UIView) {

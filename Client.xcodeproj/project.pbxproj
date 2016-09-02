@@ -7223,6 +7223,7 @@
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "3680cee9-329b-4bef-afb7-738834e1e251";
@@ -7246,6 +7247,7 @@
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
@@ -7269,6 +7271,7 @@
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_BETA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 			};
@@ -7291,6 +7294,7 @@
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_NIGHTLY -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 			};
@@ -7313,6 +7317,7 @@
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_AURORA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 			};
