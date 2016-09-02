@@ -105,6 +105,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: UIDeviceOrientationDidChangeNotification, object: UIDevice.currentDevice())
 
     }
+
     func fixViewport() {
         if #available(iOS 9.0, *) {
             return
@@ -132,8 +133,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		}
 
 		javaScriptBridge.setDefaultSearchEngine()
-		self.updateContentBlockingPreferences()
-    }
+		self.updateExtensionPreferences()
+	}
 
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -193,7 +194,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     func updatePrivateMode(privateMode: Bool) {
         if privateMode != self.privateMode {
             self.privateMode = privateMode
-            updatePrivateModePreferences()
+			self.updateExtensionPreferences()
         }
     }
     
@@ -274,18 +275,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.spinnerView.stopAnimating()
 	}
 	
-	private func updateContentBlockingPreferences() {
+	private func updateExtensionPreferences() {
 		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
-		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
+		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
+		              "incognito" : self.privateMode]
+		javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
 	}
-    
-    private func updatePrivateModePreferences() {
-        let params = ["incognito" : self.privateMode]
-        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
-    }
-    
-    
+
     //MARK: - Reset TopSites
     func showBlockedTopSites(notification: NSNotification) {
         javaScriptBridge.callJSMethod("jsAPI.restoreBlockedTopSites", parameter: nil, completionHandler: nil)
@@ -416,6 +412,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 	
 	func isReady() {
 		javaScriptBridge.setDefaultSearchEngine()
+		self.updateExtensionPreferences()
 	}
 
 }
