@@ -130,7 +130,7 @@ public class TabToolbarHelper: NSObject {
         
         
         // Cliqz: Add new tab button
-        toolbar.newTabButton.setImage(UIImage.templateImageNamed("addTab-Toolbar"), forState: .Normal)
+        toolbar.newTabButton.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
         toolbar.newTabButton.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
         let longPressGestureNewTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressNewTab(_:)))
         toolbar.newTabButton.addGestureRecognizer(longPressGestureNewTabButton)
