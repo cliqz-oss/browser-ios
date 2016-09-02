@@ -11,6 +11,7 @@ import Foundation
 protocol BrowserNavigationDelegate: class {
 
 	func navigateToURL(url: NSURL)
+	func navigateToURLInNewTab(url: NSURL)
 	func navigateToQuery(query: String)
 
 }

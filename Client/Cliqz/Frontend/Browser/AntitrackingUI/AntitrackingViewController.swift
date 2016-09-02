@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import Shared
 
 class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private var blurryBackgroundView: UIVisualEffectView!
+	private var backgroundView: UIView!
 	private let titleLabel = UILabel()
 	private let titleIcon = UIImageView()
 	private let trackersCountLabel = UILabel()
@@ -23,7 +25,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	private let antitrackingGreen = UIColor(rgb: 0x2CBA84)
 
 	private let trackedWebViewID: Int!
-	private let trackersList: [(String, Int)]!
+	private var trackersList: [(String, Int)]!
 
 	private let trackerCellIdentifier = "TabCell"
 
@@ -32,9 +34,12 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 
 	weak var delegate: BrowserNavigationDelegate? = nil
 
-	init(webViewID: Int) {
+	private let isPrivateMode: Bool!
+
+	init(webViewID: Int, privateMode: Bool = false) {
 		trackedWebViewID = webViewID
 		trackersList = AntiTrackingModule.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
+		isPrivateMode = privateMode
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -42,12 +47,19 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationBadRequestDetected, object: nil)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
 		let blurEffect = UIBlurEffect(style: .Light)
 		self.blurryBackgroundView = UIVisualEffectView(effect: blurEffect)
 		self.view.insertSubview(blurryBackgroundView, atIndex: 0)
+		self.backgroundView = UIView()
+		self.backgroundView.backgroundColor = self.backgroundColor().colorWithAlphaComponent(0.8)
+		self.view.addSubview(self.backgroundView)
 
 		titleLabel.textColor = antitrackingGreen
 		titleLabel.font = UIFont.systemFontOfSize(22)
@@ -60,7 +72,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		titleIcon.tintColor = antitrackingGreen
 		self.view.addSubview(titleIcon)
 
-		trackersCountLabel.textColor = UIColor.blackColor()
+		trackersCountLabel.textColor = self.textColor()
 		trackersCountLabel.font = UIFont.systemFontOfSize(30)
 		self.view.addSubview(trackersCountLabel)
 		trackersCountLabel.textAlignment = .Center
@@ -83,9 +95,9 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 
 		let title = NSLocalizedString("Help", comment: "Show the SUMO support page from the Support section in the settings")
 		self.helpButton.setTitle(title, forState: .Normal)
-		self.helpButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+		self.helpButton.setTitleColor(self.textColor(), forState: .Normal)
 		self.helpButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
-		self.helpButton.layer.borderColor = UIColor.blackColor().CGColor
+		self.helpButton.layer.borderColor = self.textColor().CGColor
 		self.helpButton.layer.borderWidth = 1.5
 		self.helpButton.layer.cornerRadius = 6
 		self.helpButton.backgroundColor = UIColor.clearColor()
@@ -116,6 +128,10 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 
 	private func setupConstraints() {
 		blurryBackgroundView.snp_makeConstraints { (make) in
+			make.left.right.bottom.equalTo(self.view)
+			make.top.equalTo(self.view).offset(44)
+		}
+		backgroundView.snp_makeConstraints { (make) in
 			make.left.right.bottom.equalTo(self.view)
 			make.top.equalTo(self.view).offset(44)
 		}
@@ -150,7 +166,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 			make.bottom.equalTo(self.view).offset(-10)
 		}
 	}
-	
+
 	private func closeAntitrackingView() {
 		UIView.animateWithDuration(0.5, animations: {
 			var p = self.view.center
@@ -167,9 +183,36 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	@objc private func openHelp(sender: UIButton) {
 		let url = NSURL(string: AntitrackingViewController.antitrackingHelpURL)
 		if let u = url {
-			self.delegate?.navigateToURL(u)
+			self.delegate?.navigateToURLInNewTab(u)
 			closeAntitrackingView()
 		}
+	}
+
+	@objc private func SELBadRequestDetected(notification: NSNotification) {
+		dispatch_async(dispatch_get_main_queue()) {
+			self.trackersList = AntiTrackingModule.sharedInstance.getAntiTrackingStatistics(self.trackedWebViewID)
+			self.updateView()
+		}
+	}
+
+	private func updateView() {
+		self.trackersCountLabel.text = "\(AntiTrackingModule.sharedInstance.getTrackersCount(self.trackedWebViewID))"
+		self.trackersTableView.reloadData()
+	}
+
+	private func textColor() -> UIColor {
+		if self.isPrivateMode == true {
+			return UIConstants.PrivateModeTextColor
+		}
+		return UIConstants.NormalModeTextColor
+	}
+	
+	private func backgroundColor() -> UIColor {
+		if self.isPrivateMode == true {
+//			return UIConstants.PrivateModeBackgroundColor
+			return UIColor.blackColor()
+		}
+		return UIConstants.AppBackgroundColor
 	}
 }
 
@@ -181,6 +224,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.trackersTableView.dequeueReusableCellWithIdentifier(trackerCellIdentifier, forIndexPath: indexPath) as! TrackerViewCell
+		cell.isPrivateMode = self.isPrivateMode
 		let item = self.trackersList[indexPath.row]
 		cell.nameLabel.text = item.0
 		cell.countLabel.text = "\(item.1)"
@@ -198,28 +242,28 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 	}
 	
 	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		return 15
+		return 3
 	}
 
 	func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let header = UIView()
 		header.backgroundColor = UIColor.clearColor()
 		let underline = UIView()
-		underline.backgroundColor = UIColor.blackColor()
+		underline.backgroundColor = self.textColor()
 		header.addSubview(underline)
 
 		let nameTitle = UILabel()
 		nameTitle.text = NSLocalizedString("Companies title", tableName: "Cliqz", comment: "Antitracking UI title for companies column")
 
 		nameTitle.font = UIFont.systemFontOfSize(12)
-		nameTitle.textColor = UIColor.blackColor()
+		nameTitle.textColor = self.textColor()
 		nameTitle.textAlignment = .Left
 		header.addSubview(nameTitle)
 
 		let countTitle = UILabel()
 		countTitle.text = NSLocalizedString("Trackers count title", tableName: "Cliqz", comment: "Antitracking UI title for tracked count column")
 		countTitle.font = UIFont.systemFontOfSize(12)
-		countTitle.textColor = UIColor.blackColor()
+		countTitle.textColor = self.textColor()
 		countTitle.textAlignment = .Right
 		header.addSubview(countTitle)
 
@@ -236,7 +280,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		countTitle.snp_makeConstraints { (make) in
 			make.right.top.equalTo(header)
 			make.height.equalTo(20)
-			make.width.equalTo(100)
+			make.width.equalTo(header).multipliedBy(0.5)
 		}
 
 		return header
@@ -246,7 +290,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		let footer = UIView()
 		footer.backgroundColor = UIColor.clearColor()
 		let underline = UIView()
-		underline.backgroundColor = UIColor.blackColor()
+		underline.backgroundColor = self.textColor()
 		footer.addSubview(underline)
 		underline.snp_makeConstraints { (make) in
 			make.left.right.bottom.equalTo(footer)
@@ -260,7 +304,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		let tracker = item.0.stringByReplacingOccurrencesOfString(" ", withString: "-")
 		let url = NSURL(string: AntitrackingViewController.trackerInfoURL.stringByAppendingString(tracker))
 		if let u = url {
-			self.delegate?.navigateToURL(u)
+			self.delegate?.navigateToURLInNewTab(u)
 			closeAntitrackingView()
 		}
 	}

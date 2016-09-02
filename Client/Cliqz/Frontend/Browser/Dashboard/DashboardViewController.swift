@@ -17,6 +17,8 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	private var panelSwitchContainerView: UIView!
 	private var panelContainerView: UIView!
 
+	private let dashboardThemeColor = UIColor(rgb: 0x78C9D9)
+
 	weak var delegate: BrowserNavigationDelegate!
 
 	private lazy var historyViewController: HistoryViewController = {
@@ -57,7 +59,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
 
 		panelSwitchControl = UISegmentedControl(items: ["Tabs", history, fav])
-		panelSwitchControl.tintColor = UIColor(rgb: 0x78C9D9)
+		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), forControlEvents: .ValueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
 		self.panelSwitchControl.selectedSegmentIndex = 0
@@ -70,6 +72,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:  NSLocalizedString("Settings", tableName: "Cliqz", comment: "Setting menu title"), style: .Plain, target: self, action: #selector(openSettings))
+		self.navigationItem.rightBarButtonItem?.tintColor = self.dashboardThemeColor
 		view.backgroundColor = UIColor.whiteColor()
 	}
 

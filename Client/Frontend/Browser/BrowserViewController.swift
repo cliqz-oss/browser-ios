@@ -450,7 +450,6 @@ class BrowserViewController: UIViewController {
         }
 		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
-        
     }
 
     private func setupConstraints() {
@@ -1146,7 +1145,7 @@ class BrowserViewController: UIViewController {
     /// Call this whenever the page URL changes.
     private func updateURLBarDisplayURL(tab: Tab) {
         urlBar.currentURL = tab.displayURL
-
+		urlBar.updateTrackersCount((tab.webView?.badRequests)!)
         let isPage = tab.displayURL?.isWebPage() ?? false
         navigationToolbar.updatePageStatus(isWebPage: isPage)
 
@@ -3796,6 +3795,10 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 	
 	func navigateToQuery(query: String) {
 		self.urlBar.enterOverlayMode(query, pasted: true)
+	}
+	
+	func navigateToURLInNewTab(url: NSURL) {
+		self.openURLInNewTab(url)
 	}
 
     private func navigateToUrl(url: NSURL, searchQuery: String?) {

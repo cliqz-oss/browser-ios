@@ -14,6 +14,7 @@ class CliqzURLBarView: URLBarView {
 	private lazy var antitrackingButton: UIButton = {
 		let button = UIButton(type: .Custom)
 		button.setTitle("0", forState: .Normal)
+		button.titleLabel?.font = UIFont.systemFontOfSize(12)
 		button.backgroundColor = UIColor(rgb: 0x2CBA84)
 		return button
 	}()
@@ -37,7 +38,7 @@ class CliqzURLBarView: URLBarView {
 			}
 			self.antitrackingButton.hidden = false
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
-				make.size.equalTo(CGSizeMake(40, CGFloat(URLBarViewUX.LocationHeight)))
+				make.size.equalTo(CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight)))
 			})
 		} else {
 			self.antitrackingButton.hidden = true

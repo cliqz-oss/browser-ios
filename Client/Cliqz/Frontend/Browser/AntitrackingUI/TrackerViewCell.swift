@@ -15,19 +15,28 @@ class TrackerViewCell: UITableViewCell {
 	let nameLabel = UILabel()
 	let countLabel = UILabel()
 
+	var isPrivateMode = false {
+		didSet {
+			iconImageView.tintColor = self.textColor()
+			nameLabel.textColor = self.textColor()
+			countLabel.textColor = self.textColor()
+			self.setNeedsDisplay()
+		}
+	}
+
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.contentView.backgroundColor = UIColor.clearColor()
 		iconImageView.backgroundColor = UIColor.clearColor()
 		let img = UIImage(named: "trackerInfo")
 		iconImageView.image = img?.imageWithRenderingMode(.AlwaysTemplate)
-		iconImageView.tintColor = UIColor.blackColor()
+		iconImageView.tintColor = self.textColor()
 		self.contentView.addSubview(iconImageView)
 		nameLabel.backgroundColor = UIColor.clearColor()
-		nameLabel.textColor = UIColor.blackColor()
+		nameLabel.textColor = self.textColor()
 		self.contentView.addSubview(nameLabel)
 		countLabel.backgroundColor = UIColor.clearColor()
-		countLabel.textColor = UIColor.blackColor()
+		countLabel.textColor = self.textColor()
 		countLabel.textAlignment = .Right
 		self.contentView.addSubview(countLabel)
 	}
@@ -55,7 +64,14 @@ class TrackerViewCell: UITableViewCell {
 		self.countLabel.snp_makeConstraints { (make) in
 			make.left.equalTo(self.nameLabel.snp_right)
 			make.width.equalTo(20)
-			make.right.equalTo(self.contentView)
+			make.right.equalTo(self.contentView).offset(-3)
 		}
+	}
+
+	private func textColor() -> UIColor {
+		if self.isPrivateMode == true {
+			return UIConstants.PrivateModeTextColor
+		}
+		return UIConstants.NormalModeTextColor
 	}
 }

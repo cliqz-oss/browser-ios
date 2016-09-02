@@ -91,7 +91,7 @@ extension BrowserViewController {
 
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
 		if let tab = self.tabManager.selectedTab, webView = tab.webView {
-			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId)
+			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId, privateMode: tab.isPrivate)
 			antitrackingVC.delegate = self
 			self.addChildViewController(antitrackingVC)
 			var r = self.view.bounds

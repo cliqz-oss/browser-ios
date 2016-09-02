@@ -36,7 +36,7 @@ struct URLBarViewUX {
         theme.borderColor = UIConstants.PrivateModeLocationBorderColor
         theme.activeBorderColor = UIConstants.PrivateModePurple
         theme.tintColor = UIConstants.PrivateModePurple
-        theme.textColor = UIColor.whiteColor()
+        theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
@@ -48,7 +48,7 @@ struct URLBarViewUX {
         theme.borderColor = UIColor.clearColor()
         theme.activeBorderColor = UIColor.clearColor()
         theme.tintColor = ProgressTintColor
-        theme.textColor = UIColor.blackColor()
+        theme.textColor = UIConstants.NormalModeTextColor //UIColor.blackColor()
         // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
         theme.buttonTintColor = UIColor.blackColor()
         // Cliqz: Set URLBar backgroundColor because of requirements
