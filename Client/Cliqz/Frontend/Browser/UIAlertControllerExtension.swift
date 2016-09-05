@@ -14,12 +14,12 @@ extension UIAlertController {
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
         
         // new normal Tab option
-        let newTabTitle = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new tab")
+        let newTabTitle = NSLocalizedString("Open New Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new tab")
         let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default, handler: newTabHandler)
         actionSheetController.addAction(openNewTabAction)
         
         // new forget tab option
-        let newForgetTabTitle = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new forget tab")
+        let newForgetTabTitle = NSLocalizedString("Open New Forget Tab", tableName: "Cliqz", comment: "Action sheet item for opening a new forget tab")
         let openNewForgetTabAction =  UIAlertAction(title: newForgetTabTitle, style: UIAlertActionStyle.Default, handler: newForgetModeTabHandler)
         actionSheetController.addAction(openNewForgetTabAction)
         

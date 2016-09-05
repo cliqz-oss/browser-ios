@@ -129,10 +129,16 @@
 "Settings" = "Settings";
 
 /* New tab title */
-"New Tab" = "Open New Tab";
+"New Tab" = "New Tab";
 
 /* New private tab title */
-"New Private Tab" = "Open New Forget Tab";
+"New Private Tab" = "New Forget Tab";
+
+/* Open new tab title */
+"Open New Tab" = "Open New Tab";
+
+/* Open new forget mode tab title */
+"Open New Forget Tab" = "Open New Forget Tab";
 
 /* Show images title */
 "Show Images" = "Show Images";
