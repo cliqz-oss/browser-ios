@@ -28,11 +28,13 @@ class LoginsHelper: TabHelper {
     required init(tab: Tab, profile: Profile) {
         self.tab = tab
         self.profile = profile
-
+#if !CLIQZ
+        // Cliqz: disable adding login helper user script as it is not used
         if let path = NSBundle.mainBundle().pathForResource("LoginsHelper", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
             tab.webView!.configuration.userContentController.addUserScript(userScript)
         }
+#endif
     }
 
     func scriptMessageHandlerName() -> String? {

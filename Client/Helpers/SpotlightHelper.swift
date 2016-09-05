@@ -32,6 +32,8 @@ class SpotlightHelper: NSObject {
     init(tab: Tab, openURL: ((url: NSURL) -> ())? = nil) {
         createNewTab = openURL
         self.tab = tab
+#if !CLIQZ
+        // Cliqz: disable adding spot light helper user script as it is not used
 
         if let path = NSBundle.mainBundle().pathForResource("SpotlightHelper", ofType: "js") {
             if let source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
@@ -39,6 +41,7 @@ class SpotlightHelper: NSObject {
                 tab.webView!.configuration.userContentController.addUserScript(userScript)
             }
         }
+#endif
     }
 
     deinit {

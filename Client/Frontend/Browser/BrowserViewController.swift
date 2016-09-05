@@ -2041,6 +2041,8 @@ extension BrowserViewController: TabDelegate {
         let favicons = FaviconManager(tab: tab, profile: profile)
         tab.addHelper(favicons, name: FaviconManager.name())
 
+#if !CLIQZ
+        // Cliqz: disable adding login and context menu helpers as ther are not used
         // only add the logins helper if the tab is not a private browsing tab
         if !tab.isPrivate {
             let logins = LoginsHelper(tab: tab, profile: profile)
@@ -2050,7 +2052,7 @@ extension BrowserViewController: TabDelegate {
         let contextMenuHelper = ContextMenuHelper(tab: tab)
         contextMenuHelper.delegate = self
         tab.addHelper(contextMenuHelper, name: ContextMenuHelper.name())
-
+#endif
         let errorHelper = ErrorPageHelper()
         tab.addHelper(errorHelper, name: ErrorPageHelper.name())
 
@@ -2063,10 +2065,11 @@ extension BrowserViewController: TabDelegate {
         let findInPageHelper = FindInPageHelper(tab: tab)
         findInPageHelper.delegate = self
         tab.addHelper(findInPageHelper, name: FindInPageHelper.name())
-
+#if !CLIQZ
+        // Cliqz: disable adding hide image helper as it is not used
         let noImageModeHelper = NoImageModeHelper(tab: tab)
         tab.addHelper(noImageModeHelper, name: NoImageModeHelper.name())
-        
+#endif
         let printHelper = PrintHelper(tab: tab)
         tab.addHelper(printHelper, name: PrintHelper.name())
 
@@ -2076,12 +2079,14 @@ extension BrowserViewController: TabDelegate {
         let openURL = {(url: NSURL) -> Void in
             self.switchToTabForURLOrOpen(url)
         }
+#if !CLIQZ
+        // Cliqz: disable adding night mode and spot light helpers as ther are not used
         let nightModeHelper = NightModeHelper(tab: tab)
         tab.addHelper(nightModeHelper, name: NightModeHelper.name())
 
         let spotlightHelper = SpotlightHelper(tab: tab, openURL: openURL)
         tab.addHelper(spotlightHelper, name: SpotlightHelper.name())
-
+#endif
         tab.addHelper(LocalRequestHelper(), name: LocalRequestHelper.name())
         // Cliqz: Add custom user scripts
         addCustomUserScripts(tab)
