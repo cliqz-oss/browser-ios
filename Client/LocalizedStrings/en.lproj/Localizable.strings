@@ -567,3 +567,24 @@
 /* Relative date for yesterday. */
 "yesterday" = "yesterday";
 
+/* Label for button to perform advanced actions on the error page. */
+"ErrorPages.Advanced.Button" = "Advanced";
+
+/* Warning text when clicking the Advanced button on error pages. */
+"ErrorPages.AdvancedWarning1.Text" = "Warning: we can't confirm your connection to this website is secure.";
+
+/* Additional warning text when clicking the Advanced button on error pages. */
+"ErrorPages.AdvancedWarning2.Text" = "It may be a misconfiguration or tampering by an attacker. Proceed if you accept the potential risk.";
+
+/* Warning text on the certificate error page. */
+"ErrorPages.CertWarning.Description" = "The owner of %@ has configured their website improperly. To protect your information from being stolen, CLIQZ has not connected to this website.";
+
+/* Title on the certificate error page. */
+"ErrorPages.CertWarning.Title" = "This Connection is Untrusted";
+
+/* Label for button to go back from the error page. */
+"ErrorPages.GoBack.Button" = "Go Back";
+
+/* Button label to temporarily continue to the site from the certificate error page. */
+"ErrorPages.VisitOnce.Button" = "Visit site anyway";
+

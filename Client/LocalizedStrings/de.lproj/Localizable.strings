@@ -567,3 +567,24 @@
 /* Relative date for yesterday. */
 "yesterday" = "gestern";
 
+
+/* Label for button to perform advanced actions on the error page. */
+"ErrorPages.Advanced.Button" = "Erweitert";
+
+/* Warning text when clicking the Advanced button on error pages. */
+"ErrorPages.AdvancedWarning1.Text" = "Warnung: Cliqz kann nicht sicherstellen, dass die Verbindung zu dieser Webseite sicher ist.";
+
+/* Additional warning text when clicking the Advanced button on error pages. */
+"ErrorPages.AdvancedWarning2.Text" = "Der Grund kann eine Fehlkonfiguration der Webseite oder die Manipulation eines Angreifers sein. Fahre nur fort, wenn du das potentielle Risikos akzeptierst.";
+
+/* Warning text on the certificate error page. */
+"ErrorPages.CertWarning.Description" = "Der Inhaber von %@ hat die Webseite nicht richtig konfiguriert. Cliqz hat keine Verbindung mit dieser Webseite aufgebaut um deine Informationen vor Diebstahl zu schützen.";
+
+/* Title on the certificate error page. */
+"ErrorPages.CertWarning.Title" = "Diese Verbindung ist nicht sicher";
+
+/* Label for button to go back from the error page. */
+"ErrorPages.GoBack.Button" = "Zurück";
+
+/* Button label to temporarily continue to the site from the certificate error page. */
+"ErrorPages.VisitOnce.Button" = "Webseite trotzdem besuchen";
