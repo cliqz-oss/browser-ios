@@ -3220,11 +3220,7 @@ extension BrowserViewController: IntroViewControllerDelegate {
     }
 
     func introViewControllerDidFinish(introViewController: IntroViewController) {
-        introViewController.dismissViewControllerAnimated(true) { finished in
-            if self.navigationController?.viewControllers.count > 1 {
-                self.navigationController?.popToRootViewControllerAnimated(true)
-            }
-        }
+        introViewController.dismissViewControllerAnimated(true, completion: nil)
         // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
         if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
             self.urlBar.enterOverlayMode("", pasted: false)
