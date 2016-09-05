@@ -30,10 +30,11 @@ class ClearPrivateDataTableViewController: UITableViewController {
         return [
             (HistoryClearable(profile: self.profile), true),
             // Cliqz: Added option to clear bookmarks
-            (BookmarksClearable(profile: self.profile), true),
-            (CacheClearable(tabManager: self.tabManager), true),
-            (CookiesClearable(tabManager: self.tabManager), true),
-            (SiteDataClearable(tabManager: self.tabManager), true),
+            (BookmarksClearable(profile: self.profile), false),
+            // Cliqz: changed the default value of clearables to false
+            (CacheClearable(tabManager: self.tabManager), false),
+            (CookiesClearable(tabManager: self.tabManager), false),
+            (SiteDataClearable(tabManager: self.tabManager), false),
         ]
     }()
     
