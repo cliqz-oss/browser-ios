@@ -22,7 +22,7 @@ class SettingsPrefs {
 	}
 	
 	class func getFairBlockingPref() -> Bool {
-		let defaultValue = false
+		let defaultValue = true
 		if let FairBlockingPref = SettingsPrefs.getBoolPref(FairBlockingPrefKey) {
 			return FairBlockingPref
 		}

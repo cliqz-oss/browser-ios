@@ -54,9 +54,11 @@ class AdBlockerSettingsTableViewController: UITableViewController {
             if self.toggles[0] == false && indexPath.item == 1 {
                 cell.userInteractionEnabled = false
                 cell.textLabel?.textColor = UIColor.grayColor()
+                control.enabled = false
             } else {
                 cell.userInteractionEnabled = true
                 cell.textLabel?.textColor = UIColor.blackColor()
+                control.enabled = true
             }
             
         } else {
@@ -104,10 +106,6 @@ class AdBlockerSettingsTableViewController: UITableViewController {
     @objc func switchValueChanged(toggle: UISwitch) {
         
         self.toggles[toggle.tag] = toggle.on
-        if toggle.on == false && toggle.tag == 0 {
-            self.toggles[1] = false
-        }
-        
         saveToggles()
         self.tableView.reloadData()
 	}
