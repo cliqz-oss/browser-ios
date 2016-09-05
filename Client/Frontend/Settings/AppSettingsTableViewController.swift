@@ -118,6 +118,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         privacySettings.append(ClearPrivateDataSetting(settings: self))
 
+#if !CLIQZ
+        // Cliqz: remove close private tabs when leaving private browsing
         if #available(iOS 9, *) {
             privacySettings += [
                 BoolSetting(prefs: prefs,
@@ -127,6 +129,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                     statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
             ]
         }
+#endif
 
         privacySettings += [
             ShowBlockedTopSitesSetting(),
