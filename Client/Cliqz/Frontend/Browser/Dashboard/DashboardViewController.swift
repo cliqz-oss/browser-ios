@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import QuartzCore
 
 class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDelegate {
 	
@@ -101,9 +102,13 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	}
 
 	func didSelectQuery(query: String) {
+		CATransaction.begin()
+		CATransaction.setCompletionBlock({
+			self.tabManager.selectedTab?.inSearchMode = false
+			self.delegate?.navigateToQuery(query)
+		})
 		self.navigationController?.popViewControllerAnimated(false)
-		self.tabManager.selectedTab?.inSearchMode = false
-		self.delegate?.navigateToQuery(query)
+		CATransaction.commit()
 	}
 
 	func switchPanel(sender: UISegmentedControl) {
