@@ -98,19 +98,19 @@ class AntiTrackingModule: NSObject {
 
     func getAntiTrackingStatistics(webViewId: Int) -> [(String, Int)] {
         var antiTrackingStatistics = [(String, Int)]()
-        
         let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
-        
-        if let companies = tabBlockInfo["companies"] as? [String: [String]],
-            let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
-            
-            for (company, trackers) in companies {
-                let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
-				if badRequestsCount > 0 {
-					antiTrackingStatistics.append((company, badRequestsCount))
+		if tabBlockInfo != nil {
+			if let companies = tabBlockInfo["companies"] as? [String: [String]],
+				let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
+				
+				for (company, trackers) in companies {
+					let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
+					if badRequestsCount > 0 {
+						antiTrackingStatistics.append((company, badRequestsCount))
+					}
 				}
-            }
-        }
+			}
+		}
         return antiTrackingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
 
