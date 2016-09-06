@@ -209,10 +209,9 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	
 	private func backgroundColor() -> UIColor {
 		if self.isPrivateMode == true {
-//			return UIConstants.PrivateModeBackgroundColor
-			return UIColor.blackColor()
+			return UIColor(rgb: 0x222222)
 		}
-		return UIConstants.AppBackgroundColor
+		return UIColor(rgb: 0xE8E8E8)
 	}
 }
 
