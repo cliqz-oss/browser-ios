@@ -16,7 +16,7 @@ public enum TelemetryLogEventType {
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
     case UrlFocusBlur       (String, String)
     case LayerChange        (String, String)
-    case Onboarding         (String, Int)
+    case Onboarding         (String, Int, Int?)
     case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
@@ -112,8 +112,8 @@ class TelemetryLogger : EventsLogger {
             case .LayerChange(let currentLayer, let nextLayer):
                 event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
                 
-            case .Onboarding(let action, let page):
-                event = self.createOnboardingEvent(action, page: page)
+            case .Onboarding(let action, let index, let duration):
+                event = self.createOnboardingEvent(action, index: index, duration: duration)
                
             case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
                 event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
@@ -278,18 +278,21 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createOnboardingEvent(action: String, page: Int) -> [String: AnyObject] {
+    private func createOnboardingEvent(action: String, index: Int, duration: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "onboarding"
         event["action"] = action
-        event["action_target"] = page
-		event["product"] = "cliqz_ios"
 		event["version"] = "1.0"
-        if action == "hide" {
-            event["display_time"] = event["ts"]
+        event["index"] = index
+        
+        if action == "click" {
+           event["target"] = "next"
+        }
+        
+        if let showduration = duration {
+            event["show_duration"] = showduration
 		}
-
         return event
     }
     private func createPastTabEvent(pastType: String, querylength: Int, positionAge: Double, lengthAge: Double, displayTime: Double) -> [String: AnyObject] {
