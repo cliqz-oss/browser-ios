@@ -9,6 +9,12 @@
 import Foundation
 import Shared
 
+protocol AntitrackingViewDelegate: class {
+
+	func antitrackingViewWillClose(antitrackingView: UIView)
+
+}
+
 class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private var blurryBackgroundView: UIVisualEffectView!
@@ -33,6 +39,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	private static let trackerInfoURL = "https://cliqz.com/whycliqz/anti-tracking/tracker#"
 
 	weak var delegate: BrowserNavigationDelegate? = nil
+	weak var antitrackingDelegate: AntitrackingViewDelegate? = nil
 
 	private let isPrivateMode: Bool!
 
@@ -168,6 +175,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	}
 
 	private func closeAntitrackingView() {
+		self.antitrackingDelegate?.antitrackingViewWillClose(self.view)
 		UIView.animateWithDuration(0.5, animations: {
 			var p = self.view.center
 			p.y -= self.view.frame.size.height
@@ -206,7 +214,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		}
 		return UIConstants.NormalModeTextColor
 	}
-	
+
 	private func backgroundColor() -> UIColor {
 		if self.isPrivateMode == true {
 			return UIColor(rgb: 0x222222)

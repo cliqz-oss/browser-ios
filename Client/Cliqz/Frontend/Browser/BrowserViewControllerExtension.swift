@@ -9,7 +9,7 @@
 import Foundation
 import JavaScriptCore
 
-extension BrowserViewController {
+extension BrowserViewController: AntitrackingViewDelegate {
 	
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
@@ -94,16 +94,26 @@ extension BrowserViewController {
 			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId, privateMode: tab.isPrivate)
 			antitrackingVC.delegate = self
 			self.addChildViewController(antitrackingVC)
+			antitrackingVC.antitrackingDelegate = self
 			var r = self.view.bounds
 			r.origin.y = -r.size.height
 			antitrackingVC.view.frame = r
 			self.view.addSubview(antitrackingVC.view)
-			UIView.animateWithDuration(0.5) {
+			self.view.bringSubviewToFront(self.urlBar)
+			UIView.animateWithDuration(0.5, animations: {
 				antitrackingVC.view.center = self.view.center
-			}
+			}, completion: { (finished) in
+				if finished {
+					self.view.bringSubviewToFront(antitrackingVC.view)
+				}
+			})
 		}
 	}
-    
+
+	func antitrackingViewWillClose(antitrackingView: UIView) {
+		self.view.bringSubviewToFront(self.urlBar)
+	}
+
     func showAntiPhishingAlert(domainName: String) {
         let title = NSLocalizedString("Warning: deceptive website!", tableName: "Cliqz", comment: "Antiphishing alert title")
         let message = NSLocalizedString("CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information", tableName: "Cliqz", comment: "Antiphishing alert message")
