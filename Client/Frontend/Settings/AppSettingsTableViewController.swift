@@ -89,12 +89,15 @@ class AppSettingsTableViewController: SettingsTableViewController {
         // There is nothing to show in the Customize section if we don't include the compact tab layout
         // setting on iPad. When more options are added that work on both device types, this logic can
         // be changed.
+#if !CLIQZ
+        // Cliqz: removed use compact tabs settings as we use our own tab manager
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             generalSettings +=  [
                 BoolSetting(prefs: prefs, prefKey: "CompactTabLayout", defaultValue: true,
                     titleText: NSLocalizedString("Use Compact Tabs", comment: "Setting to enable compact tabs in the tab overview"))
             ]
         }
+#endif
 
         //Cliqz: removed unused sections from Settings table
 //        settings += [
