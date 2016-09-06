@@ -46,8 +46,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
             //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
 //            SearchSetting(settings: self),
             CliqzSearchSetting(settings: self),
-            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
-				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
+            // Cliqz: temporarly hide news notification settings
+//            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
+//				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
         //Cliqz: remove newTabPage settings and HomePage settings
 //        if AppConstants.MOZ_NEW_TAB_CHOICES {
 //            generalSettings += [NewTabPageSetting(settings: self)]
@@ -57,8 +58,11 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
+            // Cliqz: removed save logins settings
+            /*
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
                 titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
+             */
             // Cliqz: Commented settings for enabling third party keyboards according to our policy.
 			/*
             BoolSetting(prefs: prefs, prefKey: AllowThirdPartyKeyboardsKey, defaultValue: false,
@@ -112,7 +116,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         
         var privacySettings = [Setting]()
-        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
+        // Cliqz: removed save logins settings
+//        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
         //Cliqz: removed passcode settings as it is not working
 //        privacySettings.append(TouchIDPasscodeSetting(settings: self))
 
