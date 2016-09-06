@@ -128,7 +128,7 @@
 "Settings" = "Einstellungen";
 
 /* New tab title */
-"New Tab" = "Neuen Tab";
+"New Tab" = "Neuer Tab";
 
 /* New private tab title */
 "New Private Tab" = "Neuen Vergessen-Tab";
@@ -158,7 +158,7 @@
 "Overview" = "Übersicht";
 
 /* Title on the tab view, when no URL is open on the tab */
-"Topsites" = "Topseiten";
+"Topsites" = "Topseiten und News";
 
 /* Antitracking UI top title */
 "Data is protected" = "Deine Daten sind geschützt";

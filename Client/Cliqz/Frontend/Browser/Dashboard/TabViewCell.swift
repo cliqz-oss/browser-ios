@@ -19,19 +19,20 @@ class TabViewCell: UITableViewCell {
 
 	var isPrivateTabCell: Bool = false {
 		didSet {
-			cardView.backgroundColor = isPrivateTabCell ? UIColor.darkGrayColor() : UIColor.whiteColor()
+			cardView.backgroundColor = self.backgroundColor()
+			titleLabel.textColor = self.textColor()
 		}
 	}
 
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.contentView.backgroundColor = UIConstants.AppBackgroundColor
-		cardView.backgroundColor = UIColor.whiteColor()
+		cardView.backgroundColor = self.backgroundColor()
 		cardView.layer.cornerRadius = 4
 		contentView.addSubview(cardView)
 		cardView.addSubview(titleLabel)
 		titleLabel.font = UIFont.systemFontOfSize(18, weight: UIFontWeightMedium)
-		titleLabel.textColor = UIColor.blackColor()
+		titleLabel.textColor = self.textColor()
 		titleLabel.backgroundColor = UIColor.clearColor()
 		cardView.addSubview(URLLabel)
 		URLLabel.font = UIFont.systemFontOfSize(12, weight: UIFontWeightMedium)
@@ -106,4 +107,13 @@ class TabViewCell: UITableViewCell {
 		self.cardView.transform = CGAffineTransformIdentity
 		self.cardView.alpha = 1
 	}
+
+	private func backgroundColor() -> UIColor {
+		return isPrivateTabCell ? UIColor.darkGrayColor() : UIColor.whiteColor()
+	}
+
+	private func textColor() -> UIColor {
+		return isPrivateTabCell ? UIConstants.PrivateModeTextColor : UIConstants.NormalModeTextColor
+	}
+
 }
