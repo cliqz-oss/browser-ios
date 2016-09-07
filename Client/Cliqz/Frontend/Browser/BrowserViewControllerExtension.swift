@@ -61,9 +61,9 @@ extension BrowserViewController: AntitrackingViewDelegate {
 	
 	func downloadVideoOfSelectedFormat(urls: [AnyObject]) {
 		if urls.count > 0 {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "page_load", "is_downloadable", "true"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
 		} else {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "page_load", "is_downloadable", "false"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "false"))
 		}
  		let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
 		for url in urls {
