@@ -9,7 +9,7 @@
 import Foundation
 
 public enum TelemetryLogEventType {
-    case LifeCycle          (String, String, String, String)
+    case LifeCycle          (String, String)
     case ApplicationUsage   (String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
@@ -88,8 +88,8 @@ class TelemetryLogger : EventsLogger {
 
             switch (eventType) {
                 
-            case .LifeCycle(let action, let extensionVersion, let distVersion, let hostVersion):
-                event = self.createLifeCycleEvent(action, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion)
+            case .LifeCycle(let action, let distVersion):
+                event = self.createLifeCycleEvent(action, distVersion: distVersion)
                 
             case .ApplicationUsage(let action, let network, let battery, let memory, let startupType, let startupTime, let openDuration):
                 event = self.createApplicationUsageEvent(action, network: network, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, openDuration: openDuration)
@@ -185,16 +185,13 @@ class TelemetryLogger : EventsLogger {
     }
 
     
-    private func createLifeCycleEvent(action: String, extensionVersion: String, distVersion: String, hostVersion: String) -> [String: AnyObject]{
+    private func createLifeCycleEvent(action: String, distVersion: String) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
         event["action"] = action
-        event["version"] = extensionVersion
         event["version_dist"] = distVersion
-        event["version_host"] = hostVersion
-        
-        
+
         return event
     }
     private func createApplicationUsageEvent(action: String, network: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, openDuration: Double?) -> [String: AnyObject]{

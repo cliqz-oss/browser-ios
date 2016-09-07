@@ -190,7 +190,7 @@ class AppStatus {
     
     //MARK: application life cycle event
     private func logLifeCycleEvent(action: String) {
-        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, extensionVersion, distVersion, hostVersion))
+        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, distVersion))
     }
     
     //MARK: application usage event
