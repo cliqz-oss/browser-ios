@@ -209,8 +209,8 @@ class URLBarView: UIView {
 
 
     lazy var actionButtons: [UIButton] = {
-		// Cliqz: Removed menu button as we don't need it
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
+		// Cliqz: Removed StopReloadButton
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -263,7 +263,7 @@ class URLBarView: UIView {
         }
         addSubview(forwardButton)
         addSubview(backButton)
-        addSubview(stopReloadButton)
+//        addSubview(stopReloadButton)
 
         locationContainer.addSubview(locationView)
         addSubview(locationContainer)
@@ -300,11 +300,7 @@ class URLBarView: UIView {
 		// Cliqz: Moved Tabs button to the left of URL bar
 		tabsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			if self.toolbarIsShowing {
-				make.left.equalTo(self.stopReloadButton.snp_right)
-			} else {
-				make.left.equalTo(self)
-			}
+			make.left.equalTo(self)
 			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
@@ -315,9 +311,11 @@ class URLBarView: UIView {
 //            self.rightBarConstraint?.updateOffset(defaultRightOffset)
 //        }
 
+		// Cliqz: changed backButtons constraint to position after tabs button
         backButton.snp_makeConstraints { make in
-			make.left.centerY.equalTo(self)
-				make.size.equalTo(UIConstants.ToolbarHeight)
+			make.centerY.equalTo(self)
+			make.left.equalTo(self.tabsButton.snp_right)
+			make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
         forwardButton.snp_makeConstraints { make in
@@ -326,11 +324,14 @@ class URLBarView: UIView {
             make.size.equalTo(backButton)
         }
 
-        stopReloadButton.snp_makeConstraints { make in
+		// Cliqz: Removed stopReloadingButton from toolBar
+/*
+		stopReloadButton.snp_makeConstraints { make in
             make.left.equalTo(self.forwardButton.snp_right)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
+*/
 
         if AppConstants.MOZ_MENU {
             shareButton.snp_makeConstraints { make in
@@ -350,14 +351,17 @@ class URLBarView: UIView {
                 make.size.equalTo(backButton)
             }
         } else {
+			// Cliqz: Changed forwardButton position, now it should be after forward button
             shareButton.snp_makeConstraints { make in
-                make.right.equalTo(self.bookmarkButton.snp_left)
+                make.left.equalTo(self.forwardButton.snp_right)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
 
+			// Cliqz: Changed Bookmark button position, next to share button
             bookmarkButton.snp_makeConstraints { make in
-                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+//                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				make.left.equalTo(self.shareButton.snp_right)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
@@ -389,10 +393,10 @@ class URLBarView: UIView {
 			}
         } else {
             self.locationContainer.snp_remakeConstraints { make in
-				make.leading.equalTo(self.tabsButton.snp_trailing)
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
-                    make.trailing.equalTo(self.shareButton.snp_leading)
+					make.leading.equalTo(self.bookmarkButton.snp_trailing)
+                    make.trailing.equalTo(self)
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons
@@ -400,6 +404,7 @@ class URLBarView: UIView {
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
                     */
+					make.leading.equalTo(self.tabsButton.snp_trailing)
                     make.trailing.equalTo(self)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
@@ -408,11 +413,7 @@ class URLBarView: UIView {
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
-				if self.toolbarIsShowing {
-					make.left.equalTo(self.stopReloadButton.snp_right)
-				} else {
 					make.left.equalTo(self)
-				}
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         }
@@ -777,7 +778,8 @@ extension URLBarView: TabToolbarProtocol {
                 return [locationTextField]
             } else {
                 if toolbarIsShowing {
-                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, menuButton, tabsButton, progressBar] : [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
+					// Cliqz: Removed stopReloadButton from the list as we don't use it anymore
+                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, menuButton, tabsButton, progressBar] : [backButton, forwardButton,  locationView, shareButton, bookmarkButton, tabsButton, progressBar]
                 } else {
                     return [locationView, tabsButton, progressBar]
                 }
