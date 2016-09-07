@@ -232,13 +232,23 @@ class AppStatus {
             let historyUrls = profile.history.count()
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
-            let prefs = [String: AnyObject]()
+            let prefs = self.getEnvironmentPrefs(profile)
             
             TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }
-    
+    private func getEnvironmentPrefs(profile: Profile) -> [String: AnyObject] {
+        var prefs = [String: AnyObject]()
+        prefs["block_popups"] = profile.prefs.boolForKey("blockPopups")
+        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref()
+        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
+        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
+        prefs["human_web"] = SettingsPrefs.getHumanWebPref()
+        prefs["clear_on_exit"] = SettingsPrefs.getClearDataOnTerminatingPref()
+        
+        return prefs
+    }
     private func getAppLanguage() -> String {
         let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode)
         let countryCode = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode)

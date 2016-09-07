@@ -653,7 +653,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // reset IsAppTerminated state
         LocalDataStore.setObject(false, forKey: IsAppTerminated)
         
-		guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true else {
+		guard let profile = self.profile where SettingsPrefs.getClearDataOnTerminatingPref() == true else {
 			return
 		}
 		profile.clearPrivateData(self.tabManager)

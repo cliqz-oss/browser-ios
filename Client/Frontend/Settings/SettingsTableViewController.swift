@@ -197,7 +197,7 @@ class BoolSetting: Setting {
     
     // Cliqz: log telemetry signal
     private func logStateChangeTelemetrySingal(prefKey: String, oldValue: Bool) {
-        let target = prefKey == "blockContent" ? "block_ads" : "block_popups"
+        let target = prefKey == SettingsPrefs.BlockExplicitContentPrefKey ? "block_ads" : "block_popups"
         let state = oldValue == true ? "on" : "off"
         let valueChangedSignal = TelemetryLogEventType.Settings("main", "click", target, state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)

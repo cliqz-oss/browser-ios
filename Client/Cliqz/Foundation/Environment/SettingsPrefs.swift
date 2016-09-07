@@ -12,7 +12,10 @@ class SettingsPrefs {
 
 	static let AdBlockerPrefKey = "blockAds"
 	static let FairBlockingPrefKey = "fairBlocking"
-	
+	static let BlockExplicitContentPrefKey = "blockContent"
+    static let HumanWebPrefKey = "humanweb.toggle"
+    static let ClearDataOnTerminatingPrefKey = "clearprivatedata.onterminate"
+
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
 		if let blockAdsPref = SettingsPrefs.getBoolPref(AdBlockerPrefKey) {
@@ -37,6 +40,38 @@ class SettingsPrefs {
 		SettingsPrefs.updateBoolPref(FairBlockingPrefKey, value: newValue)
 	}
 
+    class func getBlockExplicitContentPref() -> Bool {
+        let defaultValue = true
+        if let blockExplicitContentPref = SettingsPrefs.getBoolPref(BlockExplicitContentPrefKey) {
+            return blockExplicitContentPref
+        }
+        return defaultValue
+    }
+    
+    class func getHumanWebPref() -> Bool {
+        let defaultValue = true
+        if let humanWebPref = SettingsPrefs.getBoolPref(HumanWebPrefKey) {
+            return humanWebPref
+        }
+        return defaultValue
+    }
+    
+    class func updateHumanWebPref(newValue: Bool) {
+        SettingsPrefs.updateBoolPref(HumanWebPrefKey, value: newValue)
+    }
+    
+    class func getClearDataOnTerminatingPref() -> Bool {
+        let defaultValue = false
+        if let ClearDataOnTerminatingPref = SettingsPrefs.getBoolPref(ClearDataOnTerminatingPrefKey) {
+            return ClearDataOnTerminatingPref
+        }
+        return defaultValue
+    }
+    
+    class func updateClearDataOnTerminatingPref(newValue: Bool) {
+        SettingsPrefs.updateBoolPref(ClearDataOnTerminatingPrefKey, value: newValue)
+    }
+    // MARK: - Private helper metods
 	class private func getBoolPref(forKey: String) -> Bool? {
 		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 		if let profile = appDelegate.profile {

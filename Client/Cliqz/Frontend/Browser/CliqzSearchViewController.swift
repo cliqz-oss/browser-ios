@@ -276,7 +276,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	private func updateExtensionPreferences() {
-		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
+		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode]
 		javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
