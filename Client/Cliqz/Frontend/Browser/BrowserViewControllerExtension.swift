@@ -108,8 +108,17 @@ extension BrowserViewController: AntitrackingViewDelegate {
 					self.view.bringSubviewToFront(antitrackingVC.view)
 				}
 			})
+            
+            logToolbarSignal("click", target: "attack", customData: webView.badRequests)
 		}
 	}
+    
+    func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?) {
+        if let charCount = oldText?.characters.count {
+            self.logToolbarDeleteSignal(charCount)
+        }
+        self.urlBar(urlBar, didEnterText: "")
+    }
 
 	func antitrackingViewWillClose(antitrackingView: UIView) {
 		self.view.bringSubviewToFront(self.urlBar)
@@ -134,5 +143,28 @@ extension BrowserViewController: AntitrackingViewDelegate {
         self.presentViewController(alert, animated: true, completion: nil)
         
     }
-
+    
+    // MARK: - toolbar telemetry signals
+    func logToolbarFocusSignal() {
+        logToolbarSignal("focus", target: "search", customData: nil)
+        SearchBarTelemetryHelper.sharedInstance.didFocusUrlBar()
+    }
+    func logToolbarBlurSignal() {
+        logToolbarSignal("blur", target: "search", customData: nil)
+    }
+    func logToolbarDeleteSignal(charCount: Int) {
+        logToolbarSignal("click", target: "delete", customData: charCount)
+        
+    }
+    func logToolbarOverviewSignal() {
+        let openTabs = self.tabManager.tabs.count
+        logToolbarSignal("click", target: "overview", customData: openTabs)
+    }
+    
+    private func logToolbarSignal(action: String, target: String, customData: Int?) {
+        if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
+            let view = getCurrentView() {
+            TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, view, isForgetMode, customData))
+        }
+    }
 }

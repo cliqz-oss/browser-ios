@@ -14,7 +14,6 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
-    case UrlFocusBlur       (String, String)
     case LayerChange        (String, String)
     case Onboarding         (String, Int, Int?)
     case PastTap            (String, Int, Double, Double, Double)
@@ -27,6 +26,7 @@ public enum TelemetryLogEventType {
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
+    case Toolbar            (String, String, String, Bool, Int?)
 }
 
 
@@ -104,11 +104,6 @@ class TelemetryLogger : EventsLogger {
                 
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
-                
-            case .UrlFocusBlur(let action, let context):
-                event = self.createUrlFocusBlurEvent(action, context: context)
-                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
-                disableSendingEvent = true
 
             case .LayerChange(let currentLayer, let nextLayer):
                 event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
@@ -145,6 +140,12 @@ class TelemetryLogger : EventsLogger {
                 
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
+                
+            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
+                event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
+                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
+                disableSendingEvent = true
+                
             }
             
             // Always store the event
@@ -250,18 +251,6 @@ class TelemetryLogger : EventsLogger {
         event["type"] = "activity"
         event["action"] = action
         event["current_length"] = currentLength
-        
-        return event
-    }
-    
-    private func createUrlFocusBlurEvent(action: String, context: String) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = action
-        if !context.isEmpty {
-            event["context"] = context
-        }
         
         return event
     }
@@ -421,6 +410,26 @@ class TelemetryLogger : EventsLogger {
         if let duration = duration {
             event["show_duration"] = duration
         }
+        return event
+    }
+    
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool, customData: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "toolbar"
+        event["action"] = action
+        event["target"] = target
+        event["view"] = view
+        event["is_forget"] = isForgetMode
+        
+        if let customData = customData where target == "overview" {
+            event["open_tabs"] = customData
+        } else if let customData = customData where target == "delete" {
+            event["char_count"] = customData
+        } else if let customData = customData where target == "attack" {
+            event["tracker_count"] = customData
+        }
+        
         return event
     }
 }

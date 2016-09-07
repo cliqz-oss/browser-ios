@@ -80,8 +80,10 @@ protocol URLBarDelegate: class {
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
     
-    // Cliqz: Added delegate methods for antitracking button
+    // Cliqz: Added delegate method for antitracking button
 	func urlBarDidClickAntitracking(urlBar: URLBarView)
+    // Cliqz: Added delegate method for notifing deletge that search field was cleared
+    func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?)
 }
 
 class URLBarView: UIView {
@@ -842,7 +844,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 		if autocompleteTextField.text == nil || autocompleteTextField.text!.isEmpty {
 			self.SELdidClickCancel()
 		} else {
-			delegate?.urlBar(self, didEnterText: "")
+            delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
 		}
         return true
     }

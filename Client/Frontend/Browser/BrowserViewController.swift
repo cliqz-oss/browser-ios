@@ -1630,6 +1630,9 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidPressTabs(urlBar: URLBarView) {
+        // Cliqz: telemetry logging for toolbar
+        self.logToolbarOverviewSignal()
+        
         self.webViewContainerToolbar.hidden = true
         updateFindInPageVisibility(visible: false)
 
@@ -1800,6 +1803,9 @@ extension BrowserViewController: URLBarDelegate {
     }
     
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
+        // Cliqz: telemetry logging for toolbar
+        self.logToolbarFocusSignal()
+        
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {
@@ -1809,6 +1815,9 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
+        // Cliqz: telemetry logging for toolbar
+        self.logToolbarBlurSignal()
+        
         hideSearchController()
         // Cliqz: update URL bar when leaving overlay
         if let tab = tabManager.selectedTab {
@@ -3733,6 +3742,7 @@ private extension WKNavigationAction {
     }
 }
 
+//MARK: - Cliqz
 // CLiqz: Added extension for HomePanelDelegate to react for didSelectURL from SearchHistoryViewController
 extension BrowserViewController: HomePanelDelegate {
     
@@ -3975,11 +3985,25 @@ extension BrowserViewController {
     }
     
     // Cliqz: Add custom user scripts
-    func addCustomUserScripts(browser: Tab) {
+    private func addCustomUserScripts(browser: Tab) {
         // Wikipedia scripts to clear expanded sections from local storage
         if let path = NSBundle.mainBundle().pathForResource("wikipediaUserScript", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentStart, forMainFrameOnly: false)
             browser.webView!.configuration.userContentController.addUserScript(userScript)
         }
+    }
+    // Cliqz: Added to get the current view for telemetry signals
+    func getCurrentView() -> String? {
+        var currentView: String?
+        
+        if let searchQuery = self.searchController?.searchQuery where  searchQuery.characters.count > 0 {
+            currentView = "cards"
+        } else if let _ = self.urlBar.currentURL where self.searchController?.view.hidden == true {
+            currentView = "web"
+        } else {
+            currentView = "home"
+        }
+        return currentView
+        
     }
 }
