@@ -71,8 +71,8 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "cliqzBack"), style: .Plain, target: self, action: #selector(goBack))
 		self.navigationItem.title = NSLocalizedString("Overview", tableName: "Cliqz", comment: "Dashboard navigation bar title")
 		self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:  NSLocalizedString("Settings", tableName: "Cliqz", comment: "Setting menu title"), style: .Plain, target: self, action: #selector(openSettings))
+		self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : UIFont.boldSystemFontOfSize(17)], forState: .Normal)
 		self.navigationItem.rightBarButtonItem?.tintColor = self.dashboardThemeColor
 		view.backgroundColor = UIColor.whiteColor()
 	}

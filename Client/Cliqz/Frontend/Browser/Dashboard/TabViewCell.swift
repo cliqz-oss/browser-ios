@@ -57,8 +57,8 @@ class TabViewCell: UITableViewCell {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		let cardViewLeftOffset = 30
-		let cardViewRightOffset = -20
+		let cardViewLeftOffset = 25
+		let cardViewRightOffset = -25
 		let cardViewTopOffset = 5
 		let cardViewBottomOffset = -5
 		self.cardView.snp_remakeConstraints { (make) in

@@ -18,6 +18,8 @@ class TabsViewController: UIViewController {
 
 	private let tabCellIdentifier = "TabCell"
 
+	static let bottomToolbarHeight = 45
+
 	init(tabManager: TabManager) {
 		self.tabManager = tabManager
 		self.tabs = tabManager.tabs
@@ -45,8 +47,11 @@ class TabsViewController: UIViewController {
 		view.addSubview(tabsView)
 		
 		addTabButton = UIButton(type: .Custom)
-		addTabButton.setBackgroundImage(UIImage(named: "addTab"), forState: .Normal)
-		addTabButton.backgroundColor = UIColor.clearColor()
+		addTabButton.setTitle("+", forState: .Normal)
+		addTabButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+		addTabButton.titleLabel?.font = UIFont.systemFontOfSize(30)
+		addTabButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
+		addTabButton.backgroundColor =  UIColor.whiteColor()
 		self.view.addSubview(addTabButton)
 		addTabButton.addTarget(self, action: #selector(addNewTab), forControlEvents: .TouchUpInside)
 
@@ -87,15 +92,17 @@ class TabsViewController: UIViewController {
             self.presentViewController(actionSheetController, animated: true, completion: nil)
         }
     }
+
 	private func setupConstraints() {
 		tabsView.snp_makeConstraints { make in
 			make.left.bottom.right.equalTo(self.view)
 			make.top.equalTo(self.view).offset(10)
 		}
 		addTabButton.snp_makeConstraints { make in
-			make.right.equalTo(self.view).offset(-10)
-			make.bottom.equalTo(self.view).offset(-10)
-			make.size.equalTo(CGSizeMake(30, 30))
+			make.centerX.equalTo(self.view)
+			make.bottom.equalTo(self.view)
+			make.left.right.equalTo(self.view)
+			make.height.equalTo(TabsViewController.bottomToolbarHeight)
 		}
 	}
 }
