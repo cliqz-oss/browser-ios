@@ -26,6 +26,7 @@ public enum TelemetryLogEventType {
     case TabSignal          (String, String, Int?, Int)
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String, String)
+    case Settings (String, String, String, String?, Int?)
 }
 
 
@@ -141,6 +142,9 @@ class TelemetryLogger : EventsLogger {
 			
 			case .YoutubeVideoDownloader(let type, let action, let statusKey, let statusValue):
 				event = self.createYoutubeVideoDownloaderEvent(type, action: action, statusKey: statusKey, statusValue: statusValue)
+                
+            case .Settings(let view, let action, let target, let state, let duration):
+                event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
             }
             
             // Always store the event
@@ -408,4 +412,19 @@ class TelemetryLogger : EventsLogger {
 		event[statusKey] = statusValue
 		return event
 	}
+    
+    private func createSettingsEvent(view: String, action: String, target: String, state: String?, duration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        event["type"] = "settings"
+        event["view"] = view
+        event["action"] = action
+        event[target] = target
+        if let state = state {
+            event["state"] = state
+        }
+        if let duration = duration {
+            event["show_duration"] = duration
+        }
+        return event
+    }
 }

@@ -8,9 +8,15 @@ class SearchEnginePicker: UITableViewController {
     weak var delegate: SearchEnginePickerDelegate?
     var engines: [OpenSearchEngine]!
     var selectedSearchEngineName: String?
-
+    
+    // Cliqz: added to calculate the duration spent on search settings view
+    var settingsOpenTime = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
 
         navigationItem.title = NSLocalizedString("Default Search Engine", comment: "Title for default search engine picker.")
 
@@ -40,6 +46,10 @@ class SearchEnginePicker: UITableViewController {
         let engine = engines[indexPath.item]
         delegate?.searchEnginePicker(self, didSelectSearchEngine: engine)
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        
+        // Cliqz: log telementry signal for changing default search engine
+        let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", engine.shortName, nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
     }
 
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
@@ -48,5 +58,14 @@ class SearchEnginePicker: UITableViewController {
 
     func cancel() {
         delegate?.searchEnginePicker(self, didSelectSearchEngine: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // Cliqz: log back telemetry singal for search settings view
+        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+        let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", "back", nil, duration)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
     }
 }

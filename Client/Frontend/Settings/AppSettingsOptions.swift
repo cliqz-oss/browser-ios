@@ -453,6 +453,10 @@ class LicenseAndAcknowledgementsSetting: Setting {
 
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
+
+        // Cliqz: log telemetry signal
+        let licenseSignal = TelemetryLogEventType.Settings("main", "click", "license", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(licenseSignal)
     }
 }
 
@@ -487,6 +491,10 @@ class ShowIntroductionSetting: Setting {
                 appDelegate.browserViewController.presentIntroViewController(true)
             }
         })
+        
+        // Cliqz: log telemetry signal
+        let showTourSignal = TelemetryLogEventType.Settings("main", "click", "show_tour", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(showTourSignal)
     }
 }
 
@@ -657,6 +665,10 @@ class ClearPrivateDataSetting: Setting {
         viewController.profile = profile
         viewController.tabManager = tabManager
         navigationController?.pushViewController(viewController, animated: true)
+        
+        // Cliqz: log telemetry signal
+        let privateDataSignal = TelemetryLogEventType.Settings("main", "click", "private_data", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(privateDataSignal)
     }
 }
 
@@ -673,6 +685,10 @@ class PrivacyPolicySetting: Setting {
 
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let privacySignal = TelemetryLogEventType.Settings("main", "click", "privacy_statement", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(privacySignal)
     }
 }
 

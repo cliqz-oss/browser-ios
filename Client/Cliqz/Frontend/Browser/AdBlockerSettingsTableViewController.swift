@@ -17,6 +17,8 @@ private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 class AdBlockerSettingsTableViewController: UITableViewController {
 
     var profile: Profile!
+    // added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
     
     private let toggleTitles =
         [NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads toogle title in Block Ads settings"),
@@ -28,6 +30,8 @@ class AdBlockerSettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
         
         title = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads setting")
         tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
@@ -38,6 +42,14 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         tableView.tableFooterView = footer
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // log telemetry signal
+        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+        let settingsBackSignal = TelemetryLogEventType.Settings("block_ads", "click", "back", nil, duration)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
         
@@ -92,6 +104,11 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         let fairBlockingDescriptionPath = NSBundle.mainBundle().pathForResource("FairBlocking", ofType: "html")
         viewController.url = NSURL(fileURLWithPath: fairBlockingDescriptionPath!)
         navigationController?.pushViewController(viewController, animated: true)
+        
+        // log telemetry signal
+        let infoSignal = TelemetryLogEventType.Settings("block_ads", "click", "info", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(infoSignal)
+
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -108,6 +125,12 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         self.toggles[toggle.tag] = toggle.on
         saveToggles()
         self.tableView.reloadData()
+        
+        // log telemetry signal
+        let target = toggle.tag == 0 ? "enable" : "fair_blocking"
+        let state = toggle.on == true ? "off" : "on" // we log old value
+        let valueChangedSignal = TelemetryLogEventType.Settings("block_ads", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
 	}
 
     private func saveToggles() {

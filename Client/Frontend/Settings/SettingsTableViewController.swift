@@ -191,6 +191,16 @@ class BoolSetting: Setting {
     @objc func switchValueChanged(control: UISwitch) {
         prefs.setBool(control.on, forKey: prefKey)
         settingDidChange?(control.on)
+        // Cliqz: log telemetry signal
+        logStateChangeTelemetrySingal(prefKey, oldValue: !control.on)
+    }
+    
+    // Cliqz: log telemetry signal
+    private func logStateChangeTelemetrySingal(prefKey: String, oldValue: Bool) {
+        let target = prefKey == "blockContent" ? "block_ads" : "block_popups"
+        let state = oldValue == true ? "on" : "off"
+        let valueChangedSignal = TelemetryLogEventType.Settings("main", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
 }
 
@@ -402,6 +412,9 @@ class SettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     var tabManager: TabManager!
+    
+    // Cliqz: added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
 
     /// Used to calculate cell heights.
     private lazy var dummyToggleCell: UITableViewCell = {
@@ -421,6 +434,9 @@ class SettingsTableViewController: UITableViewController {
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
         tableView.estimatedRowHeight = 44
         tableView.estimatedSectionHeaderHeight = 44
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -445,6 +461,15 @@ class SettingsTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidStartSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+        
+        // Cliqz: log back telemetry singal for settings view
+        // this check distinguish between showing detail and clicking done
+        if self.navigationController?.viewControllers.count == 1 {
+            let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("main", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            
+        }
     }
 
     // Override to provide settings in subclasses

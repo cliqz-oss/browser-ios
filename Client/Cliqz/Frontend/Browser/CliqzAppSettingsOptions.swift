@@ -23,6 +23,9 @@ class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
         searchEnginePicker.delegate = self
         searchEnginePicker.selectedSearchEngineName = profile.searchEngines.defaultEngine.shortName
         navigationController?.pushViewController(searchEnginePicker, animated: true)
+        
+        let searchEngineSingal = TelemetryLogEventType.Settings("main", "click", "search_engine", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(searchEngineSingal)
     }
     
     func searchEnginePicker(searchEnginePicker: SearchEnginePicker?, didSelectSearchEngine engine: OpenSearchEngine?) -> Void {
@@ -45,6 +48,9 @@ class ImprintSetting: Setting {
     
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
+        // log Telemerty signal
+        let imprintSingal = TelemetryLogEventType.Settings("main", "click", "imprint", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(imprintSingal)
     }
 }
 
@@ -66,6 +72,9 @@ class HumanWebSetting: Setting {
         let viewController = HumanWebSettingsTableViewController()
         viewController.profile = self.profile
         navigationController?.pushViewController(viewController, animated: true)
+        // log Telemerty signal
+        let humanWebSingal = TelemetryLogEventType.Settings("main", "click", "human_web", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
     }
 }
 //Cliqz: Added new settings item for Ad Blocker
@@ -86,6 +95,10 @@ class AdBlockerSetting: Setting {
         let viewController = AdBlockerSettingsTableViewController()
         viewController.profile = self.profile
         navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "block_ads", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
     }
 }
 
@@ -109,6 +122,10 @@ class SendCliqzFeedbackSetting: SendFeedbackSetting, MFMailComposeViewController
             alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .Default, handler: nil))
             navigationController?.presentViewController(alertController, animated: true, completion: nil)
         }
+        
+        // Cliqz: log telemetry signal
+        let contactSignal = TelemetryLogEventType.Settings("main", "click", "contact", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(contactSignal)
     }
     
     @objc func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
@@ -144,14 +161,24 @@ class ShowBlockedTopSitesSetting: Setting {
             preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .Cancel) { (action) in
-                // Do nothing.
+                // log telemetry signal
+                let cancelSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "cancel", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(cancelSignal)
             })
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("OK", tableName: "Cliqz", comment: "OK button in the 'Show blocked top-sites' alert"), style: .Default) { (action) in
                 // reset top-sites
                 NSNotificationCenter.defaultCenter().postNotificationName(NotificationShowBlockedTopSites, object: nil)
+                
+                // log telemetry signal
+                let confirmSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "confirm", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(confirmSignal)
 
             })
         navigationController?.presentViewController(alertController, animated: true, completion: nil)
+        
+        // log telemetry signal
+        let restoreTopsitesSignal = TelemetryLogEventType.Settings("main", "click", "restore_topsites", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(restoreTopsitesSignal)
     }
 }
