@@ -3859,8 +3859,7 @@ extension BrowserViewController {
             })
             
         }
-        
-        
+
     }
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
