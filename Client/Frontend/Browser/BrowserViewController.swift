@@ -1633,25 +1633,20 @@ extension BrowserViewController: URLBarDelegate {
         self.webViewContainerToolbar.hidden = true
         updateFindInPageVisibility(visible: false)
 
-        let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
-
-        // Cliqz: Take screenshot of search view instead of browser view if tabs button is clicked while search is in progress
-        if let tab = tabManager.selectedTab {
-            if searchController?.view.hidden == false {
-                screenshotHelper.takeScreenshot(tab, searchView: searchController!.view)
-            } else {
-                screenshotHelper.takeScreenshot(tab)
-            }
-        }
+        // Cliqz: disabled taking screenshots as it is not used in our tab manager
         /*
         if let tab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(tab)
         }
         */
+        
 		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
-//        self.navigationController?.pushViewController(tabTrayController, animated: true)
-//		self.tabTrayController = tabTrayController
-
+        /*
+        let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
+        self.navigationController?.pushViewController(tabTrayController, animated: true)
+		self.tabTrayController = tabTrayController
+        */
+        
 		let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
 		dashboard.delegate = self
 		self.navigationController?.pushViewController(dashboard, animated: false)

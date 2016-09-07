@@ -56,11 +56,4 @@ class ScreenshotHelper {
             takeDelayedScreenshot(tab)
         }
     }
-    
-    // Cliqz: Take screenshot of search view instead of browser view if tabs button is clicked while search is in progress
-    func takeScreenshot(tab: Tab, searchView: UIView) {
-        var screenshot: UIImage?
-        screenshot = searchView.screenshot()
-        tab.setScreenshot(screenshot)
-    }
 }
