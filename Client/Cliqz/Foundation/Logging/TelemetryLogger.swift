@@ -10,7 +10,7 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String, String, String)
-    case ApplicationUsage   (String, String, String, Int, Double, String?, Double?, Double?)
+    case ApplicationUsage   (String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
@@ -91,8 +91,8 @@ class TelemetryLogger : EventsLogger {
             case .LifeCycle(let action, let extensionVersion, let distVersion, let hostVersion):
                 event = self.createLifeCycleEvent(action, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion)
                 
-            case .ApplicationUsage(let action, let network, let context, let battery, let memory, let startupType, let startupTime, let timeUsed):
-                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, timeUsed: timeUsed)
+            case .ApplicationUsage(let action, let network, let battery, let memory, let startupType, let startupTime, let openDuration):
+                event = self.createApplicationUsageEvent(action, network: network, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, openDuration: openDuration)
                 
             case .NetworkStatus(let network, let duration):
                 event = self.createNetworkStatusEvent(network, duration:duration)
@@ -197,26 +197,25 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, openDuration: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
 
         event["type"] = "app_state_change"
         event["state"] = action
         event["network"] = network
-        event["context"] = context
         event["battery"] = battery
         event["memory"] = NSNumber(longLong: Int64(memory))
 
-        if startupType != nil {
+        if let startupType = startupType {
             event["startup_type"] = startupType
         }
         
-        if let s = startupTime {
-            event["startup_time"] = NSNumber(longLong: Int64(s))
+        if let startupTime = startupTime {
+            event["startup_time"] = NSNumber(longLong: Int64(startupTime))
         }
 
-        if timeUsed != nil {
-            event["time_used"] = timeUsed
+        if let openDuration = openDuration {
+            event["open_duration"] = openDuration
         }
         
         return event

@@ -122,12 +122,13 @@ class AppStatus {
     
     internal func appDidBecomeResponsive(startupType: String) {
         let startupTime = NSDate.milliSecondsSinceDate(lastOpenedDate)
-        logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, timeUsed: nil)
+        logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, openDuration: nil)
     }
     
     internal func appWillResignActive() {
         
-        logApplicationUsageEvent("Inactive")
+        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Inactive", startupType:nil, startupTime: nil, openDuration: openDuration)
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
         
         TelemetryLogger.sharedInstance.persistState()
@@ -137,8 +138,8 @@ class AppStatus {
     internal func appDidEnterBackground() {
         SessionState.sessionPaused()
         
-        let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
-        logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
+        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, openDuration: openDuration)
 
         TelemetryLogger.sharedInstance.appDidEnterBackground()
 
@@ -195,19 +196,16 @@ class AppStatus {
     //MARK: application usage event
     
     private func logApplicationUsageEvent(action: String) {
-        logApplicationUsageEvent(action, startupType: nil, startupTime: nil, timeUsed: nil)
+        logApplicationUsageEvent(action, startupType: nil, startupTime: nil, openDuration: nil)
     }
     
-    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, timeUsed: Double?) {
+    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, openDuration: Double?) {
         dispatch_async(dispatchQueue) {
             let network = NetworkReachability.sharedInstance.networkReachabilityStatus?.description
             let battery = self.batteryLevel()
             let memory = self.getMemoryUsage()
-            //TODO `context`
-            let context = ""
             
-            TelemetryLogger.sharedInstance.logEvent(.ApplicationUsage(action, network!, context, battery, memory, startupType, startupTime, timeUsed))
-            
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.ApplicationUsage(action, network!, battery, memory, startupType, startupTime, openDuration))
         }
     }
     //MARK: application Environment event
