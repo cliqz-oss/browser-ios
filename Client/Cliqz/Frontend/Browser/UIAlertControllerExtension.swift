@@ -10,7 +10,7 @@ import UIKit
 
 extension UIAlertController {
     @available(iOS 9.0, *)
-    class func createNewTabActionSheetController(newTabHandler: ((UIAlertAction) -> Void), newForgetModeTabHandler: ((UIAlertAction) -> Void)) -> UIAlertController {
+    class func createNewTabActionSheetController(newTabHandler: ((UIAlertAction) -> Void), newForgetModeTabHandler: ((UIAlertAction) -> Void), cancelHandler: ((UIAlertAction) -> Void)) -> UIAlertController {
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
         
         // new normal Tab option
@@ -24,7 +24,7 @@ extension UIAlertController {
         actionSheetController.addAction(openNewForgetTabAction)
         
         // cancel option
-        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: cancelHandler)
         actionSheetController.addAction(cancelAction)
         
         return actionSheetController

@@ -86,7 +86,11 @@ class TabsViewController: UIViewController {
                 return
             }
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler)
+            let cancelHandler = { (action: UIAlertAction) in
+                // do no thing
+            }
+            
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
         }

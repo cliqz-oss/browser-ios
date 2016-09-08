@@ -28,6 +28,7 @@ public enum TelemetryLogEventType {
     case Settings (String, String, String, String?, Int?)
     case Toolbar            (String, String, String, Bool, Int?)
     case Keyboard            (String, String, Bool, Int?)
+    case WebMenu            (String, String, Bool)
 }
 
 
@@ -149,6 +150,11 @@ class TelemetryLogger : EventsLogger {
                 
             case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
                 // disable sending event when there is interaciton with keyboars
+                disableSendingEvent = true
+                
+            case .WebMenu(let action, let target, let isForgetMode):
+                event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
+                // disable sending event when there is interaciton web menu
                 disableSendingEvent = true
             }
             
@@ -451,4 +457,15 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    private func createWebMenuEvent(action: String, target: String, isForgetMode: Bool) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "web_menu"
+        event["action"] = action
+        event["target"] = target
+        event["is_forget"] = isForgetMode
+        
+        return event
+    }
+    
 }

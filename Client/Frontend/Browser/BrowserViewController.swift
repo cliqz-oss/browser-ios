@@ -1849,6 +1849,8 @@ extension BrowserViewController: URLBarDelegate {
 extension BrowserViewController: TabToolbarDelegate {
     func tabToolbarDidPressBack(tabToolbar: TabToolbarProtocol, button: UIButton) {
         tabManager.selectedTab?.goBack()
+        // Cliqz: log telemetry singal for web menu
+        logWebMenuSignal("click", target: "back")
     }
 
     func tabToolbarDidLongPressBack(tabToolbar: TabToolbarProtocol, button: UIButton) {
@@ -1889,6 +1891,8 @@ extension BrowserViewController: TabToolbarDelegate {
 
     func tabToolbarDidPressForward(tabToolbar: TabToolbarProtocol, button: UIButton) {
         tabManager.selectedTab?.goForward()
+        // Cliqz: log telemetry singal for web menu
+        logWebMenuSignal("click", target: "forward")
     }
 
     func tabToolbarDidLongPressForward(tabToolbar: TabToolbarProtocol, button: UIButton) {
@@ -1930,8 +1934,12 @@ extension BrowserViewController: TabToolbarDelegate {
     func toggleBookmarkForTabState(tabState: TabState) {
         if tabState.isBookmarked {
             self.removeBookmark(tabState)
+            // Cliqz: log telemetry singal for web menu
+            logWebMenuSignal("click", target: "remove_favorite")
         } else {
             self.addBookmark(tabState)
+            // Cliqz: log telemetry singal for web menu
+            logWebMenuSignal("click", target: "add_favorite")
         }
     }
 
@@ -1952,6 +1960,9 @@ extension BrowserViewController: TabToolbarDelegate {
         if let tab = tabManager.selectedTab, url = tab.displayURL {
             let sourceView = self.navigationToolbar.shareButton
             presentActivityViewController(url, tab: tab, sourceView: sourceView.superview, sourceRect: sourceView.frame, arrowDirection: .Up)
+            
+            // Cliqz: log telemetry singal for web menu
+            logWebMenuSignal("click", target: "share")
         }
     }
 
@@ -1982,23 +1993,36 @@ extension BrowserViewController: TabToolbarDelegate {
         } else {
             tabManager.addTabAndSelect()
         }
+        
+        // Cliqz: log telemetry singal for web menu
+        logWebMenuSignal("click", target: "new_tab")
     }
     
+    // Cliqz: Add delegate methods for new tab button
     func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
                 self.preserveSearchState()
                 self.tabManager.addTabAndSelect()
+                self.logWebMenuSignal("click", target: "new_tab")
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
                 self.preserveSearchState()
                 self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+                self.logWebMenuSignal("click", target: "new_forget_tab")
             }
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler)
+            let cancelHandler = { (action: UIAlertAction) in
+                self.logWebMenuSignal("click", target: "cancel")
+            }
+            
+            
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
+            
+            logWebMenuSignal("longpress", target: "new_tab")
         }
     }
 }

@@ -183,4 +183,11 @@ extension BrowserViewController: AntitrackingViewDelegate {
             TelemetryLogger.sharedInstance.logEvent(.Keyboard("hide", view, isForgetMode, showDuration))
         }
     }
+    
+    //MARK - WebMenu signals
+    func logWebMenuSignal(action: String, target: String) {
+        if let isForgetMode = self.tabManager.selectedTab?.isPrivate {
+            TelemetryLogger.sharedInstance.logEvent(.WebMenu(action, target, isForgetMode))
+        }
+    }
 }
