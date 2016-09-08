@@ -170,6 +170,9 @@ extension BrowserViewController: AntitrackingViewDelegate {
         let openTabs = self.tabManager.tabs.count
         logToolbarSignal("click", target: "overview", customData: openTabs)
     }
+    func logToolbarReaderModeSignal(state: Int) {
+        logToolbarSignal("click", target: "reader_mode", customData: state)
+    }
     
     private func logToolbarSignal(action: String, target: String, customData: Int?) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,

@@ -451,6 +451,8 @@ class TelemetryLogger : EventsLogger {
             event["char_count"] = customData
         } else if let customData = customData where target == "attack" {
             event["tracker_count"] = customData
+        } else if let customData = customData where target == "reader_mode" {
+            event["state"] = customData == 1 ? "true" : "false"
         }
         
         return event

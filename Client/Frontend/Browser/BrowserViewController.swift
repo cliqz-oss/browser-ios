@@ -1677,8 +1677,10 @@ extension BrowserViewController: URLBarDelegate {
                 switch readerMode.state {
                 case .Available:
                     enableReaderMode()
+                    logToolbarReaderModeSignal(0)
                 case .Active:
                     disableReaderMode()
+                    logToolbarReaderModeSignal(1)
                 case .Unavailable:
                     break
                 }
