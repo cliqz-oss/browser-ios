@@ -18,7 +18,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	private var panelSwitchContainerView: UIView!
 	private var panelContainerView: UIView!
 
-	private let dashboardThemeColor = UIColor(rgb: 0x78C9D9)
+	private let dashboardThemeColor = UIColor(rgb: 0x45C2CC)
 
 	weak var delegate: BrowserNavigationDelegate!
 

@@ -16,7 +16,7 @@ public struct UIConstants {
 	static let PrivateModeLocationBackgroundColor = UIColor(rgb: 0x333333) //UIColor(red: 31 / 255, green: 31 / 255, blue: 31 / 255, alpha: 1)
     static let PrivateModeLocationBorderColor = UIColor.clearColor() // UIColor(red: 255, green: 255, blue: 255, alpha: 0.15)
     static let PrivateModeActionButtonTintColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.8)
-	static let PrivateModeTextHighlightColor = UIColor(rgb: 0x78C9D9) // UIColor(red: 120 / 255, green: 120 / 255, blue: 165 / 255, alpha: 1)
+	static let PrivateModeTextHighlightColor = UIColor(rgb: 0x45C2CC) // UIColor(red: 120 / 255, green: 120 / 255, blue: 165 / 255, alpha: 1)
     static let PrivateModeReaderModeBackgroundColor = UIColor(red: 89 / 255, green: 89 / 255, blue: 89 / 255, alpha: 1)
     static let PrivateModeToolbarTintColor = UIColor(red: 74 / 255, green: 74 / 255, blue: 74 / 255, alpha: 1)
 	
