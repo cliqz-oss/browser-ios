@@ -118,7 +118,7 @@ class URLBarView: UIView {
 
     var toolbarIsShowing = false
 
-    private var locationTextField: ToolbarTextField?
+    internal var locationTextField: ToolbarTextField?
 
     /// Overlay mode is the state where the lock/reader icons are hidden, the home panels are shown,
     /// and the Cancel button is visible (allowing the user to leave overlay mode). Overlay mode
@@ -396,7 +396,7 @@ class URLBarView: UIView {
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
 					make.leading.equalTo(self.bookmarkButton.snp_trailing)
-                    make.trailing.equalTo(self)
+                    make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 } else {
                     // Otherwise, left align the location view
 					// Cliqz: Changed locationContainer's constraints to align with new buttons

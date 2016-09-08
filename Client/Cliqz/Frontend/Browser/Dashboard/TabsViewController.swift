@@ -71,19 +71,18 @@ class TabsViewController: UIViewController {
 	}
 
 	@objc private func addNewTab(sender: UIButton) {
-		self.tabManager.addTabAndSelect()
-		self.navigationController?.popViewControllerAnimated(false)
+		self.openNewTab()
 	}
     
     @objc func SELdidLongPressAddTab(recognizer: UILongPressGestureRecognizer) {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
-                self.tabManager.addTabAndSelect()
+                self.openNewTab()
                 return
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
-                self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+                self.openNewTab(false)
                 return
             }
             
@@ -92,6 +91,17 @@ class TabsViewController: UIViewController {
             self.presentViewController(actionSheetController, animated: true, completion: nil)
         }
     }
+
+	private func openNewTab(isPrivate: Bool = false) {
+		if isPrivate {
+			if #available(iOS 9, *) {
+				self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+			}
+		} else {
+			self.tabManager.addTabAndSelect()
+		}
+		self.navigationController?.popViewControllerAnimated(false)
+	}
 
 	private func setupConstraints() {
 		tabsView.snp_makeConstraints { make in

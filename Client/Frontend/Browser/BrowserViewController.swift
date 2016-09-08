@@ -3819,11 +3819,11 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 extension BrowserViewController {
     
     // Cliqz: preserve search state when dimissing view
-    private func preserveSearchState() {
+    internal func preserveSearchState() {
         guard let selectedTab = self.tabManager.selectedTab else {
             return
         }
-        
+
         if self.searchController?.view.hidden == false {
             urlBar.leaveOverlayMode()
             selectedTab.lastSearchQuery = searchController?.searchQuery ?? ""

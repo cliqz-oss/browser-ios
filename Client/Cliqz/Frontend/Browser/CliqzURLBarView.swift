@@ -32,14 +32,16 @@ class CliqzURLBarView: URLBarView {
 	override func updateConstraints() {
 		super.updateConstraints()
 		if !inOverlayMode {
-			locationContainer.snp_updateConstraints { make in
-				let x = -(UIConstants.ToolbarHeight + 10)
-				make.trailing.equalTo(self).offset(x)
+			if self.locationView.urlTextField.text?.characters.count > 0 {
+				locationContainer.snp_updateConstraints { make in
+					let x = -(UIConstants.ToolbarHeight + 10)
+					make.trailing.equalTo(self).offset(x)
+				}
+				self.antitrackingButton.hidden = false
+				self.antitrackingButton.snp_updateConstraints(closure: { (make) in
+					make.size.equalTo(CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight)))
+				})
 			}
-			self.antitrackingButton.hidden = false
-			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
-				make.size.equalTo(CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight)))
-			})
 		} else {
 			self.antitrackingButton.hidden = true
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
