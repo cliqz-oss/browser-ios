@@ -27,6 +27,7 @@ public enum TelemetryLogEventType {
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
     case Toolbar            (String, String, String, Bool, Int?)
+    case Keyboard            (String, String, Bool, Int?)
 }
 
 
@@ -146,6 +147,9 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
                 disableSendingEvent = true
                 
+            case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
+                // disable sending event when there is interaciton with keyboars
+                disableSendingEvent = true
             }
             
             // Always store the event
@@ -428,6 +432,21 @@ class TelemetryLogger : EventsLogger {
             event["char_count"] = customData
         } else if let customData = customData where target == "attack" {
             event["tracker_count"] = customData
+        }
+        
+        return event
+    }
+    
+    private func createKeyboardEvent(action: String, view: String, isForgetMode: Bool, showDuration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "keyboard"
+        event["action"] = action
+        event["view"] = view
+        event["is_forget"] = isForgetMode
+        
+        if let showDuration = showDuration {
+            event["show _duration"] = showDuration
         }
         
         return event

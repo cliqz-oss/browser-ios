@@ -136,6 +136,8 @@ class BrowserViewController: UIViewController {
         containerViewController.transitioningDelegate = self
         return containerViewController
     }()
+    // Cliqz: added to record keyboard show duration for keyboard telemetry signal
+    var keyboardShowTime = 0.0
     
     // Cliqz: key for storing the last visited website
     let lastVisitedWebsiteKey = "lastVisitedWebsite"
@@ -562,6 +564,16 @@ class BrowserViewController: UIViewController {
                                                          selector: #selector(BrowserViewController.openSettings),
                                                          name: NotificationStatusNotificationTapped,
                                                          object: nil)
+        
+        // Cliqz: add observer for keyboard actions for Telemetry signals
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(BrowserViewController.keyboardWillShow(_:)),
+                                                         name: UIKeyboardWillShowNotification,
+                                                         object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(BrowserViewController.keyboardWillHide(_:)),
+                                                         name: UIKeyboardWillHideNotification,
+                                                         object: nil)
     }
 
     private func showRestoreTabsAlert() {
@@ -660,6 +672,10 @@ class BrowserViewController: UIViewController {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationStatusNotificationTapped, object: nil)
+        
+        // Cliqz: remove keyboard obervers
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
 
     func resetBrowserChrome() {

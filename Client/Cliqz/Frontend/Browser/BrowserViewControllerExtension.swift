@@ -167,4 +167,20 @@ extension BrowserViewController: AntitrackingViewDelegate {
             TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, view, isForgetMode, customData))
         }
     }
+    
+    //MARK - keyboard telemetry signals
+    func keyboardWillShow(notification: NSNotification) {
+        if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
+            let view = getCurrentView() {
+            keyboardShowTime = NSDate.getCurrentMillis()
+            TelemetryLogger.sharedInstance.logEvent(.Keyboard("show", view, isForgetMode, nil))
+        }
+    }
+    func keyboardWillHide(notification: NSNotification) {
+        if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
+            let view = getCurrentView() {
+            let showDuration = Int(NSDate.getCurrentMillis() - keyboardShowTime)
+            TelemetryLogger.sharedInstance.logEvent(.Keyboard("hide", view, isForgetMode, showDuration))
+        }
+    }
 }
