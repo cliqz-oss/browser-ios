@@ -3857,10 +3857,9 @@ extension BrowserViewController {
                 searchController.resetState()
                 
             })
-            
         }
-
     }
+
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
         if let selectedTab = self.tabManager.selectedTab {

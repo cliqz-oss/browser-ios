@@ -175,7 +175,6 @@ class AntiTrackingModule: NSObject {
         // set up System global for module import
         context.evaluateScript("var exports = {}")
         loadJavascriptSource("system-polyfill")
-        context.evaluateScript("exports.System.import")
         context.evaluateScript("var System = exports.System;")
         loadJavascriptSource("fs-polyfill")
         
@@ -183,8 +182,13 @@ class AntiTrackingModule: NSObject {
         loadConfigFile()
         
         // load promise
-        loadJavascriptSource("es6-promise")
-        
+        loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+		// Quick fix for iOS8: polyfill for ios8
+		if #available(iOS 9, *) {
+		} else {
+			loadJavascriptSource("/bower_components/core.js/client/core")
+		}
+
         // create legacy CliqzUtils global
          context.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
         
