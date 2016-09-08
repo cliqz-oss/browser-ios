@@ -125,6 +125,8 @@ extension BrowserViewController: AntitrackingViewDelegate {
 	}
 
     func showAntiPhishingAlert(domainName: String) {
+        let antiPhishingShowTime = NSDate.getCurrentMillis()
+        
         let title = NSLocalizedString("Warning: deceptive website!", tableName: "Cliqz", comment: "Antiphishing alert title")
         let message = NSLocalizedString("CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information", tableName: "Cliqz", comment: "Antiphishing alert message")
         let personnalizedMessage = message.replace("%1$", replacement: domainName)
@@ -135,12 +137,20 @@ extension BrowserViewController: AntitrackingViewDelegate {
         alert.addAction(UIAlertAction(title: backToSafeSiteButtonTitle, style: .Default, handler: { (action) in
             // go back
             self.goBack()
+            TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("click", "back", nil))
+            let duration = Int(NSDate.getCurrentMillis()-antiPhishingShowTime)
+            TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("hide", nil, duration))
         }))
         
         let continueDespiteWarningButtonTitle = NSLocalizedString("Continue despite warning", tableName: "Cliqz", comment: "Continue despite warning buttun title in antiphishing alert title")
-        alert.addAction(UIAlertAction(title: continueDespiteWarningButtonTitle, style: .Destructive, handler: nil))
+        alert.addAction(UIAlertAction(title: continueDespiteWarningButtonTitle, style: .Destructive, handler: { (action) in
+            TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("click", "continue", nil))
+            let duration = Int(NSDate.getCurrentMillis()-antiPhishingShowTime)
+            TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("hide", nil, duration))
+        }))
         
         self.presentViewController(alert, animated: true, completion: nil)
+        TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("show", nil, nil))
         
     }
     

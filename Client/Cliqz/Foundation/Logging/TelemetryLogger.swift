@@ -30,6 +30,7 @@ public enum TelemetryLogEventType {
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case Attrack            (String, String?, Int?)
+    case AntiPhishing            (String, String?, Int?)
 }
 
 
@@ -161,6 +162,12 @@ class TelemetryLogger : EventsLogger {
             case .Attrack(let action, let target, let customData):
                 event = self.createAttrackEvent(action, target: target, customData: customData)
                 // disable sending event when there is interaciton with anti-tracking UI
+                disableSendingEvent = true
+                
+            
+            case .AntiPhishing(let action, let target, let showDuration):
+                event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
+                // disable sending event when there is interaciton with anti-phishing UI
                 disableSendingEvent = true
             }
             
@@ -494,5 +501,19 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
+    private func createAntiPhishingEvent(action: String, target: String?, showDuration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "anti_phishing"
+        event["action"] = action
+        if let target = target {
+            event["target"] = target
+        }
+        
+        if let showDuration = showDuration {
+            event["show_duration"] = showDuration
+        }
+        return event
+    }
     
 }
