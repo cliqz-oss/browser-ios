@@ -10,7 +10,7 @@ struct IntroViewControllerUX {
     static let Height = 667
 
     // Cliqz: replaced fixfox intro with cliqz intro
-    static let CardSlides = ["cliqz-intro1", "cliqz-intro2", "cliqz-intro3"]
+    static let CardSlides = ["cliqz-intro2", "cliqz-intro3"]
 //    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
 
     static let NumberOfCards = CardSlides.count
@@ -195,7 +195,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
 
         // Cliqz: changed titles and texts of the cards
-        addCard("", title: IntroViewControllerUX.CardTitleCliqzBrowser)
         addTextCard(IntroViewControllerUX.CardTextTyping)
         addTextCard(IntroViewControllerUX.CardTextLocationSearch, additionalView: gettingStartedButton)
             
