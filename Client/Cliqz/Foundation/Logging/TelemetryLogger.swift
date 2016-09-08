@@ -29,6 +29,7 @@ public enum TelemetryLogEventType {
     case Toolbar            (String, String, String, Bool, Int?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
+    case Attrack            (String, String?, Int?)
 }
 
 
@@ -154,7 +155,12 @@ class TelemetryLogger : EventsLogger {
                 
             case .WebMenu(let action, let target, let isForgetMode):
                 event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
-                // disable sending event when there is interaciton web menu
+                // disable sending event when there is interaciton with web menu
+                disableSendingEvent = true
+            
+            case .Attrack(let action, let target, let customData):
+                event = self.createAttrackEvent(action, target: target, customData: customData)
+                // disable sending event when there is interaciton with anti-tracking UI
                 disableSendingEvent = true
             }
             
@@ -457,6 +463,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
     private func createWebMenuEvent(action: String, target: String, isForgetMode: Bool) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -467,5 +474,25 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
+    private func createAttrackEvent(action: String, target: String?, customData: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "attrack"
+        event["action"] = action
+        if let target = target {
+            event["target"] = target
+            if let customData = customData where target == "info_company" {
+                event["index"] = customData
+            }
+        }
+        
+        if let customData = customData where action == "hide" {
+            event["show_duration"] = customData
+        }
+        
+        return event
+    }
+    
     
 }

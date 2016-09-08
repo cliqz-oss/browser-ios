@@ -42,6 +42,8 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	weak var antitrackingDelegate: AntitrackingViewDelegate? = nil
 
 	private let isPrivateMode: Bool!
+    
+    var viewOpenTime = 0.0
 
 	init(webViewID: Int, privateMode: Bool = false) {
 		trackedWebViewID = webViewID
@@ -60,6 +62,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        viewOpenTime = NSDate.getCurrentMillis()
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
 		let blurEffect = UIBlurEffect(style: .Light)
 		self.blurryBackgroundView = UIVisualEffectView(effect: blurEffect)
@@ -186,6 +189,8 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 				self.removeFromParentViewController()
 			}
 		}
+        let showDuration = Int(NSDate.getCurrentMillis() - viewOpenTime)
+        TelemetryLogger.sharedInstance.logEvent(.Attrack("hide", nil, showDuration))
 	}
 
 	@objc private func openHelp(sender: UIButton) {
@@ -193,6 +198,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		if let u = url {
 			self.delegate?.navigateToURLInNewTab(u)
 			closeAntitrackingView()
+            TelemetryLogger.sharedInstance.logEvent(.Attrack("click", "help", nil))
 		}
 	}
 
@@ -313,6 +319,7 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 		if let u = url {
 			self.delegate?.navigateToURLInNewTab(u)
 			closeAntitrackingView()
+            TelemetryLogger.sharedInstance.logEvent(.Attrack("click", "info_company", indexPath.row))
 		}
 	}
 }
