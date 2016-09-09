@@ -22,7 +22,7 @@ struct TodayUX {
 
     static let verticalWidgetMargin: CGFloat = 10
     static let horizontalWidgetMargin: CGFloat = 10
-    static let copyLinkImageHorizontalPadding: CGFloat = 22
+    static var defaultWidgetTextMargin: CGFloat = 22
 
     static let buttonSpacerMultipleOfScreen = 0.4
 }
@@ -72,7 +72,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         // We need to set the background image/color for .Normal, so the whole button is tappable.
         button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
         button.setBackgroundColor(TodayUX.backgroundHightlightColor, forState: .Highlighted)
-
         button.setImage(UIImage(named: "copy_link_icon"), forState: .Normal)
 
         button.label.font = UIFont.systemFontOfSize(TodayUX.labelTextSize)
@@ -94,6 +93,20 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
     private var hasCopiedURL: Bool {
         return copiedURL != nil
+    }
+
+    private var scheme: String {
+        
+#if CLIQZ
+        // Cliqz: return correct scheme so that today's widget redirect to Cliqz app not firefox app
+        return "cliqz"
+#else
+        guard let string = NSBundle.mainBundle().objectForInfoDictionaryKey("MozInternalURLScheme") as? String else {
+            // Something went wrong/weird, but we should fallback to the public one.
+            return "firefox"
+        }
+        return string
+#endif
     }
 
     override func viewDidLoad() {
@@ -140,19 +153,18 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             make.height.equalTo(TodayUX.copyLinkButtonHeight)
         }
 
-        view.snp_makeConstraints { make in
+        view.snp_remakeConstraints { make in
             var extraHeight = TodayUX.verticalWidgetMargin
             if hasCopiedURL {
                 extraHeight += TodayUX.copyLinkButtonHeight + TodayUX.verticalWidgetMargin
             }
-            make.height.equalTo(buttonSpacer.snp_height).offset(extraHeight)
+            make.height.equalTo(buttonSpacer.snp_height).offset(extraHeight).priorityHigh()
         }
         
-        // Cliqz: Hide new private tab button on iOS8
-        guard #available(iOS 9, *) else {
+        #if CLIQZ
+            // Cliqz: Hide private tab option from today's widget
             newPrivateTabButton.hidden = true
-            return
-        }
+        #endif
     }
 
     override func viewDidLayoutSubviews() {
@@ -166,6 +178,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.openCopiedLinkButton.hidden = false
             self.openCopiedLinkButton.subtitleLabel.hidden = SystemUtils.isDeviceLocked()
             self.openCopiedLinkButton.subtitleLabel.text = url.absoluteString
+            self.openCopiedLinkButton.remakeConstraints()
         } else {
             self.openCopiedLinkButton.hidden = true
         }
@@ -174,6 +187,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
 
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
+        TodayUX.defaultWidgetTextMargin = defaultMarginInsets.left
         return UIEdgeInsetsMake(0, 0, TodayUX.verticalWidgetMargin, 0)
     }
 
@@ -191,14 +205,15 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     // MARK: Button behaviour
 
     @objc func onPressNewTab(view: UIView) {
-        openContainingApp("cliqz://")
+        openContainingApp("")
     }
 
     @objc func onPressNewPrivateTab(view: UIView) {
-        openContainingApp("cliqz://?private=true")
+        openContainingApp("?private=true")
     }
 
-    private func openContainingApp(urlString: String) {
+    private func openContainingApp(urlSuffix: String = "") {
+        let urlString = "\(scheme)://\(urlSuffix)"
         self.extensionContext?.openURL(NSURL(string: urlString)!) { success in
             log.info("Extension opened containing app: \(success)")
         }
@@ -209,7 +224,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             _ = NSURL(string: urlString) {
             let encodedString =
                 urlString.escape()
-            openContainingApp("cliqz://?url=\(encodedString)")
+            openContainingApp("?url=\(encodedString)")
         }
     }
 }
@@ -320,20 +335,23 @@ class ButtonWithSublabel: UIButton {
 
         imageView.snp_remakeConstraints { make in
             make.centerY.equalTo(self.snp_centerY)
-            make.left.equalTo(self.snp_left).offset(TodayUX.copyLinkImageHorizontalPadding)
-        }
-
-        titleLabel.snp_remakeConstraints { make in
-            make.top.equalTo(self.snp_top).offset(TodayUX.verticalWidgetMargin / 2)
-            make.left.equalTo(imageView.snp_right).offset(TodayUX.horizontalWidgetMargin).priorityLow()
+            make.right.equalTo(titleLabel.snp_left).offset(-TodayUX.horizontalWidgetMargin)
         }
 
         subtitleLabel.lineBreakMode = .ByTruncatingTail
         subtitleLabel.snp_makeConstraints { make in
             make.left.equalTo(titleLabel.snp_left)
             make.top.equalTo(titleLabel.snp_bottom).offset(TodayUX.verticalWidgetMargin / 2)
-            make.leading.equalTo(imageView.snp_trailing).offset(TodayUX.horizontalWidgetMargin)
             make.right.lessThanOrEqualTo(self.snp_right).offset(-TodayUX.horizontalWidgetMargin)
+        }
+
+        remakeConstraints()
+    }
+
+    func remakeConstraints() {
+        self.label.snp_remakeConstraints { make in
+            make.top.equalTo(self.snp_top).offset(TodayUX.verticalWidgetMargin / 2)
+            make.left.equalTo(self.snp_left).offset(TodayUX.defaultWidgetTextMargin).priorityHigh()
         }
     }
 

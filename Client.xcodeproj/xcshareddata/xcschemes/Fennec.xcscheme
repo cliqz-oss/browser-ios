@@ -20,20 +20,6 @@
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1E32B4271CF5A81C00412468"
-               BuildableName = "CliqzUITests.xctest"
-               BlueprintName = "CliqzUITests"
-               ReferencedContainer = "container:Client.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -46,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1E32B4271CF5A81C00412468"
+               BlueprintIdentifier = "1E79DEBE1D5098F6006BEB4A"
                BuildableName = "CliqzUITests.xctest"
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">

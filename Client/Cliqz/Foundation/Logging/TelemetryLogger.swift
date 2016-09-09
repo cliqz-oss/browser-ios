@@ -10,13 +10,12 @@ import Foundation
 
 public enum TelemetryLogEventType {
     case LifeCycle          (String, String)
-    case ApplicationUsage   (String, String, String, Int, Double, String?, Double?, Double?)
+    case ApplicationUsage   (String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, String, Int, Int, [String: AnyObject])
-    case UrlFocusBlur       (String, String)
+    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
     case LayerChange        (String, String)
-    case Onboarding         (String, Int)
+    case Onboarding         (String, Int, Int?)
     case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
@@ -25,7 +24,14 @@ public enum TelemetryLogEventType {
     case HomeScreenShortcut (String, Int)
     case TabSignal          (String, String, Int?, Int)
     case NewsNotification   (String)
-	case YoutubeVideoDownloader	(String, String, String, String)
+	case YoutubeVideoDownloader	(String, String, String)
+    case Settings (String, String, String, String?, Int?)
+    case Toolbar            (String, String, String, Bool, Int?)
+    case Keyboard            (String, String, Bool, Int?)
+    case WebMenu            (String, String, Bool)
+    case Attrack            (String, String?, Int?)
+    case AntiPhishing            (String, String?, Int?)
+    case ShareMenu            (String, String)
 }
 
 
@@ -87,11 +93,11 @@ class TelemetryLogger : EventsLogger {
 
             switch (eventType) {
                 
-            case .LifeCycle(let action, let version):
-                event = self.createLifeCycleEvent(action, version: version)
+            case .LifeCycle(let action, let distVersion):
+                event = self.createLifeCycleEvent(action, distVersion: distVersion)
                 
-            case .ApplicationUsage(let action, let network, let context, let battery, let memory, let startupType, let startupTime, let timeUsed):
-                event = self.createApplicationUsageEvent(action, network: network, context: context, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, timeUsed: timeUsed)
+            case .ApplicationUsage(let action, let network, let battery, let memory, let startupType, let startupTime, let openDuration):
+                event = self.createApplicationUsageEvent(action, network: network, battery: battery, memory: memory, startupType: startupType, startupTime: startupTime, openDuration: openDuration)
                 
             case .NetworkStatus(let network, let duration):
                 event = self.createNetworkStatusEvent(network, duration:duration)
@@ -101,19 +107,14 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is query interaction
                 disableSendingEvent = true
                 
-            case .Environment(let device, let language, let version, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
-                event = self.createEnvironmentEvent(device, language: language, version: version, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
-                
-            case .UrlFocusBlur(let action, let context):
-                event = self.createUrlFocusBlurEvent(action, context: context)
-                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
-                disableSendingEvent = true
+            case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
+                event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
             case .LayerChange(let currentLayer, let nextLayer):
                 event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
                 
-            case .Onboarding(let action, let page):
-                event = self.createOnboardingEvent(action, page: page)
+            case .Onboarding(let action, let index, let duration):
+                event = self.createOnboardingEvent(action, index: index, duration: duration)
                
             case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
                 event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
@@ -139,8 +140,41 @@ class TelemetryLogger : EventsLogger {
             case .NewsNotification(let action):
                 event = self.createNewsNotificationEvent(action)
 			
-			case .YoutubeVideoDownloader(let type, let action, let statusKey, let statusValue):
-				event = self.createYoutubeVideoDownloaderEvent(type, action: action, statusKey: statusKey, statusValue: statusValue)
+			case .YoutubeVideoDownloader(let action, let statusKey, let statusValue):
+				event = self.createYoutubeVideoDownloaderEvent(action, statusKey: statusKey, statusValue: statusValue)
+                
+            case .Settings(let view, let action, let target, let state, let duration):
+                event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
+                
+            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
+                event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
+                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
+                disableSendingEvent = true
+                
+            case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
+                // disable sending event when there is interaciton with keyboars
+                disableSendingEvent = true
+                
+            case .WebMenu(let action, let target, let isForgetMode):
+                event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
+                // disable sending event when there is interaciton with web menu
+                disableSendingEvent = true
+            
+            case .Attrack(let action, let target, let customData):
+                event = self.createAttrackEvent(action, target: target, customData: customData)
+                // disable sending event when there is interaciton with anti-tracking UI
+                disableSendingEvent = true
+                
+            case .AntiPhishing(let action, let target, let showDuration):
+                event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
+                // disable sending event when there is interaciton with anti-phishing UI
+                disableSendingEvent = true
+                
+            case .ShareMenu (let action, let target):
+                event = self.createShareMenuEvent(action, target: target)
+                // disable sending event when there is interaciton with share menu
+                disableSendingEvent = true
+                
             }
             
             // Always store the event
@@ -181,46 +215,47 @@ class TelemetryLogger : EventsLogger {
     }
 
     
-    private func createLifeCycleEvent(action: String, version: String) -> [String: AnyObject]{
+    private func createLifeCycleEvent(action: String, distVersion: String) -> [String: AnyObject]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
         event["action"] = action
-        event["version"] = version
-        
+        event["version_dist"] = distVersion
+
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, context: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, timeUsed: Double?) -> [String: AnyObject]{
+    private func createApplicationUsageEvent(action: String, network: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, openDuration: Double?) -> [String: AnyObject]{
         var event = createBasicEvent()
 
         event["type"] = "app_state_change"
         event["state"] = action
         event["network"] = network
-        event["context"] = context
         event["battery"] = battery
         event["memory"] = NSNumber(longLong: Int64(memory))
 
-        if startupType != nil {
+        if let startupType = startupType {
             event["startup_type"] = startupType
         }
         
-        if let s = startupTime {
-            event["startup_time"] = NSNumber(longLong: Int64(s))
+        if let startupTime = startupTime {
+            event["startup_time"] = NSNumber(longLong: Int64(startupTime))
         }
 
-        if timeUsed != nil {
-            event["time_used"] = timeUsed
+        if let openDuration = openDuration {
+            event["open_duration"] = openDuration
         }
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, version: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
+    private func createEnvironmentEvent(device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
         event["device"] = device
         event["language"] = language
-        event["version"] = version
+        event["version"] = extensionVersion
+        event["version_dist"] = distVersion
+        event["version_host"] = hostVersion
         event["os_version"] = osVersion
         event["defaultSearchEngine"] = defaultSearchEngine
         event["historyUrls"] = historyUrls
@@ -249,18 +284,6 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createUrlFocusBlurEvent(action: String, context: String) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = action
-        if !context.isEmpty {
-            event["context"] = context
-        }
-        
-        return event
-    }
-    
     private func createLayerChangeEvent(currentLayer: String, nextLayer: String) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -273,18 +296,21 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createOnboardingEvent(action: String, page: Int) -> [String: AnyObject] {
+    private func createOnboardingEvent(action: String, index: Int, duration: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "onboarding"
         event["action"] = action
-        event["action_target"] = page
-		event["product"] = "cliqz_ios"
 		event["version"] = "1.0"
-        if action == "hide" {
-            event["display_time"] = event["ts"]
+        event["index"] = index
+        
+        if action == "click" {
+           event["target"] = "next"
+        }
+        
+        if let showduration = duration {
+            event["show_duration"] = showduration
 		}
-
         return event
     }
     private func createPastTabEvent(pastType: String, querylength: Int, positionAge: Double, lengthAge: Double, displayTime: Double) -> [String: AnyObject] {
@@ -393,11 +419,120 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 	
-	private func createYoutubeVideoDownloaderEvent(type: String, action: String, statusKey: String, statusValue: String) -> [String: AnyObject] {
+	private func createYoutubeVideoDownloaderEvent(action: String, statusKey: String, statusValue: String) -> [String: AnyObject] {
 		var event = createBasicEvent()
-		event["type"] = type
+		event["type"] = "video_downloader"
 		event["action"] = action
 		event[statusKey] = statusValue
 		return event
 	}
+    
+    private func createSettingsEvent(view: String, action: String, target: String, state: String?, duration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        event["type"] = "settings"
+        event["view"] = view
+        event["action"] = action
+        event[target] = target
+        if let state = state {
+            event["state"] = state
+        }
+        if let duration = duration {
+            event["show_duration"] = duration
+        }
+        return event
+    }
+    
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool, customData: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "toolbar"
+        event["action"] = action
+        event["target"] = target
+        event["view"] = view
+        event["is_forget"] = isForgetMode
+        
+        if let customData = customData where target == "overview" {
+            event["open_tabs"] = customData
+        } else if let customData = customData where target == "delete" {
+            event["char_count"] = customData
+        } else if let customData = customData where target == "attack" {
+            event["tracker_count"] = customData
+        } else if let customData = customData where target == "reader_mode" {
+            event["state"] = customData == 1 ? "true" : "false"
+        }
+        
+        return event
+    }
+    
+    private func createKeyboardEvent(action: String, view: String, isForgetMode: Bool, showDuration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "keyboard"
+        event["action"] = action
+        event["view"] = view
+        event["is_forget"] = isForgetMode
+        
+        if let showDuration = showDuration {
+            event["show _duration"] = showDuration
+        }
+        
+        return event
+    }
+    
+    private func createWebMenuEvent(action: String, target: String, isForgetMode: Bool) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "web_menu"
+        event["action"] = action
+        event["target"] = target
+        event["is_forget"] = isForgetMode
+        
+        return event
+    }
+    
+    private func createAttrackEvent(action: String, target: String?, customData: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "attrack"
+        event["action"] = action
+        if let target = target {
+            event["target"] = target
+            if let customData = customData where target == "info_company" {
+                event["index"] = customData
+            }
+        }
+        
+        if let customData = customData where action == "hide" {
+            event["show_duration"] = customData
+        }
+        
+        return event
+    }
+    
+    private func createAntiPhishingEvent(action: String, target: String?, showDuration: Int?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "anti_phishing"
+        event["action"] = action
+        if let target = target {
+            event["target"] = target
+        }
+        
+        if let showDuration = showDuration {
+            event["show_duration"] = showDuration
+        }
+        return event
+    }
+    
+    private func createShareMenuEvent(action: String, target: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "share_menu"
+        event["action"] = action
+        event["target"] = target
+
+        return event
+    }
+    
+    
 }

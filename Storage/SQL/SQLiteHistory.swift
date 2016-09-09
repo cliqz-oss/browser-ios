@@ -119,6 +119,8 @@ public class SQLiteHistory {
     }
 }
 
+private let topSitesQuery = "SELECT * FROM \(TableCachedTopSites) ORDER BY frecencies DESC LIMIT (?)"
+
 extension SQLiteHistory: BrowserHistory {
     public func removeSiteFromTopSites(site: Site) -> Success {
         if let host = site.url.asURL?.normalizedHost() {
@@ -265,8 +267,6 @@ extension SQLiteHistory: BrowserHistory {
 
     public func getTopSitesWithLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         // Cliqz: Used Cliqz customized query to get top sites instead of the regular Fire Fox one
-//        let topSitesQuery = "SELECT * FROM \(TableCachedTopSites) ORDER BY frecencies DESC LIMIT (?)"
-        
         let topSitesQuery = "select mzh.id as historyID, mzh.guid as guid, mzh.url as url, mzh.title as title, sum(mzh.days_count) as total_count, count(id) as visit_count " +  
                                     "from ( " +
                                         "select \(TableHistory).id , \(TableHistory).guid, \(TableHistory).url, \(TableHistory).title, \(TableVisits).siteID, " +
@@ -279,12 +279,12 @@ extension SQLiteHistory: BrowserHistory {
                                                 "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +
                                     ") as mzh " +
                             "group by mzh.siteID " +
+							// Cliqz: Changed next 2 lines to fix top sites logic
                             "having visit_count > 2 " +
                             "order by total_count desc,visit_count desc, mzh.last_visit_date desc " +
                             "limit (?)"
         
-        let factory = SQLiteHistory.iconHistoryColumnFactory
-        return self.db.runQuery(topSitesQuery, args: [limit], factory: factory)
+        return self.db.runQuery(topSitesQuery, args: [limit], factory: SQLiteHistory.iconHistoryColumnFactory)
     }
 
     public func setTopSitesNeedsInvalidation() {
@@ -310,6 +310,43 @@ extension SQLiteHistory: BrowserHistory {
     public func refreshTopSitesCache() -> Success {
         let cacheSize = Int(prefs.intForKey(PrefsKeys.KeyTopSitesCacheSize) ?? 0)
         return updateTopSitesCacheWithLimit(cacheSize)
+    }
+
+    public func areTopSitesDirty(withLimit limit: Int) -> Deferred<Maybe<Bool>> {
+        let (whereData, groupBy) = self.topSiteClauses()
+        let (query, args) = self.filteredSitesByFrecencyQueryWithHistoryLimit(limit, bookmarksLimit: 0, groupClause: groupBy, whereData: whereData)
+        let cacheArgs: Args = [limit]
+
+        return accumulate([
+            { self.db.runQuery(query, args: args, factory: SQLiteHistory.iconHistoryColumnFactory) },
+            { self.db.runQuery(topSitesQuery, args: cacheArgs, factory: SQLiteHistory.iconHistoryColumnFactory) }
+        ]).bind { results in
+            guard let results = results.successValue else {
+                // Something weird happened - default to dirty.
+                return deferMaybe(true)
+            }
+
+            let frecencyResults = results[0]
+            let cacheResults = results[1]
+
+            // Counts don't match? Exit early and say we're dirty.
+            if frecencyResults.count != cacheResults.count {
+                return deferMaybe(true)
+            }
+
+            var isDirty = false
+            // Check step-wise that the ordering and entries are the same
+            (0..<frecencyResults.count).forEach { index in
+                guard let frecencyID = frecencyResults[index]?.id,
+                      let cacheID = cacheResults[index]?.id where frecencyID == cacheID else {
+                    // It only takes one difference to make everything dirty
+                    isDirty = true
+                    return
+                }
+            }
+
+            return deferMaybe(isDirty)
+        }
     }
 
     private func updateTopSitesCacheWithLimit(limit : Int) -> Success {
@@ -567,16 +604,24 @@ extension SQLiteHistory: BrowserHistory {
         }
 
         // Innermost: grab history items and basic visit/domain metadata.
-        let ungroupedSQL =
-        "SELECT \(TableHistory).id AS historyID, \(TableHistory).url AS url, title, guid, domain_id, domain" +
+        var ungroupedSQL =
+        "SELECT \(TableHistory).id AS historyID, \(TableHistory).url AS url, \(TableHistory).title AS title, \(TableHistory).guid AS guid, domain_id, domain" +
         ", COALESCE(max(case \(TableVisits).is_local when 1 then \(TableVisits).date else 0 end), 0) AS localVisitDate" +
         ", COALESCE(max(case \(TableVisits).is_local when 0 then \(TableVisits).date else 0 end), 0) AS remoteVisitDate" +
         ", COALESCE(sum(\(TableVisits).is_local), 0) AS localVisitCount" +
         ", COALESCE(sum(case \(TableVisits).is_local when 1 then 0 else 1 end), 0) AS remoteVisitCount" +
         " FROM \(TableHistory) " +
         "INNER JOIN \(TableDomains) ON \(TableDomains).id = \(TableHistory).domain_id " +
-        "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
-        whereClause + " GROUP BY historyID"
+        "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id "
+
+        if includeBookmarks && AppConstants.MOZ_AWESOMEBAR_DUPES {
+            ungroupedSQL.appendContentsOf("LEFT JOIN \(ViewAllBookmarks) on \(ViewAllBookmarks).url = \(TableHistory).url ")
+        }
+        ungroupedSQL.appendContentsOf(whereClause.stringByReplacingOccurrencesOfString("url", withString: "\(TableHistory).url").stringByReplacingOccurrencesOfString("title", withString: "\(TableHistory).title"))
+        if includeBookmarks && AppConstants.MOZ_AWESOMEBAR_DUPES {
+            ungroupedSQL.appendContentsOf(" AND \(ViewAllBookmarks).url IS NULL")
+        }
+        ungroupedSQL.appendContentsOf(" GROUP BY historyID")
 
         // Next: limit to only those that have been visited at all within the last six months.
         // (Don't do that in the innermost: we want to get the full count, even if some visits are older.)
@@ -638,11 +683,12 @@ extension SQLiteHistory: BrowserHistory {
                 "1 AS is_bookmarked",
                 "FROM", ViewAwesomebarBookmarksWithIcons,
                 whereClause,                  // The columns match, so we can reuse this.
+                AppConstants.MOZ_AWESOMEBAR_DUPES ? "GROUP BY url" : "",
                 "ORDER BY visitDate DESC LIMIT \(bookmarksLimit)",
             ].joinWithSeparator(" ")
 
             let sql =
-            "SELECT * FROM (SELECT * FROM (\(historyWithIconsSQL)) UNION ALL SELECT * FROM (\(bookmarksWithIconsSQL))) ORDER BY is_bookmarked DESC, frecencies DESC"
+            "SELECT * FROM (SELECT * FROM (\(historyWithIconsSQL)) UNION SELECT * FROM (\(bookmarksWithIconsSQL))) ORDER BY is_bookmarked DESC, frecencies DESC"
             return (sql, args)
         }
 
@@ -659,11 +705,11 @@ extension SQLiteHistory: BrowserHistory {
             "1 AS is_bookmarked",
             "FROM", ViewAwesomebarBookmarks,
             whereClause,                  // The columns match, so we can reuse this.
+            "GROUP BY url",
             "ORDER BY visitDate DESC LIMIT \(bookmarksLimit)",
         ].joinWithSeparator(" ")
 
-
-        let allSQL = "SELECT * FROM (SELECT * FROM (\(historySQL)) UNION ALL SELECT * FROM (\(bookmarksSQL))) ORDER BY is_bookmarked DESC, frecencies DESC"
+        let allSQL = "SELECT * FROM (SELECT * FROM (\(historySQL)) UNION SELECT * FROM (\(bookmarksSQL))) ORDER BY is_bookmarked DESC, frecencies DESC"
         return (allSQL, args)
     }
 }
@@ -690,6 +736,15 @@ extension SQLiteHistory: Favicons {
         " WHERE bm.faviconID = \(TableFavicons).id AND bm.bmkUri IS ?"
         let args: Args = [url]
         return db.runQuery(sql, args: args, factory: SQLiteHistory.iconColumnFactory)
+    }
+    
+    public func getSitesForURLs(urls: [String]) -> Deferred<Maybe<Cursor<Site?>>> {
+        let inExpression = urls.joinWithSeparator("\",\"")
+        let sql = "SELECT \(TableHistory).id AS historyID, \(TableHistory).url AS url, title, guid, iconID, iconURL, iconDate, iconType, iconWidth FROM " +
+            "\(ViewWidestFaviconsForSites), \(TableHistory) WHERE " +
+            "\(TableHistory).id = siteID AND \(TableHistory).url IN (\"\(inExpression)\")"
+        let args: Args = []
+        return db.runQuery(sql, args: args, factory: SQLiteHistory.iconHistoryColumnFactory)
     }
 
     public func clearAllFavicons() -> Success {

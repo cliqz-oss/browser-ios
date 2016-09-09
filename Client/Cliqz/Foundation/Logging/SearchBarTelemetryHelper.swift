@@ -46,17 +46,6 @@ class SearchBarTelemetryHelper: NSObject {
             TelemetryLogger.sharedInstance.logEvent(.QueryInteraction("paste", currentLength))
         }
     }
-    func logUrlBarFocusEvent() {
-        urlbarFocusTime = NSDate.getCurrentMillis()
-        
-        //TODO context
-        let context = ""
-        TelemetryLogger.sharedInstance.logEvent(.UrlFocusBlur("urlbar_focus", context))
-    }
-    
-    class func logUrlBarBlurEvent() {
-        TelemetryLogger.sharedInstance.logEvent(.UrlFocusBlur("urlbar_blur", ""))
-    }
     
     func logResultEnterEvent(enteredText: String, autoCompletedText: String) {
         let queryLength = enteredText.characters.count
@@ -67,5 +56,9 @@ class SearchBarTelemetryHelper: NSObject {
         let urlbarTime = now - urlbarFocusTime
         
         TelemetryLogger.sharedInstance.logEvent(.ResultEnter(queryLength, autocompletedLength, autocompletedUrl, reactionTime, urlbarTime))
+    }
+    
+    func didFocusUrlBar() {
+        urlbarFocusTime = NSDate.getCurrentMillis()
     }
 }

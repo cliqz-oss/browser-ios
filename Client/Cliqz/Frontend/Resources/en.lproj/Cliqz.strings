@@ -23,11 +23,8 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Imprint";
 
-/* Send Feedback Email */
-"Send Feedback" = "Send Feedback";
-
-/* Send Feedback Email Subject*/
-"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
+"FAQs & Support" = "FAQs & Support";
 
 /* Open search section of settings */
 "Search" = "Search";
@@ -118,3 +115,72 @@
 
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Make available offline";
+
+/* History title on dashboard */
+"History" = "History";
+
+/* Add Favorites */
+"Add Favorite" = "Add Favorite";
+
+/* Setting menu title */
+"Settings" = "Settings";
+
+/* New tab title */
+"New Tab" = "New Tab";
+
+/* New private tab title */
+"New Private Tab" = "New Forget Tab";
+
+/* Open new tab title */
+"Open New Tab" = "Open New Tab";
+
+/* Open new forget mode tab title */
+"Open New Forget Tab" = "Open New Forget Tab";
+
+/* Show images title */
+"Show Images" = "Show Images";
+
+/* Hide images title */
+"Hide Images" = "Hide Images";
+
+/* Night mode title */
+"Night Mode" = "Night Mode";
+
+/* Turn off Night mode title */
+"Night Mode off" = "Night Mode Off";
+
+/* Remove favorites title */
+"Remove Favorites" = "Remove Favorite";
+
+/* Dashboard navigation bar title */
+"Overview" = "Overview";
+
+/* Title on the tab view, when no URL is open on the tab */
+"Topsites" = "Topsites and News";
+
+/* Antitracking UI top title */
+"Data is protected" = "Your data is protected";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Private data points have been removed";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking companies";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Private data points";
+
+/* Antiphishing alert title */
+"Warning: deceptive website!" =  "Warning: deceptive website!";
+
+/* Antiphishing alert message */
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
+
+/* Back to safe site buttun title in antiphishing alert title */
+"Back to safe site" = "Back to safe site";
+
+/* Continue despite warning buttun title in antiphishing alert title */
+"Continue despite warning" = "Continue despite warning";
+
+/* Context menu option for opening a link in a new private tab */
+"Open In New Forget Tab" = "Open In New Forget Tab";

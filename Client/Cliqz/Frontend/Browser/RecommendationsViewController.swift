@@ -11,11 +11,6 @@ import Shared
 import Storage
 import WebKit
 
-protocol RecommendationsViewControllerDelegate: class {
-
-	func didSelectURL(url: NSURL)
-}
-
 class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
 
 	lazy var topSitesWebView: WKWebView = {
@@ -38,7 +33,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 	private let maxFrecencyLimit: Int = 30
 
-	weak var delegate: RecommendationsViewControllerDelegate?
+	weak var delegate: BrowserNavigationDelegate?
     var reload = false
 
 	private var spinnerView: UIActivityIndicatorView!
@@ -210,7 +205,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 extension RecommendationsViewController: JavaScriptBridgeDelegate {
     
     func didSelectUrl(url: NSURL) {
-        delegate?.didSelectURL(url)
+        delegate?.navigateToURL(url)
         self.dismiss()
     }
     

@@ -211,8 +211,9 @@ class ErrorPageHelper {
             return GCDWebServerDataResponse(data: NSData(contentsOfFile: path), contentType: "text/css")
         })
     }
-
-    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: WKWebView) {
+    // Cliqz: [UIWebView] Type change
+//    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: WKWebView) {
+    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: UIWebView) {
         // Don't show error pages for error pages.
         if ErrorPageHelper.isErrorPageURL(url) {
             if let previousURL = ErrorPageHelper.originalURLFromQuery(url),
@@ -271,7 +272,7 @@ class ErrorPageHelper {
     }
 }
 
-extension ErrorPageHelper: BrowserHelper {
+extension ErrorPageHelper: TabHelper {
     static func name() -> String {
         return "ErrorPageHelper"
     }
@@ -290,8 +291,10 @@ extension ErrorPageHelper: BrowserHelper {
             case ErrorPageHelper.MessageOpenInSafari:
                 UIApplication.sharedApplication().openURL(originalURL)
             case ErrorPageHelper.MessageCertVisitOnce:
-                if let cert = certFromErrorURL(errorURL) {
-                    ErrorPageHelper.certStore?.addCertificate(cert)
+                if let cert = certFromErrorURL(errorURL),
+                   let host = originalURL.host {
+                    let origin = "\(host):\(originalURL.port ?? 443)"
+                    ErrorPageHelper.certStore?.addCertificate(cert, forOrigin: origin)
                     message.webView?.reload()
                 }
             default:

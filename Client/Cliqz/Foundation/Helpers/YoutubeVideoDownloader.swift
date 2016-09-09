@@ -35,10 +35,10 @@ class YoutubeVideoDownloader {
 						PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(localPath)}) { completed, error in
 							if completed {
 								// TODO: Postponed showing status info for the next release
-								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "download", "is_success", "true"))
+								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "true"))
 								print("Video asset created")
 							} else {
-								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("video_downloader", "download", "is_success", "false"))
+								TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "false"))
 								// TODO: Postponed showing status info for the next release
 								print("Download failed: \(error)")
 							}
