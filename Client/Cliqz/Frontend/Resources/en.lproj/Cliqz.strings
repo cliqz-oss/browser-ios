@@ -23,11 +23,8 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Imprint";
 
-/* Send Feedback Email */
-"Send Feedback" = "Send Feedback";
-
-/* Send Feedback Email Subject*/
-"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
+"FAQs & Support" = "FAQs & Support";
 
 /* Open search section of settings */
 "Search" = "Search";
