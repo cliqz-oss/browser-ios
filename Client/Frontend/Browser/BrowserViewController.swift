@@ -1284,6 +1284,8 @@ class BrowserViewController: UIViewController {
 
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
+            // Cliqz: log telemetry signal for share menu
+            TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "search_page"))
         }
         activities.append(findInPageActivity)
 
@@ -1301,6 +1303,8 @@ class BrowserViewController: UIViewController {
         // Cliqz: Added settings activity to sharing menu
         let settingsActivity = SettingsActivity() {
             self.openSettings()
+            // Cliqz: log telemetry signal for share menu
+            TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "settings"))
         }
         activities.append(settingsActivity)
 
@@ -1317,6 +1321,9 @@ class BrowserViewController: UIViewController {
                     self.updateURLBarDisplayURL(tab)
                 }
                 self.updateReaderModeBar()
+            } else {
+                // Cliqz: log telemetry signal for share menu
+                TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "cancel"))
             }
         })
 

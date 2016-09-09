@@ -31,6 +31,7 @@ public enum TelemetryLogEventType {
     case WebMenu            (String, String, Bool)
     case Attrack            (String, String?, Int?)
     case AntiPhishing            (String, String?, Int?)
+    case ShareMenu            (String, String)
 }
 
 
@@ -164,11 +165,16 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is interaciton with anti-tracking UI
                 disableSendingEvent = true
                 
-            
             case .AntiPhishing(let action, let target, let showDuration):
                 event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
                 // disable sending event when there is interaciton with anti-phishing UI
                 disableSendingEvent = true
+                
+            case .ShareMenu (let action, let target):
+                event = self.createShareMenuEvent(action, target: target)
+                // disable sending event when there is interaciton with share menu
+                disableSendingEvent = true
+                
             }
             
             // Always store the event
@@ -517,5 +523,16 @@ class TelemetryLogger : EventsLogger {
         }
         return event
     }
+    
+    private func createShareMenuEvent(action: String, target: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "share_menu"
+        event["action"] = action
+        event["target"] = target
+
+        return event
+    }
+    
     
 }
