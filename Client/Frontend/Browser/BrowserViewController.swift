@@ -1287,6 +1287,8 @@ class BrowserViewController: UIViewController {
         }
         activities.append(findInPageActivity)
 
+        // Cliqz: disable Desktop/Mobile website option
+#if !CLIQZ
         if #available(iOS 9.0, *) {
             if let tab = tab where (tab.getHelper(name: ReaderMode.name()) as? ReaderMode)?.state != .Active {
                 let requestDesktopSiteActivity = RequestDesktopSiteActivity(requestMobileSite: tab.desktopSite) { [unowned tab] in
@@ -1295,6 +1297,7 @@ class BrowserViewController: UIViewController {
                 activities.append(requestDesktopSiteActivity)
             }
         }
+#endif
         // Cliqz: Added settings activity to sharing menu
         let settingsActivity = SettingsActivity() {
             self.openSettings()
