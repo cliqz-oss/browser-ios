@@ -56,13 +56,17 @@ class CliqzURLBarView: URLBarView {
 		self.setNeedsUpdateConstraints()
 	}
 
+	func enableAntitrackingButton(enable: Bool) {
+		self.antitrackingButton.enabled = enable
+	}
+
 	private func commonInit() {
 		let img = UIImage(named: "shieldButton")
 		self.antitrackingButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
 		self.antitrackingButton.setImage(img, forState: .Normal)
 		self.antitrackingButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 2, bottom: 5, right: 0)
 		self.antitrackingButton.imageEdgeInsets = UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 20)
-		self.antitrackingButton.addTarget(self, action: #selector(openAntitrackingView), forControlEvents: .TouchUpInside)
+		self.antitrackingButton.addTarget(self, action: #selector(antitrackingButtonPressed), forControlEvents: .TouchUpInside)
 		addSubview	(self.antitrackingButton)
 		antitrackingButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
@@ -71,7 +75,7 @@ class CliqzURLBarView: URLBarView {
 		}
 	}
 	
-	@objc private func openAntitrackingView(sender: UIButton) {
+	@objc private func antitrackingButtonPressed(sender: UIButton) {
 		self.delegate?.urlBarDidClickAntitracking(self)
 	}
 }

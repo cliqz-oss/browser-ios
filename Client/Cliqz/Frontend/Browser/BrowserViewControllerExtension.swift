@@ -104,6 +104,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 			antitrackingVC.view.frame = r
 			self.view.addSubview(antitrackingVC.view)
 			self.view.bringSubviewToFront(self.urlBar)
+			self.urlBar.enableAntitrackingButton(false)
 			UIView.animateWithDuration(0.5, animations: {
 				antitrackingVC.view.center = self.view.center
 			}, completion: { (finished) in
@@ -124,6 +125,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
     }
 
 	func antitrackingViewWillClose(antitrackingView: UIView) {
+		self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}
 
