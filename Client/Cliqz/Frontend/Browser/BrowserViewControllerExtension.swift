@@ -70,10 +70,13 @@ extension BrowserViewController: AntitrackingViewDelegate {
 			if let f = url["label"] as? String, u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
 					YoutubeVideoDownloader.downloadFromURL(u)
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", f.replace(" ", replacement: "_")))
 				}))
 			}
 		}
-		actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: { _ in
+            TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
+        }))
 		self.presentViewController(actionSheet, animated: true, completion: nil)
 	}
 	
