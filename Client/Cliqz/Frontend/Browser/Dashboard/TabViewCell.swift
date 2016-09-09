@@ -21,6 +21,7 @@ class TabViewCell: UITableViewCell {
 		didSet {
 			cardView.backgroundColor = self.backgroundColor()
 			titleLabel.textColor = self.textColor()
+			setNeedsDisplay()
 		}
 	}
 
