@@ -873,8 +873,10 @@ class BrowserViewController: UIViewController {
 //                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
                 let showInline = true
                 showHomePanelController(inline: showInline)
+				self.urlBar.showAntitrackingButton(false)
             } else {
                 hideHomePanelController()
+				self.urlBar.showAntitrackingButton(true)
             }
         }
     }
@@ -1833,7 +1835,7 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
         // Cliqz: telemetry logging for toolbar
         self.logToolbarFocusSignal()
-        
+        self.urlBar.showAntitrackingButton(false)
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {

@@ -395,19 +395,18 @@ class URLBarView: UIView {
 			}
         } else {
             self.locationContainer.snp_remakeConstraints { make in
+				// Cliqz: Changed locationContainer's constraints to align with new buttons
+				make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
 					make.leading.equalTo(self.bookmarkButton.snp_trailing)
-                    make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 } else {
                     // Otherwise, left align the location view
-					// Cliqz: Changed locationContainer's constraints to align with new buttons
                     /*
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
                     */
 					make.leading.equalTo(self.tabsButton.snp_trailing)
-                    make.trailing.equalTo(self)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
@@ -419,7 +418,6 @@ class URLBarView: UIView {
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         }
-
     }
 
     func createLocationTextField() {
