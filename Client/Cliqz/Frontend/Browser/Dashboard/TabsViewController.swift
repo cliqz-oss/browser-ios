@@ -82,7 +82,7 @@ class TabsViewController: UIViewController {
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
-                self.openNewTab(false)
+                self.openNewTab(true)
                 return
             }
             
