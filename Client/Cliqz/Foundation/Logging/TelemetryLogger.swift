@@ -14,15 +14,12 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
-    case LayerChange        (String, String)
     case Onboarding         (String, Int, Int?)
-    case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptSignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
-    case TabSignal          (String, String, Int?, Int)
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
@@ -101,15 +98,9 @@ class TelemetryLogger : EventsLogger {
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
-            case .LayerChange(let currentLayer, let nextLayer):
-                event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
-                
             case .Onboarding(let action, let index, let duration):
                 event = self.createOnboardingEvent(action, index: index, duration: duration)
                
-            case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
-                event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
-                
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
                 
@@ -125,9 +116,6 @@ class TelemetryLogger : EventsLogger {
             case .HomeScreenShortcut(let targetType, let targetIndex):
                 event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
             
-            case .TabSignal(let action, let mode, let tabIndex, let tabCount):
-                event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
-                
             case .NewsNotification(let action):
                 event = self.createNewsNotificationEvent(action)
 			
@@ -271,18 +259,6 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createLayerChangeEvent(currentLayer: String, nextLayer: String) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = "layer_change"
-        event["current_layer"] = currentLayer
-        event["next_layer"] = nextLayer
-        event["display_time"] = event["ts"]
-        
-        return event
-    }
-    
     private func createOnboardingEvent(action: String, index: Int, duration: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -300,18 +276,7 @@ class TelemetryLogger : EventsLogger {
 		}
         return event
     }
-    private func createPastTabEvent(pastType: String, querylength: Int, positionAge: Double, lengthAge: Double, displayTime: Double) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = "past_tap"
-        event["query_length"] = querylength
-        event["position_age"] = positionAge
-        event["length_age"] = lengthAge
-        event["display_time"] = displayTime
-        
-        return event
-    }
+    
     private func createNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -384,18 +349,6 @@ class TelemetryLogger : EventsLogger {
         event["action"] = "click"
         event["target_type"] = targetType
         event["target_index"] = targetIndex
-        return event
-    }
-    
-    private func createTabSignalEvent(action: String, mode: String, tabIndex: Int?, tabCount: Int) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        event["type"] = "tab"
-        event["action"] = action
-        event["mode"] = mode
-        if let index = tabIndex {
-            event["tab_index"] = index
-        }
-        event["tab_count"] = tabCount
         return event
     }
     
