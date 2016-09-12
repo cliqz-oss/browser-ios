@@ -13,6 +13,9 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	
 	var profile: Profile!
 	let tabManager: TabManager
+    
+    var viewOpenTime = 0.0
+    var panelOpenTime = 0.0
 
 	private var panelSwitchControl: UISegmentedControl!
 	private var panelSwitchContainerView: UIView!
@@ -75,6 +78,8 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : UIFont.boldSystemFontOfSize(17)], forState: .Normal)
 		self.navigationItem.rightBarButtonItem?.tintColor = self.dashboardThemeColor
 		view.backgroundColor = UIColor.whiteColor()
+        
+        viewOpenTime = NSDate.getCurrentMillis()
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -113,16 +118,21 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	func switchPanel(sender: UISegmentedControl) {
 		self.hideCurrentPanelViewController()
+        var target = "UNDEFINED"
 		switch sender.selectedSegmentIndex {
 		case 0:
 			self.showPanelViewController(self.tabsViewController)
+            target = "openTabs"
 		case 1:
 			self.showPanelViewController(self.historyViewController)
+            target = "history"
 		case 2:
 			self.showPanelViewController(self.favoritesViewController)
+            target = "favorites"
 		default:
 			break
 		}
+        logToolbarSignal("click", target: target, customData: nil)
 	}
 
 	private func setupConstraints() {
@@ -154,6 +164,9 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 			make.top.left.right.bottom.equalTo(self.panelContainerView)
 		}
 		viewController.didMoveToParentViewController(self)
+        
+        panelOpenTime = NSDate.getCurrentMillis()
+        
 	}
 
 	private func hideCurrentPanelViewController() {
@@ -161,11 +174,14 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 			panel.willMoveToParentViewController(nil)
 			panel.view.removeFromSuperview()
 			panel.removeFromParentViewController()
+            logHidePanelSignal(panel)
 		}
 	}
 
 	@objc private func goBack() {
 		self.navigationController?.popViewControllerAnimated(false)
+        let duration = Int(NSDate.getCurrentMillis() - viewOpenTime)
+        logToolbarSignal("click", target: "back", customData: duration)
 	}
 
 	@objc private func openSettings() {
@@ -178,6 +194,8 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		controller.popoverDelegate = self
 		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
 		presentViewController(controller, animated: true, completion: nil)
+        
+        logToolbarSignal("click", target: "settings", customData: nil)
 	}
 }
 
@@ -196,4 +214,35 @@ extension DashboardViewController:PresentingModalViewControllerDelegate {
 		self.dismissViewControllerAnimated(animated, completion: nil)
 	}
 
+}
+
+//MARK: - telemetry singals
+
+extension DashboardViewController {
+    
+    private func logToolbarSignal(action: String, target: String, customData: Int?) {
+        TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, "overview", nil, customData))
+    }
+    
+    private func logHidePanelSignal(panel: UIViewController) {
+        let duration = Int(NSDate.getCurrentMillis() - panelOpenTime)
+        var type = ""
+        switch panel {
+        case tabsViewController:
+            type = "open_tabs"
+            
+        case historyViewController:
+            type = "history"
+            
+        case favoritesViewController:
+            type = "favorites"
+            
+        default:
+            type = "UNDEFINED"
+        }
+        
+        let customData = ["show_duration" : duration]
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard(type, "hide", nil, customData))
+        
+    }
 }

@@ -14,6 +14,7 @@ class TabViewCell: UITableViewCell {
 	let URLLabel = UILabel()
 	let logoImageView = UIImageView()
 	let cardView = UIView()
+    var clickedElement: String?
 	
 	var animator: SwipeAnimator!
 
@@ -50,8 +51,27 @@ class TabViewCell: UITableViewCell {
 			minExitVelocity: 800,
 			recenterAnimationDuration: 0.15)
 		self.animator = SwipeAnimator(animatingView: self.cardView, container: self, params: swipeParams)
+        
+        // tab gesture recognizer
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapPressed(_:)))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.delegate = self
+        self.addGestureRecognizer(tapGestureRecognizer)
+        
 	}
-
+    
+    func tapPressed(gestureRecognizer: UIGestureRecognizer) {
+        let touchLocation = gestureRecognizer.locationInView(self.cardView)
+        
+        if CGRectContainsPoint(titleLabel.frame, touchLocation) {
+            clickedElement = "title"
+        } else if CGRectContainsPoint(URLLabel.frame, touchLocation) {
+            clickedElement = "url"
+        } else if CGRectContainsPoint(logoImageView.frame, touchLocation) {
+            clickedElement = "logo"
+        } 
+    }
+    
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}

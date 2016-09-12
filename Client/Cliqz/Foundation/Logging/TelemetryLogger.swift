@@ -26,12 +26,13 @@ public enum TelemetryLogEventType {
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool, Int?)
+    case Toolbar            (String, String, String, Bool?, Int?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case Attrack            (String, String?, Int?)
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
+    case DashBoard            (String, String, String?, [String: AnyObject]?)
 }
 
 
@@ -41,8 +42,6 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
-    
-    var privateMode = false
     
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
@@ -69,10 +68,6 @@ class TelemetryLogger : EventsLogger {
     func storeCurrentTelemetrySeq() {
         LocalDataStore.setObject(telemetrySeq!.get(), forKey: self.telementrySequenceKey)
     }
-    //MARK: - private mode
-    func changePrivateMode(privateMode: Bool) {
-        self.privateMode = privateMode
-    }
     
     //MARK: - Presisting events and sequence
     internal func persistState() {
@@ -82,10 +77,6 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Log events
     internal func logEvent(eventType: TelemetryLogEventType){
-        // disable sending any signals during private mode
-        guard privateMode == false else {
-            return
-        }
         
         dispatch_async(dispatchQueue) {
             var event: [String: AnyObject]
@@ -146,10 +137,8 @@ class TelemetryLogger : EventsLogger {
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
                 
-            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
+            case .Toolbar(let action, let target, let view, let isForgetMode?, let customData):
                 event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
-                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
-                disableSendingEvent = true
                 
             case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
                 // disable sending event when there is interaciton with keyboars
@@ -157,24 +146,22 @@ class TelemetryLogger : EventsLogger {
                 
             case .WebMenu(let action, let target, let isForgetMode):
                 event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
-                // disable sending event when there is interaciton with web menu
-                disableSendingEvent = true
             
             case .Attrack(let action, let target, let customData):
                 event = self.createAttrackEvent(action, target: target, customData: customData)
-                // disable sending event when there is interaciton with anti-tracking UI
-                disableSendingEvent = true
                 
             case .AntiPhishing(let action, let target, let showDuration):
                 event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
-                // disable sending event when there is interaciton with anti-phishing UI
-                disableSendingEvent = true
+            
                 
             case .ShareMenu (let action, let target):
                 event = self.createShareMenuEvent(action, target: target)
-                // disable sending event when there is interaciton with share menu
-                disableSendingEvent = true
                 
+            case .DashBoard (let type, let action, let target, let customData):
+                event = self.createDashBoardEvent(type, action: action, target: target, customData: customData)
+            
+            default:
+                return
             }
             
             // Always store the event
@@ -442,14 +429,17 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool, customData: Int?) -> [String: AnyObject] {
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
         event["action"] = action
         event["target"] = target
         event["view"] = view
-        event["is_forget"] = isForgetMode
+        
+        if let isForgetMode = isForgetMode {
+            event["is_forget"] = isForgetMode
+        }
         
         if let customData = customData where target == "overview" {
             event["open_tabs"] = customData
@@ -459,6 +449,8 @@ class TelemetryLogger : EventsLogger {
             event["tracker_count"] = customData
         } else if let customData = customData where target == "reader_mode" {
             event["state"] = customData == 1 ? "true" : "false"
+        } else if let customData = customData where view == "overview" {
+            event["show_duration"] = customData == 1 ? "true" : "false"
         }
         
         return event
@@ -534,5 +526,23 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
+    
+    private func createDashBoardEvent(type: String, action: String, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+    
+        event["type"] = type
+        event["action"] = action
+        
+        if let target = target {
+            event["target"] = target
+        }
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
+        return event
+    }
     
 }

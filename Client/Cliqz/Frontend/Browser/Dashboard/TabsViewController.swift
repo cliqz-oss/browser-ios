@@ -19,8 +19,8 @@ class TabsViewController: UIViewController {
 	private let tabCellIdentifier = "TabCell"
 
 	static let bottomToolbarHeight = 45
-
-	init(tabManager: TabManager) {
+    
+    init(tabManager: TabManager) {
 		self.tabManager = tabManager
 		self.tabs = tabManager.tabs
 		super.init(nibName: nil, bundle: nil)
@@ -59,6 +59,7 @@ class TabsViewController: UIViewController {
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
 
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
+        
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -72,27 +73,37 @@ class TabsViewController: UIViewController {
 
 	@objc private func addNewTab(sender: UIButton) {
 		self.openNewTab()
+        
+        let customData: [String : AnyObject] = ["count" : tabs.count]
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
 	}
     
     @objc func SELdidLongPressAddTab(recognizer: UILongPressGestureRecognizer) {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
+                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", nil))
                 self.openNewTab()
                 return
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
+                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_forget_tab", nil))
+                
                 self.openNewTab(true)
                 return
             }
             
             let cancelHandler = { (action: UIAlertAction) in
                 // do no thing
+                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
             }
             
             let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
+            
+            let customData: [String : AnyObject] = ["count" : tabs.count]
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
         }
     }
 
@@ -156,8 +167,22 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		let tab = self.tabManager.tabs[indexPath.row] //tabsToDisplay[index]
 		self.tabManager.selectTab(tab)
 		self.navigationController?.popViewControllerAnimated(false)
+        
+        if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? TabViewCell {
+            logTabClickSignal(currentCell, indexPath: indexPath, count: tabs.count, isForget: tab.isPrivate)
+        }
+        
 
 	}
+    func logTabClickSignal(currentCell : TabViewCell, indexPath: NSIndexPath, count: Int, isForget: Bool) {
+        var customData: [String : AnyObject] = ["index" : indexPath.row, "count" : count , "is_forget" : isForget]
+        
+        if let clickedElement = currentCell.clickedElement {
+            customData["element"] = clickedElement
+        }
+        
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
+    }
 }
 
 extension TabsViewController: SwipeAnimatorDelegate {
@@ -166,8 +191,23 @@ extension TabsViewController: SwipeAnimatorDelegate {
 		if let indexPath = self.tabsView.indexPathForCell(tabCell) {
 			let tab = self.tabManager.tabs[indexPath.row]
 			tabManager.removeTab(tab)
+            
+            logSwipeSignal(tab, indexPath: indexPath, viewWillExitContainerBounds: viewWillExitContainerBounds)
+            
 		}
 	}
+    func logSwipeSignal(tab: Tab, indexPath: NSIndexPath, viewWillExitContainerBounds: UIView) {
+        
+        var action = ""
+        if viewWillExitContainerBounds.frame.origin.x < 0 {
+            action = "swipe_left"
+        } else {
+            action = "swipe_right"
+        }
+        
+        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : tabs.count, "is_forget" : tab.isPrivate]
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
+    }
 }
 
 extension TabsViewController: TabManagerDelegate {
