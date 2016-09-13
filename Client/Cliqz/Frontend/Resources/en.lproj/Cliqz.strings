@@ -184,3 +184,13 @@
 
 /* Context menu option for opening a link in a new private tab */
 "Open In New Forget Tab" = "Open In New Forget Tab";
+
+/* First card text in onBorading */
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
+
+/* Second card text in onBorading */
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
+
+/* Thrid card text in onBorading */
+"When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
+

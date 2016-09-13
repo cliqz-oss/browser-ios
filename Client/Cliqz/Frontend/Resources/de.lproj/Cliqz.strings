@@ -183,3 +183,12 @@
 
 /* Context menu option for opening a link in a new private tab */
 "Open In New Forget Tab" = "In neuem Forget-Tab öffnen";
+
+/* First card text in onBorading */
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!";
+
+/* Second card text in onBorading */
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag.";
+
+/* Thrid card text in onBorading */
+"When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
