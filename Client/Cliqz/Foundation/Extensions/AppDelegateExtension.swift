@@ -64,7 +64,11 @@ extension AppDelegate {
             
         }
     }
-	
+
+	static func changeStatusBarColor(color: UIColor) {
+		UIApplication.sharedApplication().delegate?.window??.backgroundColor = color
+	}
+
 	// MARK:- Private methods
     // append top sites shortcuts to the application shortcut items
 	@available(iOS 9.0, *)
@@ -158,4 +162,5 @@ extension AppDelegate {
         })
 
     }
+
 }

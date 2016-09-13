@@ -574,6 +574,9 @@ class BrowserViewController: UIViewController {
                                                          selector: #selector(BrowserViewController.keyboardWillHide(_:)),
                                                          name: UIKeyboardWillHideNotification,
                                                          object: nil)
+		if let tab = self.tabManager.selectedTab {
+			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
+		}
     }
 
     private func showRestoreTabsAlert() {
@@ -3685,14 +3688,14 @@ extension BrowserViewController: Themeable {
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .ExtraLight
             footerBackground?.blurStyle = .ExtraLight
-			UIApplication.sharedApplication().delegate?.window??.backgroundColor = UIConstants.AppBackgroundColor
+			AppDelegate.changeStatusBarColor(UIConstants.AppBackgroundColor)
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
             // Cliqz: Use same blurStyle for both normal and private modes
 //            footerBackground?.blurStyle = .Dark
             footerBackground?.blurStyle = .ExtraLight
-			UIApplication.sharedApplication().delegate?.window??.backgroundColor = UIConstants.PrivateModeBackgroundColor
+			AppDelegate.changeStatusBarColor(UIConstants.PrivateModeBackgroundColor)
         default:
             log.debug("Unknown Theme \(themeName)")
         }
