@@ -74,7 +74,7 @@
 "What is 'fair'?" = "What is 'fair'?";
 
 /* Settings item for clearing favorite history */
-"Favorites" = "Include Favorites";
+"Favorites" = "Favorites";
 
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Clear Private Data on Termination";
