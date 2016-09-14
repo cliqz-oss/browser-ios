@@ -212,7 +212,7 @@ class JavaScriptBridge {
 			}
 		}
 	}
-	
+
 	private func removeURLFromBookmarks(url: String?) {
 		if let u = url {
 			profile.bookmarks.modelFactory >>== {

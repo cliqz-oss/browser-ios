@@ -16,13 +16,14 @@ private let log = Logger.browserLogger
 private let HistoryClearableIndex = 0
 // Cliqz: added for clear private data on termination
 private let SectionClearOnTermination = 0
-public let ClearDataOnTerminatingPrefKey = "clearprivatedata.onterminate"
 
 class ClearPrivateDataTableViewController: UITableViewController {
     private var clearButton: UITableViewCell?
 
     var profile: Profile!
     var tabManager: TabManager!
+    // Cliqz: added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
 
     private typealias DefaultCheckedState = Bool
 
@@ -30,10 +31,11 @@ class ClearPrivateDataTableViewController: UITableViewController {
         return [
             (HistoryClearable(profile: self.profile), true),
             // Cliqz: Added option to clear bookmarks
-            (BookmarksClearable(profile: self.profile), true),
-            (CacheClearable(tabManager: self.tabManager), true),
-            (CookiesClearable(tabManager: self.tabManager), true),
-            (SiteDataClearable(tabManager: self.tabManager), true),
+            (BookmarksClearable(profile: self.profile), false),
+            // Cliqz: changed the default value of clearables to false
+            (CacheClearable(tabManager: self.tabManager), false),
+            (CookiesClearable(tabManager: self.tabManager), false),
+            (SiteDataClearable(tabManager: self.tabManager), false),
         ]
     }()
     
@@ -61,6 +63,9 @@ class ClearPrivateDataTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
 
         title = Strings.SettingsClearPrivateDataTitle
 
@@ -72,15 +77,23 @@ class ClearPrivateDataTableViewController: UITableViewController {
         footer.showBottomBorder = false
         tableView.tableFooterView = footer
     }
-
+    
+    // Cliqz: log telemetry signal
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+        let settingsBackSignal = TelemetryLogEventType.Settings("private_data", "click", "back", nil, duration)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
 
         if indexPath.section == SectionToggles {
             cell.textLabel?.text = clearables[indexPath.item].clearable.label
             let control = UISwitch()
-            // Cliqz: Used default tint color for UIControl instead of the custom orange one
-//            control.onTintColor = UIConstants.ControlTintColor
+            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
             control.on = toggles[indexPath.item]
             cell.accessoryView = control
@@ -92,7 +105,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
             cell.textLabel?.text = NSLocalizedString("Clear Private data on termination", tableName: "Cliqz", comment: "Settings item for clearing private data on termination")
             let control = UISwitch()
             control.addTarget(self, action: "clearDataOnTerminationChangedValue:", forControlEvents: UIControlEvents.ValueChanged)
-            control.on = self.profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false
+            control.on = SettingsPrefs.getClearDataOnTerminatingPref()
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
@@ -158,6 +171,11 @@ class ClearPrivateDataTableViewController: UITableViewController {
                         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                     }
             }
+            
+            // Cliqz: log telemetry signal
+            let confirmSignal = TelemetryLogEventType.Settings("private_data", "click", "confirm", nil, nil)
+            TelemetryLogger.sharedInstance.logEvent(confirmSignal)
+
         }
 
         // We have been asked to clear history and we have an account.
@@ -179,6 +197,10 @@ class ClearPrivateDataTableViewController: UITableViewController {
         } else {
             let alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
             self.presentViewController(alert, animated: true, completion: nil)
+            
+            // Cliqz: log telemetry signal
+            let clearSignal = TelemetryLogEventType.Settings("private_data", "click", "clear", nil, nil)
+            TelemetryLogger.sharedInstance.logEvent(clearSignal)
         }
 
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
@@ -202,11 +224,40 @@ class ClearPrivateDataTableViewController: UITableViewController {
         self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
         
         self.tableView.reloadData()
+        
+        // Cliqz: log telemetry signal
+        let target = getTelemetrySignalTarget(toggle.tag)
+        let state = toggle.on == true ? "off" : "on" // we log old value
+        let valueChangedSignal = TelemetryLogEventType.Settings("private_data", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
-    
+    // Cliqz: getting getTelemetrySignalTarget for given toggle
+    func getTelemetrySignalTarget(toggleIndex: Int) -> String {
+        var target = ""
+        switch toggleIndex {
+        case 0:
+            target = "clear_history"
+        case 1:
+            target = "clear_favorites"
+        case 2:
+            target = "clear_cache";
+        case 3:
+            target = "clear_cookies"
+        case 4:
+            target = "clear_offline"
+        default:
+            target = "UNDEFINED"
+        }
+        return target;
+    }
     // Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
     func clearDataOnTerminationChangedValue(sender: UISwitch) {
-        self.profile.prefs.setBool(sender.on, forKey: ClearDataOnTerminatingPrefKey)
+        SettingsPrefs.updateClearDataOnTerminatingPref(sender.on)
+        
+        //log telemetry signal
+        let state = sender.on == true ? "off" : "on" // we log old value
+        let valueChangedSignal = TelemetryLogEventType.Settings("private_data", "click", "clear_on_exit", state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
     
     private func clearQueries() {

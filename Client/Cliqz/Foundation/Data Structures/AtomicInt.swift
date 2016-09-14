@@ -23,7 +23,7 @@ class AtomicInt {
     internal func incrementAndGet()-> Int {
         dispatch_sync(dispatchQueue) {
             if self.currentValue < Int.max {
-                self.currentValue++
+                self.currentValue += 1
             } else {
                 self.currentValue = 0
             }
@@ -35,7 +35,7 @@ class AtomicInt {
     internal func decrementAndGet()-> Int {
         dispatch_sync(dispatchQueue) {
             if self.currentValue > 0 {
-                self.currentValue--
+                self.currentValue -= 1
             } else {
                 self.currentValue = 0
             }

@@ -24,7 +24,7 @@ class AdBlocker {
     }
     
     func isAdServer(url: NSURL) -> Bool {
-        let isAdsBlocked = self.profile.prefs.boolForKey("blockAds") ?? false
+        let isAdsBlocked = self.profile.prefs.boolForKey(AdBlockerPrefKey) ?? true
         if isAdsBlocked == true {
             let absoluteURL = url.absoluteString
             // discard local host url, i.e. home, trampoline,...

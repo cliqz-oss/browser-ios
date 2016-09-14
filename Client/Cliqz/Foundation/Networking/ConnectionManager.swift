@@ -10,6 +10,11 @@ import Foundation
 import Alamofire
 import Crashlytics
 
+enum ResponseType {
+    case JSONResponse
+    case StringResponse
+}
+
 class ConnectionManager {
     
     //MARK: - Singltone
@@ -20,38 +25,72 @@ class ConnectionManager {
     
     //MARK: - Sending Requests
     
-    internal func sendGetRequest(url: String, parameters: [String: AnyObject]?, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
-        Alamofire.request(.GET, url, parameters: parameters)
-            .responseJSON {
-                request, response, result in
-                switch result {
-                    
-                case .Success(let json):
-                    onSuccess(json)
-                    
-                case .Failure(let data, let error):
-                    onFailure(data, error)
-                }
+    internal func sendGetRequest(url: String, parameters: [String: AnyObject]?, responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+        switch responseType {
+        case .JSONResponse:
+            Alamofire.request(.GET, url, parameters: parameters)
+                .responseJSON {
+                    request, response, result in
+                    switch result {
+                        
+                    case .Success(let json):
+                        onSuccess(json)
+                        
+                    case .Failure(let data, let error):
+                        onFailure(data, error)
+                    }
+            }
+        case .StringResponse:
+            Alamofire.request(.GET, url, parameters: parameters)
+                .responseString {
+                    request, response, result in
+                    switch result {
+                        
+                    case .Success(let string):
+                        onSuccess(string)
+                        
+                    case .Failure(let data, let error):
+                        onFailure(data, error)
+                    }
+            }
+        }
+        
+    }
+    
+    
+    internal func sendPostRequest(url: String, parameters: [String: AnyObject], responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+        switch responseType {
+        case .JSONResponse:
+            Alamofire.request(.POST, url, parameters: parameters)
+                .responseJSON {
+                    request, response, result in
+                    switch result {
+                        
+                    case .Success(let json):
+                        onSuccess(json)
+                        
+                    case .Failure(let data, let error):
+                        onFailure(data, error)
+                    }
+            }
+        case .StringResponse:
+            Alamofire.request(.POST, url, parameters: parameters)
+                .responseString {
+                    request, response, result in
+                    switch result {
+                        
+                    case .Success(let string):
+                        onSuccess(string)
+                        
+                    case .Failure(let data, let error):
+                        onFailure(data, error)
+                    }
+            }
         }
     }
     
-    internal func sendPostRequest(url: String, parameters: [String: AnyObject], onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
-        Alamofire.request(.POST, url, parameters: parameters)
-            .responseJSON {
-                request, response, result in
-                switch result {
-                    
-                case .Success(let json):
-                    onSuccess(json)
-                    
-                case .Failure(let data, let error):
-                    onFailure(data, error)
-                }
-        }
-    }
     
-    
-    internal func sendPostRequest(url: String, body: AnyObject, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    internal func sendPostRequest(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         
         if NSJSONSerialization.isValidJSONObject(body) {
             do {
@@ -68,18 +107,33 @@ class ConnectionManager {
                     request.HTTPBody = data
                 }
                 
-                
-                Alamofire.request(request)
-                    .responseJSON {
-                        request, response, result in
-                        switch result {
-                            
-                        case .Success(let json):
-                            onSuccess(json)
-                            
-                        case .Failure(let data, let error):
-                            onFailure(data, error)
-                        }
+                switch responseType {
+                case .JSONResponse:
+                    Alamofire.request(request)
+                        .responseJSON {
+                            request, response, result in
+                            switch result {
+                                
+                            case .Success(let json):
+                                onSuccess(json)
+                                
+                            case .Failure(let data, let error):
+                                onFailure(data, error)
+                            }
+                    }
+                case .StringResponse:
+                    Alamofire.request(request)
+                        .responseString {
+                            request, response, result in
+                            switch result {
+                                
+                            case .Success(let string):
+                                onSuccess(string)
+                                
+                            case .Failure(let data, let error):
+                                onFailure(data, error)
+                            }
+                    }
                 }
             } catch let error as NSError {
                 Answers.logCustomEventWithName("sendPostRequestError", customAttributes: ["error": error.localizedDescription])

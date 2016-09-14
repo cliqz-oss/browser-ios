@@ -5,7 +5,7 @@ Prerequisites, as of *March 28, 2016*:
 
 * Mac OS X 10.11.4
 * Xcode 7.3 GM with the iOS 9.3 GM SDK (Betas not supported)
-* Carthage 0.15 via Homebrew or direct install via https://github.com/Carthage/Carthage/releases/tag/0.15
+* Carthage 0.15 or newer
 
 When running on a device:
 
@@ -27,16 +27,13 @@ cd firefox-ios
 Pull in Dependencies
 --------------------
 
-We use Carthage to manage projects that we depend on. __The build will currently only work with Carthage v0.15__. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
+We use Carthage to manage projects that we depend on. __The build will currently only work with Carthage v0.15 or newer__. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
 
 ```
 brew update
 brew upgrade
 brew install carthage
-brew switch carthage 0.15
 ```
-
-If the `brew switch` does not work because Carthage 0.15 is not available, you will have to `brew uninstall carthage' and install the binary distribution manually from https://github.com/Carthage/Carthage/releases/tag/0.15
 
 You can now execute our `bootstrap.sh` script:
 

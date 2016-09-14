@@ -10,7 +10,7 @@ struct IntroViewControllerUX {
     static let Height = 667
 
     // Cliqz: replaced fixfox intro with cliqz intro
-    static let CardSlides = ["cliqz-intro1", "cliqz-intro2", "cliqz-intro3"]
+    static let CardSlides = ["cliqz-intro2", "cliqz-intro3"]
 //    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
 
     static let NumberOfCards = CardSlides.count
@@ -28,20 +28,20 @@ struct IntroViewControllerUX {
 
     static let CardTextLineHeight = CGFloat(6)
 
-    static let CardTitleOrganize = NSLocalizedString("Organize", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
-    static let CardTitleCustomize = NSLocalizedString("Customize", tableName: "Intro", comment: "See http://mzl.la/1T8gxwo")
-    static let CardTitleShare = NSLocalizedString("Share", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
-    static let CardTitleChoose = NSLocalizedString("Choose", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
-    static let CardTitleSync = NSLocalizedString("Sync your Devices.", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
+    static let CardTitleOrganize = NSLocalizedString("Organize", tableName: "Intro", comment: "Title for one of the panels in the First Run tour.")
+    static let CardTitleCustomize = NSLocalizedString("Customize", tableName: "Intro", comment: "Title for one of the panels in the First Run tour.")
+    static let CardTitleShare = NSLocalizedString("Share", tableName: "Intro", comment: "Title for one of the panels in the First Run tour.")
+    static let CardTitleChoose = NSLocalizedString("Choose", tableName: "Intro", comment: "Title for one of the panels in the First Run tour.")
+    static let CardTitleSync = NSLocalizedString("Sync your Devices.", tableName: "Intro", comment: "Title for one of the panels in the First Run tour.")
 
-    static let CardTextOrganize = NSLocalizedString("Easily switch between open pages with tabs.", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
-    static let CardTextCustomize = NSLocalizedString("Personalize your default search engine and more in Settings.", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
-    static let CardTextShare = NSLocalizedString("Use the share sheet to send links from other apps to Firefox.", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
-    static let CardTextChoose = NSLocalizedString("Tap, hold and move the Cliqz icon into your dock for easy access.", tableName: "Intro", comment: "See http://mzl.la/1if9ODp")
+    static let CardTextOrganize = NSLocalizedString("Easily switch between open pages with tabs.", tableName: "Intro", comment: "Description for the 'Organize' panel in the First Run tour.")
+    static let CardTextCustomize = NSLocalizedString("Personalize your default search engine and more in Settings.", tableName: "Intro", comment: "Description for the 'Customize' panel in the First Run tour.")
+    static let CardTextShare = NSLocalizedString("Use the share sheet to send links from other apps to Firefox.", tableName: "Intro", comment: "Description for the 'Share' panel in the First Run tour.")
+    static let CardTextChoose = NSLocalizedString("Tap, hold and move the Firefox icon into your dock for easy access.", tableName: "Intro", comment: "Description for the 'Choose' panel in the First Run tour.")
 
-    static let Card1ImageLabel = NSLocalizedString("The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs.", tableName: "Intro", comment: "Accessibility label for an image. See http://mzl.la/1T8gxwo")
-    static let Card2ImageLabel = NSLocalizedString("The Settings button is at the beginning of the Tabs Tray.", tableName: "Intro", comment: "Accessibility label for an image. See http://mzl.la/1T8gxwo")
-    static let Card3ImageLabel = NSLocalizedString("Firefox and the cloud", tableName: "Intro", comment: "Accessibility label for an image. See http://mzl.la/1T8gxwo")
+    static let Card1ImageLabel = NSLocalizedString("The Show Tabs button is next to the Address and Search text field and displays the current number of open tabs.", tableName: "Intro", comment: "Accessibility label for the UI element used to display the number of open tabs, and open the tab tray.")
+    static let Card2ImageLabel = NSLocalizedString("The Settings button is at the beginning of the Tabs Tray.", tableName: "Intro", comment: "Accessibility label for the Settings button in the tab tray.")
+    static let Card3ImageLabel = NSLocalizedString("Firefox and the cloud", tableName: "Intro", comment: "Accessibility label for the image displayed in the 'Sync' panel of the First Run tour.")
 
     static let CardTextSyncOffsetFromCenter = 25
     static let Card3ButtonOffsetFromCenter = -10
@@ -85,6 +85,12 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var backButton: UIButton!
     var forwardButton: UIButton!
     var signInButton: UIButton!
+    
+    // Cliqz: added attribute to calculate the duration user take on each page
+    var durationStartTime = 0.0
+    // Cliqz: added keep track of current page index to detect whether user swipe left or right
+    var currentPageIndex = 0
+    
     
     // Cliqz: custom getting started button
     lazy var gettingStartedButton: UIButton = self.createGettingStartedButton()
@@ -189,7 +195,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
 
         // Cliqz: changed titles and texts of the cards
-        addCard("", title: IntroViewControllerUX.CardTitleCliqzBrowser)
         addTextCard(IntroViewControllerUX.CardTextTyping)
         addTextCard(IntroViewControllerUX.CardTextLocationSearch, additionalView: gettingStartedButton)
             
@@ -298,7 +303,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func SELstartBrowsing() {
         delegate?.introViewControllerDidFinish(self)
         // Cliqz: logged Onboarding event
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("hide", pageControl.currentPage))
+        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
     }
 
     func SELback() {
@@ -336,16 +342,26 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func changePage() {
         let swipeCoordinate = CGFloat(pageControl.currentPage) * scrollView.frame.size.width
         scrollView.setContentOffset(CGPointMake(swipeCoordinate, 0), animated: true)
-	}
-
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        // Need to add this method so that when forcibly dragging, instead of letting deceleration happen, should also calculate what card it's on.
+        // This especially affects sliding to the last or first slides.
+        if !decelerate {
+            scrollViewDidEndDecelerating(scrollView)
+        }
+    }
+    
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
-        // Need to add this method so that tapping the pageControl will also change the card texts. 
+        // Need to add this method so that tapping the pageControl will also change the card texts.
         // scrollViewDidEndDecelerating waits until the end of the animation to calculate what card it's on.
         scrollViewDidEndDecelerating(scrollView)
     }
 
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        // Cliqz: log swipe telemetry singal for onboarding
+        logSwipeTelemetrySingal(currentPageIndex, newPageIndex: page)
         setActiveIntroView(introViews[page], forPage: page)
     }
 
@@ -383,6 +399,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     private func setActiveIntroView(newIntroView: UIView, forPage page: Int) {
         if introView != newIntroView {
+            // Cliqz: set the current page index
+            currentPageIndex = page
             // Cliqz: removed the fade animation when switching between cards
             self.introView?.alpha = 0
             self.introView = newIntroView
@@ -406,7 +424,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //                }
 //            })
             // Cliqz: logged Onboarding event
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
+            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page, nil))
+            durationStartTime = NSDate.getCurrentMillis()
         }
 		if page == pageControl.numberOfPages - 1 {
 			LocationManager.sharedInstance.askForLocationAccess()
@@ -546,6 +565,21 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // Cliqz: added method to log swipe telemetry signals
+    func logSwipeTelemetrySingal(currentPageIndex: Int, newPageIndex: Int) {
+        guard currentPageIndex != newPageIndex else {
+            return
+        }
+        
+        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
+        var action: String = ""
+        if newPageIndex > currentPageIndex {
+            action = "swipe_left"
+        } else {
+            action = "swipe_right"
+        }
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
+    }
 }
 
 private class IntroOverlayScrollView: UIScrollView {

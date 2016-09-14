@@ -15,7 +15,6 @@ private let Bug1204635_S3 = NSLocalizedString("Clear", tableName: "ClearPrivateD
 private let Bug1204635_S4 = NSLocalizedString("Cancel", tableName: "ClearPrivateData", comment: "Used as a button label in the dialog to cancel clear private data dialog")
 
 // A base setting class that shows a title. You probably want to subclass this, not use it directly.
-// Cliqz: Modified Settings to extend from NSObject to prevent compilation errors for SendCliqzFeedbackSetting
 class Setting: NSObject {
     private var _title: NSAttributedString?
 
@@ -26,7 +25,7 @@ class Setting: NSObject {
 
     // The title shown on the pref.
     var title: NSAttributedString? { return _title }
-    var accessibilityIdentifier: String? { return nil }
+    private(set) var accessibilityIdentifier: String?
 
     // An optional second line of text shown on the pref.
     var status: NSAttributedString? { return nil }
@@ -38,7 +37,7 @@ class Setting: NSObject {
 
     var accessoryType: UITableViewCellAccessoryType { return .None }
 
-    var textAlignment: NSTextAlignment { return .Left }
+    var textAlignment: NSTextAlignment { return .Natural }
 
     private(set) var enabled: Bool = true
 
@@ -174,8 +173,7 @@ class BoolSetting: Setting {
         super.onConfigureCell(cell)
 
         let control = UISwitch()
-        // Cliqz: Revert the tint color of the UISwitch to the default color for iOS (green color)
-//        control.onTintColor = UIConstants.ControlTintColor
+        control.onTintColor = UIConstants.ControlTintColor
         control.addTarget(self, action: #selector(BoolSetting.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         control.on = prefs.boolForKey(prefKey) ?? defaultValue
         if let title = title {
@@ -184,6 +182,7 @@ class BoolSetting: Setting {
             } else {
                 control.accessibilityLabel = title.string
             }
+            cell.accessibilityLabel = nil
         }
         cell.accessoryView = PaddedSwitch(switchView: control)
         cell.selectionStyle = .None
@@ -192,6 +191,148 @@ class BoolSetting: Setting {
     @objc func switchValueChanged(control: UISwitch) {
         prefs.setBool(control.on, forKey: prefKey)
         settingDidChange?(control.on)
+        // Cliqz: log telemetry signal
+        logStateChangeTelemetrySingal(prefKey, oldValue: !control.on)
+    }
+    
+    // Cliqz: log telemetry signal
+    private func logStateChangeTelemetrySingal(prefKey: String, oldValue: Bool) {
+        let target = prefKey == SettingsPrefs.BlockExplicitContentPrefKey ? "block_ads" : "block_popups"
+        let state = oldValue == true ? "on" : "off"
+        let valueChangedSignal = TelemetryLogEventType.Settings("main", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
+    }
+}
+
+/// A helper class for a setting backed by a UITextField.
+/// This takes an optional settingIsValid and settingDidChange callback
+/// If settingIsValid returns false, the Setting will not change and the text remains red.
+class StringSetting: Setting, UITextFieldDelegate {
+
+    let prefKey: String
+
+    private let prefs: Prefs
+    private let defaultValue: String?
+    private let placeholder: String
+    private let settingDidChange: (String? -> Void)?
+    private let settingIsValid: (String? -> Bool)?
+
+    let textField = UITextField()
+
+    init(prefs: Prefs, prefKey: String, defaultValue: String? = nil, placeholder: String, accessibilityIdentifier: String, settingIsValid isValueValid: (String? -> Bool)? = nil, settingDidChange: (String? -> Void)? = nil) {
+        self.prefs = prefs
+        self.prefKey = prefKey
+        self.defaultValue = defaultValue
+        self.settingDidChange = settingDidChange
+        self.settingIsValid = isValueValid
+        self.placeholder = placeholder
+
+        super.init()
+        self.accessibilityIdentifier = accessibilityIdentifier
+    }
+
+    override func onConfigureCell(cell: UITableViewCell) {
+        super.onConfigureCell(cell)
+        if let id = accessibilityIdentifier {
+            textField.accessibilityIdentifier = id + "TextField"
+        }
+        textField.placeholder = placeholder
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldDidChange), forControlEvents: .EditingChanged)
+        cell.userInteractionEnabled = true
+        cell.accessibilityTraits = UIAccessibilityTraitNone
+        cell.contentView.addSubview(textField)
+
+        cell.contentView.snp_makeConstraints { make in
+            make.height.equalTo(44)
+            make.width.equalTo(cell.snp_width)
+        }
+
+        textField.snp_makeConstraints { make in
+            make.height.equalTo(cell.contentView)
+            make.width.equalTo(cell.contentView).offset(-2 * SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
+            make.leading.equalTo(cell.contentView).offset(SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
+        }
+        textField.text = prefs.stringForKey(prefKey) ?? defaultValue
+        textFieldDidChange(textField)
+    }
+
+    override func onClick(navigationController: UINavigationController?) {
+        textField.becomeFirstResponder()
+    }
+
+    private func isValid(value: String?) -> Bool {
+        guard let test = settingIsValid else {
+            return true
+        }
+        return test(prepareValidValue(userInput: value))
+    }
+
+    /// This gives subclasses an opportunity to treat the user input string
+    /// before it is saved or tested.
+    /// Default implementation does nothing.
+    func prepareValidValue(userInput value: String?) -> String? {
+        return value
+    }
+
+    @objc func textFieldDidChange(textField: UITextField) {
+        let color = isValid(textField.text) ? UIConstants.TableViewRowTextColor : UIConstants.DestructiveRed
+        textField.textColor = color
+    }
+
+    @objc func textFieldShouldReturn(textField: UITextField) -> Bool {
+        return isValid(textField.text)
+    }
+
+    @objc func textFieldDidEndEditing(textField: UITextField) {
+        let text = textField.text
+        if !isValid(text) {
+            return
+        }
+        if let text = prepareValidValue(userInput: text) {
+            prefs.setString(text, forKey: prefKey)
+        } else {
+            prefs.removeObjectForKey(prefKey)
+        }
+        // Call settingDidChange with text or nil.
+        settingDidChange?(text)
+    }
+}
+
+/// A helper class for a setting backed by a UITextField.
+/// This takes an optional isEnabled and mandatory onClick callback
+/// isEnabled is called on each tableview.reloadData. If it returns
+/// false then the 'button' appears disabled.
+class ButtonSetting: Setting {
+    let onButtonClick: (UINavigationController?) -> ()
+    let destructive: Bool
+    let isEnabled: (() -> Bool)?
+
+    init(title: NSAttributedString?, destructive: Bool = false, accessibilityIdentifier: String, isEnabled: (() -> Bool)? = nil, onClick: UINavigationController? -> ()) {
+        self.onButtonClick = onClick
+        self.destructive = destructive
+        self.isEnabled = isEnabled
+        super.init(title: title)
+        self.accessibilityIdentifier = accessibilityIdentifier
+    }
+
+    override func onConfigureCell(cell: UITableViewCell) {
+        super.onConfigureCell(cell)
+
+        if isEnabled?() ?? true {
+            cell.textLabel?.textColor = destructive ? UIConstants.DestructiveRed : UIConstants.HighlightBlue
+        } else {
+            cell.textLabel?.textColor = UIConstants.TableViewDisabledRowTextColor
+        }
+        cell.textLabel?.textAlignment = NSTextAlignment.Center
+        cell.accessibilityTraits = UIAccessibilityTraitButton
+        cell.selectionStyle = .None
+    }
+
+    override func onClick(navigationController: UINavigationController?) {
+        if isEnabled?() ?? true {
+            onButtonClick(navigationController)
+        }
     }
 }
 
@@ -271,6 +412,9 @@ class SettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     var tabManager: TabManager!
+    
+    // Cliqz: added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
 
     /// Used to calculate cell heights.
     private lazy var dummyToggleCell: UITableViewCell = {
@@ -290,6 +434,9 @@ class SettingsTableViewController: UITableViewController {
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
         tableView.estimatedRowHeight = 44
         tableView.estimatedSectionHeaderHeight = 44
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -314,6 +461,15 @@ class SettingsTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidStartSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+        
+        // Cliqz: log back telemetry singal for settings view
+        // this check distinguish between showing detail and clicking done
+        if self.navigationController?.viewControllers.count == 1 {
+            let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("main", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            
+        }
     }
 
     // Override to provide settings in subclasses
@@ -404,15 +560,16 @@ class SettingsTableViewController: UITableViewController {
         if let setting = section[indexPath.row] where setting.enabled {
             setting.onClick(navigationController)
         }
+        
+        // Cliqz: deselect the selected row after performing the required action
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
     private func calculateStatusCellHeightForSetting(setting: Setting) -> CGFloat {
-        let topBottomMargin: CGFloat = 10
+        dummyToggleCell.layoutSubviews()
 
-        let tableWidth = tableView.frame.width
-        let accessoryWidth = dummyToggleCell.accessoryView!.frame.width
-        let insetsWidth = 2 * tableView.separatorInset.left
-        let width = tableWidth - accessoryWidth - insetsWidth
+        let topBottomMargin: CGFloat = 10
+        let width = dummyToggleCell.contentView.frame.width - 2 * dummyToggleCell.separatorInset.left
 
         return
             heightForLabel(dummyToggleCell.textLabel!, width: width, text: setting.title?.string) +

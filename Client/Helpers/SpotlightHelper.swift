@@ -27,18 +27,21 @@ class SpotlightHelper: NSObject {
 
     private let createNewTab: ((url: NSURL) -> ())?
 
-    private weak var tab: Browser?
+    private weak var tab: Tab?
 
-    init(browser: Browser, openURL: ((url: NSURL) -> ())? = nil) {
+    init(tab: Tab, openURL: ((url: NSURL) -> ())? = nil) {
         createNewTab = openURL
-        self.tab = browser
+        self.tab = tab
+#if !CLIQZ
+        // Cliqz: disable adding spot light helper user script as it is not used
 
         if let path = NSBundle.mainBundle().pathForResource("SpotlightHelper", ofType: "js") {
             if let source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
                 let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
-                browser.webView!.configuration.userContentController.addUserScript(userScript)
+                tab.webView!.configuration.userContentController.addUserScript(userScript)
             }
         }
+#endif
     }
 
     deinit {
@@ -117,7 +120,7 @@ extension SpotlightHelper: NSUserActivityDelegate {
     }
 }
 
-extension SpotlightHelper: BrowserHelper {
+extension SpotlightHelper: TabHelper {
     static func name() -> String {
         return "SpotlightHelper"
     }

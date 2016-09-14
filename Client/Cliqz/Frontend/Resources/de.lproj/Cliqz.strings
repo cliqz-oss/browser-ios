@@ -23,11 +23,8 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Impressum";
 
-/* Send Feedback Email */
-"Send Feedback" = "Feedback geben";
-
-/* Send Feedback Email Subject*/
-"Feedback to iOS Cliqz Browser" = "Feedback zu iOS Cliqz Browser";
+/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
+"FAQs & Support" = "FAQs & Support";
 
 /* Open search section of settings */
 "Search" = "Suche";
@@ -117,3 +114,72 @@
 
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Offline verfügbar machen";
+
+/* History title on dashboard */
+"History" = "Verlauf";
+
+/* Add Favorites */
+"Add Favorite" = "Favorit hinzufügen";
+
+/* Setting menu title */
+"Settings" = "Einstellungen";
+
+/* New tab title */
+"New Tab" = "Neuer Tab";
+
+/* New private tab title */
+"New Private Tab" = "Neuen Vergessen-Tab";
+
+/* Open new tab title */
+"Open New Tab" = "Neuen Tab öffnen";
+
+/* Open new forget mode tab title */
+"Open New Forget Tab" = "Neuen Vergessen-Tab öffnen";
+
+/* Show images title */
+"Show Images" = "Bilder anzeigen";
+
+/* Hide images titile */
+"Hide Images" = "Bilder verbergen";
+
+/* Night mode title */
+"Night Mode" = "Nacht Modus";
+
+/* Turn off Night mode title */
+"Night Mode off" = "Nacht Modus ausschalten";
+
+/* Remove favorites title */
+"Remove Favorites" = "Favorit entfernen";
+
+/* Dashboard navigation bar title */
+"Overview" = "Übersicht";
+
+/* Title on the tab view, when no URL is open on the tab */
+"Topsites" = "Topseiten und News";
+
+/* Antitracking UI top title */
+"Data is protected" = "Deine Daten sind geschützt";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Persönliche Daten wurden entfernt";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking Unternehmen";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Persönliche Daten";
+
+/* Antiphishing alert title */
+"Warning: deceptive website!" =  "Warnung: betrügerische Website!";
+
+/* Antiphishing alert message */
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ hat den Zugriff auf %1$ blockiert, weil diese Seite als Phishing-Website gemeldet wurde.\nPhishing-Websites geben vor, vertrauenswürdig zu sein, damit du deine Anmeldedaten, dein Passwort oder andere vertrauliche Informationen preisgibst.";
+
+/* Back to safe site buttun title in antiphishing alert title */
+"Back to safe site" = "Zurück zu sicherer Webseite";
+
+/* Continue despite warning buttun title in antiphishing alert title */
+"Continue despite warning" = "Trotz der Warnung fortfahren";
+
+/* Context menu option for opening a link in a new private tab */
+"Open In New Forget Tab" = "In neuem Forget-Tab öffnen";

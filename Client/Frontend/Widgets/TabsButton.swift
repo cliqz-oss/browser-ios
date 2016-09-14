@@ -16,10 +16,9 @@ struct TabsButtonUX {
     static let TitleFont: UIFont = UIConstants.DefaultChromeSmallFontBold
     static let BorderStrokeWidth: CGFloat = 1
 
-	// Cliqz: Changed BorderColor for Normal mode according to requirements
-    static let BorderColor: UIColor = UIColor.whiteColor() // UIColor.clearColor()
+    static let BorderColor: UIColor = UIColor.clearColor()
 	// Cliqz: Changed Insets to make Tabs button as big as UITextField
-    static let TitleInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8) // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+    static let TitleInsets = UIEdgeInsets(top: 11, left: 5, bottom: 5, right: 11) // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
 
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
@@ -30,7 +29,7 @@ struct TabsButtonUX {
         theme.borderWidth = 0 // BorderStrokeWidth
         theme.font = UIConstants.DefaultChromeBoldFont
 		// Cliqz: Changed background&text colors and insets of TabsButton in Private Mode according to requirements (Commented out original color)
-        theme.backgroundColor = UIConstants.OrangeColor // UIConstants.AppBackgroundColor
+        theme.backgroundColor = UIColor.clearColor() // UIConstants.AppBackgroundColor
         theme.textColor = UIColor.whiteColor() // UIConstants.PrivateModePurple
 		theme.insets = TitleInsets // UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
@@ -45,7 +44,7 @@ struct TabsButtonUX {
         theme.font = TitleFont
 		// Cliqz: Changed text colors and backgroundColor of TabsButton in Normal Mode according to requirements (Commented out original color)
         theme.backgroundColor = UIColor.clearColor() //TitleBackgroundColor
-        theme.textColor = UIColor.whiteColor() // TitleColor
+        theme.textColor = UIColor.blackColor() // TitleColor
         theme.insets = TitleInsets
         theme.highlightButtonColor = TabsButtonUX.TitleColor
         theme.highlightTextColor = TabsButtonUX.TitleBackgroundColor
