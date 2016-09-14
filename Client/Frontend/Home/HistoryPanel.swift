@@ -359,8 +359,6 @@ class HistoryPanelSiteTableViewController: SiteTableViewController {
             if let homePanelDelegate = homePanelDelegate,
                    historyPanel = historyPanel {
                 homePanelDelegate.homePanel(historyPanel, didSelectURL: url, visitType: visitType)
-                // Cliqz log history tap telemery signal
-                logHistoryTapTelemetrySignal(site)
             }
             return
         }
@@ -552,15 +550,7 @@ class HistoryPanelSiteTableViewController: SiteTableViewController {
 
 // Cliqz log history tap telemery signal
 extension HistoryPanelSiteTableViewController {
-    private func logHistoryTapTelemetrySignal(site: Site) {
-        let pastType = "web"
-        let queryLength = site.url.characters.count
-        let positionAge = getPositionAge(site)
-        let lengthAge = self.getHistoryHours(profile)
-        let displayTime = NSDate.getCurrentMillis() - openDatetime!
-        
-        TelemetryLogger.sharedInstance.logEvent(.PastTap(pastType, queryLength, positionAge, lengthAge, displayTime))
-    }
+    
     private func getPositionAge(site: Site) -> Double {
         var positionAge = 0.0
         if let visitDateMicroseconds = site.latestVisit?.date {

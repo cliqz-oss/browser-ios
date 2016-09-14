@@ -14,24 +14,22 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
-    case LayerChange        (String, String)
     case Onboarding         (String, Int, Int?)
-    case PastTap            (String, Int, Double, Double, Double)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptSignal   ([String: AnyObject])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
-    case TabSignal          (String, String, Int?, Int)
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool, Int?)
+    case Toolbar            (String, String, String, Bool?, Int?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case Attrack            (String, String?, Int?)
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
+    case DashBoard            (String, String, String?, [String: AnyObject]?)
 }
 
 
@@ -41,8 +39,6 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
-    
-    var privateMode = false
     
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
@@ -69,10 +65,6 @@ class TelemetryLogger : EventsLogger {
     func storeCurrentTelemetrySeq() {
         LocalDataStore.setObject(telemetrySeq!.get(), forKey: self.telementrySequenceKey)
     }
-    //MARK: - private mode
-    func changePrivateMode(privateMode: Bool) {
-        self.privateMode = privateMode
-    }
     
     //MARK: - Presisting events and sequence
     internal func persistState() {
@@ -82,10 +74,6 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Log events
     internal func logEvent(eventType: TelemetryLogEventType){
-        // disable sending any signals during private mode
-        guard privateMode == false else {
-            return
-        }
         
         dispatch_async(dispatchQueue) {
             var event: [String: AnyObject]
@@ -110,15 +98,9 @@ class TelemetryLogger : EventsLogger {
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
-            case .LayerChange(let currentLayer, let nextLayer):
-                event = self.createLayerChangeEvent(currentLayer, nextLayer: nextLayer)
-                
             case .Onboarding(let action, let index, let duration):
                 event = self.createOnboardingEvent(action, index: index, duration: duration)
                
-            case .PastTap(let pastType, let querylength, let positionAge, let lengthAge, let displayTime):
-                event = self.createPastTabEvent(pastType, querylength: querylength, positionAge: positionAge, lengthAge: lengthAge, displayTime: displayTime)
-                
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
                 
@@ -134,9 +116,6 @@ class TelemetryLogger : EventsLogger {
             case .HomeScreenShortcut(let targetType, let targetIndex):
                 event = self.createHomeScreenShortcutEvent(targetType, targetIndex: targetIndex)
             
-            case .TabSignal(let action, let mode, let tabIndex, let tabCount):
-                event = self.createTabSignalEvent(action, mode: mode, tabIndex: tabIndex, tabCount: tabCount)
-                
             case .NewsNotification(let action):
                 event = self.createNewsNotificationEvent(action)
 			
@@ -146,10 +125,8 @@ class TelemetryLogger : EventsLogger {
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
                 
-            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
+            case .Toolbar(let action, let target, let view, let isForgetMode?, let customData):
                 event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
-                // disable sending event when there is interaction with the search bar (user is about to type or about to navigate to url)
-                disableSendingEvent = true
                 
             case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
                 // disable sending event when there is interaciton with keyboars
@@ -157,24 +134,22 @@ class TelemetryLogger : EventsLogger {
                 
             case .WebMenu(let action, let target, let isForgetMode):
                 event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
-                // disable sending event when there is interaciton with web menu
-                disableSendingEvent = true
             
             case .Attrack(let action, let target, let customData):
                 event = self.createAttrackEvent(action, target: target, customData: customData)
-                // disable sending event when there is interaciton with anti-tracking UI
-                disableSendingEvent = true
                 
             case .AntiPhishing(let action, let target, let showDuration):
                 event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
-                // disable sending event when there is interaciton with anti-phishing UI
-                disableSendingEvent = true
+            
                 
             case .ShareMenu (let action, let target):
                 event = self.createShareMenuEvent(action, target: target)
-                // disable sending event when there is interaciton with share menu
-                disableSendingEvent = true
                 
+            case .DashBoard (let type, let action, let target, let customData):
+                event = self.createDashBoardEvent(type, action: action, target: target, customData: customData)
+            
+            default:
+                return
             }
             
             // Always store the event
@@ -284,18 +259,6 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createLayerChangeEvent(currentLayer: String, nextLayer: String) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = "layer_change"
-        event["current_layer"] = currentLayer
-        event["next_layer"] = nextLayer
-        event["display_time"] = event["ts"]
-        
-        return event
-    }
-    
     private func createOnboardingEvent(action: String, index: Int, duration: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -313,18 +276,7 @@ class TelemetryLogger : EventsLogger {
 		}
         return event
     }
-    private func createPastTabEvent(pastType: String, querylength: Int, positionAge: Double, lengthAge: Double, displayTime: Double) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "activity"
-        event["action"] = "past_tap"
-        event["query_length"] = querylength
-        event["position_age"] = positionAge
-        event["length_age"] = lengthAge
-        event["display_time"] = displayTime
-        
-        return event
-    }
+    
     private func createNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -400,18 +352,6 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createTabSignalEvent(action: String, mode: String, tabIndex: Int?, tabCount: Int) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        event["type"] = "tab"
-        event["action"] = action
-        event["mode"] = mode
-        if let index = tabIndex {
-            event["tab_index"] = index
-        }
-        event["tab_count"] = tabCount
-        return event
-    }
-    
     private func createNewsNotificationEvent(action: String) -> [String: AnyObject] {
         var event = createBasicEvent()
         event["type"] = "news_notification"
@@ -442,14 +382,17 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool, customData: Int?) -> [String: AnyObject] {
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
         event["action"] = action
         event["target"] = target
         event["view"] = view
-        event["is_forget"] = isForgetMode
+        
+        if let isForgetMode = isForgetMode {
+            event["is_forget"] = isForgetMode
+        }
         
         if let customData = customData where target == "overview" {
             event["open_tabs"] = customData
@@ -459,6 +402,8 @@ class TelemetryLogger : EventsLogger {
             event["tracker_count"] = customData
         } else if let customData = customData where target == "reader_mode" {
             event["state"] = customData == 1 ? "true" : "false"
+        } else if let customData = customData where view == "overview" {
+            event["show_duration"] = customData == 1 ? "true" : "false"
         }
         
         return event
@@ -534,5 +479,23 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
+    
+    private func createDashBoardEvent(type: String, action: String, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+    
+        event["type"] = type
+        event["action"] = action
+        
+        if let target = target {
+            event["target"] = target
+        }
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
+        return event
+    }
     
 }

@@ -102,7 +102,6 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	// Mark: Action handlers
 	func dismiss() {
 		self.dismissViewControllerAnimated(true, completion: nil)
-        TelemetryLogger.sharedInstance.logEvent(.LayerChange("future", "present"))
 	}
 
 	func openSettings() {

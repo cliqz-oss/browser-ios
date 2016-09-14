@@ -63,7 +63,7 @@
 "Human Web" = "Human Web";
 
 /* Block Ads setting */
-"Block Ads" = "Werbung blockieren";
+"Block Ads" = "Werbung blockieren BETA";
 
 /* Fair Blocking toogle title in Block Ads settings
  Title of navigation controller of Fair Blocking */
@@ -82,13 +82,10 @@
 "Enable News Push Notifications" = "Eilmeldungen";
 
 /* Show blocked top-sites from settings */
-"Show blocked topsites" = "Entfernte Topseiten anzeigen";
-
-/* Title of the 'Show blocked top-sites' alert */
-"Show blocked topsites" = "Entfernte Topseiten anzeigen";
+"Show blocked topsites" = "Meist-besuchte Seiten wiederherstellen";
 
 /* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "Alle entfernten Topseiten werden wieder auf der Startseite angezeigt.";
+"All blocked topsites will be shown on the start page again." = "AStartseite zeigt wieder deine meist-besuchten Seiten.";
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
@@ -155,7 +152,7 @@
 "Overview" = "Übersicht";
 
 /* Title on the tab view, when no URL is open on the tab */
-"Topsites" = "Topseiten und News";
+"Topsites" = "Meist-besuchte Seiten und Nachrichten";
 
 /* Antitracking UI top title */
 "Data is protected" = "Deine Daten sind geschützt";
@@ -183,3 +180,12 @@
 
 /* Context menu option for opening a link in a new private tab */
 "Open In New Forget Tab" = "In neuem Forget-Tab öffnen";
+
+/* First card text in onBorading */
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!";
+
+/* Second card text in onBorading */
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag.";
+
+/* Thrid card text in onBorading */
+"When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
