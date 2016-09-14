@@ -64,7 +64,7 @@
 
 /* Block Ads setting
  Block Ads toogle title in Block Ads settings */
-"Block Ads" = "Block Ads BETA";
+"Block Ads" = "Block Ads [Beta]";
 
 /* Fair Blocking toogle title in Block Ads settings
   Title of navigation controller of Fair Blocking */
