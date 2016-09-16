@@ -22,11 +22,11 @@ class InterceptorURLProtocol: NSURLProtocol {
              && request.mainDocumentURL != nil) else {
             return false
         }
-        
-        if let url = request.URL where isExcludedUrl(url) == false {
-            return true
+        guard isExcludedUrl(request.URL) == false else {
+            return false
         }
-        return false
+        
+        return AntiTrackingModule.sharedInstance.shouldInterceptRequest(request)
     }
     
     override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
@@ -38,7 +38,8 @@ class InterceptorURLProtocol: NSURLProtocol {
     }
     
     override func startLoading() {
-        if let newRequest = AntiTrackingModule.sharedInstance.getModifiedRequest(self.request) {
+        //TODO: [BlockAllRequests] always return empty response
+        if let newRequest = AntiTrackingRequestsCache.sharedInstance.getModifiedRequest(self.request) {
             NSURLProtocol.setProperty(true, forKey: InterceptorURLProtocol.customURLProtocolHandledKey, inRequest: newRequest)
 
             let userAgent = request.allHTTPHeaderFields?["User-Agent"]

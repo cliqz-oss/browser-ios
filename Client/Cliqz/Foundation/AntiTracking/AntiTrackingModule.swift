@@ -47,14 +47,14 @@ class AntiTrackingModule: NSObject {
             self.loadModule()
         }
     }
-    
-    func getModifiedRequest(originalRequest: NSURLRequest) -> NSMutableURLRequest? {
-        
-//        let modifiedRequest = originalRequest.mutableCopy() as! NSMutableURLRequest
-        let modifiedRequest = AntiTrackingModule.cloneRequest(originalRequest)
-        
-        let requestInfo = getRequestInfo(originalRequest)
-        if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
+    //TODO: [BlockAllRequests] rename to shouldBlockRequest
+    func shouldInterceptRequest(request: NSURLRequest) -> Bool {
+        guard AntiTrackingRequestsCache.sharedInstance.hasRequest(request) == false else {
+            return true
+        }
+        let requestInfo = getRequestInfo(request)
+        if let blockResponse = getBlockResponseForRequest(requestInfo)
+            where blockResponse.count > 0 {
             
             // increment requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
@@ -63,24 +63,30 @@ class AntiTrackingModule: NSObject {
             }
             
             if let block = blockResponse["cancel"] as? Bool where block == true {
-//                print("[Anti-Tracking] request blocked")
-                return nil
+                AntiTrackingRequestsCache.sharedInstance.addBlockedRequest(request)
+//                print("[Anti-Tracking] blocked: \(request.URL)")
+                
+            } else if let redirectUrl = blockResponse["redirectUrl"] as? String {
+                let modifiedRequest = AntiTrackingModule.cloneRequest(request)
+                modifiedRequest.URL = NSURL(string: redirectUrl)!
+//                print("[Anti-Tracking] redirect: \(request.URL)")
+                
+                if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
+                    
+                    for requestHeader in requestHeaders {
+                        modifiedRequest.setValue(requestHeader["value"], forHTTPHeaderField: requestHeader["name"]!)
+                    }
+                }
+                AntiTrackingRequestsCache.sharedInstance.addTrackingEntry(request, modifiedRequest: modifiedRequest)
             }
             
-            if let redirectUrl = blockResponse["redirectUrl"] as? String {
-                modifiedRequest.URL = NSURL(string: redirectUrl)!
-//                print("[Anti-Tracking] request redirected")
-            }
-            if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
-                
-                for requestHeader in requestHeaders {
-                    modifiedRequest.setValue(requestHeader["value"], forHTTPHeaderField: requestHeader["name"]!)
-                }
-            }
+            return true
         }
-        return modifiedRequest
+        
+        return false
     }
 
+    
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value));")
