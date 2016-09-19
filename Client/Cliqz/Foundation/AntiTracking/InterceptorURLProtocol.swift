@@ -10,7 +10,6 @@ import UIKit
 
 
 class InterceptorURLProtocol: NSURLProtocol {
-    var connection: NSURLConnection?
     
     static let customURLProtocolHandledKey = "customURLProtocolHandledKey"
     static let excludeUrlPrefixes = ["https://lookback.io/api", "http://localhost"]
@@ -26,7 +25,7 @@ class InterceptorURLProtocol: NSURLProtocol {
             return false
         }
         
-        return AntiTrackingModule.sharedInstance.shouldInterceptRequest(request)
+        return AntiTrackingModule.sharedInstance.shouldBlockRequest(request)
     }
     
     override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
@@ -38,59 +37,13 @@ class InterceptorURLProtocol: NSURLProtocol {
     }
     
     override func startLoading() {
-        //TODO: [BlockAllRequests] always return empty response
-        if let newRequest = AntiTrackingRequestsCache.sharedInstance.getModifiedRequest(self.request) {
-            NSURLProtocol.setProperty(true, forKey: InterceptorURLProtocol.customURLProtocolHandledKey, inRequest: newRequest)
-
-            let userAgent = request.allHTTPHeaderFields?["User-Agent"]
-
-            if request.URL == request.mainDocumentURL {
-                returnEmptyResponse()
-                postAsyncToMain(0) {
-                    WebViewToUAMapper.userAgentToWebview(userAgent)?.loadRequest(newRequest)
-                }
-            } else if isSameOriginAsMainDocument(request) && !isResourceRequest(newRequest) {
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.connection = NSURLConnection(request: newRequest, delegate: self)
-                })
-            } else {
-                self.connection = NSURLConnection(request: newRequest, delegate: self)
-            }
-
-        } else {
-            returnEmptyResponse()
-        }
+        BlockedRequestsCache.sharedInstance.removeBlockedRequest(self.request)
+        returnEmptyResponse()
     }
-    
     override func stopLoading() {
-        self.connection?.cancel()
-        self.connection = nil
+    
     }
     
-    
-    //MARK: - NSURLConnectionDataDelegate
-    func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
-        self.client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .NotAllowed)
-    }
-    
-    func connection(connection: NSURLConnection, willSendRequest request: NSURLRequest, redirectResponse response: NSURLResponse?) -> NSURLRequest? {
-        if let response = response {
-            client?.URLProtocol(self, wasRedirectedToRequest: request, redirectResponse: response)
-        }
-        return request
-    }
-    func connection(connection: NSURLConnection, didReceiveData data: NSData) {
-        self.client?.URLProtocol(self, didLoadData: data)
-    }
-    
-    func connectionDidFinishLoading(connection: NSURLConnection) {
-        self.client?.URLProtocolDidFinishLoading(self)
-        
-    }
-    
-    func didFailWithError(error: NSError) {
-        self.client?.URLProtocol(self, didFailWithError: error)
-    }
     
     //MARK: - private helper methods
     class func isExcludedUrl(url: NSURL?) -> Bool {
@@ -119,28 +72,6 @@ class InterceptorURLProtocol: NSURLProtocol {
         client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .NotAllowed)
         client?.URLProtocol(self, didLoadData: NSData())
         client?.URLProtocolDidFinishLoading(self)
-    }
-    
-    private func isResourceRequest(request: NSURLRequest) -> Bool {
-        if let urlString = request.URL?.absoluteString {
-            // images
-            if urlString.endsWith(".jpg") || urlString.endsWith(".png") || urlString.endsWith(".gif") {
-                return true
-            }
-            // css and js
-            if urlString.endsWith(".js") || urlString.endsWith(".css") {
-                return true
-            }
-        }
-        return false
-    }
-    
-    private func isSameOriginAsMainDocument(request: NSURLRequest) -> Bool {
-        if let host = request.URL?.host,
-            let mainHost = request.mainDocumentURL?.host where host == mainHost{
-            return true
-        }
-        return false
     }
     
     

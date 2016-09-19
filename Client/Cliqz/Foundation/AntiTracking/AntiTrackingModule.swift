@@ -47,9 +47,9 @@ class AntiTrackingModule: NSObject {
             self.loadModule()
         }
     }
-    //TODO: [BlockAllRequests] rename to shouldBlockRequest
-    func shouldInterceptRequest(request: NSURLRequest) -> Bool {
-        guard AntiTrackingRequestsCache.sharedInstance.hasRequest(request) == false else {
+
+    func shouldBlockRequest(request: NSURLRequest) -> Bool {
+        guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
             return true
         }
         let requestInfo = getRequestInfo(request)
@@ -62,23 +62,8 @@ class AntiTrackingModule: NSObject {
                 webView.incrementBadRequestsCount()
             }
             
-            if let block = blockResponse["cancel"] as? Bool where block == true {
-                AntiTrackingRequestsCache.sharedInstance.addBlockedRequest(request)
-//                print("[Anti-Tracking] blocked: \(request.URL)")
-                
-            } else if let redirectUrl = blockResponse["redirectUrl"] as? String {
-                let modifiedRequest = AntiTrackingModule.cloneRequest(request)
-                modifiedRequest.URL = NSURL(string: redirectUrl)!
-//                print("[Anti-Tracking] redirect: \(request.URL)")
-                
-                if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
-                    
-                    for requestHeader in requestHeaders {
-                        modifiedRequest.setValue(requestHeader["value"], forHTTPHeaderField: requestHeader["name"]!)
-                    }
-                }
-                AntiTrackingRequestsCache.sharedInstance.addTrackingEntry(request, modifiedRequest: modifiedRequest)
-            }
+            
+            BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             
             return true
         }
