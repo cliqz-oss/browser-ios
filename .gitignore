@@ -60,7 +60,8 @@ python-env/
 # IDEA
 .idea
 
-Carthage/
+Carthage/Checkouts/
+!Carthage/Build/
 
 ThirdParty/google-breakpad
 
