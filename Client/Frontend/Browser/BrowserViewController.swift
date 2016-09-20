@@ -977,9 +977,11 @@ class BrowserViewController: UIViewController {
 
     func addBookmark(tabState: TabState) {
         guard let url = tabState.url else { return }
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        guard let urlString = url.absoluteString else { return }
         
         // Cliqz: replaced ShareItem with CliqzShareItem to extend bookmarks behaviour
-        let shareItem = CliqzShareItem(url: url.absoluteString, title: tabState.title, favicon: nil, bookmarkedDate: NSDate.now())
+        let shareItem = CliqzShareItem(url: urlString, title: tabState.title, favicon: nil, bookmarkedDate: NSDate.now())
 //        let shareItem = ShareItem(url: url.absoluteString, title: tabState.title, favicon: tabState.favicon)
         
         profile.bookmarks.shareItem(shareItem)
@@ -1028,8 +1030,11 @@ class BrowserViewController: UIViewController {
 
     private func removeBookmark(tabState: TabState) {
         guard let url = tabState.url else { return }
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        guard url.absoluteString != nil else { return }
+        
         profile.bookmarks.modelFactory >>== {
-            $0.removeByURL(url.absoluteString)
+            $0.removeByURL(url.absoluteString!)
                 .uponQueue(dispatch_get_main_queue()) { res in
                 if res.isSuccess {
                     if let tab = self.tabManager.getTabForURL(url) {
@@ -1133,7 +1138,7 @@ class BrowserViewController: UIViewController {
 
     private func updateUIForReaderHomeStateForTab(tab: Tab) {
         // Cliqz: Added gaurd statement to avoid overridding url when search results are displayed
-        guard self.searchController != nil && self.searchController!.view.hidden && tab.url != nil && !tab.url!.absoluteString.contains("/cliqz/") else {
+        guard self.searchController != nil && self.searchController!.view.hidden && tab.url != nil && tab.url!.absoluteString != nil && !tab.url!.absoluteString!.contains("/cliqz/") else {
             return
         }
         
@@ -1155,7 +1160,9 @@ class BrowserViewController: UIViewController {
 
     private func isWhitelistedUrl(url: NSURL) -> Bool {
         for entry in WhiteListedUrls {
-            if let _ = url.absoluteString.rangeOfString(entry, options: .RegularExpressionSearch) {
+            // Cliqz: [iOS10] fixed compilation error for optional value
+            if let urlString = url.absoluteString,
+                let _ = urlString.rangeOfString(entry, options: .RegularExpressionSearch) {
                 return UIApplication.sharedApplication().canOpenURL(url)
             }
         }
@@ -1169,7 +1176,8 @@ class BrowserViewController: UIViewController {
 		urlBar.updateTrackersCount((tab.webView?.badRequests)!)
         let isPage = tab.displayURL?.isWebPage() ?? false
         navigationToolbar.updatePageStatus(isWebPage: isPage)
-
+        
+        // Cliqz: [iOS10] fixed compilation error for optional value
         guard let url = tab.displayURL?.absoluteString else {
             return
         }
@@ -1704,9 +1712,11 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLongPressReaderMode(urlBar: URLBarView) -> Bool {
+        // Cliqz: [iOS10] fixed compilation error for optional value
         guard let tab = tabManager.selectedTab,
                url = tab.displayURL,
-               result = profile.readingList?.createRecordWithURL(url.absoluteString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
+               urlString  = url.absoluteString,
+               result = profile.readingList?.createRecordWithURL(urlString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
             else {
                 UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("Could not add page to Reading list", comment: "Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed."))
                 return false
@@ -1961,6 +1971,7 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        // Cliqz: [iOS10] fixed compilation error for optional value
         guard let tab = tabManager.selectedTab,
             let _ = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
@@ -2367,6 +2378,7 @@ extension BrowserViewController: TabManagerDelegate {
             webView.accessibilityIdentifier = "contentView"
             webView.accessibilityElementsHidden = false
 
+            // Cliqz: [iOS10] fixed compilation error for optional value
             if let url = webView.URL?.absoluteString {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
                 if AboutUtils.isAboutURL(webView.URL) {
@@ -2557,13 +2569,14 @@ extension BrowserViewController: WKNavigationDelegate {
         }
         
         //Cliqz: Navigation telemetry signal
-        if url.absoluteString.rangeOfString("localhost") == nil {
+        if let urlString = url.absoluteString where urlString.rangeOfString("localhost") == nil {
             startNavigation(webView, navigationAction: navigationAction)
         }
         // First special case are some schemes that are about Calling. We prompt the user to confirm this action. This
         // gives us the exact same behaviour as Safari.
         if url.scheme == "tel" || url.scheme == "facetime" || url.scheme == "facetime-audio" {
-            if let phoneNumber = url.resourceSpecifier.stringByRemovingPercentEncoding where !phoneNumber.isEmpty {
+            if let resourceSpecifier = url.resourceSpecifier,
+                let phoneNumber = resourceSpecifier.stringByRemovingPercentEncoding where !phoneNumber.isEmpty {
                 let formatter = PhoneNumberFormatter()
                 let formattedPhoneNumber = formatter.formatPhoneNumber(phoneNumber)
                 let alert = UIAlertController(title: formattedPhoneNumber, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -2592,7 +2605,7 @@ extension BrowserViewController: WKNavigationDelegate {
 
         if url.scheme == "http" || url.scheme == "https" {
             // Cliqz: Added handling for back/forward functionality
-            if url.absoluteString.contains("cliqz/goto.html") {
+            if let urlString = url.absoluteString where urlString.contains("cliqz/goto.html") {
                 if let q = url.query {
                     let comp = q.componentsSeparatedByString("=")
                     if comp.count == 2 {
@@ -2729,7 +2742,7 @@ extension BrowserViewController: WKNavigationDelegate {
         }
 		
         //Cliqz: Navigation telemetry signal
-        if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
+        if let urlString = webView.URL?.absoluteString where urlString.rangeOfString("localhost") == nil {
             finishNavigation(webView)
         }
         
@@ -3044,6 +3057,7 @@ extension BrowserViewController {
             } else {
                 readerModeBar.applyTheme(Theme.NormalMode)
             }
+            // Cliqz: [iOS10] fixed compilation error for optional value
             if let url = self.tabManager.selectedTab?.displayURL?.absoluteString, result = profile.readingList?.getRecordWithURL(url) {
                 if let successValue = result.successValue, record = successValue {
                     readerModeBar.unread = record.unread
@@ -3227,8 +3241,10 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
         case .AddToReadingList:
             if let tab = tabManager.selectedTab,
                let url = tab.url where ReaderModeUtils.isReaderModeURL(url) {
-                if let url = ReaderModeUtils.decodeURL(url) {
-                    profile.readingList?.createRecordWithURL(url.absoluteString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name) // TODO Check result, can this fail?
+                // Cliqz: [iOS10] fixed compilation error for optional value
+                if let url = ReaderModeUtils.decodeURL(url),
+                    let urlString = url.absoluteString {
+                    profile.readingList?.createRecordWithURL(urlString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name) // TODO Check result, can this fail?
                     readerModeBar.added = true
                     readerModeBar.unread = true
                 }
@@ -3865,8 +3881,10 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 	}
 
     private func navigateToUrl(url: NSURL, searchQuery: String?) {
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        guard let urlString = url.absoluteString else { return }
         let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(urlString.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(URL: u)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
@@ -3947,10 +3965,11 @@ extension BrowserViewController {
 
 	// Cliqz: Logging the Navigation Telemetry signals
     private func finishNavigation(webView: CliqzWebView) {
-		// calculate the url length
-		guard let urlLength = webView.URL?.absoluteString.characters.count else {
-			return
-		}
+        guard let urlString = webView.URL?.absoluteString else { return }
+		
+        // calculate the url length
+		let urlLength = urlString.characters.count
+        
         // calculate times
         let currentTime = NSDate.getCurrentMillis()
         let displayTime = currentTime - navigationEndTime

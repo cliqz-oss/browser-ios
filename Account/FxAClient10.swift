@@ -227,7 +227,7 @@ public class FxAClient10 {
             "authPW": authPW.base16EncodedStringWithOptions(NSDataBase16EncodingOptions.LowerCase),
         ]
 
-        var URL: NSURL = self.URL.URLByAppendingPathComponent("/account/login")
+        var URL: NSURL = self.URL.URLByAppendingPathComponent("/account/login")!
         if getKeys {
             let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: false)!
             components.query = "keys=true"
@@ -280,7 +280,7 @@ public class FxAClient10 {
         let hawkHelper = HawkHelper(id: tokenId.hexEncodedString, key: reqHMACKey)
 
         let URL = self.URL.URLByAppendingPathComponent("/account/keys")
-        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
         mutableURLRequest.HTTPMethod = Method.GET.rawValue
 
         let hawkValue = hawkHelper.getAuthorizationValueFor(mutableURLRequest)
@@ -328,7 +328,7 @@ public class FxAClient10 {
         let hawkHelper = HawkHelper(id: tokenId.hexEncodedString, key: reqHMACKey)
 
         let URL = self.URL.URLByAppendingPathComponent("/certificate/sign")
-        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
         mutableURLRequest.HTTPMethod = Method.POST.rawValue
 
         mutableURLRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")

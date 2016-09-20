@@ -482,9 +482,9 @@ class TabTrayController: UIViewController {
             fromView = emptyPrivateTabsView
         } else {
             let snapshot = collectionView.snapshotViewAfterScreenUpdates(false)
-            snapshot.frame = collectionView.frame
-            view.insertSubview(snapshot, aboveSubview: collectionView)
-            fromView = snapshot
+            snapshot!.frame = collectionView.frame
+            view.insertSubview(snapshot!, aboveSubview: collectionView)
+            fromView = snapshot!
         }
 
         privateMode = !privateMode
@@ -506,10 +506,10 @@ class TabTrayController: UIViewController {
             emptyPrivateTabsView.hidden = true
             //when exiting private mode don't screenshot the collectionview (causes the UI to hang)
             let newSnapshot = collectionView.snapshotViewAfterScreenUpdates(!exitingPrivateMode)
-            newSnapshot.frame = collectionView.frame
-            view.insertSubview(newSnapshot, aboveSubview: fromView)
+            newSnapshot!.frame = collectionView.frame
+            view.insertSubview(newSnapshot!, aboveSubview: fromView)
             collectionView.alpha = 0
-            toView = newSnapshot
+            toView = newSnapshot!
         }
         toView.alpha = 0
         toView.transform = scaleDownTransform

@@ -125,21 +125,23 @@ public class WebViewProgress
 		var isFragmentJump: Bool = false
 		
 		if let fragment = request.URL?.fragment {
-			let nonFragmentUrl = request.URL?.absoluteString.stringByReplacingOccurrencesOfString("#" + fragment,
+			let nonFragmentUrl = request.URL?.absoluteString!.stringByReplacingOccurrencesOfString("#" + fragment,
 			                                                                                      withString: "")
 			
 			isFragmentJump = nonFragmentUrl == webView?.request?.URL?.absoluteString
 		}
 		
 		let isTopLevelNavigation = request.mainDocumentURL == request.URL
+        if let scheme = request.URL?.scheme {
+            let isHTTPOrLocalFile = scheme.startsWith("http") == true ||
+                scheme.startsWith("file") == true
+            
+            if (!isFragmentJump && isHTTPOrLocalFile && isTopLevelNavigation) {
+                currentURL = request.URL
+                reset()
+            }
+        }
 		
-		let isHTTPOrLocalFile = request.URL?.scheme.startsWith("http") == true ||
-			request.URL?.scheme.startsWith("file") == true
-		
-		if (!isFragmentJump && isHTTPOrLocalFile && isTopLevelNavigation) {
-			currentURL = request.URL
-			reset()
-		}
 		return true
 	}
 	

@@ -52,7 +52,7 @@ class AuroraAppDelegate: AppDelegate {
                     window.drawViewHierarchyInRect(window.bounds, afterScreenUpdates: true)
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    self.sendFeedbackMailWithImage(image)
+                    self.sendFeedbackMailWithImage(image!)
                 }
         }
     }

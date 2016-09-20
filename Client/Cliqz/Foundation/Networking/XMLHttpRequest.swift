@@ -70,16 +70,19 @@ enum ReadyState: Int {
 	}
 
 	func send(data: AnyObject?) {
-		Alamofire.request(.GET, self.url!.absoluteString, headers: self.requestHeaders)
-		.validate(statusCode: 200..<300)
-		.response { [weak self] (responseRequest, responseResponse, responseData, responseError) in
-			self?.status = responseResponse?.statusCode
-			self?.readyState = NSNumber(long: ReadyState.Done.rawValue)
-			self?.responseText = NSString(data: responseData!, encoding: NSUTF8StringEncoding)
-			if (self?.onreadystatechange != nil) {
-				self?.onreadystatechange!.callWithArguments([])
-			}
-		}
+        if let requestURL = self.url!.absoluteString {
+            Alamofire.request(.GET, requestURL, headers: self.requestHeaders)
+                .validate(statusCode: 200..<300)
+                .response { [weak self] (responseRequest, responseResponse, responseData, responseError) in
+                    self?.status = responseResponse?.statusCode
+                    self?.readyState = NSNumber(long: ReadyState.Done.rawValue)
+                    self?.responseText = NSString(data: responseData!, encoding: NSUTF8StringEncoding)
+                    if (self?.onreadystatechange != nil) {
+                        self?.onreadystatechange!.callWithArguments([])
+                    }
+            }
+        }
+		
 	}
 
 	func setRequestHeader(name: String, _ value: String) {

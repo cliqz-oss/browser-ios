@@ -82,6 +82,7 @@ class OpenSearchEngine: NSObject, NSCoding {
             return item.value == placeholder
         }
         guard let term = searchTerm where !term.isEmpty  else { return nil }
+        
         return term[0].name
     }
 

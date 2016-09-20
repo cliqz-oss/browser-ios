@@ -78,8 +78,9 @@ class CliqzWebView: UIWebView {
 	func setUrl(url: NSURL?, reliableSource: Bool) {
 		_url.prevUrl = _url.url
 		_url.isReliableSource = reliableSource
-		if URL?.absoluteString.endsWith("?") ?? false {
-			if let noQuery = URL?.absoluteString.componentsSeparatedByString("?")[0] {
+		if let urlString = URL?.absoluteString
+            where urlString.endsWith("?") ?? false {
+			if let noQuery = URL?.absoluteString!.componentsSeparatedByString("?")[0] {
 				_url.url = NSURL(string: noQuery)
 			}
 		} else {
@@ -217,7 +218,8 @@ class CliqzWebView: UIWebView {
 		guard let docLoc = self.stringByEvaluatingJavaScriptFromString("document.location.href") else { return }
 
 		if docLoc != self.prevDocumentLocation {
-			if !(self.URL?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
+			if let urlString = self.URL?.absoluteString
+            where !(urlString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
 			}
 			

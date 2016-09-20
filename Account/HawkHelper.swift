@@ -85,7 +85,8 @@ public class HawkHelper {
         if let port = url.port {
             append(port.stringValue)
         } else {
-            if url.scheme.lowercaseString == "https" {
+            // Cliqz: [iOS10] fixed compilation error for optional value
+            if let scheme = url.scheme where scheme.lowercaseString == "https" {
                 append("443")
             } else {
                 append("80")
