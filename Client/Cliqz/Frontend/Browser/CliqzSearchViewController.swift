@@ -200,7 +200,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     //MARK: - WKWebView Delegate
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
+		if !navigationAction.request.URL!.absoluteString!.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}

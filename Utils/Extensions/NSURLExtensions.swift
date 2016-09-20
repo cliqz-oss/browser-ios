@@ -157,12 +157,12 @@ extension NSURL {
     public func absoluteDisplayString() -> String? {
         var urlString = self.absoluteString
         // For http URLs, get rid of the trailing slash if the path is empty or '/'
-        if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString.endsWith("/") {
-            urlString = urlString.substringToIndex(urlString.endIndex.advancedBy(-1))
+        if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString!.endsWith("/") {
+            urlString = urlString!.substringToIndex(urlString!.endIndex.advancedBy(-1))
         }
         // If it's basic http, strip out the string but leave anything else in
-        if urlString.hasPrefix("http://") ?? false {
-            return urlString.substringFromIndex(urlString.startIndex.advancedBy(7))
+        if urlString!.hasPrefix("http://") ?? false {
+            return urlString!.substringFromIndex(urlString!.startIndex.advancedBy(7))
         } else {
             return urlString
         }
@@ -236,7 +236,7 @@ extension NSURL {
     public func isWebPage() -> Bool {
         let httpSchemes = ["http", "https"]
 
-        if let _ = httpSchemes.indexOf(scheme) {
+        if let _ = httpSchemes.indexOf(scheme!) {
             return true
         }
 
@@ -261,7 +261,7 @@ extension NSURL {
      This only accepts permanent schemes: historical and provisional schemes are not accepted.
      */
     public var schemeIsValid: Bool {
-        return permanentURISchemes.contains(scheme)
+        return permanentURISchemes.contains(scheme!)
     }
 }
 

@@ -94,18 +94,18 @@ class PasscodeInputView: UIView, UIKeyInput {
 
         (0..<passcodeSize).forEach { index in
             let context = UIGraphicsGetCurrentContext()
-            CGContextSetLineWidth(context, 1)
-            CGContextSetStrokeColorWithColor(context, UIConstants.PasscodeDotColor.CGColor)
-            CGContextSetFillColorWithColor(context, UIConstants.PasscodeDotColor.CGColor)
+            CGContextSetLineWidth(context!, 1)
+            CGContextSetStrokeColorWithColor(context!, UIConstants.PasscodeDotColor.CGColor)
+            CGContextSetFillColorWithColor(context!, UIConstants.PasscodeDotColor.CGColor)
 
             let offset = floor(rect.width / CGFloat(passcodeSize))
             var circleRect = CGRect(origin: CGPointZero, size: circleSize)
             circleRect.center = CGPoint(x: (offset * CGFloat(index + 1))  - offset / 2, y: rect.height / 2)
 
             if index < inputtedCode.characters.count {
-                CGContextFillEllipseInRect(context, circleRect)
+                CGContextFillEllipseInRect(context!, circleRect)
             } else {
-                CGContextStrokeEllipseInRect(context, circleRect)
+                CGContextStrokeEllipseInRect(context!, circleRect)
             }
         }
     }

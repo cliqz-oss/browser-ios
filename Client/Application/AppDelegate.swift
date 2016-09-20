@@ -164,7 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
             if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL {
                 let title = (userInfo["Title"] as? String) ?? ""
-                profile.readingList?.createRecordWithURL(url.absoluteString, title: title, addedBy: UIDevice.currentDevice().name)
+                profile.readingList?.createRecordWithURL(url.absoluteString!, title: title, addedBy: UIDevice.currentDevice().name)
             }
         }
 
@@ -267,9 +267,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 
         // Cliqz: Start Crashlytics
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            Fabric.with([Crashlytics.self])
-        }
+        Fabric.with([Crashlytics.self])
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+//            Fabric.with([Crashlytics.self])
+//        }
 
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
