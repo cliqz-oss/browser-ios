@@ -146,9 +146,11 @@ public class FaviconFetcher : NSObject, NSXMLParserDelegate {
                         iconType = .Guess
                     }
 
+                    // Cliqz: [iOS10] fixed compilation error for optional value
                     if let type = iconType where !bestType.isPreferredTo(type),
-                        let iconUrl = NSURL(string: href, relativeToURL: url) {
-                            let icon = Favicon(url: iconUrl.absoluteString!, date: NSDate(), type: type)
+                        let iconUrl = NSURL(string: href, relativeToURL: url),
+                        let urlString = iconUrl.absoluteString {
+                            let icon = Favicon(url: urlString, date: NSDate(), type: type)
                             // If we already have a list of Favicons going already, then add it…
                             if (type == bestType) {
                                 icons.append(icon)
@@ -161,8 +163,9 @@ public class FaviconFetcher : NSObject, NSXMLParserDelegate {
                 }
 
                 // If we haven't got any options icons, then use the default at the root of the domain.
-                if let url = NSURL(string: "/favicon.ico", relativeToURL: url) where icons.isEmpty {
-                    let icon = Favicon(url: url.absoluteString!, date: NSDate(), type: .Guess)
+                // Cliqz: [iOS10] fixed compilation error for optional value
+                if let url = NSURL(string: "/favicon.ico", relativeToURL: url), let urlString = url.absoluteString  where icons.isEmpty {
+                    let icon = Favicon(url: urlString, date: NSDate(), type: .Guess)
                     icons = [icon]
                 }
             }
@@ -174,31 +177,36 @@ public class FaviconFetcher : NSObject, NSXMLParserDelegate {
         let deferred = Deferred<Maybe<Favicon>>()
         let url = icon.url
         let manager = SDWebImageManager.sharedManager()
-        let site = Site(url: siteUrl.absoluteString!, title: "")
-
-        var fav = Favicon(url: url, type: icon.type)
-        if let url = url.asURL {
-            manager.downloadImageWithURL(url,
-                options: SDWebImageOptions.LowPriority,
-                progress: nil,
-                completed: { (img, err, cacheType, success, url) -> Void in
-                fav = Favicon(url: url.absoluteString!,
-                    type: icon.type)
-
-                if let img = img {
-                    fav.width = Int(img.size.width)
-                    fav.height = Int(img.size.height)
-                    profile.favicons.addFavicon(fav, forSite: site)
-                } else {
-                    fav.width = 0
-                    fav.height = 0
-                }
-
-                deferred.fill(Maybe(success: fav))
-            })
-        } else {
-            return deferMaybe(FaviconFetcherErrorType(description: "Invalid URL \(url)"))
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let urlString = siteUrl.absoluteString {
+            let site = Site(url: siteUrl.absoluteString!, title: "")
+            
+            var fav = Favicon(url: url, type: icon.type)
+            if let url = url.asURL {
+                manager.downloadImageWithURL(url,
+                                             options: SDWebImageOptions.LowPriority,
+                                             progress: nil,
+                                             completed: { (img, err, cacheType, success, url) -> Void in
+                                                fav = Favicon(url: url.absoluteString!,
+                                                    type: icon.type)
+                                                
+                                                if let img = img {
+                                                    fav.width = Int(img.size.width)
+                                                    fav.height = Int(img.size.height)
+                                                    profile.favicons.addFavicon(fav, forSite: site)
+                                                } else {
+                                                    fav.width = 0
+                                                    fav.height = 0
+                                                }
+                                                
+                                                deferred.fill(Maybe(success: fav))
+                })
+            } else {
+                return deferMaybe(FaviconFetcherErrorType(description: "Invalid URL \(url)"))
+            }
         }
+
+        
 
         return deferred
     }

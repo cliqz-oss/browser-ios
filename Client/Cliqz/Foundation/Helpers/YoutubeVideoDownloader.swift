@@ -15,7 +15,10 @@ class YoutubeVideoDownloader {
 
 	class func isYoutubeURL(url: NSURL) -> Bool {
 		let pattern = "https?://(m\\.|www\\.)?youtube.+/watch\\?v=.*"
-		return url.absoluteString!.rangeOfString(pattern, options: .RegularExpressionSearch) != nil
+        if let urlString = url.absoluteString {
+            return urlString.rangeOfString(pattern, options: .RegularExpressionSearch) != nil
+        }
+        return false
 	}
 
 	class func downloadFromURL(url: String) {

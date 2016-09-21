@@ -138,7 +138,9 @@ class DiskReaderModeCache: ReaderModeCache {
     }
 
     private func hashForURL(url: NSURL) -> NSString? {
-        guard let data = url.absoluteString!.dataUsingEncoding(NSUTF8StringEncoding) else { return nil }
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        guard let urlString = url.absoluteString else { return nil }
+        guard let data = urlString.dataUsingEncoding(NSUTF8StringEncoding) else { return nil }
 
         return data.sha1.hexEncodedString
     }

@@ -55,28 +55,32 @@ class FaviconManager : TabHelper {
                 for icon in favicons {
                     if let iconUrl = NSURL(string: icon.url) {
                         manager.downloadImageWithURL(iconUrl, options: SDWebImageOptions(options), progress: nil, completed: { (img, err, cacheType, success, url) -> Void in
-                            let fav = Favicon(url: url.absoluteString!,
-                                date: NSDate(),
-                                type: icon.type)
-
-                            if let img = img {
-                                fav.width = Int(img.size.width)
-                                fav.height = Int(img.size.height)
-                            } else {
-                                if favicons.count == 1 && favicons[0].type == .Guess {
-                                    // No favicon is indicated in the HTML
-                                    self.noFaviconAvailable(tab, atURL: currentURL)
+                            // Cliqz: [iOS10] fixed compilation error for optional value
+                            if let urlString = url.absoluteString {
+                                let fav = Favicon(url: urlString,
+                                                  date: NSDate(),
+                                                  type: icon.type)
+                                
+                                if let img = img {
+                                    fav.width = Int(img.size.width)
+                                    fav.height = Int(img.size.height)
+                                } else {
+                                    if favicons.count == 1 && favicons[0].type == .Guess {
+                                        // No favicon is indicated in the HTML
+                                        self.noFaviconAvailable(tab, atURL: currentURL)
+                                    }
+                                    return
                                 }
-                                return
-                            }
-
-                            if !tab.isPrivate {
-                                self.profile.favicons.addFavicon(fav, forSite: site)
-                                if tab.favicons.isEmpty {
-                                    self.makeFaviconAvailable(tab, atURL: currentURL, favicon: fav, withImage: img)
+                                
+                                if !tab.isPrivate {
+                                    self.profile.favicons.addFavicon(fav, forSite: site)
+                                    if tab.favicons.isEmpty {
+                                        self.makeFaviconAvailable(tab, atURL: currentURL, favicon: fav, withImage: img)
+                                    }
                                 }
+                                tab.favicons.append(fav)
                             }
-                            tab.favicons.append(fav)
+                            
                         })
                     }
                 }

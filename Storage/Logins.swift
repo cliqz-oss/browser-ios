@@ -288,27 +288,32 @@ public class Login: CustomStringConvertible, LoginData, LoginUsageData, Equatabl
               let password = script["password"] as? String else {
                 return nil
         }
-
-        let login = Login(hostname: getPasswordOrigin(url.absoluteString!)!, username: username, password: password)
-
-        if let formSubmit = script["formSubmitURL"] as? String {
-            login.formSubmitURL = formSubmit
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let urlString = url.absoluteString,
+            let hostname = getPasswordOrigin(urlString) {
+            let login = Login(hostname: hostname, username: username, password: password)
+            
+            if let formSubmit = script["formSubmitURL"] as? String {
+                login.formSubmitURL = formSubmit
+            }
+            
+            if let passwordField = script["passwordField"] as? String {
+                login.passwordField = passwordField
+            }
+            
+            if let userField = script["usernameField"] as? String {
+                login.usernameField = userField
+            }
+            return login as LoginData
         }
-
-        if let passwordField = script["passwordField"] as? String {
-            login.passwordField = passwordField
-        }
-
-        if let userField = script["usernameField"] as? String {
-            login.usernameField = userField
-        }
-
-        return login as LoginData
+        
+        return nil
     }
 
     private class func getPasswordOrigin(uriString: String, allowJS: Bool = false) -> String? {
         var realm: String? = nil
-        if let uri = NSURL(string: uriString) where !uri.scheme!.isEmpty {
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let uri = NSURL(string: uriString), let scheme = uri.scheme where !scheme.isEmpty {
             if allowJS && uri.scheme == "javascript" {
                 return "javascript:"
             }

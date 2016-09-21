@@ -111,8 +111,12 @@ class CommandStoringSyncDelegate: SyncDelegate {
     }
 
     func displaySentTabForURL(URL: NSURL, title: String) {
-        let item = ShareItem(url: URL.absoluteString!, title: title, favicon: nil)
-        self.profile.queue.addToQueue(item)
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let urlString = URL.absoluteString {
+            let item = ShareItem(url: urlString, title: title, favicon: nil)
+            self.profile.queue.addToQueue(item)
+        }
+        
     }
 }
 
@@ -145,7 +149,9 @@ class BrowserProfileSyncDelegate: SyncDelegate {
     func displaySentTabForURL(URL: NSURL, title: String) {
         // check to see what the current notification settings are and only try and send a notification if
         // the user has agreed to them
-        if let currentSettings = app.currentUserNotificationSettings() {
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let currentSettings = app.currentUserNotificationSettings(),
+            let urlString = URL.absoluteString {
             if currentSettings.types.rawValue & UIUserNotificationType.Alert.rawValue != 0 {
                 if Logger.logPII {
                     log.info("Displaying notification for URL \(URL.absoluteString)")
@@ -154,8 +160,8 @@ class BrowserProfileSyncDelegate: SyncDelegate {
                 let notification = UILocalNotification()
                 notification.fireDate = NSDate()
                 notification.timeZone = NSTimeZone.defaultTimeZone()
-                notification.alertBody = String(format: NSLocalizedString("New tab: %@: %@", comment:"New tab [title] [url]"), title, URL.absoluteString!)
-                notification.userInfo = [TabSendURLKey: URL.absoluteString!, TabSendTitleKey: title]
+                notification.alertBody = String(format: NSLocalizedString("New tab: %@: %@", comment:"New tab [title] [url]"), title, urlString)
+                notification.userInfo = [TabSendURLKey: urlString, TabSendTitleKey: title]
                 notification.alertAction = nil
                 notification.category = TabSendCategory
 
@@ -323,9 +329,12 @@ public class BrowserProfile: Profile {
             // Only record local vists if the change notification originated from a non-private tab
             if !(notification.userInfo!["isPrivate"] as? Bool ?? false) {
                 // We don't record a visit if no type was specified -- that means "ignore me".
-                let site = Site(url: url.absoluteString!, title: title as String)
-                let visit = SiteVisit(site: site, date: NSDate.nowMicroseconds(), type: visitType)
-                history.addLocalVisit(visit)
+                // Cliqz: [iOS10] fixed compilation error for optional value
+                if let urlString = url.absoluteString{
+                    let site = Site(url: urlString, title: title as String)
+                    let visit = SiteVisit(site: site, date: NSDate.nowMicroseconds(), type: visitType)
+                    history.addLocalVisit(visit)
+                }
             }
 
             history.setTopSitesNeedsInvalidation()

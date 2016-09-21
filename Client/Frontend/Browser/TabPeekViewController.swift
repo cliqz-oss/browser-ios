@@ -63,7 +63,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
             // as we are only allowed 4 in total and we always want to display close tab
             if actions.count < 3 {
                 actions.append(UIPreviewAction(title: TabPeekViewController.PreviewActionCopyURL, style: .Default) { previewAction, viewController in
-                    guard let url = self.tab?.url where url.absoluteString!.characters.count > 0 else { return }
+                    guard let url = self.tab?.url, let urlString = url.absoluteString where urlString.characters.count > 0 else { return }
                     let pasteBoard = UIPasteboard.generalPasteboard()
                     pasteBoard.URL = url
                     })

@@ -23,8 +23,9 @@ class HomePageHelper {
             return HomePageAccessors.getHomePage(prefs)
         }
         set {
-            if let url = newValue {
-                prefs.setString(url.absoluteString!, forKey: HomePageConstants.HomePageURLPrefKey)
+            // Cliqz: [iOS10] fixed compilation error for optional value
+            if let url = newValue, let urlString = url.absoluteString {
+                prefs.setString(urlString, forKey: HomePageConstants.HomePageURLPrefKey)
             } else {
                 prefs.removeObjectForKey(HomePageConstants.HomePageURLPrefKey)
             }

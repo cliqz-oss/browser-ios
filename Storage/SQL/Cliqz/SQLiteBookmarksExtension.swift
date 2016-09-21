@@ -24,9 +24,9 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 	
 	public func shareItem(item: CliqzShareItem) {
 		// We parse here in anticipation of getting real URLs at some point.
-		if let url = item.url.asURL {
-			let title = item.title ?? url.absoluteString
-			self.addToMobileBookmarks(url, title: title!, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
+        // Cliqz: [iOS10] fixed compilation error for optional value
+		if let url = item.url.asURL, let title = item.title ?? url.absoluteString {
+			self.addToMobileBookmarks(url, title: title, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
 		}
 	}
 	

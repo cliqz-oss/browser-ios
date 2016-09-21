@@ -162,9 +162,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log.debug("Adding observers…")
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
-            if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL {
+            // Cliqz: [iOS10] fixed compilation error for optional value
+            if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL,
+                let urlString = url.absoluteString {
                 let title = (userInfo["Title"] as? String) ?? ""
-                profile.readingList?.createRecordWithURL(url.absoluteString!, title: title, addedBy: UIDevice.currentDevice().name)
+                profile.readingList?.createRecordWithURL(urlString, title: title, addedBy: UIDevice.currentDevice().name)
             }
         }
 

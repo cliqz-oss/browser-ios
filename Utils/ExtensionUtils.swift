@@ -34,7 +34,10 @@ public struct ExtensionUtils {
                         }
 
                         let title = inputItem.attributedContentText?.string
-                        completionHandler(ShareItem(url: url.absoluteString!, title: title, favicon: nil), nil)
+                        // Cliqz: [iOS10] fixed compilation error for optional value
+                        if let urlString = url.absoluteString {
+                            completionHandler(ShareItem(url: urlString, title: title, favicon: nil), nil)
+                        }
                     }
 
                     return
