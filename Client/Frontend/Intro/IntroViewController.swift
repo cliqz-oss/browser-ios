@@ -56,9 +56,11 @@ struct IntroViewControllerUX {
     static let Card3Color = UIColor(rgb: 0x0096DD)
     
     // Cliqz: new titles and texts for cards
-    static let CardTitleCliqzBrowser = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!"
-    static let CardTextTyping = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag."
-    static let CardTextLocationSearch = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps)."
+    static let CardTitleCliqzBrowser = NSLocalizedString("The first browser with a built-in quick-search\nno detours, directly to the right destination.", tableName: "Cliqz", comment: "First card text in onBorading")
+    
+    static let CardTextTyping = NSLocalizedString("Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.", tableName: "Cliqz", comment: "Second card text in onBorading")
+    
+    static let CardTextLocationSearch = NSLocalizedString("When you share your location, you also get results for locations near you (Google Maps)", tableName: "Cliqz", comment: "Thrid card text in onBorading")
     
 }
 
