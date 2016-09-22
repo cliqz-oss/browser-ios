@@ -338,13 +338,15 @@ class AntiTrackingModule: NSObject {
     
     private func registerReadFileMethod() {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                let content = try String(contentsOfURL: filePathURL!)
-                callback.callWithArguments([content])
-            } catch {
-                // files does not exist, do no thing
-                callback.callWithArguments(nil)
+            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                print("[ReadFileMethod]: path: \(path)")
+                do {
+                    let content = try String(contentsOfURL: filePathURL)
+                    callback.callWithArguments([content])
+                } catch {
+                    // files does not exist, do no thing
+                    callback.callWithArguments(nil)
+                }
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
@@ -353,12 +355,13 @@ class AntiTrackingModule: NSObject {
     
     private func registerWriteFileMethod() {
         let writeFile: @convention(block) (String, String) -> () = { path, data in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                try data.writeToURL(filePathURL!, atomically: true, encoding: NSUTF8StringEncoding)
-                
-            } catch let error as NSError {
-                print(error)
+            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                do {
+                    try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
+                    
+                } catch let error as NSError {
+                    print(error)
+                }
             }
             
         }
@@ -368,11 +371,18 @@ class AntiTrackingModule: NSObject {
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = { path in
-            let tempDirectoryPath = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)!.path!
-
+            self.createTempDir(path)
+        }
+        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+    }
+    
+    private func createTempDir(path: String) {
+        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
+            let tempDirectoryPath = tempDirectory.path {
+            
             if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
                 do {
-                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: false, attributes: nil)
+                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: true, attributes: nil)
                 } catch let error as NSError {
                     NSLog("Unable to create directory \(error.debugDescription)")
                 }
