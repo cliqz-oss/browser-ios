@@ -40,15 +40,19 @@ class AntiTrackingModule: NSObject {
     
     //MARK: - Public APIs
     func initModule() {
-        // Register interceptor url protocol
-        NSURLProtocol.registerClass(InterceptorURLProtocol)
-        
-        dispatch_async(dispatchQueue) {
-            self.loadConfigFiles()
-            self.configureExceptionHandler()
-            self.loadModule()
+        if #available(iOS 10, *) {
+        } else {
+            // Register interceptor url protocol
+            NSURLProtocol.registerClass(InterceptorURLProtocol)
+            
+            dispatch_async(dispatchQueue) {
+                self.loadConfigFiles()
+                self.configureExceptionHandler()
+                self.loadModule()
+            }
         }
     }
+    
     func loadConfigFiles() {
         createTempDir("cliqz/adblocker/assets/ublock")
         copyConfigFile("filter-lists", type: "json", toPath: "cliqz/adblocker/assets/ublock/filter-lists.json")
@@ -68,16 +72,9 @@ class AntiTrackingModule: NSObject {
                     NSLog("Unable to copyConfigFile \(error.debugDescription)")
                 }
             }
-
-            
-            
-            
-            
         }
-        
-        
-        
     }
+    
     func shouldBlockRequest(request: NSURLRequest) -> Bool {
         guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
             return true
@@ -93,7 +90,6 @@ class AntiTrackingModule: NSObject {
                 webView.incrementBadRequestsCount()
             }
             
-            
             BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             
             return true
@@ -102,7 +98,6 @@ class AntiTrackingModule: NSObject {
         return false
     }
 
-    
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value));")
