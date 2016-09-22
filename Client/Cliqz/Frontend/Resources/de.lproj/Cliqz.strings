@@ -189,3 +189,6 @@
 
 /* Thrid card text in onBorading */
 "When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
+
+/* Start buttun title for onBorading */
+"Let's start!" = "Jetzt loslegen!";
