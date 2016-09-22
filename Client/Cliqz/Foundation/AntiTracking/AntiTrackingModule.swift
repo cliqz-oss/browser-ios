@@ -35,26 +35,54 @@ class AntiTrackingModule: NSObject {
     
     override init() {
         super.init()
+        
     }
     
     //MARK: - Public APIs
     func initModule() {
-        // Register interceptor url protocol
-        NSURLProtocol.registerClass(InterceptorURLProtocol)
-        
-        dispatch_async(dispatchQueue) {
-            self.configureExceptionHandler()
-            self.loadModule()
+        if #available(iOS 10, *) {
+        } else {
+            // Register interceptor url protocol
+            NSURLProtocol.registerClass(InterceptorURLProtocol)
+            
+            dispatch_async(dispatchQueue) {
+                self.loadConfigFiles()
+                self.configureExceptionHandler()
+                self.loadModule()
+            }
         }
     }
     
-    func getModifiedRequest(originalRequest: NSURLRequest) -> NSMutableURLRequest? {
+    func loadConfigFiles() {
+        createTempDir("cliqz/adblocker/assets/ublock")
+        copyConfigFile("filter-lists", type: "json", toPath: "cliqz/adblocker/assets/ublock/filter-lists.json")
         
-//        let modifiedRequest = originalRequest.mutableCopy() as! NSMutableURLRequest
-        let modifiedRequest = AntiTrackingModule.cloneRequest(originalRequest)
+        createTempDir("cliqz/adblocker")
+        copyConfigFile("checksums", type: "", toPath: "cliqz/adblocker/checksums")
+    }
+    
+    func copyConfigFile(name : String, type : String, toPath : String) {
+        if let bundlePath = NSBundle.mainBundle().pathForResource(name, ofType: type, inDirectory: "\(antiTrackingDirectory)/config"),
+            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(toPath)!.path {
+            
+            if self.fileManager.fileExistsAtPath(filePathURL) == false {
+                do {
+                    try self.fileManager.copyItemAtPath(bundlePath, toPath: filePathURL)
+                } catch let error as NSError {
+                    NSLog("Unable to copyConfigFile \(error.debugDescription)")
+                }
+            }
+        }
+    }
+    
+    func shouldBlockRequest(request: NSURLRequest) -> Bool {
+        guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
+            return true
+        }
         
-        let requestInfo = getRequestInfo(originalRequest)
-        if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
+        let requestInfo = getRequestInfo(request)
+        if let blockResponse = getBlockResponseForRequest(requestInfo)
+            where blockResponse.count > 0 {
             
             // increment requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
@@ -62,23 +90,12 @@ class AntiTrackingModule: NSObject {
                 webView.incrementBadRequestsCount()
             }
             
-            if let block = blockResponse["cancel"] as? Bool where block == true {
-//                print("[Anti-Tracking] request blocked")
-                return nil
-            }
+            BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             
-            if let redirectUrl = blockResponse["redirectUrl"] as? String {
-                modifiedRequest.URL = NSURL(string: redirectUrl)!
-//                print("[Anti-Tracking] request redirected")
-            }
-            if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
-                
-                for requestHeader in requestHeaders {
-                    modifiedRequest.setValue(requestHeader["value"], forHTTPHeaderField: requestHeader["name"]!)
-                }
-            }
+            return true
         }
-        return modifiedRequest
+        
+        return false
     }
 
     func setAdblockEnabled(value: Bool) {
@@ -345,14 +362,18 @@ class AntiTrackingModule: NSObject {
     
     private func registerReadFileMethod() {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                let content = try String(contentsOfURL: filePathURL)
-                callback.callWithArguments([content])
-            } catch {
-                // files does not exist, do no thing
-                callback.callWithArguments(nil)
+            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+//                print("[ReadFileMethod]: path: \(path)")
+//                print("[ReadFileMethod]: absolute path: \(filePathURL)")
+                do {
+                    let content = try String(contentsOfURL: filePathURL)
+                    callback.callWithArguments([content])
+                } catch {
+                    // files does not exist, do no thing
+                    callback.callWithArguments(nil)
+                }
             }
+            
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
@@ -360,13 +381,15 @@ class AntiTrackingModule: NSObject {
     
     private func registerWriteFileMethod() {
         let writeFile: @convention(block) (String, String) -> () = { path, data in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
-                
-            } catch let error as NSError {
-                print(error)
+            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                do {
+                    try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
+                    
+                } catch let error as NSError {
+                    print(error)
+                }
             }
+            
             
         }
         context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
@@ -375,18 +398,25 @@ class AntiTrackingModule: NSObject {
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = { path in
-            let tempDirectoryPath = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path).path!
-
+            self.createTempDir(path)
+        }
+        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+    }
+    
+    private func createTempDir(path: String) {
+        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
+            let tempDirectoryPath = tempDirectory.path {
+            
             if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
                 do {
-                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: false, attributes: nil)
+                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: true, attributes: nil)
                 } catch let error as NSError {
                     NSLog("Unable to create directory \(error.debugDescription)")
                 }
             }
-            
         }
-        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+        
+        
     }
     
     private func registerIsWindowActiveMethod() {

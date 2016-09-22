@@ -155,17 +155,19 @@ extension NSURL {
     }
 
     public func absoluteDisplayString() -> String? {
-        var urlString = self.absoluteString
-        // For http URLs, get rid of the trailing slash if the path is empty or '/'
-        if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString.endsWith("/") {
-            urlString = urlString.substringToIndex(urlString.endIndex.advancedBy(-1))
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        var result = self.absoluteString
+        if let urlString = self.absoluteString {
+            // For http URLs, get rid of the trailing slash if the path is empty or '/'
+            if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString.endsWith("/") {
+                result = urlString.substringToIndex(urlString.endIndex.advancedBy(-1))
+            }
+            // If it's basic http, strip out the string but leave anything else in
+            if result!.hasPrefix("http://") ?? false {
+                return result!.substringFromIndex(result!.startIndex.advancedBy(7))
+            }
         }
-        // If it's basic http, strip out the string but leave anything else in
-        if urlString.hasPrefix("http://") ?? false {
-            return urlString.substringFromIndex(urlString.startIndex.advancedBy(7))
-        } else {
-            return urlString
-        }
+        return result
     }
 
     /**
@@ -236,7 +238,7 @@ extension NSURL {
     public func isWebPage() -> Bool {
         let httpSchemes = ["http", "https"]
 
-        if let _ = httpSchemes.indexOf(scheme) {
+        if let _ = httpSchemes.indexOf(scheme!) {
             return true
         }
 
@@ -261,7 +263,10 @@ extension NSURL {
      This only accepts permanent schemes: historical and provisional schemes are not accepted.
      */
     public var schemeIsValid: Bool {
-        return permanentURISchemes.contains(scheme)
+        if let scheme = scheme {
+            return permanentURISchemes.contains(scheme)
+        }
+        return false
     }
 }
 

@@ -27,14 +27,14 @@ class MenuItemImageView: UIImageView {
 
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        CGContextSaveGState(context)
+        CGContextSaveGState(context!)
 
-        CGContextDrawImage(context, rect, image?.CGImage)
+        CGContextDrawImage(context!, rect, (image?.CGImage)!)
 
-        CGContextSetBlendMode(context, .Multiply)
-        CGContextSetFillColor(context, CGColorGetComponents(overlayColor.CGColor))
-        CGContextFillRect(context, self.bounds)
-        CGContextRestoreGState(context)
+        CGContextSetBlendMode(context!, .Multiply)
+        CGContextSetFillColor(context!, CGColorGetComponents(overlayColor.CGColor))
+        CGContextFillRect(context!, self.bounds)
+        CGContextRestoreGState(context!)
     }
 
 }

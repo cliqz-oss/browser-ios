@@ -989,16 +989,16 @@ private class CurveView: UIView {
 
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        CGContextSaveGState(context)
-        CGContextClearRect(context, rect)
-        CGContextSetFillColorWithColor(context, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
+        CGContextSaveGState(context!)
+        CGContextClearRect(context!, rect)
+        CGContextSetFillColorWithColor(context!, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
 		// Cliqz: Removed URLBar decorations according to requirements
 /*
         getPath().fill()
         leftCurvePath.fill()
 */
-        CGContextDrawPath(context, CGPathDrawingMode.Fill)
-        CGContextRestoreGState(context)
+        CGContextDrawPath(context!, CGPathDrawingMode.Fill)
+        CGContextRestoreGState(context!)
     }
 }
 
@@ -1074,20 +1074,20 @@ class ToolbarTextField: AutocompleteTextField {
         let context = UIGraphicsGetCurrentContext()
         image.drawAtPoint(CGPointZero, blendMode: CGBlendMode.Normal, alpha: 1.0)
 
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextSetBlendMode(context, CGBlendMode.SourceIn)
-        CGContextSetAlpha(context, 1.0)
+        CGContextSetFillColorWithColor(context!, color.CGColor)
+        CGContextSetBlendMode(context!, CGBlendMode.SourceIn)
+        CGContextSetAlpha(context!, 1.0)
 
         let rect = CGRectMake(
             CGPointZero.x,
             CGPointZero.y,
             image.size.width,
             image.size.height)
-        CGContextFillRect(UIGraphicsGetCurrentContext(), rect)
+        CGContextFillRect(UIGraphicsGetCurrentContext()!, rect)
         let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return tintedImage
+        return tintedImage!
     }
     
     // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events

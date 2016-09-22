@@ -35,8 +35,9 @@ func failOrSucceed(err: NSError?, op: String) -> Success {
 private var ignoredSchemes = ["about"]
 
 public func isIgnoredURL(url: NSURL) -> Bool {
-    let scheme = url.scheme
-    if let _ = ignoredSchemes.indexOf(scheme) {
+    // Cliqz: [iOS10] fixed compilation error for optional value
+    if let scheme = url.scheme,
+        let _ = ignoredSchemes.indexOf(scheme) {
         return true
     }
 

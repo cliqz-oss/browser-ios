@@ -31,8 +31,8 @@ extension SQLiteBookmarks: ShareToDestination {
 
     public func shareItem(item: ShareItem) {
         // We parse here in anticipation of getting real URLs at some point.
-        if let url = item.url.asURL {
-            let title = item.title ?? url.absoluteString
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let url = item.url.asURL, let title = item.title ?? url.absoluteString {
             self.addToMobileBookmarks(url, title: title, favicon: item.favicon)
         }
     }

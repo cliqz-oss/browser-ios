@@ -52,10 +52,12 @@ public extension Logger {
 
     static private func fileLoggerWithName(name: String) -> XCGLogger {
         let log = XCGLogger()
-        if let logFileURL = urlForLogNamed(name) {
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        if let logFileURL = urlForLogNamed(name),
+            let urlString = logFileURL.absoluteString {
             let fileDestination = XCGFileLogDestination(
                 owner: log,
-                writeToFile: logFileURL.absoluteString,
+                writeToFile: urlString,
                 identifier: "com.mozilla.firefox.filelogger.\(name)"
             )
             log.addLogDestination(fileDestination)
@@ -90,8 +92,8 @@ public extension Logger {
 //            filenamesAndURLs += try browserLogger.logFilenamesAndURLs()
         } catch _ {
         }
-
-        return filenamesAndURLs.map { ($0, NSData(contentsOfFile: $1.absoluteString)) }
+        // Cliqz: [iOS10] fixed compilation error for optional value
+        return filenamesAndURLs.map { ($0, $1.absoluteString == nil ? nil : NSData(contentsOfFile: $1.absoluteString!)) }
     }
 }
 

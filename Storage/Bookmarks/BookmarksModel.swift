@@ -169,9 +169,12 @@ public class MemoryBookmarkFolder: BookmarkFolder, SequenceType {
 
     override public var favicon: Favicon? {
         get {
+            // Cliqz: [iOS10] fixed compilation error for optional value
             if let path = NSBundle.mainBundle().pathForResource("bookmarkFolder", ofType: "png") {
                 let url = NSURL(fileURLWithPath: path)
-                return Favicon(url: url.absoluteString, date: NSDate(), type: IconType.Local)
+                if let urlString = url.absoluteString {
+                    return Favicon(url: urlString, date: NSDate(), type: IconType.Local)
+                }
             }
             return nil
         }

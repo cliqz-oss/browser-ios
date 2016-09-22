@@ -36,7 +36,8 @@ extension BrowserViewController: AntitrackingViewDelegate {
         }
     }
 	
-	func downloadVideoFromURL(url: String) {
+	func downloadVideoFromURL(url: String?) {
+        guard let url = url else { return }
 		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
 			do {
 				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)

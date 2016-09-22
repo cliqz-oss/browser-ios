@@ -81,14 +81,16 @@ class JavaScriptBridge {
 	func setDefaultSearchEngine() {
         
         dispatch_async(backgorundQueue) {
-            
-            let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.componentsSeparatedByString("=queryString")
-            let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
-                "url": searchComps![0] + "="]
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+            if let searchQuery = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString {
+                let searchComps = searchQuery.componentsSeparatedByString("=queryString")
+                let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
+                                   "url": searchComps[0] + "="]
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+                }
             }
+            
         }
 		
 	}

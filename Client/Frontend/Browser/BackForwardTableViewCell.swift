@@ -120,14 +120,14 @@ class BackForwardTableViewCell: UITableViewCell {
             endPoint.x = rect.origin.x - endPoint.x + rect.size.width
         }
         
-        CGContextSaveGState(context)
-        CGContextSetLineCap(context, CGLineCap.Square)
-        CGContextSetStrokeColorWithColor(context, BackForwardViewCellUX.bgColor.CGColor)
-        CGContextSetLineWidth(context, 1.0)
-        CGContextMoveToPoint(context, startPoint.x, startPoint.y)
-        CGContextAddLineToPoint(context, endPoint.x, endPoint.y)
-        CGContextStrokePath(context)
-        CGContextRestoreGState(context)
+        CGContextSaveGState(context!)
+        CGContextSetLineCap(context!, CGLineCap.Square)
+        CGContextSetStrokeColorWithColor(context!, BackForwardViewCellUX.bgColor.CGColor)
+        CGContextSetLineWidth(context!, 1.0)
+        CGContextMoveToPoint(context!, startPoint.x, startPoint.y)
+        CGContextAddLineToPoint(context!, endPoint.x, endPoint.y)
+        CGContextStrokePath(context!)
+        CGContextRestoreGState(context!)
     }
     
     override func setHighlighted(highlighted: Bool, animated: Bool) {
