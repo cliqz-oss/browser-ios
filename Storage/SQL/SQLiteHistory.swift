@@ -36,7 +36,7 @@ private var ignoredSchemes = ["about"]
 
 public func isIgnoredURL(url: NSURL) -> Bool {
     let scheme = url.scheme
-    if let _ = ignoredSchemes.indexOf(scheme) {
+    if let _ = ignoredSchemes.indexOf(scheme!) {
         return true
     }
 

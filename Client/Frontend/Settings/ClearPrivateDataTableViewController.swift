@@ -104,7 +104,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
             // Cliqz: clear private data on termination
             cell.textLabel?.text = NSLocalizedString("Clear Private data on termination", tableName: "Cliqz", comment: "Settings item for clearing private data on termination")
             let control = UISwitch()
-            control.addTarget(self, action: "clearDataOnTerminationChangedValue:", forControlEvents: UIControlEvents.ValueChanged)
+            control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.clearDataOnTerminationChangedValue(_:)), forControlEvents: UIControlEvents.ValueChanged)
             control.on = SettingsPrefs.getClearDataOnTerminatingPref()
             cell.accessoryView = control
             cell.selectionStyle = .None

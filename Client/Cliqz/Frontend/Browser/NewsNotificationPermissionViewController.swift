@@ -38,13 +38,13 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     private lazy var yesButton: UIButton = {
         let title = NSLocalizedString("Yes please!", tableName: "Cliqz", comment: "Button label to `Yes please` in news notification permission screen")
-        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.blueColor, action: "SELdidClickYes")
+        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.blueColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickYes))
         return button
     }()
     
     private lazy var laterButton: UIButton = {
         let title = NSLocalizedString("Remind me later", tableName: "Cliqz", comment: "Button label to `Remind me later` in news notification permission screen")
-        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: "SELdidClickLater")
+        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: #selector(NewsNotificationPermissionViewController.SELdidClickLater))
         button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.CGColor
         button.layer.borderWidth = 1
         return button
@@ -52,7 +52,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     private lazy var noButton: UIButton = {
         let title = NSLocalizedString("No thanks", tableName: "Cliqz", comment: "Button label to `No thanks` in news notification permission screen")
-        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: "SELdidClickNo")
+        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: #selector(NewsNotificationPermissionViewController.SELdidClickNo))
         button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.CGColor
         button.layer.borderWidth = 1
         return button
@@ -60,7 +60,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     private lazy var okButton: UIButton = {
         let title = NSLocalizedString("OK", tableName: "Cliqz", comment: "Button label to `OK` in news notification permission screen")
-        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.greenColor, action: "SELdidClickOk")
+        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.greenColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickOk))
         return button
     }()
     

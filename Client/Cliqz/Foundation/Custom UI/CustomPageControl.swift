@@ -29,7 +29,7 @@ class CustomPageControl: UIPageControl {
     }
     
     func updateDots() {
-        for var i = 0; i < subviews.count; i++ {
+        for i in 0 ..< subviews.count {
             let view: UIView = subviews[i]
             if view.subviews.count == 0 {
                 self.addImageViewOnDotView(view, imageSize: activeImage.size)
