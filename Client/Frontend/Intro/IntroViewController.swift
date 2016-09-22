@@ -103,7 +103,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         button.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightBold)
         button.setBackgroundImage(UIImage(named: "getting-started"), forState: UIControlState.Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        button.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), forControlEvents: UIControlEvents.TouchUpInside)
         button.snp_makeConstraints { (make) -> Void in
             make.width.equalTo(200.0)
             make.height.equalTo(40.0)

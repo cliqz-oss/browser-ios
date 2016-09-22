@@ -338,7 +338,7 @@ class AntiTrackingModule: NSObject {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
             let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
             do {
-                let content = try String(contentsOfURL: filePathURL)
+                let content = try String(contentsOfURL: filePathURL!)
                 callback.callWithArguments([content])
             } catch {
                 // files does not exist, do no thing
@@ -353,7 +353,7 @@ class AntiTrackingModule: NSObject {
         let writeFile: @convention(block) (String, String) -> () = { path, data in
             let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
             do {
-                try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
+                try data.writeToURL(filePathURL!, atomically: true, encoding: NSUTF8StringEncoding)
                 
             } catch let error as NSError {
                 print(error)
@@ -366,7 +366,7 @@ class AntiTrackingModule: NSObject {
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = { path in
-            let tempDirectoryPath = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path).path!
+            let tempDirectoryPath = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)!.path!
 
             if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
                 do {

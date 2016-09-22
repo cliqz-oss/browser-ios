@@ -70,7 +70,7 @@ enum ReadyState: Int {
 	}
 
 	func send(data: AnyObject?) {
-		Alamofire.request(.GET, self.url!.absoluteString, headers: self.requestHeaders)
+		Alamofire.request(.GET, self.url!.absoluteString!, headers: self.requestHeaders)
 		.validate(statusCode: 200..<300)
 		.response { [weak self] (responseRequest, responseResponse, responseData, responseError) in
 			self?.status = responseResponse?.statusCode

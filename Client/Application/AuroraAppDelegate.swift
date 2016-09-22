@@ -52,7 +52,7 @@ class AuroraAppDelegate: AppDelegate {
                     window.drawViewHierarchyInRect(window.bounds, afterScreenUpdates: true)
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    self.sendFeedbackMailWithImage(image)
+                    self.sendFeedbackMailWithImage(image!)
                 }
         }
     }
@@ -84,18 +84,14 @@ extension AuroraAppDelegate: UIAlertViewDelegate {
     }
 
     private func fetchLatestAuroraVersion(completionHandler: NSString? -> Void) {
-        Alamofire.request(.GET, AuroraPropertyListURL).responsePropertyList(options: NSPropertyListReadOptions(), completionHandler: { (_, _, object) -> Void in
-            if let plist = object.value as? NSDictionary {
-                if let items = plist["items"] as? NSArray {
-                    if let item = items[0] as? NSDictionary {
-                        if let metadata = item["metadata"] as? NSDictionary {
-                            if let remoteVersion = metadata["bundle-version"] as? String {
-                                completionHandler(remoteVersion)
-                                return
-                            }
-                        }
-                    }
-                }
+        Alamofire.request(.GET, AuroraPropertyListURL).responsePropertyList(options: NSPropertyListReadOptions(), completionHandler: { response -> Void in
+            if let plist = response.result.value as? NSDictionary,
+                let items = plist["items"] as? NSArray,
+                let item = items[0] as? NSDictionary,
+                let metadata = item["metadata"] as? NSDictionary,
+                let remoteVersion = metadata["bundle-version"] as? String {
+                completionHandler(remoteVersion)
+                return
             }
             completionHandler(nil)
         })

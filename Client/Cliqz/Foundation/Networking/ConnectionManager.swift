@@ -30,27 +30,27 @@ class ConnectionManager {
         case .JSONResponse:
             Alamofire.request(.GET, url, parameters: parameters)
                 .responseJSON {
-                    request, response, result in
-                    switch result {
+                    response in
+                    switch response.result {
                         
                     case .Success(let json):
                         onSuccess(json)
                         
-                    case .Failure(let data, let error):
-                        onFailure(data, error)
+                    case .Failure(let error):
+                        onFailure(response.data, error)
                     }
             }
         case .StringResponse:
             Alamofire.request(.GET, url, parameters: parameters)
                 .responseString {
-                    request, response, result in
-                    switch result {
+                    response in
+                    switch response.result {
                         
                     case .Success(let string):
                         onSuccess(string)
                         
-                    case .Failure(let data, let error):
-                        onFailure(data, error)
+                    case .Failure(let error):
+                        onFailure(response.data, error)
                     }
             }
         }
@@ -63,27 +63,27 @@ class ConnectionManager {
         case .JSONResponse:
             Alamofire.request(.POST, url, parameters: parameters)
                 .responseJSON {
-                    request, response, result in
-                    switch result {
+                    response in
+                    switch response.result {
                         
                     case .Success(let json):
                         onSuccess(json)
                         
-                    case .Failure(let data, let error):
-                        onFailure(data, error)
+                    case .Failure(let error):
+                        onFailure(response.data, error)
                     }
             }
         case .StringResponse:
             Alamofire.request(.POST, url, parameters: parameters)
                 .responseString {
-                    request, response, result in
-                    switch result {
+                    response in
+                    switch response.result {
                         
                     case .Success(let string):
                         onSuccess(string)
                         
-                    case .Failure(let data, let error):
-                        onFailure(data, error)
+                    case .Failure(let error):
+                        onFailure(response.data, error)
                     }
             }
         }
@@ -111,27 +111,27 @@ class ConnectionManager {
                 case .JSONResponse:
                     Alamofire.request(request)
                         .responseJSON {
-                            request, response, result in
-                            switch result {
+                            response in
+                            switch response.result {
                                 
                             case .Success(let json):
                                 onSuccess(json)
                                 
-                            case .Failure(let data, let error):
-                                onFailure(data, error)
+                            case .Failure(let error):
+                                onFailure(response.data, error)
                             }
                     }
                 case .StringResponse:
                     Alamofire.request(request)
                         .responseString {
-                            request, response, result in
-                            switch result {
+                            response in
+                            switch response.result {
                                 
                             case .Success(let string):
                                 onSuccess(string)
                                 
-                            case .Failure(let data, let error):
-                                onFailure(data, error)
+                            case .Failure(let error):
+                                onFailure(response.data, error)
                             }
                     }
                 }

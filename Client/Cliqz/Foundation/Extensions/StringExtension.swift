@@ -25,7 +25,7 @@ extension String {
         
         let rangeLength = UInt32 (alphabet.characters.count)
         
-        for (var i=0; i < length; i++){
+        for _ in 0 ..< length {
             let randomIndex = Int(arc4random_uniform(rangeLength))
             randomString.append(alphabet[alphabet.startIndex.advancedBy(randomIndex)])
         }

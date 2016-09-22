@@ -38,7 +38,7 @@ class NetworkReachability : NSObject {
     }
     //MARK: - Reachability monitoring 
     func startMonitoring() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("reachabilityChanged:"), name: kReachabilityChangedNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NetworkReachability.reachabilityChanged(_:)), name: kReachabilityChangedNotification, object: nil)
         internetReachability.startNotifier()
     }
     func reachabilityChanged(notification: NSNotification) {

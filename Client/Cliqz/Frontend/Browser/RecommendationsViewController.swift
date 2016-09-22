@@ -58,8 +58,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search recommendations", tableName: "Cliqz", comment: "Search Recommendations and top visited sites title")
         
-		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
-		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
+		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: #selector(RecommendationsViewController.dismiss))
+		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: #selector(RecommendationsViewController.openSettings))
 
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
