@@ -3618,7 +3618,8 @@ extension BrowserViewController: KeyboardHelperDelegate {
                 guard let _ = result as? [String: String] else {
                     return
                 }
-                self.addCustomSearchButtonToWebView(webView)
+                // Cliqz: disable showing custom search button as this feature is not needed and crashes on iPad
+//                self.addCustomSearchButtonToWebView(webView)
             }
         }
     }
