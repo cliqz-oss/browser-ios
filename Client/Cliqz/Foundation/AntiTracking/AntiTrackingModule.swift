@@ -347,6 +347,8 @@ class AntiTrackingModule: NSObject {
                     // files does not exist, do no thing
                     callback.callWithArguments(nil)
                 }
+            } else {
+                callback.callWithArguments(nil)
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
