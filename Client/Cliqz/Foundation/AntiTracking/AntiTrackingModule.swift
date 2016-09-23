@@ -338,13 +338,17 @@ class AntiTrackingModule: NSObject {
     
     private func registerReadFileMethod() {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
-            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
-                print("[ReadFileMethod]: path: \(path)")
-                do {
-                    let content = try String(contentsOfURL: filePathURL)
-                    callback.callWithArguments([content])
-                } catch {
-                    // files does not exist, do no thing
+            dispatch_async(self.dispatchQueue) {
+                if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                    print("[ReadFileMethod]: path: \(path)")
+                    do {
+                        let content = try String(contentsOfURL: filePathURL)
+                        callback.callWithArguments([content])
+                    } catch {
+                        // files does not exist, do no thing
+                        callback.callWithArguments(nil)
+                    }
+                } else {
                     callback.callWithArguments(nil)
                 }
             } else {
