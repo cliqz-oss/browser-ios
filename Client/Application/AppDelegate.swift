@@ -464,6 +464,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppStatus.sharedInstance.appWillEnterForeground()
 
         resetForegroundStartTime()
+
+        profile?.reopen()
     }
 
     private func resetForegroundStartTime() {
