@@ -1667,12 +1667,9 @@ extension BrowserViewController: URLBarDelegate {
         self.webViewContainerToolbar.hidden = true
         updateFindInPageVisibility(visible: false)
 
-        // Cliqz: disabled taking screenshots as it is not used in our tab manager
-        /*
         if let tab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(tab)
         }
-        */
         
 		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
         /*
