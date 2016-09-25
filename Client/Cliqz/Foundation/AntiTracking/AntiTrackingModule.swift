@@ -340,7 +340,6 @@ class AntiTrackingModule: NSObject {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
             dispatch_async(self.dispatchQueue) {
                 if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
-                    print("[ReadFileMethod]: path: \(path)")
                     do {
                         let content = try String(contentsOfURL: filePathURL)
                         callback.callWithArguments([content])
@@ -351,8 +350,6 @@ class AntiTrackingModule: NSObject {
                 } else {
                     callback.callWithArguments(nil)
                 }
-            } else {
-                callback.callWithArguments(nil)
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
