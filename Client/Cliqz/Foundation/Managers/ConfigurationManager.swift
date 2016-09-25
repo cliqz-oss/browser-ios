@@ -20,7 +20,7 @@ class ConfigurationManager: NSObject {
     func getSharedConfiguration(scriptMessageHandler: WKScriptMessageHandler) -> WKWebViewConfiguration {
         
         let controller = WKUserContentController()
-        controller.addScriptMessageHandler(scriptMessageHandler, name: "jsBridge")
+        controller.addScriptMessageHandler(LeakAvoider(delegate:scriptMessageHandler), name: "jsBridge")
 
         sharedConfig.userContentController = controller
         return sharedConfig

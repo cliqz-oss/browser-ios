@@ -99,11 +99,12 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     
     private func createGettingStartedButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Jetzt loslegen!", forState: UIControlState.Normal)
+        let buttonTitle = NSLocalizedString("Let's start!", tableName: "Cliqz", comment: "Start buttun title for onBorading")
+        button.setTitle(buttonTitle, forState: UIControlState.Normal)
         button.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightBold)
         button.setBackgroundImage(UIImage(named: "getting-started"), forState: UIControlState.Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        button.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), forControlEvents: UIControlEvents.TouchUpInside)
         button.snp_makeConstraints { (make) -> Void in
             make.width.equalTo(200.0)
             make.height.equalTo(40.0)

@@ -16,7 +16,10 @@ class ScreenshotHelper {
         self.controller = controller
     }
 
+    
     func takeScreenshot(tab: Tab) {
+        // Cliqz: disabled taking screenshots as it is not used in our tab manager
+        /*
         var screenshot: UIImage?
 
         if let url = tab.url {
@@ -31,12 +34,15 @@ class ScreenshotHelper {
         }
 
         tab.setScreenshot(screenshot)
+         */
     }
 
     /// Takes a screenshot after a small delay.
     /// Trying to take a screenshot immediately after didFinishNavigation results in a screenshot
     /// of the previous page, presumably due to an iOS bug. Adding a brief delay fixes this.
     func takeDelayedScreenshot(tab: Tab) {
+        // Cliqz: disabled taking screenshots as it is not used in our tab manager
+        /*
         let time = dispatch_time(DISPATCH_TIME_NOW, Int64(100 * NSEC_PER_MSEC))
         dispatch_after(time, dispatch_get_main_queue()) {
             // If the view controller isn't visible, the screenshot will be blank.
@@ -48,12 +54,16 @@ class ScreenshotHelper {
 
             self.takeScreenshot(tab)
         }
+        */
     }
 
     func takePendingScreenshots(tabs: [Tab]) {
+        // Cliqz: disabled taking screenshots as it is not used in our tab manager
+        /*
         for tab in tabs where tab.pendingScreenshot {
             tab.pendingScreenshot = false
             takeDelayedScreenshot(tab)
         }
+        */
     }
 }

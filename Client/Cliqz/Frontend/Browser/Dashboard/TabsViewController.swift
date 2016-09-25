@@ -98,7 +98,7 @@ class TabsViewController: UIViewController {
                 TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
             }
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             

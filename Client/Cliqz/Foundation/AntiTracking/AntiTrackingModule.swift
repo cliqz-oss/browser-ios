@@ -18,7 +18,7 @@ class AntiTrackingModule: NSObject {
     private let antiTrackingDirectory = "Extension/build/mobile/search/v8"
     private let documentDirectory = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! as String
     private let fileManager = NSFileManager.defaultManager()
-    private let dispatchQueue = dispatch_queue_create("com.cliqz.AntiTracking", DISPATCH_QUEUE_CONCURRENT)
+    private let dispatchQueue = dispatch_queue_create("com.cliqz.AntiTracking", DISPATCH_QUEUE_SERIAL)
     
     private let adBlockABTestPrefName = "cliqz-adb-abtest"
     private let adBlockPrefName = "cliqz-adb"
@@ -47,14 +47,14 @@ class AntiTrackingModule: NSObject {
             self.loadModule()
         }
     }
-    
-    func getModifiedRequest(originalRequest: NSURLRequest) -> NSMutableURLRequest? {
-        
-//        let modifiedRequest = originalRequest.mutableCopy() as! NSMutableURLRequest
-        let modifiedRequest = AntiTrackingModule.cloneRequest(originalRequest)
-        
-        let requestInfo = getRequestInfo(originalRequest)
-        if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
+
+    func shouldBlockRequest(request: NSURLRequest) -> Bool {
+        guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
+            return true
+        }
+        let requestInfo = getRequestInfo(request)
+        if let blockResponse = getBlockResponseForRequest(requestInfo)
+            where blockResponse.count > 0 {
             
             // increment requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
@@ -62,29 +62,18 @@ class AntiTrackingModule: NSObject {
                 webView.incrementBadRequestsCount()
             }
             
-            if let block = blockResponse["cancel"] as? Bool where block == true {
-//                print("[Anti-Tracking] request blocked")
-                return nil
-            }
             
-            if let redirectUrl = blockResponse["redirectUrl"] as? String {
-                modifiedRequest.URL = NSURL(string: redirectUrl)!
-//                print("[Anti-Tracking] request redirected")
-            }
-            if let requestHeaders = blockResponse["requestHeaders"] as? [[String: String]] {
-                
-                for requestHeader in requestHeaders {
-                    modifiedRequest.setValue(requestHeader["value"], forHTTPHeaderField: requestHeader["name"]!)
-                }
-            }
+            BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
+            
+            return true
         }
-        return modifiedRequest
+        
+        return false
     }
 
+    
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
-            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value));")
-
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
         }
     }
@@ -105,7 +94,7 @@ class AntiTrackingModule: NSObject {
 				
 				for (company, trackers) in companies {
 					let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
-					if badRequestsCount > 0 {
+					if badRequestsCount >= 0 {
 						antiTrackingStatistics.append((company, badRequestsCount))
 					}
 				}
@@ -183,8 +172,12 @@ class AntiTrackingModule: NSObject {
         
         // load promise
         loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+        
 		// Quick fix for iOS8: polyfill for ios8
-		if #available(iOS 9, *) {
+        if #available(iOS 10, *) {
+            // ios 10 polyfill
+            loadJavascriptSource("/bower_components/core.js/client/core")
+        } else if #available(iOS 9, *) {
 		} else {
 			loadJavascriptSource("/bower_components/core.js/client/core")
 		}
@@ -210,9 +203,9 @@ class AntiTrackingModule: NSObject {
         }
 
         // startup
-        context.evaluateScript("setTimeout(function() {"
-            + "System.import(\"platform/startup\").then(function(startup) { startup.default() });"
-            + "}, 100)")
+        context.evaluateScript("setTimeout(function() { "
+            + "System.import(\"platform/startup\").then(function(startup) { startup.default() }).catch(function(e) { logDebug(e, 'xxx') });"
+            + "}, 200)")
         
     }
     
@@ -345,13 +338,18 @@ class AntiTrackingModule: NSObject {
     
     private func registerReadFileMethod() {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                let content = try String(contentsOfURL: filePathURL)
-                callback.callWithArguments([content])
-            } catch {
-                // files does not exist, do no thing
-                callback.callWithArguments(nil)
+            dispatch_async(self.dispatchQueue) {
+                if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                    do {
+                        let content = try String(contentsOfURL: filePathURL)
+                        callback.callWithArguments([content])
+                    } catch {
+                        // files does not exist, do no thing
+                        callback.callWithArguments(nil)
+                    }
+                } else {
+                    callback.callWithArguments(nil)
+                }
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
@@ -360,12 +358,13 @@ class AntiTrackingModule: NSObject {
     
     private func registerWriteFileMethod() {
         let writeFile: @convention(block) (String, String) -> () = { path, data in
-            let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path)
-            do {
-                try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
-                
-            } catch let error as NSError {
-                print(error)
+            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+                do {
+                    try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
+                    
+                } catch let error as NSError {
+                    print(error)
+                }
             }
             
         }
@@ -375,18 +374,24 @@ class AntiTrackingModule: NSObject {
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = { path in
-            let tempDirectoryPath = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path).path!
-
+            self.createTempDir(path)
+        }
+        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+    }
+    
+    private func createTempDir(path: String) {
+        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
+            let tempDirectoryPath = tempDirectory.path {
+            
             if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
                 do {
-                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: false, attributes: nil)
+                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: true, attributes: nil)
                 } catch let error as NSError {
                     NSLog("Unable to create directory \(error.debugDescription)")
                 }
             }
             
         }
-        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
     }
     
     private func registerIsWindowActiveMethod() {
@@ -416,10 +421,12 @@ class AntiTrackingModule: NSObject {
     }
     private func registerHttpHandlerMethod() {
         let httpHandler: @convention(block) (String, String, JSValue, JSValue, Int, String) -> () = { method, requestedUrl, callback, onerror, timeout, data in
-            if requestedUrl.startsWith("file://") {
+            if requestedUrl.startsWith("chrome://") {
                 let (fileName, fileExtension, directory) = self.getFileMetaData(requestedUrl)
                 if let path = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension, inDirectory: directory), content = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
                     callback.callWithArguments([content])
+                } else {
+                    onerror.callWithArguments(["Not Found"])
                 }
             } else {
                 var hasError = false
@@ -429,28 +436,29 @@ class AntiTrackingModule: NSObject {
                 //                } else {
                 if method == "GET" {
                     ConnectionManager.sharedInstance
-                        .sendGetRequest(requestedUrl,
-                                        parameters: nil,
-                                        responseType: .StringResponse,
-                                        onSuccess: { responseData in
-                                            self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+                        .sendRequest(.GET,
+                                     url: requestedUrl,
+                                     parameters: nil,
+                                     responseType: .StringResponse,
+                                     onSuccess: { responseData in
+                                        self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
                             },
-                                        onFailure: { (error) in
-                                            onerror.callWithArguments(nil)
+                                     onFailure: { (error) in
+                                        onerror.callWithArguments(nil)
                         })
                     
                 } else if method == "POST" {
                     
                     ConnectionManager.sharedInstance
-                        .sendPostRequest(requestedUrl,
-                                         body: data,
-                                         responseType: .StringResponse,
-                                         enableCompression: false,
-                                         onSuccess: { responseData in
-                                            self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+                        .sendPostRequestWithBody(requestedUrl,
+                                                 body: data,
+                                                 responseType: .StringResponse,
+                                                 enableCompression: false,
+                                                 onSuccess: { responseData in
+                                                    self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
                             },
-                                         onFailure: { (error) in
-                                            onerror.callWithArguments(nil)
+                                                 onFailure: { (error) in
+                                                    onerror.callWithArguments(nil)
                         })
                     
                 } else {
@@ -475,7 +483,7 @@ class AntiTrackingModule: NSObject {
         var fileExtension: String = "js" // default is js
         var directory: String
         
-        var sourcePath = requestedUrl.replace("file://", replacement: "")
+        var sourcePath = requestedUrl.replace("chrome://cliqz/content", replacement: "/modules")
         sourcePath = sourcePath.replace("/v8", replacement: "")
         
         if sourcePath.contains("/") {

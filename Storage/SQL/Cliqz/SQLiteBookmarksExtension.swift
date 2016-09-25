@@ -26,7 +26,7 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 		// We parse here in anticipation of getting real URLs at some point.
 		if let url = item.url.asURL {
 			let title = item.title ?? url.absoluteString
-			self.addToMobileBookmarks(url, title: title, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
+			self.addToMobileBookmarks(url, title: title!, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
 		}
 	}
 	

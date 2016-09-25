@@ -65,7 +65,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showBlockedTopSites:", name: NotificationShowBlockedTopSites, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.showBlockedTopSites(_:)), name: NotificationShowBlockedTopSites, object: nil)
         
     }
     
@@ -200,7 +200,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     //MARK: - WKWebView Delegate
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
+		if !navigationAction.request.URL!.absoluteString!.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
@@ -290,13 +290,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     //MARK: - Guestures
     func addGuestureRecognizers() {
         // longPress gesture recognizer
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onLongPress(_:)))
         longPressGestureRecognizer.delegate = self
         self.webView?.addGestureRecognizer(longPressGestureRecognizer)
         
         
         // swiper up gesture recognizer
-        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "onSwipeUp:")
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onSwipeUp(_:)))
         swipeGestureRecognizer.direction = .Up
         swipeGestureRecognizer.delegate = self
         self.webView?.addGestureRecognizer(swipeGestureRecognizer)

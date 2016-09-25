@@ -78,8 +78,8 @@ class CliqzWebView: UIWebView {
 	func setUrl(url: NSURL?, reliableSource: Bool) {
 		_url.prevUrl = _url.url
 		_url.isReliableSource = reliableSource
-		if URL?.absoluteString.endsWith("?") ?? false {
-			if let noQuery = URL?.absoluteString.componentsSeparatedByString("?")[0] {
+		if URL?.absoluteString!.endsWith("?") ?? false {
+			if let noQuery = URL?.absoluteString!.componentsSeparatedByString("?")[0] {
 				_url.url = NSURL(string: noQuery)
 			}
 		} else {
@@ -217,7 +217,7 @@ class CliqzWebView: UIWebView {
 		guard let docLoc = self.stringByEvaluatingJavaScriptFromString("document.location.href") else { return }
 
 		if docLoc != self.prevDocumentLocation {
-			if !(self.URL?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
+			if !(self.URL?.absoluteString!.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
 			}
 			
@@ -403,10 +403,10 @@ extension CliqzWebView: UIWebViewDelegate {
         updateObservableAttributes()
 	}
 	
-	func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+	func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
 		// The error may not be the main document that failed to load. Check if the failing URL matches the URL being loaded
 		
-		if let error = error, errorUrl = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
+		if let errorUrl = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL {
 			var handled = false
 			if error.code == -1009 /*kCFURLErrorNotConnectedToInternet*/ {
 				let cache = NSURLCache.sharedURLCache().cachedResponseForRequest(NSURLRequest(URL: errorUrl))

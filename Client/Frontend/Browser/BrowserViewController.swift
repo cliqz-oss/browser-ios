@@ -660,7 +660,7 @@ class BrowserViewController: UIViewController {
     }
 
     private func showQueuedAlertIfAvailable() {
-        if var queuedAlertInfo = tabManager.selectedTab?.dequeueJavascriptAlertPrompt() {
+        if let queuedAlertInfo = tabManager.selectedTab?.dequeueJavascriptAlertPrompt() {
             let alertController = queuedAlertInfo.alertController()
             alertController.delegate = self
             presentViewController(alertController, animated: true, completion: nil)
@@ -982,7 +982,7 @@ class BrowserViewController: UIViewController {
         guard let url = tabState.url else { return }
         
         // Cliqz: replaced ShareItem with CliqzShareItem to extend bookmarks behaviour
-        let shareItem = CliqzShareItem(url: url.absoluteString, title: tabState.title, favicon: nil, bookmarkedDate: NSDate.now())
+        let shareItem = CliqzShareItem(url: url.absoluteString!, title: tabState.title, favicon: nil, bookmarkedDate: NSDate.now())
 //        let shareItem = ShareItem(url: url.absoluteString, title: tabState.title, favicon: tabState.favicon)
         
         profile.bookmarks.shareItem(shareItem)
@@ -1032,7 +1032,7 @@ class BrowserViewController: UIViewController {
     private func removeBookmark(tabState: TabState) {
         guard let url = tabState.url else { return }
         profile.bookmarks.modelFactory >>== {
-            $0.removeByURL(url.absoluteString)
+            $0.removeByURL(url.absoluteString!)
                 .uponQueue(dispatch_get_main_queue()) { res in
                 if res.isSuccess {
                     if let tab = self.tabManager.getTabForURL(url) {
@@ -1136,7 +1136,7 @@ class BrowserViewController: UIViewController {
 
     private func updateUIForReaderHomeStateForTab(tab: Tab) {
         // Cliqz: Added gaurd statement to avoid overridding url when search results are displayed
-        guard self.searchController != nil && self.searchController!.view.hidden && tab.url != nil && !tab.url!.absoluteString.contains("/cliqz/") else {
+        guard self.searchController != nil && self.searchController!.view.hidden && tab.url != nil && !tab.url!.absoluteString!.contains("/cliqz/") else {
             return
         }
         
@@ -1158,7 +1158,7 @@ class BrowserViewController: UIViewController {
 
     private func isWhitelistedUrl(url: NSURL) -> Bool {
         for entry in WhiteListedUrls {
-            if let _ = url.absoluteString.rangeOfString(entry, options: .RegularExpressionSearch) {
+            if let _ = url.absoluteString!.rangeOfString(entry, options: .RegularExpressionSearch) {
                 return UIApplication.sharedApplication().canOpenURL(url)
             }
         }
@@ -1285,7 +1285,7 @@ class BrowserViewController: UIViewController {
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
 				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_page"))
-				self.downloadVideoFromURL(url.absoluteString)
+				self.downloadVideoFromURL(url.absoluteString!)
 			}
 			activities.append(youtubeDownloader)
 		}
@@ -1670,12 +1670,9 @@ extension BrowserViewController: URLBarDelegate {
         self.webViewContainerToolbar.hidden = true
         updateFindInPageVisibility(visible: false)
 
-        // Cliqz: disabled taking screenshots as it is not used in our tab manager
-        /*
         if let tab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(tab)
         }
-        */
         
 		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
         /*
@@ -1709,7 +1706,7 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidLongPressReaderMode(urlBar: URLBarView) -> Bool {
         guard let tab = tabManager.selectedTab,
                url = tab.displayURL,
-               result = profile.readingList?.createRecordWithURL(url.absoluteString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
+               result = profile.readingList?.createRecordWithURL(url.absoluteString!, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
             else {
                 UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("Could not add page to Reading list", comment: "Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed."))
                 return false
@@ -2038,7 +2035,7 @@ extension BrowserViewController: TabToolbarDelegate {
             }
             
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
@@ -2560,13 +2557,13 @@ extension BrowserViewController: WKNavigationDelegate {
         }
         
         //Cliqz: Navigation telemetry signal
-        if url.absoluteString.rangeOfString("localhost") == nil {
+        if url.absoluteString!.rangeOfString("localhost") == nil {
             startNavigation(webView, navigationAction: navigationAction)
         }
         // First special case are some schemes that are about Calling. We prompt the user to confirm this action. This
         // gives us the exact same behaviour as Safari.
         if url.scheme == "tel" || url.scheme == "facetime" || url.scheme == "facetime-audio" {
-            if let phoneNumber = url.resourceSpecifier.stringByRemovingPercentEncoding where !phoneNumber.isEmpty {
+            if let phoneNumber = url.resourceSpecifier!.stringByRemovingPercentEncoding where !phoneNumber.isEmpty {
                 let formatter = PhoneNumberFormatter()
                 let formattedPhoneNumber = formatter.formatPhoneNumber(phoneNumber)
                 let alert = UIAlertController(title: formattedPhoneNumber, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -2595,7 +2592,7 @@ extension BrowserViewController: WKNavigationDelegate {
 
         if url.scheme == "http" || url.scheme == "https" {
             // Cliqz: Added handling for back/forward functionality
-            if url.absoluteString.contains("cliqz/goto.html") {
+            if url.absoluteString!.contains("cliqz/goto.html") {
                 if let q = url.query {
                     let comp = q.componentsSeparatedByString("=")
                     if comp.count == 2 {
@@ -2732,7 +2729,7 @@ extension BrowserViewController: WKNavigationDelegate {
         }
 		
         //Cliqz: Navigation telemetry signal
-        if webView.URL?.absoluteString.rangeOfString("localhost") == nil {
+        if webView.URL?.absoluteString!.rangeOfString("localhost") == nil {
             finishNavigation(webView)
         }
         
@@ -2841,7 +2838,7 @@ extension BrowserViewController: WKUIDelegate {
         // If the page we just opened has a bad scheme, we return nil here so that JavaScript does not
         // get a reference to it which it can return from window.open() - this will end up as a
         // CFErrorHTTPBadURL being presented.
-        guard let scheme = navigationAction.request.URL?.scheme.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
+        guard let scheme = navigationAction.request.URL?.scheme!.lowercaseString where SchemesAllowedToOpenPopups.contains(scheme) else {
             return nil
         }
         
@@ -3231,7 +3228,7 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
             if let tab = tabManager.selectedTab,
                let url = tab.url where ReaderModeUtils.isReaderModeURL(url) {
                 if let url = ReaderModeUtils.decodeURL(url) {
-                    profile.readingList?.createRecordWithURL(url.absoluteString, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name) // TODO Check result, can this fail?
+                    profile.readingList?.createRecordWithURL(url.absoluteString!, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name) // TODO Check result, can this fail?
                     readerModeBar.added = true
                     readerModeBar.unread = true
                 }
@@ -3624,7 +3621,8 @@ extension BrowserViewController: KeyboardHelperDelegate {
                 guard let _ = result as? [String: String] else {
                     return
                 }
-                self.addCustomSearchButtonToWebView(webView)
+                // Cliqz: disable showing custom search button as this feature is not needed and crashes on iPad
+//                self.addCustomSearchButtonToWebView(webView)
             }
         }
     }
@@ -3869,7 +3867,7 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 
     private func navigateToUrl(url: NSURL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
-        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        let forwardUrl = NSURL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString!.encodeURL())&q=\(query.encodeURL())")
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(URL: u)) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
@@ -3951,7 +3949,7 @@ extension BrowserViewController {
 	// Cliqz: Logging the Navigation Telemetry signals
     private func finishNavigation(webView: CliqzWebView) {
 		// calculate the url length
-		guard let urlLength = webView.URL?.absoluteString.characters.count else {
+		guard let urlLength = webView.URL?.absoluteString!.characters.count else {
 			return
 		}
         // calculate times
