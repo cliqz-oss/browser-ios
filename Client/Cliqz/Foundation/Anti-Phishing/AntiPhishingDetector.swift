@@ -32,7 +32,7 @@ class AntiPhishingDetector: NSObject {
             
             let antiPhishingURL = antiPhisingAPIURL + md5Prefix
             
-            ConnectionManager.sharedInstance.sendGetRequest(antiPhishingURL, parameters: nil, responseType: .JSONResponse, onSuccess: { (result) in
+            ConnectionManager.sharedInstance.sendRequest(.GET, url: antiPhishingURL, parameters: nil, responseType: .JSONResponse, onSuccess: { (result) in
                 
                 if let blacklist = result["blacklist"] as? [AnyObject] {
                     for suffixTuples in blacklist {

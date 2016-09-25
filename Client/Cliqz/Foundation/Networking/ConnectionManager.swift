@@ -24,73 +24,25 @@ class ConnectionManager {
     }
     
     //MARK: - Sending Requests
-    
-    internal func sendGetRequest(url: String, parameters: [String: AnyObject]?, responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    internal func sendRequest(method: Alamofire.Method, url: String, parameters: [String: AnyObject]?, responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         switch responseType {
+            
         case .JSONResponse:
-            Alamofire.request(.GET, url, parameters: parameters)
+            Alamofire.request(method, url, parameters: parameters)
                 .responseJSON {
                     response in
-                    switch response.result {
-                        
-                    case .Success(let json):
-                        onSuccess(json)
-                        
-                    case .Failure(let error):
-                        onFailure(response.data, error)
-                    }
+                    self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
             }
         case .StringResponse:
-            Alamofire.request(.GET, url, parameters: parameters)
+            Alamofire.request(method, url, parameters: parameters)
                 .responseString {
                     response in
-                    switch response.result {
-                        
-                    case .Success(let string):
-                        onSuccess(string)
-                        
-                    case .Failure(let error):
-                        onFailure(response.data, error)
-                    }
-            }
-        }
-        
-    }
-    
-    
-    internal func sendPostRequest(url: String, parameters: [String: AnyObject], responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
-        switch responseType {
-        case .JSONResponse:
-            Alamofire.request(.POST, url, parameters: parameters)
-                .responseJSON {
-                    response in
-                    switch response.result {
-                        
-                    case .Success(let json):
-                        onSuccess(json)
-                        
-                    case .Failure(let error):
-                        onFailure(response.data, error)
-                    }
-            }
-        case .StringResponse:
-            Alamofire.request(.POST, url, parameters: parameters)
-                .responseString {
-                    response in
-                    switch response.result {
-                        
-                    case .Success(let string):
-                        onSuccess(string)
-                        
-                    case .Failure(let error):
-                        onFailure(response.data, error)
-                    }
+                    self.handelStringResponse(response, onSuccess: onSuccess, onFailure: onFailure)
             }
         }
     }
     
-    
-    internal func sendPostRequest(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    internal func sendPostRequestWithBody(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         
         if NSJSONSerialization.isValidJSONObject(body) {
             do {
@@ -112,27 +64,13 @@ class ConnectionManager {
                     Alamofire.request(request)
                         .responseJSON {
                             response in
-                            switch response.result {
-                                
-                            case .Success(let json):
-                                onSuccess(json)
-                                
-                            case .Failure(let error):
-                                onFailure(response.data, error)
-                            }
+                            self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
                     }
                 case .StringResponse:
                     Alamofire.request(request)
                         .responseString {
                             response in
-                            switch response.result {
-                                
-                            case .Success(let string):
-                                onSuccess(string)
-                                
-                            case .Failure(let error):
-                                onFailure(response.data, error)
-                            }
+                            self.handelStringResponse(response, onSuccess: onSuccess, onFailure: onFailure)
                     }
                 }
             } catch let error as NSError {
@@ -142,5 +80,31 @@ class ConnectionManager {
             Answers.logCustomEventWithName("sendPostRequestError", customAttributes: nil)
         }
         
+    }
+    
+    // MARK: - Private methods
+    
+    private func handelStringResponse(response: Alamofire.Response<String, NSError>, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+        
+        switch response.result {
+            
+        case .Success(let string):
+            onSuccess(string)
+            
+        case .Failure(let error):
+            onFailure(response.data, error)
+        }
+    }
+    
+    private func handelJSONResponse(response: Alamofire.Response<AnyObject, NSError>, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+        
+        switch response.result {
+            
+        case .Success(let json):
+            onSuccess(json)
+            
+        case .Failure(let error):
+            onFailure(response.data, error)
+        }
     }
 }

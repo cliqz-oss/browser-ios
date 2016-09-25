@@ -436,28 +436,29 @@ class AntiTrackingModule: NSObject {
                 //                } else {
                 if method == "GET" {
                     ConnectionManager.sharedInstance
-                        .sendGetRequest(requestedUrl,
-                                        parameters: nil,
-                                        responseType: .StringResponse,
-                                        onSuccess: { responseData in
-                                            self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+                        .sendRequest(.GET,
+                                     url: requestedUrl,
+                                     parameters: nil,
+                                     responseType: .StringResponse,
+                                     onSuccess: { responseData in
+                                        self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
                             },
-                                        onFailure: { (error) in
-                                            onerror.callWithArguments(nil)
+                                     onFailure: { (error) in
+                                        onerror.callWithArguments(nil)
                         })
                     
                 } else if method == "POST" {
                     
                     ConnectionManager.sharedInstance
-                        .sendPostRequest(requestedUrl,
-                                         body: data,
-                                         responseType: .StringResponse,
-                                         enableCompression: false,
-                                         onSuccess: { responseData in
-                                            self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+                        .sendPostRequestWithBody(requestedUrl,
+                                                 body: data,
+                                                 responseType: .StringResponse,
+                                                 enableCompression: false,
+                                                 onSuccess: { responseData in
+                                                    self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
                             },
-                                         onFailure: { (error) in
-                                            onerror.callWithArguments(nil)
+                                                 onFailure: { (error) in
+                                                    onerror.callWithArguments(nil)
                         })
                     
                 } else {
