@@ -2032,7 +2032,7 @@ extension BrowserViewController: TabToolbarDelegate {
             }
             
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
