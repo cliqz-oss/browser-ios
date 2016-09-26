@@ -372,7 +372,7 @@ class TelemetryLogger : EventsLogger {
         event["type"] = "settings"
         event["view"] = view
         event["action"] = action
-        event[target] = target
+        event["target"] = target
         if let state = state {
             event["state"] = state
         }
