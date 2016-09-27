@@ -395,7 +395,7 @@ class TelemetryLogger : EventsLogger {
         }
         
         if let customData = customData where target == "overview" {
-            event["open_tabs"] = customData
+            event["open_tabs_count"] = customData
         } else if let customData = customData where target == "delete" {
             event["char_count"] = customData
         } else if let customData = customData where target == "attack" {
