@@ -10,10 +10,6 @@ import Foundation
 
 private let TogglesPrefKey = "clearprivatedata.toggles"
 
-public enum ClearHistoryType {
-	case None, NotFavorites, All
-}
-
 extension Profile {
 	
 	private var toggles: [Bool] {
@@ -28,17 +24,8 @@ extension Profile {
 		}
 	}
 
-	func historyTypeShouldBeCleared() -> ClearHistoryType {
-		if self.toggles[1] {
-			return .All
-		}
-		if self.toggles[0] {
-			return .NotFavorites
-		}
-		return .None
-	}
-
 	func clearPrivateData(tabManager: TabManager) {
+        clearQueries = true
 		let clearables: [Clearable] = [
 			HistoryClearable(profile: self),
 			BookmarksClearable(profile: self),

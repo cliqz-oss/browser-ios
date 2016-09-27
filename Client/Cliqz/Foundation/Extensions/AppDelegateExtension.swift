@@ -64,7 +64,11 @@ extension AppDelegate {
             
         }
     }
-	
+
+	static func changeStatusBarColor(color: UIColor) {
+		UIApplication.sharedApplication().delegate?.window??.backgroundColor = color
+	}
+
 	// MARK:- Private methods
     // append top sites shortcuts to the application shortcut items
 	@available(iOS 9.0, *)
@@ -141,7 +145,7 @@ extension AppDelegate {
     }
     
     private func navigateToRandomTopNews() {
-        ConnectionManager.sharedInstance.sendGetRequest(topNewsURL, parameters: nil,
+        ConnectionManager.sharedInstance.sendRequest(.GET, url: topNewsURL, parameters: nil, responseType: .JSONResponse,
             onSuccess: { json in
                 let jsonDict = json as! [String : AnyObject]
                 let results = jsonDict["results"] as! [[String : AnyObject]]
@@ -158,4 +162,5 @@ extension AppDelegate {
         })
 
     }
+
 }

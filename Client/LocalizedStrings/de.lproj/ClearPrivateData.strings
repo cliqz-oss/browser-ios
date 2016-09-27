@@ -2,7 +2,7 @@
 "Are you sure you want to clear all of your data? This will also close all open tabs." = "Sollen wirklich alle Ihre Daten gelöscht werden? Dabei werden auch alle offenen Tabs geschlossen.";
 
 /* Settings item for clearing browsing history */
-"Browsing History" = "Besuchte Seiten";
+"Browsing History" = "Verlauf";
 
 /* Settings item for clearing the cache */
 "Cache" = "Cache";

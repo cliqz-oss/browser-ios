@@ -24,6 +24,7 @@ class SessionState {
 	}
 
 	class func isSessionExpired() -> Bool {
-		return isTimeout
+//		return isTimeout
+		return false
 	}
 }

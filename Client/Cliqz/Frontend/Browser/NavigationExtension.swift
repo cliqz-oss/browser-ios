@@ -38,6 +38,11 @@ class NavigationExtension: NSObject {
         return "\(baseURL)/history.html"
     }()
 
+	// url for favorites page
+	static let favoritesURL: String =  {
+		return "\(baseURL)/favorites.html"
+	}()
+
     // url for fresh tab page
     static let freshtabURL: String =  {
         return "\(baseURL)/freshtab.html"

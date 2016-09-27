@@ -47,19 +47,21 @@ public struct AppConstants {
 
     /// Enables/disables the new Menu functionality
     public static let MOZ_MENU: Bool = {
-        #if MOZ_CHANNEL_RELEASE
-            return true
-        #elseif MOZ_CHANNEL_BETA
-            return true
-        #elseif MOZ_CHANNEL_NIGHTLY
-            return true
-        #elseif MOZ_CHANNEL_FENNEC
-            return true
-        #elseif MOZ_CHANNEL_AURORA
-            return true
-        #else
-            return true
-        #endif
+        // Cliqz: disable MOZ MENU
+        return false
+//        #if MOZ_CHANNEL_RELEASE
+//            return true
+//        #elseif MOZ_CHANNEL_BETA
+//            return true
+//        #elseif MOZ_CHANNEL_NIGHTLY
+//            return true
+//        #elseif MOZ_CHANNEL_FENNEC
+//            return true
+//        #elseif MOZ_CHANNEL_AURORA
+//            return true
+//        #else
+//            return true
+//        #endif
     }()
 
     ///  Enables/disables the notification bar that appears on the status bar area

@@ -10,7 +10,7 @@ struct IntroViewControllerUX {
     static let Height = 667
 
     // Cliqz: replaced fixfox intro with cliqz intro
-    static let CardSlides = ["cliqz-intro1", "cliqz-intro2", "cliqz-intro3"]
+    static let CardSlides = ["cliqz-intro2", "cliqz-intro3"]
 //    static let CardSlides = ["organize", "customize", "share", "choose", "sync"]
 
     static let NumberOfCards = CardSlides.count
@@ -56,9 +56,11 @@ struct IntroViewControllerUX {
     static let Card3Color = UIColor(rgb: 0x0096DD)
     
     // Cliqz: new titles and texts for cards
-    static let CardTitleCliqzBrowser = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!"
-    static let CardTextTyping = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag."
-    static let CardTextLocationSearch = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps)."
+    static let CardTitleCliqzBrowser = NSLocalizedString("The first browser with a built-in quick-search\nno detours, directly to the right destination.", tableName: "Cliqz", comment: "First card text in onBorading")
+    
+    static let CardTextTyping = NSLocalizedString("Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.", tableName: "Cliqz", comment: "Second card text in onBorading")
+    
+    static let CardTextLocationSearch = NSLocalizedString("When you share your location, you also get results for locations near you (Google Maps)", tableName: "Cliqz", comment: "Thrid card text in onBorading")
     
 }
 
@@ -86,16 +88,23 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var forwardButton: UIButton!
     var signInButton: UIButton!
     
+    // Cliqz: added attribute to calculate the duration user take on each page
+    var durationStartTime = 0.0
+    // Cliqz: added keep track of current page index to detect whether user swipe left or right
+    var currentPageIndex = 0
+    
+    
     // Cliqz: custom getting started button
     lazy var gettingStartedButton: UIButton = self.createGettingStartedButton()
     
     private func createGettingStartedButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Jetzt loslegen!", forState: UIControlState.Normal)
+        let buttonTitle = NSLocalizedString("Let's start!", tableName: "Cliqz", comment: "Start buttun title for onBorading")
+        button.setTitle(buttonTitle, forState: UIControlState.Normal)
         button.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightBold)
         button.setBackgroundImage(UIImage(named: "getting-started"), forState: UIControlState.Normal)
         button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        button.addTarget(self, action: "SELstartBrowsing", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), forControlEvents: UIControlEvents.TouchUpInside)
         button.snp_makeConstraints { (make) -> Void in
             make.width.equalTo(200.0)
             make.height.equalTo(40.0)
@@ -189,7 +198,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
 
         // Cliqz: changed titles and texts of the cards
-        addCard("", title: IntroViewControllerUX.CardTitleCliqzBrowser)
         addTextCard(IntroViewControllerUX.CardTextTyping)
         addTextCard(IntroViewControllerUX.CardTextLocationSearch, additionalView: gettingStartedButton)
             
@@ -298,7 +306,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func SELstartBrowsing() {
         delegate?.introViewControllerDidFinish(self)
         // Cliqz: logged Onboarding event
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("hide", pageControl.currentPage))
+        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
     }
 
     func SELback() {
@@ -354,6 +363,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        // Cliqz: log swipe telemetry singal for onboarding
+        logSwipeTelemetrySingal(currentPageIndex, newPageIndex: page)
         setActiveIntroView(introViews[page], forPage: page)
     }
 
@@ -391,6 +402,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     private func setActiveIntroView(newIntroView: UIView, forPage page: Int) {
         if introView != newIntroView {
+            // Cliqz: set the current page index
+            currentPageIndex = page
             // Cliqz: removed the fade animation when switching between cards
             self.introView?.alpha = 0
             self.introView = newIntroView
@@ -414,7 +427,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //                }
 //            })
             // Cliqz: logged Onboarding event
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page))
+            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page, nil))
+            durationStartTime = NSDate.getCurrentMillis()
         }
 		if page == pageControl.numberOfPages - 1 {
 			LocationManager.sharedInstance.askForLocationAccess()
@@ -554,6 +568,21 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // Cliqz: added method to log swipe telemetry signals
+    func logSwipeTelemetrySingal(currentPageIndex: Int, newPageIndex: Int) {
+        guard currentPageIndex != newPageIndex else {
+            return
+        }
+        
+        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
+        var action: String = ""
+        if newPageIndex > currentPageIndex {
+            action = "swipe_left"
+        } else {
+            action = "swipe_right"
+        }
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
+    }
 }
 
 private class IntroOverlayScrollView: UIScrollView {

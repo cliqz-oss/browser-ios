@@ -24,6 +24,34 @@ class AppStatus {
     lazy var isRelease: Bool  = self.isReleasedVersion()
     lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
     
+    lazy var extensionVersion: String = {
+        
+        if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "Extension/build/mobile/search"),
+            let jsonData = try? NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe) as NSData,
+            let jsonResult: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+            
+                if let extensionVersion : String = jsonResult["EXTENSION_VERSION"] as? String {
+                    return extensionVersion
+                }
+        }
+        return ""
+    }()
+    
+    lazy var distVersion: String = {
+        let versionDescription = self.getVersionDescriptor()
+        return self.getAppVersion(versionDescription)
+    }()
+    
+    lazy var hostVersion: String = {
+        // Firefox version
+        if let path = NSBundle.mainBundle().pathForResource("Info", ofType: "plist"),
+            let infoDict = NSDictionary(contentsOfFile: path),
+            let hostVersion = infoDict["HostVersion"] as? String {
+                return hostVersion
+        }
+        return ""
+    }()
+    
     private func isReleasedVersion() -> Bool {
 //        let infoDict = NSBundle.mainBundle().infoDictionary;
 //        if let isRelease = infoDict!["Release"] {
@@ -36,11 +64,7 @@ class AppStatus {
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
             return "\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
     }
-
-	func getCurrentAppVersion() -> String {
-        return getAppVersion(getVersionDescriptor())
-    }
-
+    
     func batteryLevel() -> Int {
         return Int(UIDevice.currentDevice().batteryLevel * 100)
     }
@@ -98,12 +122,13 @@ class AppStatus {
     
     internal func appDidBecomeResponsive(startupType: String) {
         let startupTime = NSDate.milliSecondsSinceDate(lastOpenedDate)
-        logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, timeUsed: nil)
+        logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, openDuration: nil)
     }
     
     internal func appWillResignActive() {
         
-        logApplicationUsageEvent("Inactive")
+        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Inactive", startupType:nil, startupTime: nil, openDuration: openDuration)
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
         
         TelemetryLogger.sharedInstance.persistState()
@@ -113,8 +138,8 @@ class AppStatus {
     internal func appDidEnterBackground() {
         SessionState.sessionPaused()
         
-        let timeUsed = NSDate.milliSecondsSinceDate(lastOpenedDate)
-        logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, timeUsed: timeUsed)
+        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, openDuration: openDuration)
 
         TelemetryLogger.sharedInstance.appDidEnterBackground()
 
@@ -165,26 +190,22 @@ class AppStatus {
     
     //MARK: application life cycle event
     private func logLifeCycleEvent(action: String) {
-        let version = getCurrentAppVersion()
-        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, version))
+        TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, distVersion))
     }
     
     //MARK: application usage event
     
     private func logApplicationUsageEvent(action: String) {
-        logApplicationUsageEvent(action, startupType: nil, startupTime: nil, timeUsed: nil)
+        logApplicationUsageEvent(action, startupType: nil, startupTime: nil, openDuration: nil)
     }
     
-    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, timeUsed: Double?) {
+    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, openDuration: Double?) {
         dispatch_async(dispatchQueue) {
             let network = NetworkReachability.sharedInstance.networkReachabilityStatus?.description
             let battery = self.batteryLevel()
             let memory = self.getMemoryUsage()
-            //TODO `context`
-            let context = ""
             
-            TelemetryLogger.sharedInstance.logEvent(.ApplicationUsage(action, network!, context, battery, memory, startupType, startupTime, timeUsed))
-            
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.ApplicationUsage(action, network!, battery, memory, startupType, startupTime, openDuration))
         }
     }
     //MARK: application Environment event
@@ -201,19 +222,31 @@ class AppStatus {
             self.lastEnvironmentEventDate = NSDate()
             let device: String = UIDevice.currentDevice().deviceType
             let language = self.getAppLanguage()
-            let version = self.getCurrentAppVersion()
+            let extensionVersion = self.extensionVersion
+            let distVersion = self.distVersion
+            let hostVersion = self.hostVersion
             let osVersion = UIDevice.currentDevice().systemVersion
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
             let historyUrls = profile.history.count()
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
-            let prefs = [String: AnyObject]()
+            let prefs = self.getEnvironmentPrefs(profile)
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, version, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }
-    
+    private func getEnvironmentPrefs(profile: Profile) -> [String: AnyObject] {
+        var prefs = [String: AnyObject]()
+        prefs["block_popups"] = profile.prefs.boolForKey("blockPopups")
+        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref()
+        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
+        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
+        prefs["human_web"] = SettingsPrefs.getHumanWebPref()
+        prefs["clear_on_exit"] = SettingsPrefs.getClearDataOnTerminatingPref()
+        
+        return prefs
+    }
     private func getAppLanguage() -> String {
         let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode)
         let countryCode = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode)

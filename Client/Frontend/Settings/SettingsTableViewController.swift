@@ -173,8 +173,7 @@ class BoolSetting: Setting {
         super.onConfigureCell(cell)
 
         let control = UISwitch()
-        // Cliqz: Revert the tint color of the UISwitch to the default color for iOS (green color)
-//        control.onTintColor = UIConstants.ControlTintColor
+        control.onTintColor = UIConstants.ControlTintColor
         control.addTarget(self, action: #selector(BoolSetting.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         control.on = prefs.boolForKey(prefKey) ?? defaultValue
         if let title = title {
@@ -192,6 +191,16 @@ class BoolSetting: Setting {
     @objc func switchValueChanged(control: UISwitch) {
         prefs.setBool(control.on, forKey: prefKey)
         settingDidChange?(control.on)
+        // Cliqz: log telemetry signal
+        logStateChangeTelemetrySingal(prefKey, oldValue: !control.on)
+    }
+    
+    // Cliqz: log telemetry signal
+    private func logStateChangeTelemetrySingal(prefKey: String, oldValue: Bool) {
+        let target = prefKey == SettingsPrefs.BlockExplicitContentPrefKey ? "block_ads" : "block_popups"
+        let state = oldValue == true ? "on" : "off"
+        let valueChangedSignal = TelemetryLogEventType.Settings("main", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
 }
 
@@ -403,6 +412,9 @@ class SettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     var tabManager: TabManager!
+    
+    // Cliqz: added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
 
     /// Used to calculate cell heights.
     private lazy var dummyToggleCell: UITableViewCell = {
@@ -422,6 +434,9 @@ class SettingsTableViewController: UITableViewController {
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
         tableView.estimatedRowHeight = 44
         tableView.estimatedSectionHeaderHeight = 44
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -446,6 +461,15 @@ class SettingsTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidStartSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationProfileDidFinishSyncing, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+        
+        // Cliqz: log back telemetry singal for settings view
+        // this check distinguish between showing detail and clicking done
+        if self.navigationController?.viewControllers.count == 1 {
+            let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("main", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            
+        }
     }
 
     // Override to provide settings in subclasses
@@ -536,6 +560,9 @@ class SettingsTableViewController: UITableViewController {
         if let setting = section[indexPath.row] where setting.enabled {
             setting.onClick(navigationController)
         }
+        
+        // Cliqz: deselect the selected row after performing the required action
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
     private func calculateStatusCellHeightForSetting(setting: Setting) -> CGFloat {

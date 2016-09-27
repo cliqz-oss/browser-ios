@@ -1,5 +1,6 @@
 amazondotcom
 google
+qwant
 twitter
 wikipedia
 yahoo

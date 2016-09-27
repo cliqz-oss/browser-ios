@@ -96,20 +96,17 @@ struct AppMenuConfiguration: MenuConfiguration {
         var menuItems = [MenuItem]()
         switch appState.ui {
         case .Tab(let tabState):
-            menuItems.append(AppMenuConfiguration.FindInPageMenuItem)
             if #available(iOS 9, *) {
                 menuItems.append(tabState.desktopSite ? AppMenuConfiguration.RequestMobileMenuItem : AppMenuConfiguration.RequestDesktopMenuItem)
             }
-
+            
             if !HomePageAccessors.isButtonInMenu(appState) {
                 menuItems.append(AppMenuConfiguration.SharePageMenuItem)
+            } else if HomePageAccessors.hasHomePage(appState) {
+                menuItems.append(AppMenuConfiguration.OpenHomePageMenuItem)
+            } else {
+                menuItems.append(AppMenuConfiguration.SetHomePageMenuItem)
             }
-            // Cliqz: disable showing set homepage item
-//            else if HomePageAccessors.hasHomePage(appState) {
-//                menuItems.append(AppMenuConfiguration.OpenHomePageMenuItem)
-//            } else {
-//                menuItems.append(AppMenuConfiguration.SetHomePageMenuItem)
-//            }
             menuItems.append(AppMenuConfiguration.NewTabMenuItem)
             if #available(iOS 9, *) {
                 menuItems.append(AppMenuConfiguration.NewPrivateTabMenuItem)

@@ -37,14 +37,9 @@ struct TabLocationViewUX {
         theme = Theme()
         theme.URLFontColor = BaseURLFontColor
         theme.hostFontColor = HostFontColor
-        // Cliqz: Changed LocationView backgroundColor according to requirements
-        theme.backgroundColor = UIColor.clearColor()
+        theme.backgroundColor = UIColor.whiteColor()
         themes[Theme.NormalMode] = theme
 
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
-        
         return themes
     }()
 }
@@ -101,10 +96,9 @@ class TabLocationView: UIView {
 
     lazy var placeholder: NSAttributedString = {
 		// Cliqz: Changed Placeholder text and color according to requirements
-		// TODO Naira: we should localize the string as well
 //        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
 		let placeholderText = NSLocalizedString("Search", tableName: "Cliqz", comment: "The text shown in the search field")
-        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+		return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0x9B9B9B)])
     }()
 
     lazy var urlTextField: UITextField = {
@@ -124,11 +118,8 @@ class TabLocationView: UIView {
         urlTextField.font = UIConstants.DefaultChromeFont
 
         // Cliqz: Added text color to the location text field
-		urlTextField.textColor = UIColor.whiteColor()
+		urlTextField.textColor = UIColor.blackColor()
 
-        // Cliqz: Added background color to the location text field
-        urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
-        
         // Cliqz: Added left pading to the url text field
         urlTextField.setLeftPading(5)
         
@@ -240,8 +231,8 @@ class TabLocationView: UIView {
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
 
             // Cliqz: Changed URL styling colors according to requirements.
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.whiteColor(), range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: UIColor.whiteColor())
+            attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: nsRange)
+            attributedString.colorSubstring(baseDomain, withColor: UIColor.blackColor())
 //            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
 //            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: TabLocationViewUX.BaseURLPitch), range: nsRange)

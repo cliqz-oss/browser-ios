@@ -8,19 +8,21 @@ import Shared
 public struct UIConstants {
 
     static let AboutHomePage = NSURL(string: "\(WebServer.sharedInstance.base)/about/home/")!
-    
-    // Cliqz: Changed background color according to the requirements
-    static let TextFieldBackgroundColor = UIColor(red: 45 / 255, green: 115 / 255, blue: 185 / 255, alpha: 1)
-    static let AppBackgroundColor = UIColor(red: 31 / 255, green: 104 / 255, blue: 173 / 255, alpha: 1) //UIColor.blackColor()
 
+    // Cliqz: Changed Appbackground color, PrivateModePurple, PrivateModeLocationBackgroundColor, PrivateModeLocationBorderColor, PrivateModeActionButtonTintColor, PrivateModeTextHighlightColor, PrivateModeTextHighlightColor according to the requirements
+	static let AppBackgroundColor = UIColor(rgb: 0xE8E8E8) //UIColor.blackColor()
     static let SystemBlueColor = UIColor(red: 0 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)
-    static let PrivateModePurple = UIColor(red: 207 / 255, green: 104 / 255, blue: 255 / 255, alpha: 1)
-    static let PrivateModeLocationBackgroundColor = UIColor(red: 31 / 255, green: 31 / 255, blue: 31 / 255, alpha: 1)
-    static let PrivateModeLocationBorderColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.15)
+    static let PrivateModePurple = UIColor.clearColor() // UIColor(red: 207 / 255, green: 104 / 255, blue: 255 / 255, alpha: 1)
+	static let PrivateModeLocationBackgroundColor = UIColor(rgb: 0x333333) //UIColor(red: 31 / 255, green: 31 / 255, blue: 31 / 255, alpha: 1)
+    static let PrivateModeLocationBorderColor = UIColor.clearColor() // UIColor(red: 255, green: 255, blue: 255, alpha: 0.15)
     static let PrivateModeActionButtonTintColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.8)
-    static let PrivateModeTextHighlightColor = UIColor(red: 120 / 255, green: 120 / 255, blue: 165 / 255, alpha: 1)
+	static let PrivateModeTextHighlightColor = UIColor(rgb: 0x45C2CC) // UIColor(red: 120 / 255, green: 120 / 255, blue: 165 / 255, alpha: 1)
     static let PrivateModeReaderModeBackgroundColor = UIColor(red: 89 / 255, green: 89 / 255, blue: 89 / 255, alpha: 1)
     static let PrivateModeToolbarTintColor = UIColor(red: 74 / 255, green: 74 / 255, blue: 74 / 255, alpha: 1)
+	
+	// Cliqz: Added colors for our new UI
+	static let TextFieldBackgroundColor = UIColor.whiteColor()
+	static let PrivateModeBackgroundColor = UIColor(rgb: 0x4A4A4A)
 
     static let ToolbarHeight: CGFloat = 44
     static let DefaultRowHeight: CGFloat = 58
@@ -67,8 +69,10 @@ public struct UIConstants {
     static let TableViewRowWarningTextColor = UIColor(red: 245/255, green: 166/255, blue: 35/255, alpha: 1.0)
     static let TableViewRowActionAccessoryColor = UIColor(red: 0.29, green: 0.56, blue: 0.89, alpha: 1.0)
 
+    // Cliqz: Used default tint color for UIControl instead of the custom orange one globally on the whole app
     // Firefox Orange
-    static let ControlTintColor = UIColor(red: 240.0 / 255, green: 105.0 / 255, blue: 31.0 / 255, alpha: 1)
+//    static let ControlTintColor = UIColor(red: 240.0 / 255, green: 105.0 / 255, blue: 31.0 / 255, alpha: 1)
+    static let ControlTintColor = UIColor(red: 66.0 / 255, green: 210.0 / 255, blue: 80.0 / 255, alpha: 1)
 
     // Passcode dot gray
     static let PasscodeDotColor = UIColor(rgb: 0x4A4A4A)

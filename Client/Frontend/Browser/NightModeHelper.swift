@@ -17,10 +17,14 @@ class NightModeHelper: TabHelper {
 
     required init(tab: Tab) {
         self.tab = tab
+        
+#if !CLIQZ
+        // Cliqz: disable adding night mode user script as it is not used
         if let path = NSBundle.mainBundle().pathForResource("NightModeHelper", ofType: "js"), source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentStart, forMainFrameOnly: true)
             tab.webView!.configuration.userContentController.addUserScript(userScript)
         }
+#endif
     }
 
     static func name() -> String {

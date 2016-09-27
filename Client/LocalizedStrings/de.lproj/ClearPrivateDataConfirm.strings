@@ -5,5 +5,4 @@
 "OK" = "OK";
 
 /* Description of the confirmation dialog shown when a user tries to clear their private data. */
-"This action will clear all of your private data. It cannot be undone." = "Diese Aktion löscht alle Ihre persönlichen Daten. Dies kann nicht rückgängig gemacht werden.";
-
+"This action will clear all of your private data. It cannot be undone." = "Diese Aktion löscht die ausgewählten privaten Daten aus dem Browser. Dies kann nicht rückgängig gemacht werden.";

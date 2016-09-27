@@ -65,7 +65,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     init(profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showBlockedTopSites:", name: NotificationShowBlockedTopSites, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.showBlockedTopSites(_:)), name: NotificationShowBlockedTopSites, object: nil)
         
     }
     
@@ -105,6 +105,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: UIDeviceOrientationDidChangeNotification, object: UIDevice.currentDevice())
 
     }
+
     func fixViewport() {
         if #available(iOS 9.0, *) {
             return
@@ -132,8 +133,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		}
 
 		javaScriptBridge.setDefaultSearchEngine()
-		self.updateContentBlockingPreferences()
-    }
+		self.updateExtensionPreferences()
+	}
 
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -193,13 +194,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     func updatePrivateMode(privateMode: Bool) {
         if privateMode != self.privateMode {
             self.privateMode = privateMode
-            updatePrivateModePreferences()
+			self.updateExtensionPreferences()
         }
     }
     
     //MARK: - WKWebView Delegate
 	func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-		if !navigationAction.request.URL!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
+		if !navigationAction.request.URL!.absoluteString!.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.Cancel)
 		}
@@ -274,18 +275,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.spinnerView.stopAnimating()
 	}
 	
-	private func updateContentBlockingPreferences() {
-		let isBlocked = self.profile.prefs.boolForKey("blockContent") ?? true
-		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal"]
-        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
+	private func updateExtensionPreferences() {
+		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
+		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
+		              "incognito" : self.privateMode]
+		javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
 	}
-    
-    private func updatePrivateModePreferences() {
-        let params = ["incognito" : self.privateMode]
-        javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
-    }
-    
-    
+
     //MARK: - Reset TopSites
     func showBlockedTopSites(notification: NSNotification) {
         javaScriptBridge.callJSMethod("jsAPI.restoreBlockedTopSites", parameter: nil, completionHandler: nil)
@@ -294,13 +290,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     //MARK: - Guestures
     func addGuestureRecognizers() {
         // longPress gesture recognizer
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "onLongPress:")
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onLongPress(_:)))
         longPressGestureRecognizer.delegate = self
         self.webView?.addGestureRecognizer(longPressGestureRecognizer)
         
         
         // swiper up gesture recognizer
-        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "onSwipeUp:")
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onSwipeUp(_:)))
         swipeGestureRecognizer.direction = .Up
         swipeGestureRecognizer.delegate = self
         self.webView?.addGestureRecognizer(swipeGestureRecognizer)
@@ -416,6 +412,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 	
 	func isReady() {
 		javaScriptBridge.setDefaultSearchEngine()
+		self.updateExtensionPreferences()
 	}
 
 }

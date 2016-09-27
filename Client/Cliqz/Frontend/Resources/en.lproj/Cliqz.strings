@@ -23,11 +23,8 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Imprint";
 
-/* Send Feedback Email */
-"Send Feedback" = "Send Feedback";
-
-/* Send Feedback Email Subject*/
-"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
+"FAQs & Support" = "FAQs & Support";
 
 /* Open search section of settings */
 "Search" = "Search";
@@ -67,7 +64,7 @@
 
 /* Block Ads setting
  Block Ads toogle title in Block Ads settings */
-"Block Ads" = "Block Ads";
+"Block Ads" = "Block Ads BETA";
 
 /* Fair Blocking toogle title in Block Ads settings
   Title of navigation controller of Fair Blocking */
@@ -86,13 +83,10 @@
 "Enable News Push Notifications" = "News Notification";
 
 /* Show blocked top-sites from settings */
-"Show blocked topsites" = "Show blocked topsites";
-
-/* Title of the 'Show blocked top-sites' alert */
-"Show blocked topsites" = "Show blocked topsites";
+"Show blocked topsites" = "Restore most visited websites";
 
 /* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "All blocked topsites will be shown on the start page again.";
+"All blocked topsites will be shown on the start page again." = "Start page shows most-visited websites again.";
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
@@ -118,3 +112,84 @@
 
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Make available offline";
+
+/* History title on dashboard */
+"History" = "History";
+
+/* Add Favorites */
+"Add Favorite" = "Add Favorite";
+
+/* Setting menu title */
+"Settings" = "Settings";
+
+/* New tab title */
+"New Tab" = "New Tab";
+
+/* New private tab title */
+"New Private Tab" = "New Forget Tab";
+
+/* Open new tab title */
+"Open New Tab" = "Open New Tab";
+
+/* Open new forget mode tab title */
+"Open New Forget Tab" = "Open New Forget Tab";
+
+/* Show images title */
+"Show Images" = "Show Images";
+
+/* Hide images title */
+"Hide Images" = "Hide Images";
+
+/* Night mode title */
+"Night Mode" = "Night Mode";
+
+/* Turn off Night mode title */
+"Night Mode off" = "Night Mode Off";
+
+/* Remove favorites title */
+"Remove Favorites" = "Remove Favorite";
+
+/* Dashboard navigation bar title */
+"Overview" = "Overview";
+
+/* Title on the tab view, when no URL is open on the tab */
+"Topsites" = "Most visited sites and News";
+
+/* Antitracking UI top title */
+"Data is protected" = "Your data is protected";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Private data points have been removed";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking companies";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Private data points";
+
+/* Antiphishing alert title */
+"Warning: deceptive website!" =  "Warning: deceptive website!";
+
+/* Antiphishing alert message */
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
+
+/* Back to safe site buttun title in antiphishing alert title */
+"Back to safe site" = "Back to safe site";
+
+/* Continue despite warning buttun title in antiphishing alert title */
+"Continue despite warning" = "Continue despite warning";
+
+/* Context menu option for opening a link in a new private tab */
+"Open In New Forget Tab" = "Open In New Forget Tab";
+
+/* First card text in onBorading */
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
+
+/* Second card text in onBorading */
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
+
+/* Thrid card text in onBorading */
+"When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
+
+/* Start buttun title for onBorading */
+"Let's start!" = "Let's start!";

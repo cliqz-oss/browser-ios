@@ -63,7 +63,7 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
             // as we are only allowed 4 in total and we always want to display close tab
             if actions.count < 3 {
                 actions.append(UIPreviewAction(title: TabPeekViewController.PreviewActionCopyURL, style: .Default) { previewAction, viewController in
-                    guard let url = self.tab?.url where url.absoluteString.characters.count > 0 else { return }
+                    guard let url = self.tab?.url where url.absoluteString!.characters.count > 0 else { return }
                     let pasteBoard = UIPasteboard.generalPasteboard()
                     pasteBoard.URL = url
                     })
@@ -95,7 +95,10 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
         }
         // if there is no screenshot, load the URL in a web page
         // otherwise just show the screenshot
+		// Cliqz:[UIWebView] Commented as we won't need this logic in  future
+#if !CLIQZ
         setupWebView(tab?.webView)
+#endif
         guard let screenshot = tab?.screenshot else { return }
         setupWithScreenshot(screenshot)
     }

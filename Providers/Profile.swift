@@ -111,7 +111,7 @@ class CommandStoringSyncDelegate: SyncDelegate {
     }
 
     func displaySentTabForURL(URL: NSURL, title: String) {
-        let item = ShareItem(url: URL.absoluteString, title: title, favicon: nil)
+        let item = ShareItem(url: URL.absoluteString!, title: title, favicon: nil)
         self.profile.queue.addToQueue(item)
     }
 }
@@ -154,8 +154,8 @@ class BrowserProfileSyncDelegate: SyncDelegate {
                 let notification = UILocalNotification()
                 notification.fireDate = NSDate()
                 notification.timeZone = NSTimeZone.defaultTimeZone()
-                notification.alertBody = String(format: NSLocalizedString("New tab: %@: %@", comment:"New tab [title] [url]"), title, URL.absoluteString)
-                notification.userInfo = [TabSendURLKey: URL.absoluteString, TabSendTitleKey: title]
+                notification.alertBody = String(format: NSLocalizedString("New tab: %@: %@", comment:"New tab [title] [url]"), title, URL.absoluteString!)
+                notification.userInfo = [TabSendURLKey: URL.absoluteString!, TabSendTitleKey: title]
                 notification.alertAction = nil
                 notification.category = TabSendCategory
 
@@ -171,6 +171,10 @@ class BrowserProfileSyncDelegate: SyncDelegate {
 protocol Profile: class {
 	// Cliqz: Added CliqzShareToDestination and CliqzSQLiteBookmarks protocols to extend bookmarks behaviour
     var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> { get }
+    
+    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
+    var clearQueries: Bool { get set }
+    
     // var favicons: Favicons { get }
     var prefs: Prefs { get }
     var queue: TabQueue { get }
@@ -220,6 +224,9 @@ public class BrowserProfile: Profile {
     private let name: String
     internal let files: FileAccessor
 
+    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
+    var clearQueries = false
+    
     weak private var app: UIApplication?
 
     /**
@@ -316,7 +323,7 @@ public class BrowserProfile: Profile {
             // Only record local vists if the change notification originated from a non-private tab
             if !(notification.userInfo!["isPrivate"] as? Bool ?? false) {
                 // We don't record a visit if no type was specified -- that means "ignore me".
-                let site = Site(url: url.absoluteString, title: title as String)
+                let site = Site(url: url.absoluteString!, title: title as String)
                 let visit = SiteVisit(site: site, date: NSDate.nowMicroseconds(), type: visitType)
                 history.addLocalVisit(visit)
             }
