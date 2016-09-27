@@ -11,11 +11,6 @@ import Shared
 import Storage
 import WebKit
 
-protocol RecommendationsViewControllerDelegate: class {
-
-	func didSelectURL(url: NSURL)
-}
-
 class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UIAlertViewDelegate {
 
 	lazy var topSitesWebView: WKWebView = {
@@ -38,7 +33,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 	private let maxFrecencyLimit: Int = 30
 
-	weak var delegate: RecommendationsViewControllerDelegate?
+	weak var delegate: BrowserNavigationDelegate?
     var reload = false
 
 	private var spinnerView: UIActivityIndicatorView!
@@ -63,8 +58,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 			NSForegroundColorAttributeName : UIColor.whiteColor()]
         self.title = NSLocalizedString("Search recommendations", tableName: "Cliqz", comment: "Search Recommendations and top visited sites title")
         
-		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: Selector("dismiss"))
-		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: Selector("openSettings"))
+		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: #selector(RecommendationsViewController.dismiss))
+		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: #selector(RecommendationsViewController.openSettings))
 
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 		self.view.addSubview(spinnerView)
@@ -107,7 +102,6 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	// Mark: Action handlers
 	func dismiss() {
 		self.dismissViewControllerAnimated(true, completion: nil)
-        TelemetryLogger.sharedInstance.logEvent(.LayerChange("future", "present"))
 	}
 
 	func openSettings() {
@@ -210,7 +204,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 extension RecommendationsViewController: JavaScriptBridgeDelegate {
     
     func didSelectUrl(url: NSURL) {
-        delegate?.didSelectURL(url)
+        delegate?.navigateToURL(url)
         self.dismiss()
     }
     

@@ -96,9 +96,11 @@ extension UIAlertController {
 
         let noOption = UIAlertAction(
             title: NSLocalizedString("Cancel", tableName: "ClearPrivateDataConfirm", comment: "The cancel button when confirming clear private data."),
-            style: UIAlertActionStyle.Cancel,
-            handler: nil
-        )
+            style: UIAlertActionStyle.Cancel) { (action) in
+                // Cliqz: log telemetry signal
+                let cancelSignal = TelemetryLogEventType.Settings("private_data", "click", "cancel", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(cancelSignal)
+            }
 
         let okayOption = UIAlertAction(
             title: NSLocalizedString("OK", tableName: "ClearPrivateDataConfirm", comment: "The button that clears private data."),

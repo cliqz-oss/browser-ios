@@ -11,23 +11,20 @@ import UIKit
 private let SectionToggle = 0
 private let SectionDetails = 1
 private let HeaderFooterHeight: CGFloat = 44
-private let HumanWebPrefKey = "humanweb.toggle"
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 
 class HumanWebSettingsTableViewController: UITableViewController {
 
-	var profile: Profile!
+    var profile: Profile!
+    // added to calculate the duration spent on settings page
+    var settingsOpenTime = 0.0
 	
-	private lazy var toggle: Bool = {
-		if let savedToggle = self.profile.prefs.boolForKey(HumanWebPrefKey) {
-			return savedToggle
-		}
-		
-		return true
-	}()
+	private lazy var toggle: Bool = SettingsPrefs.getHumanWebPref()
 
 	override func viewDidLoad() {
-		super.viewDidLoad()
+        super.viewDidLoad()
+        // record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
 
 		title = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "Navigation title in settings.")
 		tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
@@ -38,13 +35,23 @@ class HumanWebSettingsTableViewController: UITableViewController {
 		tableView.tableFooterView = footer
 	}
 
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // log telemetry signal
+        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+        let settingsBackSignal = TelemetryLogEventType.Settings("human_web", "click", "back", nil, duration)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+    }
+    
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
 
 		if indexPath.section == SectionToggle {
 			cell.textLabel?.text = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "toogle title in Human web settings.")
 			let control = UISwitch()
-			control.onTintColor = UIConstants.ControlTintColor
+            control.onTintColor = UIConstants.ControlTintColor
             control.addTarget(self, action: #selector(HumanWebSettingsTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
 			control.on = toggle
 			cell.accessoryView = control
@@ -77,6 +84,9 @@ class HumanWebSettingsTableViewController: UITableViewController {
 		viewController.settingsTitle = NSAttributedString(string: NSLocalizedString("Human Web", tableName: "Cliqz", comment: "Title of navigation controller of human web"))
 		viewController.url = NSURL(string: NSLocalizedString("Human Web URL", tableName: "Cliqz", comment: "URL for detailed info for human web"))
 		navigationController?.pushViewController(viewController, animated: true)
+        // log telemetry signal
+        let infoSignal = TelemetryLogEventType.Settings("human_web", "click", "info", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(infoSignal)
 	}
 
 	override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -89,6 +99,11 @@ class HumanWebSettingsTableViewController: UITableViewController {
 
 	@objc func switchValueChanged(toggle: UISwitch) {
 		self.toggle = toggle.on
-		self.profile.prefs.setObject(self.toggle, forKey: HumanWebPrefKey)
+        SettingsPrefs.updateHumanWebPref(self.toggle)
+        
+        // log telemetry signal
+        let state = toggle.on == true ? "off" : "on" // we log old value
+        let valueChangedSignal = TelemetryLogEventType.Settings("human_web", "click", "enable", state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
 	}
 }

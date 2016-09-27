@@ -164,7 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().addObserverForName(FSReadingListAddReadingListItemNotification, object: nil, queue: nil) { (notification) -> Void in
             if let userInfo = notification.userInfo, url = userInfo["URL"] as? NSURL {
                 let title = (userInfo["Title"] as? String) ?? ""
-                profile.readingList?.createRecordWithURL(url.absoluteString, title: title, addedBy: UIDevice.currentDevice().name)
+                profile.readingList?.createRecordWithURL(url.absoluteString!, title: title, addedBy: UIDevice.currentDevice().name)
             }
         }
 
@@ -208,9 +208,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
 		// Cliqz added preference in UserDefaults for keeping the state when app is terminated to clean-up on launch if needed
-		NSUserDefaults.standardUserDefaults().setBool(true, forKey: IsAppTerminated)
-		NSUserDefaults.standardUserDefaults().synchronize()
-
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: IsAppTerminated)
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
 		// We have only five seconds here, so let's hope this doesn't take too long.
         self.profile?.shutdown()
 
@@ -247,7 +247,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppStatus.sharedInstance.appDidFinishLaunching()
 
         // Override point for customization after application launch.
-        var shouldPerformAdditionalDelegateHandling = true
+        let shouldPerformAdditionalDelegateHandling = true
 
         log.debug("Did finish launching.")
         
@@ -287,6 +287,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
 		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
+
+        // Configure AntiTracking Module
+        AntiTrackingModule.sharedInstance.initModule()
 
         log.debug("Done with applicationDidFinishLaunching.")
 
@@ -374,9 +377,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NightModeHelper.restoreNightModeBrightness((self.profile?.prefs)!, toForeground: true)
         self.profile?.syncManager.applicationDidBecomeActive()
 
+        //Cliqz: disable loading queued tables
         // We could load these here, but then we have to futz with the tab counter
         // and making NSURLRequests.
-        self.browserViewController.loadQueuedTabs()
+//        self.browserViewController.loadQueuedTabs()
 
         // handle quick actions is available
         if #available(iOS 9, *) {
@@ -411,8 +415,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(application: UIApplication) {
 
-		// Cliqz: mark the app not being termenated while closing
-        LocalDataStore.setObject(false, forKey: IsAppTerminated)
         // Cliq: notify the AppStatus that the app entered background
         AppStatus.sharedInstance.appDidEnterBackground()
         
@@ -645,11 +647,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	// Cliqz: Added method to clear Data if the application was closed before and
 	private func clearLocalDataIfNeeded() {
-		guard NSUserDefaults.standardUserDefaults().boolForKey(IsAppTerminated) ?? false else {
+		guard LocalDataStore.objectForKey(IsAppTerminated) as? Bool ?? false else {
 			return
 		}
-
-		guard let profile = self.profile where (profile.prefs.boolForKey(ClearDataOnTerminatingPrefKey) ?? false) == true else {
+        // reset IsAppTerminated state
+        LocalDataStore.setObject(false, forKey: IsAppTerminated)
+        
+		guard let profile = self.profile where SettingsPrefs.getClearDataOnTerminatingPref() == true else {
 			return
 		}
 		profile.clearPrivateData(self.tabManager)

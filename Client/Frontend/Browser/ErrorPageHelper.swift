@@ -211,8 +211,9 @@ class ErrorPageHelper {
             return GCDWebServerDataResponse(data: NSData(contentsOfFile: path), contentType: "text/css")
         })
     }
-
-    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: WKWebView) {
+    // Cliqz: [UIWebView] Type change
+//    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: WKWebView) {
+    func showPage(error: NSError, forUrl url: NSURL, inWebView webView: UIWebView) {
         // Don't show error pages for error pages.
         if ErrorPageHelper.isErrorPageURL(url) {
             if let previousURL = ErrorPageHelper.originalURLFromQuery(url),

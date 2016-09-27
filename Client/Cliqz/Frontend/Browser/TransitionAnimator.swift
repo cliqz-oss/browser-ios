@@ -31,7 +31,7 @@ class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
         
         
-        let containerView = transitionContext.containerView()!
+        let containerView = transitionContext.containerView()
         let modalView = presenting ? toView : fromView
         containerView.addSubview(toView)
         containerView.bringSubviewToFront(modalView)

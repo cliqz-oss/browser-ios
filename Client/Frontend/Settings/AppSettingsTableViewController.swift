@@ -46,8 +46,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
             //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
 //            SearchSetting(settings: self),
             CliqzSearchSetting(settings: self),
-            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
-				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
+            // Cliqz: temporarly hide news notification settings
+//            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
+//				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
         //Cliqz: remove newTabPage settings and HomePage settings
 //        if AppConstants.MOZ_NEW_TAB_CHOICES {
 //            generalSettings += [NewTabPageSetting(settings: self)]
@@ -57,14 +58,17 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
             BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
+            // Cliqz: removed save logins settings
+            /*
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
                 titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
+             */
             // Cliqz: Commented settings for enabling third party keyboards according to our policy.
 			/*
             BoolSetting(prefs: prefs, prefKey: AllowThirdPartyKeyboardsKey, defaultValue: false,
                 titleText: NSLocalizedString("Allow Third-Party Keyboards", comment: "Setting to enable third-party keyboards"), statusText: NSLocalizedString("Firefox needs to reopen for this change to take effect.", comment: "Setting value prop to enable third-party keyboards")),
 			*/
-            BoolSetting(prefs: prefs, prefKey: "blockContent", defaultValue: true, titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
+            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             AdBlockerSetting(settings: self),
             ImprintSetting(),
             HumanWebSetting(settings: self)
@@ -85,12 +89,15 @@ class AppSettingsTableViewController: SettingsTableViewController {
         // There is nothing to show in the Customize section if we don't include the compact tab layout
         // setting on iPad. When more options are added that work on both device types, this logic can
         // be changed.
+#if !CLIQZ
+        // Cliqz: removed use compact tabs settings as we use our own tab manager
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             generalSettings +=  [
                 BoolSetting(prefs: prefs, prefKey: "CompactTabLayout", defaultValue: true,
                     titleText: NSLocalizedString("Use Compact Tabs", comment: "Setting to enable compact tabs in the tab overview"))
             ]
         }
+#endif
 
         //Cliqz: removed unused sections from Settings table
 //        settings += [
@@ -112,12 +119,15 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         
         var privacySettings = [Setting]()
-        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
+        // Cliqz: removed save logins settings
+//        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
         //Cliqz: removed passcode settings as it is not working
 //        privacySettings.append(TouchIDPasscodeSetting(settings: self))
 
         privacySettings.append(ClearPrivateDataSetting(settings: self))
 
+#if !CLIQZ
+        // Cliqz: remove close private tabs when leaving private browsing
         if #available(iOS 9, *) {
             privacySettings += [
                 BoolSetting(prefs: prefs,
@@ -127,8 +137,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
                     statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
             ]
         }
+#endif
 
         privacySettings += [
+            ShowBlockedTopSitesSetting(),
             PrivacyPolicySetting()
         ]
 

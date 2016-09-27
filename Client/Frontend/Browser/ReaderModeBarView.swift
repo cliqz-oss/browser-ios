@@ -112,13 +112,13 @@ class ReaderModeBarView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         let context = UIGraphicsGetCurrentContext()
-        CGContextSetLineWidth(context, 0.5)
-        CGContextSetRGBStrokeColor(context, 0.1, 0.1, 0.1, 1.0)
-        CGContextSetStrokeColorWithColor(context, UIColor.grayColor().CGColor)
-        CGContextBeginPath(context)
-        CGContextMoveToPoint(context, 0, frame.height)
-        CGContextAddLineToPoint(context, frame.width, frame.height)
-        CGContextStrokePath(context)
+        CGContextSetLineWidth(context!, 0.5)
+        CGContextSetRGBStrokeColor(context!, 0.1, 0.1, 0.1, 1.0)
+        CGContextSetStrokeColorWithColor(context!, UIColor.grayColor().CGColor)
+        CGContextBeginPath(context!)
+        CGContextMoveToPoint(context!, 0, frame.height)
+        CGContextAddLineToPoint(context!, frame.width, frame.height)
+        CGContextStrokePath(context!)
     }
 
     private func createButton(type type: ReaderModeBarButtonType, action: Selector) -> UIButton {

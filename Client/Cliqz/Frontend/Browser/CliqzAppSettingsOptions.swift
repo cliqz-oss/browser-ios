@@ -23,6 +23,9 @@ class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
         searchEnginePicker.delegate = self
         searchEnginePicker.selectedSearchEngineName = profile.searchEngines.defaultEngine.shortName
         navigationController?.pushViewController(searchEnginePicker, animated: true)
+        
+        let searchEngineSingal = TelemetryLogEventType.Settings("main", "click", "search_engine", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(searchEngineSingal)
     }
     
     func searchEnginePicker(searchEnginePicker: SearchEnginePicker?, didSelectSearchEngine engine: OpenSearchEngine?) -> Void {
@@ -45,6 +48,9 @@ class ImprintSetting: Setting {
     
     override func onClick(navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
+        // log Telemerty signal
+        let imprintSingal = TelemetryLogEventType.Settings("main", "click", "imprint", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(imprintSingal)
     }
 }
 
@@ -66,6 +72,9 @@ class HumanWebSetting: Setting {
         let viewController = HumanWebSettingsTableViewController()
         viewController.profile = self.profile
         navigationController?.pushViewController(viewController, animated: true)
+        // log Telemerty signal
+        let humanWebSingal = TelemetryLogEventType.Settings("main", "click", "human_web", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
     }
 }
 //Cliqz: Added new settings item for Ad Blocker
@@ -76,8 +85,8 @@ class AdBlockerSetting: Setting {
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let humanWebTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
-        super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let blockAdsTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
+        super.init(title: NSAttributedString(string: blockAdsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
@@ -86,34 +95,31 @@ class AdBlockerSetting: Setting {
         let viewController = AdBlockerSettingsTableViewController()
         viewController.profile = self.profile
         navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "block_ads", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
     }
 }
 
-//Cliqz: Added Settings for sending email feedback
-class SendCliqzFeedbackSetting: SendFeedbackSetting, MFMailComposeViewControllerDelegate {
+//Cliqz: Added Settings for redirecting to feedback page
+class SendCliqzFeedbackSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"))
+    }
+    
+    override var url: NSURL? {
+        return NSURL(string: "https://cliqz.com/support")
+    }
     
     override func onClick(navigationController: UINavigationController?) {
-        if MFMailComposeViewController.canSendMail() {
-            let emailViewController = MFMailComposeViewController()
-            emailViewController.setSubject(NSLocalizedString("Feedback to iOS Cliqz Browser", tableName: "Cliqz", comment: "Send Feedback Email Subject"))
-            emailViewController.setToRecipients(["feedback@cliqz.com"])
-            emailViewController.mailComposeDelegate = self
-            let footnote = NSLocalizedString("Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@", tableName: "Cliqz", comment: "Footnote message for feedback")
-            emailViewController.setMessageBody(String(format: "\n\n" + footnote, AppStatus.sharedInstance.getCurrentAppVersion(), UIDevice.currentDevice().systemVersion, UIDevice.currentDevice().deviceType), isHTML: false)
-            navigationController?.presentViewController(emailViewController, animated: false, completion: nil)
-        } else {
-            let alertController = UIAlertController(
-                title: NSLocalizedString("No Email account title", tableName: "Cliqz", comment: "Title for No Email account pop-up"),
-                message: NSLocalizedString("No Email account message", tableName: "Cliqz", comment: "Text for the missing email account for sending feedback pop-up"),
-                preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .Default, handler: nil))
-            navigationController?.presentViewController(alertController, animated: true, completion: nil)
-        }
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let contactSignal = TelemetryLogEventType.Settings("main", "click", "contact", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(contactSignal)
     }
     
-    @objc func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
-    }
 }
 
 // Cliqz: Custom Bool settings for News Push Notifications
@@ -144,14 +150,24 @@ class ShowBlockedTopSitesSetting: Setting {
             preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .Cancel) { (action) in
-                // Do nothing.
+                // log telemetry signal
+                let cancelSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "cancel", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(cancelSignal)
             })
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("OK", tableName: "Cliqz", comment: "OK button in the 'Show blocked top-sites' alert"), style: .Default) { (action) in
                 // reset top-sites
                 NSNotificationCenter.defaultCenter().postNotificationName(NotificationShowBlockedTopSites, object: nil)
+                
+                // log telemetry signal
+                let confirmSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "confirm", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(confirmSignal)
 
             })
         navigationController?.presentViewController(alertController, animated: true, completion: nil)
+        
+        // log telemetry signal
+        let restoreTopsitesSignal = TelemetryLogEventType.Settings("main", "click", "restore_topsites", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(restoreTopsitesSignal)
     }
 }

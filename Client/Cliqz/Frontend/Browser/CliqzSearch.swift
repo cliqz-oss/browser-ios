@@ -23,7 +23,7 @@ class CliqzSearch: NSObject {
             statisticsCollector.startEvent(query)
             DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 
-            ConnectionManager.sharedInstance.sendGetRequest(searchURL, parameters: ["q" : query],
+            ConnectionManager.sharedInstance.sendRequest(.GET, url: searchURL, parameters: ["q" : query], responseType: .JSONResponse,
                 onSuccess: { json in
                     self.statisticsCollector.endEvent(query)
                     DebugLogger.log("<< Received response for query: \(query)")

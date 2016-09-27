@@ -161,6 +161,18 @@ class TabManager : NSObject {
 
         return nil
     }
+	// Cliqz: [UIWebView] Temporary Added to get the tab that contains specific WebView
+	func tabForWebView(webView: UIWebView) -> Tab? {
+		objc_sync_enter(self); defer { objc_sync_exit(self) }
+		
+		for tab in tabs {
+			if tab.webView === webView {
+				return tab
+			}
+		}
+		
+		return nil
+	}
 
     func getTabFor(url: NSURL) -> Tab? {
         assert(NSThread.isMainThread())
@@ -490,6 +502,8 @@ class TabManager : NSObject {
     }
 
     func prefsDidChange() {
+        // Cliqz: [UIWebview] CliqzWebViewConfiguration does not contain preferences 
+#if !CLIQZ
         dispatch_async(dispatch_get_main_queue()) {
             let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
             // Each tab may have its own configuration, so we should tell each of them in turn.
@@ -502,6 +516,7 @@ class TabManager : NSObject {
                 self.privateConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
             }
         }
+#endif
     }
 
     func resetProcessPool() {
@@ -591,7 +606,7 @@ extension TabManager {
 
     static private func tabsStateArchivePath() -> String {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-        return NSURL(fileURLWithPath: documentsPath).URLByAppendingPathComponent("tabsState.archive").path!
+        return NSURL(fileURLWithPath: documentsPath).URLByAppendingPathComponent("tabsState.archive")!.path!
     }
 
     static func tabArchiveData() -> NSData? {
