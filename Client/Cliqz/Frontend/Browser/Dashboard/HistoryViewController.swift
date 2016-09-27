@@ -21,7 +21,7 @@ class HistoryViewController: CliqzExtensionViewController {
     let QueryLimit = 100
 	
 	override init(profile: Profile) {
-		super.init(profile: profile)
+		super.init(profile: profile, viewType: "history")
 
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(clearQueries as (NSNotification) -> Void), name: NotificationPrivateDataClearQueries, object: nil)
     }
