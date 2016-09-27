@@ -37,6 +37,10 @@ class TelemetryLogger : EventsLogger {
     
     let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
     
+    private var isForgetModeActivate = false
+    private let preventedTypesInForgetMode = ["home", "cards", "web", "web_menu", "context_menu", "share_menu", "attrack", "anti_phishing", "video_downloader"]
+    private let preventedActionsInForgetMode = ["result_enter", "key_stroke", "keystroke_del", "paste", "results", "result_click"]
+    
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
     
@@ -45,6 +49,9 @@ class TelemetryLogger : EventsLogger {
         loadTelemetrySeq()
     }
     
+    func updateForgetModeStatue(newStatus: Bool) {
+        isForgetModeActivate = newStatus
+    }
     
     //MARK: - Instant Variables
     var telemetrySeq: AtomicInt?
@@ -152,6 +159,10 @@ class TelemetryLogger : EventsLogger {
                 return
             }
             
+            if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
+                return
+            }
+            
             // Always store the event
             self.storeEvent(event)
             
@@ -162,6 +173,19 @@ class TelemetryLogger : EventsLogger {
         }
     }
 
+    private func shouldPreventEventInForgetMode(event: [String: AnyObject]) -> Bool {
+        if let type = event["type"] as? String
+            where preventedTypesInForgetMode.contains(type) {
+            return true
+        }
+        
+        if let action = event["action"] as? String
+            where preventedActionsInForgetMode.contains(action) {
+            return true
+        }
+        
+        return false
+    }
     // MARK: - Private Helper methods
 
     internal func createBasicEvent() ->[String: AnyObject] {

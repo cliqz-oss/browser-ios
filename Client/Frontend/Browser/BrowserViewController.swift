@@ -2344,6 +2344,7 @@ extension BrowserViewController: TabManagerDelegate {
 
         if let tab = selected, webView = tab.webView {
             updateURLBarDisplayURL(tab)
+            TelemetryLogger.sharedInstance.updateForgetModeStatue(tab.isPrivate)
 
             if tab.isPrivate {
                 readerModeCache = MemoryReaderModeCache.sharedInstance
