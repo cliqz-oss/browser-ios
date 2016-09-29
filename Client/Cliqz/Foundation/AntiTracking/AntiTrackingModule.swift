@@ -75,6 +75,7 @@ class AntiTrackingModule: NSObject {
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
+            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
         }
     }
 
@@ -273,7 +274,7 @@ class AntiTrackingModule: NSObject {
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
