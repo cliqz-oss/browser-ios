@@ -525,14 +525,8 @@ class AntiTrackingModule: NSObject {
         requestInfo["isPrivate"] = isPrivate
         requestInfo["originUrl"] = originUrl
         
-        // simple content type detection
-        var contentPolicyType = 11; // default is XMLHttpRequest
-        if (isMainDocument) {
-            contentPolicyType = 6;
-        } else if (url!.endsWith(".js")) {
-            contentPolicyType = 2;
-        }
         
+        let contentPolicyType = ContentPolicyDetector.getContentPolicy(request, isMainDocument: isMainDocument)
         requestInfo["type"] = contentPolicyType;
         
         
