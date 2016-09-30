@@ -56,12 +56,15 @@ class AntiTrackingModule: NSObject {
         if let blockResponse = getBlockResponseForRequest(requestInfo)
             where blockResponse.count > 0 {
             
-            // increment requests count for the webivew that issued this request
+            // update unsafe requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
                 let webView = WebViewToUAMapper.idToWebView(tabId) {
-                webView.incrementBadRequestsCount()
+                if let tabBlockInfo = getTabBlockingInfo(tabId),
+                    let requests = tabBlockInfo["requests"] as? [String : AnyObject],
+                    let unsafeRequestsCount = requests["unsafe"] as? Int {
+                        webView.updateUnsafeRequestsCount(unsafeRequestsCount)
+                    }
             }
-            
             
             BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             
@@ -81,15 +84,14 @@ class AntiTrackingModule: NSObject {
 
 	func getTrackersCount(webViewId: Int) -> Int {
 		if let webView = WebViewToUAMapper.idToWebView(webViewId) {
-			return webView.badRequests
+			return webView.unsafeRequests
 		}
 		return 0
 	}
 
     func getAntiTrackingStatistics(webViewId: Int) -> [(String, Int)] {
         var antiTrackingStatistics = [(String, Int)]()
-        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
-		if tabBlockInfo != nil {
+        if let tabBlockInfo = getTabBlockingInfo(webViewId) {
 			if let companies = tabBlockInfo["companies"] as? [String: [String]],
 				let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
 				
@@ -103,8 +105,14 @@ class AntiTrackingModule: NSObject {
 		}
         return antiTrackingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
-
+    
     //MARK: - Private Helpers
+    
+    private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
+        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
+        return tabBlockInfo
+    }
+    
     private func getCompanyBadRequestsCount(trackers: [String], allTrackers: [String: AnyObject]) -> Int {
         var badRequestsCount = 0
         for tracker in trackers {

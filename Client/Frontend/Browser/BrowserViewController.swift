@@ -1166,7 +1166,7 @@ class BrowserViewController: UIViewController {
     /// Call this whenever the page URL changes.
     private func updateURLBarDisplayURL(tab: Tab) {
         urlBar.currentURL = tab.displayURL
-		urlBar.updateTrackersCount((tab.webView?.badRequests)!)
+		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
         let isPage = tab.displayURL?.isWebPage() ?? false
         navigationToolbar.updatePageStatus(isWebPage: isPage)
 
