@@ -23,7 +23,10 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 	private let titleIcon = UIImageView()
 	private let trackersCountLabel = UILabel()
 	private let subtitleLabel = UILabel()
-
+    lazy var legendView : UIView! = {
+       return self.createLegendView()
+    }()
+    
 	private let trackersTableView = UITableView()
 
 	private let helpButton = UIButton(type: .Custom)
@@ -93,12 +96,14 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		self.view.addSubview(subtitleLabel)
 		subtitleLabel.text = NSLocalizedString("Private data points", tableName: "Cliqz", comment: "Persönliche Daten wurden entfernt")
 		
+        self.view.addSubview(legendView)
+        
 		trackersTableView.registerClass(TrackerViewCell.self, forCellReuseIdentifier: self.trackerCellIdentifier)
 		trackersTableView.delegate = self
 		trackersTableView.dataSource = self
 		trackersTableView.backgroundColor = UIColor.clearColor()
 		trackersTableView.tableFooterView = UIView()
-		trackersTableView.separatorStyle = .None
+        trackersTableView.separatorStyle = .None
 		trackersTableView.clipsToBounds = true
 		trackersTableView.allowsSelection = true
 		self.view.addSubview(trackersTableView)
@@ -164,11 +169,16 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 			make.top.equalTo(trackersCountLabel.snp_bottom).offset(7)
 			make.height.equalTo(20)
 		}
+        legendView.snp_makeConstraints { make in
+            make.left.right.equalTo(trackersTableView)
+            make.top.equalTo(subtitleLabel.snp_bottom).offset(10)
+            make.height.equalTo(25)
+        }
 		trackersTableView.snp_makeConstraints { (make) in
 			make.left.equalTo(self.view).offset(25)
 			make.right.equalTo(self.view).offset(-25)
-			make.top.equalTo(subtitleLabel.snp_bottom).offset(10)
-			make.bottom.equalTo(self.helpButton.snp_top)
+			make.top.equalTo(legendView.snp_bottom)
+			make.bottom.equalTo(self.helpButton.snp_top).offset(-5)
 		}
 		helpButton.snp_makeConstraints { (make) in
 			make.size.equalTo(CGSizeMake(80, 35))
@@ -227,6 +237,46 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		}
 		return UIColor(rgb: 0xE8E8E8)
 	}
+    private func createLegendView() -> UIView? {
+        let header = UIView()
+        header.backgroundColor = UIColor.clearColor()
+        let underline = UIView()
+        underline.backgroundColor = self.textColor()
+        header.addSubview(underline)
+        
+        let nameTitle = UILabel()
+        nameTitle.text = NSLocalizedString("Companies title", tableName: "Cliqz", comment: "Antitracking UI title for companies column")
+        
+        nameTitle.font = UIFont.systemFontOfSize(12)
+        nameTitle.textColor = self.textColor()
+        nameTitle.textAlignment = .Left
+        header.addSubview(nameTitle)
+        
+        let countTitle = UILabel()
+        countTitle.text = NSLocalizedString("Trackers count title", tableName: "Cliqz", comment: "Antitracking UI title for tracked count column")
+        countTitle.font = UIFont.systemFontOfSize(12)
+        countTitle.textColor = self.textColor()
+        countTitle.textAlignment = .Right
+        header.addSubview(countTitle)
+        
+        nameTitle.snp_makeConstraints { (make) in
+            make.left.top.equalTo(header)
+            make.height.equalTo(20)
+            make.right.equalTo(countTitle.snp_left)
+        }
+        underline.snp_makeConstraints { (make) in
+            make.left.right.equalTo(header)
+            make.height.equalTo(1)
+            make.top.equalTo(nameTitle.snp_bottom)
+        }
+        countTitle.snp_makeConstraints { (make) in
+            make.right.top.equalTo(header)
+            make.height.equalTo(20)
+            make.width.equalTo(header).multipliedBy(0.5)
+        }
+        
+        return header
+    }
 }
 
 extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate {
@@ -249,54 +299,9 @@ extension AntitrackingViewController: UITableViewDataSource, UITableViewDelegate
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		return 30
 	}
-
-	func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		return 30
-	}
 	
 	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return 3
-	}
-
-	func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		let header = UIView()
-		header.backgroundColor = UIColor.clearColor()
-		let underline = UIView()
-		underline.backgroundColor = self.textColor()
-		header.addSubview(underline)
-
-		let nameTitle = UILabel()
-		nameTitle.text = NSLocalizedString("Companies title", tableName: "Cliqz", comment: "Antitracking UI title for companies column")
-
-		nameTitle.font = UIFont.systemFontOfSize(12)
-		nameTitle.textColor = self.textColor()
-		nameTitle.textAlignment = .Left
-		header.addSubview(nameTitle)
-
-		let countTitle = UILabel()
-		countTitle.text = NSLocalizedString("Trackers count title", tableName: "Cliqz", comment: "Antitracking UI title for tracked count column")
-		countTitle.font = UIFont.systemFontOfSize(12)
-		countTitle.textColor = self.textColor()
-		countTitle.textAlignment = .Right
-		header.addSubview(countTitle)
-
-		nameTitle.snp_makeConstraints { (make) in
-			make.left.top.equalTo(header)
-			make.height.equalTo(20)
-			make.right.equalTo(countTitle.snp_left)
-		}
-		underline.snp_makeConstraints { (make) in
-			make.left.right.equalTo(header)
-			make.height.equalTo(1)
-			make.top.equalTo(nameTitle.snp_bottom)
-		}
-		countTitle.snp_makeConstraints { (make) in
-			make.right.top.equalTo(header)
-			make.height.equalTo(20)
-			make.width.equalTo(header).multipliedBy(0.5)
-		}
-
-		return header
 	}
 
 	func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

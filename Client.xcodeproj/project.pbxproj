@@ -230,6 +230,7 @@
 		1E79DEFF1D509986006BEB4A /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB81D5098CC006BEB4A /* Global.swift */; };
 		1E79DF001D50998D006BEB4A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DEB91D5098CC006BEB4A /* Info.plist */; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
+		1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -512,7 +513,6 @@
 		7B6FF7911C74A2C00007E196 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B604F9A1C4950F2006EEEC3 /* WebImage.framework */; };
 		7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B72E8211CAEC78100FB1D1C /* AppState.swift */; };
 		7B844E3D1BBDDB9D00E733A2 /* ChevronView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B844E3C1BBDDB9D00E733A2 /* ChevronView.swift */; };
-		7B8A47F61D01D3B400C07734 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8A47F51D01D3B400C07734 /* PassKit.framework */; };
 		7B9A61CD1C3EBFAE005C83DC /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A61CC1C3EBFAE005C83DC /* RXMLElement.m */; };
 		7BA0601B1C0F4DE200DFADB6 /* TabPeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA0601A1C0F4DE200DFADB6 /* TabPeekViewController.swift */; };
 		7BA4A9471C4CED900091D032 /* GCDWebServers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BA4A9451C4CED780091D032 /* GCDWebServers.framework */; };
@@ -1645,6 +1645,7 @@
 		1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "UITests copy-Info.plist"; path = "/Users/mahmoud/Cliqz/Repositories/cliqzfox-ios/UITests copy-Info.plist"; sourceTree = "<absolute>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
+		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
@@ -1888,7 +1889,6 @@
 		7B60B0071BDE3AE10090C984 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		7B72E8211CAEC78100FB1D1C /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		7B844E3C1BBDDB9D00E733A2 /* ChevronView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChevronView.swift; sourceTree = "<group>"; };
-		7B8A47F51D01D3B400C07734 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		7B95CD191C3AB2EE00638E31 /* MarketingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingUITests.swift; sourceTree = "<group>"; };
 		7B9A61CB1C3EBFAE005C83DC /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
 		7B9A61CC1C3EBFAE005C83DC /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
@@ -2289,7 +2289,6 @@
 				1E79DD5C1D4FB489006BEB4A /* AVFoundation.framework in Frameworks */,
 				1E79DD5A1D4FB484006BEB4A /* AudioToolbox.framework in Frameworks */,
 				1E79DD581D4FB464006BEB4A /* WebKit.framework in Frameworks */,
-				7B8A47F61D01D3B400C07734 /* PassKit.framework in Frameworks */,
 				A862970A1C9EE1020000B594 /* libPhoneNumber.framework in Frameworks */,
 				7B604F861C494983006EEEC3 /* Alamofire.framework in Frameworks */,
 				7B604F9B1C4950F2006EEEC3 /* WebImage.framework in Frameworks */,
@@ -2506,6 +2505,7 @@
 				1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */,
 				1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */,
 				1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */,
+				1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */,
 			);
 			path = AntiTracking;
 			sourceTree = "<group>";
@@ -3641,7 +3641,6 @@
 				1E79DD5B1D4FB489006BEB4A /* AVFoundation.framework */,
 				1E79DD591D4FB484006BEB4A /* AudioToolbox.framework */,
 				1E79DD571D4FB464006BEB4A /* WebKit.framework */,
-				7B8A47F51D01D3B400C07734 /* PassKit.framework */,
 				A8F9B1F11C9B49610028AAF8 /* libPhoneNumber.framework */,
 				7BA4A9631C4CFE840091D032 /* Deferred.framework */,
 				7BA4A94B1C4CF03B0091D032 /* SwiftKeychainWrapper.framework */,
@@ -5039,7 +5038,7 @@
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -5063,13 +5062,16 @@
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
+							};
+							com.apple.Wallet = {
+								enabled = 0;
 							};
 						};
 					};
@@ -5082,7 +5084,7 @@
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
@@ -5094,7 +5096,7 @@
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
@@ -6012,6 +6014,7 @@
 				1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */,
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
+				1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */,
 				4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */,
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
@@ -7246,7 +7249,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mahmoud Adam (A53FR6DCWM)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7262,7 +7265,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
-				PROVISIONING_PROFILE = "2af7c733-65f2-4ad9-af24-fda0cd1d8849";
+				PROVISIONING_PROFILE = "ccd580c4-f900-45b5-9043-3a59792e13f7";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Fennec;
@@ -7461,7 +7464,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Nightly;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7518,7 +7521,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7542,7 +7544,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7639,7 +7640,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7703,7 +7704,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7728,7 +7728,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7964,8 +7963,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mahmoud Adam (A53FR6DCWM)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7978,7 +7976,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2af7c733-65f2-4ad9-af24-fda0cd1d8849";
+				PROVISIONING_PROFILE = "ccd580c4-f900-45b5-9043-3a59792e13f7";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -7989,7 +7987,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8013,7 +8010,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8355,7 +8351,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8396,7 +8392,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8418,7 +8413,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8442,7 +8436,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8841,7 +8834,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Beta;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8901,7 +8894,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8923,7 +8915,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8947,7 +8938,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9289,8 +9279,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mahmoud Adam (A53FR6DCWM)";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9321,7 +9311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "ffd54272-0dc3-4876-addf-7c5335d24ba6";
+				PROVISIONING_PROFILE = "ccd580c4-f900-45b5-9043-3a59792e13f7";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
@@ -9349,8 +9339,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mahmoud Adam (A53FR6DCWM)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9363,7 +9352,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2af7c733-65f2-4ad9-af24-fda0cd1d8849";
+				PROVISIONING_PROFILE = "ccd580c4-f900-45b5-9043-3a59792e13f7";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -9375,8 +9364,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mahmoud Adam (A53FR6DCWM)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9389,7 +9377,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2af7c733-65f2-4ad9-af24-fda0cd1d8849";
+				PROVISIONING_PROFILE = "ccd580c4-f900-45b5-9043-3a59792e13f7";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};

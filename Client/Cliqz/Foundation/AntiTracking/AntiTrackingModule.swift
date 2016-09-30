@@ -56,12 +56,15 @@ class AntiTrackingModule: NSObject {
         if let blockResponse = getBlockResponseForRequest(requestInfo)
             where blockResponse.count > 0 {
             
-            // increment requests count for the webivew that issued this request
+            // update unsafe requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
                 let webView = WebViewToUAMapper.idToWebView(tabId) {
-                webView.incrementBadRequestsCount()
+                if let tabBlockInfo = getTabBlockingInfo(tabId),
+                    let requests = tabBlockInfo["requests"] as? [String : AnyObject],
+                    let unsafeRequestsCount = requests["unsafe"] as? Int {
+                        webView.updateUnsafeRequestsCount(unsafeRequestsCount)
+                    }
             }
-            
             
             BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             
@@ -75,20 +78,20 @@ class AntiTrackingModule: NSObject {
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
+            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
         }
     }
 
 	func getTrackersCount(webViewId: Int) -> Int {
 		if let webView = WebViewToUAMapper.idToWebView(webViewId) {
-			return webView.badRequests
+			return webView.unsafeRequests
 		}
 		return 0
 	}
 
     func getAntiTrackingStatistics(webViewId: Int) -> [(String, Int)] {
         var antiTrackingStatistics = [(String, Int)]()
-        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
-		if tabBlockInfo != nil {
+        if let tabBlockInfo = getTabBlockingInfo(webViewId) {
 			if let companies = tabBlockInfo["companies"] as? [String: [String]],
 				let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
 				
@@ -102,8 +105,14 @@ class AntiTrackingModule: NSObject {
 		}
         return antiTrackingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
-
+    
     //MARK: - Private Helpers
+    
+    private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
+        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
+        return tabBlockInfo
+    }
+    
     private func getCompanyBadRequestsCount(trackers: [String], allTrackers: [String: AnyObject]) -> Int {
         var badRequestsCount = 0
         for tracker in trackers {
@@ -273,7 +282,7 @@ class AntiTrackingModule: NSObject {
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
@@ -524,14 +533,8 @@ class AntiTrackingModule: NSObject {
         requestInfo["isPrivate"] = isPrivate
         requestInfo["originUrl"] = originUrl
         
-        // simple content type detection
-        var contentPolicyType = 11; // default is XMLHttpRequest
-        if (isMainDocument) {
-            contentPolicyType = 6;
-        } else if (url!.endsWith(".js")) {
-            contentPolicyType = 2;
-        }
         
+        let contentPolicyType = ContentPolicyDetector.getContentPolicy(request, isMainDocument: isMainDocument)
         requestInfo["type"] = contentPolicyType;
         
         
