@@ -232,6 +232,7 @@ public class BrowserDB {
                 }
             }
 
+            self.reopenIfClosed()
             if let _ = db.transaction({ connection -> Bool in
                 for table in tables {
                     doCreate(table, connection)
