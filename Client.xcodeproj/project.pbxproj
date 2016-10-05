@@ -231,6 +231,13 @@
 		1E79DF001D50998D006BEB4A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DEB91D5098CC006BEB4A /* Info.plist */; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */; };
+		1ECAE33D1DA4EE5800CB8102 /* ES5CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */; };
+		1ECAE33E1DA4EE5800CB8102 /* ES6CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */; };
+		1ECAE33F1DA4EE5800CB8102 /* ESCompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3331DA4EE5800CB8102 /* ESCompatTest.swift */; };
+		1ECAE3401DA4EE5800CB8102 /* core.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE3381DA4EE5800CB8102 /* core.js */; };
+		1ECAE3411DA4EE5800CB8102 /* es6-promise.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33A1DA4EE5800CB8102 /* es6-promise.js */; };
+		1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33B1DA4EE5800CB8102 /* es5tests.json */; };
+		1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33C1DA4EE5800CB8102 /* es6tests.json */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -1646,6 +1653,13 @@
 		1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "UITests copy-Info.plist"; path = "/Users/mahmoud/Cliqz/Repositories/cliqzfox-ios/UITests copy-Info.plist"; sourceTree = "<absolute>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPolicyDetector.swift; sourceTree = "<group>"; };
+		1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES5CompatTest.swift; sourceTree = "<group>"; };
+		1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES6CompatTest.swift; sourceTree = "<group>"; };
+		1ECAE3331DA4EE5800CB8102 /* ESCompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESCompatTest.swift; sourceTree = "<group>"; };
+		1ECAE3381DA4EE5800CB8102 /* core.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = core.js; sourceTree = "<group>"; };
+		1ECAE33A1DA4EE5800CB8102 /* es6-promise.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "es6-promise.js"; sourceTree = "<group>"; };
+		1ECAE33B1DA4EE5800CB8102 /* es5tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = es5tests.json; sourceTree = "<group>"; };
+		1ECAE33C1DA4EE5800CB8102 /* es6tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = es6tests.json; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
@@ -3110,6 +3124,7 @@
 		1E79DEB41D5098CC006BEB4A /* CliqzUITests */ = {
 			isa = PBXGroup;
 			children = (
+				1ECAE3301DA4EE5800CB8102 /* ESCompatTests */,
 				1E79DEB51D5098CC006BEB4A /* asdf.m */,
 				1E79DEB61D5098CC006BEB4A /* CliqzUITests-Bridging-Header.h */,
 				1E79DEB71D5098CC006BEB4A /* CliqzUITests.swift */,
@@ -3125,6 +3140,60 @@
 				1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */,
 			);
 			path = "Anti-Phishing";
+			sourceTree = "<group>";
+		};
+		1ECAE3301DA4EE5800CB8102 /* ESCompatTests */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE3331DA4EE5800CB8102 /* ESCompatTest.swift */,
+				1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */,
+				1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */,
+				1ECAE3341DA4EE5800CB8102 /* Resources */,
+			);
+			path = ESCompatTests;
+			sourceTree = "<group>";
+		};
+		1ECAE3341DA4EE5800CB8102 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE3351DA4EE5800CB8102 /* bower_components */,
+				1ECAE33B1DA4EE5800CB8102 /* es5tests.json */,
+				1ECAE33C1DA4EE5800CB8102 /* es6tests.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1ECAE3351DA4EE5800CB8102 /* bower_components */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE3361DA4EE5800CB8102 /* core.js */,
+				1ECAE3391DA4EE5800CB8102 /* es6-promise */,
+			);
+			path = bower_components;
+			sourceTree = "<group>";
+		};
+		1ECAE3361DA4EE5800CB8102 /* core.js */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE3371DA4EE5800CB8102 /* client */,
+			);
+			path = core.js;
+			sourceTree = "<group>";
+		};
+		1ECAE3371DA4EE5800CB8102 /* client */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE3381DA4EE5800CB8102 /* core.js */,
+			);
+			path = client;
+			sourceTree = "<group>";
+		};
+		1ECAE3391DA4EE5800CB8102 /* es6-promise */ = {
+			isa = PBXGroup;
+			children = (
+				1ECAE33A1DA4EE5800CB8102 /* es6-promise.js */,
+			);
+			path = "es6-promise";
 			sourceTree = "<group>";
 		};
 		282731601ABC9BE600AA1954 /* Supporting Files */ = {
@@ -5278,6 +5347,10 @@
 				1E79DEEE1D5098F6006BEB4A /* youtube.ico in Resources */,
 				1E79DEEF1D5098F6006BEB4A /* KIFHelper.js in Resources */,
 				1E79DF001D50998D006BEB4A /* Info.plist in Resources */,
+				1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */,
+				1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */,
+				1ECAE3411DA4EE5800CB8102 /* es6-promise.js in Resources */,
+				1ECAE3401DA4EE5800CB8102 /* core.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5606,6 +5679,9 @@
 				1E79DEFD1D50997B006BEB4A /* asdf.m in Sources */,
 				1E79DEFE1D509981006BEB4A /* CliqzUITests.swift in Sources */,
 				1E79DEFF1D509986006BEB4A /* Global.swift in Sources */,
+				1ECAE33F1DA4EE5800CB8102 /* ESCompatTest.swift in Sources */,
+				1ECAE33D1DA4EE5800CB8102 /* ES5CompatTest.swift in Sources */,
+				1ECAE33E1DA4EE5800CB8102 /* ES6CompatTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

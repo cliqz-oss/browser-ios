@@ -1,0 +1,235 @@
+ [{
+  "name": "Object/array literal extensions",
+  "significance": "large",
+  "subtests": [{
+               "name": "Getter accessors",
+               "exec": "function () {\n      return ({ get x(){ return 1 } }).x === 1;\n    }"
+               }, {
+               "name": "Setter accessors",
+               "exec": "function () {\n      var value = 0;\n      ({ set x(v){ value = v; } }).x = 1;\n      return value === 1;\n    }"
+               }, {
+               "name": "Trailing commas in object literals",
+               "exec": "function () {\n      return { a: true, }.a === true;\n    }"
+               }, {
+               "name": "Trailing commas in array literals",
+               "exec": "function () {\n      return [1,].length === 1;\n    }"
+               }, {
+               "name": "Reserved words as property names",
+               "exec": "function () {\n      return ({ if: 1 }).if === 1;\n    }"
+               }]
+  }, {
+  "name": "Object static methods",
+  "significance": "large",
+  "subtests": [{
+               "name": "Object.create",
+               "exec": "function () {\n      return typeof Object.create == 'function';\n    }"
+               }, {
+               "name": "Object.defineProperty",
+               "exec": "function () {\n      return typeof Object.defineProperty == 'function';\n    }"
+               }, {
+               "name": "Object.defineProperties",
+               "exec": "function () {\n      return typeof Object.defineProperties == 'function';\n    }"
+               }, {
+               "name": "Object.getPrototypeOf",
+               "exec": "function () {\n      return typeof Object.getPrototypeOf == 'function';\n    }"
+               }, {
+               "name": "Object.keys",
+               "exec": "function () {\n      return typeof Object.keys == 'function';\n    }"
+               }, {
+               "name": "Object.seal",
+               "exec": "function () {\n      return typeof Object.seal == 'function';\n    }"
+               }, {
+               "name": "Object.freeze",
+               "exec": "function () {\n      return typeof Object.freeze == 'function';\n    }"
+               }, {
+               "name": "Object.preventExtensions",
+               "exec": "function () {\n      return typeof Object.preventExtensions == 'function';\n    }"
+               }, {
+               "name": "Object.isSealed",
+               "exec": "function () {\n      return typeof Object.isSealed == 'function';\n    }"
+               }, {
+               "name": "Object.isFrozen",
+               "exec": "function () {\n      return typeof Object.isFrozen == 'function';\n    }"
+               }, {
+               "name": "Object.isExtensible",
+               "exec": "function () {\n      return typeof Object.isExtensible == 'function';\n    }"
+               }, {
+               "name": "Object.getOwnPropertyDescriptor",
+               "exec": "function () {\n      return typeof Object.getOwnPropertyDescriptor == 'function';\n    }"
+               }, {
+               "name": "Object.getOwnPropertyNames",
+               "exec": "function () {\n      return typeof Object.getOwnPropertyNames == 'function';\n    }"
+               }]
+  }, {
+  "name": "Array methods",
+  "significance": "large",
+  "subtests": [{
+               "name": "Array.isArray",
+               "exec": "function () {\n      return typeof Array.isArray == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.indexOf",
+               "exec": "function () {\n      return typeof Array.prototype.indexOf == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.lastIndexOf",
+               "exec": "function () {\n      return typeof Array.prototype.lastIndexOf == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.every",
+               "exec": "function () {\n      return typeof Array.prototype.every == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.some",
+               "exec": "function () {\n      return typeof Array.prototype.some == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.forEach",
+               "exec": "function () {\n      return typeof Array.prototype.forEach == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.map",
+               "exec": "function () {\n      return typeof Array.prototype.map == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.filter",
+               "exec": "function () {\n      return typeof Array.prototype.filter == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.reduce",
+               "exec": "function () {\n      return typeof Array.prototype.reduce == 'function';\n    }"
+               }, {
+               "name": "Array.prototype.reduceRight",
+               "exec": "function () {\n      return typeof Array.prototype.reduceRight == 'function';\n    }"
+               }]
+  }, {
+  "name": "String properties and methods",
+  "significance": "small",
+  "subtests": [{
+               "name": "Property access on strings",
+               "exec": "function () {\n      return \"foobar\"[3] === \"b\";\n    }"
+               }, {
+               "name": "String.prototype.trim",
+               "exec": "function () {\n      return typeof String.prototype.trim == 'function';\n    }"
+               }]
+  }, {
+  "name": "Date methods",
+  "significance": "small",
+  "subtests": [{
+               "name": "Date.prototype.toISOString",
+               "exec": "function () {\n      return typeof Date.prototype.toISOString == 'function';\n    }"
+               }, {
+               "name": "Date.now",
+               "exec": "function () {\n      return typeof Date.now == 'function';\n    }"
+               }, {
+               "name": "Date.prototype.toJSON",
+               "exec": "function () {\n      try {\n        return Date.prototype.toJSON.call(new Date(NaN)) === null;\n      } catch (e) {\n        return false;\n      }\n    }"
+               }]
+  }, {
+  "name": "Function.prototype.bind",
+  "significance": "medium",
+  "subtests": []
+  }, {
+  "name": "JSON",
+  "significance": "medium",
+  "subtests": []
+  }, {
+  "name": "Immutable globals",
+  "significance": "small",
+  "subtests": [{
+               "name": "undefined",
+               "exec": "function () {\n      undefined = 12345;\n      var result = typeof undefined == 'undefined';\n      undefined = void 0;\n      return result;\n    }"
+               }, {
+               "name": "NaN",
+               "exec": "function () {\n      NaN = false;\n      var result = typeof NaN == 'number';\n      NaN = Math.sqrt(-1);\n      return result;\n    }"
+               }, {
+               "name": "Infinity",
+               "exec": "function () {\n      Infinity = false;\n      var result = typeof Infinity == 'number';\n      Infinity = 1/0;\n      return result;\n    }"
+               }]
+  }, {
+  "name": "Miscellaneous",
+  "significance": "medium",
+  "subtests": [{
+               "skip": true,
+               "name": "Array.prototype.sort: compareFn must be function or undefined",
+               "exec": "function () {\n      try {\n        [1,2].sort(null);\n        return false;\n      } catch (enull) {}\n      try {\n        [1,2].sort(true);\n        return false;\n      } catch (etrue) {}\n      try {\n        [1,2].sort({});\n        return false;\n      } catch (eobj) {}\n      try {\n        [1,2].sort([]);\n        return false;\n      } catch (earr) {}\n      try {\n        [1,2].sort(/a/g);\n        return false;\n      } catch (eregex) {}\n      return true;\n    }"
+               }, {
+               "name": "Array.prototype.sort: compareFn may be explicit undefined",
+               "exec": "function () {\n      try {\n        var arr = [2, 1];\n        return arr.sort(undefined) === arr && arr[0] === 1 && arr[1] === 2;\n      } catch (e) {\n        return false;\n      }\n    }"
+               }, {
+               "name": "Function.prototype.apply permits array-likes",
+               "exec": "function () {\n      return (function(a,b) { return a === 1 && b === 2; }).apply({}, {0:1, 1:2, length:2});\n    }"
+               }, {
+               "name": "parseInt ignores leading zeros",
+               "exec": "function () {\n      return parseInt('010') === 10;\n    }"
+               }, {
+               "name": "Function \"prototype\" property is non-enumerable",
+               "exec": "function () {\n      return !Function().propertyIsEnumerable('prototype');\n    }"
+               }, {
+               "name": "Arguments toStringTag is \"Arguments\"",
+               "exec": "function () {\n      return (function(){ return Object.prototype.toString.call(arguments) === '[object Arguments]'; }());\n    }"
+               }, {
+               "name": "Zero-width chars in identifiers",
+               "exec": "function () {\n      var _\\u200c\\u200d = true;\n      return _\\u200c\\u200d;\n    }"
+               }, {
+               "name": "Unreserved words",
+               "exec": "function () {\n      var abstract, boolean, byte, char, double, final, float, goto, int, long,\n        native, short, synchronized, transient, volatile;\n      return true;\n    }"
+               }, {
+               "skip": true,
+               "name": "Enumerable properties can be shadowed by non-enumerables",
+               "exec": "function () {\n      var result = true;\n      Object.prototype.length = 42;\n      for (var i in Function) {\n          if (i == 'length') {\n              result = false;\n          }\n      }\n      delete Object.prototype.length;\n      return result;\n    }"
+               }, {
+               "name": "Thrown functions have proper \"this\" values",
+               "exec": "function () {\n      try {\n        throw function() { return !('a' in this); };\n      }\n      catch(e) {\n        var a = true;\n        return e();\n      }\n    }"
+               }]
+  }, {
+  "name": "Strict mode",
+  "significance": "large",
+  "subtests": [{
+               "name": "reserved words",
+               "exec": "function () {\n      'use strict';\n      var words = 'implements,interface,let,package,private,protected,public,static,yield'.split(',');\n      for (var i = 0; i < 9; i+=1) {\n        try { eval('var ' + words[i]); return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      }\n      return true;\n    }"
+               }, {
+               "name": "\"this\" is undefined in functions",
+               "exec": "function () {\n      'use strict';\n      return this === undefined && (function(){ return this === undefined; }).call();\n    }"
+               }, {
+               "name": "\"this\" is not coerced to object in primitive methods",
+               "exec": "function () {\n      'use strict';\n      return (function(){ return typeof this === 'string' }).call('')\n        && (function(){ return typeof this === 'number' }).call(1)\n        && (function(){ return typeof this === 'boolean' }).call(true);\n    }"
+               }, {
+               "name": "\"this\" is not coerced to object in primitive accessors",
+               "exec": "function () {\n      'use strict';\n\n      function test(Class, instance) {\n        Object.defineProperty(Class.prototype, 'test', {\n          get: function () { passed = passed && this === instance; },\n          set: function () { passed = passed && this === instance; },\n          configurable: true\n        });\n\n        var passed = true;\n        instance.test;\n        instance.test = 42;\n        return passed;\n      }\n\n      return test(String, '')\n        && test(Number, 1)\n        && test(Boolean, true);\n    }"
+               }, {
+               "name": "legacy octal is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('010');     return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('\"\\\\010\"'); return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "assignment to unresolvable identifiers is a ReferenceError",
+               "exec": "function () {\n      'use strict';\n      try { eval('__i_dont_exist = 1'); } catch (err) { return err instanceof ReferenceError; }\n    }"
+               }, {
+               "name": "assignment to eval or arguments is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('eval = 1');      return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('arguments = 1'); return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('eval++');        return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('arguments++');   return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "assignment to non-writable properties is a TypeError",
+               "exec": "function () {\n      'use strict';\n      try { Object.defineProperty({},\"x\",{ writable: false }).x = 1; return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      try { Object.preventExtensions({}).x = 1;                      return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      try { ({ get x(){ } }).x = 1;                                  return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      try { (function f() { f = 123; })();                           return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "eval or arguments bindings is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('var eval');                return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('var arguments');           return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('(function(eval){})');      return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('(function(arguments){})'); return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('try{}catch(eval){}');      return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      try { eval('try{}catch(arguments){}'); return false; } catch (err) { if (!(err instanceof SyntaxError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "arguments.caller and arguments.callee is a TypeError",
+               "exec": "function () {\n      'use strict';\n      try { arguments.caller; return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      try { arguments.callee; return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "(function(){}).caller and (function(){}).arguments is a TypeError",
+               "exec": "function () {\n      'use strict';\n      try { (function(){}).caller;    return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      try { (function(){}).arguments; return false; } catch (err) { if (!(err instanceof TypeError)) return false; }\n      return true;\n    }"
+               }, {
+               "name": "arguments is unmapped",
+               "exec": "function () {\n      'use strict';\n      return (function(x){\n        x = 2;\n        return arguments[0] === 1;\n      })(1) && (function(x){\n        arguments[0] = 2;\n        return x === 1;\n      })(1);\n    }"
+               }, {
+               "name": "eval() can't create bindings",
+               "exec": "function () {\n      'use strict';\n      try { eval('var __some_unique_variable;'); __some_unique_variable; } catch (err) { return err instanceof ReferenceError; }\n    }"
+               }, {
+               "name": "deleting bindings is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('var x; delete x;'); } catch (err) { return err instanceof SyntaxError; }\n    }"
+               }, {
+               "name": "deleting non-configurable properties is a TypeError",
+               "exec": "function () {\n      'use strict';\n      try { delete Object.prototype; } catch (err) { return err instanceof TypeError; }\n    }"
+               }, {
+               "name": "\"with\" is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('with({}){}'); } catch (err) { return err instanceof SyntaxError; }\n    }"
+               }, {
+               "name": "repeated parameter names is a SyntaxError",
+               "exec": "function () {\n      'use strict';\n      try { eval('function f(x, x) { }'); } catch (err) { return err instanceof SyntaxError; }\n    }"
+               }, {
+               "name": "function expressions with matching name and argument are valid",
+               "exec": "function () {\n      var foo = function bar(bar) {'use strict'};\n      return typeof foo === 'function';\n    }"
+               }]
+  }]
