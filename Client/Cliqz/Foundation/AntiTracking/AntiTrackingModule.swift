@@ -168,6 +168,18 @@ class AntiTrackingModule: NSObject {
         
         // register methods
         registerNativeMethods()
+        loadJavascriptSource("timers")
+        
+        // Quick fix for iOS8: polyfill for ios8
+        if #available(iOS 10, *) {
+            context.evaluateScript("Promise = undefined")
+            loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+        } else if #available(iOS 9, *) {
+            loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+        } else {
+            loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+            loadJavascriptSource("/bower_components/core.js/client/core")
+        }
         
         
         // set up System global for module import
@@ -178,18 +190,6 @@ class AntiTrackingModule: NSObject {
         
         // load config file
         loadConfigFile()
-        
-        // load promise
-        loadJavascriptSource("/bower_components/es6-promise/es6-promise")
-        
-		// Quick fix for iOS8: polyfill for ios8
-        if #available(iOS 10, *) {
-            // ios 10 polyfill
-            loadJavascriptSource("/bower_components/core.js/client/core")
-        } else if #available(iOS 9, *) {
-		} else {
-			loadJavascriptSource("/bower_components/core.js/client/core")
-		}
 
         // create legacy CliqzUtils global
          context.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
@@ -222,6 +222,8 @@ class AntiTrackingModule: NSObject {
         let (sourceName, directory) = getSourceMetaData(sourcePath)
         if let path = NSBundle.mainBundle().pathForResource(sourceName, ofType: "js", inDirectory: directory), script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             context.evaluateScript(script);
+        } else {
+            print("Script not found: \(sourcePath)")
         }
     }
     
@@ -288,7 +290,8 @@ class AntiTrackingModule: NSObject {
     }
 
     private func registerLoadSubscriptMethod() {
-        let loadSubscript: @convention(block) String -> () = { subscriptName in
+        let loadSubscript: @convention(block) (String) -> () = { subscriptName in
+            print("Load: \(subscriptName)")
             self.loadJavascriptSource("/modules\(subscriptName)")
         }
         context.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
