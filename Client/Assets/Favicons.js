@@ -40,7 +40,7 @@ window.__firefox__.favicons = function() {
   
   function getFavicons() {
     var favicons = getAll();
-    webkit.messageHandlers.faviconsMessageHandler.postMessage(favicons);
+    __cliqzjs___faviconsMessageHandler(favicons);
   }
   
   return {
