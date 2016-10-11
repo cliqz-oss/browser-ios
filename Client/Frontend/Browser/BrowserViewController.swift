@@ -2100,17 +2100,19 @@ extension BrowserViewController: TabDelegate {
         tab.addHelper(favicons, name: FaviconManager.name())
 
 #if !CLIQZ
-        // Cliqz: disable adding login and context menu helpers as ther are not used
+        // Cliqz: disable adding login as it is not used
         // only add the logins helper if the tab is not a private browsing tab
         if !tab.isPrivate {
             let logins = LoginsHelper(tab: tab, profile: profile)
             tab.addHelper(logins, name: LoginsHelper.name())
         }
 
+#endif
+        
         let contextMenuHelper = ContextMenuHelper(tab: tab)
         contextMenuHelper.delegate = self
         tab.addHelper(contextMenuHelper, name: ContextMenuHelper.name())
-#endif
+        
         let errorHelper = ErrorPageHelper()
         tab.addHelper(errorHelper, name: ErrorPageHelper.name())
 
@@ -3372,16 +3374,6 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 actionSheetController.addAction(openNewTabAction)
             }
 
-			// Cliqz: Added Action handler for the long press to download Youtube videos
-			if YoutubeVideoDownloader.isYoutubeURL(url) {
-				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
-				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-					self.downloadVideoFromURL(dialogTitle!)
-					TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
-				}
-				actionSheetController.addAction(downloadVideo)
-			}
-
             if #available(iOS 9, *) {
                 // Cliqz: changed localized string for open in new private tab option to open in froget mode tab
 //                let openNewPrivateTabTitle = NSLocalizedString("Open In New Private Tab", tableName: "PrivateBrowsing", comment: "Context menu option for opening a link in a new private tab")
@@ -3394,7 +3386,17 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
             }
-
+            
+            // Cliqz: Added Action handler for the long press to download Youtube videos
+            if YoutubeVideoDownloader.isYoutubeURL(url) {
+                let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
+                let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                    self.downloadVideoFromURL(dialogTitle!)
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
+                }
+                actionSheetController.addAction(downloadVideo)
+            }
+            
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
@@ -3420,7 +3422,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 if photoAuthorizeStatus == PHAuthorizationStatus.Authorized || photoAuthorizeStatus == PHAuthorizationStatus.NotDetermined {
                     self.getImage(url) { UIImageWriteToSavedPhotosAlbum($0, nil, nil, nil) }
                 } else {
-                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.Alert)
+                    let accessDenied = UIAlertController(title: NSLocalizedString("CLIQZ would like to access your Photos", tableName: "Cliqz", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.Alert)
                     let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Default, handler: nil)
                     accessDenied.addAction(dismissAction)
                     let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.Default ) { (action: UIAlertAction!) -> Void in
