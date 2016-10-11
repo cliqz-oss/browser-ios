@@ -1278,6 +1278,8 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
+        // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+        /*
 		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
@@ -1286,7 +1288,8 @@ class BrowserViewController: UIViewController {
 			}
 			activities.append(youtubeDownloader)
 		}
-
+        */
+        
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
             // Cliqz: log telemetry signal for share menu
@@ -3388,7 +3391,8 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
             }
-            
+            // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+            /*
             // Cliqz: Added Action handler for the long press to download Youtube videos
             if YoutubeVideoDownloader.isYoutubeURL(url) {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
@@ -3398,7 +3402,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 }
                 actionSheetController.addAction(downloadVideo)
             }
-            
+            */
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
