@@ -3369,6 +3369,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
@@ -3382,6 +3383,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
@@ -3401,12 +3403,14 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
                 pasteBoard.URL = url
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
             }
             actionSheetController.addAction(copyAction)
 
             let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
             let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.Default) { _ in
                 self.presentActivityViewController(url, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .Any)
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
             }
             actionSheetController.addAction(shareAction)
         }
@@ -3430,6 +3434,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                     }
                     accessDenied.addAction(settingsAction)
                     self.presentViewController(accessDenied, animated: true, completion: nil)
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image"))
 
                 }
             }
@@ -3460,6 +3465,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
                         application.endBackgroundTask(taskId)
                 }
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "image"))
             }
             actionSheetController.addAction(copyAction)
         }
@@ -3472,7 +3478,10 @@ extension BrowserViewController: ContextMenuHelperDelegate {
         }
 
         actionSheetController.title = dialogTitle?.ellipsize(maxLength: ActionSheetTitleMaxLength)
-        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel){ (action: UIAlertAction) -> Void in
+            let view = elements.link != nil ? "link" : "image"
+            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+        }
         actionSheetController.addAction(cancelAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
