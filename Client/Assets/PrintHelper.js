@@ -5,6 +5,6 @@
 (function() {
     "use strict";
     window.print = function() {
-        webkit.messageHandlers.printHandler.postMessage({})
+        __cliqzjs___printHandler({})
     };
 }) ();

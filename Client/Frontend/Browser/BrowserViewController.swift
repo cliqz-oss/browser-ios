@@ -1278,6 +1278,8 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
+        // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+        /*
 		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
@@ -1286,7 +1288,8 @@ class BrowserViewController: UIViewController {
 			}
 			activities.append(youtubeDownloader)
 		}
-
+        */
+        
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
             // Cliqz: log telemetry signal for share menu
@@ -2100,17 +2103,19 @@ extension BrowserViewController: TabDelegate {
         tab.addHelper(favicons, name: FaviconManager.name())
 
 #if !CLIQZ
-        // Cliqz: disable adding login and context menu helpers as ther are not used
+        // Cliqz: disable adding login as it is not used
         // only add the logins helper if the tab is not a private browsing tab
         if !tab.isPrivate {
             let logins = LoginsHelper(tab: tab, profile: profile)
             tab.addHelper(logins, name: LoginsHelper.name())
         }
 
+#endif
+        
         let contextMenuHelper = ContextMenuHelper(tab: tab)
         contextMenuHelper.delegate = self
         tab.addHelper(contextMenuHelper, name: ContextMenuHelper.name())
-#endif
+        
         let errorHelper = ErrorPageHelper()
         tab.addHelper(errorHelper, name: ErrorPageHelper.name())
 
@@ -3367,20 +3372,11 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
             }
-
-			// Cliqz: Added Action handler for the long press to download Youtube videos
-			if YoutubeVideoDownloader.isYoutubeURL(url) {
-				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
-				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-					self.downloadVideoFromURL(dialogTitle!)
-					TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
-				}
-				actionSheetController.addAction(downloadVideo)
-			}
 
             if #available(iOS 9, *) {
                 // Cliqz: changed localized string for open in new private tab option to open in froget mode tab
@@ -3390,21 +3386,35 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
             }
-
+            // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+            /*
+            // Cliqz: Added Action handler for the long press to download Youtube videos
+            if YoutubeVideoDownloader.isYoutubeURL(url) {
+                let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
+                let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                    self.downloadVideoFromURL(dialogTitle!)
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
+                }
+                actionSheetController.addAction(downloadVideo)
+            }
+            */
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
                 pasteBoard.URL = url
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
             }
             actionSheetController.addAction(copyAction)
 
             let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
             let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.Default) { _ in
                 self.presentActivityViewController(url, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .Any)
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
             }
             actionSheetController.addAction(shareAction)
         }
@@ -3420,7 +3430,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 if photoAuthorizeStatus == PHAuthorizationStatus.Authorized || photoAuthorizeStatus == PHAuthorizationStatus.NotDetermined {
                     self.getImage(url) { UIImageWriteToSavedPhotosAlbum($0, nil, nil, nil) }
                 } else {
-                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.Alert)
+                    let accessDenied = UIAlertController(title: NSLocalizedString("CLIQZ would like to access your Photos", tableName: "Cliqz", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.Alert)
                     let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Default, handler: nil)
                     accessDenied.addAction(dismissAction)
                     let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.Default ) { (action: UIAlertAction!) -> Void in
@@ -3428,6 +3438,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                     }
                     accessDenied.addAction(settingsAction)
                     self.presentViewController(accessDenied, animated: true, completion: nil)
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image"))
 
                 }
             }
@@ -3458,6 +3469,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
                         application.endBackgroundTask(taskId)
                 }
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "image"))
             }
             actionSheetController.addAction(copyAction)
         }
@@ -3470,7 +3482,10 @@ extension BrowserViewController: ContextMenuHelperDelegate {
         }
 
         actionSheetController.title = dialogTitle?.ellipsize(maxLength: ActionSheetTitleMaxLength)
-        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel){ (action: UIAlertAction) -> Void in
+            let view = elements.link != nil ? "link" : "image"
+            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+        }
         actionSheetController.addAction(cancelAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }

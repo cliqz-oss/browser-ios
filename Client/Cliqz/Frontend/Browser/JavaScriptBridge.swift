@@ -128,9 +128,12 @@ class JavaScriptBridge {
 			
         case "browserAction":
             if let actionData = data as? [String: AnyObject], let actionType = actionData["type"] as? String {
-                if actionType == "phoneNumber" {
-                    self.callPhoneNumber(actionData["data"])
+                if let phoneNumber = actionData["data"] as? String where actionType == "phoneNumber" {
+                    self.callPhoneNumber(phoneNumber)
+                } else if let mapURL = actionData["data"] as? String where actionType == "map" {
+                    self.openGoogleMaps(mapURL)
                 }
+
             }
             
         case "pushTelemetry":
@@ -249,13 +252,25 @@ class JavaScriptBridge {
         }
 	}
 
-    private func callPhoneNumber(data: AnyObject?) {
-        if let phoneNumber = data as? String {
-            let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
-            if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
-                UIApplication.sharedApplication().openURL(url)
+    private func callPhoneNumber(phoneNumber: String) {
+        let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
+        if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
+            UIApplication.sharedApplication().openURL(url)
+        }
+    }
+    
+    private func openGoogleMaps(url: String) {
+        if UIApplication.sharedApplication().canOpenURL(
+            NSURL(string: "comgooglemapsurl://")!) {
+            let escapedURL = url.replace("https%3A//", replacement: "")
+            
+            if let mapURL = NSURL(string:"comgooglemapsurl://\(escapedURL)") {
+                UIApplication.sharedApplication().openURL(mapURL)
             }
         }
+
+        
+        
     }
     
 }

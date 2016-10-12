@@ -34,13 +34,11 @@ class ContextMenuHelper: NSObject, TabHelper, UIGestureRecognizerDelegate {
         super.init()
         self.tab = tab
 
-#if !CLIQZ
         // Cliqz: disable adding context menu user script as it is not used
         let path = NSBundle.mainBundle().pathForResource("ContextMenu", ofType: "js")!
         let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
         let userScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
         tab.webView!.configuration.userContentController.addUserScript(userScript)
-#endif
         // Add a gesture recognizer that disables the built-in context menu gesture recognizer.
         gestureRecognizer.delegate = self
         tab.webView!.addGestureRecognizer(gestureRecognizer)

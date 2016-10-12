@@ -14,7 +14,7 @@
     var _close = window.close;
  
     window.close = function () {
-        webkit.messageHandlers.windowCloseHelper.postMessage(null);
+        __cliqzjs___windowCloseHelper(null);
         _close.apply(this, arguments);
     };
     // A close message applies to the current window, so we need to execute the
