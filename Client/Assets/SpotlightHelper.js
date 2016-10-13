@@ -25,7 +25,7 @@
 
   window.addEventListener("load", function() {
      var payload = assemblePayload(document, selectors);
-     webkit.messageHandlers.spotlightMessageHandler.postMessage(payload);
+     __cliqzjs___spotlightMessageHandler(payload);
   });
 
 })()

@@ -61,6 +61,7 @@
 	<array>
 		<string>itms-books</string>
 		<string>org-appextension-feature-password-management</string>
+		<string>comgooglemapsurl</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

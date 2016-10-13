@@ -30,6 +30,7 @@ public enum TelemetryLogEventType {
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: AnyObject]?)
+    case ContextMenu            (String, String)
 }
 
 
@@ -154,6 +155,10 @@ class TelemetryLogger : EventsLogger {
                 
             case .DashBoard (let type, let action, let target, let customData):
                 event = self.createDashBoardEvent(type, action: action, target: target, customData: customData)
+                
+                
+            case .ContextMenu (let target, let view):
+                event = self.createContextMenuEvent(target, view: view)
             
             default:
                 return
@@ -521,5 +526,18 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
+    
+    private func createContextMenuEvent(target: String, view: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "context_menu"
+        event["action"] = "click"
+        event["target"] = target
+        event["view"] = view
+        
+        return event
+    }
+    
     
 }
