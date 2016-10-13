@@ -53,8 +53,7 @@ class AntiTrackingModule: NSObject {
             return true
         }
         let requestInfo = getRequestInfo(request)
-        if let blockResponse = getBlockResponseForRequest(requestInfo)
-            where blockResponse.count > 0 {
+        if let blockResponse = getBlockResponseForRequest(requestInfo) where blockResponse.count > 0 {
             
             // update unsafe requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int,
@@ -170,13 +169,13 @@ class AntiTrackingModule: NSObject {
         registerNativeMethods()
         loadJavascriptSource("timers")
         
-        // Quick fix for iOS8: polyfill for ios8
         if #available(iOS 10, *) {
             context.evaluateScript("Promise = undefined")
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else if #available(iOS 9, *) {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else {
+			// Quick fix for iOS8: polyfill for ios8
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
             loadJavascriptSource("/bower_components/core.js/client/core")
         }
@@ -215,9 +214,8 @@ class AntiTrackingModule: NSObject {
         context.evaluateScript("setTimeout(function() { "
             + "System.import(\"platform/startup\").then(function(startup) { startup.default() }).catch(function(e) { logDebug(e, 'xxx') });"
             + "}, 200)")
-        
     }
-    
+
     private func loadJavascriptSource(sourcePath: String) {
         let (sourceName, directory) = getSourceMetaData(sourcePath)
         if let path = NSBundle.mainBundle().pathForResource(sourceName, ofType: "js", inDirectory: directory), script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
@@ -247,7 +245,7 @@ class AntiTrackingModule: NSObject {
     }
     
     private func loadConfigFile() {
-        if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "\(antiTrackingDirectory)/config"), script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
+        if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "\(antiTrackingDirectory)/config"), let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let formatedScript = script.replace("\"", replacement: "\\\"").replace("\n", replacement: "")
             let configScript = "var __CONFIG__ = JSON.parse(\"\(formatedScript)\");"
             context.evaluateScript(configScript)
@@ -290,9 +288,8 @@ class AntiTrackingModule: NSObject {
     }
 
     private func registerLoadSubscriptMethod() {
-        let loadSubscript: @convention(block) (String) -> () = { subscriptName in
-            print("Load: \(subscriptName)")
-            self.loadJavascriptSource("/modules\(subscriptName)")
+        let loadSubscript: @convention(block) (String) -> () = {[weak self] subscriptName in
+            self?.loadJavascriptSource("/modules\(subscriptName)")
         }
         context.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
         
@@ -346,22 +343,27 @@ class AntiTrackingModule: NSObject {
         }
         context.setObject(unsafeBitCast(clearInterval, AnyObject.self), forKeyedSubscript: "clearInterval")
     }
-    
-    
+
     private func registerReadFileMethod() {
         let readFile: @convention(block) (String, JSValue) -> () = { path, callback in
-            dispatch_async(self.dispatchQueue) {
-                if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
-                    do {
-                        let content = try String(contentsOfURL: filePathURL)
-                        callback.callWithArguments([content])
-                    } catch {
-                        // files does not exist, do no thing
-                        callback.callWithArguments(nil)
-                    }
-                } else {
-                    callback.callWithArguments(nil)
-                }
+            dispatch_async(self.dispatchQueue) {[weak self] in
+				if var p = self?.documentDirectory {
+					do {
+						p.appendContentsOf("/\(path)")
+						let content = try String(contentsOfFile: p, encoding: NSUTF8StringEncoding)
+						if content == "undefined" {
+							// files does not exist, do no thing
+							callback.callWithArguments(nil)
+						} else {
+							callback.callWithArguments([content])
+						}
+					} catch let error as NSError {
+						// files does not exist, do no thing
+						callback.callWithArguments(nil)
+					}
+				} else {
+					callback.callWithArguments(nil)
+				}
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
@@ -369,24 +371,22 @@ class AntiTrackingModule: NSObject {
     }
     
     private func registerWriteFileMethod() {
-        let writeFile: @convention(block) (String, String) -> () = { path, data in
-            if let filePathURL = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
+        let writeFile: @convention(block) (String, String) -> () = {[weak self] path, data in
+            if let p = self?.documentDirectory, filePathURL = NSURL(fileURLWithPath: p).URLByAppendingPathComponent(path) {
                 do {
                     try data.writeToURL(filePathURL, atomically: true, encoding: NSUTF8StringEncoding)
-                    
                 } catch let error as NSError {
-                    print(error)
+                    print("WriteFile Failed: ---- \(error)")
                 }
             }
-            
         }
         context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
         context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeTempFile")
     }
     
     private func registerMkTempDirMethod() {
-        let mkTempDir: @convention(block) (String) -> () = { path in
-            self.createTempDir(path)
+        let mkTempDir: @convention(block) (String) -> () = {[weak self] path in
+            self?.createTempDir(path)
         }
         context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
     }
@@ -412,6 +412,7 @@ class AntiTrackingModule: NSObject {
         }
         context.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
     }
+
     private func registerSendTelemetryMethod() {
         let sendTelemetry: @convention(block) (String) -> () = { telemetry in
             guard let data = telemetry.dataUsingEncoding(NSUTF8StringEncoding) else {
@@ -431,73 +432,78 @@ class AntiTrackingModule: NSObject {
         }
         context.setObject(unsafeBitCast(sendTelemetry, AnyObject.self), forKeyedSubscript: "sendTelemetry")
     }
+
     private func registerHttpHandlerMethod() {
-        let httpHandler: @convention(block) (String, String, JSValue, JSValue, Int, String) -> () = { method, requestedUrl, callback, onerror, timeout, data in
-            if requestedUrl.startsWith("chrome://") {
-                let (fileName, fileExtension, directory) = self.getFileMetaData(requestedUrl)
-                if let path = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension, inDirectory: directory), content = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
-                    callback.callWithArguments([content])
-                } else {
-                    onerror.callWithArguments(["Not Found"])
-                }
-            } else {
-                var hasError = false
-                
-                //                if NetworkReachability.sharedInstance.networkReachabilityStatus != .ReachableViaWiFi {
-                //                    hasError = true
-                //                } else {
-                if method == "GET" {
-                    ConnectionManager.sharedInstance
-                        .sendRequest(.GET,
-                                     url: requestedUrl,
-                                     parameters: nil,
-                                     responseType: .StringResponse,
-                                     onSuccess: { responseData in
-                                        self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
-                            },
-                                     onFailure: { (error) in
-                                        onerror.callWithArguments(nil)
-                        })
-                    
-                } else if method == "POST" {
-                    
-                    ConnectionManager.sharedInstance
-                        .sendPostRequestWithBody(requestedUrl,
-                                                 body: data,
-                                                 responseType: .StringResponse,
-                                                 enableCompression: false,
-                                                 onSuccess: { responseData in
-                                                    self.httpHandlerReply(responseData, callback: callback, onerror: onerror)
-                            },
-                                                 onFailure: { (error) in
-                                                    onerror.callWithArguments(nil)
-                        })
-                    
-                } else {
-                    hasError = true
-                }
-                //                }
-                
-                if hasError {
-                    onerror.callWithArguments([])
-                }
-            }
-            
-        }
+        let httpHandler: @convention(block) (String, String, JSValue, JSValue, Int, String) -> () = {[weak self] method, requestedUrl, callback, onerror, timeout, data in
+			if let q = self?.dispatchQueue {
+				dispatch_async(q) {
+					if requestedUrl.startsWith("chrome://") {
+						if let (fileName, fileExtension, directory) = self?.getFileMetaData(requestedUrl),
+							path = NSBundle.mainBundle().pathForResource(fileName, ofType: fileExtension, inDirectory: directory),
+							content = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
+							if content == "undefined" {
+								onerror.callWithArguments(["Not Found"])
+							} else {
+								self?.httpHandlerReply(content, callback: callback, onerror: onerror)
+							}
+						} else {
+								onerror.callWithArguments(["Not Found"])
+						}
+					} else {
+						var hasError = false
+						if method == "GET" {
+							ConnectionManager.sharedInstance
+								.sendRequest(.GET,
+											 url: requestedUrl,
+											 parameters: nil,
+											 responseType: .StringResponse,
+											 onSuccess: { responseData in
+												self?.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+									},
+											 onFailure: { (error) in
+												onerror.callWithArguments(nil)
+								})
+							
+						} else if method == "POST" {
+							ConnectionManager.sharedInstance
+								.sendPostRequestWithBody(requestedUrl,
+														 body: data,
+														 responseType: .StringResponse,
+														 enableCompression: false,
+														 onSuccess: { responseData in
+															self?.httpHandlerReply(responseData, callback: callback, onerror: onerror)
+									},
+														 onFailure: { (error) in
+															onerror.callWithArguments(nil)
+								})
+						} else {
+							hasError = true
+						}
+						if hasError {
+							onerror.callWithArguments([])
+						}
+					}
+				}
+			} else {
+				onerror.callWithArguments(nil)
+			}
+		}
         context.setObject(unsafeBitCast(httpHandler, AnyObject.self), forKeyedSubscript: "httpHandler")
     }
+
     private func httpHandlerReply(responseString: AnyObject, callback: JSValue, onerror: JSValue) {
         let response = ["status": 200, "responseText": responseString, "response": responseString]
         callback.callWithArguments([response])
-    }
+	}
+
     private func getFileMetaData(requestedUrl: String) -> (String, String, String) {
         var fileName: String
         var fileExtension: String = "js" // default is js
         var directory: String
-        
+		
         var sourcePath = requestedUrl.replace("chrome://cliqz/content", replacement: "/modules")
         sourcePath = sourcePath.replace("/v8", replacement: "")
-        
+		
         if sourcePath.contains("/") {
             var pathComponents = sourcePath.componentsSeparatedByString("/")
             fileName = pathComponents.last!
@@ -524,8 +530,7 @@ class AntiTrackingModule: NSObject {
         let tabId = getTabId(userAgent)
         let isPrivate = false
         let originUrl = request.mainDocumentURL?.absoluteString
-        
-        
+
         var requestInfo = [String: AnyObject]()
         requestInfo["url"] = url
         requestInfo["method"] = request.HTTPMethod
@@ -535,12 +540,10 @@ class AntiTrackingModule: NSObject {
         requestInfo["frameId"] = tabId ?? -1
         requestInfo["isPrivate"] = isPrivate
         requestInfo["originUrl"] = originUrl
-        
-        
+
         let contentPolicyType = ContentPolicyDetector.getContentPolicy(request, isMainDocument: isMainDocument)
         requestInfo["type"] = contentPolicyType;
-        
-        
+
         requestInfo["requestHeaders"] = request.allHTTPHeaderFields
         return requestInfo
     }
@@ -548,7 +551,7 @@ class AntiTrackingModule: NSObject {
     private func isTabActive(tabId: Int?) -> Bool {
         return WebViewToUAMapper.idToWebView(tabId) != nil
     }
-    
+
     private func getTabId(userAgent: String?) -> Int? {
         if let webView = WebViewToUAMapper.userAgentToWebview(userAgent) {
             return webView.uniqueId
@@ -557,7 +560,7 @@ class AntiTrackingModule: NSObject {
     }
     
     private func getBlockResponseForRequest(requestInfo: [String: AnyObject]) -> [NSObject : AnyObject]? {
-        
+
         if let requestInfoJsonString = toJSONString(requestInfo) {
             
             let onBeforeRequestCall = "System.get('platform/webrequest').default.onBeforeRequest._trigger(\(requestInfoJsonString));"
