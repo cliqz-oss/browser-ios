@@ -211,8 +211,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 
 	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-		stopLoadingAnimation()
-	}
+
+    }
 
 	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
         ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
@@ -411,6 +411,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
 	
 	func isReady() {
+        stopLoadingAnimation()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}
