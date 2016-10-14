@@ -131,11 +131,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
-
-		javaScriptBridge.setDefaultSearchEngine()
-		self.updateExtensionPreferences()
 	}
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.javaScriptBridge.publishEvent("show")
+        self.javaScriptBridge.setDefaultSearchEngine()
+        self.updateExtensionPreferences()
+    }
+    
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
     }
@@ -179,14 +183,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	func loadData(query: String) {
-		var JSString: String!
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-		var coordinates = ""
+		var parameters = "'\(q)'"
 		if let l = LocationManager.sharedInstance.location {
-			coordinates += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
+			parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
 		}
-		JSString = "jsAPI.search('\(q)'\(coordinates))"
-		self.webView!.evaluateJavaScript(JSString, completionHandler: nil)
+        self.javaScriptBridge.publishEvent("search", parameters: parameters)
 
         lastQuery = query
 	}
@@ -279,12 +281,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode]
-		javaScriptBridge.callJSMethod("jsAPI.setClientPreferences", parameter: params, completionHandler: nil)
+        javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
 
     //MARK: - Reset TopSites
     func showBlockedTopSites(notification: NSNotification) {
-        javaScriptBridge.callJSMethod("jsAPI.restoreBlockedTopSites", parameter: nil, completionHandler: nil)
+        javaScriptBridge.publishEvent("restore-blocked-topsites")
     }
     
     //MARK: - Guestures
@@ -341,7 +343,8 @@ extension CliqzSearchViewController {
             if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
                 configs["title"] = lastTitle
             }
-            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
+            
+            javaScriptBridge.publishEvent("reset-state", parameters: configs)
         } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
             configs["q"] = query
             // get current location if possible
@@ -349,7 +352,7 @@ extension CliqzSearchViewController {
                 configs["lat"] = currentLocation.coordinate.latitude
                 configs["long"] = currentLocation.coordinate.longitude
             }
-            javaScriptBridge.callJSMethod("jsAPI.resetState", parameter: configs, completionHandler: nil)
+            javaScriptBridge.publishEvent("reset-state", parameters: configs)
         }
         
         // reset local stored values
