@@ -11,11 +11,14 @@ import SnapKit
 
 class CliqzURLBarView: URLBarView {
 
+	private let antitrackingBackgroundColor = UIColor(rgb: 0x2CBA84)
+	private let antitrackingButtonSize = CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight))
+	
 	private lazy var antitrackingButton: UIButton = {
 		let button = UIButton(type: .Custom)
 		button.setTitle("0", forState: .Normal)
 		button.titleLabel?.font = UIFont.systemFontOfSize(12)
-		button.backgroundColor = UIColor(rgb: 0x2CBA84)
+		button.backgroundColor = self.antitrackingBackgroundColor
 		return button
 	}()
 	
@@ -37,8 +40,11 @@ class CliqzURLBarView: URLBarView {
 				make.trailing.equalTo(self).offset(x)
 			}
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
-				make.size.equalTo(CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight)))
+				make.size.equalTo(self.antitrackingButtonSize)
 			})
+			if self.antitrackingButton.backgroundColor != UIColor.clearColor() && self.antitrackingButton.bounds.size != CGSizeZero {
+				self.antitrackingButton.addRoundedCorners(cornersToRound: [.TopRight, .BottomRight], cornerRadius: CGSizeMake(URLBarViewUX.TextFieldCornerRadius, URLBarViewUX.TextFieldCornerRadius), color: self.antitrackingBackgroundColor)
+			}
 		} else {
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
 				make.size.equalTo(CGSizeMake(0, 0))
@@ -67,11 +73,12 @@ class CliqzURLBarView: URLBarView {
 		self.antitrackingButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 2, bottom: 5, right: 0)
 		self.antitrackingButton.imageEdgeInsets = UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 20)
 		self.antitrackingButton.addTarget(self, action: #selector(antitrackingButtonPressed), forControlEvents: .TouchUpInside)
-		addSubview	(self.antitrackingButton)
+		self.antitrackingButton.hidden = true
+		addSubview(self.antitrackingButton)
 		antitrackingButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.leading.equalTo(self.locationContainer.snp_trailing)
-			make.size.equalTo(CGSizeMake(40, CGFloat(URLBarViewUX.LocationHeight)))
+			make.size.equalTo(self.antitrackingButtonSize)
 		}
 	}
 	
