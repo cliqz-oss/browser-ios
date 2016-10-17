@@ -183,6 +183,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	func loadData(query: String) {
+        guard query != lastQuery else {
+            return
+        }
+        if query == "" && lastQuery == nil {
+            return
+        }
+        
 		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		var parameters = "'\(q)'"
 		if let l = LocationManager.sharedInstance.location {
