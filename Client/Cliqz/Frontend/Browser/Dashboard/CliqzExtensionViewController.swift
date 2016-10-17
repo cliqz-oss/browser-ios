@@ -63,7 +63,7 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
-		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
+        self.javaScriptBridge.publishEvent("show")
         viewAppearTime = NSDate.getCurrentMillis()
 	}
 
