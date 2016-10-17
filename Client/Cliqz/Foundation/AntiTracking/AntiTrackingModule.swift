@@ -73,7 +73,6 @@ class AntiTrackingModule: NSObject {
         return false
     }
 
-    
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
@@ -92,8 +91,8 @@ class AntiTrackingModule: NSObject {
         var antiTrackingStatistics = [(String, Int)]()
         if let tabBlockInfo = getTabBlockingInfo(webViewId) {
 			if let companies = tabBlockInfo["companies"] as? [String: [String]],
-				let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
-				
+			   let allTrackers = tabBlockInfo["trackers"] as? [String: AnyObject] {
+
 				for (company, trackers) in companies {
 					let badRequestsCount = getCompanyBadRequestsCount(trackers, allTrackers:allTrackers)
 					if badRequestsCount >= 0 {
@@ -106,7 +105,6 @@ class AntiTrackingModule: NSObject {
     }
     
     //MARK: - Private Helpers
-    
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
         let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
         return tabBlockInfo
@@ -124,7 +122,6 @@ class AntiTrackingModule: NSObject {
                 }
             }
         }
-        
         return badRequestsCount
     }
 
@@ -149,7 +146,6 @@ class AntiTrackingModule: NSObject {
 
     private func toJSONString(anyObject: AnyObject) -> String? {
         do {
-            
             if NSJSONSerialization.isValidJSONObject(anyObject) {
                 let jsonData = try NSJSONSerialization.dataWithJSONObject(anyObject, options: NSJSONWritingOptions(rawValue: 0))
                 let jsonString = String(data:jsonData, encoding: NSUTF8StringEncoding)!
@@ -180,7 +176,6 @@ class AntiTrackingModule: NSObject {
             loadJavascriptSource("/bower_components/core.js/client/core")
         }
         
-        
         // set up System global for module import
         context.evaluateScript("var exports = {}")
         loadJavascriptSource("system-polyfill")
@@ -192,8 +187,7 @@ class AntiTrackingModule: NSObject {
 
         // create legacy CliqzUtils global
          context.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
-        
-        
+
         // pref config
         context.evaluateScript("setTimeout(function () { "
             + "CliqzUtils.setPref(\"antiTrackTest\", true);"
@@ -257,7 +251,7 @@ class AntiTrackingModule: NSObject {
             print("JS Error: \(exception)")
         }
     }
-    
+
     private func registerNativeMethods() {
         registerMd5NativeMethod()
         registerLogDebugMethod()
@@ -312,7 +306,7 @@ class AntiTrackingModule: NSObject {
             self.timerCounter += 1
             let intervalInSeconds = interval / 1000
             let timeInterval = NSTimeInterval(intervalInSeconds)
-            
+
             dispatch_async(dispatch_get_main_queue()) {
                 let timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval,
                                                                    target: self,
@@ -321,12 +315,11 @@ class AntiTrackingModule: NSObject {
                                                                    repeats: true)
                 self.timers[timerId] = timer
             }
-            
             return timerId
         }
         context.setObject(unsafeBitCast(setInterval, AnyObject.self), forKeyedSubscript: "setInterval")
     }
-    
+
     @objc private func excuteJavaScriptFunction(timer: NSTimer) -> () {
         dispatch_async(dispatchQueue) {
             if let function = timer.userInfo as? JSValue {
@@ -334,7 +327,7 @@ class AntiTrackingModule: NSObject {
             }
         }
     }
-    
+
     private func registerClearIntervalMethod() {
         let clearInterval: @convention(block) Int -> () = { timerId in
             if let timer = self.timers[timerId] {
@@ -367,10 +360,10 @@ class AntiTrackingModule: NSObject {
             }
         }
         context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
-        context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
-    }
-    
-    private func registerWriteFileMethod() {
+		context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
+	}
+
+	private func registerWriteFileMethod() {
         let writeFile: @convention(block) (String, String) -> () = {[weak self] path, data in
             if let p = self?.documentDirectory, filePathURL = NSURL(fileURLWithPath: p).URLByAppendingPathComponent(path) {
                 do {
@@ -390,7 +383,7 @@ class AntiTrackingModule: NSObject {
         }
         context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
     }
-    
+
     private func createTempDir(path: String) {
         if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
             let tempDirectoryPath = tempDirectory.path {
@@ -402,10 +395,9 @@ class AntiTrackingModule: NSObject {
                     NSLog("Unable to create directory \(error.debugDescription)")
                 }
             }
-            
         }
     }
-    
+
     private func registerIsWindowActiveMethod() {
         let isWindowActive: @convention(block) (String) -> Bool = { tabId in
             return self.isTabActive(Int(tabId))
@@ -451,12 +443,14 @@ class AntiTrackingModule: NSObject {
 						}
 					} else {
 						var hasError = false
+						print(" registerHttpHandlerMethod THREAD--- \(NSThread.currentThread())")
 						if method == "GET" {
 							ConnectionManager.sharedInstance
 								.sendRequest(.GET,
 											 url: requestedUrl,
 											 parameters: nil,
 											 responseType: .StringResponse,
+											 queue: q,
 											 onSuccess: { responseData in
 												self?.httpHandlerReply(responseData, callback: callback, onerror: onerror)
 									},
@@ -469,7 +463,7 @@ class AntiTrackingModule: NSObject {
 								.sendPostRequestWithBody(requestedUrl,
 														 body: data,
 														 responseType: .StringResponse,
-														 enableCompression: false,
+														 enableCompression: false, queue: (self?.dispatchQueue)!,
 														 onSuccess: { responseData in
 															self?.httpHandlerReply(responseData, callback: callback, onerror: onerror)
 									},
@@ -500,10 +494,9 @@ class AntiTrackingModule: NSObject {
         var fileName: String
         var fileExtension: String = "js" // default is js
         var directory: String
-		
         var sourcePath = requestedUrl.replace("chrome://cliqz/content", replacement: "/modules")
         sourcePath = sourcePath.replace("/v8", replacement: "")
-		
+
         if sourcePath.contains("/") {
             var pathComponents = sourcePath.componentsSeparatedByString("/")
             fileName = pathComponents.last!
@@ -513,7 +506,7 @@ class AntiTrackingModule: NSObject {
             fileName = sourcePath
             directory = antiTrackingDirectory
         }
-        
+
         if fileName.contains(".") {
             let nameComponents = fileName.componentsSeparatedByString(".")
             fileName = nameComponents[0]
@@ -521,7 +514,7 @@ class AntiTrackingModule: NSObject {
         }
         return (fileName, fileExtension, directory)
     }
-    
+
     private func getRequestInfo(request: NSURLRequest) -> [String: AnyObject] {
         let url = request.URL?.absoluteString
         let userAgent = request.allHTTPHeaderFields?["User-Agent"]
@@ -547,7 +540,7 @@ class AntiTrackingModule: NSObject {
         requestInfo["requestHeaders"] = request.allHTTPHeaderFields
         return requestInfo
     }
-    
+
     private func isTabActive(tabId: Int?) -> Bool {
         return WebViewToUAMapper.idToWebView(tabId) != nil
     }
@@ -558,18 +551,14 @@ class AntiTrackingModule: NSObject {
         }
         return nil
     }
-    
+
     private func getBlockResponseForRequest(requestInfo: [String: AnyObject]) -> [NSObject : AnyObject]? {
 
         if let requestInfoJsonString = toJSONString(requestInfo) {
-            
             let onBeforeRequestCall = "System.get('platform/webrequest').default.onBeforeRequest._trigger(\(requestInfoJsonString));"
-            
             let blockResponse = context.evaluateScript(onBeforeRequestCall).toDictionary()
-            
             return blockResponse
         }
-        
         return nil
     }
 }

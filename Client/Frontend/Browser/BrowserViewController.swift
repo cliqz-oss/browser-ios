@@ -2547,6 +2547,14 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }
+
+		// Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
+		AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
+			if isPhishingSite {
+				self.showAntiPhishingAlert(url.host!)
+			}
+		}
+
         // Fixes 1261457 - Rich text editor fails because requests to about:blank are blocked
         if url.scheme == "about" && url.resourceSpecifier == "blank" {
             decisionHandler(WKNavigationActionPolicy.Allow)
@@ -2693,13 +2701,6 @@ extension BrowserViewController: WKNavigationDelegate {
 //            postLocationChangeNotificationForTab(tab, navigation: navigation)
             if currentResponseStatusCode < 400 {
                 postLocationChangeNotificationForTab(tab, navigation: navigation)
-            }
-
-            // Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
-            AntiPhishingDetector.scanRequest(url) { (isPhishingSite) in
-                if isPhishingSite {
-                    self.showAntiPhishingAlert(url.host!)
-                }
             }
 
             // Fire the readability check. This is here and not in the pageShow event handler in ReaderMode.js anymore
