@@ -136,7 +136,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.javaScriptBridge.publishEvent("show")
-        self.javaScriptBridge.setDefaultSearchEngine()
         self.updateExtensionPreferences()
     }
     
