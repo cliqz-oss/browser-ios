@@ -443,7 +443,6 @@ class AntiTrackingModule: NSObject {
 						}
 					} else {
 						var hasError = false
-						print(" registerHttpHandlerMethod THREAD--- \(NSThread.currentThread())")
 						if method == "GET" {
 							ConnectionManager.sharedInstance
 								.sendRequest(.GET,
