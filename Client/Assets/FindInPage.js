@@ -124,7 +124,7 @@ function highlightAllMatches(text) {
   clearHighlights();
 
   if (!text.trim()) {
-    webkit.messageHandlers.findInPageHandler.postMessage({ totalResults: 0 });
+    __cliqzjs___findInPageHandler({ totalResults: 0 });
     return;
   }
 
@@ -147,7 +147,7 @@ function highlightAllMatches(text) {
   }
 
   debug(matches.length + " highlighted rects created!");
-  webkit.messageHandlers.findInPageHandler.postMessage({ totalResults: matches.length });
+  __cliqzjs___findInPageHandler({ totalResults: matches.length });
 }
 
 function getIDForRect(rect) {
@@ -236,7 +236,7 @@ function updateSearch(text) {
 
   // Update the UI with the current match index.
   var currentResult = highlightSpans.length ? activeIndex + 1 : 0;
-  webkit.messageHandlers.findInPageHandler.postMessage({ currentResult: currentResult });
+  __cliqzjs___findInPageHandler({ currentResult: currentResult });
 
   updateActiveHighlight();
 }

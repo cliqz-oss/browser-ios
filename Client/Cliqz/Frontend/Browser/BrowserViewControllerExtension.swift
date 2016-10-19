@@ -87,7 +87,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 				x = 0
 			}
 			if self.tabManager.selectedTab?.webView?.uniqueId == x {
-				self.urlBar.updateTrackersCount((self.tabManager.selectedTab?.webView?.badRequests)!)
+				self.urlBar.updateTrackersCount((self.tabManager.selectedTab?.webView?.unsafeRequests)!)
 			}
 		}
 	}
@@ -113,7 +113,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 				}
 			})
             
-            logToolbarSignal("click", target: "attack", customData: webView.badRequests)
+            logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
 		}
 	}
     

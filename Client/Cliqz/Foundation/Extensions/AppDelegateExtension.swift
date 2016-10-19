@@ -145,7 +145,7 @@ extension AppDelegate {
     }
     
     private func navigateToRandomTopNews() {
-        ConnectionManager.sharedInstance.sendRequest(.GET, url: topNewsURL, parameters: nil, responseType: .JSONResponse,
+        ConnectionManager.sharedInstance.sendRequest(.GET, url: topNewsURL, parameters: nil, responseType: .JSONResponse, queue: dispatch_get_main_queue(),
             onSuccess: { json in
                 let jsonDict = json as! [String : AnyObject]
                 let results = jsonDict["results"] as! [[String : AnyObject]]

@@ -26,5 +26,5 @@
     var readability = new Readability(uri, doc);
     var readabilityResult = readability.parse();
 
-    webkit.messageHandlers.readabilityMessageHandler.postMessage(readabilityResult);
+    __cliqzjs___readabilityMessageHandler(readabilityResult);
 })();

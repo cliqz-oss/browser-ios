@@ -21,7 +21,8 @@ protocol TabLocationViewDelegate {
 
 struct TabLocationViewUX {
     static let HostFontColor = UIColor.blackColor()
-    static let BaseURLFontColor = UIColor.grayColor()
+	// Cliqz: Changed text color to black from grey for our styling
+    static let BaseURLFontColor = UIColor.blackColor()
     static let BaseURLPitch = 0.75
     static let HostPitch = 1.0
     static let LocationContentInset = 8
@@ -29,7 +30,8 @@ struct TabLocationViewUX {
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
-        theme.URLFontColor = UIColor.lightGrayColor()
+		// Cliqz: Changed text color to white from light grey for our styling
+        theme.URLFontColor = UIColor.whiteColor()
         theme.hostFontColor = UIColor.whiteColor()
         theme.backgroundColor = UIConstants.PrivateModeLocationBackgroundColor
         themes[Theme.PrivateMode] = theme
@@ -117,9 +119,6 @@ class TabLocationView: UIView {
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultChromeFont
-
-        // Cliqz: Added text color to the location text field
-		urlTextField.textColor = UIColor.blackColor()
 
         // Cliqz: Added left pading to the url text field
         urlTextField.setLeftPading(5)
@@ -231,11 +230,8 @@ class TabLocationView: UIView {
             let attributedString = NSMutableAttributedString(string: httplessURL)
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
 
-            // Cliqz: Changed URL styling colors according to requirements.
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: UIColor.blackColor())
-//            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
-//            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
+			attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
+			attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: TabLocationViewUX.BaseURLPitch), range: nsRange)
             attributedString.pitchSubstring(baseDomain, withPitch: TabLocationViewUX.HostPitch)
             urlTextField.attributedText = attributedString

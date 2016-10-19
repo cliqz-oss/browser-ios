@@ -64,7 +64,7 @@ class TrackerViewCell: UITableViewCell {
 		self.countLabel.snp_makeConstraints { (make) in
 			make.left.equalTo(self.nameLabel.snp_right)
 			make.width.equalTo(20)
-			make.right.equalTo(self.contentView).offset(-3)
+			make.right.equalTo(self.contentView).offset(-10)
 		}
 	}
 

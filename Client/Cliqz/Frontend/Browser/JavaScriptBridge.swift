@@ -40,6 +40,16 @@ class JavaScriptBridge {
         }
     }
     
+    func publishEvent(eventName: String, parameters: AnyObject? = nil) {
+        var evalScript = "CliqzEvents.pub('mobile-browser:\(eventName)'"
+        if let serializedParameters =  serializeParameters(parameters) {
+            evalScript += ",\(serializedParameters)"
+        }
+        evalScript += ")"
+        
+        self.delegate?.evaluateJavaScript(evalScript, completionHandler: nil)
+    }
+    
     func callJSMethod(methodName: String, parameter: AnyObject?, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
         var parameterString: String = ""
         
@@ -83,17 +93,36 @@ class JavaScriptBridge {
         dispatch_async(backgorundQueue) {
             
             let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString!.componentsSeparatedByString("=queryString")
-            let inputParams = ["name": self.profile.searchEngines.defaultEngine.shortName,
-                "url": searchComps![0] + "="]
+            let searchEngineName = self.profile.searchEngines.defaultEngine.shortName
+            let parameters = "'\(searchEngineName)', `\(searchComps![0])=`"
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.callJSMethod("jsAPI.setDefaultSearchEngine", parameter: inputParams, completionHandler: nil)
+                self.publishEvent("set-search-engine", parameters: parameters)
             }
         }
 		
 	}
-
-    // Mark: Handle JavaScript Action
+    
+    // Mark:- Private Helper Methods
+    private func serializeParameters(parameters: AnyObject? = nil) -> String? {
+        if let parameters = parameters as? String {
+            return parameters
+        } else if let parameters = parameters as? [String: AnyObject] {
+            do {
+                if NSJSONSerialization.isValidJSONObject(parameters) {
+                    let json = try NSJSONSerialization.dataWithJSONObject(parameters, options: NSJSONWritingOptions(rawValue: 0))
+                    return String(data:json, encoding: NSUTF8StringEncoding)!
+                } else {
+                    print("couldn't convert object \(parameters) to JSON because it is not valid JSON")
+                }
+            } catch let error as NSError {
+                print("Json conversion is failed with error: \(error)")
+            }
+        }
+        
+        return nil
+    }
+    
     private func handleJSAction(action: String, data: AnyObject?, callback: String?) {
         switch action {
             
@@ -128,9 +157,12 @@ class JavaScriptBridge {
 			
         case "browserAction":
             if let actionData = data as? [String: AnyObject], let actionType = actionData["type"] as? String {
-                if actionType == "phoneNumber" {
-                    self.callPhoneNumber(actionData["data"])
+                if let phoneNumber = actionData["data"] as? String where actionType == "phoneNumber" {
+                    self.callPhoneNumber(phoneNumber)
+                } else if let mapURL = actionData["data"] as? String where actionType == "map" {
+                    self.openGoogleMaps(mapURL)
                 }
+
             }
             
         case "pushTelemetry":
@@ -249,13 +281,21 @@ class JavaScriptBridge {
         }
 	}
 
-    private func callPhoneNumber(data: AnyObject?) {
-        if let phoneNumber = data as? String {
-            let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
-            if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
-                UIApplication.sharedApplication().openURL(url)
-            }
+    private func callPhoneNumber(phoneNumber: String) {
+        let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
+        if let url = NSURL(string: "tel://\(trimmedPhoneNumber)") {
+            UIApplication.sharedApplication().openURL(url)
         }
     }
     
+    private func openGoogleMaps(url: String) {
+        if UIApplication.sharedApplication().canOpenURL(
+            NSURL(string: "comgooglemapsurl://")!) {
+            let escapedURL = url.replace("https://", replacement: "")
+            if let mapURL = NSURL(string:"comgooglemapsurl://\(escapedURL)") {
+                UIApplication.sharedApplication().openURL(mapURL)
+			}
+		}
+	}
+
 }
