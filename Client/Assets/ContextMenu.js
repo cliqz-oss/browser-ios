@@ -131,10 +131,10 @@ addEventListener("touchstart", function (event) {
     longPressTimeout = setTimeout(function () {
       touchHandled = true;
       cancel();
-      webkit.messageHandlers.contextMenuMessageHandler.postMessage(data);
+      __cliqzjs___contextMenuMessageHandler(data);
     }, 500);
 
-    webkit.messageHandlers.contextMenuMessageHandler.postMessage({ handled: true });
+    __cliqzjs___contextMenuMessageHandler({ handled: true });
   }
 }, true);
 

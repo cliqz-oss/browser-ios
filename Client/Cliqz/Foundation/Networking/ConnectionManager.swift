@@ -24,25 +24,26 @@ class ConnectionManager {
     }
     
     //MARK: - Sending Requests
-    internal func sendRequest(method: Alamofire.Method, url: String, parameters: [String: AnyObject]?, responseType: ResponseType, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+	internal func sendRequest(method: Alamofire.Method, url: String, parameters: [String: AnyObject]?, responseType: ResponseType, queue: dispatch_queue_t, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+
         switch responseType {
             
         case .JSONResponse:
             Alamofire.request(method, url, parameters: parameters)
-                .responseJSON {
+                .responseJSON(queue: queue) {
                     response in
                     self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
             }
         case .StringResponse:
             Alamofire.request(method, url, parameters: parameters)
-                .responseString {
+				.responseString(queue: queue) {
                     response in
                     self.handelStringResponse(response, onSuccess: onSuccess, onFailure: onFailure)
             }
         }
     }
     
-    internal func sendPostRequestWithBody(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+	internal func sendPostRequestWithBody(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, queue: dispatch_queue_t, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
         
         if NSJSONSerialization.isValidJSONObject(body) {
             do {
@@ -62,13 +63,13 @@ class ConnectionManager {
                 switch responseType {
                 case .JSONResponse:
                     Alamofire.request(request)
-                        .responseJSON {
+                        .responseJSON(queue: queue) {
                             response in
                             self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
                     }
                 case .StringResponse:
                     Alamofire.request(request)
-                        .responseString {
+                        .responseString(queue: queue) {
                             response in
                             self.handelStringResponse(response, onSuccess: onSuccess, onFailure: onFailure)
                     }

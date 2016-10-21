@@ -30,12 +30,17 @@ public enum TelemetryLogEventType {
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: AnyObject]?)
+    case ContextMenu            (String, String)
 }
 
 
 class TelemetryLogger : EventsLogger {
     
     let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
+    
+    private var isForgetModeActivate = false
+    private let preventedTypesInForgetMode = ["home", "cards", "web", "web_menu", "context_menu", "share_menu", "attrack", "anti_phishing", "video_downloader"]
+    private let preventedActionsInForgetMode = ["result_enter", "key_stroke", "keystroke_del", "paste", "results", "result_click"]
     
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
@@ -45,6 +50,9 @@ class TelemetryLogger : EventsLogger {
         loadTelemetrySeq()
     }
     
+    func updateForgetModeStatue(newStatus: Bool) {
+        isForgetModeActivate = newStatus
+    }
     
     //MARK: - Instant Variables
     var telemetrySeq: AtomicInt?
@@ -147,8 +155,16 @@ class TelemetryLogger : EventsLogger {
                 
             case .DashBoard (let type, let action, let target, let customData):
                 event = self.createDashBoardEvent(type, action: action, target: target, customData: customData)
+                
+                
+            case .ContextMenu (let target, let view):
+                event = self.createContextMenuEvent(target, view: view)
             
             default:
+                return
+            }
+            
+            if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
                 return
             }
             
@@ -162,6 +178,19 @@ class TelemetryLogger : EventsLogger {
         }
     }
 
+    private func shouldPreventEventInForgetMode(event: [String: AnyObject]) -> Bool {
+        if let type = event["type"] as? String
+            where preventedTypesInForgetMode.contains(type) {
+            return true
+        }
+        
+        if let action = event["action"] as? String
+            where preventedActionsInForgetMode.contains(action) {
+            return true
+        }
+        
+        return false
+    }
     // MARK: - Private Helper methods
 
     internal func createBasicEvent() ->[String: AnyObject] {
@@ -372,7 +401,7 @@ class TelemetryLogger : EventsLogger {
         event["type"] = "settings"
         event["view"] = view
         event["action"] = action
-        event[target] = target
+        event["target"] = target
         if let state = state {
             event["state"] = state
         }
@@ -395,7 +424,7 @@ class TelemetryLogger : EventsLogger {
         }
         
         if let customData = customData where target == "overview" {
-            event["open_tabs"] = customData
+            event["open_tabs_count"] = customData
         } else if let customData = customData where target == "delete" {
             event["char_count"] = customData
         } else if let customData = customData where target == "attack" {
@@ -497,5 +526,18 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
+    
+    private func createContextMenuEvent(target: String, view: String) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "context_menu"
+        event["action"] = "click"
+        event["target"] = target
+        event["view"] = view
+        
+        return event
+    }
+    
     
 }

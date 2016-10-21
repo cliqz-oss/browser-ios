@@ -11,7 +11,9 @@ import WebKit
 
 class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	
-	var profile: Profile!
+    var profile: Profile!
+    var viewAppearTime = 0.0
+    var viewType: String
 	
 	lazy var extensionWebView: WKWebView = {
 		let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
@@ -30,9 +32,15 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	var queuedScripts = [String]()
 	
 //	weak var delegate: FavoritesDelegate?
-	
-	init(profile: Profile) {
+    init(profile: Profile) {
+        self.profile = profile
+        self.viewType = "NONE"
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(profile: Profile, viewType: String) {
 		self.profile = profile
+        self.viewType = viewType
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -55,7 +63,8 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
-		self.javaScriptBridge.callJSMethod("jsAPI.onShow", parameter: nil, completionHandler: nil)
+        self.javaScriptBridge.publishEvent("show")
+        viewAppearTime = NSDate.getCurrentMillis()
 	}
 
 	func mainRequestURL() -> String {
@@ -116,6 +125,20 @@ extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 
     func isReady() {
         evaluateQueuedScripts()
+        self.logShowViewSignal()
     }
 
+}
+
+
+//MARK: - telemetry singals
+
+extension CliqzExtensionViewController {
+    
+    private func logShowViewSignal() {
+        let duration = Int(NSDate.getCurrentMillis() - viewAppearTime)
+        let customData = ["load_duration" : duration]
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
+        
+    }
 }

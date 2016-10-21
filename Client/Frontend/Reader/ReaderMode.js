@@ -21,7 +21,7 @@ var _firefox_ReaderMode = {
     checkReadability: function() {
         if (document.location.href.match(/^http:\/\/localhost:\d+\/reader-mode\/page/)) {
             this.debug({Type: "ReaderModeStateChange", Value: "Active"});
-            webkit.messageHandlers.readerModeMessageHandler.postMessage({Type: "ReaderModeStateChange", Value: "Active"});
+            __cliqzjs___readerModeMessageHandler({Type: "ReaderModeStateChange", Value: "Active"});
             return;
         }
 
@@ -30,7 +30,7 @@ var _firefox_ReaderMode = {
             // back/forward: the page will be cached and the result will still be there.
             if (_firefox_ReaderMode.readabilityResult && _firefox_ReaderMode.readabilityResult.content) {
                 this.debug({Type: "ReaderModeStateChange", Value: "Available"});
-                webkit.messageHandlers.readerModeMessageHandler.postMessage({Type: "ReaderModeStateChange", Value: "Available"});
+                __cliqzjs___readerModeMessageHandler({Type: "ReaderModeStateChange", Value: "Available"});
                 return;
             }
 
@@ -50,13 +50,13 @@ var _firefox_ReaderMode = {
             _firefox_ReaderMode.readabilityResult = readability.parse();
 
             this.debug({Type: "ReaderModeStateChange", Value: _firefox_ReaderMode.readabilityResult !== null ? "Available" : "Unavailable"});
-            webkit.messageHandlers.readerModeMessageHandler.postMessage({Type: "ReaderModeStateChange", Value: _firefox_ReaderMode.readabilityResult !== null ? "Available" : "Unavailable"});
+            __cliqzjs___readerModeMessageHandler({Type: "ReaderModeStateChange", Value: _firefox_ReaderMode.readabilityResult !== null ? "Available" : "Unavailable"});
 
             return;
         }
 
         this.debug({Type: "ReaderModeStateChange", Value: "Unavailable"});
-        webkit.messageHandlers.readerModeMessageHandler.postMessage({Type: "ReaderModeStateChange", Value: "Unavailable"});
+        __cliqzjs___readerModeMessageHandler({Type: "ReaderModeStateChange", Value: "Unavailable"});
     },
 
     // Readerize the document. Since we did the actual readerization already in checkReadability, we
@@ -179,6 +179,6 @@ window.addEventListener('load', function(event) {
 window.addEventListener('pageshow', function(event) {
     // If this is an about:reader page that we are showing, fire an event to the native code
     if (document.location.href.match(/^http:\/\/localhost:\d+\/reader-mode\/page/)) {
-        webkit.messageHandlers.readerModeMessageHandler.postMessage({Type: "ReaderPageEvent", Value: "PageShow"});
+        __cliqzjs___readerModeMessageHandler({Type: "ReaderPageEvent", Value: "PageShow"});
     }
 });

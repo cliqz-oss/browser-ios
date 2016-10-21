@@ -151,7 +151,7 @@ class CliqzWebView: UIWebView {
 
     // Anti-Tracking
     var uniqueId = -1
-	var badRequests = 0 {
+	var unsafeRequests = 0 {
 		didSet {
 			NSNotificationCenter.defaultCenter().postNotificationName(NotificationBadRequestDetected, object: self.uniqueId)
 		}
@@ -202,7 +202,7 @@ class CliqzWebView: UIWebView {
 	}
 	
 	override func loadRequest(request: NSURLRequest) {
-        badRequests = 0
+        unsafeRequests = 0
 		super.loadRequest(request)
 	}
 	
@@ -246,9 +246,9 @@ class CliqzWebView: UIWebView {
 		self.reload()
 	}
     
-    func incrementBadRequestsCount() {
+    func updateUnsafeRequestsCount(newCount: Int) {
         dispatch_sync(lockQueue) {
-            self.badRequests += 1
+            self.unsafeRequests = newCount
         }
     }
 

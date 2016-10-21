@@ -21,7 +21,7 @@ class HistoryViewController: CliqzExtensionViewController {
     let QueryLimit = 100
 	
 	override init(profile: Profile) {
-		super.init(profile: profile)
+		super.init(profile: profile, viewType: "history")
 
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(clearQueries as (NSNotification) -> Void), name: NotificationPrivateDataClearQueries, object: nil)
     }
@@ -75,6 +75,7 @@ extension HistoryViewController {
         if profile.clearQueries {
             clearQueries(favorites: true)
             clearQueries(favorites: false)
+            self.javaScriptBridge.publishEvent("show")
         }
     }
 
@@ -86,9 +87,9 @@ extension HistoryViewController {
 
 	func clearQueries(favorites favorites: Bool) {
         if favorites == true {
-            self.evaluateJavaScript("jsAPI.clearFavorites()", completionHandler: nil)
+            self.javaScriptBridge.publishEvent("clear-favorites")
         } else {
-            self.evaluateJavaScript("jsAPI.clearHistory()", completionHandler: nil)
+            self.javaScriptBridge.publishEvent("clear-history")
         }
     }
 

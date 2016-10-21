@@ -22,7 +22,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 	weak var delegate: FavoritesDelegate?
 
 	override init(profile: Profile) {
-		super.init(profile: profile)
+        super.init(profile: profile, viewType: "favorites")
 	}
 
 	required init?(coder aDecoder: NSCoder) {

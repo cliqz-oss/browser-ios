@@ -74,7 +74,7 @@ class TabsViewController: UIViewController {
 	@objc private func addNewTab(sender: UIButton) {
 		self.openNewTab()
         
-        let customData: [String : AnyObject] = ["count" : tabs.count]
+        let customData: [String : AnyObject] = ["tab_count" : tabs.count]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
 	}
     

@@ -1169,7 +1169,7 @@ class BrowserViewController: UIViewController {
     /// Call this whenever the page URL changes.
     private func updateURLBarDisplayURL(tab: Tab) {
         urlBar.currentURL = tab.displayURL
-		urlBar.updateTrackersCount((tab.webView?.badRequests)!)
+		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
         let isPage = tab.displayURL?.isWebPage() ?? false
         navigationToolbar.updatePageStatus(isWebPage: isPage)
 
@@ -1281,6 +1281,8 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
+        // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+        /*
 		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
@@ -1289,7 +1291,8 @@ class BrowserViewController: UIViewController {
 			}
 			activities.append(youtubeDownloader)
 		}
-
+        */
+        
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
             // Cliqz: log telemetry signal for share menu
@@ -2347,6 +2350,7 @@ extension BrowserViewController: TabManagerDelegate {
 
         if let tab = selected, webView = tab.webView {
             updateURLBarDisplayURL(tab)
+            TelemetryLogger.sharedInstance.updateForgetModeStatue(tab.isPrivate)
 
             if tab.isPrivate {
                 readerModeCache = MemoryReaderModeCache.sharedInstance
@@ -2544,6 +2548,14 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(WKNavigationActionPolicy.Cancel)
             return
         }
+
+		// Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
+		AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
+			if isPhishingSite {
+				self.showAntiPhishingAlert(url.host!)
+			}
+		}
+
         // Fixes 1261457 - Rich text editor fails because requests to about:blank are blocked
         if url.scheme == "about" && url.resourceSpecifier == "blank" {
             decisionHandler(WKNavigationActionPolicy.Allow)
@@ -2690,13 +2702,6 @@ extension BrowserViewController: WKNavigationDelegate {
 //            postLocationChangeNotificationForTab(tab, navigation: navigation)
             if currentResponseStatusCode < 400 {
                 postLocationChangeNotificationForTab(tab, navigation: navigation)
-            }
-
-            // Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
-            AntiPhishingDetector.scanRequest(url) { (isPhishingSite) in
-                if isPhishingSite {
-                    self.showAntiPhishingAlert(url.host!)
-                }
             }
 
             // Fire the readability check. This is here and not in the pageShow event handler in ReaderMode.js anymore
@@ -3369,6 +3374,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
@@ -3392,21 +3398,35 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
             }
-
+            // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
+            /*
+            // Cliqz: Added Action handler for the long press to download Youtube videos
+            if YoutubeVideoDownloader.isYoutubeURL(url) {
+                let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
+                let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
+                    self.downloadVideoFromURL(dialogTitle!)
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
+                }
+                actionSheetController.addAction(downloadVideo)
+            }
+            */
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
                 pasteBoard.URL = url
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
             }
             actionSheetController.addAction(copyAction)
 
             let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
             let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.Default) { _ in
                 self.presentActivityViewController(url, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .Any)
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
             }
             actionSheetController.addAction(shareAction)
         }
@@ -3430,6 +3450,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                     }
                     accessDenied.addAction(settingsAction)
                     self.presentViewController(accessDenied, animated: true, completion: nil)
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image"))
 
                 }
             }
@@ -3460,6 +3481,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
                         application.endBackgroundTask(taskId)
                 }
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "image"))
             }
             actionSheetController.addAction(copyAction)
         }
@@ -3472,7 +3494,10 @@ extension BrowserViewController: ContextMenuHelperDelegate {
         }
 
         actionSheetController.title = dialogTitle?.ellipsize(maxLength: ActionSheetTitleMaxLength)
-        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.Cancel){ (action: UIAlertAction) -> Void in
+            let view = elements.link != nil ? "link" : "image"
+            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+        }
         actionSheetController.addAction(cancelAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
