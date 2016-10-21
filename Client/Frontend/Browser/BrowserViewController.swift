@@ -2112,12 +2112,11 @@ extension BrowserViewController: TabDelegate {
             let logins = LoginsHelper(tab: tab, profile: profile)
             tab.addHelper(logins, name: LoginsHelper.name())
         }
-
-#endif
-        
+    
         let contextMenuHelper = ContextMenuHelper(tab: tab)
         contextMenuHelper.delegate = self
         tab.addHelper(contextMenuHelper, name: ContextMenuHelper.name())
+#endif
         
         let errorHelper = ErrorPageHelper()
         tab.addHelper(errorHelper, name: ErrorPageHelper.name())
@@ -3360,9 +3359,12 @@ extension BrowserViewController: ContextMenuHelperDelegate {
         // locationInView can return (0, 0) when the long press is triggered in an invalid page
         // state (e.g., long pressing a link before the document changes, then releasing after a
         // different page loads).
-        let touchPoint = gestureRecognizer.locationInView(view)
-        guard touchPoint != CGPointZero else { return }
-
+        
+        // Cliqz: Moved the code to `showContextMenu` as it is now called from `CliqzContextMenu` which does not use `ContextMenuHelper` object
+    }
+    
+    // Cliqz: called from `CliqzContextMenu` when long press is detected
+    func showContextMenu(elements elements: ContextMenuHelper.Elements, touchPoint: CGPoint) {
         let touchSize = CGSizeMake(0, 16)
 
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)

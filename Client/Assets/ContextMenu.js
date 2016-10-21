@@ -127,8 +127,6 @@ addEventListener("touchstart", function (event) {
     var touch = event.touches[0];
     touchDownX = touch.screenX;
     touchDownY = touch.screenY;
-    //Cliqz: [iOS10] If we're showing the context menu, prevent the page from handling the click event.
-    event.preventDefault();
                  
     longPressTimeout = setTimeout(function () {
       touchHandled = true;
