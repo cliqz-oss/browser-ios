@@ -123,7 +123,13 @@ class BrowserViewController: UIViewController {
     var navigationStep          : Int = 0
     var backNavigationStep      : Int = 0
     var navigationEndTime       : Double = NSDate.getCurrentMillis()
-    
+    // Cliqz: Custom dashboard
+    private lazy var dashboard : DashboardViewController =  {
+        let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
+        dashboard.delegate = self
+        return dashboard
+    }()
+
     // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
     var headerConstraintUpdated:Bool = false
     
@@ -1680,9 +1686,6 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
-        
-		let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
-		dashboard.delegate = self
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
