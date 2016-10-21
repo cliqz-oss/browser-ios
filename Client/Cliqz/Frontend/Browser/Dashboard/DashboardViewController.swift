@@ -46,6 +46,10 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.tabManager = tabManager
 		self.profile = profile
 		super.init(nibName: nil, bundle: nil)
+        
+        // load histroy and favorites immediately not lazy to enhance the performance
+        self.historyViewController.loadExtensionWebView()
+        self.favoritesViewController.loadExtensionWebView()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
