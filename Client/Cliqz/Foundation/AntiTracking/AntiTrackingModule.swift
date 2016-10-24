@@ -74,10 +74,12 @@ class AntiTrackingModule: NSObject {
     }
 
     func setAdblockEnabled(value: Bool) {
-        dispatch_async(dispatchQueue) {
+		// Quick fix to fix the crash
+		return
+/*        dispatch_async(dispatchQueue) {
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
-        }
+        }*/
     }
 
 	func getTrackersCount(webViewId: Int) -> Int {
@@ -198,10 +200,10 @@ class AntiTrackingModule: NSObject {
         
         // block ads prefs
         if SettingsPrefs.getAdBlockerPref() {
-            context.evaluateScript("setTimeout(function () { "
-                + "CliqzUtils.setPref(\"\(adBlockABTestPrefName)\", true);"
-                + "CliqzUtils.setPref(\"\(adBlockPrefName)\", 1);"
-                + "}, 100)");
+            //context.evaluateScript("setTimeout(function () { "
+            //    + "CliqzUtils.setPref(\"\(adBlockABTestPrefName)\", true);"
+            //    + "CliqzUtils.setPref(\"\(adBlockPrefName)\", 1);"
+            //    + "}, 100)");
         }
 
         // startup
