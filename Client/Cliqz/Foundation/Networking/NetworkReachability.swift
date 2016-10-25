@@ -64,7 +64,15 @@ class NetworkReachability : NSObject {
         
         TelemetryLogger.sharedInstance.logEvent(.NetworkStatus(self.networkReachabilityStatus!.description, duration))
     }
-    
+    func isReachableViaWiFi() -> Bool {
+        if let isReachable = isReachable,
+            let networkReachabilityStatus = networkReachabilityStatus {
+            return isReachable && networkReachabilityStatus == .ReachableViaWiFi
+        } else {
+            return false
+        }
+        
+    }
     //MARK: - Private Helper methods
     
     //MARK: update current network status    

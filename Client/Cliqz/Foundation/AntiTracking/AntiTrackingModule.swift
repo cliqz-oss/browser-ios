@@ -24,6 +24,9 @@ class AntiTrackingModule: NSObject {
     private let adBlockPrefName = "cliqz-adb"
     
     private let telemetryWhiteList = ["attrack.FP", "attrack.tp_events"]
+    private let urlsWhiteList = ["https://cdn.cliqz.com/anti-tracking/bloom_filter/",
+                                 "https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json",
+                                 "https://cdn.cliqz.com/adblocking/mobile/allowed-lists.json"]
     
     // MARK: - Local variables
     var privateMode = false
@@ -75,6 +78,11 @@ class AntiTrackingModule: NSObject {
 
     func setAdblockEnabled(value: Bool) {
         dispatch_async(dispatchQueue) {
+            
+            if value == true {
+                self.extractAdblockerSeedFiles()
+            }
+            
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
             self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
         }
@@ -105,6 +113,42 @@ class AntiTrackingModule: NSObject {
     }
     
     //MARK: - Private Helpers
+    private func extractAdblockerSeedFiles() {
+        let sourceDirectory = "\(antiTrackingDirectory)/seed-files/adblocking"
+        let destinationDirectory = "cliqz/antitracking/adblocking"
+        
+        if let sourcePath = NSBundle.mainBundle().resourceURL?.URLByAppendingPathComponent(sourceDirectory)?.path,
+            let destinationPath = NSURL(fileURLWithPath: documentDirectory).URLByAppendingPathComponent(destinationDirectory)?.path {
+            
+            if self.fileManager.fileExistsAtPath(destinationPath) == false {
+                let allFiles = self.fileManager.enumeratorAtPath(sourcePath)
+                
+                while let file = allFiles?.nextObject() as? String {
+                    if file.endsWith(".txt") {
+                        extractFile(file, sourcePath: sourcePath, destinationPath: destinationPath)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func extractFile(relativePath: String, sourcePath: String, destinationPath: String) {
+        do {
+            let absolutePath = sourcePath + "/" + relativePath
+            if let content = self.fileManager.contentsAtPath(absolutePath) {
+                let unzippedData = try content.gunzippedData()
+                
+                let fileDesitination = destinationPath + "/" + (relativePath)
+                let containingDirectory = NSURL(fileURLWithPath: fileDesitination).URLByDeletingLastPathComponent
+                createDirectoryIfNotExist(containingDirectory)
+                
+                unzippedData.writeToFile(fileDesitination, atomically:true)
+            }
+        } catch let error as NSError  {
+            print("[Error] Could not copy file: \(relativePath), because of the following error: \(error)")
+        }
+    }
+    
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
         let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
         return tabBlockInfo
@@ -276,7 +320,7 @@ class AntiTrackingModule: NSObject {
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
@@ -385,15 +429,18 @@ class AntiTrackingModule: NSObject {
     }
 
     private func createTempDir(path: String) {
-        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
-            let tempDirectoryPath = tempDirectory.path {
+        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
             
-            if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
-                do {
-                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: true, attributes: nil)
-                } catch let error as NSError {
-                    NSLog("Unable to create directory \(error.debugDescription)")
-                }
+            createDirectoryIfNotExist(tempDirectory)
+        }
+    }
+    
+    private func createDirectoryIfNotExist(directoryURL: NSURL?){
+        if let path = directoryURL?.path where self.fileManager.fileExistsAtPath(path) == false {
+            do {
+                try self.fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                NSLog("Could not create directory at path:\(path) because of the following error: \(error.debugDescription)")
             }
         }
     }
@@ -443,8 +490,13 @@ class AntiTrackingModule: NSObject {
 						}
 					} else {
 						var hasError = false
-						print(" registerHttpHandlerMethod THREAD--- \(NSThread.currentThread())")
-						if method == "GET" {
+                        if let isReachable = NetworkReachability.sharedInstance.isReachable where isReachable == false {
+                            // No internet connection
+                            hasError = true
+                        } else if NetworkReachability.sharedInstance.isReachableViaWiFi() == false && self?.isWhitelistedUrl(requestedUrl) == false {
+                            // do not download large files if user is not on WiFi
+                            hasError = true
+                        } else if method == "GET" {
 							ConnectionManager.sharedInstance
 								.sendRequest(.GET,
 											 url: requestedUrl,
@@ -560,6 +612,15 @@ class AntiTrackingModule: NSObject {
             return blockResponse
         }
         return nil
+    }
+    
+    private func isWhitelistedUrl(url: String) -> Bool {
+        for whiteListUrl in urlsWhiteList {
+            if url.startsWith(whiteListUrl) {
+                return true
+            }
+        }
+        return false
     }
 }
 

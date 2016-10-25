@@ -129,7 +129,7 @@ class EventsLogger: NSObject {
         
         TelemetryLogger.sharedInstance.persistState()
         
-        if NetworkReachability.sharedInstance.networkReachabilityStatus == .ReachableViaWiFi {
+        if NetworkReachability.sharedInstance.isReachableViaWiFi() {
             dispatch_async(serialDispatchQueue) {
                 self.publishCurrentEvents()
             }
