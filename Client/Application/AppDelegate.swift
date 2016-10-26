@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log.debug("Configuring window…")
 
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window = CliqzMainWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
 		
 		AWSSNSManager.configureCongnitoPool()
