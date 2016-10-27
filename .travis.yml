@@ -16,5 +16,4 @@ before_install:
   - brew upgrade carthage || true
   - ./bootstrap.sh
 
-script: xctool build -scheme Firefox -sdk iphonesimulator10.0 -arch "i386" ONLY_ACTIVE_ARCH=NO VALID_ARCHS="i386 x86_64"
-#script:xcodebuild -project Client.xcodeproj -scheme "Firefox" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6,OS=8.2" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -c
+script: xcodebuild -project Client.xcodeproj -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6,OS=9.3" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -c
