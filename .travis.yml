@@ -12,14 +12,3 @@ script:
   - rm -rf build
   - xcodebuild -project Client.xcodeproj -scheme "Firefox" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -c
 
-notifications:
-  email: false
-  irc:
-    channels:
-      - "irc.mozilla.org#firefoxios"
-    on_success: change
-    on_failure: always
-
-# This stopped working
-#  - xctool -project Client.xcodeproj -scheme Travis -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
-#  - xctool test -freshSimulator -project Client.xcodeproj -scheme Travis -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
