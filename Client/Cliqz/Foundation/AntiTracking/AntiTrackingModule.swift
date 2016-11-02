@@ -211,7 +211,6 @@ class AntiTrackingModule: NSObject {
         loadJavascriptSource("timers")
         
         if #available(iOS 10, *) {
-            context.evaluateScript("Promise = undefined")
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else if #available(iOS 9, *) {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
@@ -220,6 +219,7 @@ class AntiTrackingModule: NSObject {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
             loadJavascriptSource("/bower_components/core.js/client/core")
         }
+		context.evaluateScript("Promise = ES6Promise")
         
         // set up System global for module import
         context.evaluateScript("var exports = {}")
