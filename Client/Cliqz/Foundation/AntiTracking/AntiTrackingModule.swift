@@ -47,6 +47,7 @@ class AntiTrackingModule: NSObject {
         
         dispatch_async(dispatchQueue) {
             self.configureExceptionHandler()
+			self.loadWindowTimers()
             self.loadModule()
         }
     }
@@ -300,9 +301,6 @@ class AntiTrackingModule: NSObject {
         registerMd5NativeMethod()
         registerLogDebugMethod()
         registerLoadSubscriptMethod()
-        registerSetTimeoutMethod()
-        registerSetIntervalMethod()
-        registerClearIntervalMethod()
         registerMkTempDirMethod()
         registerReadFileMethod()
         registerWriteFileMethod()
@@ -333,36 +331,6 @@ class AntiTrackingModule: NSObject {
         
     }
 
-    private func registerSetTimeoutMethod() {
-        let setTimeout: @convention(block) (JSValue, Int) -> () = { function, timeoutMsec in
-            let delay = Double(timeoutMsec) * Double(NSEC_PER_MSEC)
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-            dispatch_after(time, self.dispatchQueue, {
-                function.callWithArguments(nil)
-            })
-        }
-        context.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
-    }
-    
-    private func registerSetIntervalMethod() {
-        let setInterval: @convention(block) (JSValue, Int) -> Int = { function, interval in
-            let timerId = self.timerCounter
-            self.timerCounter += 1
-            let intervalInSeconds = interval / 1000
-            let timeInterval = NSTimeInterval(intervalInSeconds)
-
-            dispatch_async(dispatch_get_main_queue()) {
-                let timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval,
-                                                                   target: self,
-                                                                   selector: #selector(AntiTrackingModule.excuteJavaScriptFunction(_:)),
-                                                                   userInfo: function,
-                                                                   repeats: true)
-                self.timers[timerId] = timer
-            }
-            return timerId
-        }
-        context.setObject(unsafeBitCast(setInterval, AnyObject.self), forKeyedSubscript: "setInterval")
-    }
 
     @objc private func excuteJavaScriptFunction(timer: NSTimer) -> () {
         dispatch_async(dispatchQueue) {
@@ -370,15 +338,6 @@ class AntiTrackingModule: NSObject {
                 function.callWithArguments(nil)
             }
         }
-    }
-
-    private func registerClearIntervalMethod() {
-        let clearInterval: @convention(block) Int -> () = { timerId in
-            if let timer = self.timers[timerId] {
-                timer.invalidate()
-            }
-        }
-        context.setObject(unsafeBitCast(clearInterval, AnyObject.self), forKeyedSubscript: "clearInterval")
     }
 
     private func registerReadFileMethod() {
@@ -622,5 +581,10 @@ class AntiTrackingModule: NSObject {
         }
         return false
     }
+
+	private func loadWindowTimers() {
+		let w = WTWindowTimers(self.dispatchQueue)
+		w.extend(context)
+	}
 }
 
