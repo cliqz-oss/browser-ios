@@ -28,6 +28,8 @@ class AntiTrackingModule: NSObject {
                                  "https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json",
                                  "https://cdn.cliqz.com/adblocking/mobile/allowed-lists.json"]
     
+    let adBlockerLastUpdateDateKey = "AdBlockerLastUpdateDate"
+    
     // MARK: - Local variables
     var privateMode = false
     var timerCounter = 0
@@ -77,15 +79,15 @@ class AntiTrackingModule: NSObject {
         return false
     }
 
-    func setAdblockEnabled(value: Bool) {
+    func setAdblockEnabled(value: Bool, timeout: Int = 0) {
         dispatch_async(dispatchQueue) {
-            
             if value == true {
                 self.extractAdblockerSeedFiles()
             }
-            
-            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
-            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
+            self.context.evaluateScript("setTimeout(function () { "
+                + "CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));"
+                + "CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));"
+                + "}, \(timeout))");
         }
     }
 
@@ -114,36 +116,81 @@ class AntiTrackingModule: NSObject {
     }
     
     //MARK: - Private Helpers
+    private func isOutdatedAdblcokerFiles() -> Bool {
+        // fresh install  -> replace files
+        guard let currentAdBlockerLastUpdateDate = LocalDataStore.objectForKey(adBlockerLastUpdateDateKey) as? NSDate else {
+            return true
+        }
+        
+        // bundle does not have timestamp file -> don't replace files
+        guard let bundleTimestampPath = NSBundle.mainBundle().pathForResource("lastupdateTimestamp", ofType: "txt", inDirectory: "\(self.antiTrackingDirectory)/seed-files") else {
+            return false
+        }
+        
+        do {
+            //get bundle timestamp and compare it with current one
+        let bundleTimestamp = try String(contentsOfFile: bundleTimestampPath, encoding: NSUTF8StringEncoding)
+            let bundleDate = NSDate(timeIntervalSince1970: Double(bundleTimestamp.trim())!)
+            
+            // bundle date is later than the current last update date -> replace files
+            if bundleDate.compare(currentAdBlockerLastUpdateDate) == NSComparisonResult.OrderedDescending {
+                return true
+            }
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        return false
+        
+    }
     private func extractAdblockerSeedFiles() {
-        let sourceDirectory = "\(antiTrackingDirectory)/seed-files/adblocking"
-        let destinationDirectory = "cliqz/antitracking/adblocking"
+        guard isOutdatedAdblcokerFiles() else {
+            return
+        }
+        
+        let sourceDirectory = "\(antiTrackingDirectory)/seed-files/adblocker"
+        let destinationDirectory = "cliqz/adblocker"
         
         if let sourcePath = NSBundle.mainBundle().resourceURL?.URLByAppendingPathComponent(sourceDirectory)?.path,
             let destinationPath = NSURL(fileURLWithPath: documentDirectory).URLByAppendingPathComponent(destinationDirectory)?.path {
-            
-            if self.fileManager.fileExistsAtPath(destinationPath) == false {
+            do {
+                // delete the old files if exist
+                if self.fileManager.fileExistsAtPath(destinationPath) == true {
+                    try self.fileManager.removeItemAtPath(destinationPath)
+                }
+                
                 let allFiles = self.fileManager.enumeratorAtPath(sourcePath)
                 
                 while let file = allFiles?.nextObject() as? String {
-                    if file.endsWith(".txt") {
+                    if file.endsWith(".txt") || file.endsWith("checksums") {
                         extractFile(file, sourcePath: sourcePath, destinationPath: destinationPath)
                     }
                 }
+            } catch let error as NSError {
+                print(error)
+                return
             }
         }
+        
+        LocalDataStore.setObject(NSDate(), forKey: adBlockerLastUpdateDateKey)
     }
     
     private func extractFile(relativePath: String, sourcePath: String, destinationPath: String) {
         do {
             let absolutePath = sourcePath + "/" + relativePath
             if let content = self.fileManager.contentsAtPath(absolutePath) {
-                let unzippedData = try content.gunzippedData()
                 
                 let fileDesitination = destinationPath + "/" + (relativePath)
                 let containingDirectory = NSURL(fileURLWithPath: fileDesitination).URLByDeletingLastPathComponent
                 createDirectoryIfNotExist(containingDirectory)
+                if relativePath.endsWith("checksums") {
+                    // checksums is not compressed
+                    content.writeToFile(fileDesitination, atomically:true)
+                } else {
+                    let unzippedData = try content.gunzippedData()
+                    unzippedData.writeToFile(fileDesitination, atomically:true)
+                }
                 
-                unzippedData.writeToFile(fileDesitination, atomically:true)
             }
         } catch let error as NSError  {
             print("[Error] Could not copy file: \(relativePath), because of the following error: \(error)")
@@ -243,10 +290,7 @@ class AntiTrackingModule: NSObject {
         
         // block ads prefs
         if SettingsPrefs.getAdBlockerPref() {
-            context.evaluateScript("setTimeout(function () { "
-                + "CliqzUtils.setPref(\"\(adBlockABTestPrefName)\", true);"
-                + "CliqzUtils.setPref(\"\(adBlockPrefName)\", 1);"
-                + "}, 100)");
+            self.setAdblockEnabled(true, timeout: 100)
         }
 
         // startup
