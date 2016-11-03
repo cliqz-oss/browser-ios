@@ -48,7 +48,9 @@ class AntiTrackingModule: NSObject {
         NSURLProtocol.registerClass(InterceptorURLProtocol)
         
         dispatch_async(dispatchQueue) {
+#if DEBUG
             self.configureExceptionHandler()
+#endif
 			self.loadWindowTimers()
             self.loadModule()
         }
@@ -362,7 +364,7 @@ class AntiTrackingModule: NSObject {
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
         context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
@@ -395,6 +397,7 @@ class AntiTrackingModule: NSObject {
 							// files does not exist, do no thing
 							callback.callWithArguments(nil)
 						} else {
+							print("Current THREAD--- \(NSThread.currentThread())")
 							callback.callWithArguments([content])
 						}
 					} catch let error as NSError {
