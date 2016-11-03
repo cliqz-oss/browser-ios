@@ -16,7 +16,7 @@ extension String {
     
     
     func trim() -> String {
-        let newString = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        let newString = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         return newString
     }
     
