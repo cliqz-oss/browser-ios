@@ -54,6 +54,10 @@ class WebViewToUAMapper {
     }
 }
 
+struct CliqzWebViewConstants {
+    static let kNotificationWebViewLoadCompleteOrFailed = "kNotificationWebViewLoadCompleteOrFailed"
+    static let kNotificationPageInteractive = "kNotificationPageInteractive"
+}
 
 class CliqzWebView: UIWebView {
 	
@@ -227,6 +231,8 @@ class CliqzWebView: UIWebView {
 			}
 		}
 		self.prevDocumentLocation = docLoc
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed, object: self)
 	}
 	
 	var customUserAgent:String? /*{
@@ -423,6 +429,10 @@ extension CliqzWebView: UIWebViewDelegate {
 				}
 			}
 		}
+        
+        NSNotificationCenter.defaultCenter()
+            .postNotificationName(CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed, object: self)
+        
 		progress?.didFailLoadWithError()
         updateObservableAttributes()
 	}

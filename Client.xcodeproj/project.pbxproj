@@ -47,6 +47,7 @@
 		0BF42D4F1A7CD09600889E28 /* TestFavicons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */; };
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
+		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
 		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
 		1E1432321D88539A001C27C9 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
@@ -1366,6 +1367,7 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistorySwiper.swift; sourceTree = "<group>"; };
 		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
 		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
@@ -2720,6 +2722,7 @@
 				4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */,
 				4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */,
 				1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */,
+				1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -6246,6 +6249,7 @@
 				E664B45A1CD7ECDB0045A6A4 /* NotificationRootViewController.swift in Sources */,
 				2FDE87FE1ABB3817005317B1 /* RemoteTabsPanel.swift in Sources */,
 				39DD030D1CD53E1900BC09B3 /* HomePageHelper.swift in Sources */,
+				1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */,
 				C4F3B29A1CFCF93A00966259 /* ButtonToast.swift in Sources */,
 				4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */,
 				E4A961341AC051360069AD6F /* ReadabilityTabHelper.swift in Sources */,

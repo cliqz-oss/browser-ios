@@ -161,6 +161,10 @@ class BrowserViewController: UIViewController {
 //        }
 //    }
 
+    // Cliqz: swipe back and forward
+    var historySwiper = HistorySwiper()
+    
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -2370,6 +2374,14 @@ extension BrowserViewController: TabManagerDelegate {
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
             webView.accessibilityIdentifier = "contentView"
             webView.accessibilityElementsHidden = false
+            
+            #if CLIQZ
+                // Cliqz: back and forward swipe
+                historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)
+                for swipe in [historySwiper.goBackSwipe, historySwiper.goForwardSwipe] {
+                    tab.webView?.scrollView.panGestureRecognizer.requireGestureRecognizerToFail(swipe)
+                }
+            #endif
 
             if let url = webView.URL?.absoluteString {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
