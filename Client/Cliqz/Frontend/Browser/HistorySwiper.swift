@@ -55,9 +55,9 @@ class HistorySwiper : NSObject {
                 }, completion: { (Bool) -> Void in
                     if !shouldReturnToZero {
                         if recognizer == self.goBackSwipe {
-                            tab.goBack()
+                            getApp().browserViewController.goBack()
                         } else {
-                            tab.goForward()
+                            getApp().browserViewController.goForward()
                         }
                         
                         self.webViewContainer.transform = CGAffineTransformMakeTranslation(0, self.webViewContainer.transform.ty)

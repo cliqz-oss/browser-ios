@@ -1078,7 +1078,8 @@ class BrowserViewController: UIViewController {
             urlBar.SELdidClickCancel()
             return true
         } else if let selectedTab = tabManager.selectedTab where selectedTab.canGoBack {
-            selectedTab.goBack()
+            // Cliqz: use one entry to go back/forward in all code
+            self.goBack()
             return true
         }
         return false
@@ -1872,7 +1873,8 @@ extension BrowserViewController: URLBarDelegate {
 
 extension BrowserViewController: TabToolbarDelegate {
     func tabToolbarDidPressBack(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goBack()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goBack()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "back")
     }
@@ -1914,7 +1916,8 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressForward(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goForward()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goForward()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "forward")
     }
