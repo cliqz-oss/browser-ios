@@ -14,7 +14,7 @@ import Crashlytics
 class AntiTrackingModule: NSObject {
     
     //MARK: Constants
-    private let context = JSContext()
+	private let context: JSContext? = nil
     private let antiTrackingDirectory = "Extension/build/mobile/search/v8"
     private let documentDirectory = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! as String
     private let fileManager = NSFileManager.defaultManager()
@@ -40,6 +40,9 @@ class AntiTrackingModule: NSObject {
     
     override init() {
         super.init()
+		dispatch_async(dispatchQueue) {
+			self.context = JSContext()
+		}
     }
     
     //MARK: - Public APIs
@@ -48,7 +51,9 @@ class AntiTrackingModule: NSObject {
         NSURLProtocol.registerClass(InterceptorURLProtocol)
         
         dispatch_async(dispatchQueue) {
+#if DEBUG
             self.configureExceptionHandler()
+#endif
 			self.loadWindowTimers()
             self.loadModule()
         }
@@ -84,7 +89,7 @@ class AntiTrackingModule: NSObject {
             if value == true {
                 self.extractAdblockerSeedFiles()
             }
-            self.context.evaluateScript("setTimeout(function () { "
+            self.context?.evaluateScript("setTimeout(function () { "
                 + "CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));"
                 + "CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));"
                 + "}, \(timeout))");
@@ -198,7 +203,7 @@ class AntiTrackingModule: NSObject {
     }
     
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
-        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
+        let tabBlockInfo = self.context?.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
         return tabBlockInfo
     }
     
@@ -258,7 +263,6 @@ class AntiTrackingModule: NSObject {
         loadJavascriptSource("timers")
         
         if #available(iOS 10, *) {
-            context.evaluateScript("Promise = undefined")
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else if #available(iOS 9, *) {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
@@ -267,21 +271,22 @@ class AntiTrackingModule: NSObject {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
             loadJavascriptSource("/bower_components/core.js/client/core")
         }
+		context?.evaluateScript("Promise = ES6Promise")
         
         // set up System global for module import
-        context.evaluateScript("var exports = {}")
+        context?.evaluateScript("var exports = {}")
         loadJavascriptSource("system-polyfill")
-        context.evaluateScript("var System = exports.System;")
+        context?.evaluateScript("var System = exports.System;")
         loadJavascriptSource("fs-polyfill")
         
         // load config file
         loadConfigFile()
 
         // create legacy CliqzUtils global
-         context.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
+         context?.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
 
         // pref config
-        context.evaluateScript("setTimeout(function () { "
+        context?.evaluateScript("setTimeout(function () { "
             + "CliqzUtils.setPref(\"antiTrackTest\", true);"
             + "CliqzUtils.setPref(\"attrackForceBlock\", false);"
             + "CliqzUtils.setPref(\"attrackBloomFilter\", true);"
@@ -294,7 +299,7 @@ class AntiTrackingModule: NSObject {
         }
 
         // startup
-        context.evaluateScript("setTimeout(function() { "
+        context?.evaluateScript("setTimeout(function() { "
             + "System.import(\"platform/startup\").then(function(startup) { startup.default() }).catch(function(e) { logDebug(e, 'xxx') });"
             + "}, 200)")
     }
@@ -302,7 +307,7 @@ class AntiTrackingModule: NSObject {
     private func loadJavascriptSource(sourcePath: String) {
         let (sourceName, directory) = getSourceMetaData(sourcePath)
         if let path = NSBundle.mainBundle().pathForResource(sourceName, ofType: "js", inDirectory: directory), script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
-            context.evaluateScript(script);
+            context?.evaluateScript(script);
         } else {
             print("Script not found: \(sourcePath)")
         }
@@ -331,12 +336,12 @@ class AntiTrackingModule: NSObject {
         if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "\(antiTrackingDirectory)/config"), let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let formatedScript = script.replace("\"", replacement: "\\\"").replace("\n", replacement: "")
             let configScript = "var __CONFIG__ = JSON.parse(\"\(formatedScript)\");"
-            context.evaluateScript(configScript)
+            context?.evaluateScript(configScript)
         }
     }
 
     private func configureExceptionHandler() {
-        context.exceptionHandler = { context, exception in
+        context?.exceptionHandler = { context, exception in
             print("JS Error: \(exception)")
         }
     }
@@ -357,21 +362,21 @@ class AntiTrackingModule: NSObject {
         let md5Native: @convention(block) (String) -> String = { data in
             return md5(data)
         }
-        context.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
+        context?.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
     }
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
-//            print("\n\n>>>>>>>> \(key): \(message)\n\n")
+            print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
-        context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
+        context?.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
 
     private func registerLoadSubscriptMethod() {
         let loadSubscript: @convention(block) (String) -> () = {[weak self] subscriptName in
             self?.loadJavascriptSource("/modules\(subscriptName)")
         }
-        context.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
+        context?.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
         
     }
 
@@ -406,8 +411,8 @@ class AntiTrackingModule: NSObject {
 				}
             }
         }
-        context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
-		context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
+        context?.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
+		context?.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
 	}
 
 	private func registerWriteFileMethod() {
@@ -420,15 +425,15 @@ class AntiTrackingModule: NSObject {
                 }
             }
         }
-        context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
-        context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeTempFile")
+        context?.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
+        context?.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeTempFile")
     }
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = {[weak self] path in
             self?.createTempDir(path)
         }
-        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+        context?.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
     }
 
     private func createTempDir(path: String) {
@@ -452,7 +457,7 @@ class AntiTrackingModule: NSObject {
         let isWindowActive: @convention(block) (String) -> Bool = { tabId in
             return self.isTabActive(Int(tabId))
         }
-        context.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
+        context?.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
     }
 
     private func registerSendTelemetryMethod() {
@@ -472,7 +477,7 @@ class AntiTrackingModule: NSObject {
                 Answers.logCustomEventWithName("[Anti-Trakcing] SendTelemetry Error", customAttributes: ["error": error])
             }
         }
-        context.setObject(unsafeBitCast(sendTelemetry, AnyObject.self), forKeyedSubscript: "sendTelemetry")
+        context?.setObject(unsafeBitCast(sendTelemetry, AnyObject.self), forKeyedSubscript: "sendTelemetry")
     }
 
     private func registerHttpHandlerMethod() {
@@ -537,7 +542,7 @@ class AntiTrackingModule: NSObject {
 				onerror.callWithArguments(nil)
 			}
 		}
-        context.setObject(unsafeBitCast(httpHandler, AnyObject.self), forKeyedSubscript: "httpHandler")
+        context?.setObject(unsafeBitCast(httpHandler, AnyObject.self), forKeyedSubscript: "httpHandler")
     }
 
     private func httpHandlerReply(responseString: AnyObject, callback: JSValue, onerror: JSValue) {
@@ -611,7 +616,7 @@ class AntiTrackingModule: NSObject {
 
         if let requestInfoJsonString = toJSONString(requestInfo) {
             let onBeforeRequestCall = "System.get('platform/webrequest').default.onBeforeRequest._trigger(\(requestInfoJsonString));"
-            let blockResponse = context.evaluateScript(onBeforeRequestCall).toDictionary()
+            let blockResponse = context?.evaluateScript(onBeforeRequestCall).toDictionary()
             return blockResponse
         }
         return nil
