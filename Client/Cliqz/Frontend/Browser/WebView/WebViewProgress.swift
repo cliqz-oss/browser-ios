@@ -187,9 +187,9 @@ public class WebViewProgress
 			case "interactive":
 				interactiveCount += 1
 				if let webView = webView {
-//					if  interactiveCount == 1 {
-//						NSNotificationCenter.defaultCenter().postNotificationName(CliqzWebViewConstants.kNotificationPageInteractive, object: webView)
-//					}
+					if  interactiveCount == 1 {
+						NSNotificationCenter.defaultCenter().postNotificationName(CliqzWebViewConstants.kNotificationPageInteractive, object: webView)
+					}
 					if !webView.loading {
 						completeProgress()
 					}

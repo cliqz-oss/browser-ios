@@ -161,6 +161,10 @@ class BrowserViewController: UIViewController {
 //        }
 //    }
 
+    // Cliqz: swipe back and forward
+    var historySwiper = HistorySwiper()
+    
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -1074,7 +1078,8 @@ class BrowserViewController: UIViewController {
             urlBar.SELdidClickCancel()
             return true
         } else if let selectedTab = tabManager.selectedTab where selectedTab.canGoBack {
-            selectedTab.goBack()
+            // Cliqz: use one entry to go back/forward in all code
+            self.goBack()
             return true
         }
         return false
@@ -1804,6 +1809,9 @@ extension BrowserViewController: URLBarDelegate {
             searchController!.searchQuery = text
         }
         */
+        // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
+        self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
+        self.urlBar.showAntitrackingButton(false)
     }
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
@@ -1868,7 +1876,8 @@ extension BrowserViewController: URLBarDelegate {
 
 extension BrowserViewController: TabToolbarDelegate {
     func tabToolbarDidPressBack(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goBack()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goBack()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "back")
     }
@@ -1910,7 +1919,8 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressForward(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goForward()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goForward()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "forward")
     }
@@ -2370,6 +2380,14 @@ extension BrowserViewController: TabManagerDelegate {
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
             webView.accessibilityIdentifier = "contentView"
             webView.accessibilityElementsHidden = false
+            
+            #if CLIQZ
+                // Cliqz: back and forward swipe
+                historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)
+                for swipe in [historySwiper.goBackSwipe, historySwiper.goForwardSwipe] {
+                    tab.webView?.scrollView.panGestureRecognizer.requireGestureRecognizerToFail(swipe)
+                }
+            #endif
 
             if let url = webView.URL?.absoluteString {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
