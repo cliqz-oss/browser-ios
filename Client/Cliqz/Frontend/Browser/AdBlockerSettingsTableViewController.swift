@@ -18,7 +18,7 @@ class AdBlockerSettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     // added to calculate the duration spent on settings page
-    var settingsOpenTime = 0.0
+    var settingsOpenTime: Double?
     
     private let toggleTitles =
         [NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads toogle title in Block Ads settings"),
@@ -46,9 +46,12 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         super.viewDidDisappear(animated)
         
         // log telemetry signal
-        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
-        let settingsBackSignal = TelemetryLogEventType.Settings("block_ads", "click", "back", nil, duration)
-        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("block_ads", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)

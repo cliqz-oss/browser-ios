@@ -17,7 +17,7 @@ class HumanWebSettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     // added to calculate the duration spent on settings page
-    var settingsOpenTime = 0.0
+    var settingsOpenTime : Double?
 	
 	private lazy var toggle: Bool = SettingsPrefs.getHumanWebPref()
 
@@ -40,9 +40,12 @@ class HumanWebSettingsTableViewController: UITableViewController {
         super.viewDidDisappear(animated)
         
         // log telemetry signal
-        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
-        let settingsBackSignal = TelemetryLogEventType.Settings("human_web", "click", "back", nil, duration)
-        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("human_web", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
     
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

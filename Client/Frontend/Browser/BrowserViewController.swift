@@ -143,7 +143,7 @@ class BrowserViewController: UIViewController {
         return containerViewController
     }()
     // Cliqz: added to record keyboard show duration for keyboard telemetry signal
-    var keyboardShowTime = 0.0
+    var keyboardShowTime : Double?
     
     // Cliqz: key for storing the last visited website
     let lastVisitedWebsiteKey = "lastVisitedWebsite"

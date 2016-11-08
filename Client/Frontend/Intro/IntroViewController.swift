@@ -89,7 +89,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var signInButton: UIButton!
     
     // Cliqz: added attribute to calculate the duration user take on each page
-    var durationStartTime = 0.0
+    var durationStartTime : Double?
     // Cliqz: added keep track of current page index to detect whether user swipe left or right
     var currentPageIndex = 0
     
@@ -306,8 +306,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func SELstartBrowsing() {
         delegate?.introViewControllerDidFinish(self)
         // Cliqz: logged Onboarding event
-        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
+        if let startTime = durationStartTime {
+            let duration = Int(NSDate.getCurrentMillis() - startTime)
+            TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
+            durationStartTime = nil
+        }
     }
 
     func SELback() {
@@ -573,15 +576,17 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         guard currentPageIndex != newPageIndex else {
             return
         }
-        
-        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
-        var action: String = ""
-        if newPageIndex > currentPageIndex {
-            action = "swipe_left"
-        } else {
-            action = "swipe_right"
+        if let startTime = durationStartTime {
+            let duration = Int(NSDate.getCurrentMillis() - startTime)
+            var action: String = ""
+            if newPageIndex > currentPageIndex {
+                action = "swipe_left"
+            } else {
+                action = "swipe_right"
+            }
+            TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
+            durationStartTime = nil
         }
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
     }
 }
 

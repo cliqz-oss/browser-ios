@@ -196,9 +196,11 @@ extension BrowserViewController: AntitrackingViewDelegate {
     }
     func keyboardWillHide(notification: NSNotification) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
-            let view = getCurrentView() {
-            let showDuration = Int(NSDate.getCurrentMillis() - keyboardShowTime)
+            let view = getCurrentView(),
+            let showTime = keyboardShowTime {
+            let showDuration = Int(NSDate.getCurrentMillis() - showTime)
             TelemetryLogger.sharedInstance.logEvent(.Keyboard("hide", view, isForgetMode, showDuration))
+            keyboardShowTime = nil
         }
     }
     
