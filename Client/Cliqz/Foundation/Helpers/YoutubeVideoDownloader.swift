@@ -63,7 +63,19 @@ class YoutubeVideoDownloader {
                     print("[VedioDownloader] Could not save video file on Phone: \(error)")
                 }
 
+                // Delete the local file after saving it to photos library
+                YoutubeVideoDownloader.deleteLocalVideo(localPath)
         }
     }
     
+    private class func deleteLocalVideo(localPath: NSURL) {
+        let fileManager = NSFileManager.defaultManager()
+        do {
+            if let path = localPath.path where fileManager.fileExistsAtPath(path) == true {
+                try fileManager.removeItemAtPath(path)
+            }
+        } catch let error as NSError {
+            print("[VedioDownloader] Could not delete local video at path \(localPath) because of the following error \(error)")
+        }
+    }
 }
