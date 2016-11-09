@@ -269,6 +269,11 @@ class CliqzWebView: UIWebView {
         scalesPageToFit = true
         generateUniqueUserAgent()
 		progress = WebViewProgress(parent: self)
+		let refresh = UIRefreshControl()
+		refresh.bounds = CGRectMake(0, -10, refresh.bounds.size.width, refresh.bounds.size.height)
+		refresh.tintColor = UIColor.blackColor()
+		refresh.addTarget(self, action: #selector(refreshWebView), forControlEvents: UIControlEvents.ValueChanged)
+		self.scrollView.addSubview(refresh)
 	}
 
     // Needed to identify webview in url protocol
@@ -311,8 +316,8 @@ class CliqzWebView: UIWebView {
 		}
 		return nil
 	}
+
     private func reverseStringify(text: String?) -> String? {
-        
         guard text != nil else {
             return nil
         }
@@ -333,6 +338,10 @@ class CliqzWebView: UIWebView {
         self.canGoForward = super.canGoForward
     }
 
+	@objc private func refreshWebView(refresh: UIRefreshControl) {
+		refresh.endRefreshing()
+		self.reload()
+	}
 }
 
 extension CliqzWebView: UIWebViewDelegate {
