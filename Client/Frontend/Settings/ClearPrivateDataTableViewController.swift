@@ -23,7 +23,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
     var profile: Profile!
     var tabManager: TabManager!
     // Cliqz: added to calculate the duration spent on settings page
-    var settingsOpenTime = 0.0
+    var settingsOpenTime : Double?
 
     private typealias DefaultCheckedState = Bool
 
@@ -81,10 +81,12 @@ class ClearPrivateDataTableViewController: UITableViewController {
     // Cliqz: log telemetry signal
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        
-        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
-        let settingsBackSignal = TelemetryLogEventType.Settings("private_data", "click", "back", nil, duration)
-        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("private_data", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

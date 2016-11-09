@@ -46,7 +46,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 
 	private let isPrivateMode: Bool!
     
-    var viewOpenTime = 0.0
+    var viewOpenTime: Double?
 
 	init(webViewID: Int, privateMode: Bool = false) {
 		trackedWebViewID = webViewID
@@ -199,8 +199,11 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 				self.removeFromParentViewController()
 			}
 		}
-        let showDuration = Int(NSDate.getCurrentMillis() - viewOpenTime)
-        TelemetryLogger.sharedInstance.logEvent(.Attrack("hide", nil, showDuration))
+        if let openTime = viewOpenTime {
+            let showDuration = Int(NSDate.getCurrentMillis() - openTime)
+            TelemetryLogger.sharedInstance.logEvent(.Attrack("hide", nil, showDuration))
+            viewOpenTime = nil
+        }
 	}
 
 	@objc private func openHelp(sender: UIButton) {

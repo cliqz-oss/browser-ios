@@ -10,7 +10,7 @@ class SearchEnginePicker: UITableViewController {
     var selectedSearchEngineName: String?
     
     // Cliqz: added to calculate the duration spent on search settings view
-    var settingsOpenTime = 0.0
+    var settingsOpenTime : Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,8 +64,11 @@ class SearchEnginePicker: UITableViewController {
         super.viewDidDisappear(animated)
         
         // Cliqz: log back telemetry singal for search settings view
-        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
-        let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", "back", nil, duration)
-        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
 }

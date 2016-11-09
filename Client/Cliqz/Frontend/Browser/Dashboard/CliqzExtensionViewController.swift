@@ -12,7 +12,7 @@ import WebKit
 class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	
     var profile: Profile!
-    var loadExtensionStartTime = NSDate.getCurrentMillis()
+    var loadExtensionStartTime : Double?
     var viewType: String
 	
 	lazy var extensionWebView: WKWebView = {
@@ -144,9 +144,12 @@ extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 extension CliqzExtensionViewController {
     
     private func logShowViewSignal() {
-        let duration = Int(NSDate.getCurrentMillis() - loadExtensionStartTime)
-        let customData = ["load_duration" : duration]
-        TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
+        if let startTime  =  loadExtensionStartTime {
+            let duration = Int(NSDate.getCurrentMillis() - startTime)
+            let customData = ["load_duration" : duration]
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
+            loadExtensionStartTime = nil
+        }
         
     }
 }
