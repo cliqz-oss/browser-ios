@@ -224,7 +224,7 @@ class CliqzWebView: UIWebView {
 			if !(self.URL?.absoluteString!.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
 			}
-			
+
 			if let nd = self.navigationDelegate {
 				globalContainerWebView.legacyWebView = self
 				nd.webView?(globalContainerWebView, didFinishNavigation: nullWKNavigation)
@@ -372,7 +372,17 @@ extension CliqzWebView: UIWebViewDelegate {
             assert(CliqzWebView.webviewBuiltinUserAgent != nil)
         }
 
-        
+		if url.scheme == "newtab" {
+			if let delegate = self.UIDelegate,
+				let absoluteStr = url.absoluteString?.stringByRemovingPercentEncoding {
+				let startIndex = absoluteStr.startIndex.advancedBy((url.scheme?.characters.count)! + 1)
+				let newURL = NSURL(string: absoluteStr.substringFromIndex(startIndex))!
+				let newRequest = NSURLRequest(URL: newURL)
+				delegate.webView!(globalContainerWebView, createWebViewWithConfiguration: WKWebViewConfiguration(), forNavigationAction: LegacyNavigationAction(type: WKNavigationType(rawValue: navigationType.rawValue)!, request: newRequest), windowFeatures: WKWindowFeatures())
+			}
+			return false
+		}
+
 		if let progressCheck = progress?.shouldStartLoadWithRequest(request, navigationType: navigationType) where !progressCheck {
 			return false
 		}

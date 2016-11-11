@@ -2832,8 +2832,6 @@ extension BrowserViewController: WKNavigationDelegate {
 private let SchemesAllowedToOpenPopups = ["http", "https", "javascript", "data"]
 
 extension BrowserViewController: WKUIDelegate {
-	// Cliqz:[UIWebView] Commented delegate method, later reimplement the same feature
-#if !CLIQZ
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
@@ -2865,9 +2863,8 @@ extension BrowserViewController: WKUIDelegate {
             return nil
         }
         
-        return newTab.webView
-    }
-#endif
+        return webView
+	}
 
     private func canDisplayJSAlertForWebView(webView: WKWebView) -> Bool {
         // Only display a JS Alert if we are selected and there isn't anything being shown

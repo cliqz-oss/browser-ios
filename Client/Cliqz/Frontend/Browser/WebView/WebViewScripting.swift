@@ -50,17 +50,13 @@ class LegacyUserContentController
             // already injected into this context
             return
         }
-        
-//        // use tap detection until this returns false/
-//        // on page start reset enableBlankTargetTapDetection, then set it off when page loaded
-//        webView.blankTargetLinkDetectionOn = true
-//        if webView.stringByEvaluatingJavaScriptFromString(LegacyUserContentController.jsPageHasBlankTargets) != "true" {
-//            // no _blank
-//            webView.blankTargetLinkDetectionOn = false
-//        }
-//        print("has blank targets \(webView.blankTargetLinkDetectionOn)")
-        
-        let js = LegacyJSContext()
+
+		// Run script to overwrite all blank targeted links and window.open to handle it properly opening in new tab
+		let path = NSBundle.mainBundle().pathForResource("ModifyLinksForNewTab", ofType: "js")!
+		let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
+		webView.stringByEvaluatingJavaScriptFromString(source)
+
+		let js = LegacyJSContext()
         js.windowOpenOverride(webView, context:nil)
         
         for (name, handler) in scriptHandlersMainFrame {
@@ -105,6 +101,7 @@ class LegacyUserContentController
         injectIntoMain()
         injectIntoSubFrame()
     }
+
 }
 
 class CliqzWebViewConfiguration
