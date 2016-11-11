@@ -192,3 +192,12 @@
 
 /* Start buttun title for onBorading */
 "Let's start!" = "Jetzt loslegen!";
+
+/* Toast message shown when youtube video download started */
+"The video is being downloaded." = "Das Video wird heruntergeladen.";
+
+/* Toast message shown when youtube video download faild */
+"The download failed." = "Der Download ist fehlgeschlagen.";
+
+/* Toast message shown when youtube video is Successfully downloaded */
+"The download is complete. Open the Photos app to watch the video." = "Der Download is abgeschlossen. Öffne die Fotos App um das Video anzuschauen.";

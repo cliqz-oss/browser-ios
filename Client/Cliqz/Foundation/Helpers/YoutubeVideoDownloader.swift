@@ -11,6 +11,7 @@ import Photos
 import JavaScriptCore
 import Alamofire
 
+
 class YoutubeVideoDownloader {
 
 	class func isYoutubeURL(url: NSURL) -> Bool {
@@ -27,8 +28,9 @@ class YoutubeVideoDownloader {
             PHPhotoLibrary.requestAuthorization({ (authorizationStatus: PHAuthorizationStatus) -> Void in
                 
                 if authorizationStatus == .Authorized {
-                    //TODO: Show status info for the user
-                    print("[VedioDownloader] Download Started")
+
+                    let infoMessage = NSLocalizedString("The video is being downloaded.", tableName: "Cliqz", comment: "Toast message shown when youtube video download started")
+                    FeedbackUI.showToastMessage(infoMessage, messageType: .Info)
                     
                     Alamofire.download(.GET, videoUrl, destination: {  (temporaryURL, response) -> NSURL in
                         let pathComponent = NSDate().description + (response.suggestedFilename ?? "")
@@ -38,8 +40,9 @@ class YoutubeVideoDownloader {
                         .response {
                             (request, response, _, error) in
                             if error != nil {
-                                //TODO: Show status info for the user
-                                print("[VedioDownloader] Download failed: \(error)")
+                                
+                                let errorMessage = NSLocalizedString("The download failed.", tableName: "Cliqz", comment: "Toast message shown when youtube video download faild")
+                                FeedbackUI.showToastMessage(errorMessage, messageType: .Error)
                             } else {
                                 YoutubeVideoDownloader.saveVideoToPhotoLibrary(localPath)
                             }
@@ -55,12 +58,14 @@ class YoutubeVideoDownloader {
             PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(localPath)}) { completed, error in
                 if completed {
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "true"))
-                    //TODO: Show status info for the user
-                    print("[VedioDownloader] Video asset created")
+                    
+                    let infoMessage = NSLocalizedString("The download is complete. Open the Photos app to watch the video.", tableName: "Cliqz", comment: "Toast message shown when youtube video is Successfully downloaded")
+                    FeedbackUI.showToastMessage(infoMessage, messageType: .Done)
                 } else {
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "false"))
-                    //TODO: Show status info for the user
-                    print("[VedioDownloader] Could not save video file on Phone: \(error)")
+                    
+                    let errorMessage = NSLocalizedString("The download failed.", tableName: "Cliqz", comment: "Toast message shown when youtube video download faild")
+                    FeedbackUI.showToastMessage(errorMessage, messageType: .Error)
                 }
 
                 // Delete the local file after saving it to photos library
