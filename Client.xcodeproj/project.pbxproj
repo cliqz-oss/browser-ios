@@ -458,6 +458,7 @@
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
 		4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
+		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
 		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
@@ -1869,6 +1870,7 @@
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
+		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
 		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
@@ -2741,6 +2743,7 @@
 				1E79DCFE1D4FB2C5006BEB4A /* viewport.js */,
 				1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */,
 				1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */,
+				4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5577,6 +5580,7 @@
 				D30684F11C84F12A002D8D82 /* SearchPlugins in Resources */,
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
 				1E79DD311D4FB2C5006BEB4A /* NewsPermissionAsking-6Plus.png in Resources */,
+				4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
 				1E79DD3A1D4FB2C5006BEB4A /* Lato-Medium.ttf in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
