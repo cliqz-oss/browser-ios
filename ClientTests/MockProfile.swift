@@ -89,7 +89,7 @@ public class MockProfile: Profile {
      */
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
     private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
-        return SQLiteHistory(db: self.db, prefs: MockProfilePrefs())!
+        return SQLiteHistory(db: self.db, prefs: MockProfilePrefs())
     }()
 
     var favicons: Favicons {
