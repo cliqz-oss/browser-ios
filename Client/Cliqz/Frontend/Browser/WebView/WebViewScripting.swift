@@ -51,7 +51,7 @@ class LegacyUserContentController
             return
         }
 
-		let js = LegacyJSContext()
+	let js = LegacyJSContext()
         js.windowOpenOverride(webView, context:nil)
 
         for (name, handler) in scriptHandlersMainFrame {
