@@ -138,5 +138,7 @@
 			<string></string>
 		</dict>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CLIQZ will only use this access to download videos to your device.</string>
 </dict>
 </plist>
