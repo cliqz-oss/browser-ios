@@ -278,6 +278,14 @@ class CliqzWebView: UIWebView {
 		let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
 		let modifyLinksScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
 		self.configuration.userContentController.addUserScript(modifyLinksScript)
+        
+        
+        // Added for overriding XHR request to detect youtube redirect between videos
+        let ajaxHandlerPath = NSBundle.mainBundle().pathForResource("ajax_handler", ofType: "js")!
+        let ajaxHandlerSource = try! NSString(contentsOfFile: ajaxHandlerPath, encoding: NSUTF8StringEncoding) as String
+        let ajaxHandlerScript = WKUserScript(source: ajaxHandlerSource, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+        self.configuration.userContentController.addUserScript(ajaxHandlerScript)
+        
 	}
 
     // Needed to identify webview in url protocol

@@ -47,6 +47,7 @@
 		0BF42D4F1A7CD09600889E28 /* TestFavicons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */; };
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
+		1E01FCEE1DD9CB6600570663 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E01FCED1DD9CB6600570663 /* ajax_handler.js */; };
 		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
 		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
 		1E1432321D88539A001C27C9 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
@@ -1373,6 +1374,7 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E01FCED1DD9CB6600570663 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
 		1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistorySwiper.swift; sourceTree = "<group>"; };
 		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
 		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
@@ -2753,6 +2755,7 @@
 				1E79DCFE1D4FB2C5006BEB4A /* viewport.js */,
 				1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */,
 				1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */,
+				1E01FCED1DD9CB6600570663 /* ajax_handler.js */,
 				4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */,
 			);
 			path = Resources;
@@ -5541,6 +5544,7 @@
 				D38A1EE01CB458EC0080C842 /* CertError.html in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
+				1E01FCEE1DD9CB6600570663 /* ajax_handler.js in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				7B42406E1CA04CAC009B5C28 /* Menu.xcassets in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
