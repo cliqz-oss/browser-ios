@@ -148,6 +148,23 @@ class CliqzWebView: UIWebView {
 
     var removeProgressObserversOnDeinit: ((UIWebView) -> Void)?
 
+    static var modifyLinksScript: WKUserScript?
+    static var ajaxHandlerScript: WKUserScript?
+    
+    override class func initialize() {
+        // Added for modifying page links with target blank to open in new tabs
+        let path = NSBundle.mainBundle().pathForResource("ModifyLinksForNewTab", ofType: "js")!
+        let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
+        modifyLinksScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+        
+        
+        // Added for overriding XHR request to detect youtube redirect between videos
+        let ajaxHandlerPath = NSBundle.mainBundle().pathForResource("ajax_handler", ofType: "js")!
+        let ajaxHandlerSource = try! NSString(contentsOfFile: ajaxHandlerPath, encoding: NSUTF8StringEncoding) as String
+        ajaxHandlerScript = WKUserScript(source: ajaxHandlerSource, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+
+    }
+    
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
 		commonInit()
@@ -274,18 +291,10 @@ class CliqzWebView: UIWebView {
 		refresh.tintColor = UIColor.blackColor()
 		refresh.addTarget(self, action: #selector(refreshWebView), forControlEvents: UIControlEvents.ValueChanged)
 		self.scrollView.addSubview(refresh)
-		let path = NSBundle.mainBundle().pathForResource("ModifyLinksForNewTab", ofType: "js")!
-		let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
-		let modifyLinksScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
-		self.configuration.userContentController.addUserScript(modifyLinksScript)
-        
-        
-        // Added for overriding XHR request to detect youtube redirect between videos
-        let ajaxHandlerPath = NSBundle.mainBundle().pathForResource("ajax_handler", ofType: "js")!
-        let ajaxHandlerSource = try! NSString(contentsOfFile: ajaxHandlerPath, encoding: NSUTF8StringEncoding) as String
-        let ajaxHandlerScript = WKUserScript(source: ajaxHandlerSource, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
-        self.configuration.userContentController.addUserScript(ajaxHandlerScript)
-        
+		
+        // built-in userScripts
+		self.configuration.userContentController.addUserScript(CliqzWebView.modifyLinksScript!)
+        self.configuration.userContentController.addUserScript(CliqzWebView.ajaxHandlerScript!)
 	}
 
     // Needed to identify webview in url protocol
