@@ -202,8 +202,21 @@
 
 /* Toast message shown when youtube video is Successfully downloaded */
 "The download is complete. Open the Photos app to watch the video." = "The download is complete. Open the Photos app to watch the video.";
+
 /* Brading label for onBorading */
 "Faster and safer" = "Faster and safer";
 
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "SEARCH ENGINE \n IN THE BROWSER";
+
+/* Anti-tracking hint title */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Anti-tracking hint description */
+"Anti-Tracking description" = "You are in control: CLIQZ Anti-Tracking protects your privacy";
+
+/* Cliqz search hint title */
+"Fast-search" = "Fast-Search";
+
+/* Cliqz search hint description */
+"Fast-search description" = "Everything now. No detours";

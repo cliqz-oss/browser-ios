@@ -207,3 +207,15 @@
 
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "DIE SUCHMASCHINE \n IM BROWSER";
+
+/* Anti-tracking hint title */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Anti-tracking hint description */
+"Anti-Tracking description" = "Du hast die Kontrolle: CLIQZ Anti-Tracking schützt deine Privatsphäre";
+
+/* Cliqz search hint title */
+"Fast-search" = "Schnellsuche";
+
+/* Cliqz search hint description */
+"Fast-search description" = "Alles sofort im Blick: Die relevantesten Suchergebnisse werden dir auf den intelligenten CLIQZ Ergebniskarten direkt angezeigt";

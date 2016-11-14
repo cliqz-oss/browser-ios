@@ -466,6 +466,7 @@
 		4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
+		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
 		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
@@ -1882,6 +1883,7 @@
 		4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
+		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
 		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
@@ -2739,6 +2741,7 @@
 				1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */,
 				1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */,
 				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
+				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -6143,6 +6146,7 @@
 				1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */,
 				745DAB3F1CDAB09E00D44181 /* HistoryBackButton.swift in Sources */,
 				D3B6923F1B9F9A58004B87A4 /* FindInPageHelper.swift in Sources */,
+				4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */,
 				1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */,
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
 				1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */,

@@ -1814,33 +1814,39 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
         // If we can't make a valid URL, do a search query.
         // If we still don't have a valid URL, something is broken. Give up.
-        
-        var url = URIFixup.getURL(text)
-        
-        // If we can't make a valid URL, do a search query.
-        if url == nil {
-            url = profile.searchEngines.defaultEngine.searchURLForQuery(text)
-            if url != nil {
-                // Cliqz: Support showing search view with query set when going back from search result
-                navigateToUrl(url!, searchQuery: text)
-            } else {
-                // If we still don't have a valid URL, something is broken. Give up.
-                log.error("Error handling URL entry: \"\(text)\".")
-            }
-        } else {
-            finishEditingAndSubmit(url!, visitType: VisitType.Typed)
-        }
-        
-        //TODO: [Review]
-        /*
-        let engine = profile.searchEngines.defaultEngine
-        guard let url = URIFixup.getURL(text) ??
-                        engine.searchURLForQuery(text) else {
-            log.error("Error handling URL entry: \"\(text)\".")
-            return
-        }
-        finishEditingAndSubmit(url!, visitType: VisitType.Typed)
-        */
+		
+		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint {
+			urlBar.locationTextField?.enforceResignFirstResponder()
+			self.showHint(.CliqzSearch)
+		} else {
+
+			var url = URIFixup.getURL(text)
+			
+			// If we can't make a valid URL, do a search query.
+			if url == nil {
+				url = profile.searchEngines.defaultEngine.searchURLForQuery(text)
+				if url != nil {
+					// Cliqz: Support showing search view with query set when going back from search result
+					navigateToUrl(url!, searchQuery: text)
+				} else {
+					// If we still don't have a valid URL, something is broken. Give up.
+					log.error("Error handling URL entry: \"\(text)\".")
+				}
+			} else {
+				finishEditingAndSubmit(url!, visitType: VisitType.Typed)
+			}
+			
+			//TODO: [Review]
+			/*
+			let engine = profile.searchEngines.defaultEngine
+			guard let url = URIFixup.getURL(text) ??
+							engine.searchURLForQuery(text) else {
+				log.error("Error handling URL entry: \"\(text)\".")
+				return
+			}
+			finishEditingAndSubmit(url!, visitType: VisitType.Typed)
+			*/
+		}
     }
     
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
@@ -4093,3 +4099,4 @@ extension BrowserViewController {
         
     }
 }
+
