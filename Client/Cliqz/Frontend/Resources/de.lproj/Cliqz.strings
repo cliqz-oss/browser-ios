@@ -110,7 +110,7 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Webseiten-Verlauf und Cookies werden nicht gespeichert. Neue Downloads und Lesezeichen werden jedoch gespeichert.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "Offline verfügbar machen";
+"Download youtube video" = "Video offline ansehen";
 
 /* History title on dashboard */
 "History" = "Verlauf";
