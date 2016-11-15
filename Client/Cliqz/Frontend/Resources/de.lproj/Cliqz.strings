@@ -179,7 +179,7 @@
 "Continue despite warning" = "Trotz der Warnung fortfahren";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Forget Tab" = "In neuem Forget-Tab öffnen";
+"Open In New Forget Tab" = "In neuem Vergessen-Tab öffnen";
 
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!";
@@ -207,3 +207,15 @@
 
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "DIE SUCHMASCHINE \n IM BROWSER";
+
+/* Anti-tracking hint title */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Anti-tracking hint description */
+"Anti-Tracking description" = "Du hast die Kontrolle: CLIQZ Anti-Tracking schützt deine Privatsphäre";
+
+/* Cliqz search hint title */
+"Fast-search" = "Schnellsuche";
+
+/* Cliqz search hint description */
+"Fast-search description" = "Alles sofort im Blick: Die relevantesten Suchergebnisse werden dir auf den intelligenten CLIQZ Ergebniskarten direkt angezeigt";

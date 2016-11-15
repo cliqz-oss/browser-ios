@@ -238,9 +238,6 @@
 		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
 		1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */; };
 		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
-		1EBC01441DD4786D000912B9 /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; };
-		1EBC01521DD47C3A000912B9 /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; };
-		1EBC01531DD47C3A000912B9 /* CRToast.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */; };
 		1ECAE33D1DA4EE5800CB8102 /* ES5CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */; };
 		1ECAE33E1DA4EE5800CB8102 /* ES6CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */; };
@@ -466,6 +463,8 @@
 		4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
+		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
+		4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
@@ -1300,7 +1299,6 @@
 				E60138691C89EB8E00DF9756 /* ReadingList.framework in Copy Frameworks */,
 				E60138681C89EB8800DF9756 /* Sync.framework in Copy Frameworks */,
 				E60138671C89EB8300DF9756 /* Account.framework in Copy Frameworks */,
-				1EBC01531DD47C3A000912B9 /* CRToast.framework in Copy Frameworks */,
 				E60138661C89EB7D00DF9756 /* Storage.framework in Copy Frameworks */,
 				E60138651C89EB7600DF9756 /* Shared.framework in Copy Frameworks */,
 			);
@@ -1882,6 +1880,7 @@
 		4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
+		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
 		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
@@ -2334,7 +2333,6 @@
 				7B604FB71C495782006EEEC3 /* SWXMLHash.framework in Frameworks */,
 				7B604FA21C495268006EEEC3 /* SnapKit.framework in Frameworks */,
 				7BA4A9471C4CED900091D032 /* GCDWebServers.framework in Frameworks */,
-				1EBC01441DD4786D000912B9 /* CRToast.framework in Frameworks */,
 				7BA4A94A1C4CEFC70091D032 /* OnePasswordExtension.framework in Frameworks */,
 				7B604FBB1C495D8A006EEEC3 /* XCGLogger.framework in Frameworks */,
 				7B6050011C49653B006EEEC3 /* AdjustSdk.framework in Frameworks */,
@@ -2350,9 +2348,9 @@
 				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
 				282731751ABC9BE700AA1954 /* Sync.framework in Frameworks */,
-				1EBC01521DD47C3A000912B9 /* CRToast.framework in Frameworks */,
 				1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */,
 				1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */,
+				4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2739,6 +2737,7 @@
 				1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */,
 				1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */,
 				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
+				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -5703,6 +5702,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Deferred.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftKeychainWrapper.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/libPhoneNumber.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CRToast.framework",
 			);
 			name = "Copy Carthage Dependencies";
 			outputPaths = (
@@ -6143,6 +6143,7 @@
 				1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */,
 				745DAB3F1CDAB09E00D44181 /* HistoryBackButton.swift in Sources */,
 				D3B6923F1B9F9A58004B87A4 /* FindInPageHelper.swift in Sources */,
+				4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */,
 				1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */,
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
 				1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */,
