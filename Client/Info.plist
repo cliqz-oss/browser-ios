@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>4</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -73,6 +73,8 @@
 	<string>Used if user wants to send video feedback or bug report</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Websites you visit may request your location.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CLIQZ will only use this access to download videos to your device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>org.mozilla.ios.firefox.browsing</string>
@@ -139,7 +141,5 @@
 			<string></string>
 		</dict>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>CLIQZ will only use this access to download videos to your device.</string>
 </dict>
 </plist>
