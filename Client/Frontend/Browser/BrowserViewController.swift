@@ -3266,7 +3266,8 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
 extension BrowserViewController: IntroViewControllerDelegate {
     func presentIntroViewController(force: Bool = false) -> Bool{
         if force || profile.prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
-            let introViewController = IntroViewController()
+            // Cliqz: replace regular introViewController with CliqzIntroViewController
+            let introViewController = CliqzIntroViewController()
             introViewController.delegate = self
             // On iPad we present it modally in a controller
             if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
@@ -3302,8 +3303,7 @@ extension BrowserViewController: IntroViewControllerDelegate {
         return false
     }
 
-    func introViewControllerDidFinish(introViewController: IntroViewController) {
-        introViewController.dismissViewControllerAnimated(true, completion: nil)
+    func introViewControllerDidFinish() {
         // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
         if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
             self.urlBar.enterOverlayMode("", pasted: false)

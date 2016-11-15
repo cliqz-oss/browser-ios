@@ -94,6 +94,7 @@
 		<string>FiraSans-UltraLight.ttf</string>
 		<string>Lato-Light.ttf</string>
 		<string>Lato-Medium.ttf</string>
+		<string>Gotham-Book.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
