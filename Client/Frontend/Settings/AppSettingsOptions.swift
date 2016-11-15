@@ -486,7 +486,9 @@ class ShowIntroductionSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-		InteractiveIntro.sharedInstance.reset()
+		navigationController?.dismissViewControllerAnimated(true, completion: {
+			InteractiveIntro.sharedInstance.reset()
+		})
         // Cliqz: log telemetry signal
         let showTourSignal = TelemetryLogEventType.Settings("main", "click", "show_tour", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(showTourSignal)

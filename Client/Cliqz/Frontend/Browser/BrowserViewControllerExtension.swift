@@ -218,10 +218,11 @@ extension BrowserViewController: AntitrackingViewDelegate {
 
 	func showHint(type: HintType) {
 		let intro = InteractiveIntroViewController()
-		self.addChildViewController(intro)
-		self.view.addSubview(intro.view)
-		intro.view.frame = self.view.bounds
+		intro.modalPresentationStyle = .OverFullScreen
 		intro.showHint(type)
-		InteractiveIntro.sharedInstance.updateHintPref(type, value: false)
+		self.presentViewController(intro, animated: true) { 
+			InteractiveIntro.sharedInstance.updateHintPref(type, value: false)
+		}
+		
 	}
 }
