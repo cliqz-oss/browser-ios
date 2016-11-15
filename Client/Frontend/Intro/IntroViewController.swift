@@ -67,7 +67,7 @@ struct IntroViewControllerUX {
 let IntroViewControllerSeenProfileKey = "IntroViewControllerSeen"
 
 protocol IntroViewControllerDelegate: class {
-    func introViewControllerDidFinish(introViewController: IntroViewController)
+    func introViewControllerDidFinish()
     func introViewControllerDidRequestToLogin(introViewController: IntroViewController)
 }
 
@@ -304,7 +304,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     }
 
     func SELstartBrowsing() {
-        delegate?.introViewControllerDidFinish(self)
+        self.dismissViewControllerAnimated(true, completion: nil)
+        delegate?.introViewControllerDidFinish()
         // Cliqz: logged Onboarding event
         if let startTime = durationStartTime {
             let duration = Int(NSDate.getCurrentMillis() - startTime)
