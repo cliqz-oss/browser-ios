@@ -11,6 +11,7 @@ import UIKit
 private let SectionToggle = 0
 private let SectionDetails = 1
 private let HeaderFooterHeight: CGFloat = 44
+private let FooterHeight: CGFloat = 100
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 
 
@@ -37,9 +38,10 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
-        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: HeaderFooterHeight))
+        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: FooterHeight))
         footer.showBottomBorder = false
         tableView.tableFooterView = footer
+		footer.titleLabel.text = NSLocalizedString("AdBlocking settings clarification", tableName: "Cliqz", comment: "Detailed description on Adblocking settings")
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -53,6 +55,7 @@ class AdBlockerSettingsTableViewController: UITableViewController {
             settingsOpenTime = nil
         }
     }
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
         
@@ -117,12 +120,11 @@ class AdBlockerSettingsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return HeaderFooterHeight
     }
-    
+
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderFooterIdentifier) as! SettingsTableSectionHeaderFooterView
     }
 
-    
     @objc func switchValueChanged(toggle: UISwitch) {
         
         self.toggles[toggle.tag] = toggle.on
