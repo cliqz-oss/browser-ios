@@ -70,7 +70,6 @@ class AppSettingsTableViewController: SettingsTableViewController {
 			*/
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             AdBlockerSetting(settings: self),
-            ImprintSetting(),
             HumanWebSetting(settings: self)
 
         ]
