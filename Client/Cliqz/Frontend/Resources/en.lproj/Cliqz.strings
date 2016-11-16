@@ -220,3 +220,6 @@
 
 /* Cliqz search hint description */
 "Fast-search description" = "Everything now. No detours";
+
+/* Detailed description on Adblocking settings */
+"AdBlocking settings clarification" = "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.";
