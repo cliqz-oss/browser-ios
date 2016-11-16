@@ -188,7 +188,9 @@ class BrowserViewController: UIViewController {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 
-        displayedPopoverController?.dismissViewControllerAnimated(true, completion: nil)
+		displayedPopoverController?.dismissViewControllerAnimated(true) {
+			self.displayedPopoverController = nil
+		}
 
         guard let displayedPopoverController = self.displayedPopoverController else {
             return
@@ -307,8 +309,14 @@ class BrowserViewController: UIViewController {
     }
 
     func SELappWillResignActiveNotification() {
-        // If we are displying a private tab, hide any elements in the tab that we wouldn't want shown
+		// Dismiss any popovers that might be visible
+		displayedPopoverController?.dismissViewControllerAnimated(false) {
+			self.displayedPopoverController = nil
+		}
+
+		// If we are displying a private tab, hide any elements in the tab that we wouldn't want shown
         // when the app is in the home switcher
+		
         guard let privateTab = tabManager.selectedTab where privateTab.isPrivate else {
             return
         }
@@ -1329,6 +1337,12 @@ class BrowserViewController: UIViewController {
         let controller = helper.createActivityViewController({ [unowned self] completed in
             // After dismissing, check to see if there were any prompts we queued up
             self.showQueuedAlertIfAvailable()
+
+			// Usually the popover delegate would handle nil'ing out the references we have to it
+			// on the BVC when displaying as a popover but the delegate method doesn't seem to be
+			// invoked on iOS 10. See Bug 1297768 for additional details.
+			self.displayedPopoverController = nil
+			self.updateDisplayedPopoverProperties = nil
 
             if completed {
                 // We don't know what share action the user has chosen so we simply always
@@ -4016,8 +4030,10 @@ extension BrowserViewController {
     // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
     func SELappDidEnterBackgroundNotification() {
         
-        displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
-        
+		displayedPopoverController?.dismissViewControllerAnimated(false) {
+			self.displayedPopoverController = nil
+		}
+
         isAppResponsive = false
         
         if self.tabManager.selectedTab?.isPrivate == false {
