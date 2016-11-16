@@ -3394,6 +3394,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url))
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
@@ -3408,6 +3409,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
