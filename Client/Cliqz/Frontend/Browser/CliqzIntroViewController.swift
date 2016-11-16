@@ -70,6 +70,14 @@ class CliqzIntroViewController: UIViewController {
         
     }
     
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Portrait
+    }
+
     private func setupConstraints() {
         cliqzLogoView.snp_makeConstraints { make in
             make.centerX.equalTo(self.view)
