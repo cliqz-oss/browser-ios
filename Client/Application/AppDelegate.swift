@@ -284,10 +284,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         // Cliqz: Added Lookback integration
+#if BETA
 		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
 		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
-
+#endif
         // Configure AntiTracking Module
         AntiTrackingModule.sharedInstance.initModule()
 
