@@ -14,14 +14,14 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	var profile: Profile!
 	let tabManager: TabManager
     
-    var viewOpenTime = 0.0
-    var panelOpenTime = 0.0
+    var viewOpenTime : Double?
+    var panelOpenTime : Double?
 
 	private var panelSwitchControl: UISegmentedControl!
 	private var panelSwitchContainerView: UIView!
 	private var panelContainerView: UIView!
 
-	private let dashboardThemeColor = UIColor(rgb: 0x45C2CC)
+	private let dashboardThemeColor = UIConstants.CliqzThemeColor
 
 	weak var delegate: BrowserNavigationDelegate!
 
@@ -46,6 +46,10 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.tabManager = tabManager
 		self.profile = profile
 		super.init(nibName: nil, bundle: nil)
+        
+        // load histroy and favorites immediately not lazy to enhance the performance
+        self.historyViewController.loadExtensionWebView()
+        self.favoritesViewController.loadExtensionWebView()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -181,8 +185,11 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	@objc private func goBack() {
 		self.navigationController?.popViewControllerAnimated(false)
-        let duration = Int(NSDate.getCurrentMillis() - viewOpenTime)
-        logToolbarSignal("click", target: "back", customData: duration)
+        if let openTime = viewOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            logToolbarSignal("click", target: "back", customData: duration)
+            viewOpenTime = nil
+        }
 	}
 
 	@objc private func openSettings() {
@@ -226,7 +233,10 @@ extension DashboardViewController {
     }
     
     private func logHidePanelSignal(panel: UIViewController) {
-        let duration = Int(NSDate.getCurrentMillis() - panelOpenTime)
+        guard  let openTime = panelOpenTime else {
+            return
+        }
+        let duration = Int(NSDate.getCurrentMillis() - openTime)
         var type = ""
         switch panel {
         case tabsViewController:
@@ -244,6 +254,7 @@ extension DashboardViewController {
         
         let customData = ["show_duration" : duration]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard(type, "hide", nil, customData))
+        panelOpenTime = nil
         
     }
 }

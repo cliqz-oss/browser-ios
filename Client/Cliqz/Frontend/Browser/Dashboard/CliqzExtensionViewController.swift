@@ -12,7 +12,7 @@ import WebKit
 class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	
     var profile: Profile!
-    var viewAppearTime = 0.0
+    var loadExtensionStartTime : Double?
     var viewType: String
 	
 	lazy var extensionWebView: WKWebView = {
@@ -43,11 +43,23 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
         self.viewType = viewType
 		super.init(nibName: nil, bundle: nil)
 	}
-	
+
+    func loadExtensionWebView() {
+		loadExtensionStartTime = NSDate.getCurrentMillis()
+        if self.extensionWebView.URL == nil {
+            let url = NSURL(string:  self.mainRequestURL())
+            self.extensionWebView.loadRequest(NSURLRequest(URL: url!))
+        }
+    }
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.setupConstraints()
@@ -55,16 +67,12 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		if self.extensionWebView.URL == nil {
-			let url = NSURL(string:  self.mainRequestURL())
-			self.extensionWebView.loadRequest(NSURLRequest(URL: url!))
-		}
+        self.loadExtensionWebView()
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
         self.javaScriptBridge.publishEvent("show")
-        viewAppearTime = NSDate.getCurrentMillis()
 	}
 
 	func mainRequestURL() -> String {
@@ -136,9 +144,12 @@ extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 extension CliqzExtensionViewController {
     
     private func logShowViewSignal() {
-        let duration = Int(NSDate.getCurrentMillis() - viewAppearTime)
-        let customData = ["load_duration" : duration]
-        TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
+        if let startTime  =  loadExtensionStartTime {
+            let duration = Int(NSDate.getCurrentMillis() - startTime)
+            let customData = ["load_duration" : duration]
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
+            loadExtensionStartTime = nil
+        }
         
     }
 }

@@ -111,7 +111,7 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "Make available offline";
+"Download youtube video" = "view video offline";
 
 /* History title on dashboard */
 "History" = "History";
@@ -193,3 +193,33 @@
 
 /* Start buttun title for onBorading */
 "Let's start!" = "Let's start!";
+
+/* Toast message shown when youtube video download started */
+"The video is being downloaded." = "The video is being downloaded.";
+
+/* Toast message shown when youtube video download faild */
+"The download failed." = "The download failed.";
+
+/* Toast message shown when youtube video is Successfully downloaded */
+"The download is complete. Open the Photos app to watch the video." = "The download is complete. Open the Photos app to watch the video.";
+
+/* Brading label for onBorading */
+"Faster and safer" = "Faster and safer";
+
+/* subtitle label for onBorading */
+"SEARCH ENGINE \n IN THE BROWSER" = "SEARCH ENGINE \n IN THE BROWSER";
+
+/* Anti-tracking hint title */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Anti-tracking hint description */
+"Anti-Tracking description" = "You are in control: CLIQZ Anti-Tracking protects your privacy";
+
+/* Cliqz search hint title */
+"Fast-search" = "Fast-Search";
+
+/* Cliqz search hint description */
+"Fast-search description" = "Everything now. No detours";
+
+/* Detailed description on Adblocking settings */
+"AdBlocking settings clarification" = "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.";

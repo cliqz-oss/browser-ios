@@ -43,3 +43,10 @@ func postAsyncToMain(delay:Double, closure:()->()) {
         ),
         dispatch_get_main_queue(), closure)
 }
+
+func getApp() -> AppDelegate {
+    return UIApplication.sharedApplication().delegate as! AppDelegate
+}
+func getCurrentWebView() -> CliqzWebView? {
+    return getApp().browserViewController.tabManager.selectedTab?.webView
+}

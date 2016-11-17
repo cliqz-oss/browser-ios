@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import XCTest
+import KIF
 
 extension XCTestCase {
-	
+
 	var tester: KIFUITestActor { return tester() }
 	var system: KIFSystemTestActor { return system() }
-	
+
 	private func tester(file : String = __FILE__, _ line : Int = __LINE__) -> KIFUITestActor {
 		return KIFUITestActor(inFile: file, atLine: line, delegate: self)
 	}
@@ -28,10 +30,10 @@ extension KIFUITestActor {
 //		let element = UIApplication.sharedApplication().accessibilityElementMatchingBlock { element in
 //			return element.accessibilityHint == hint
 //		}
-//		
+//
 //		return element != nil
 //	}
-//	
+//
 //	func waitForViewWithAccessibilityHint(hint: String) -> UIView? {
 //		var view: UIView? = nil
 //		autoreleasepool {
@@ -39,7 +41,7 @@ extension KIFUITestActor {
 //		}
 //		return view
 //	}
-	
+
 	func viewExistsWithLabel(label: String) -> Bool {
 		do {
 			try self.tryFindingViewWithAccessibilityLabel(label)

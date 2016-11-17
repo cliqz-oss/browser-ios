@@ -21,6 +21,8 @@
 #import "AWSSNS.h"
 #import "LegacyJSContext.h"
 
+#import "ThirdParty/WindowTimers/WindowTimers.h"
+
 // Cliqz: Commented crash reporter
 //#import <CrashReporter/CrashReporter.h>
 

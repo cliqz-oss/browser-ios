@@ -414,7 +414,7 @@ class SettingsTableViewController: UITableViewController {
     var tabManager: TabManager!
     
     // Cliqz: added to calculate the duration spent on settings page
-    var settingsOpenTime = 0.0
+    var settingsOpenTime : Double?
 
     /// Used to calculate cell heights.
     private lazy var dummyToggleCell: UITableViewCell = {
@@ -464,10 +464,11 @@ class SettingsTableViewController: UITableViewController {
         
         // Cliqz: log back telemetry singal for settings view
         // this check distinguish between showing detail and clicking done
-        if self.navigationController?.viewControllers.count == 1 {
-            let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
+        if let openTime = settingsOpenTime where self.navigationController?.viewControllers.count == 1 {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
             let settingsBackSignal = TelemetryLogEventType.Settings("main", "click", "back", nil, duration)
             TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
             
         }
     }

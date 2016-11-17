@@ -64,6 +64,7 @@ class TabsViewController: UIViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		self.tabsView.reloadData()
 	}
 	
 	override func viewWillLayoutSubviews() {

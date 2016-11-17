@@ -47,10 +47,14 @@
 		0BF42D4F1A7CD09600889E28 /* TestFavicons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */; };
 		0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF648101A9C54E900BA963C /* TopSitesPanel.swift */; };
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
+		1E01FCEE1DD9CB6600570663 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E01FCED1DD9CB6600570663 /* ajax_handler.js */; };
+		1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */; };
+		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
 		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
 		1E1432321D88539A001C27C9 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
 		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
+		1E1CB9A31DD46C050098D980 /* FeedbackUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */; };
 		1E705C391D5E052D009FAEE1 /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */; };
 		1E705C3B1D5E059E009FAEE1 /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
@@ -230,6 +234,10 @@
 		1E79DEFF1D509986006BEB4A /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB81D5098CC006BEB4A /* Global.swift */; };
 		1E79DF001D50998D006BEB4A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DEB91D5098CC006BEB4A /* Info.plist */; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
+		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
+		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
+		1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */; };
+		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
 		1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */; };
 		1ECAE33D1DA4EE5800CB8102 /* ES5CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */; };
 		1ECAE33E1DA4EE5800CB8102 /* ES6CompatTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */; };
@@ -239,6 +247,7 @@
 		1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33B1DA4EE5800CB8102 /* es5tests.json */; };
 		1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33C1DA4EE5800CB8102 /* es6tests.json */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
+		1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		280CB1371C20E0A3005AF147 /* BookmarksSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */; };
@@ -440,6 +449,7 @@
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
 		4F0552821D74730F00E2A684 /* AntitrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */; };
 		4F0552841D74902A00E2A684 /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552831D74902A00E2A684 /* TrackerViewCell.swift */; };
+		4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F88A6F31D7714D30039775D /* BrowserNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
@@ -452,6 +462,9 @@
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
 		4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
+		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
+		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
+		4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
@@ -747,7 +760,6 @@
 		E4D5679F1ADECEB800F1EFE7 /* ReadingListClientRecordTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D567951ADECEB800F1EFE7 /* ReadingListClientRecordTestCase.swift */; };
 		E4D567A51ADECEB800F1EFE7 /* ReadingListStorageTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D5679B1ADECEB800F1EFE7 /* ReadingListStorageTestCase.swift */; };
 		E4D6BEB91A0930EC00F538BD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4D6BEB81A0930EC00F538BD /* LaunchScreen.xib */; };
-		E4D8F3B01ACDD5150005A2E4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */; };
 		E4E25CCB1CA99E7400D0F088 /* HexExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E25CCA1CA99E7400D0F088 /* HexExtensionsTests.swift */; };
 		E4E7EB6B1C4A86430094275D /* SupportUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E7EB451C4A85D80094275D /* SupportUtils.swift */; };
 		E4E7EB6D1C4AED5E0094275D /* SupportUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E7EB6C1C4AED5E0094275D /* SupportUtilsTests.swift */; };
@@ -1355,11 +1367,15 @@
 		0BF42D4E1A7CD09600889E28 /* TestFavicons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFavicons.swift; sourceTree = "<group>"; };
 		0BF648101A9C54E900BA963C /* TopSitesPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSitesPanel.swift; sourceTree = "<group>"; };
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
+		1E01FCED1DD9CB6600570663 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
+		1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Book.otf"; sourceTree = "<group>"; };
+		1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistorySwiper.swift; sourceTree = "<group>"; };
 		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
 		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
 		1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegacyJSContext.m; sourceTree = "<group>"; };
+		1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackUI.swift; sourceTree = "<group>"; };
 		1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
@@ -1466,7 +1482,6 @@
 		1E79DD791D4FB59D006BEB4A /* SQLiteBookmarksExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksExtension.swift; sourceTree = "<group>"; };
 		1E79DD7A1D4FB59D006BEB4A /* SQLiteBookmarksModelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModelExtension.swift; sourceTree = "<group>"; };
 		1E79DD7B1D4FB59D006BEB4A /* SQLiteHistoryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHistoryExtension.swift; sourceTree = "<group>"; };
-		1E79DD811D507C93006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1E79DD841D507D26006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/3DTouchActions.strings; sourceTree = "<group>"; };
 		1E79DD861D507D26006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AuthenticationManager.strings; sourceTree = "<group>"; };
 		1E79DD881D507D26006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/BookmarkPanel.strings; sourceTree = "<group>"; };
@@ -1646,6 +1661,11 @@
 		1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "UITests copy-Info.plist"; path = "/Users/mahmoud/Cliqz/Repositories/cliqzfox-ios/UITests copy-Info.plist"; sourceTree = "<absolute>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
+		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
+		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
+		1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementAtPoint.swift; sourceTree = "<group>"; };
+		1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ElementAtPoint.js; sourceTree = "<group>"; };
+		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
 		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES5CompatTest.swift; sourceTree = "<group>"; };
 		1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES6CompatTest.swift; sourceTree = "<group>"; };
@@ -1655,6 +1675,7 @@
 		1ECAE33B1DA4EE5800CB8102 /* es5tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = es5tests.json; sourceTree = "<group>"; };
 		1ECAE33C1DA4EE5800CB8102 /* es6tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = es6tests.json; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
+		1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzIntroViewController.swift; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
 		28126F6D1C2F94F9006466CC /* SQLiteBookmarksModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModel.swift; sourceTree = "<group>"; };
@@ -1838,6 +1859,8 @@
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntitrackingViewController.swift; sourceTree = "<group>"; };
 		4F0552831D74902A00E2A684 /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
+		4F44ECBC1DC34C6E00E03860 /* WindowTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowTimers.h; sourceTree = "<group>"; };
+		4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowTimers.m; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserNavigationDelegate.swift; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
@@ -1850,6 +1873,8 @@
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
+		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
+		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
 		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
@@ -2110,7 +2135,6 @@
 		E4D567951ADECEB800F1EFE7 /* ReadingListClientRecordTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingListClientRecordTestCase.swift; sourceTree = "<group>"; };
 		E4D5679B1ADECEB800F1EFE7 /* ReadingListStorageTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingListStorageTestCase.swift; sourceTree = "<group>"; };
 		E4D6BEB81A0930EC00F538BD /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		E4D8F3B11ACDD5150005A2E4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E4E0BB151AFBC9E4008D6260 /* Shared-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shared-Bridging-Header.h"; sourceTree = "<group>"; };
 		E4E0BB171AFBC9E4008D6260 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4E25CCA1CA99E7400D0F088 /* HexExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexExtensionsTests.swift; sourceTree = "<group>"; };
@@ -2320,6 +2344,7 @@
 				282731751ABC9BE700AA1954 /* Sync.framework in Frameworks */,
 				1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */,
 				1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */,
+				4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2682,6 +2707,9 @@
 				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
 				4FF239C71D52464A00EEDE89 /* WebView */,
 				1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */,
+				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
+				1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */,
+				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
 				1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */,
 				1E79DCC91D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift */,
 				1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */,
@@ -2700,6 +2728,10 @@
 				4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */,
 				4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */,
 				1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */,
+				1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */,
+				1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */,
+				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
+				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -2707,6 +2739,7 @@
 		1E79DCD71D4FB2C5006BEB4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */,
 				1E79DCD91D4FB2C5006BEB4A /* Breaking News Screens */,
 				1E79DCF21D4FB2C5006BEB4A /* Cliqz.strings */,
 				1E79DCF41D4FB2C5006BEB4A /* FairBlocking.html */,
@@ -2717,6 +2750,9 @@
 				1E79DCFD1D4FB2C5006BEB4A /* trampolineForward.html */,
 				1E79DCFE1D4FB2C5006BEB4A /* viewport.js */,
 				1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */,
+				1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */,
+				1E01FCED1DD9CB6600570663 /* ajax_handler.js */,
+				4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3396,6 +3432,7 @@
 		28CE83EF1A1D246900576538 /* Third-Party Source */ = {
 			isa = PBXGroup;
 			children = (
+				4F44ECBA1DC34C6E00E03860 /* WindowTimers */,
 				1E79DDE01D508368006BEB4A /* AWSCore */,
 				1E79DD421D4FB2F8006BEB4A /* AWSSNS */,
 				1E79DD531D4FB319006BEB4A /* Lookback-Resources */,
@@ -3635,6 +3672,16 @@
 			path = AntitrackingUI;
 			sourceTree = "<group>";
 		};
+		4F44ECBA1DC34C6E00E03860 /* WindowTimers */ = {
+			isa = PBXGroup;
+			children = (
+				4F44ECBC1DC34C6E00E03860 /* WindowTimers.h */,
+				4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */,
+			);
+			name = WindowTimers;
+			path = ThirdParty/WindowTimers;
+			sourceTree = "<group>";
+		};
 		4FA29B131D64BFE300C59F5E /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -3691,6 +3738,7 @@
 		7B604FC11C496005006EEEC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1EBC01431DD4786D000912B9 /* CRToast.framework */,
 				1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */,
 				1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */,
 				1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */,
@@ -4373,7 +4421,6 @@
 				1E79DD821D507D26006BEB4A /* LocalizedStrings */,
 				1E79DC961D4FB2C5006BEB4A /* Cliqz */,
 				F84B22431A09165600AAB793 /* Info.plist */,
-				E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */,
 				E60961841B62B7E100DD640F /* Configuration */,
 				F84B21EB1A0910F600AAB793 /* Assets */,
 				F84B21E41A0910F600AAB793 /* Application */,
@@ -5084,6 +5131,7 @@
 					};
 					390527491C874D35007E0BB7 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
 					};
 					7BEB64401C7345600092C02E = {
@@ -5098,6 +5146,7 @@
 					};
 					E4BA8A2A1B4B0A1600BC2E95 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -5122,6 +5171,7 @@
 					};
 					F84B21BD1A090F8100AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -5144,6 +5194,7 @@
 					};
 					F84B22481A0920C600AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -5156,6 +5207,7 @@
 					};
 					F84B225B1A09210A00AAB793 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -5487,6 +5539,7 @@
 				D38A1EE01CB458EC0080C842 /* CertError.html in Resources */,
 				0BA1E0301B051A07007675AF /* NetError.css in Resources */,
 				E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */,
+				1E01FCEE1DD9CB6600570663 /* ajax_handler.js in Resources */,
 				F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */,
 				7B42406E1CA04CAC009B5C28 /* Menu.xcassets in Resources */,
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
@@ -5530,6 +5583,7 @@
 				E4B7B7791A793CF20022C5E0 /* FiraSans-Light.ttf in Resources */,
 				D38A1BF01A9FA2CA00F6A386 /* SiteTableViewControllerHeader.xib in Resources */,
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
+				1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
 				1E79DD351D4FB2C5006BEB4A /* NewsPermissionSettings-6Plus.png in Resources */,
 				1E79DDD51D507D26006BEB4A /* PrivateBrowsing.strings in Resources */,
@@ -5537,6 +5591,7 @@
 				D30684F11C84F12A002D8D82 /* SearchPlugins in Resources */,
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
 				1E79DD311D4FB2C5006BEB4A /* NewsPermissionAsking-6Plus.png in Resources */,
+				4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
 				1E79DD3A1D4FB2C5006BEB4A /* Lato-Medium.ttf in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
@@ -5559,6 +5614,7 @@
 				E4424B3C1AC71FB400F44C38 /* FiraSans-Book.ttf in Resources */,
 				1E79DD321D4FB2C5006BEB4A /* NewsPermissionSettings-4.png in Resources */,
 				1E79DD3B1D4FB2C5006BEB4A /* main.js in Resources */,
+				1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */,
 				0BF42D391A7C0E8900889E28 /* Favicons.js in Resources */,
 				1E79DDCE1D507D26006BEB4A /* HistoryPanel.strings in Resources */,
 				39A35AED1C0662A3006B9E87 /* SpotlightHelper.js in Resources */,
@@ -5570,7 +5626,6 @@
 				1E79DDC71D507D26006BEB4A /* BookmarkPanel.strings in Resources */,
 				E49C0EB11B46109C009092BB /* WindowCloseHelper.js in Resources */,
 				1E79DD361D4FB2C5006BEB4A /* Cliqz.strings in Resources */,
-				E4D8F3B01ACDD5150005A2E4 /* InfoPlist.strings in Resources */,
 				2F44FB2D1A9D5D8500FD20CC /* FiraSans-BoldItalic.ttf in Resources */,
 				1E79DDDA1D507D26006BEB4A /* Storage.strings in Resources */,
 			);
@@ -5641,6 +5696,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Deferred.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftKeychainWrapper.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/libPhoneNumber.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CRToast.framework",
 			);
 			name = "Copy Carthage Dependencies";
 			outputPaths = (
@@ -6081,9 +6137,12 @@
 				1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */,
 				745DAB3F1CDAB09E00D44181 /* HistoryBackButton.swift in Sources */,
 				D3B6923F1B9F9A58004B87A4 /* FindInPageHelper.swift in Sources */,
+				4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */,
 				1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */,
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
+				1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
+				1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */,
 				1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */,
 				4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */,
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
@@ -6115,6 +6174,7 @@
 				1E79DD2A1D4FB2C5006BEB4A /* TransitionAnimator.swift in Sources */,
 				D331DFCA1CB6E9EE009B5DA2 /* OldStrings.swift in Sources */,
 				D3BE7B461B054F8600641031 /* TestAppDelegate.swift in Sources */,
+				1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */,
 				0B62EFD21AD63CD100ACB9CD /* Clearables.swift in Sources */,
 				1E79DD0B1D4FB2C5006BEB4A /* StringExtension.swift in Sources */,
 				1E79DE781D508368006BEB4A /* AWSBolts.m in Sources */,
@@ -6153,6 +6213,7 @@
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
+				4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
@@ -6162,6 +6223,7 @@
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
+				1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */,
 				1E79DD171D4FB2C5006BEB4A /* ConnectionManager.swift in Sources */,
 				E69E06C91C76198000D0F926 /* AuthenticationManagerConstants.swift in Sources */,
 				1E79DE9B1D508368006BEB4A /* AWSURLRequestSerialization.m in Sources */,
@@ -6204,6 +6266,7 @@
 				E664B45A1CD7ECDB0045A6A4 /* NotificationRootViewController.swift in Sources */,
 				2FDE87FE1ABB3817005317B1 /* RemoteTabsPanel.swift in Sources */,
 				39DD030D1CD53E1900BC09B3 /* HomePageHelper.swift in Sources */,
+				1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */,
 				C4F3B29A1CFCF93A00966259 /* ButtonToast.swift in Sources */,
 				4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */,
 				E4A961341AC051360069AD6F /* ReadabilityTabHelper.swift in Sources */,
@@ -6293,6 +6356,7 @@
 				0BA1E02E1B046F1E007675AF /* ErrorPageHelper.swift in Sources */,
 				1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */,
 				1E79DE841D508368006BEB4A /* AWSFMDatabasePool.m in Sources */,
+				1E1CB9A31DD46C050098D980 /* FeedbackUI.swift in Sources */,
 				D3A9949C1A3686BD008AD1AC /* BrowserViewController.swift in Sources */,
 				59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */,
 				E69E06D01C765BB900D0F926 /* NSAttributedStringExtensions.swift in Sources */,
@@ -6929,15 +6993,6 @@
 			name = Storage.strings;
 			sourceTree = "<group>";
 		};
-		E4D8F3B21ACDD5150005A2E4 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E4D8F3B11ACDD5150005A2E4 /* en */,
-				1E79DD811D507C93006BEB4A /* de */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -7319,7 +7374,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7335,7 +7391,8 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
-				PROVISIONING_PROFILE = "b0439221-0bfa-4c22-867c-8776ad180597";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_VERSION = 2.3;
 			};
 			name = Fennec;
@@ -7345,6 +7402,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7360,7 +7418,8 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Firefox;
@@ -7370,6 +7429,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7385,6 +7445,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_BETA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_VERSION = 2.3;
 			};
 			name = FirefoxBeta;
@@ -7394,6 +7455,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7409,6 +7471,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_NIGHTLY -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_VERSION = 2.3;
 			};
 			name = FirefoxNightly;
@@ -7418,6 +7481,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7433,6 +7497,7 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_AURORA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_VERSION = 2.3;
 			};
 			name = FennecAurora;
@@ -7535,6 +7600,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Nightly;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7554,6 +7621,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_PRODUCT_NAME = CLIQZ;
 				MOZ_VENDOR = CLIQZ;
 				OTHER_LDFLAGS = (
@@ -7594,6 +7662,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7606,6 +7675,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7617,6 +7687,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7629,6 +7700,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -7714,7 +7786,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7773,6 +7846,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7785,7 +7859,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7797,6 +7872,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7809,7 +7885,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8032,7 +8109,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8045,7 +8123,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b0439221-0bfa-4c22-867c-8776ad180597";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8056,6 +8135,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8068,7 +8148,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da664b41-ab6e-44e6-b619-b6940dace364";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8079,6 +8160,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8091,6 +8173,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8421,6 +8504,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8458,6 +8543,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8470,6 +8556,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8479,6 +8566,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8491,6 +8579,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8502,6 +8591,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8514,6 +8604,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8901,6 +8992,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Beta;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8957,6 +9050,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8969,6 +9063,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8978,6 +9073,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8990,6 +9086,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -9001,6 +9098,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9013,6 +9111,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -9343,7 +9442,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9398,7 +9498,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9411,7 +9512,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b0439221-0bfa-4c22-867c-8776ad180597";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -9423,7 +9525,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Naira Sahakyan (Z58SDXNDV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9436,7 +9539,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b0439221-0bfa-4c22-867c-8776ad180597";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};

@@ -54,6 +54,10 @@ class WebViewToUAMapper {
     }
 }
 
+struct CliqzWebViewConstants {
+    static let kNotificationWebViewLoadCompleteOrFailed = "kNotificationWebViewLoadCompleteOrFailed"
+    static let kNotificationPageInteractive = "kNotificationPageInteractive"
+}
 
 class CliqzWebView: UIWebView {
 	
@@ -144,6 +148,23 @@ class CliqzWebView: UIWebView {
 
     var removeProgressObserversOnDeinit: ((UIWebView) -> Void)?
 
+    static var modifyLinksScript: WKUserScript?
+    static var ajaxHandlerScript: WKUserScript?
+    
+    override class func initialize() {
+        // Added for modifying page links with target blank to open in new tabs
+        let path = NSBundle.mainBundle().pathForResource("ModifyLinksForNewTab", ofType: "js")!
+        let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
+        modifyLinksScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+        
+        
+        // Added for overriding XHR request to detect youtube redirect between videos
+        let ajaxHandlerPath = NSBundle.mainBundle().pathForResource("ajax_handler", ofType: "js")!
+        let ajaxHandlerSource = try! NSString(contentsOfFile: ajaxHandlerPath, encoding: NSUTF8StringEncoding) as String
+        ajaxHandlerScript = WKUserScript(source: ajaxHandlerSource, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
+
+    }
+    
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
 		commonInit()
@@ -220,13 +241,15 @@ class CliqzWebView: UIWebView {
 			if !(self.URL?.absoluteString!.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScriptFromString("document.title") ?? NSURL(string: docLoc)?.baseDomain() ?? ""
 			}
-			
+
 			if let nd = self.navigationDelegate {
 				globalContainerWebView.legacyWebView = self
 				nd.webView?(globalContainerWebView, didFinishNavigation: nullWKNavigation)
 			}
 		}
 		self.prevDocumentLocation = docLoc
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed, object: self)
 	}
 	
 	var customUserAgent:String? /*{
@@ -263,6 +286,15 @@ class CliqzWebView: UIWebView {
         scalesPageToFit = true
         generateUniqueUserAgent()
 		progress = WebViewProgress(parent: self)
+		let refresh = UIRefreshControl()
+		refresh.bounds = CGRectMake(0, -10, refresh.bounds.size.width, refresh.bounds.size.height)
+		refresh.tintColor = UIColor.blackColor()
+		refresh.addTarget(self, action: #selector(refreshWebView), forControlEvents: UIControlEvents.ValueChanged)
+		self.scrollView.addSubview(refresh)
+		
+        // built-in userScripts
+		self.configuration.userContentController.addUserScript(CliqzWebView.modifyLinksScript!)
+        self.configuration.userContentController.addUserScript(CliqzWebView.ajaxHandlerScript!)
 	}
 
     // Needed to identify webview in url protocol
@@ -305,8 +337,8 @@ class CliqzWebView: UIWebView {
 		}
 		return nil
 	}
+
     private func reverseStringify(text: String?) -> String? {
-        
         guard text != nil else {
             return nil
         }
@@ -327,6 +359,10 @@ class CliqzWebView: UIWebView {
         self.canGoForward = super.canGoForward
     }
 
+	@objc private func refreshWebView(refresh: UIRefreshControl) {
+		refresh.endRefreshing()
+		self.reload()
+	}
 }
 
 extension CliqzWebView: UIWebViewDelegate {
@@ -357,7 +393,17 @@ extension CliqzWebView: UIWebViewDelegate {
             assert(CliqzWebView.webviewBuiltinUserAgent != nil)
         }
 
-        
+		if url.scheme == "newtab" {
+			if let delegate = self.UIDelegate,
+				let absoluteStr = url.absoluteString?.stringByRemovingPercentEncoding {
+				let startIndex = absoluteStr.startIndex.advancedBy((url.scheme?.characters.count)! + 1)
+				let newURL = NSURL(string: absoluteStr.substringFromIndex(startIndex))!
+				let newRequest = NSURLRequest(URL: newURL)
+				delegate.webView!(globalContainerWebView, createWebViewWithConfiguration: WKWebViewConfiguration(), forNavigationAction: LegacyNavigationAction(type: WKNavigationType(rawValue: navigationType.rawValue)!, request: newRequest), windowFeatures: WKWindowFeatures())
+			}
+			return false
+		}
+
 		if let progressCheck = progress?.shouldStartLoadWithRequest(request, navigationType: navigationType) where !progressCheck {
 			return false
 		}
@@ -423,6 +469,10 @@ extension CliqzWebView: UIWebViewDelegate {
 				}
 			}
 		}
+        
+        NSNotificationCenter.defaultCenter()
+            .postNotificationName(CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed, object: self)
+        
 		progress?.didFailLoadWithError()
         updateObservableAttributes()
 	}

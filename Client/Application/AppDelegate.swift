@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         log.debug("Configuring window…")
 
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window = CliqzMainWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
 		
 		AWSSNSManager.configureCongnitoPool()
@@ -284,10 +284,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         // Cliqz: Added Lookback integration
-//		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
-//		Lookback.sharedLookback().shakeToRecord = true
+#if BETA
+		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
-
+#endif
         // Configure AntiTracking Module
         AntiTrackingModule.sharedInstance.initModule()
 

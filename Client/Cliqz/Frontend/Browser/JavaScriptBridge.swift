@@ -289,13 +289,9 @@ class JavaScriptBridge {
     }
     
     private func openGoogleMaps(url: String) {
-        if UIApplication.sharedApplication().canOpenURL(
-            NSURL(string: "comgooglemapsurl://")!) {
-            let escapedURL = url.replace("https://", replacement: "")
-            if let mapURL = NSURL(string:"comgooglemapsurl://\(escapedURL)") {
-                UIApplication.sharedApplication().openURL(mapURL)
-			}
-		}
+        if let mapURL = NSURL(string:url) {
+            delegate?.didSelectUrl(mapURL)
+        }
 	}
 
 }
