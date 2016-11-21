@@ -16,13 +16,13 @@ class HistorySwiper : NSObject {
     
     lazy var goBackSwipe: UIGestureRecognizer = {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(HistorySwiper.screenLeftEdgeSwiped(_:)))
-        self.topLevelView.superview!.addGestureRecognizer(pan)
+        self.topLevelView.addGestureRecognizer(pan)
         return pan
     }()
     
     lazy var goForwardSwipe: UIGestureRecognizer = {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(HistorySwiper.screenRightEdgeSwiped(_:)))
-        self.topLevelView.superview!.addGestureRecognizer(pan)
+        self.topLevelView.addGestureRecognizer(pan)
         return pan
     }()
     
