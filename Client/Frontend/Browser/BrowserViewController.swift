@@ -1301,7 +1301,7 @@ class BrowserViewController: UIViewController {
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
 				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_page"))
-				self.downloadVideoFromURL(url.absoluteString!)
+                self.downloadVideoFromURL(url.absoluteString!, sourceRect: sourceRect)
 			}
 			activities.append(youtubeDownloader)
 		}
@@ -3435,7 +3435,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             if YoutubeVideoDownloader.isYoutubeURL(url) {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
                 let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.downloadVideoFromURL(dialogTitle!)
+                    self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
                 }
                 actionSheetController.addAction(downloadVideo)
