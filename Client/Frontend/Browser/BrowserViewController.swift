@@ -470,6 +470,12 @@ class BrowserViewController: UIViewController {
         }
 		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
+        
+        #if CLIQZ
+            // Cliqz:  setup back and forward swipe
+            historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)            
+        #endif
+
     }
 
     private func setupConstraints() {
@@ -2400,7 +2406,6 @@ extension BrowserViewController: TabManagerDelegate {
             
             #if CLIQZ
                 // Cliqz: back and forward swipe
-                historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)
                 for swipe in [historySwiper.goBackSwipe, historySwiper.goForwardSwipe] {
                     tab.webView?.scrollView.panGestureRecognizer.requireGestureRecognizerToFail(swipe)
                 }
