@@ -19,8 +19,6 @@ let LatestAppVersionProfileKey = "latestAppVersion"
 let AllowThirdPartyKeyboardsKey = "settings.allowThirdPartyKeyboards"
 private let InitialPingSentKey = "initialPingSent"
 
-public let IsAppTerminated = "isAppTerminated"
-
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var browserViewController: BrowserViewController!
@@ -200,17 +198,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         log.debug("Done with setting up the application.")
-		self.clearLocalDataIfNeeded()
 
         return true
     }
 
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
-		// Cliqz added preference in UserDefaults for keeping the state when app is terminated to clean-up on launch if needed
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: IsAppTerminated)
-        NSUserDefaults.standardUserDefaults().synchronize()
-        
+		
 		// We have only five seconds here, so let's hope this doesn't take too long.
         self.profile?.shutdown()
 
@@ -646,19 +640,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-	// Cliqz: Added method to clear Data if the application was closed before and
-	private func clearLocalDataIfNeeded() {
-		guard LocalDataStore.objectForKey(IsAppTerminated) as? Bool ?? false else {
-			return
-		}
-        // reset IsAppTerminated state
-        LocalDataStore.setObject(false, forKey: IsAppTerminated)
-        
-		guard let profile = self.profile where SettingsPrefs.getClearDataOnTerminatingPref() == true else {
-			return
-		}
-		profile.clearPrivateData(self.tabManager)
-	}
 
     // Cliqz: comented Firefox 3D Touch code
 //    @available(iOS 9.0, *)

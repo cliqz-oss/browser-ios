@@ -243,7 +243,6 @@ class AppStatus {
         prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
-        prefs["clear_on_exit"] = SettingsPrefs.getClearDataOnTerminatingPref()
         
         return prefs
     }
