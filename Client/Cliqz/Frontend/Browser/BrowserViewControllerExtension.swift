@@ -36,7 +36,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
         }
     }
 
-	func downloadVideoFromURL(url: String) {
+	func downloadVideoFromURL(url: String, sourceRect: CGRect) {
 		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
 			do {
 				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)
@@ -48,7 +48,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 				}
 				context.evaluateScript(jsString as String)
 				let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
-					self?.downloadVideoOfSelectedFormat(urls)
+                    self?.downloadVideoOfSelectedFormat(urls, sourceRect: sourceRect)
 				}
 				let callbackName = "URLReceived"
 				context.setObject(unsafeBitCast(callback, AnyObject.self), forKeyedSubscript: callbackName)
@@ -59,7 +59,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 		}
 	}
 	
-	func downloadVideoOfSelectedFormat(urls: [AnyObject]) {
+	func downloadVideoOfSelectedFormat(urls: [AnyObject], sourceRect: CGRect) {
 		if urls.count > 0 {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
 		} else {
@@ -77,6 +77,11 @@ extension BrowserViewController: AntitrackingViewDelegate {
         actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: { _ in
             TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
         }))
+        
+        if let popoverPresentationController = actionSheet.popoverPresentationController {
+            popoverPresentationController.sourceView = view
+            popoverPresentationController.sourceRect = sourceRect   
+        }
 		self.presentViewController(actionSheet, animated: true, completion: nil)
 	}
 	
