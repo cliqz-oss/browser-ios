@@ -56,7 +56,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	override func viewDidLoad(	) {
 		super.viewDidLoad()
 		
 		panelSwitchContainerView = UIView()
@@ -151,7 +151,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 			make.height.equalTo(45)
 		}
 		panelSwitchControl.snp_makeConstraints { make in
-			make.top.equalTo(panelSwitchContainerView)
+			make.centerY.equalTo(panelSwitchContainerView)
 			make.left.equalTo(panelSwitchContainerView).offset(switchControlLeftOffset)
 			make.right.equalTo(panelSwitchContainerView).offset(switchControlRightOffset)
 			make.height.equalTo(switchControlHeight)
