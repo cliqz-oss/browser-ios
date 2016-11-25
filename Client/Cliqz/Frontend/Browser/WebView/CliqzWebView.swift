@@ -223,10 +223,13 @@ class CliqzWebView: UIWebView {
 	}
 	
 	override func loadRequest(request: NSURLRequest) {
-        unsafeRequests = 0
+		if let url = request.URL where
+			!ReaderModeUtils.isReaderModeURL(url) {
+			unsafeRequests = 0
+		}
 		super.loadRequest(request)
 	}
-	
+
 	func loadingCompleted() {
 		if internalLoadingEndedFlag {
 			return
