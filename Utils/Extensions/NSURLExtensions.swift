@@ -236,7 +236,8 @@ extension NSURL {
     public func isWebPage() -> Bool {
         let httpSchemes = ["http", "https"]
 
-        if let _ = httpSchemes.indexOf(scheme!) {
+        if let s = scheme,
+			let _ = httpSchemes.indexOf(s) {
             return true
         }
 
