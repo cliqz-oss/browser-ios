@@ -14,7 +14,6 @@ class SettingsPrefs {
 	static let FairBlockingPrefKey = "fairBlocking"
 	static let BlockExplicitContentPrefKey = "blockContent"
     static let HumanWebPrefKey = "humanweb.toggle"
-    static let ClearDataOnTerminatingPrefKey = "clearprivatedata.onterminate"
 	static let ShowAntitrackingHintKey = "showAntitrackingHint"
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
 
@@ -62,18 +61,6 @@ class SettingsPrefs {
         SettingsPrefs.updateBoolPref(HumanWebPrefKey, value: newValue)
     }
     
-    class func getClearDataOnTerminatingPref() -> Bool {
-        let defaultValue = false
-        if let ClearDataOnTerminatingPref = SettingsPrefs.getBoolPref(ClearDataOnTerminatingPrefKey) {
-            return ClearDataOnTerminatingPref
-        }
-        return defaultValue
-    }
-    
-    class func updateClearDataOnTerminatingPref(newValue: Bool) {
-        SettingsPrefs.updateBoolPref(ClearDataOnTerminatingPrefKey, value: newValue)
-    }
-	
 	class func updateShowAntitrackingHintPref(newValue: Bool) {
 		SettingsPrefs.updateBoolPref(ShowAntitrackingHintKey, value: newValue)
 	}
