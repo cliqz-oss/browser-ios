@@ -10,8 +10,8 @@ class CliqzContextMenu {
     var timer1_cancelDefaultMenu: NSTimer = NSTimer()
     var timer2_showMenuIfStillPressed: NSTimer = NSTimer()
     
-    static let initialDelayToCancelBuiltinMenu = 0.15 // seconds, must be <0.3 or built-in menu can't be cancelled
-    static let totalDelayToShowContextMenu = 0.55 - initialDelayToCancelBuiltinMenu // 850 is copied from Safari
+    static let initialDelayToCancelBuiltinMenu = 0.20 // seconds, must be <0.3 or built-in menu can't be cancelled
+    static let totalDelayToShowContextMenu = 0.65 - initialDelayToCancelBuiltinMenu // 850 is copied from Safari
     
     private func resetTimer() {
         if (!timer1_cancelDefaultMenu.valid && !timer2_showMenuIfStillPressed.valid) {
@@ -74,6 +74,9 @@ class CliqzContextMenu {
                 }
                 break
             case .Ended, .Cancelled:
+                if let url = tappedElement?.link {
+                    getCurrentWebView()?.loadRequest(NSURLRequest(URL: url))
+                }
                 resetTimer()
                 break
             }
