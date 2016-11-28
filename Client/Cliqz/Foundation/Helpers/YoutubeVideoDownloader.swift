@@ -29,6 +29,8 @@ class YoutubeVideoDownloader {
                 
                 if authorizationStatus == .Authorized {
 
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+                    
                     let infoMessage = NSLocalizedString("The video is being downloaded.", tableName: "Cliqz", comment: "Toast message shown when youtube video download started")
                     FeedbackUI.showToastMessage(infoMessage, messageType: .Info)
                     
@@ -70,6 +72,8 @@ class YoutubeVideoDownloader {
 
                 // Delete the local file after saving it to photos library
                 YoutubeVideoDownloader.deleteLocalVideo(localPath)
+                
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         }
     }
     
