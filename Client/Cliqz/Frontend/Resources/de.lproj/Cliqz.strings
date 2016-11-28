@@ -225,3 +225,12 @@
 
 /* [Settings] Show tips and tricks page */
 "Get the best out of CLIQZ" = "Get the best out of CLIQZ";
+
+/* Youtube downloader action sheet title */
+"Video quality" = "Videoqualität";
+
+/* Youtube downloader action sheet message */
+"Please select video quality" = "Bitte wähle die gewünschte Videoqualität aus";
+
+/* HUD message displayed while youtube downloader grabing the download URLs of the video */
+"Retrieving video information" = "Lade Videoinformationen";

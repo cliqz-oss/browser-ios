@@ -39,6 +39,8 @@ extension BrowserViewController: AntitrackingViewDelegate {
 	func downloadVideoFromURL(url: String, sourceRect: CGRect) {
 		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
 			do {
+                let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
+                FeedbackUI.showLoadingHUD(hudMessage)
 				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)
 				let context = JSContext()
 				let httpRequest = XMLHttpRequest()
@@ -65,7 +67,10 @@ extension BrowserViewController: AntitrackingViewDelegate {
 		} else {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "false"))
 		}
- 		let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        FeedbackUI.dismissHUD()
+        let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
+        let message = NSLocalizedString("Please select video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet message")
+ 		let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
 		for url in urls {
 			if let f = url["label"] as? String, u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
@@ -80,7 +85,9 @@ extension BrowserViewController: AntitrackingViewDelegate {
         
         if let popoverPresentationController = actionSheet.popoverPresentationController {
             popoverPresentationController.sourceView = view
-            popoverPresentationController.sourceRect = sourceRect   
+            let center = self.view.center
+            popoverPresentationController.sourceRect = CGRectMake(center.x, center.y, 1, 1)
+            popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.init(rawValue: 0)
         }
 		self.presentViewController(actionSheet, animated: true, completion: nil)
 	}
