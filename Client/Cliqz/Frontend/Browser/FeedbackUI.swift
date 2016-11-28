@@ -8,6 +8,8 @@
 
 import Foundation
 import CRToast
+import SVProgressHUD
+
 public enum ToastMessageType {
     case Info
     case Error
@@ -26,6 +28,7 @@ class FeedbackUI: NSObject {
         
     ]
     
+    //MARK:- Toast
     class func showToastMessage(message: String, messageType: ToastMessageType) {
         var options : [NSObject : AnyObject] = [kCRToastTextKey: message]
         
@@ -53,5 +56,19 @@ class FeedbackUI: NSObject {
             CRToastManager.showNotificationWithOptions(options, completionBlock: nil)
         }
     }
+    
+    //MARK:- HUD
+    class func showLoadingHUD(message: String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            SVProgressHUD.showWithStatus(message)
+        }
+    }
+
+    class func dismissHUD() {
+        dispatch_async(dispatch_get_main_queue()) {
+            SVProgressHUD.dismiss()
+        }
+    }
+    
 
 }
