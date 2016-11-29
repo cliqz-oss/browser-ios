@@ -223,10 +223,13 @@ class CliqzWebView: UIWebView {
 	}
 	
 	override func loadRequest(request: NSURLRequest) {
-        unsafeRequests = 0
+		if let url = request.URL where
+			!ReaderModeUtils.isReaderModeURL(url) {
+			unsafeRequests = 0
+		}
 		super.loadRequest(request)
 	}
-	
+
 	func loadingCompleted() {
 		if internalLoadingEndedFlag {
 			return
@@ -439,6 +442,9 @@ extension CliqzWebView: UIWebViewDelegate {
 		guard let pageInfo = stringByEvaluatingJavaScriptFromString("document.readyState.toLowerCase() + '|' + document.title") else {
 			return
 		}
+        // prevent the default context menu on UIWebView
+        stringByEvaluatingJavaScriptFromString("document.body.style.webkitTouchCallout='none';")
+        
 		let pageInfoArray = pageInfo.componentsSeparatedByString("|")
 		
 		let readyState = pageInfoArray.first // ;print("readyState:\(readyState)")

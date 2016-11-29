@@ -146,6 +146,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
 		#if BETA
 			let supportChildren  = [
 				ShowIntroductionSetting(settings: self),
+                
+                // Cliqz: Added tips and tricks settings option
+                TipsAndTricksSetting(),
+                
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
@@ -156,6 +160,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
 			]
 		#else
 			let supportChildren = [
+                // Cliqz: Added tips and tricks settings option
+                TipsAndTricksSetting(),
+                
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
