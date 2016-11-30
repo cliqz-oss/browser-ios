@@ -113,6 +113,7 @@ class TabScrollingController: NSObject {
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if keyPath == "contentSize" {
+            tab?.webView?.contentSizeChangeDetected()
             if !checkScrollHeightIsLargeEnoughForScrolling() && !toolbarsShowing {
                 showToolbars(animated: true, completion: nil)
             }
