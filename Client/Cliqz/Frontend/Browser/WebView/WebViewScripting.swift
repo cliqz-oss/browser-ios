@@ -50,23 +50,14 @@ class LegacyUserContentController
             // already injected into this context
             return
         }
-        
-//        // use tap detection until this returns false/
-//        // on page start reset enableBlankTargetTapDetection, then set it off when page loaded
-//        webView.blankTargetLinkDetectionOn = true
-//        if webView.stringByEvaluatingJavaScriptFromString(LegacyUserContentController.jsPageHasBlankTargets) != "true" {
-//            // no _blank
-//            webView.blankTargetLinkDetectionOn = false
-//        }
-//        print("has blank targets \(webView.blankTargetLinkDetectionOn)")
-        
-        let js = LegacyJSContext()
+
+	let js = LegacyJSContext()
         js.windowOpenOverride(webView, context:nil)
-        
+
         for (name, handler) in scriptHandlersMainFrame {
             js.installHandlerForWebView(webView, handlerName: name, handler:handler)
         }
-        
+
         for script in scripts {
             webView.stringByEvaluatingJavaScriptFromString(script.source)
         }
@@ -100,11 +91,12 @@ class LegacyUserContentController
             js.callOnContext(ctx, script: script)
         }
     }
-    
+
     func injectJsIntoPage() {
         injectIntoMain()
         injectIntoSubFrame()
     }
+
 }
 
 class CliqzWebViewConfiguration

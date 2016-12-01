@@ -64,6 +64,7 @@ class TabsViewController: UIViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		self.tabsView.reloadData()
 	}
 	
 	override func viewWillLayoutSubviews() {
@@ -120,8 +121,9 @@ class TabsViewController: UIViewController {
 
 	private func setupConstraints() {
 		tabsView.snp_makeConstraints { make in
-			make.left.bottom.right.equalTo(self.view)
+			make.left.right.equalTo(self.view)
 			make.top.equalTo(self.view).offset(10)
+			make.bottom.equalTo(addTabButton.snp_top)
 		}
 		addTabButton.snp_makeConstraints { make in
 			make.centerX.equalTo(self.view)

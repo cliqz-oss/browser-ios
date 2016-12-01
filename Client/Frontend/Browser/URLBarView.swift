@@ -426,11 +426,11 @@ class URLBarView: UIView {
         locationTextField = ToolbarTextField()
 
         guard let locationTextField = locationTextField else { return }
-
+		
         locationTextField.translatesAutoresizingMaskIntoConstraints = false
         locationTextField.autocompleteDelegate = self
         //Cliqz: Changed the keyboard return button to default button `Return` as it dismiss the keyboard now instead of navigating to the search page
-//        locationTextField.keyboardType = UIKeyboardType.WebSearch
+        locationTextField.keyboardType = .WebSearch
         locationTextField.autocorrectionType = UITextAutocorrectionType.No
         locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
         locationTextField.returnKeyType = UIReturnKeyType.Go

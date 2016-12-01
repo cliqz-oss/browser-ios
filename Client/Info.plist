@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.4</string>
+	<string>1.0.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -61,7 +61,6 @@
 	<array>
 		<string>itms-books</string>
 		<string>org-appextension-feature-password-management</string>
-		<string>comgooglemapsurl</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -74,6 +73,8 @@
 	<string>Used if user wants to send video feedback or bug report</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Websites you visit may request your location.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CLIQZ will only use this access to download videos to your device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>org.mozilla.ios.firefox.browsing</string>
@@ -95,6 +96,7 @@
 		<string>FiraSans-UltraLight.ttf</string>
 		<string>Lato-Light.ttf</string>
 		<string>Lato-Medium.ttf</string>
+		<string>Gotham-Book.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

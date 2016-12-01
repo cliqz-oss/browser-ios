@@ -1,6 +1,7 @@
-"NSLocationWhenInUseUsageDescription" = "Websites you visit may request your location.";
+"NSLocationWhenInUseUsageDescription" = "You receive better results when you allow CLIQZ accessing your location.";
 
 "ShortcutItemTitleNewPrivateTab" = "New Private Tab";
 
 "ShortcutItemTitleNewTab" = "New Tab";
 
+"NSPhotoLibraryUsageDescription" = "CLIQZ will only use this access to download videos to your device.";

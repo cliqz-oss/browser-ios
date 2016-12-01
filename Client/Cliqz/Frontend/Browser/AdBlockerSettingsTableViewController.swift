@@ -11,6 +11,7 @@ import UIKit
 private let SectionToggle = 0
 private let SectionDetails = 1
 private let HeaderFooterHeight: CGFloat = 44
+private let FooterHeight: CGFloat = 100
 private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 
 
@@ -18,7 +19,7 @@ class AdBlockerSettingsTableViewController: UITableViewController {
 
     var profile: Profile!
     // added to calculate the duration spent on settings page
-    var settingsOpenTime = 0.0
+    var settingsOpenTime: Double?
     
     private let toggleTitles =
         [NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Block Ads toogle title in Block Ads settings"),
@@ -37,19 +38,24 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
-        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: HeaderFooterHeight))
+        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: FooterHeight))
         footer.showBottomBorder = false
         tableView.tableFooterView = footer
+		footer.titleLabel.text = NSLocalizedString("AdBlocking settings clarification", tableName: "Cliqz", comment: "Detailed description on Adblocking settings")
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
         // log telemetry signal
-        let duration = Int(NSDate.getCurrentMillis() - settingsOpenTime)
-        let settingsBackSignal = TelemetryLogEventType.Settings("block_ads", "click", "back", nil, duration)
-        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("block_ads", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
         
@@ -114,12 +120,11 @@ class AdBlockerSettingsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return HeaderFooterHeight
     }
-    
+
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderFooterIdentifier) as! SettingsTableSectionHeaderFooterView
     }
 
-    
     @objc func switchValueChanged(toggle: UISwitch) {
         
         self.toggles[toggle.tag] = toggle.on

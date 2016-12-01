@@ -14,7 +14,8 @@ class SettingsPrefs {
 	static let FairBlockingPrefKey = "fairBlocking"
 	static let BlockExplicitContentPrefKey = "blockContent"
     static let HumanWebPrefKey = "humanweb.toggle"
-    static let ClearDataOnTerminatingPrefKey = "clearprivatedata.onterminate"
+	static let ShowAntitrackingHintKey = "showAntitrackingHint"
+	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -60,17 +61,30 @@ class SettingsPrefs {
         SettingsPrefs.updateBoolPref(HumanWebPrefKey, value: newValue)
     }
     
-    class func getClearDataOnTerminatingPref() -> Bool {
-        let defaultValue = false
-        if let ClearDataOnTerminatingPref = SettingsPrefs.getBoolPref(ClearDataOnTerminatingPrefKey) {
-            return ClearDataOnTerminatingPref
-        }
-        return defaultValue
-    }
-    
-    class func updateClearDataOnTerminatingPref(newValue: Bool) {
-        SettingsPrefs.updateBoolPref(ClearDataOnTerminatingPrefKey, value: newValue)
-    }
+	class func updateShowAntitrackingHintPref(newValue: Bool) {
+		SettingsPrefs.updateBoolPref(ShowAntitrackingHintKey, value: newValue)
+	}
+
+	class func updateShowCliqzSearchHintPref(newValue: Bool) {
+		SettingsPrefs.updateBoolPref(ShowCliqzSearchHintKey, value: newValue)
+	}
+
+	class func getShowCliqzSearchHintPref() -> Bool {
+		let defaultValue = true
+		if let showCliqSearchPref = SettingsPrefs.getBoolPref(ShowCliqzSearchHintKey) {
+			return showCliqSearchPref
+		}
+		return defaultValue
+	}
+
+	class func getShowAntitrackingHintPref() -> Bool {
+		let defaultValue = true
+		if let showAntitrackingHintPref = SettingsPrefs.getBoolPref(ShowAntitrackingHintKey) {
+			return showAntitrackingHintPref
+		}
+		return defaultValue
+	}
+
     // MARK: - Private helper metods
 	class private func getBoolPref(forKey: String) -> Bool? {
 		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

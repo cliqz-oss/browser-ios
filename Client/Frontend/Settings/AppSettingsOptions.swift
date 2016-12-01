@@ -486,12 +486,9 @@ class ShowIntroductionSetting: Setting {
     }
 
     override func onClick(navigationController: UINavigationController?) {
-        navigationController?.dismissViewControllerAnimated(true, completion: {
-            if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-                appDelegate.browserViewController.presentIntroViewController(true)
-            }
-        })
-        
+		navigationController?.dismissViewControllerAnimated(true, completion: {
+			InteractiveIntro.sharedInstance.reset()
+		})
         // Cliqz: log telemetry signal
         let showTourSignal = TelemetryLogEventType.Settings("main", "click", "show_tour", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(showTourSignal)
@@ -680,7 +677,7 @@ class PrivacyPolicySetting: Setting {
     override var url: NSURL? {
         //Cliqz: replaced FireFox Privacy Policy URL with Cliqz one
 //        return NSURL(string: "https://www.mozilla.org/privacy/firefox/")
-        return NSURL(string: "http://cdn.cliqz.com/mobile/extension/static/privacy.html")
+        return NSURL(string: "https://cliqz.com/mobile/privacy-cliqz-for-ios")
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -691,6 +688,26 @@ class PrivacyPolicySetting: Setting {
         TelemetryLogger.sharedInstance.logEvent(privacySignal)
     }
 }
+
+
+class TipsAndTricksSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("Get the best out of CLIQZ", comment: "[Settings] Show tips and tricks page"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+    override var url: NSURL? {
+        return NSURL(string: "https://cliqz.com/tips-ios")
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let privacySignal = TelemetryLogEventType.Settings("main", "click", "tips_tricks", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(privacySignal)
+    }
+}
+
 
 class ChinaSyncServiceSetting: WithoutAccountSetting {
     override var accessoryType: UITableViewCellAccessoryType { return .None }

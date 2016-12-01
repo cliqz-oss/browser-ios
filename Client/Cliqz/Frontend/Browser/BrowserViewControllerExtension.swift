@@ -10,7 +10,7 @@ import Foundation
 import JavaScriptCore
 
 extension BrowserViewController: AntitrackingViewDelegate {
-	
+
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
 		   let url = NSURL(string: urlString) {
@@ -21,7 +21,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 			self.initialURL = nil
 		}
 	}
-    
+
     func askForNewsNotificationPermissionIfNeeded () {
         if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
             let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
@@ -35,10 +35,12 @@ extension BrowserViewController: AntitrackingViewDelegate {
             })
         }
     }
-	
-	func downloadVideoFromURL(url: String) {
+
+	func downloadVideoFromURL(url: String, sourceRect: CGRect) {
 		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
 			do {
+                let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
+                FeedbackUI.showLoadingHUD(hudMessage)
 				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)
 				let context = JSContext()
 				let httpRequest = XMLHttpRequest()
@@ -48,7 +50,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 				}
 				context.evaluateScript(jsString as String)
 				let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
-					self?.downloadVideoOfSelectedFormat(urls)
+                    self?.downloadVideoOfSelectedFormat(urls, sourceRect: sourceRect)
 				}
 				let callbackName = "URLReceived"
 				context.setObject(unsafeBitCast(callback, AnyObject.self), forKeyedSubscript: callbackName)
@@ -59,13 +61,16 @@ extension BrowserViewController: AntitrackingViewDelegate {
 		}
 	}
 	
-	func downloadVideoOfSelectedFormat(urls: [AnyObject]) {
+	func downloadVideoOfSelectedFormat(urls: [AnyObject], sourceRect: CGRect) {
 		if urls.count > 0 {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
 		} else {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "false"))
 		}
- 		let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        FeedbackUI.dismissHUD()
+        let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
+        let message = NSLocalizedString("Please select video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet message")
+ 		let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
 		for url in urls {
 			if let f = url["label"] as? String, u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
@@ -77,6 +82,13 @@ extension BrowserViewController: AntitrackingViewDelegate {
         actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: { _ in
             TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
         }))
+        
+        if let popoverPresentationController = actionSheet.popoverPresentationController {
+            popoverPresentationController.sourceView = view
+            let center = self.view.center
+            popoverPresentationController.sourceRect = CGRectMake(center.x, center.y, 1, 1)
+            popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.init(rawValue: 0)
+        }
 		self.presentViewController(actionSheet, animated: true, completion: nil)
 	}
 	
@@ -87,7 +99,12 @@ extension BrowserViewController: AntitrackingViewDelegate {
 				x = 0
 			}
 			if self.tabManager.selectedTab?.webView?.uniqueId == x {
-				self.urlBar.updateTrackersCount((self.tabManager.selectedTab?.webView?.unsafeRequests)!)
+				let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
+				self.urlBar.updateTrackersCount(newCount)
+				if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
+					self.showHint(.Antitracking)
+				}
+				
 			}
 		}
 	}
@@ -112,7 +129,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
 					self.view.bringSubviewToFront(antitrackingVC.view)
 				}
 			})
-            
+
             logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
 		}
 	}
@@ -207,9 +224,11 @@ extension BrowserViewController: AntitrackingViewDelegate {
     }
     func keyboardWillHide(notification: NSNotification) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
-            let view = getCurrentView() {
-            let showDuration = Int(NSDate.getCurrentMillis() - keyboardShowTime)
+            let view = getCurrentView(),
+            let showTime = keyboardShowTime {
+            let showDuration = Int(NSDate.getCurrentMillis() - showTime)
             TelemetryLogger.sharedInstance.logEvent(.Keyboard("hide", view, isForgetMode, showDuration))
+            keyboardShowTime = nil
         }
     }
     
@@ -219,4 +238,14 @@ extension BrowserViewController: AntitrackingViewDelegate {
             TelemetryLogger.sharedInstance.logEvent(.WebMenu(action, target, isForgetMode))
         }
     }
+
+	func showHint(type: HintType) {
+		let intro = InteractiveIntroViewController()
+		intro.modalPresentationStyle = .OverFullScreen
+		intro.showHint(type)
+		self.presentViewController(intro, animated: true) { 
+			InteractiveIntro.sharedInstance.updateHintPref(type, value: false)
+		}
+		
+	}
 }

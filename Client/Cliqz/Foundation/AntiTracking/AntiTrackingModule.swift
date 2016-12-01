@@ -14,7 +14,7 @@ import Crashlytics
 class AntiTrackingModule: NSObject {
     
     //MARK: Constants
-    private let context = JSContext()
+	private let context: JSContext? = nil
     private let antiTrackingDirectory = "Extension/build/mobile/search/v8"
     private let documentDirectory = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! as String
     private let fileManager = NSFileManager.defaultManager()
@@ -24,6 +24,11 @@ class AntiTrackingModule: NSObject {
     private let adBlockPrefName = "cliqz-adb"
     
     private let telemetryWhiteList = ["attrack.FP", "attrack.tp_events"]
+    private let urlsWhiteList = ["https://cdn.cliqz.com/anti-tracking/bloom_filter/",
+                                 "https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json",
+                                 "https://cdn.cliqz.com/adblocking/mobile/allowed-lists.json"]
+    
+    let adBlockerLastUpdateDateKey = "AdBlockerLastUpdateDate"
     
     // MARK: - Local variables
     var privateMode = false
@@ -35,6 +40,9 @@ class AntiTrackingModule: NSObject {
     
     override init() {
         super.init()
+		dispatch_async(dispatchQueue) {
+			self.context = JSContext()
+		}
     }
     
     //MARK: - Public APIs
@@ -43,7 +51,10 @@ class AntiTrackingModule: NSObject {
         NSURLProtocol.registerClass(InterceptorURLProtocol)
         
         dispatch_async(dispatchQueue) {
+#if DEBUG
             self.configureExceptionHandler()
+#endif
+			self.loadWindowTimers()
             self.loadModule()
         }
     }
@@ -73,10 +84,15 @@ class AntiTrackingModule: NSObject {
         return false
     }
 
-    func setAdblockEnabled(value: Bool) {
+    func setAdblockEnabled(value: Bool, timeout: Int = 0) {
         dispatch_async(dispatchQueue) {
-            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));")
-            self.context.evaluateScript("CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));")
+            if value == true {
+                self.extractAdblockerSeedFiles()
+            }
+            self.context?.evaluateScript("setTimeout(function () { "
+                + "CliqzUtils.setPref(\"\(self.adBlockPrefName)\", \(value ? 1 : 0));"
+                + "CliqzUtils.setPref(\"\(self.adBlockABTestPrefName)\", \(value ? true : false));"
+                + "}, \(timeout))");
         }
     }
 
@@ -105,8 +121,89 @@ class AntiTrackingModule: NSObject {
     }
     
     //MARK: - Private Helpers
+    private func isOutdatedAdblcokerFiles() -> Bool {
+        // fresh install  -> replace files
+        guard let currentAdBlockerLastUpdateDate = LocalDataStore.objectForKey(adBlockerLastUpdateDateKey) as? NSDate else {
+            return true
+        }
+        
+        // bundle does not have timestamp file -> don't replace files
+        guard let bundleTimestampPath = NSBundle.mainBundle().pathForResource("lastupdateTimestamp", ofType: "txt", inDirectory: "\(self.antiTrackingDirectory)/seed-files") else {
+            return false
+        }
+        
+        do {
+            //get bundle timestamp and compare it with current one
+        let bundleTimestamp = try String(contentsOfFile: bundleTimestampPath, encoding: NSUTF8StringEncoding)
+            let bundleDate = NSDate(timeIntervalSince1970: Double(bundleTimestamp.trim())!)
+            
+            // bundle date is later than the current last update date -> replace files
+            if bundleDate.compare(currentAdBlockerLastUpdateDate) == NSComparisonResult.OrderedDescending {
+                return true
+            }
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        return false
+        
+    }
+    private func extractAdblockerSeedFiles() {
+        guard isOutdatedAdblcokerFiles() else {
+            return
+        }
+        
+        let sourceDirectory = "\(antiTrackingDirectory)/seed-files/adblocker"
+        let destinationDirectory = "cliqz/adblocker"
+        
+        if let sourcePath = NSBundle.mainBundle().resourceURL?.URLByAppendingPathComponent(sourceDirectory)?.path,
+            let destinationPath = NSURL(fileURLWithPath: documentDirectory).URLByAppendingPathComponent(destinationDirectory)?.path {
+            do {
+                // delete the old files if exist
+                if self.fileManager.fileExistsAtPath(destinationPath) == true {
+                    try self.fileManager.removeItemAtPath(destinationPath)
+                }
+                
+                let allFiles = self.fileManager.enumeratorAtPath(sourcePath)
+                
+                while let file = allFiles?.nextObject() as? String {
+                    if file.endsWith(".txt") || file.endsWith("checksums") {
+                        extractFile(file, sourcePath: sourcePath, destinationPath: destinationPath)
+                    }
+                }
+            } catch let error as NSError {
+                print(error)
+                return
+            }
+        }
+        
+        LocalDataStore.setObject(NSDate(), forKey: adBlockerLastUpdateDateKey)
+    }
+    
+    private func extractFile(relativePath: String, sourcePath: String, destinationPath: String) {
+        do {
+            let absolutePath = sourcePath + "/" + relativePath
+            if let content = self.fileManager.contentsAtPath(absolutePath) {
+                
+                let fileDesitination = destinationPath + "/" + (relativePath)
+                let containingDirectory = NSURL(fileURLWithPath: fileDesitination).URLByDeletingLastPathComponent
+                createDirectoryIfNotExist(containingDirectory)
+                if relativePath.endsWith("checksums") {
+                    // checksums is not compressed
+                    content.writeToFile(fileDesitination, atomically:true)
+                } else {
+                    let unzippedData = try content.gunzippedData()
+                    unzippedData.writeToFile(fileDesitination, atomically:true)
+                }
+                
+            }
+        } catch let error as NSError  {
+            print("[Error] Could not copy file: \(relativePath), because of the following error: \(error)")
+        }
+    }
+    
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
-        let tabBlockInfo = self.context.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
+        let tabBlockInfo = self.context?.evaluateScript("System.get('antitracking/attrack').default.getTabBlockingInfo(\(webViewId));").toDictionary()
         return tabBlockInfo
     }
     
@@ -166,7 +263,6 @@ class AntiTrackingModule: NSObject {
         loadJavascriptSource("timers")
         
         if #available(iOS 10, *) {
-            context.evaluateScript("Promise = undefined")
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else if #available(iOS 9, *) {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
@@ -175,21 +271,22 @@ class AntiTrackingModule: NSObject {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
             loadJavascriptSource("/bower_components/core.js/client/core")
         }
+		context?.evaluateScript("Promise = ES6Promise")
         
         // set up System global for module import
-        context.evaluateScript("var exports = {}")
+        context?.evaluateScript("var exports = {}")
         loadJavascriptSource("system-polyfill")
-        context.evaluateScript("var System = exports.System;")
+        context?.evaluateScript("var System = exports.System;")
         loadJavascriptSource("fs-polyfill")
         
         // load config file
         loadConfigFile()
 
         // create legacy CliqzUtils global
-         context.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
+         context?.evaluateScript("var CliqzUtils = {}; System.import(\"core/utils\").then(function(mod) { CliqzUtils = mod.default; });")
 
         // pref config
-        context.evaluateScript("setTimeout(function () { "
+        context?.evaluateScript("setTimeout(function () { "
             + "CliqzUtils.setPref(\"antiTrackTest\", true);"
             + "CliqzUtils.setPref(\"attrackForceBlock\", false);"
             + "CliqzUtils.setPref(\"attrackBloomFilter\", true);"
@@ -198,14 +295,11 @@ class AntiTrackingModule: NSObject {
         
         // block ads prefs
         if SettingsPrefs.getAdBlockerPref() {
-            context.evaluateScript("setTimeout(function () { "
-                + "CliqzUtils.setPref(\"\(adBlockABTestPrefName)\", true);"
-                + "CliqzUtils.setPref(\"\(adBlockPrefName)\", 1);"
-                + "}, 100)");
+            self.setAdblockEnabled(true, timeout: 100)
         }
 
         // startup
-        context.evaluateScript("setTimeout(function() { "
+        context?.evaluateScript("setTimeout(function() { "
             + "System.import(\"platform/startup\").then(function(startup) { startup.default() }).catch(function(e) { logDebug(e, 'xxx') });"
             + "}, 200)")
     }
@@ -213,7 +307,7 @@ class AntiTrackingModule: NSObject {
     private func loadJavascriptSource(sourcePath: String) {
         let (sourceName, directory) = getSourceMetaData(sourcePath)
         if let path = NSBundle.mainBundle().pathForResource(sourceName, ofType: "js", inDirectory: directory), script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
-            context.evaluateScript(script);
+            context?.evaluateScript(script);
         } else {
             print("Script not found: \(sourcePath)")
         }
@@ -242,12 +336,12 @@ class AntiTrackingModule: NSObject {
         if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "\(antiTrackingDirectory)/config"), let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String {
             let formatedScript = script.replace("\"", replacement: "\\\"").replace("\n", replacement: "")
             let configScript = "var __CONFIG__ = JSON.parse(\"\(formatedScript)\");"
-            context.evaluateScript(configScript)
+            context?.evaluateScript(configScript)
         }
     }
 
     private func configureExceptionHandler() {
-        context.exceptionHandler = { context, exception in
+        context?.exceptionHandler = { context, exception in
             print("JS Error: \(exception)")
         }
     }
@@ -256,9 +350,6 @@ class AntiTrackingModule: NSObject {
         registerMd5NativeMethod()
         registerLogDebugMethod()
         registerLoadSubscriptMethod()
-        registerSetTimeoutMethod()
-        registerSetIntervalMethod()
-        registerClearIntervalMethod()
         registerMkTempDirMethod()
         registerReadFileMethod()
         registerWriteFileMethod()
@@ -271,54 +362,24 @@ class AntiTrackingModule: NSObject {
         let md5Native: @convention(block) (String) -> String = { data in
             return md5(data)
         }
-        context.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
+        context?.setObject(unsafeBitCast(md5Native, AnyObject.self), forKeyedSubscript: "_md5Native")
     }
 
     private func registerLogDebugMethod() {
         let logDebug: @convention(block) (String, String) -> () = { message, key in
             print("\n\n>>>>>>>> \(key): \(message)\n\n")
         }
-        context.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
+        context?.setObject(unsafeBitCast(logDebug, AnyObject.self), forKeyedSubscript: "logDebug")
     }
 
     private func registerLoadSubscriptMethod() {
         let loadSubscript: @convention(block) (String) -> () = {[weak self] subscriptName in
             self?.loadJavascriptSource("/modules\(subscriptName)")
         }
-        context.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
+        context?.setObject(unsafeBitCast(loadSubscript, AnyObject.self), forKeyedSubscript: "loadSubScript")
         
     }
 
-    private func registerSetTimeoutMethod() {
-        let setTimeout: @convention(block) (JSValue, Int) -> () = { function, timeoutMsec in
-            let delay = Double(timeoutMsec) * Double(NSEC_PER_MSEC)
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-            dispatch_after(time, self.dispatchQueue, {
-                function.callWithArguments(nil)
-            })
-        }
-        context.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
-    }
-    
-    private func registerSetIntervalMethod() {
-        let setInterval: @convention(block) (JSValue, Int) -> Int = { function, interval in
-            let timerId = self.timerCounter
-            self.timerCounter += 1
-            let intervalInSeconds = interval / 1000
-            let timeInterval = NSTimeInterval(intervalInSeconds)
-
-            dispatch_async(dispatch_get_main_queue()) {
-                let timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval,
-                                                                   target: self,
-                                                                   selector: #selector(AntiTrackingModule.excuteJavaScriptFunction(_:)),
-                                                                   userInfo: function,
-                                                                   repeats: true)
-                self.timers[timerId] = timer
-            }
-            return timerId
-        }
-        context.setObject(unsafeBitCast(setInterval, AnyObject.self), forKeyedSubscript: "setInterval")
-    }
 
     @objc private func excuteJavaScriptFunction(timer: NSTimer) -> () {
         dispatch_async(dispatchQueue) {
@@ -326,15 +387,6 @@ class AntiTrackingModule: NSObject {
                 function.callWithArguments(nil)
             }
         }
-    }
-
-    private func registerClearIntervalMethod() {
-        let clearInterval: @convention(block) Int -> () = { timerId in
-            if let timer = self.timers[timerId] {
-                timer.invalidate()
-            }
-        }
-        context.setObject(unsafeBitCast(clearInterval, AnyObject.self), forKeyedSubscript: "clearInterval")
     }
 
     private func registerReadFileMethod() {
@@ -359,8 +411,8 @@ class AntiTrackingModule: NSObject {
 				}
             }
         }
-        context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
-		context.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
+        context?.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readFileNative")
+		context?.setObject(unsafeBitCast(readFile, AnyObject.self), forKeyedSubscript: "readTempFile")
 	}
 
 	private func registerWriteFileMethod() {
@@ -373,27 +425,30 @@ class AntiTrackingModule: NSObject {
                 }
             }
         }
-        context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
-        context.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeTempFile")
+        context?.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeFileNative")
+        context?.setObject(unsafeBitCast(writeFile, AnyObject.self), forKeyedSubscript: "writeTempFile")
     }
     
     private func registerMkTempDirMethod() {
         let mkTempDir: @convention(block) (String) -> () = {[weak self] path in
             self?.createTempDir(path)
         }
-        context.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
+        context?.setObject(unsafeBitCast(mkTempDir, AnyObject.self), forKeyedSubscript: "mkTempDir")
     }
 
     private func createTempDir(path: String) {
-        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path),
-            let tempDirectoryPath = tempDirectory.path {
+        if let tempDirectory = NSURL(fileURLWithPath: self.documentDirectory).URLByAppendingPathComponent(path) {
             
-            if self.fileManager.fileExistsAtPath(tempDirectoryPath) == false {
-                do {
-                    try self.fileManager.createDirectoryAtPath(tempDirectoryPath, withIntermediateDirectories: true, attributes: nil)
-                } catch let error as NSError {
-                    NSLog("Unable to create directory \(error.debugDescription)")
-                }
+            createDirectoryIfNotExist(tempDirectory)
+        }
+    }
+    
+    private func createDirectoryIfNotExist(directoryURL: NSURL?){
+        if let path = directoryURL?.path where self.fileManager.fileExistsAtPath(path) == false {
+            do {
+                try self.fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                NSLog("Could not create directory at path:\(path) because of the following error: \(error.debugDescription)")
             }
         }
     }
@@ -402,7 +457,7 @@ class AntiTrackingModule: NSObject {
         let isWindowActive: @convention(block) (String) -> Bool = { tabId in
             return self.isTabActive(Int(tabId))
         }
-        context.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
+        context?.setObject(unsafeBitCast(isWindowActive, AnyObject.self), forKeyedSubscript: "_nativeIsWindowActive")
     }
 
     private func registerSendTelemetryMethod() {
@@ -422,7 +477,7 @@ class AntiTrackingModule: NSObject {
                 Answers.logCustomEventWithName("[Anti-Trakcing] SendTelemetry Error", customAttributes: ["error": error])
             }
         }
-        context.setObject(unsafeBitCast(sendTelemetry, AnyObject.self), forKeyedSubscript: "sendTelemetry")
+        context?.setObject(unsafeBitCast(sendTelemetry, AnyObject.self), forKeyedSubscript: "sendTelemetry")
     }
 
     private func registerHttpHandlerMethod() {
@@ -443,7 +498,13 @@ class AntiTrackingModule: NSObject {
 						}
 					} else {
 						var hasError = false
-						if method == "GET" {
+                        if let isReachable = NetworkReachability.sharedInstance.isReachable where isReachable == false {
+                            // No internet connection
+                            hasError = true
+                        } else if NetworkReachability.sharedInstance.isReachableViaWiFi() == false && self?.isWhitelistedUrl(requestedUrl) == false {
+                            // do not download large files if user is not on WiFi
+                            hasError = true
+                        } else if method == "GET" {
 							ConnectionManager.sharedInstance
 								.sendRequest(.GET,
 											 url: requestedUrl,
@@ -481,7 +542,7 @@ class AntiTrackingModule: NSObject {
 				onerror.callWithArguments(nil)
 			}
 		}
-        context.setObject(unsafeBitCast(httpHandler, AnyObject.self), forKeyedSubscript: "httpHandler")
+        context?.setObject(unsafeBitCast(httpHandler, AnyObject.self), forKeyedSubscript: "httpHandler")
     }
 
     private func httpHandlerReply(responseString: AnyObject, callback: JSValue, onerror: JSValue) {
@@ -555,10 +616,24 @@ class AntiTrackingModule: NSObject {
 
         if let requestInfoJsonString = toJSONString(requestInfo) {
             let onBeforeRequestCall = "System.get('platform/webrequest').default.onBeforeRequest._trigger(\(requestInfoJsonString));"
-            let blockResponse = context.evaluateScript(onBeforeRequestCall).toDictionary()
+            let blockResponse = context?.evaluateScript(onBeforeRequestCall).toDictionary()
             return blockResponse
         }
         return nil
     }
+    
+    private func isWhitelistedUrl(url: String) -> Bool {
+        for whiteListUrl in urlsWhiteList {
+            if url.startsWith(whiteListUrl) {
+                return true
+            }
+        }
+        return false
+    }
+
+	private func loadWindowTimers() {
+		let w = WTWindowTimers(self.dispatchQueue)
+		w.extend(context)
+	}
 }
 

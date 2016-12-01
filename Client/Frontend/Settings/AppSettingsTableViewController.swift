@@ -70,7 +70,6 @@ class AppSettingsTableViewController: SettingsTableViewController {
 			*/
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             AdBlockerSetting(settings: self),
-            ImprintSetting(),
             HumanWebSetting(settings: self)
 
         ]
@@ -144,19 +143,38 @@ class AppSettingsTableViewController: SettingsTableViewController {
             PrivacyPolicySetting()
         ]
 
-
+		#if BETA
+			let supportChildren  = [
+				ShowIntroductionSetting(settings: self),
+                
+                // Cliqz: Added tips and tricks settings option
+                TipsAndTricksSetting(),
+                
+				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
+				//                SendFeedbackSetting(),
+				SendCliqzFeedbackSetting(),
+				
+				//Cliqz: removed unused sections from Settings table
+				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
+				//                OpenSupportPageSetting(delegate: settingsDelegate),
+			]
+		#else
+			let supportChildren = [
+                // Cliqz: Added tips and tricks settings option
+                TipsAndTricksSetting(),
+                
+				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
+				//                SendFeedbackSetting(),
+				SendCliqzFeedbackSetting(),
+				
+				//Cliqz: removed unused sections from Settings table
+				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
+				//                OpenSupportPageSetting(delegate: settingsDelegate),
+			]
+		#endif
         settings += [
             SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: [
-                ShowIntroductionSetting(settings: self),
-                //Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
-//                SendFeedbackSetting(),
-                SendCliqzFeedbackSetting(),
-
-                //Cliqz: removed unused sections from Settings table
-//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
-//                OpenSupportPageSetting(delegate: settingsDelegate),
-            ]),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
                 VersionSetting(settings: self),
                 LicenseAndAcknowledgementsSetting(),

@@ -123,7 +123,13 @@ class BrowserViewController: UIViewController {
     var navigationStep          : Int = 0
     var backNavigationStep      : Int = 0
     var navigationEndTime       : Double = NSDate.getCurrentMillis()
-    
+    // Cliqz: Custom dashboard
+    private lazy var dashboard : DashboardViewController =  {
+        let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
+        dashboard.delegate = self
+        return dashboard
+    }()
+
     // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
     var headerConstraintUpdated:Bool = false
     
@@ -137,7 +143,7 @@ class BrowserViewController: UIViewController {
         return containerViewController
     }()
     // Cliqz: added to record keyboard show duration for keyboard telemetry signal
-    var keyboardShowTime = 0.0
+    var keyboardShowTime : Double?
     
     // Cliqz: key for storing the last visited website
     let lastVisitedWebsiteKey = "lastVisitedWebsite"
@@ -155,6 +161,10 @@ class BrowserViewController: UIViewController {
 //        }
 //    }
 
+    // Cliqz: swipe back and forward
+    var historySwiper = HistorySwiper()
+    
+    
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
         self.tabManager = tabManager
@@ -178,7 +188,9 @@ class BrowserViewController: UIViewController {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 
-        displayedPopoverController?.dismissViewControllerAnimated(true, completion: nil)
+		displayedPopoverController?.dismissViewControllerAnimated(true) {
+			self.displayedPopoverController = nil
+		}
 
         guard let displayedPopoverController = self.displayedPopoverController else {
             return
@@ -297,8 +309,14 @@ class BrowserViewController: UIViewController {
     }
 
     func SELappWillResignActiveNotification() {
-        // If we are displying a private tab, hide any elements in the tab that we wouldn't want shown
+		// Dismiss any popovers that might be visible
+		displayedPopoverController?.dismissViewControllerAnimated(false) {
+			self.displayedPopoverController = nil
+		}
+
+		// If we are displying a private tab, hide any elements in the tab that we wouldn't want shown
         // when the app is in the home switcher
+		
         guard let privateTab = tabManager.selectedTab where privateTab.isPrivate else {
             return
         }
@@ -455,6 +473,12 @@ class BrowserViewController: UIViewController {
 		invalidateCache()
 		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
+        
+        #if CLIQZ
+            // Cliqz:  setup back and forward swipe
+            historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)            
+        #endif
+
     }
 
     private func setupConstraints() {
@@ -1071,7 +1095,8 @@ class BrowserViewController: UIViewController {
             urlBar.SELdidClickCancel()
             return true
         } else if let selectedTab = tabManager.selectedTab where selectedTab.canGoBack {
-            selectedTab.goBack()
+            // Cliqz: use one entry to go back/forward in all code
+            self.goBack()
             return true
         }
         return false
@@ -1281,17 +1306,14 @@ class BrowserViewController: UIViewController {
     private func presentActivityViewController(url: NSURL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
-        // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
-        /*
 		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
 				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_page"))
-				self.downloadVideoFromURL(url.absoluteString!)
+                self.downloadVideoFromURL(url.absoluteString!, sourceRect: sourceRect)
 			}
 			activities.append(youtubeDownloader)
 		}
-        */
         
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
@@ -1324,6 +1346,12 @@ class BrowserViewController: UIViewController {
         let controller = helper.createActivityViewController({ [unowned self] completed in
             // After dismissing, check to see if there were any prompts we queued up
             self.showQueuedAlertIfAvailable()
+
+			// Usually the popover delegate would handle nil'ing out the references we have to it
+			// on the BVC when displaying as a popover but the delegate method doesn't seem to be
+			// invoked on iOS 10. See Bug 1297768 for additional details.
+			self.displayedPopoverController = nil
+			self.updateDisplayedPopoverProperties = nil
 
             if completed {
                 // We don't know what share action the user has chosen so we simply always
@@ -1683,9 +1711,6 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
-        
-		let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
-		dashboard.delegate = self
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
@@ -1804,38 +1829,47 @@ extension BrowserViewController: URLBarDelegate {
             searchController!.searchQuery = text
         }
         */
+        // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
+        self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
+        self.urlBar.showAntitrackingButton(false)
     }
 
     func urlBar(urlBar: URLBarView, didSubmitText text: String) {
         // If we can't make a valid URL, do a search query.
         // If we still don't have a valid URL, something is broken. Give up.
-        
-        var url = URIFixup.getURL(text)
-        
-        // If we can't make a valid URL, do a search query.
-        if url == nil {
-            url = profile.searchEngines.defaultEngine.searchURLForQuery(text)
-            if url != nil {
-                // Cliqz: Support showing search view with query set when going back from search result
-                navigateToUrl(url!, searchQuery: text)
-            } else {
-                // If we still don't have a valid URL, something is broken. Give up.
-                log.error("Error handling URL entry: \"\(text)\".")
-            }
-        } else {
-            finishEditingAndSubmit(url!, visitType: VisitType.Typed)
-        }
-        
-        //TODO: [Review]
-        /*
-        let engine = profile.searchEngines.defaultEngine
-        guard let url = URIFixup.getURL(text) ??
-                        engine.searchURLForQuery(text) else {
-            log.error("Error handling URL entry: \"\(text)\".")
-            return
-        }
-        finishEditingAndSubmit(url!, visitType: VisitType.Typed)
-        */
+		
+		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint {
+			urlBar.locationTextField?.enforceResignFirstResponder()
+			self.showHint(.CliqzSearch)
+		} else {
+
+			var url = URIFixup.getURL(text)
+			
+			// If we can't make a valid URL, do a search query.
+			if url == nil {
+				url = profile.searchEngines.defaultEngine.searchURLForQuery(text)
+				if url != nil {
+					// Cliqz: Support showing search view with query set when going back from search result
+					navigateToUrl(url!, searchQuery: text)
+				} else {
+					// If we still don't have a valid URL, something is broken. Give up.
+					log.error("Error handling URL entry: \"\(text)\".")
+				}
+			} else {
+				finishEditingAndSubmit(url!, visitType: VisitType.Typed)
+			}
+			
+			//TODO: [Review]
+			/*
+			let engine = profile.searchEngines.defaultEngine
+			guard let url = URIFixup.getURL(text) ??
+							engine.searchURLForQuery(text) else {
+				log.error("Error handling URL entry: \"\(text)\".")
+				return
+			}
+			finishEditingAndSubmit(url!, visitType: VisitType.Typed)
+			*/
+		}
     }
     
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
@@ -1868,7 +1902,8 @@ extension BrowserViewController: URLBarDelegate {
 
 extension BrowserViewController: TabToolbarDelegate {
     func tabToolbarDidPressBack(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goBack()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goBack()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "back")
     }
@@ -1910,7 +1945,8 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressForward(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        tabManager.selectedTab?.goForward()
+        // Cliqz: use one entry to go back/forward in all code
+        self.goForward()
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "forward")
     }
@@ -2112,11 +2148,11 @@ extension BrowserViewController: TabDelegate {
             let logins = LoginsHelper(tab: tab, profile: profile)
             tab.addHelper(logins, name: LoginsHelper.name())
         }
-
         let contextMenuHelper = ContextMenuHelper(tab: tab)
         contextMenuHelper.delegate = self
         tab.addHelper(contextMenuHelper, name: ContextMenuHelper.name())
 #endif
+        
         let errorHelper = ErrorPageHelper()
         tab.addHelper(errorHelper, name: ErrorPageHelper.name())
 
@@ -2370,6 +2406,13 @@ extension BrowserViewController: TabManagerDelegate {
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
             webView.accessibilityIdentifier = "contentView"
             webView.accessibilityElementsHidden = false
+            
+            #if CLIQZ
+                // Cliqz: back and forward swipe
+                for swipe in [historySwiper.goBackSwipe, historySwiper.goForwardSwipe] {
+                    tab.webView?.scrollView.panGestureRecognizer.requireGestureRecognizerToFail(swipe)
+                }
+            #endif
 
             if let url = webView.URL?.absoluteString {
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
@@ -2814,8 +2857,6 @@ extension BrowserViewController: WKNavigationDelegate {
 private let SchemesAllowedToOpenPopups = ["http", "https", "javascript", "data"]
 
 extension BrowserViewController: WKUIDelegate {
-	// Cliqz:[UIWebView] Commented delegate method, later reimplement the same feature
-#if !CLIQZ
     func webView(webView: WKWebView, createWebViewWithConfiguration configuration: WKWebViewConfiguration, forNavigationAction navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let currentTab = tabManager.selectedTab else { return nil }
 
@@ -2847,9 +2888,8 @@ extension BrowserViewController: WKUIDelegate {
             return nil
         }
         
-        return newTab.webView
-    }
-#endif
+        return webView
+	}
 
     private func canDisplayJSAlertForWebView(webView: WKWebView) -> Bool {
         // Only display a JS Alert if we are selected and there isn't anything being shown
@@ -3254,7 +3294,8 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
 extension BrowserViewController: IntroViewControllerDelegate {
     func presentIntroViewController(force: Bool = false) -> Bool{
         if force || profile.prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
-            let introViewController = IntroViewController()
+            // Cliqz: replace regular introViewController with CliqzIntroViewController
+            let introViewController = CliqzIntroViewController()
             introViewController.delegate = self
             // On iPad we present it modally in a controller
             if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
@@ -3290,8 +3331,7 @@ extension BrowserViewController: IntroViewControllerDelegate {
         return false
     }
 
-    func introViewControllerDidFinish(introViewController: IntroViewController) {
-        introViewController.dismissViewControllerAnimated(true, completion: nil)
+    func introViewControllerDidFinish() {
         // Cliqz: focus on the search bar after dimissing on-boarding if it is on home view
         if urlBar.currentURL == nil || AboutUtils.isAboutHomeURL(urlBar.currentURL) {
             self.urlBar.enterOverlayMode("", pasted: false)
@@ -3358,9 +3398,12 @@ extension BrowserViewController: ContextMenuHelperDelegate {
         // locationInView can return (0, 0) when the long press is triggered in an invalid page
         // state (e.g., long pressing a link before the document changes, then releasing after a
         // different page loads).
-        let touchPoint = gestureRecognizer.locationInView(view)
-        guard touchPoint != CGPointZero else { return }
-
+        
+        // Cliqz: Moved the code to `showContextMenu` as it is now called from `CliqzContextMenu` which does not use `ContextMenuHelper` object
+    }
+    
+    // Cliqz: called from `CliqzContextMenu` when long press is detected
+    func showContextMenu(elements elements: ContextMenuHelper.Elements, touchPoint: CGPoint) {
         let touchSize = CGSizeMake(0, 16)
 
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
@@ -3373,22 +3416,13 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url))
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
             }
-
-			// Cliqz: Added Action handler for the long press to download Youtube videos
-			if YoutubeVideoDownloader.isYoutubeURL(url) {
-				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
-				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-					self.downloadVideoFromURL(dialogTitle!)
-					TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
-				}
-				actionSheetController.addAction(downloadVideo)
-			}
 
             if #available(iOS 9, *) {
                 // Cliqz: changed localized string for open in new private tab option to open in froget mode tab
@@ -3397,24 +3431,23 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)
             }
-            // Cliqz: [TEMP] disable Youtube Video Downloader because of crashes
-            /*
+            
             // Cliqz: Added Action handler for the long press to download Youtube videos
             if YoutubeVideoDownloader.isYoutubeURL(url) {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
                 let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
-                    self.downloadVideoFromURL(dialogTitle!)
+                    self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
                 }
                 actionSheetController.addAction(downloadVideo)
             }
-            */
             let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.generalPasteboard()
@@ -4005,8 +4038,10 @@ extension BrowserViewController {
     // Cliqz: Added to diffrentiate between navigating a website or searching for something when app goes to background
     func SELappDidEnterBackgroundNotification() {
         
-        displayedPopoverController?.dismissViewControllerAnimated(false, completion: nil)
-        
+		displayedPopoverController?.dismissViewControllerAnimated(false) {
+			self.displayedPopoverController = nil
+		}
+
         isAppResponsive = false
         
         if self.tabManager.selectedTab?.isPrivate == false {
@@ -4090,3 +4125,4 @@ extension BrowserViewController {
         
     }
 }
+
