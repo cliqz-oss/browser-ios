@@ -148,20 +148,15 @@ class CliqzWebView: UIWebView {
 
     var removeProgressObserversOnDeinit: ((UIWebView) -> Void)?
 
+    var triggeredLocationCheckTimer = NSTimer()
+    
     static var modifyLinksScript: WKUserScript?
-    static var ajaxHandlerScript: WKUserScript?
     
     override class func initialize() {
         // Added for modifying page links with target blank to open in new tabs
         let path = NSBundle.mainBundle().pathForResource("ModifyLinksForNewTab", ofType: "js")!
         let source = try! NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String
         modifyLinksScript = WKUserScript(source: source, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
-        
-        
-        // Added for overriding XHR request to detect youtube redirect between videos
-        let ajaxHandlerPath = NSBundle.mainBundle().pathForResource("ajax_handler", ofType: "js")!
-        let ajaxHandlerSource = try! NSString(contentsOfFile: ajaxHandlerPath, encoding: NSUTF8StringEncoding) as String
-        ajaxHandlerScript = WKUserScript(source: ajaxHandlerSource, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: true)
 
     }
     
@@ -277,6 +272,45 @@ class CliqzWebView: UIWebView {
             self.unsafeRequests = newCount
         }
     }
+    
+    
+    // On page load, the contentSize of the webview is updated (**). If the webview has not been notified of a page change (i.e. shouldStartLoadWithRequest was never called) then 'loading' will be false, and we should check the page location using JS.
+    // (** Not always updated, particularly on back/forward. For instance load duckduckgo.com, then google.com, and go back. No content size change detected.)
+    func contentSizeChangeDetected() {
+        if triggeredLocationCheckTimer.valid {
+            return
+        }
+        
+        // Add a time delay so that multiple calls are aggregated
+        triggeredLocationCheckTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(timeoutCheckLocation), userInfo: nil, repeats: false)
+    }
+    
+    // Pushstate navigation may require this case (see brianbondy.com), as well as sites for which simple pushstate detection doesn't work:
+    // youtube and yahoo news are examples of this (http://stackoverflow.com/questions/24297929/javascript-to-listen-for-url-changes-in-youtube-html5-player)
+    @objc func timeoutCheckLocation() {
+        func shouldUpdateUrl(currentUrl: String, newLocation: String) -> Bool {
+            if newLocation == currentUrl || newLocation.contains("about:") || newLocation.contains("//localhost") || URL?.host != NSURL(string: newLocation)?.host {
+                return false
+            }
+            return true
+        }
+        
+        func tryUpdateUrl() {
+            guard let location = self.stringByEvaluatingJavaScriptFromString("window.location.href"), currentUrl = URL?.absoluteString where shouldUpdateUrl(currentUrl, newLocation: location) else {
+                return
+            }
+            
+            setUrl(NSURL(string: location), reliableSource: false)
+
+            progress?.reset()
+        }
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            tryUpdateUrl()
+        }
+        
+    }
+
 
 	// MARK:- Private methods
 
@@ -297,7 +331,6 @@ class CliqzWebView: UIWebView {
 		
         // built-in userScripts
 		self.configuration.userContentController.addUserScript(CliqzWebView.modifyLinksScript!)
-        self.configuration.userContentController.addUserScript(CliqzWebView.ajaxHandlerScript!)
 	}
 
     // Needed to identify webview in url protocol
@@ -361,7 +394,7 @@ class CliqzWebView: UIWebView {
         self.canGoBack = super.canGoBack
         self.canGoForward = super.canGoForward
     }
-
+    
 	@objc private func refreshWebView(refresh: UIRefreshControl) {
 		refresh.endRefreshing()
 		self.reload()
@@ -442,6 +475,7 @@ extension CliqzWebView: UIWebViewDelegate {
 		guard let pageInfo = stringByEvaluatingJavaScriptFromString("document.readyState.toLowerCase() + '|' + document.title") else {
 			return
 		}
+        
         // prevent the default context menu on UIWebView
         stringByEvaluatingJavaScriptFromString("document.body.style.webkitTouchCallout='none';")
         
