@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "newPrivateTab.png",
+      "filename" : "Forget_Tab.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "newPrivateTab@2x.png",
+      "filename" : "Forget_Tab@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "newPrivateTab@3x.png",
+      "filename" : "Forget_Tab@3x.png",
       "scale" : "3x"
     }
   ],
