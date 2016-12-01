@@ -1271,7 +1271,7 @@ class BrowserViewController: UIViewController {
 //        currentViewController.dismissViewControllerAnimated(true, completion: nil)
 
         if currentViewController != self {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewControllerAnimated(false)
         } else if urlBar.inOverlayMode {
             urlBar.SELdidClickCancel()
         }
