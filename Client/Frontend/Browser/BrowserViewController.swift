@@ -1872,7 +1872,11 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
         // Cliqz: telemetry logging for toolbar
         self.logToolbarFocusSignal()
+        // Cliqz: hide AntiTracking button in overlay mode
         self.urlBar.showAntitrackingButton(false)
+        // Cliqz: send `urlbar-focus` to extension
+        self.searchController?.sendUrlBarFocusEvent()
+        
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {

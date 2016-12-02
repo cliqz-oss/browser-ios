@@ -151,7 +151,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func loader(dataLoaded data: Cursor<Site>) {
 		self.historyResults = data
 	}
-
+    
+    func sendUrlBarFocusEvent() {
+        self.javaScriptBridge.publishEvent("urlbar-focus")
+    }
 /*
 	func getHistory() -> Array<Dictionary<String, String>> {
 		var results = Array<Dictionary<String, String>>()
