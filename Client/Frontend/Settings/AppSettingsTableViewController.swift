@@ -55,8 +55,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //        }
 //        generalSettings += [
 //            HomePageSetting(settings: self),
-
-            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
+            // Cliqz: Moved `blockPopups` to SettingsPrefs
+            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             // Cliqz: removed save logins settings
             /*

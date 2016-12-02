@@ -16,6 +16,7 @@ class SettingsPrefs {
     static let HumanWebPrefKey = "humanweb.toggle"
 	static let ShowAntitrackingHintKey = "showAntitrackingHint"
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
+    static let blockPopupsPrefKey = "blockPopups"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -85,6 +86,19 @@ class SettingsPrefs {
 		return defaultValue
 	}
 
+    
+    class func getBlockPopupsPref() -> Bool {
+        let defaultValue = true
+        if let blockPopupsPref = SettingsPrefs.getBoolPref(blockPopupsPrefKey) {
+            return blockPopupsPref
+        }
+        return defaultValue
+    }
+    
+    class func updateBlockPopupsPref(newValue: Bool) {
+        SettingsPrefs.updateBoolPref(blockPopupsPrefKey, value: newValue)
+    }
+    
     // MARK: - Private helper metods
 	class private func getBoolPref(forKey: String) -> Bool? {
 		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

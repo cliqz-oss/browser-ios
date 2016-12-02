@@ -17,6 +17,24 @@ class ContainerWebView : WKWebView {
 
 var globalContainerWebView = ContainerWebView()
 var nullWKNavigation: WKNavigation = WKNavigation()
+@objc class HandleJsWindowOpen : NSObject {
+    static func open(url: String) {
+        postAsyncToMain(0) { // we now know JS callbacks can be off main
+            guard let wv = getCurrentWebView() else { return }
+            let current = wv.URL
+            if SettingsPrefs.getBlockPopupsPref() {
+                guard let lastTappedTime = wv.lastTappedTime else { return }
+                if fabs(lastTappedTime.timeIntervalSinceNow) > 0.75 { // outside of the 3/4 sec time window and we ignore it
+                    return
+                }
+            }
+            wv.lastTappedTime = nil
+            if let _url = NSURL(string: url, relativeToURL: current) {
+                getApp().browserViewController.openURLInNewTab(_url)
+            }
+        }
+    }
+}
 
 
 class WebViewToUAMapper {
@@ -149,6 +167,8 @@ class CliqzWebView: UIWebView {
     var removeProgressObserversOnDeinit: ((UIWebView) -> Void)?
 
     var triggeredLocationCheckTimer = NSTimer()
+    
+    var lastTappedTime: NSDate?
     
     static var modifyLinksScript: WKUserScript?
     
