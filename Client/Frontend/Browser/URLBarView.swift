@@ -1006,10 +1006,12 @@ class ToolbarTextField: AutocompleteTextField {
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
-		theme.backgroundColor =  UIConstants.PrivateModeLocationBackgroundColor
-        theme.textColor = UIColor.whiteColor()
-        theme.buttonTintColor = UIColor.whiteColor()
+        // Cliqz: Changed TextField colors for forget mode theme
+		theme.backgroundColor =  UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
+        theme.textColor = UIColor.blackColor()
         theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
+        // Cliqz: Added Button tint color to Black
+        theme.buttonTintColor = UIColor.blackColor()
 
         themes[Theme.PrivateMode] = theme
 
