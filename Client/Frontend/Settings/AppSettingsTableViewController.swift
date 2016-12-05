@@ -158,6 +158,15 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),
 			]
+            
+            settings += [
+                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
+                    VersionSetting(settings: self),
+                    ExtensionVersionSetting(settings: self),
+                    LicenseAndAcknowledgementsSetting(),
+                    ])]
 		#else
 			let supportChildren = [
                 // Cliqz: Added tips and tricks settings option
@@ -171,18 +180,19 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),
 			]
+            settings += [
+                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
+                    VersionSetting(settings: self),
+                    LicenseAndAcknowledgementsSetting(),
+                    //Cliqz: removed unused sections from Settings table
+//                    YourRightsSetting(),
+//                    ExportBrowserDataSetting(settings: self),
+//                    DeleteExportedDataSetting(settings: self),
+                    ])]
 		#endif
-        settings += [
-            SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                VersionSetting(settings: self),
-                LicenseAndAcknowledgementsSetting(),
-                //Cliqz: removed unused sections from Settings table
-//                YourRightsSetting(),
-//                ExportBrowserDataSetting(settings: self),
-//                DeleteExportedDataSetting(settings: self),
-            ])]
+        
         //Cliqz: removed unused sections from Settings table
 //            if (profile.hasAccount()) {
 //                settings += [
