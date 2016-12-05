@@ -97,7 +97,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	override func viewWillDisappear(animated: Bool) {
 		self.navigationController?.navigationBarHidden = true
-		super.viewWillAppear(animated)
+		super.viewWillDisappear(animated)
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -105,6 +105,11 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.setupConstraints()
 	}
 
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        // setting the navigation bar origin to (0,0) to prevent shifting it when rotating from landscape to portrait orientation
+        self.navigationController?.navigationBar.frame.origin = CGPointMake(0, 0)
+    }
+    
 	func didSelectURL(url: NSURL) {
 		self.navigationController?.popViewControllerAnimated(false)
 		self.tabManager.selectedTab?.inSearchMode = false
