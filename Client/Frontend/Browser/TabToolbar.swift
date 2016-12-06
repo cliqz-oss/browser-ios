@@ -146,8 +146,8 @@ public class TabToolbarHelper: NSObject {
 
         } else {
             toolbar.bookmarkButton.contentMode = UIViewContentMode.Center
-            toolbar.bookmarkButton.setImage(UIImage(named: "bookmark"), forState: .Normal)
-            toolbar.bookmarkButton.setImage(UIImage(named: "bookmarked"), forState: UIControlState.Selected)
+            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmark"), forState: .Normal)
+            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmarked"), forState: UIControlState.Selected)
             // Cliqz: Removed highlighted state - discussed with Sven
 //            toolbar.bookmarkButton.setImage(UIImage(named: "bookmarkHighlighted"), forState: UIControlState.Highlighted)
             toolbar.bookmarkButton.accessibilityLabel = NSLocalizedString("Bookmark", comment: "Accessibility Label for the tab toolbar Bookmark button")
@@ -257,10 +257,6 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         theme = Theme()
         theme.buttonTintColor = UIColor.darkGrayColor()
         themes[Theme.NormalMode] = theme
-
-        // TODO: to be removed
-        // Cliqz: Temporary use same mode for both Normal and Private modes
-        themes[Theme.PrivateMode] = theme
         
         return themes
     }()
