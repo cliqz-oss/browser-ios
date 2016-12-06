@@ -253,8 +253,7 @@ class URLBarView: UIView {
 
         addSubview(progressBar)
         addSubview(tabsButton)
-		// Cliqz: Removed cancelButton accroding to requirements.
-//        addSubview(cancelButton)
+        addSubview(cancelButton)
 
         addSubview(shareButton)
         if AppConstants.MOZ_MENU {
@@ -293,11 +292,10 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-		// Cliqz: Removed cancelButton along with its constraints
-//		cancelButton.snp_makeConstraints { make in
-//			make.centerY.equalTo(self.locationContainer)
-//			make.trailing.equalTo(self)
-//		}
+		cancelButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.trailing.equalTo(self)
+		}
 
 		// Cliqz: Moved Tabs button to the left of URL bar
 		tabsButton.snp_makeConstraints { make in
@@ -383,7 +381,7 @@ class URLBarView: UIView {
                 make.centerY.equalTo(self)
                 */
 				make.leading.equalTo(self.tabsButton.snp_trailing)
-                make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+                make.trailing.equalTo(self.cancelButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
@@ -638,8 +636,7 @@ class URLBarView: UIView {
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
         self.bringSubviewToFront(self.locationContainer)
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.hidden = false
+        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing
@@ -652,8 +649,7 @@ class URLBarView: UIView {
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+        self.cancelButton.alpha = inOverlayMode ? 1 : 0
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         if AppConstants.MOZ_MENU {
@@ -669,8 +665,7 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-			// Cliqz: Commented out cancelButton as we've removed it
-//            self.cancelButton.transform = CGAffineTransformIdentity
+            self.cancelButton.transform = CGAffineTransformIdentity
             // Cliqz: Commented out tabsButton transition as it will be always visible
 //            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
 //            self.tabsButton.transform = tabsButtonTransform
@@ -686,8 +681,7 @@ class URLBarView: UIView {
             self.tabsButton.transform = CGAffineTransformIdentity
             // Cliqz: deleted cloned tabs button due to removing tabs button animation
 //            self.clonedTabsButton?.transform = CGAffineTransformIdentity
-			// Cliqz: Commented out cancelButton as we've removed it
-//            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
@@ -698,8 +692,7 @@ class URLBarView: UIView {
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.hidden = !inOverlayMode
+        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -780,8 +773,7 @@ extension URLBarView: TabToolbarProtocol {
         get {
             if inOverlayMode {
                 guard let locationTextField = locationTextField else { return nil }
-				// Cliqz: Removed cancelButton from the list as we don't use it anymore
-                return [locationTextField]
+                return [locationTextField, cancelButton]
             } else {
                 if toolbarIsShowing {
 					// Cliqz: Removed stopReloadButton from the list as we don't use it anymore
@@ -844,12 +836,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     }
 
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool {
-		// Cliqz: Handled cancelation when Clear button is tapped second time
-		if autocompleteTextField.text == nil || autocompleteTextField.text!.isEmpty {
-			self.SELdidClickCancel()
-		} else {
-            delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
-		}
+		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
         return true
     }
 }
