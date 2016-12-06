@@ -218,9 +218,9 @@ class URLBarView: UIView {
     // Cliqz: Added to maintain tab count
     private var tabCount = 1
 
-	// Cliqz: Changed tabsbutton type
-    // Used to temporarily store the cloned button so we can respond to layout changes during animation
-    private weak var clonedTabsButton: CliqzTabsButton?
+	// Cliqz: removed cloned tabs button due to removing tabs button animation
+//    // Used to temporarily store the cloned button so we can respond to layout changes during animation
+//    private weak var clonedTabsButton: CliqzTabsButton?
 
     private var rightBarConstraint: Constraint?
     private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
@@ -488,6 +488,10 @@ class URLBarView: UIView {
         let countToBe = (count < 100) ? count.description : infinity
         // only animate a tab count change if the tab count has actually changed
         if currentCount != countToBe {
+            // Cliqz: remove tabs button animation
+            self.tabsButton.titleLabel.text = self.tabCount.description
+            self.tabsButton.accessibilityValue = self.tabCount.description
+            /*
             if let _ = self.clonedTabsButton {
                 self.clonedTabsButton?.layer.removeAllAnimations()
                 self.clonedTabsButton?.removeFromSuperview()
@@ -558,6 +562,7 @@ class URLBarView: UIView {
             } else {
                 completion(true)
             }
+            */
         }
     }
     
@@ -679,7 +684,8 @@ class URLBarView: UIView {
             }
         } else {
             self.tabsButton.transform = CGAffineTransformIdentity
-            self.clonedTabsButton?.transform = CGAffineTransformIdentity
+            // Cliqz: deleted cloned tabs button due to removing tabs button animation
+//            self.clonedTabsButton?.transform = CGAffineTransformIdentity
 			// Cliqz: Commented out cancelButton as we've removed it
 //            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
