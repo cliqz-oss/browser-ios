@@ -53,7 +53,7 @@ class CliqzContextMenu {
         guard let cliqzWebView = getCurrentWebView() else { return }
         
         if let touches = event.touchesForWindow(window), let touch = touches.first where touches.count == 1 {
-            //            cliqzWebView.lastTappedTime = NSDate()
+            cliqzWebView.lastTappedTime = NSDate()
             switch touch.phase {
             case .Began:  // A finger touched the screen
                 guard let touchView = event.allTouches()?.first?.view where touchView.isDescendantOfView(cliqzWebView) else {

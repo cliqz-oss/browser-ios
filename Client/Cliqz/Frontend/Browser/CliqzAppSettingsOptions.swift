@@ -171,3 +171,13 @@ class ShowBlockedTopSitesSetting: Setting {
         TelemetryLogger.sharedInstance.logEvent(restoreTopsitesSignal)
     }
 }
+
+// Cliqz: settings entry for showing Extension version
+class ExtensionVersionSetting : VersionSetting {
+    
+    override var title: NSAttributedString? {
+        let extensionVersion = "Extension: \(AppStatus.sharedInstance.extensionVersion)"
+        return NSAttributedString(string: extensionVersion, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+}

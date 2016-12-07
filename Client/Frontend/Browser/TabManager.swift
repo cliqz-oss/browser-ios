@@ -66,7 +66,10 @@ class TabManager : NSObject {
     lazy private var configuration: WKWebViewConfiguration = {
         let configuration = WKWebViewConfiguration()
         configuration.processPool = WKProcessPool()
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        // Cliqz: Moved `blockPopups` to SettingsPrefs
+//        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        
         return configuration
     }()
 
@@ -75,7 +78,10 @@ class TabManager : NSObject {
     lazy private var privateConfiguration: WKWebViewConfiguration = {
         let configuration = WKWebViewConfiguration()
         configuration.processPool = WKProcessPool()
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        // Cliqz: Moved `blockPopups` to SettingsPrefs
+//        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore()
         return configuration
     }()
@@ -505,7 +511,10 @@ class TabManager : NSObject {
         // Cliqz: [UIWebview] CliqzWebViewConfiguration does not contain preferences 
 #if !CLIQZ
         dispatch_async(dispatch_get_main_queue()) {
-            let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
+            // Cliqz: Moved `blockPopups` to SettingsPrefs
+//            let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
+            let allowPopups = !SettingsPrefs.getBlockPopupsPref()
+            
             // Each tab may have its own configuration, so we should tell each of them in turn.
             for tab in self.tabs {
                 tab.webView?.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
