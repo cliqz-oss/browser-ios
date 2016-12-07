@@ -692,7 +692,7 @@ class PrivacyPolicySetting: Setting {
 
 class TipsAndTricksSetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Get the best out of CLIQZ", comment: "[Settings] Show tips and tricks page"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Get the best out of CLIQZ", tableName: "Cliqz", comment: "[Settings] Show tips and tricks page"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {
