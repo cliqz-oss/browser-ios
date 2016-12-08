@@ -142,7 +142,8 @@ class AdBlockerSettingsTableViewController: UITableViewController {
         SettingsPrefs.updateAdBlockerPref(self.toggles[0])
 		SettingsPrefs.updateFairBlockingPref(self.toggles[1])
 		// TODO: The line below should be refactored. It isn't right design to access antitracking module from settings.
-		AntiTrackingModule.sharedInstance.setAdblockEnabled(self.toggles[0])
+        //[Cliqz][Carage13] always disable AdBlocker
+		AntiTrackingModule.sharedInstance.setAdblockEnabled(false)
 	}
 
 }

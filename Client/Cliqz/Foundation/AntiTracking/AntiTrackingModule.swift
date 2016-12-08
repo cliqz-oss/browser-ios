@@ -295,7 +295,8 @@ class AntiTrackingModule: NSObject {
         
         // block ads prefs
         if SettingsPrefs.getAdBlockerPref() {
-            self.setAdblockEnabled(true, timeout: 100)
+            //[Cliqz][Carage13] always disable AdBlocker
+            self.setAdblockEnabled(false, timeout: 100)
         }
 
         // startup
