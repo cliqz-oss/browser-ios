@@ -593,8 +593,7 @@ class AntiTrackingModule: NSObject {
         requestInfo["frameId"] = tabId ?? -1
         requestInfo["isPrivate"] = isPrivate
         requestInfo["originUrl"] = originUrl
-
-        let contentPolicyType = ContentPolicyDetector.getContentPolicy(request, isMainDocument: isMainDocument)
+        let contentPolicyType = ContentPolicyDetector.sharedInstance.getContentPolicy(request, isMainDocument: isMainDocument)
         requestInfo["type"] = contentPolicyType;
 
         requestInfo["requestHeaders"] = request.allHTTPHeaderFields
