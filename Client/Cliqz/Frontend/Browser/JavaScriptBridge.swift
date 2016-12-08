@@ -89,17 +89,17 @@ class JavaScriptBridge {
     }
 
 	func setDefaultSearchEngine() {
-        
-        dispatch_async(backgorundQueue) {
-            
-            let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString!.componentsSeparatedByString("=queryString")
-            let searchEngineName = self.profile.searchEngines.defaultEngine.shortName
-            let parameters = "'\(searchEngineName)', `\(searchComps![0])=`"
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                self.publishEvent("set-search-engine", parameters: parameters)
-            }
-        }
+        //[Cliqz][Garage13] disable switching search engine inside navigation extension
+//        dispatch_async(backgorundQueue) {
+//            
+//            let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString!.componentsSeparatedByString("=queryString")
+//            let searchEngineName = self.profile.searchEngines.defaultEngine.shortName
+//            let parameters = "'\(searchEngineName)', `\(searchComps![0])=`"
+//            
+//            dispatch_async(dispatch_get_main_queue()) {
+//                self.publishEvent("set-search-engine", parameters: parameters)
+//            }
+//        }
 		
 	}
     
