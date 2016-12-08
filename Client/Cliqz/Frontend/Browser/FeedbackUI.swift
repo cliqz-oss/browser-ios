@@ -52,9 +52,10 @@ class FeedbackUI: NSObject {
         // copy default options to the current options dictionary
         defaultOptions.forEach { options[$0] = $1 }
         
-        dispatch_async(dispatch_get_main_queue()) {
-            CRToastManager.showNotificationWithOptions(options, completionBlock: nil)
-        }
+        //[Cliqz][Grage13] disable showing toast message
+//        dispatch_async(dispatch_get_main_queue()) {
+//            CRToastManager.showNotificationWithOptions(options, completionBlock: nil)
+//        }
     }
     
     //MARK:- HUD
