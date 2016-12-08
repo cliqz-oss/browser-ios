@@ -1990,7 +1990,8 @@ extension BrowserViewController: TabToolbarDelegate {
 
     func toggleBookmarkForTabState(tabState: TabState) {
         if tabState.isBookmarked {
-            self.removeBookmark(tabState)
+            //[Cliqz][Grage13] disable removing pages from bookmarks
+//            self.removeBookmark(tabState)
             // Cliqz: log telemetry singal for web menu
             logWebMenuSignal("click", target: "remove_favorite")
         } else {
