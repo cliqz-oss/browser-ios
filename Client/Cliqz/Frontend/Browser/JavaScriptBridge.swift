@@ -143,7 +143,8 @@ class JavaScriptBridge {
             
         case "getTopSites":
             if let limit = data as? Int {
-                refreshTopSites(limit, callback: callback!)
+                //[Cliqz][Garage13] show two top-sites at maximum 
+                refreshTopSites(2, callback: callback!)
             }
             
         case "searchHistory":
