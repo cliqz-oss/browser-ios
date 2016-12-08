@@ -35,10 +35,18 @@ class CliqzURLBarView: URLBarView {
 	override func updateConstraints() {
 		super.updateConstraints()
 		if !antitrackingButton.hidden {
-			locationContainer.snp_updateConstraints { make in
-				let x = -(UIConstants.ToolbarHeight + 10)
-				make.trailing.equalTo(self).offset(x)
-			}
+            if self.toolbarIsShowing {
+                locationContainer.snp_updateConstraints { make in
+                    let x = -UIConstants.ToolbarHeight
+                    make.trailing.equalTo(shareButton.snp_leading).offset(x)
+                }
+            } else {
+                locationContainer.snp_updateConstraints { make in
+                    let x = -(UIConstants.ToolbarHeight + 10)
+                    make.trailing.equalTo(self).offset(x)
+                }
+            }
+			
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
 				make.size.equalTo(self.antitrackingButtonSize)
 			})

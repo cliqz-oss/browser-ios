@@ -150,18 +150,6 @@ class URLBarView: UIView {
         return locationContainer
     }()
 
-	// Cliqz: Added new tabs button for custom background image
-    private lazy var tabsButton: CliqzTabsButton = {
-        let tabsButton = CliqzTabsButton()
-        tabsButton.titleLabel.text = "0"
-        tabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
-        tabsButton.accessibilityIdentifier = "URLBarView.tabsButton"
-        tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the tab toolbar")
-		// Cliqz: Added background image to the button
-		tabsButton.image = UIImage(named: "tabs")
-        return tabsButton
-    }()
-
     private lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView()
         progressBar.progressTintColor = URLBarViewUX.ProgressTintColor
@@ -208,11 +196,13 @@ class URLBarView: UIView {
     
     // Cliqz: Add new tab button
     lazy var newTabButton: UIButton = { return UIButton() }()
+    
+    lazy var tabsButton: UIButton = { return UIButton() }()
 
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -252,7 +242,9 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
+        // Cliqz: Add tabs button & new tab button
         addSubview(tabsButton)
+        addSubview(newTabButton)
         addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -297,10 +289,10 @@ class URLBarView: UIView {
 			make.trailing.equalTo(self)
 		}
 
-		// Cliqz: Moved Tabs button to the left of URL bar
+		// Cliqz: Moved Tabs button to the right of URL bar
 		tabsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self)
+			make.right.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
 			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
@@ -314,8 +306,8 @@ class URLBarView: UIView {
 		// Cliqz: changed backButtons constraint to position after tabs button
         backButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self)
-			make.left.equalTo(self.tabsButton.snp_right)
-			make.size.equalTo(UIConstants.ToolbarHeight)
+            make.left.equalTo(self)
+            make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
         forwardButton.snp_makeConstraints { make in
@@ -351,17 +343,24 @@ class URLBarView: UIView {
                 make.size.equalTo(backButton)
             }
         } else {
-			// Cliqz: Changed forwardButton position, now it should be after forward button
+			// Cliqz: Changed share position, now it should be before new tab button
             shareButton.snp_makeConstraints { make in
-                make.left.equalTo(self.forwardButton.snp_right)
+                make.right.equalTo(self.newTabButton.snp_left)
+                make.centerY.equalTo(self)
+                make.size.equalTo(backButton)
+            }
+            
+            // Cliqz: Changed new tab position, now it should be befores tabs button
+            newTabButton.snp_makeConstraints { make in
+                make.right.equalTo(self.tabsButton.snp_left)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
 
-			// Cliqz: Changed Bookmark button position, next to share button
+			// Cliqz: Changed Bookmark button position, next to back button
             bookmarkButton.snp_makeConstraints { make in
 //                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-				make.left.equalTo(self.shareButton.snp_right)
+				make.left.equalTo(self.forwardButton.snp_right)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
@@ -374,37 +373,35 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
-                /*
+                
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                 make.trailing.equalTo(self.cancelButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
-                */
-				make.leading.equalTo(self.tabsButton.snp_trailing)
-                make.trailing.equalTo(self.cancelButton.snp_leading)
-                make.height.equalTo(URLBarViewUX.LocationHeight)
-                make.centerY.equalTo(self)
+                
             }
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
-				make.left.equalTo(self)
+				make.right.equalTo(self)
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         } else {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
-				make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
 					make.leading.equalTo(self.bookmarkButton.snp_trailing)
+                    make.trailing.equalTo(self.shareButton.snp_leading)
                 } else {
                     // Otherwise, left align the location view
                     /*
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
                     */
-					make.leading.equalTo(self.tabsButton.snp_trailing)
+					make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                    make.trailing.equalTo(self).offset(-URLBarViewUX.LocationLeftPadding)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
@@ -412,7 +409,7 @@ class URLBarView: UIView {
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
-					make.left.equalTo(self)
+                make.right.equalTo(self)
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         }
@@ -478,6 +475,8 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        // Cliqz: commented the method as we use regular tabs button with no count
+        /*
         // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
         tabCount = count
         
@@ -489,7 +488,7 @@ class URLBarView: UIView {
             // Cliqz: remove tabs button animation
             self.tabsButton.titleLabel.text = self.tabCount.description
             self.tabsButton.accessibilityValue = self.tabCount.description
-            /*
+            
             if let _ = self.clonedTabsButton {
                 self.clonedTabsButton?.layer.removeAllAnimations()
                 self.clonedTabsButton?.removeFromSuperview()
@@ -560,8 +559,9 @@ class URLBarView: UIView {
             } else {
                 completion(true)
             }
-            */
+ 
         }
+        */
     }
     
     func updateProgressBar(progress: Float) {
@@ -646,6 +646,10 @@ class URLBarView: UIView {
         self.forwardButton.hidden = !self.toolbarIsShowing
         self.backButton.hidden = !self.toolbarIsShowing
         self.stopReloadButton.hidden = !self.toolbarIsShowing
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.hidden = !self.toolbarIsShowing
+        self.newTabButton.hidden = !self.toolbarIsShowing
+        self.shareButton.hidden = !self.toolbarIsShowing
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
@@ -660,7 +664,10 @@ class URLBarView: UIView {
         self.forwardButton.alpha = inOverlayMode ? 0 : 1
         self.backButton.alpha = inOverlayMode ? 0 : 1
         self.stopReloadButton.alpha = inOverlayMode ? 0 : 1
-
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.alpha = inOverlayMode ? 0 : 1
+        self.newTabButton.alpha = inOverlayMode ? 0 : 1
+        
         let borderColor = inOverlayMode ? locationActiveBorderColor : locationBorderColor
         locationContainer.layer.borderColor = borderColor.CGColor
 
@@ -702,6 +709,9 @@ class URLBarView: UIView {
         self.forwardButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.backButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        self.newTabButton.hidden = !self.toolbarIsShowing || inOverlayMode
     }
 
     func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {
@@ -882,8 +892,8 @@ extension URLBarView: Themeable {
         actionButtonTintColor = theme.buttonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         backgroundColor = theme.backgroundColor
-        
-        tabsButton.applyTheme(themeName)
+        // Cliqz: used regular button instead of TabsButton
+//        tabsButton.applyTheme(themeName)
     }
 }
 // Cliqz: override resignFirstResponder to dismiss the keyboard when it is called

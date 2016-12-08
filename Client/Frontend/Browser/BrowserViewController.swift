@@ -2079,6 +2079,54 @@ extension BrowserViewController: TabToolbarDelegate {
             logWebMenuSignal("longpress", target: "new_tab")
         }
     }
+    // Cliqz: Add delegate methods for tabs button
+    func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        // Cliqz: telemetry logging for toolbar
+        self.logToolbarOverviewSignal()
+        
+        self.webViewContainerToolbar.hidden = true
+        updateFindInPageVisibility(visible: false)
+        
+        if let tab = tabManager.selectedTab {
+            screenshotHelper.takeScreenshot(tab)
+        }
+        
+        // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
+        /*
+         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
+         self.navigationController?.pushViewController(tabTrayController, animated: true)
+         self.tabTrayController = tabTrayController
+         */
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    // Cliqz: Add delegate methods for tabs button
+    func tabToolbarDidLongPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        if #available(iOS 9, *) {
+            let newTabHandler = { (action: UIAlertAction) in
+                self.preserveSearchState()
+                self.tabManager.addTabAndSelect()
+                self.logWebMenuSignal("click", target: "new_tab")
+            }
+            
+            let newForgetModeTabHandler = { (action: UIAlertAction) in
+                self.preserveSearchState()
+                self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+                self.logWebMenuSignal("click", target: "new_forget_tab")
+            }
+            
+            let cancelHandler = { (action: UIAlertAction) in
+                self.logWebMenuSignal("click", target: "cancel")
+            }
+            
+            
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+            
+            self.presentViewController(actionSheetController, animated: true, completion: nil)
+            
+            logWebMenuSignal("longpress", target: "tabs")
+        }
+    }
 }
 
 extension BrowserViewController: MenuViewControllerDelegate {
