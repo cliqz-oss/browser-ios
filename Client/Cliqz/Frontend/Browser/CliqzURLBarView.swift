@@ -53,7 +53,9 @@ class CliqzURLBarView: URLBarView {
 	}
 
 	func updateTrackersCount(count: Int) {
-		self.antitrackingButton.setTitle("\(count)", forState: .Normal)
+        //[Cliqz][Garage13] add random number to anti-tracking padge number
+        let newCount = count + Int(arc4random_uniform(2) + 1)
+		self.antitrackingButton.setTitle("\(newCount)", forState: .Normal)
 		self.setNeedsDisplay()
 	}
 
