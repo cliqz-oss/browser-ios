@@ -1,5 +1,5 @@
 /* Label for preview action on Tab Tray Tab to add current tab to Bookmarks */
-"Add to Bookmarks" = "Ajouter aux marque-pages";
+"Add to Bookmarks" = "Ajouter aux favoris";
 
 /* Label for preview action on Tab Tray Tab to add current tab to Reading List */
 "Add to Reading List" = "Ajouter à la liste de lecture";
@@ -11,7 +11,7 @@
 "Copy URL" = "Copier l'URL";
 
 /* String describing the action of opening the last added bookmark from the home screen Quick Actions via 3D Touch */
-"Open Last Bookmark" = "Ouvrir le dernier marque-page";
+"Open Last Bookmark" = "Ouvrir le dernier favori";
 
 /* String describing the action of opening the last tab sent to Firefox from the home screen Quick Actions via 3D Touch */
 "Open Last Tab" = "Ouvrir le dernier onglet";

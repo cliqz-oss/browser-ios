@@ -1,7 +1,7 @@
-"NSLocationWhenInUseUsageDescription" = "You receive better results when you allow CLIQZ accessing your location.";
+"NSLocationWhenInUseUsageDescription" = "Vous obtenez de meilleurs résultats en autorisant CLIQZ à accéder à votre localisation.";
 
-"ShortcutItemTitleNewPrivateTab" = "New Private Tab";
+"ShortcutItemTitleNewPrivateTab" = "Nouvel onglet de navigation privée";
 
-"ShortcutItemTitleNewTab" = "New Tab";
+"ShortcutItemTitleNewTab" = "Nouvel onglet";
 
-"NSPhotoLibraryUsageDescription" = "CLIQZ will only use this access to download videos to your device.";
+"NSPhotoLibraryUsageDescription" = "CLIQZ n'utilisera cet accès que pour télécharger des vidéos sur votre appareil.";

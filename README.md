@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-CLIQZ for iOS
-===============
-
-CLIQZ develops novel Internet browsers that incorporate search as primary feature. This repository is about the CLIQZ Browser for iOS based on [Mozilla Firefox for iOS](https://github.com/mozilla/firefox-ios), available to users as "CLIQZ for iOS". Learn more at [cliqz.com](https://cliqz.com).
-
-Building the code
------------------
-There should be no differences to the regular [Mozilla process](https://github.com/mozilla/firefox-ios).
-=======
 Firefox for iOS [![codebeat badge](https://codebeat.co/badges/67e58b6d-bc89-4f22-ba8f-7668a9c15c5a)](https://codebeat.co/projects/github-com-mozilla-firefox-ios)
 ===============
 
@@ -102,4 +92,3 @@ It is possible to use [App Code](https://www.jetbrains.com/objc/download/) inste
 * Each commit should have a single clear purpose. If a commit contains multiple unrelated changes, those changes should be split into separate commits.
 * If a commit requires another commit to build properly, those commits should be squashed.
 * Follow-up commits for any review comments should be squashed. Do not include "Fixed PR comments", merge commits, or other "temporary" commits in pull requests.
->>>>>>> upstream/development
