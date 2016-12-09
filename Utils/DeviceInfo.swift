@@ -34,7 +34,7 @@ public class DeviceInfo {
         // E.g., "Fennec Nightly".
         return localizedDict?[key] as? String ??
                infoDict?[key] as? String ??
-               "Firefox"
+               "Cliqz"
     }
 
     // I'd land a test for this, but it turns out it's hardly worthwhile -- both the
@@ -47,6 +47,15 @@ public class DeviceInfo {
         let f = NSLocalizedString("%@ on %@", tableName: "Shared", comment: "A brief descriptive name for this app on this device, used for Send Tab and Synced Tabs. The first argument is the app name. The second argument is the device name.")
 
         return String(format: f, appName(), device)
+    }
+
+    public class func clientIdentifier(prefs: Prefs) -> String {
+        if let id = prefs.stringForKey("clientIdentifier") {
+            return id
+        }
+        let id = NSUUID().UUIDString
+        prefs.setString(id, forKey: "clientIdentifier")
+        return id
     }
 
     public class func deviceModel() -> String {
@@ -64,5 +73,17 @@ public class DeviceInfo {
         // 2. https://gist.github.com/conradev/8655650
         // Thus, testing has to take place on actual devices.
         return !lowGraphicsQualityModels.contains(specificModelName)
+    }
+
+    public class func hasConnectivity() -> Bool {
+        let status = Reach().connectionStatus()
+        switch status {
+        case .Online(.WWAN):
+            return true
+        case .Online(.WiFi):
+            return true
+        default:
+            return false
+        }
     }
 }

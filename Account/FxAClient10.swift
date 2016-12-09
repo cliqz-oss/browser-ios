@@ -6,6 +6,7 @@ import Alamofire
 import Shared
 import Foundation
 import FxA
+import Deferred
 
 public let FxAClientErrorDomain = "org.mozilla.fxa.error"
 public let FxAClientUnknownError = NSError(domain: FxAClientErrorDomain, code: 999,
@@ -158,17 +159,16 @@ public class FxAClient10 {
         if json.isError {
             return nil
         }
-        if let uid = json["uid"].asString {
-            if let verified = json["verified"].asBool {
-                if let sessionToken = json["sessionToken"].asString {
-                    if let keyFetchToken = json["keyFetchToken"].asString {
-                        return FxALoginResponse(remoteEmail: "", uid: uid, verified: verified,
-                            sessionToken: sessionToken.hexDecodedData, keyFetchToken: keyFetchToken.hexDecodedData)
-                    }
-                }
-            }
+        
+        guard let uid = json["uid"].asString,
+            let verified = json["verified"].asBool,
+            let sessionToken = json["sessionToken"].asString,
+            let keyFetchToken = json["keyFetchToken"].asString else {
+                return nil
         }
-        return nil
+        
+        return FxALoginResponse(remoteEmail: "", uid: uid, verified: verified,
+            sessionToken: sessionToken.hexDecodedData, keyFetchToken: keyFetchToken.hexDecodedData)
     }
 
     private class func keysResponseFromJSON(keyRequestKey: NSData, json: JSON) -> FxAKeysResponse? {
@@ -227,7 +227,7 @@ public class FxAClient10 {
             "authPW": authPW.base16EncodedStringWithOptions(NSDataBase16EncodingOptions.LowerCase),
         ]
 
-        var URL: NSURL = self.URL.URLByAppendingPathComponent("/account/login")
+        var URL: NSURL = self.URL.URLByAppendingPathComponent("/account/login")!
         if getKeys {
             let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: false)!
             components.query = "keys=true"
@@ -241,18 +241,18 @@ public class FxAClient10 {
 
         alamofire.request(mutableURLRequest)
                  .validate(contentType: ["application/json"])
-                 .responseJSON { (request, response, result) in
+                 .responseJSON { response in
 
                     // Don't cancel requests just because our Manager is deallocated.
                     withExtendedLifetime(self.alamofire) {
-                        if let error = result.error as? NSError {
+                        if let error = response.result.error {
                             deferred.fill(Maybe(failure: FxAClientError.Local(error)))
                             return
                         }
 
-                        if let data: AnyObject = result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
+                        if let data: AnyObject = response.result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
                             let json = JSON(data)
-                            if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response!.statusCode) {
+                            if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response.response!.statusCode) {
                                 deferred.fill(Maybe(failure: FxAClientError.Remote(remoteError)))
                                 return
                             }
@@ -280,7 +280,7 @@ public class FxAClient10 {
         let hawkHelper = HawkHelper(id: tokenId.hexEncodedString, key: reqHMACKey)
 
         let URL = self.URL.URLByAppendingPathComponent("/account/keys")
-        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
         mutableURLRequest.HTTPMethod = Method.GET.rawValue
 
         let hawkValue = hawkHelper.getAuthorizationValueFor(mutableURLRequest)
@@ -288,15 +288,15 @@ public class FxAClient10 {
 
         alamofire.request(mutableURLRequest)
             .validate(contentType: ["application/json"])
-            .responseJSON { (request, response, result) in
-                if let error = result.error as? NSError {
+            .responseJSON { response in
+                if let error = response.result.error {
                     deferred.fill(Maybe(failure: FxAClientError.Local(error)))
                     return
                 }
 
-                if let data: AnyObject = result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
+                if let data: AnyObject = response.result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
                     let json = JSON(data)
-                    if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response!.statusCode) {
+                    if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response.response!.statusCode) {
                         deferred.fill(Maybe(failure: FxAClientError.Remote(remoteError)))
                         return
                     }
@@ -328,7 +328,7 @@ public class FxAClient10 {
         let hawkHelper = HawkHelper(id: tokenId.hexEncodedString, key: reqHMACKey)
 
         let URL = self.URL.URLByAppendingPathComponent("/certificate/sign")
-        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
         mutableURLRequest.HTTPMethod = Method.POST.rawValue
 
         mutableURLRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -339,15 +339,15 @@ public class FxAClient10 {
 
         alamofire.request(mutableURLRequest)
             .validate(contentType: ["application/json"])
-            .responseJSON { (request, response, result) in
-                if let error = result.error as? NSError {
+            .responseJSON { response in
+                if let error = response.result.error {
                     deferred.fill(Maybe(failure: FxAClientError.Local(error)))
                     return
                 }
 
-                if let data: AnyObject = result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
+                if let data: AnyObject = response.result.value { // Declaring the type quiets a Swift warning about inferring AnyObject.
                     let json = JSON(data)
-                    if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response!.statusCode) {
+                    if let remoteError = FxAClient10.remoteErrorFromJSON(json, statusCode: response.response!.statusCode) {
                         deferred.fill(Maybe(failure: FxAClientError.Remote(remoteError)))
                         return
                     }

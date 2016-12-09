@@ -2,12 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import UIKit
-import XCTest
-
+@testable import Client
 import Shared
 import Storage
+import UIKit
 import WebKit
+import Deferred
+
+import XCTest
+
 
 public class TabManagerMockProfile: MockProfile {
     override func storeTabs(tabs: [RemoteTab]) -> Deferred<Maybe<Int>> {
@@ -27,7 +30,7 @@ class TabManagerTests: XCTestCase {
 
     func testTabManagerStoresChangesInDB() {
         let profile = TabManagerMockProfile()
-        let manager = TabManager(defaultNewTabRequest: NSURLRequest(URL: NSURL(fileURLWithPath: "http://localhost")), prefs: profile.prefs, imageStore: nil)
+        let manager = TabManager(prefs: profile.prefs, imageStore: nil)
         let configuration = WKWebViewConfiguration()
         configuration.processPool = WKProcessPool()
 
@@ -44,8 +47,8 @@ class TabManagerTests: XCTestCase {
         // test that non-private tabs are saved to the db
         // add some non-private tabs to the tab manager
         for _ in 0..<3 {
-            let tab = Browser(configuration: configuration)
-            manager.configureTab(tab, request: NSURLRequest(URL: NSURL(string: "http://yahoo.com")!), flushToDisk: false, zombie: false, restoring: false)
+            let tab = Tab(configuration: configuration)
+            manager.configureTab(tab, request: NSURLRequest(URL: NSURL(string: "http://yahoo.com")!), flushToDisk: false, zombie: false)
         }
 
         manager.storeChanges()
@@ -62,8 +65,8 @@ class TabManagerTests: XCTestCase {
         if #available(iOS 9, *) {
             // create some private tabs
             for _ in 0..<3 {
-                let tab = Browser(configuration: configuration, isPrivate: true)
-                manager.configureTab(tab, request: NSURLRequest(URL: NSURL(string: "http://yahoo.com")!), flushToDisk: false, zombie: false, restoring: false)
+                let tab = Tab(configuration: configuration, isPrivate: true)
+                manager.configureTab(tab, request: NSURLRequest(URL: NSURL(string: "http://yahoo.com")!), flushToDisk: false, zombie: false)
             }
 
             manager.storeChanges()

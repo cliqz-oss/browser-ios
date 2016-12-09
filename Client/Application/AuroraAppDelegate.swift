@@ -15,6 +15,7 @@ private let AppUpdateOK = NSLocalizedString("OK", comment: "Label for OK button 
 
 class AuroraAppDelegate: AppDelegate {
     private var naggedAboutAuroraUpdate = false
+    private let feedbackDelegate = FeedbackSnapshotDelegate()
 
     override func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         super.application(application, willFinishLaunchingWithOptions: launchOptions)
@@ -36,7 +37,8 @@ class AuroraAppDelegate: AppDelegate {
         unregisterFeedbackNotification()
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    override func applicationWillResignActive(application: UIApplication) {
+        super.applicationWillResignActive(application)
         unregisterFeedbackNotification()
     }
 
@@ -50,7 +52,7 @@ class AuroraAppDelegate: AppDelegate {
                     window.drawViewHierarchyInRect(window.bounds, afterScreenUpdates: true)
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    self.sendFeedbackMailWithImage(image)
+                    self.sendFeedbackMailWithImage(image!)
                 }
         }
     }
@@ -82,18 +84,14 @@ extension AuroraAppDelegate: UIAlertViewDelegate {
     }
 
     private func fetchLatestAuroraVersion(completionHandler: NSString? -> Void) {
-        Alamofire.request(.GET, AuroraPropertyListURL).responsePropertyList(options: NSPropertyListReadOptions(), completionHandler: { (_, _, object) -> Void in
-            if let plist = object.value as? NSDictionary {
-                if let items = plist["items"] as? NSArray {
-                    if let item = items[0] as? NSDictionary {
-                        if let metadata = item["metadata"] as? NSDictionary {
-                            if let remoteVersion = metadata["bundle-version"] as? String {
-                                completionHandler(remoteVersion)
-                                return
-                            }
-                        }
-                    }
-                }
+        Alamofire.request(.GET, AuroraPropertyListURL).responsePropertyList(options: NSPropertyListReadOptions(), completionHandler: { response -> Void in
+            if let plist = response.result.value as? NSDictionary,
+                let items = plist["items"] as? NSArray,
+                let item = items[0] as? NSDictionary,
+                let metadata = item["metadata"] as? NSDictionary,
+                let remoteVersion = metadata["bundle-version"] as? String {
+                completionHandler(remoteVersion)
+                return
             }
             completionHandler(nil)
         })
@@ -106,12 +104,12 @@ extension AuroraAppDelegate: UIAlertViewDelegate {
     }
 }
 
-extension AuroraAppDelegate: MFMailComposeViewControllerDelegate {
-    private func sendFeedbackMailWithImage(image: UIImage) {
+extension AuroraAppDelegate {
+    func sendFeedbackMailWithImage(image: UIImage) {
         if (MFMailComposeViewController.canSendMail()) {
             if let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey(String(kCFBundleVersionKey)) as? NSString {
                 let mailComposeViewController = MFMailComposeViewController()
-                mailComposeViewController.mailComposeDelegate = self
+                mailComposeViewController.mailComposeDelegate = self.feedbackDelegate
                 mailComposeViewController.setSubject("Feedback on iOS client version v\(appVersion) (\(buildNumber))")
                 mailComposeViewController.setToRecipients(["ios-feedback@mozilla.com"])
 
@@ -122,8 +120,10 @@ extension AuroraAppDelegate: MFMailComposeViewControllerDelegate {
             }
         }
     }
+}
 
-    func mailComposeController(mailComposeViewController: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+private class FeedbackSnapshotDelegate: NSObject, MFMailComposeViewControllerDelegate {
+    @objc func mailComposeController(mailComposeViewController: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         mailComposeViewController.dismissViewControllerAnimated(true, completion: nil)
     }
 }

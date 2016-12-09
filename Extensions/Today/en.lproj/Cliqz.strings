@@ -1,0 +1,13 @@
+/* 
+  Cliqz.strings
+  Client
+
+  Created by Sahakyan on 12/1/16.
+  Copyright © 2016 Mozilla. All rights reserved.
+*/
+
+/* New private tab title */
+"New Private Tab" = "New Forget Tab";
+
+/* "Widget item for a new tab" */
+"New Tab" = "New Tab";

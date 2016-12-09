@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Shared
+import Deferred
 
 public class IgnoredSiteError: MaybeErrorType {
     public var description: String {
@@ -23,9 +24,18 @@ public protocol BrowserHistory {
     func removeHistoryForURL(url: String) -> Success
     func removeSiteFromTopSites(site: Site) -> Success
 
-    func getSitesByFrecencyWithLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
-    func getSitesByFrecencyWithLimit(limit: Int, whereURLContains filter: String) -> Deferred<Maybe<Cursor<Site>>>
+    func getSitesByFrecencyWithHistoryLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
+    func getSitesByFrecencyWithHistoryLimit(limit: Int, whereURLContains filter: String) -> Deferred<Maybe<Cursor<Site>>>
+    func getSitesByFrecencyWithHistoryLimit(limit: Int, bookmarksLimit: Int, whereURLContains filter: String) -> Deferred<Maybe<Cursor<Site>>>
     func getSitesByLastVisit(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
+
+    func getTopSitesWithLimit(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
+    func setTopSitesNeedsInvalidation()
+    func updateTopSitesCacheIfInvalidated() -> Deferred<Maybe<Bool>>
+    func setTopSitesCacheSize(size: Int32)
+    func clearTopSitesCache() -> Success
+    func refreshTopSitesCache() -> Success
+    func areTopSitesDirty(withLimit limit: Int) -> Deferred<Maybe<Bool>>
 }
 
 /**
@@ -55,6 +65,14 @@ public protocol SyncableHistory: AccountRemovalDelegate {
      */
     func markAsSynchronized(_: [GUID], modified: Timestamp) -> Deferred<Maybe<Timestamp>>
     func markAsDeleted(guids: [GUID]) -> Success
+
+    func doneApplyingRecordsAfterDownload() -> Success
+    func doneUpdatingMetadataAfterUpload() -> Success
+
+    /**
+     * For inspecting whether we're an active participant in history sync.
+     */
+    func hasSyncedHistory() -> Deferred<Maybe<Bool>>
 }
 
 // TODO: integrate Site with this.

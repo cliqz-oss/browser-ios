@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@testable import Client
 import Foundation
 import Account
 import ReadingList
@@ -9,9 +10,16 @@ import Shared
 import Storage
 import Sync
 import XCTest
+import Deferred
 
 public class MockSyncManager: SyncManager {
     public var isSyncing = false
+    public var lastSyncFinishTime: Timestamp? = nil
+    public var syncDisplayState: SyncDisplayState?
+
+    public func hasSyncedHistory() -> Deferred<Maybe<Bool>> {
+        return deferMaybe(true)
+    }
 
     public func syncClients() -> SyncResult { return deferMaybe(.Completed) }
     public func syncClientsThenTabs() -> SyncResult { return deferMaybe(.Completed) }
@@ -30,11 +38,18 @@ public class MockSyncManager: SyncManager {
         self.endTimedSyncs()
     }
 
+    public func onNewProfile() {
+    }
+
     public func onAddedAccount() -> Success {
         return succeed()
     }
     public func onRemovedAccount(account: FirefoxAccount?) -> Success {
         return succeed()
+    }
+
+    public func hasSyncedLogins() -> Deferred<Maybe<Bool>> {
+        return deferMaybe(true)
     }
 }
 
@@ -60,9 +75,6 @@ public class MockProfile: Profile {
     }
 
     func shutdown() {
-        if dbCreated {
-            db.close()
-        }
     }
 
     private var dbCreated = false
@@ -75,8 +87,9 @@ public class MockProfile: Profile {
      * Favicons, history, and bookmarks are all stored in one intermeshed
      * collection of tables.
      */
-    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage> = {
-        return SQLiteHistory(db: self.db)!
+    // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
+    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
+        return SQLiteHistory(db: self.db, prefs: MockProfilePrefs())!
     }()
 
     var favicons: Favicons {
@@ -86,8 +99,9 @@ public class MockProfile: Profile {
     lazy var queue: TabQueue = {
         return MockTabQueue()
     }()
-
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage> {
+    
+    // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
+    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> {
         return self.places
     }
 
@@ -95,16 +109,20 @@ public class MockProfile: Profile {
         return MockSyncManager()
     }()
 
-    lazy var bookmarks: protocol<BookmarksModelFactory, ShareToDestination, ResettableSyncStorage, AccountRemovalDelegate> = {
+    lazy var certStore: CertStore = {
+        return CertStore()
+    }()
+
+    lazy var bookmarks: protocol<BookmarksModelFactorySource, SyncableBookmarks, LocalItemSource, MirrorItemSource, ShareToDestination> = {
         // Make sure the rest of our tables are initialized before we try to read them!
         // This expression is for side-effects only.
         let p = self.places
 
-        return SQLiteBookmarks(db: self.db)
+        return MergedSQLiteBookmarks(db: self.db)
     }()
 
     lazy var searchEngines: SearchEngines = {
-        return SearchEngines(prefs: self.prefs)
+        return SearchEngines(prefs: self.prefs, files: self.files)
     }()
 
     lazy var prefs: Prefs = {
@@ -117,6 +135,10 @@ public class MockProfile: Profile {
 
     lazy var readingList: ReadingListService? = {
         return ReadingListService(profileStoragePath: self.files.rootPath as String)
+    }()
+
+    lazy var recentlyClosedTabs: ClosedTabsStore = {
+        return ClosedTabsStore(prefs: self.prefs)
     }()
 
     internal lazy var remoteClientsAndTabs: RemoteClientsAndTabs = {

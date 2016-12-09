@@ -1,0 +1,236 @@
+/* The text shown in the search field */
+"Search" = "Suche";
+
+/* Error message title */
+"Sorry" = "Sorry";
+
+/* Error message when JS scripts for search can't be loaded */
+"Something went wrong, the script wasn't loaded." = "Da ist leider etwas schief gelaufen, das Script konnte nicht geladen werden.";
+
+/* Button label to cancel entering a URL or search query
+ Cancel */
+"Cancel" = "Abbrechen";
+
+/* Button label on Alert view */
+"Retry" = "Wiederholen";
+
+/* Search Recommendations and top visited sites title */
+"Search recommendations" = "Suchvorschläge";
+
+/* Search history title */
+"Search history" = "Suchverlauf";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Impressum";
+
+/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
+"FAQs & Support" = "FAQs & Support";
+
+/* Open search section of settings */
+"Search" = "Suche";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback für CLIQZ Browser for iOS (Version %@), auf %@";
+
+/* Title for No Email account pop-up */
+"No Email account title" = "kein Email-Konto eingerichtet";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Bitte Email-Konto einrichten, um Feedback schicken zu können.";
+
+/* Error title */
+"The Internet connection appears to be offline." = "Die Internet-Verbindung scheint offline zu sein.";
+
+/* Title for `Top news` home shortcut. */
+"Top news" = "Top News lesen";
+
+/* Title for `Last site` home shortcut. */
+"Last site" =  "Letzte Seite öffnen";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Nicht-jugendfreie Inhalte blockieren";
+
+/* Share footer */
+"Shared with CLIQZ for iOS" = "Geteilt mit CLIQZ für iOS";
+
+/* URL for detailed info for human web */
+"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
+
+/* Title for Human Web deteiled info on settings */
+"What is Human Web?" = "Was ist Human Web?";
+
+/* Navigation title in settings */
+"Human Web" = "Human Web";
+
+/* Block Ads setting */
+"Block Ads" = "Werbung blockieren BETA";
+
+/* Fair Blocking toogle title in Block Ads settings
+ Title of navigation controller of Fair Blocking */
+"Fair Blocking" = "Faires Blockieren";
+
+/* More details about Fair Blocking */
+"What is 'fair'?" = "Was bedeutet 'fair'?";
+
+/* Settings item for clearing favorite history */
+"Favorites" = "Favoriten";
+
+/* Settings item for clearing private data on termination */
+"Clear Private data on termination" = "Private Daten beim Verlassen löschen";
+
+/* Enable News Push Notifications */
+"Enable News Push Notifications" = "Eilmeldungen";
+
+/* Show blocked top-sites from settings */
+"Show blocked topsites" = "Meist-besuchte Seiten wiederherstellen";
+
+/* Text of the 'Show blocked top-sites' alert */
+"All blocked topsites will be shown on the start page again." = "Startseite zeigt wieder deine meist-besuchten Seiten.";
+
+/* OK button in the 'Show blocked top-sites' alert */
+/* Button label to `OK` in news notification permission screen */
+"OK" = "OK";
+
+/* Cancel button in the 'Show blocked top-sites' alert */
+"Cancel" = "Abbrechen";
+
+/* Button label to `Yes please!` in news notification permission screen */
+"Yes please!" = "Jetzt aktivieren";
+
+/* Button label to `Later` in news notification permission screen */
+"Remind me later" = "Später vielleicht";
+
+/* Button label to `No` in news notification permission screen */
+"No thanks" = "Nein, danke";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Forget Mode" = "Vergessen Modus";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Webseiten-Verlauf und Cookies werden nicht gespeichert. Neue Downloads und Lesezeichen werden jedoch gespeichert.";
+
+/* Context/Sharing menu item for downloading youtube videos */
+"Download youtube video" = "Video offline ansehen";
+
+/* History title on dashboard */
+"History" = "Verlauf";
+
+/* Add Favorites */
+"Add Favorite" = "Favorit hinzufügen";
+
+/* Setting menu title */
+"Settings" = "Einstellungen";
+
+/* "Widget item for a new tab" */
+"New Tab" = "Neuer Tab";
+
+/* New private tab title */
+"New Private Tab" = "Neuen Vergessen-Tab";
+
+/* Open new tab title */
+"Open New Tab" = "Neuen Tab öffnen";
+
+/* Open new forget mode tab title */
+"Open New Forget Tab" = "Neuen Vergessen-Tab öffnen";
+
+/* Show images title */
+"Show Images" = "Bilder anzeigen";
+
+/* Hide images titile */
+"Hide Images" = "Bilder verbergen";
+
+/* Night mode title */
+"Night Mode" = "Nacht Modus";
+
+/* Turn off Night mode title */
+"Night Mode off" = "Nacht Modus ausschalten";
+
+/* Remove favorites title */
+"Remove Favorites" = "Favorit entfernen";
+
+/* Dashboard navigation bar title */
+"Overview" = "Übersicht";
+
+/* Title on the tab view, when no URL is open on the tab */
+"Topsites" = "Meist-besuchte Seiten und Nachrichten";
+
+/* Antitracking UI top title */
+"Data is protected" = "Deine Daten sind geschützt";
+
+/* Antitracking UI subtitle */
+"Private data points" = "Persönliche Daten wurden entfernt";
+
+/* Antitracking UI title for companies column */
+"Companies title" = "Tracking Unternehmen";
+
+/* Antitracking UI title for tracked count column */
+"Trackers count title" = "Persönliche Daten";
+
+/* Antiphishing alert title */
+"Warning: deceptive website!" =  "Warnung: betrügerische Website!";
+
+/* Antiphishing alert message */
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ hat den Zugriff auf %1$ blockiert, weil diese Seite als Phishing-Website gemeldet wurde.\nPhishing-Websites geben vor, vertrauenswürdig zu sein, damit du deine Anmeldedaten, dein Passwort oder andere vertrauliche Informationen preisgibst.";
+
+/* Back to safe site buttun title in antiphishing alert title */
+"Back to safe site" = "Zurück zu sicherer Webseite";
+
+/* Continue despite warning buttun title in antiphishing alert title */
+"Continue despite warning" = "Trotz der Warnung fortfahren";
+
+/* Context menu option for opening a link in a new private tab */
+"Open In New Forget Tab" = "In neuem Vergessen-Tab öffnen";
+
+/* First card text in onBorading */
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "DIE SUCHMASCHINE IM BROWSER\n\nImmer auf dem schnellsten Weg zum Ziel!";
+
+/* Second card text in onBorading */
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Einfach drauflostippen.\n\nDu siehst sofort einen Vorschlag.\n\nNach links wischen zum nächsten Vorschlag.";
+
+/* Thrid card text in onBorading */
+"When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
+
+/* Start buttun title for onBorading */
+"Let's start!" = "Jetzt loslegen!";
+
+/* Toast message shown when youtube video download started */
+"The video is being downloaded." = "Das Video wird heruntergeladen.";
+
+/* Toast message shown when youtube video download faild */
+"The download failed." = "Der Download ist fehlgeschlagen.";
+
+/* Toast message shown when youtube video is Successfully downloaded */
+"The download is complete. Open the Photos app to watch the video." = "Der Download is abgeschlossen. Öffne die Fotos App um das Video anzuschauen.";
+
+/* Brading label for onBorading */
+"Faster and safer" = "Schneller und sicherer";
+
+/* subtitle label for onBorading */
+"SEARCH ENGINE \n IN THE BROWSER" = "DIE SUCHMASCHINE \n IM BROWSER";
+
+/* Anti-tracking hint title */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Anti-tracking hint description */
+"Anti-Tracking description" = "Du hast die Kontrolle: CLIQZ Anti-Tracking schützt deine Privatsphäre";
+
+/* Cliqz search hint title */
+"Fast-search" = "Schnellsuche";
+
+/* Cliqz search hint description */
+"Fast-search description" = "Alles sofort im Blick: Die relevantesten Suchergebnisse werden dir auf den intelligenten CLIQZ Ergebniskarten direkt angezeigt";
+
+/* Detailed description on Adblocking settings */
+"AdBlocking settings clarification" = "Bitte beachte: Cliqz Browser muss größere Informationspakete laden bevor der Werbeblocker effizient funktioniert. Dazu muss die App mit einem WLAN verbunden sein.";
+
+/* [Settings] Show tips and tricks page */
+"Get the best out of CLIQZ" = "Hol dir das Beste aus CLIQZ";
+
+/* Youtube downloader action sheet title */
+"Video quality" = "Videoqualität";
+
+/* Youtube downloader action sheet message */
+"Please select video quality" = "Bitte wähle die gewünschte Videoqualität aus";
+
+/* HUD message displayed while youtube downloader grabing the download URLs of the video */
+"Retrieving video information" = "Lade Videoinformationen";

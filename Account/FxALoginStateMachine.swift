@@ -6,6 +6,7 @@ import Foundation
 import FxA
 import Shared
 import XCGLogger
+import Deferred
 
 // TODO: log to an FxA-only, persistent log file.
 private let log = Logger.syncLogger
@@ -115,6 +116,9 @@ class FxALoginStateMachine {
                                 log.error("Unknown error: \(error.description).  Transitioning to Separated.")
                                 return separated
                             }
+                        case let .Local(localError) where localError.domain == NSURLErrorDomain:
+                            log.warning("Local networking error: \(result.failureValue!).  Assuming transient and not transitioning.")
+                            return same
                         default:
                             break
                         }
@@ -159,6 +163,9 @@ class FxALoginStateMachine {
                                 log.error("Unknown error: \(error.description).  Transitioning to Separated.")
                                 return separated
                             }
+                        case let .Local(localError) where localError.domain == NSURLErrorDomain:
+                            log.warning("Local networking error: \(result.failureValue!).  Assuming transient and not transitioning.")
+                            return same
                         default:
                             break
                         }

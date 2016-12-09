@@ -25,7 +25,7 @@ extension UIView {
      * Takes a screenshot of the view with the given aspect ratio.
      * An aspect ratio of 0 means capture the entire view.
      */
-    func screenshot(aspectRatio: CGFloat, offset: CGPoint? = nil, quality: CGFloat = 1) -> UIImage? {
+    func screenshot(aspectRatio: CGFloat = 0, offset: CGPoint? = nil, quality: CGFloat = 1) -> UIImage? {
         assert(aspectRatio >= 0)
 
         var size: CGSize
@@ -52,5 +52,43 @@ extension UIView {
     func clone() -> UIView {
         let data = NSKeyedArchiver.archivedDataWithRootObject(self)
         return NSKeyedUnarchiver.unarchiveObjectWithData(data) as! UIView
+    }
+
+    /**
+     * rounds the requested corners of a view with the provided radius
+     */
+    func addRoundedCorners(cornersToRound cornersToRound: UIRectCorner, cornerRadius: CGSize, color: UIColor) {
+        let rect = bounds
+        let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: cornersToRound, cornerRadii: cornerRadius)
+
+        // Create the shape layer and set its path
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = rect
+        maskLayer.path = maskPath.CGPath
+
+        let roundedLayer = CALayer()
+        roundedLayer.backgroundColor = color.CGColor
+        roundedLayer.frame = rect
+        roundedLayer.mask = maskLayer
+
+        layer.insertSublayer(roundedLayer, atIndex: 0)
+        backgroundColor = UIColor.clearColor()
+    }
+
+    /**
+     This allows us to find the view in a current view hierarchy that is currently the first responder
+     */
+    static func findSubViewWithFirstResponder(view: UIView) -> UIView? {
+        let subviews = view.subviews
+        if subviews.count == 0 {
+            return nil
+        }
+        for subview: UIView in subviews {
+            if subview.isFirstResponder() {
+                return subview
+            }
+            return findSubViewWithFirstResponder(subview)
+        }
+        return nil
     }
 }

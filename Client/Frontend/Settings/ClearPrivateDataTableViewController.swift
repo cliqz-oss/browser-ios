@@ -4,36 +4,52 @@
 
 import UIKit
 import Shared
-
 private let SectionToggles = 0
 private let SectionButton = 1
 private let NumberOfSections = 2
-private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
-private let HeaderHeight: CGFloat = 44
+private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 private let TogglesPrefKey = "clearprivatedata.toggles"
+
+private let log = Logger.browserLogger
+
+private let HistoryClearableIndex = 0
 
 class ClearPrivateDataTableViewController: UITableViewController {
     private var clearButton: UITableViewCell?
 
     var profile: Profile!
     var tabManager: TabManager!
+    // Cliqz: added to calculate the duration spent on settings page
+    var settingsOpenTime : Double?
 
-    private lazy var clearables: [Clearable] = {
+    private typealias DefaultCheckedState = Bool
+
+    private lazy var clearables: [(clearable: Clearable, checked: DefaultCheckedState)] = {
         return [
-            HistoryClearable(profile: self.profile),
-            CacheClearable(tabManager: self.tabManager),
-            CookiesClearable(tabManager: self.tabManager),
-            SiteDataClearable(tabManager: self.tabManager),
-            PasswordsClearable(profile: self.profile),
+            (HistoryClearable(profile: self.profile), true),
+            // Cliqz: Added option to clear bookmarks
+            (BookmarksClearable(profile: self.profile), false),
+            // Cliqz: changed the default value of clearables to false
+            (CacheClearable(tabManager: self.tabManager), false),
+            (CookiesClearable(tabManager: self.tabManager), false),
+            (SiteDataClearable(tabManager: self.tabManager), false),
         ]
     }()
-
+    
+    // Cliqz: Clear histroy and favorite items cell indexes
+    let clearHistoryCellIndex = 0
+    let clearFavoriteHistoryCellIndex = 1
+    
     private lazy var toggles: [Bool] = {
-        if let savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
+        if var savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
+            // Cliqz: Added option to include bookmarks items
+            if savedToggles.count == 4 {
+                savedToggles.insert(true, atIndex:1)
+            }
             return savedToggles
         }
 
-        return [Bool](count: self.clearables.count, repeatedValue: true)
+        return self.clearables.map { $0.checked }
     }()
 
     private var clearButtonEnabled = true {
@@ -44,40 +60,54 @@ class ClearPrivateDataTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Cliqz: record settingsOpenTime
+        settingsOpenTime = NSDate.getCurrentMillis()
 
-        title = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Navigation title in settings.")
+        title = Strings.SettingsClearPrivateDataTitle
 
-        tableView.registerClass(SettingsTableSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderIdentifier)
+        tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
 
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
-
-        tableView.tableFooterView = UIView()
+        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: UIConstants.TableViewHeaderFooterHeight))
+        footer.showBottomBorder = false
+        tableView.tableFooterView = footer
     }
-
+    
+    // Cliqz: log telemetry signal
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings("private_data", "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
 
         if indexPath.section == SectionToggles {
-            cell.textLabel?.text = clearables[indexPath.item].label
+            cell.textLabel?.text = clearables[indexPath.item].clearable.label
             let control = UISwitch()
             control.onTintColor = UIConstants.ControlTintColor
-            control.addTarget(self, action: "switchValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+            control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
             control.on = toggles[indexPath.item]
             cell.accessoryView = control
             cell.selectionStyle = .None
             control.tag = indexPath.item
+            
         } else {
             assert(indexPath.section == SectionButton)
-            cell.textLabel?.text = NSLocalizedString("Clear Private Data", tableName: "ClearPrivateData", comment: "Button in settings that clears private data for the selected items.")
+            cell.textLabel?.text = Strings.SettingsClearPrivateDataClearButton
             cell.textLabel?.textAlignment = NSTextAlignment.Center
             cell.textLabel?.textColor = UIConstants.DestructiveRed
             cell.accessibilityTraits = UIAccessibilityTraitButton
+            cell.accessibilityIdentifier = "ClearPrivateData"
             clearButton = cell
         }
-
-        // Make the separator line fill the entire table width.
-        cell.separatorInset = UIEdgeInsetsZero
 
         return cell
     }
@@ -90,7 +120,6 @@ class ClearPrivateDataTableViewController: UITableViewController {
         if section == SectionToggles {
             return clearables.count
         }
-
         assert(section == SectionButton)
         return 1
     }
@@ -105,30 +134,71 @@ class ClearPrivateDataTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard indexPath.section == SectionButton else { return }
 
-        clearables
-            .enumerate()
-            .filter { (i, _) in toggles[i] }
-            .map { (_, clearable) in clearable.clear() }
-            .allSucceed()
-            .upon { result in
-                assert(result.isSuccess, "Private data cleared successfully")
-
-                self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
-
-                dispatch_async(dispatch_get_main_queue()) {
-                    // Disable the Clear Private Data button after it's clicked.
-                    self.clearButtonEnabled = false
-                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        func clearPrivateData(action: UIAlertAction) {
+            let toggles = self.toggles
+            self.clearables
+                .enumerate()
+                .flatMap { (i, pair) in
+                    guard toggles[i] else {
+                        return nil
+                    }
+                    log.debug("Clearing \(pair.clearable).")
+                    return pair.clearable.clear()
                 }
+                .allSucceed()
+                .upon { result in
+                    assert(result.isSuccess, "Private data cleared successfully")
+
+                    // Cliqz Moved updating preferences part to toggles switch handler method to save changes immedietely.
+                    //                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        // Disable the Clear Private Data button after it's clicked.
+                        self.clearButtonEnabled = false
+                        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    }
             }
+            
+            // Cliqz: log telemetry signal
+            let confirmSignal = TelemetryLogEventType.Settings("private_data", "click", "confirm", nil, nil)
+            TelemetryLogger.sharedInstance.logEvent(confirmSignal)
+
+        }
+
+        // We have been asked to clear history and we have an account.
+        // (Whether or not it's in a good state is irrelevant.)
+        if self.toggles[HistoryClearableIndex] && profile.hasAccount() {
+            profile.syncManager.hasSyncedHistory().uponQueue(dispatch_get_main_queue()) { yes in
+                // Err on the side of warning, but this shouldn't fail.
+                let alert: UIAlertController
+                if yes.successValue ?? true {
+                    // Our local database contains some history items that have been synced.
+                    // Warn the user before clearing.
+                    alert = UIAlertController.clearSyncedHistoryAlert(clearPrivateData)
+                } else {
+                    alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
+                }
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+        } else {
+            let alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+            // Cliqz: log telemetry signal
+            let clearSignal = TelemetryLogEventType.Settings("private_data", "click", "clear", nil, nil)
+            TelemetryLogger.sharedInstance.logEvent(clearSignal)
+        }
+
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderView
+        return tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderFooterIdentifier) as! SettingsTableSectionHeaderFooterView
     }
 
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return HeaderHeight
+        return UIConstants.TableViewHeaderFooterHeight
     }
 
     @objc func switchValueChanged(toggle: UISwitch) {
@@ -136,5 +206,40 @@ class ClearPrivateDataTableViewController: UITableViewController {
 
         // Dim the clear button if no clearables are selected.
         clearButtonEnabled = toggles.contains(true)
+        
+        // Cliqz Moved updating preferences part from clear button handler to here save changes immedietely.
+        self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
+        
+        self.tableView.reloadData()
+        
+        // Cliqz: log telemetry signal
+        let target = getTelemetrySignalTarget(toggle.tag)
+        let state = toggle.on == true ? "off" : "on" // we log old value
+        let valueChangedSignal = TelemetryLogEventType.Settings("private_data", "click", target, state, nil)
+        TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
+    }
+    // Cliqz: getting getTelemetrySignalTarget for given toggle
+    func getTelemetrySignalTarget(toggleIndex: Int) -> String {
+        var target = ""
+        switch toggleIndex {
+        case 0:
+            target = "clear_history"
+        case 1:
+            target = "clear_favorites"
+        case 2:
+            target = "clear_cache";
+        case 3:
+            target = "clear_cookies"
+        case 4:
+            target = "clear_offline"
+        default:
+            target = "UNDEFINED"
+        }
+        return target;
+    }
+    
+    private func clearQueries() {
+        let includeFavorites = toggles[clearFavoriteHistoryCellIndex]
+        NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: includeFavorites)
     }
 }

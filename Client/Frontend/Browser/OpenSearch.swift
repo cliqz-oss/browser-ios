@@ -11,21 +11,53 @@ private let TypeSearch = "text/html"
 private let TypeSuggest = "application/x-suggestions+json"
 private let SearchTermsAllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*-_."
 
-class OpenSearchEngine {
+class OpenSearchEngine: NSObject, NSCoding {
     static let PreferredIconSize = 30
 
     let shortName: String
-    let description: String?
-    let image: UIImage?
-    private let searchTemplate: String
+    let engineID: String?
+    let image: UIImage
+    let isCustomEngine: Bool
+    let searchTemplate: String
     private let suggestTemplate: String?
 
-    init(shortName: String, description: String?, image: UIImage?, searchTemplate: String, suggestTemplate: String?) {
+    private let SearchTermComponent = "{searchTerms}"
+    private let LocaleTermComponent = "{moz:locale}"
+
+    private lazy var searchQueryComponentKey: String? = self.getQueryArgFromTemplate()
+
+    init(engineID: String?, shortName: String, image: UIImage, searchTemplate: String, suggestTemplate: String?, isCustomEngine: Bool) {
         self.shortName = shortName
-        self.description = description
         self.image = image
         self.searchTemplate = searchTemplate
         self.suggestTemplate = suggestTemplate
+        self.isCustomEngine = isCustomEngine
+        self.engineID = engineID
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        guard let searchTemplate = aDecoder.decodeObjectForKey("searchTemplate") as? String,
+              let shortName = aDecoder.decodeObjectForKey("shortName") as? String,
+              let isCustomEngine = aDecoder.decodeObjectForKey("isCustomEngine") as? Bool,
+              let image = aDecoder.decodeObjectForKey("image") as? UIImage else {
+                assertionFailure()
+                return nil
+        }
+
+        self.searchTemplate = searchTemplate
+        self.shortName = shortName
+        self.isCustomEngine = isCustomEngine
+        self.image = image
+        self.engineID = aDecoder.decodeObjectForKey("engineID") as? String
+        self.suggestTemplate = nil
+    }
+
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(searchTemplate, forKey: "searchTemplate")
+        aCoder.encodeObject(shortName, forKey: "shortName")
+        aCoder.encodeObject(isCustomEngine, forKey: "isCustomEngine")
+        aCoder.encodeObject(image, forKey: "image")
+        aCoder.encodeObject(engineID, forKey: "engineID")
     }
 
     /**
@@ -36,13 +68,54 @@ class OpenSearchEngine {
     }
 
     /**
+     * Return the arg that we use for searching for this engine
+     * Problem: the search terms may not be a query arg, they may be part of the URL - how to deal with this?
+     **/
+    private func getQueryArgFromTemplate() -> String? {
+        // we have the replace the templates SearchTermComponent in order to make the template
+        // a valid URL, otherwise we cannot do the conversion to NSURLComponents
+        // and have to do flaky pattern matching instead.
+        let placeholder = "PLACEHOLDER"
+        let template = searchTemplate.stringByReplacingOccurrencesOfString(SearchTermComponent, withString: placeholder)
+        let components = NSURLComponents(string: template)
+        let searchTerm = components?.queryItems?.filter { item in
+            return item.value == placeholder
+        }
+        guard let term = searchTerm where !term.isEmpty  else { return nil }
+        return term[0].name
+    }
+
+    /**
+     * check that the URL host contains the name of the search engine somewhere inside it
+     **/
+    private func isSearchURLForEngine(url: NSURL?) -> Bool {
+        guard let urlHost = url?.host,
+            let queryEndIndex = searchTemplate.rangeOfString("?")?.startIndex,
+            let templateURL = NSURL(string: searchTemplate.substringToIndex(queryEndIndex)),
+            let templateURLHost = templateURL.host else { return false }
+        return urlHost.localizedCaseInsensitiveContainsString(templateURLHost)
+    }
+
+    /**
+     * Returns the query that was used to construct a given search URL
+     **/
+    func queryForSearchURL(url: NSURL?) -> String? {
+        if isSearchURLForEngine(url) {
+            if let key = searchQueryComponentKey,
+                let value = url?.getQuery()[key] {
+                return value.stringByReplacingOccurrencesOfString("+", withString: " ").stringByRemovingPercentEncoding
+            }
+        }
+        return nil
+    }
+
+    /**
      * Returns the search suggestion URL for the given query.
      */
     func suggestURLForQuery(query: String) -> NSURL? {
         if let suggestTemplate = suggestTemplate {
             return getURLFromTemplate(suggestTemplate, query: query)
         }
-
         return nil
     }
 
@@ -57,7 +130,10 @@ class OpenSearchEngine {
             templateAllowedSet.formUnionWithCharacterSet(NSCharacterSet(charactersInString: "{}"))
 
             if let encodedSearchTemplate = searchTemplate.stringByAddingPercentEncodingWithAllowedCharacters(templateAllowedSet) {
-                let urlString = encodedSearchTemplate.stringByReplacingOccurrencesOfString("{searchTerms}", withString: escapedQuery, options: NSStringCompareOptions.LiteralSearch, range: nil)
+                let localeString = NSLocale.currentLocale().localeIdentifier
+                let urlString = encodedSearchTemplate
+                    .stringByReplacingOccurrencesOfString(SearchTermComponent, withString: escapedQuery, options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    .stringByReplacingOccurrencesOfString(LocaleTermComponent, withString: localeString, options: NSStringCompareOptions.LiteralSearch, range: nil)
                 return NSURL(string: urlString)
             }
         }
@@ -81,7 +157,7 @@ class OpenSearchParser {
         self.pluginMode = pluginMode
     }
 
-    func parse(file: String) -> OpenSearchEngine? {
+    func parse(file: String, engineID: String) -> OpenSearchEngine? {
         let data = NSData(contentsOfFile: file)
 
         if data == nil {
@@ -108,13 +184,6 @@ class OpenSearchParser {
             print("ShortName must contain text")
             return nil
         }
-
-        let descriptionIndexer = docIndexer["Description"]
-        if !pluginMode && descriptionIndexer.all.count != 1 {
-            print("Description must appear exactly once")
-            return nil
-        }
-        let description = descriptionIndexer.element?.text
 
         let urlIndexers = docIndexer["Url"].all
         if urlIndexers.isEmpty {
@@ -202,17 +271,18 @@ class OpenSearchParser {
             }
         }
 
-        var uiImage: UIImage?
+        let uiImage: UIImage
 
         if let imageElement = largestImageElement,
                imageURL = NSURL(string: imageElement.text!),
                imageData = NSData(contentsOfURL: imageURL),
-               image = UIImage(data: imageData) {
+               image = UIImage.imageFromDataThreadSafe(imageData) {
             uiImage = image
         } else {
             print("Error: Invalid search image data")
+            return nil
         }
 
-        return OpenSearchEngine(shortName: shortName!, description: description, image: uiImage, searchTemplate: searchTemplate, suggestTemplate: suggestTemplate)
+        return OpenSearchEngine(engineID: engineID, shortName: shortName!, image: uiImage, searchTemplate: searchTemplate, suggestTemplate: suggestTemplate, isCustomEngine: false)
     }
 }

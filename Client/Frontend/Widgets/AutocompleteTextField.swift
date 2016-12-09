@@ -17,7 +17,8 @@ protocol AutocompleteTextFieldDelegate: class {
 }
 
 struct AutocompleteTextFieldUX {
-    static let HighlightColor = UIColor(rgb: 0xccdded)
+    // Cliqz: Changed URLBar textfield background selection color to make it darker and more readable - Commented out original value
+    static let HighlightColor = UIConstants.CliqzThemeColor //UIColor(rgb: 0xccdded)
 }
 
 class AutocompleteTextField: UITextField, UITextFieldDelegate {
@@ -25,6 +26,14 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
     private var completionActive = false
     private var canAutocomplete = true
+
+    // This variable is a solution to get the right behavior for refocusing
+    // the AutocompleteTextField. The initial transition into Overlay Mode 
+    // doesn't involve the user interacting with AutocompleteTextField.
+    // Thus, we update shouldApplyCompletion in touchesBegin() to reflect whether
+    // the highlight is active and then the text field is updated accordingly
+    // in touchesEnd() (eg. applyCompletion() is called or not)
+    private var shouldApplyCompletion = false
     private var enteredText = ""
     private var previousSuggestion = ""
     private var notifyTextChanged: (() -> ())? = nil
@@ -61,12 +70,21 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
     private func commonInit() {
         super.delegate = self
-        super.addTarget(self, action: "SELtextDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        super.addTarget(self, action: #selector(AutocompleteTextField.SELtextDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         notifyTextChanged = debounce(0.1, action: {
             if self.editing {
-                self.autocompleteDelegate?.autocompleteTextField(self, didEnterText: self.enteredText)
+                self.autocompleteDelegate?.autocompleteTextField(self, didEnterText: self.enteredText.stringByTrimmingLeadingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
             }
         })
+        
+        // Cliqz: Added custom Clear button to show always event when the text is empty
+        let clearButton = UIButton()
+        let clearImg = UIImage(named: "cliqzClear")
+        clearButton.setImage(clearImg, forState: .Normal)
+        clearButton.frame = CGRectMake(0, 0, 30, 30)
+        clearButton.addTarget(self, action: #selector(AutocompleteTextField.SELtextDidClear(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        self.rightViewMode = .Always
+        self.rightView = clearButton
     }
 
     func highlightAll() {
@@ -82,6 +100,10 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         }
 
         selectedTextRange = textRangeFromPosition(beginningOfDocument, toPosition: beginningOfDocument)
+    }
+
+    private func normalizeString(string: String) -> String {
+        return string.lowercaseString.stringByTrimmingLeadingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 
     /// Commits the completion by setting the text and removing the highlight.
@@ -100,8 +122,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    // Cliqz: removed private modifier of the method to be able to call it from URLBar to fix the problem of not updating TextField text if there was autocompleted text
     /// Removes the autocomplete-highlighted text from the field.
-    private func removeCompletion() {
+    func removeCompletion() {
         if completionActive {
             // Workaround for stuck highlight bug.
             if enteredText.characters.count == 0 {
@@ -133,8 +156,12 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
     private func removeCompletionIfRequiredForEnteredString(string: String) {
         // If user-entered text does not start with previous suggestion then remove the completion.
+
         let actualEnteredString = enteredText + string
-        if !previousSuggestion.startsWith(actualEnteredString) {
+        // Detecting the keyboard type, and remove hightlight in "zh-Hans" and "ja-JP"
+        if !previousSuggestion.startsWith(normalizeString(actualEnteredString)) ||
+            UIApplication.sharedApplication().textInputMode?.primaryLanguage == "zh-Hans" ||
+            UIApplication.sharedApplication().textInputMode?.primaryLanguage == "ja-JP" {
             removeCompletion()
         }
         enteredText = actualEnteredString
@@ -148,9 +175,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
             // Check that the length of the entered text is shorter than the length of the suggestion.
             // This ensures that completionActive is true only if there are remaining characters to
             // suggest (which will suppress the caret).
-            if suggestion.startsWith(enteredText) && (enteredText).characters.count < suggestion.characters.count {
-                let endingString = suggestion.substringFromIndex(suggestion.startIndex.advancedBy(enteredText.characters.count))
-                let completedAndMarkedString = NSMutableAttributedString(string: suggestion)
+            if suggestion.startsWith(normalizeString(enteredText)) && normalizeString(enteredText).characters.count < suggestion.characters.count {
+                let endingString = suggestion.substringFromIndex(suggestion.startIndex.advancedBy(normalizeString(enteredText).characters.count))
+                let completedAndMarkedString = NSMutableAttributedString(string: enteredText + endingString)
                 completedAndMarkedString.addAttribute(NSBackgroundColorAttributeName, value: highlightColor, range: NSMakeRange(enteredText.characters.count, endingString.characters.count))
                 attributedText = completedAndMarkedString
                 completionActive = true
@@ -171,6 +198,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        // Cliqz: send result_enter telemetry Signal
+        SearchBarTelemetryHelper.sharedInstance.logResultEnterEvent(enteredText, autoCompletedText: text!)
+        
         return autocompleteDelegate?.autocompleteTextFieldShouldReturn(self) ?? true
     }
 
@@ -209,6 +239,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        shouldApplyCompletion = completionActive
         if !completionActive {
             super.touchesBegan(touches, withEvent: event)
         }
@@ -221,13 +252,25 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if !completionActive {
+        if !shouldApplyCompletion {
             super.touchesEnded(touches, withEvent: event)
         } else {
             applyCompletion()
 
             // Set the current position to the end of the text.
             selectedTextRange = textRangeFromPosition(endOfDocument, toPosition: endOfDocument)
+
+            shouldApplyCompletion = !shouldApplyCompletion
         }
+    }
+    
+    
+    // Cliqz: Added action handler for custom Clear button
+    func SELtextDidClear(textField: UITextField) {
+        if autocompleteDelegate?.autocompleteTextFieldShouldClear(self) == true {
+            enteredText = ""
+            self.text = ""
+        }
+        removeCompletion()
     }
 }

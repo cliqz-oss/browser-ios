@@ -4,7 +4,9 @@
 
 import Foundation
 import Shared
-import Sync
+import GCDWebServers
+@testable import Sync
+
 import XCTest
 
 private let log = Logger.syncLogger
@@ -226,7 +228,8 @@ class MockSyncServer {
             }
 
             // Record the next continuation and return the first slice of records.
-            let next = "\(self.offsets++)"
+            let next = "\(self.offsets)"
+            self.offsets += 1
             let (returned, remaining) = splitArray(remainder, at: limit)
             self.continuations[next] = remaining
             log.debug("Returning \(limit) items; next continuation is \(next).")
@@ -253,10 +256,10 @@ class MockSyncServer {
         if let sort = spec.sort {
             switch sort {
             case SortOption.NewestFirst:
-                items.sortInPlace { $0.modified > $1.modified }
+                items = items.sort { $0.modified > $1.modified }
                 log.debug("Sorted items newest first: \(items.map { $0.modified })")
             case SortOption.OldestFirst:
-                items.sortInPlace { $0.modified < $1.modified }
+                items = items.sort { $0.modified < $1.modified }
                 log.debug("Sorted items oldest first: \(items.map { $0.modified })")
             case SortOption.Index:
                 log.warning("Index sorting not yet supported.")
@@ -264,7 +267,8 @@ class MockSyncServer {
         }
 
         if let limit = spec.limit where items.count > limit {
-            let next = "\(self.offsets++)"
+            let next = "\(self.offsets)"
+            self.offsets += 1
             let (returned, remaining) = splitArray(items, at: limit)
             self.continuations[next] = remaining
             return (returned, next)

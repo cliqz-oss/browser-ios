@@ -3,46 +3,108 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+@testable import Client
 
 class SearchSettingsUITests: KIFTestCase {
-    private func navigateToSearchSettings() {
-        tester().tapViewWithAccessibilityLabel("Show Tabs")
-        tester().waitForViewWithAccessibilityLabel("Tabs Tray")
-        tester().tapViewWithAccessibilityLabel("Settings")
-        tester().waitForViewWithAccessibilityLabel("Settings")
-        tester().tapViewWithAccessibilityLabel("Search, Yahoo")
-        tester().waitForViewWithAccessibilityIdentifier("Search")
+    func testDefaultSearchEngine() {
+        SearchUtils.navigateToSearchSettings(tester())
+        SearchUtils.selectDefaultSearchEngineName(tester(), engineName: "Yahoo")
+        XCTAssertEqual("Yahoo", SearchUtils.getDefaultSearchEngineName(tester()))
+        SearchUtils.selectDefaultSearchEngineName(tester(), engineName: "Amazon.com")
+        XCTAssertEqual("Amazon.com", SearchUtils.getDefaultSearchEngineName(tester()))
+        SearchUtils.selectDefaultSearchEngineName(tester(), engineName: "Yahoo")
+        XCTAssertEqual("Yahoo", SearchUtils.getDefaultSearchEngineName(tester()))
+        SearchUtils.navigateFromSearchSettings(tester())
     }
 
-    private func navigateFromSearchSettings() {
+    func testCustomSearchEngineIsEditable() {
+        navigateToSettings()
+        let defaultEngine = SearchUtils.getDefaultEngine()
+        let youTubeEngine = SearchUtils.youTubeSearchEngine()
+        SearchUtils.addCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Search, \(defaultEngine.shortName)")
+        tester().waitForViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton)
+        SearchUtils.removeCustomSearchEngine(youTubeEngine)
         tester().tapViewWithAccessibilityLabel("Settings")
         tester().tapViewWithAccessibilityLabel("Done")
-        tester().tapViewWithAccessibilityLabel("home")
     }
 
-    // Given that we're at the Search Settings sheet, select the named search engine as the default.
-    // Afterwards, we're still at the Search Settings sheet.
-    private func selectDefaultSearchEngineName(engineName: String) {
-        tester().tapViewWithAccessibilityLabel("Default Search Engine", traits: UIAccessibilityTraitButton)
-        tester().waitForViewWithAccessibilityLabel("Default Search Engine")
-        tester().tapViewWithAccessibilityLabel(engineName)
-        tester().waitForViewWithAccessibilityLabel("Search")
+    func testCustomSearchEngineAsDefaultIsNotEditable() {
+        navigateToSettings()
+        let defaultEngine = SearchUtils.getDefaultEngine()
+        let youTubeEngine = SearchUtils.youTubeSearchEngine()
+        SearchUtils.addCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Search, \(defaultEngine.shortName)")
+        tester().waitForViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton)
+
+        // Change default search to custom
+        tester().tapViewWithAccessibilityLabel("Default Search Engine")
+        tester().tapViewWithAccessibilityLabel("YouTube")
+
+        // Verify that edit button is not enabled
+        tester().waitForViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton | UIAccessibilityTraitNotEnabled)
+
+        // Reset default search engine
+        tester().tapViewWithAccessibilityLabel("Default Search Engine")
+        tester().tapViewWithAccessibilityLabel("Yahoo")
+
+        // Exit test
+        SearchUtils.removeCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().tapViewWithAccessibilityLabel("Done")
     }
 
-    // Given that we're at the Search Settings sheet, return the default search engine's name.
-    private func getDefaultSearchEngineName() -> String {
-        let view = tester().waitForCellWithAccessibilityLabel("Default Search Engine")
-        return view.accessibilityValue!
+    func testNavigateToSearchPickerTurnsOffEditing() {
+        navigateToSettings()
+        let defaultEngine = SearchUtils.getDefaultEngine()
+        let youTubeEngine = SearchUtils.youTubeSearchEngine()
+        SearchUtils.addCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Search, \(defaultEngine.shortName)")
+
+        // Go from edit -> editing and check for done state
+        tester().tapViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton)
+        tester().waitForViewWithAccessibilityLabel("Done", traits: UIAccessibilityTraitButton)
+
+        // Navigate to the search engine picker and back
+        tester().tapViewWithAccessibilityLabel("Default Search Engine")
+        tester().tapViewWithAccessibilityLabel("Cancel")
+
+        // Check to see we're not in editing state
+        tester().waitForViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton)
+
+        // Exit test
+        SearchUtils.removeCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().tapViewWithAccessibilityLabel("Done")
     }
 
-    func testDefaultSearchEngine() {
-        navigateToSearchSettings()
-        selectDefaultSearchEngineName("Yahoo")
-        XCTAssertEqual("Yahoo", getDefaultSearchEngineName())
-        selectDefaultSearchEngineName("Amazon.com")
-        XCTAssertEqual("Amazon.com", getDefaultSearchEngineName())
-        selectDefaultSearchEngineName("Yahoo")
-        XCTAssertEqual("Yahoo", getDefaultSearchEngineName())
-        navigateFromSearchSettings()
+    func testDeletingLastCustomEngineExitsEditing() {
+        navigateToSettings()
+        let defaultEngine = SearchUtils.getDefaultEngine()
+        let youTubeEngine = SearchUtils.youTubeSearchEngine()
+        SearchUtils.addCustomSearchEngine(youTubeEngine)
+        tester().tapViewWithAccessibilityLabel("Search, \(defaultEngine.shortName)")
+
+        // Go from edit -> editing and check for done state
+        tester().tapViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton)
+        tester().waitForViewWithAccessibilityLabel("Done", traits: UIAccessibilityTraitButton)
+
+        tester().tapViewWithAccessibilityLabel("Delete YouTube")
+        tester().tapViewWithAccessibilityLabel("Delete")
+
+        // Check to see we're not in editing state and disabled
+        tester().waitForViewWithAccessibilityLabel("Edit", traits: UIAccessibilityTraitButton | UIAccessibilityTraitNotEnabled)
+
+        // Exit test
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().tapViewWithAccessibilityLabel("Done")
+    }
+
+    private func navigateToSettings() {
+        tester().tapViewWithAccessibilityLabel("Menu")
+        tester().waitForAnimationsToFinish()
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().waitForViewWithAccessibilityLabel("Settings")
     }
 }
+

@@ -6,6 +6,9 @@ import Foundation
 import UIKit
 import Shared
 import SnapKit
+import XCGLogger
+
+private let log = Logger.browserLogger
 
 struct URLBarViewUX {
     static let TextFieldBorderColor = UIColor(rgb: 0xBBBBBB)
@@ -27,6 +30,35 @@ struct URLBarViewUX {
     static let TabsButtonHeight: CGFloat = 18.0
     static let ToolbarButtonInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 
+    static let Themes: [String: Theme] = {
+        var themes = [String: Theme]()
+        var theme = Theme()
+        theme.borderColor = UIConstants.PrivateModeLocationBorderColor
+        theme.activeBorderColor = UIConstants.PrivateModePurple
+        theme.tintColor = UIConstants.PrivateModePurple
+        theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
+        theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
+        // Cliqz: Set URLBar backgroundColor because of requirements
+        theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
+        
+        themes[Theme.PrivateMode] = theme
+
+        theme = Theme()
+        // Cliqz: Removed TextField border because of requirements
+        theme.borderColor = UIColor.clearColor()
+        theme.activeBorderColor = UIColor.clearColor()
+        theme.tintColor = ProgressTintColor
+        theme.textColor = UIConstants.NormalModeTextColor //UIColor.blackColor()
+        // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
+        theme.buttonTintColor = UIColor.blackColor()
+        // Cliqz: Set URLBar backgroundColor because of requirements
+        theme.backgroundColor = UIConstants.AppBackgroundColor.colorWithAlphaComponent(1)
+        
+        themes[Theme.NormalMode] = theme
+
+        return themes
+    }()
+
     static func backgroundColorWithAlpha(alpha: CGFloat) -> UIColor {
         return UIConstants.AppBackgroundColor.colorWithAlphaComponent(alpha)
     }
@@ -46,6 +78,12 @@ protocol URLBarDelegate: class {
     func urlBarDidPressScrollToTop(urlBar: URLBarView)
     func urlBar(urlBar: URLBarView, didEnterText text: String)
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
+    func urlBarDisplayTextForURL(url: NSURL?) -> String?
+    
+    // Cliqz: Added delegate method for antitracking button
+	func urlBarDidClickAntitracking(urlBar: URLBarView)
+    // Cliqz: Added delegate method for notifing deletge that search field was cleared
+    func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?)
 }
 
 class URLBarView: UIView {
@@ -66,8 +104,8 @@ class URLBarView: UIView {
     }
 
     weak var delegate: URLBarDelegate?
-    weak var browserToolbarDelegate: BrowserToolbarDelegate?
-    var helper: BrowserToolbarHelper?
+    weak var tabToolbarDelegate: TabToolbarDelegate?
+    var helper: TabToolbarHelper?
     var isTransitioning: Bool = false {
         didSet {
             if isTransitioning {
@@ -78,7 +116,11 @@ class URLBarView: UIView {
         }
     }
 
+    private var currentTheme: String = Theme.NormalMode
+
     var toolbarIsShowing = false
+
+    internal var locationTextField: ToolbarTextField?
 
     /// Overlay mode is the state where the lock/reader icons are hidden, the home panels are shown,
     /// and the Cancel button is visible (allowing the user to leave overlay mode). Overlay mode
@@ -86,32 +128,15 @@ class URLBarView: UIView {
     /// a panel, the first responder will be resigned, yet the overlay mode UI is still active.
     var inOverlayMode = false
 
-    lazy var locationView: BrowserLocationView = {
-        let locationView = BrowserLocationView()
+    lazy var locationView: TabLocationView = {
+        let locationView = TabLocationView()
         locationView.translatesAutoresizingMaskIntoConstraints = false
         locationView.readerModeState = ReaderModeState.Unavailable
         locationView.delegate = self
         return locationView
     }()
 
-    private lazy var locationTextField: ToolbarTextField = {
-        let locationTextField = ToolbarTextField()
-        locationTextField.translatesAutoresizingMaskIntoConstraints = false
-        locationTextField.autocompleteDelegate = self
-        locationTextField.keyboardType = UIKeyboardType.WebSearch
-        locationTextField.autocorrectionType = UITextAutocorrectionType.No
-        locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
-        locationTextField.returnKeyType = UIReturnKeyType.Go
-        locationTextField.clearButtonMode = UITextFieldViewMode.WhileEditing
-        locationTextField.backgroundColor = UIColor.whiteColor()
-        locationTextField.font = UIConstants.DefaultMediumFont
-        locationTextField.accessibilityIdentifier = "address"
-        locationTextField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
-        locationTextField.attributedPlaceholder = self.locationView.placeholder
-        return locationTextField
-    }()
-
-    private lazy var locationContainer: UIView = {
+    lazy var locationContainer: UIView = {
         let locationContainer = UIView()
         locationContainer.translatesAutoresizingMaskIntoConstraints = false
 
@@ -125,11 +150,15 @@ class URLBarView: UIView {
         return locationContainer
     }()
 
-    private lazy var tabsButton: TabsButton = {
-        let tabsButton = TabsButton()
+	// Cliqz: Added new tabs button for custom background image
+    private lazy var tabsButton: CliqzTabsButton = {
+        let tabsButton = CliqzTabsButton()
         tabsButton.titleLabel.text = "0"
-        tabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
-        tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the browser toolbar")
+        tabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
+        tabsButton.accessibilityIdentifier = "URLBarView.tabsButton"
+        tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the tab toolbar")
+		// Cliqz: Added background image to the button
+		tabsButton.image = UIImage(named: "tabs")
         return tabsButton
     }()
 
@@ -144,13 +173,14 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        let cancelTitle = NSLocalizedString("Cancel", comment: "Button label to cancel entering a URL or search query")
+        let cancelTitle = NSLocalizedString("Cancel", comment: "Label for Cancel button")
         cancelButton.setTitle(cancelTitle, forState: UIControlState.Normal)
-        cancelButton.titleLabel?.font = UIConstants.DefaultMediumFont
-        cancelButton.addTarget(self, action: "SELdidClickCancel", forControlEvents: UIControlEvents.TouchUpInside)
+        cancelButton.titleLabel?.font = UIConstants.DefaultChromeFont
+        cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         cancelButton.titleEdgeInsets = UIEdgeInsetsMake(10, 12, 10, 12)
         cancelButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+        cancelButton.alpha = 0
         return cancelButton
     }()
 
@@ -158,11 +188,13 @@ class URLBarView: UIView {
 
     private lazy var scrollToTopButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: "SELtappedScrollToTopArea", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(URLBarView.SELtappedScrollToTopArea), forControlEvents: UIControlEvents.TouchUpInside)
         return button
     }()
 
     lazy var shareButton: UIButton = { return UIButton() }()
+
+    lazy var menuButton: UIButton = { return UIButton() }()
 
     lazy var bookmarkButton: UIButton = { return UIButton() }()
 
@@ -172,12 +204,23 @@ class URLBarView: UIView {
 
     lazy var stopReloadButton: UIButton = { return UIButton() }()
 
+    lazy var homePageButton: UIButton = { return UIButton() }()
+    
+    // Cliqz: Add new tab button
+    lazy var newTabButton: UIButton = { return UIButton() }()
+
+
     lazy var actionButtons: [UIButton] = {
-        return [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.stopReloadButton]
+		// Cliqz: Removed StopReloadButton
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton]
     }()
 
+    // Cliqz: Added to maintain tab count
+    private var tabCount = 1
+
+	// Cliqz: Changed tabsbutton type
     // Used to temporarily store the cloned button so we can respond to layout changes during animation
-    private weak var clonedTabsButton: TabsButton?
+    private weak var clonedTabsButton: CliqzTabsButton?
 
     private var rightBarConstraint: Constraint?
     private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
@@ -204,32 +247,38 @@ class URLBarView: UIView {
 
     private func commonInit() {
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
-        addSubview(curveShape)
+		// Cliqz: Commented extra curveView accroding to requirements.
+//        addSubview(curveShape)
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
         addSubview(tabsButton)
-        addSubview(cancelButton)
+		// Cliqz: Removed cancelButton accroding to requirements.
+//        addSubview(cancelButton)
 
         addSubview(shareButton)
-        addSubview(bookmarkButton)
+        if AppConstants.MOZ_MENU {
+            addSubview(menuButton)
+            addSubview(homePageButton)
+        } else {
+            addSubview(bookmarkButton)
+        }
         addSubview(forwardButton)
         addSubview(backButton)
-        addSubview(stopReloadButton)
+//        addSubview(stopReloadButton)
 
         locationContainer.addSubview(locationView)
-        locationContainer.addSubview(locationTextField)
         addSubview(locationContainer)
 
-        helper = BrowserToolbarHelper(toolbar: self)
+        helper = TabToolbarHelper(toolbar: self)
         setupConstraints()
 
         // Make sure we hide any views that shouldn't be showing in non-overlay mode.
         updateViewsForOverlayModeAndToolbarChanges()
-        self.locationTextField.hidden = !inOverlayMode
     }
 
     private func setupConstraints() {
+
         scrollToTopButton.snp_makeConstraints { make in
             make.top.equalTo(self)
             make.left.right.equalTo(self.locationContainer)
@@ -244,30 +293,31 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-        cancelButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-        }
+		// Cliqz: Removed cancelButton along with its constraints
+//		cancelButton.snp_makeConstraints { make in
+//			make.centerY.equalTo(self.locationContainer)
+//			make.trailing.equalTo(self)
+//		}
 
-        tabsButton.snp_makeConstraints { make in
-            make.centerY.equalTo(self.locationContainer)
-            make.trailing.equalTo(self)
-            make.size.equalTo(UIConstants.ToolbarHeight)
-        }
+		// Cliqz: Moved Tabs button to the left of URL bar
+		tabsButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.left.equalTo(self)
+			make.size.equalTo(UIConstants.ToolbarHeight)
+		}
 
-        curveShape.snp_makeConstraints { make in
-            make.top.left.bottom.equalTo(self)
-            self.rightBarConstraint = make.right.equalTo(self).constraint
-            self.rightBarConstraint?.updateOffset(defaultRightOffset)
-        }
+		// Cliqz: Commented curveShape constraints because it's removed from view
+//		curveShape.snp_makeConstraints { make in
+//            make.top.left.bottom.equalTo(self)
+//            self.rightBarConstraint = make.right.equalTo(self).constraint
+//            self.rightBarConstraint?.updateOffset(defaultRightOffset)
+//        }
 
-        locationTextField.snp_makeConstraints { make in
-            make.edges.equalTo(self.locationView.urlTextField)
-        }
-
+		// Cliqz: changed backButtons constraint to position after tabs button
         backButton.snp_makeConstraints { make in
-            make.left.centerY.equalTo(self)
-            make.size.equalTo(UIConstants.ToolbarHeight)
+			make.centerY.equalTo(self)
+			make.left.equalTo(self.tabsButton.snp_right)
+			make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
         forwardButton.snp_makeConstraints { make in
@@ -276,52 +326,135 @@ class URLBarView: UIView {
             make.size.equalTo(backButton)
         }
 
-        stopReloadButton.snp_makeConstraints { make in
+		// Cliqz: Removed stopReloadingButton from toolBar
+/*
+		stopReloadButton.snp_makeConstraints { make in
             make.left.equalTo(self.forwardButton.snp_right)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
+*/
 
-        shareButton.snp_makeConstraints { make in
-            make.right.equalTo(self.bookmarkButton.snp_left)
-            make.centerY.equalTo(self)
-            make.size.equalTo(backButton)
-        }
+        if AppConstants.MOZ_MENU {
+            shareButton.snp_makeConstraints { make in
+                make.right.equalTo(self.menuButton.snp_left)
+                make.centerY.equalTo(self)
+                make.size.equalTo(backButton)
+            }
+            
+            homePageButton.snp_makeConstraints { make in
+                make.center.equalTo(shareButton)
+                make.size.equalTo(shareButton)
+            }
+            
+            menuButton.snp_makeConstraints { make in
+                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+                make.centerY.equalTo(self)
+                make.size.equalTo(backButton)
+            }
+        } else {
+			// Cliqz: Changed forwardButton position, now it should be after forward button
+            shareButton.snp_makeConstraints { make in
+                make.left.equalTo(self.forwardButton.snp_right)
+                make.centerY.equalTo(self)
+                make.size.equalTo(backButton)
+            }
 
-        bookmarkButton.snp_makeConstraints { make in
-            make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-            make.centerY.equalTo(self)
-            make.size.equalTo(backButton)
+			// Cliqz: Changed Bookmark button position, next to share button
+            bookmarkButton.snp_makeConstraints { make in
+//                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				make.left.equalTo(self.shareButton.snp_right)
+                make.centerY.equalTo(self)
+                make.size.equalTo(backButton)
+            }
         }
-    }
+	}
 
     override func updateConstraints() {
         super.updateConstraints()
         if inOverlayMode {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
+				// Cliqz: Changed locationContainer's constraints to align with new buttons
+                /*
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                 make.trailing.equalTo(self.cancelButton.snp_leading)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
-            }
-        } else {
-            self.locationContainer.snp_remakeConstraints { make in
-                if self.toolbarIsShowing {
-                    // If we are showing a toolbar, show the text field next to the forward button
-                    make.leading.equalTo(self.stopReloadButton.snp_trailing)
-                    make.trailing.equalTo(self.shareButton.snp_leading)
-                } else {
-                    // Otherwise, left align the location view
-                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
-                }
-
+                */
+				make.leading.equalTo(self.tabsButton.snp_trailing)
+                make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
             }
+			// Cliqz: Moved Tabs button to the left side of URLbar
+			tabsButton.snp_remakeConstraints { make in
+				make.centerY.equalTo(self.locationContainer)
+				make.left.equalTo(self)
+				make.size.equalTo(UIConstants.ToolbarHeight)
+			}
+        } else {
+            self.locationContainer.snp_remakeConstraints { make in
+				// Cliqz: Changed locationContainer's constraints to align with new buttons
+				make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+                if self.toolbarIsShowing {
+                    // If we are showing a toolbar, show the text field next to the forward button
+					make.leading.equalTo(self.bookmarkButton.snp_trailing)
+                } else {
+                    // Otherwise, left align the location view
+                    /*
+                    make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+                    */
+					make.leading.equalTo(self.tabsButton.snp_trailing)
+                }
+                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.centerY.equalTo(self)
+            }
+			// Cliqz: Moved Tabs button to the left side of URLbar
+			tabsButton.snp_remakeConstraints { make in
+				make.centerY.equalTo(self.locationContainer)
+					make.left.equalTo(self)
+				make.size.equalTo(UIConstants.ToolbarHeight)
+			}
         }
+    }
 
+    func createLocationTextField() {
+        guard locationTextField == nil else { return }
+
+        locationTextField = ToolbarTextField()
+
+        guard let locationTextField = locationTextField else { return }
+		
+        locationTextField.translatesAutoresizingMaskIntoConstraints = false
+        locationTextField.autocompleteDelegate = self
+        //Cliqz: Changed the keyboard return button to default button `Return` as it dismiss the keyboard now instead of navigating to the search page
+        locationTextField.keyboardType = .WebSearch
+        locationTextField.autocorrectionType = UITextAutocorrectionType.No
+        locationTextField.autocapitalizationType = UITextAutocapitalizationType.None
+        locationTextField.returnKeyType = UIReturnKeyType.Go
+		locationTextField.enablesReturnKeyAutomatically = true
+		// Cliqz: Changed mode to always to use it also as cancel button
+        locationTextField.clearButtonMode = UITextFieldViewMode.Always
+        // Cliqz: Added left pading to the location field
+        locationTextField.setLeftPading(5)
+        locationTextField.font = UIConstants.DefaultChromeFont
+        locationTextField.accessibilityIdentifier = "address"
+        locationTextField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
+        locationTextField.attributedPlaceholder = self.locationView.placeholder
+        locationContainer.addSubview(locationTextField)
+
+        locationTextField.snp_makeConstraints { make in
+            make.edges.equalTo(self.locationView.urlTextField)
+        }
+        
+        locationTextField.applyTheme(currentTheme)
+    }
+
+    func removeLocationTextField() {
+        locationTextField?.removeFromSuperview()
+        locationTextField = nil
     }
 
     // Ideally we'd split this implementation in two, one URLBarView with a toolbar and one without
@@ -341,79 +474,93 @@ class URLBarView: UIView {
     func updateAlphaForSubviews(alpha: CGFloat) {
         self.tabsButton.alpha = alpha
         self.locationContainer.alpha = alpha
-        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
+		// Cliqz: Commented because we should always have blue URLBar
+//        self.backgroundColor = URLBarViewUX.backgroundColorWithAlpha(1 - alpha)
         self.actionButtons.forEach { $0.alpha = alpha }
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
+        tabCount = count
+        
         let currentCount = self.tabsButton.titleLabel.text
+        let infinity = "\u{221E}"
+        let countToBe = (count < 100) ? count.description : infinity
         // only animate a tab count change if the tab count has actually changed
-        if currentCount != count.description {
+        if currentCount != countToBe {
             if let _ = self.clonedTabsButton {
                 self.clonedTabsButton?.layer.removeAllAnimations()
                 self.clonedTabsButton?.removeFromSuperview()
                 self.tabsButton.layer.removeAllAnimations()
             }
-
+			
+			// Cliqz: Changed tabsbutton type
             // make a 'clone' of the tabs button
-            let newTabsButton = self.tabsButton.clone() as! TabsButton
+            let newTabsButton = self.tabsButton.clone() as! CliqzTabsButton
             self.clonedTabsButton = newTabsButton
-            newTabsButton.addTarget(self, action: "SELdidClickAddTab", forControlEvents: UIControlEvents.TouchUpInside)
-            newTabsButton.titleLabel.text = count.description
-            newTabsButton.accessibilityValue = count.description
+            newTabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
+            newTabsButton.titleLabel.text = countToBe
+            newTabsButton.accessibilityValue = countToBe
             addSubview(newTabsButton)
+			// Cliqz: change tailing constraint to the left because we moved the button to the left side of
             newTabsButton.snp_makeConstraints { make in
                 make.centerY.equalTo(self.locationContainer)
-                make.trailing.equalTo(self)
+				make.left.equalTo(self)
                 make.size.equalTo(UIConstants.ToolbarHeight)
             }
-
+            
             newTabsButton.frame = tabsButton.frame
-
+            
             // Instead of changing the anchorPoint of the CALayer, lets alter the rotation matrix math to be
             // a rotation around a non-origin point
             let frame = tabsButton.insideButton.frame
             let halfTitleHeight = CGRectGetHeight(frame) / 2
-
+            
             var newFlipTransform = CATransform3DIdentity
             newFlipTransform = CATransform3DTranslate(newFlipTransform, 0, halfTitleHeight, 0)
             newFlipTransform.m34 = -1.0 / 200.0 // add some perspective
             newFlipTransform = CATransform3DRotate(newFlipTransform, CGFloat(-M_PI_2), 1.0, 0.0, 0.0)
             newTabsButton.insideButton.layer.transform = newFlipTransform
-
+            
             var oldFlipTransform = CATransform3DIdentity
             oldFlipTransform = CATransform3DTranslate(oldFlipTransform, 0, halfTitleHeight, 0)
             oldFlipTransform.m34 = -1.0 / 200.0 // add some perspective
             oldFlipTransform = CATransform3DRotate(oldFlipTransform, CGFloat(M_PI_2), 1.0, 0.0, 0.0)
-
+            
             let animate = {
                 newTabsButton.insideButton.layer.transform = CATransform3DIdentity
                 self.tabsButton.insideButton.layer.transform = oldFlipTransform
                 self.tabsButton.insideButton.layer.opacity = 0
             }
-
+            
             let completion: (Bool) -> Void = { finished in
                 // remove the clone and setup the actual tab button
                 newTabsButton.removeFromSuperview()
-
+                
                 self.tabsButton.insideButton.layer.opacity = 1
                 self.tabsButton.insideButton.layer.transform = CATransform3DIdentity
-                self.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the (top) browser toolbar")
+                self.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the (top) tab toolbar")
 
+                // Cliqz: always update tabs button title because finish is always equal false due to unknown reasons, and display last tab count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
+                /*
                 if finished {
-                    self.tabsButton.titleLabel.text = count.description
-                    self.tabsButton.accessibilityValue = count.description
+                    self.tabsButton.titleLabel.text = countToBe
+                    self.tabsButton.accessibilityValue = countToBe
                 }
-            }
+                */
+                self.tabsButton.titleLabel.text = self.tabCount.description
+                self.tabsButton.accessibilityValue = self.tabCount.description
 
+            }
+            
             if animated {
                 UIView.animateWithDuration(1.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: animate, completion: completion)
             } else {
                 completion(true)
-        }
+            }
         }
     }
-
+    
     func updateProgressBar(progress: Float) {
         if progress == 1.0 {
             self.progressBar.setProgress(progress, animated: !isTransitioning)
@@ -437,10 +584,14 @@ class URLBarView: UIView {
     }
 
     func setAutocompleteSuggestion(suggestion: String?) {
-        locationTextField.setAutocompleteSuggestion(suggestion)
+        locationTextField?.setAutocompleteSuggestion(suggestion)
     }
 
     func enterOverlayMode(locationText: String?, pasted: Bool) {
+        createLocationTextField()
+        
+        // Cliqz: call removeCompletion on the locationTextField to fix the problem of not updating LocationTextField text to locationText if there was autocompleted text
+        locationTextField?.removeCompletion()
 
         // Show the overlay mode UI, which includes hiding the locationView and replacing it
         // with the editable locationTextField.
@@ -456,22 +607,25 @@ class URLBarView: UIView {
         if pasted {
             // Clear any existing text, focus the field, then set the actual pasted text.
             // This avoids highlighting all of the text.
-            self.locationTextField.text = ""
+            self.locationTextField?.text = ""
             dispatch_async(dispatch_get_main_queue()) {
-                self.locationTextField.becomeFirstResponder()
-                self.locationTextField.text = locationText
+                self.locationTextField?.becomeFirstResponder()
+                self.locationTextField?.text = locationText
             }
         } else {
             // Copy the current URL to the editable text field, then activate it.
-            self.locationTextField.text = locationText
+            self.locationTextField?.text = locationText
             dispatch_async(dispatch_get_main_queue()) {
-                self.locationTextField.becomeFirstResponder()
+                self.locationTextField?.becomeFirstResponder()
             }
         }
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
-        locationTextField.resignFirstResponder()
+
+        // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events
+//        locationTextField?.resignFirstResponder()
+        locationTextField?.enforceResignFirstResponder()
         animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
     }
@@ -479,20 +633,29 @@ class URLBarView: UIView {
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
         self.bringSubviewToFront(self.locationContainer)
-        self.cancelButton.hidden = false
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.hidden = false
         self.progressBar.hidden = false
-        self.shareButton.hidden = !self.toolbarIsShowing
-        self.bookmarkButton.hidden = !self.toolbarIsShowing
+        if AppConstants.MOZ_MENU {
+            self.menuButton.hidden = !self.toolbarIsShowing
+        } else {
+            self.bookmarkButton.hidden = !self.toolbarIsShowing
+        }
         self.forwardButton.hidden = !self.toolbarIsShowing
         self.backButton.hidden = !self.toolbarIsShowing
         self.stopReloadButton.hidden = !self.toolbarIsShowing
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
-        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.alpha = inOverlayMode ? 1 : 0
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
-        self.bookmarkButton.alpha = inOverlayMode ? 0 : 1
+        if AppConstants.MOZ_MENU {
+            self.menuButton.alpha = inOverlayMode ? 0 : 1
+        } else {
+            self.bookmarkButton.alpha = inOverlayMode ? 0 : 1
+        }
         self.forwardButton.alpha = inOverlayMode ? 0 : 1
         self.backButton.alpha = inOverlayMode ? 0 : 1
         self.stopReloadButton.alpha = inOverlayMode ? 0 : 1
@@ -501,35 +664,42 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-            self.cancelButton.transform = CGAffineTransformIdentity
-            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
-            self.tabsButton.transform = tabsButtonTransform
-            self.clonedTabsButton?.transform = tabsButtonTransform
-            self.rightBarConstraint?.updateOffset(URLBarViewUX.URLBarCurveOffset + URLBarViewUX.URLBarCurveBounceBuffer + tabsButton.frame.width)
+			// Cliqz: Commented out cancelButton as we've removed it
+//            self.cancelButton.transform = CGAffineTransformIdentity
+            // Cliqz: Commented out tabsButton transition as it will be always visible
+//            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
+//            self.tabsButton.transform = tabsButtonTransform
+//            self.clonedTabsButton?.transform = tabsButtonTransform
+//            self.rightBarConstraint?.updateOffset(URLBarViewUX.URLBarCurveOffset + URLBarViewUX.URLBarCurveBounceBuffer + tabsButton.frame.width)
 
             // Make the editable text field span the entire URL bar, covering the lock and reader icons.
-            self.locationTextField.snp_remakeConstraints { make in
+            self.locationTextField?.snp_remakeConstraints { make in
                 make.leading.equalTo(self.locationContainer).offset(URLBarViewUX.LocationContentOffset)
                 make.top.bottom.trailing.equalTo(self.locationContainer)
             }
         } else {
             self.tabsButton.transform = CGAffineTransformIdentity
             self.clonedTabsButton?.transform = CGAffineTransformIdentity
-            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+			// Cliqz: Commented out cancelButton as we've removed it
+//            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
-            self.locationTextField.snp_remakeConstraints { make in
+            self.locationTextField?.snp_remakeConstraints { make in
                 make.edges.equalTo(self.locationView.urlTextField)
             }
         }
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-        self.cancelButton.hidden = !inOverlayMode
+		// Cliqz: Commented out cancelButton as we've removed it
+//        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
-        self.shareButton.hidden = !self.toolbarIsShowing || inOverlayMode
-        self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        if AppConstants.MOZ_MENU {
+            self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        } else {
+            self.bookmarkButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        }
         self.forwardButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.backButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -541,8 +711,9 @@ class URLBarView: UIView {
 
         inOverlayMode = overlay
 
-        locationView.urlTextField.hidden = inOverlayMode
-        locationTextField.hidden = !inOverlayMode
+        if !overlay {
+            removeLocationTextField()
+        }
 
         UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: [], animations: { _ in
             self.transitionToOverlay(cancel)
@@ -564,9 +735,10 @@ class URLBarView: UIView {
     func SELtappedScrollToTopArea() {
         delegate?.urlBarDidPressScrollToTop(self)
     }
+
 }
 
-extension URLBarView: BrowserToolbarProtocol {
+extension URLBarView: TabToolbarProtocol {
     func updateBackStatus(canGoBack: Bool) {
         backButton.enabled = canGoBack
     }
@@ -580,6 +752,7 @@ extension URLBarView: BrowserToolbarProtocol {
     }
 
     func updateReloadStatus(isLoading: Bool) {
+        helper?.updateReloadStatus(isLoading)
         if isLoading {
             stopReloadButton.setImage(helper?.ImageStop, forState: .Normal)
             stopReloadButton.setImage(helper?.ImageStopPressed, forState: .Highlighted)
@@ -590,7 +763,9 @@ extension URLBarView: BrowserToolbarProtocol {
     }
 
     func updatePageStatus(isWebPage isWebPage: Bool) {
-        bookmarkButton.enabled = isWebPage
+        if !AppConstants.MOZ_MENU {
+            bookmarkButton.enabled = isWebPage
+        }
         stopReloadButton.enabled = isWebPage
         shareButton.enabled = isWebPage
     }
@@ -598,10 +773,13 @@ extension URLBarView: BrowserToolbarProtocol {
     override var accessibilityElements: [AnyObject]? {
         get {
             if inOverlayMode {
-                return [locationTextField, cancelButton]
+                guard let locationTextField = locationTextField else { return nil }
+				// Cliqz: Removed cancelButton from the list as we don't use it anymore
+                return [locationTextField]
             } else {
                 if toolbarIsShowing {
-                    return [backButton, forwardButton, stopReloadButton, locationView, shareButton, bookmarkButton, tabsButton, progressBar]
+					// Cliqz: Removed stopReloadButton from the list as we don't use it anymore
+                    return AppConstants.MOZ_MENU ? [backButton, forwardButton, stopReloadButton, locationView, shareButton, menuButton, tabsButton, progressBar] : [backButton, forwardButton,  locationView, shareButton, bookmarkButton, tabsButton, progressBar]
                 } else {
                     return [locationView, tabsButton, progressBar]
                 }
@@ -613,39 +791,40 @@ extension URLBarView: BrowserToolbarProtocol {
     }
 }
 
-extension URLBarView: BrowserLocationViewDelegate {
-    func browserLocationViewDidLongPressReaderMode(browserLocationView: BrowserLocationView) -> Bool {
+extension URLBarView: TabLocationViewDelegate {
+    func tabLocationViewDidLongPressReaderMode(tabLocationView: TabLocationView) -> Bool {
         return delegate?.urlBarDidLongPressReaderMode(self) ?? false
     }
 
-    func browserLocationViewDidTapLocation(browserLocationView: BrowserLocationView) {
-        enterOverlayMode(locationView.url?.absoluteString, pasted: false)
+    func tabLocationViewDidTapLocation(tabLocationView: TabLocationView) {
+        let locationText = delegate?.urlBarDisplayTextForURL(locationView.url)
+        enterOverlayMode(locationText, pasted: false)
     }
 
-    func browserLocationViewDidLongPressLocation(browserLocationView: BrowserLocationView) {
+    func tabLocationViewDidLongPressLocation(tabLocationView: TabLocationView) {
         delegate?.urlBarDidLongPressLocation(self)
     }
 
-    func browserLocationViewDidTapReload(browserLocationView: BrowserLocationView) {
+    func tabLocationViewDidTapReload(tabLocationView: TabLocationView) {
         delegate?.urlBarDidPressReload(self)
     }
     
-    func browserLocationViewDidTapStop(browserLocationView: BrowserLocationView) {
+    func tabLocationViewDidTapStop(tabLocationView: TabLocationView) {
         delegate?.urlBarDidPressStop(self)
     }
 
-    func browserLocationViewDidTapReaderMode(browserLocationView: BrowserLocationView) {
+    func tabLocationViewDidTapReaderMode(tabLocationView: TabLocationView) {
         delegate?.urlBarDidPressReaderMode(self)
     }
 
-    func browserLocationViewLocationAccessibilityActions(browserLocationView: BrowserLocationView) -> [UIAccessibilityCustomAction]? {
+    func tabLocationViewLocationAccessibilityActions(tabLocationView: TabLocationView) -> [UIAccessibilityCustomAction]? {
         return delegate?.urlBarLocationAccessibilityActions(self)
     }
 }
 
 extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldReturn(autocompleteTextField: AutocompleteTextField) -> Bool {
-        guard let text = locationTextField.text else { return true }
+        guard let text = locationTextField?.text else { return true }
         delegate?.urlBar(self, didSubmitText: text)
         return true
     }
@@ -659,7 +838,12 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     }
 
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool {
-        delegate?.urlBar(self, didEnterText: "")
+		// Cliqz: Handled cancelation when Clear button is tapped second time
+		if autocompleteTextField.text == nil || autocompleteTextField.text!.isEmpty {
+			self.SELdidClickCancel()
+		} else {
+            delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
+		}
         return true
     }
 }
@@ -684,7 +868,53 @@ extension URLBarView {
         }
     }
 
-   }
+}
+
+extension URLBarView: Themeable {
+    
+    func applyTheme(themeName: String) {
+        locationView.applyTheme(themeName)
+        locationTextField?.applyTheme(themeName)
+
+        guard let theme = URLBarViewUX.Themes[themeName] else {
+            log.error("Unable to apply unknown theme \(themeName)")
+            return
+        }
+
+        currentTheme = themeName
+        locationBorderColor = theme.borderColor!
+        locationActiveBorderColor = theme.activeBorderColor!
+        progressBarTint = theme.tintColor
+        cancelTextColor = theme.textColor
+        actionButtonTintColor = theme.buttonTintColor
+        // Cliqz: Set URLBar backgroundColor because of requirements
+        backgroundColor = theme.backgroundColor
+        
+        tabsButton.applyTheme(themeName)
+    }
+}
+// Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
+extension URLBarView {
+    override func resignFirstResponder() -> Bool {
+        
+        locationTextField?.enforceResignFirstResponder()
+        return super.resignFirstResponder()
+    }
+}
+
+extension URLBarView: AppStateDelegate {
+    func appDidUpdateState(appState: AppState) {
+        if toolbarIsShowing {
+            let showShareButton = HomePageAccessors.isButtonInMenu(appState)
+            homePageButton.hidden = showShareButton
+            shareButton.hidden = !showShareButton
+            homePageButton.enabled = HomePageAccessors.isButtonEnabled(appState)
+        } else {
+            homePageButton.hidden = true
+            shareButton.hidden = true
+        }
+    }
+}
 
 /* Code for drawing the urlbar curve */
 // Curve's aspect ratio
@@ -759,17 +989,43 @@ private class CurveView: UIView {
 
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        CGContextSaveGState(context)
-        CGContextClearRect(context, rect)
-        CGContextSetFillColorWithColor(context, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
+        CGContextSaveGState(context!)
+        CGContextClearRect(context!, rect)
+        CGContextSetFillColorWithColor(context!, URLBarViewUX.backgroundColorWithAlpha(1).CGColor)
+		// Cliqz: Removed URLBar decorations according to requirements
+/*
         getPath().fill()
         leftCurvePath.fill()
-        CGContextDrawPath(context, CGPathDrawingMode.Fill)
-        CGContextRestoreGState(context)
+*/
+        CGContextDrawPath(context!, CGPathDrawingMode.Fill)
+        CGContextRestoreGState(context!)
     }
 }
 
 class ToolbarTextField: AutocompleteTextField {
+    static let Themes: [String: Theme] = {
+        var themes = [String: Theme]()
+        var theme = Theme()
+		theme.backgroundColor =  UIConstants.PrivateModeLocationBackgroundColor
+        theme.textColor = UIColor.whiteColor()
+        theme.buttonTintColor = UIColor.whiteColor()
+        theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
+
+        themes[Theme.PrivateMode] = theme
+
+        theme = Theme()
+        // Cliqz: Changed TextField backgroundColor because of requirements
+        theme.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
+        theme.textColor = UIColor.blackColor()
+        theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
+		// Cliqz: Added Button tint color to Black
+		theme.buttonTintColor = UIColor.blackColor()
+
+        themes[Theme.NormalMode] = theme
+
+        return themes
+    }()
+
     dynamic var clearButtonTintColor: UIColor? {
         didSet {
             // Clear previous tinted image that's cache and ask for a relayout
@@ -818,19 +1074,47 @@ class ToolbarTextField: AutocompleteTextField {
         let context = UIGraphicsGetCurrentContext()
         image.drawAtPoint(CGPointZero, blendMode: CGBlendMode.Normal, alpha: 1.0)
 
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextSetBlendMode(context, CGBlendMode.SourceIn)
-        CGContextSetAlpha(context, 1.0)
+        CGContextSetFillColorWithColor(context!, color.CGColor)
+        CGContextSetBlendMode(context!, CGBlendMode.SourceIn)
+        CGContextSetAlpha(context!, 1.0)
 
         let rect = CGRectMake(
             CGPointZero.x,
             CGPointZero.y,
             image.size.width,
             image.size.height)
-        CGContextFillRect(UIGraphicsGetCurrentContext(), rect)
+        CGContextFillRect(UIGraphicsGetCurrentContext()!, rect)
         let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return tintedImage
+        return tintedImage!
+    }
+    
+    // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events
+    func enforceResignFirstResponder () {
+        super.resignFirstResponder();
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        // override resignFirstResponder only in iPhone as doing that on iPad disables the hide button on the keyboard
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            return false
+        } else {
+            return super.resignFirstResponder()
+        }
+    }
+}
+
+extension ToolbarTextField: Themeable {
+    func applyTheme(themeName: String) {
+        guard let theme = ToolbarTextField.Themes[themeName] else {
+            log.error("Unable to apply unknown theme \(themeName)")
+            return
+        }
+
+        backgroundColor = theme.backgroundColor
+        textColor = theme.textColor
+        clearButtonTintColor = theme.buttonTintColor
+        highlightColor = theme.highlightColor!
     }
 }

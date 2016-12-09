@@ -4,7 +4,7 @@
 
 import UIKit
 import XCTest
-import Shared
+@testable import Shared
 
 class NSURLExtensionsTests : XCTestCase {
     func testRemovesHTTPFromURL() {
@@ -169,5 +169,12 @@ class NSURLExtensionsTests : XCTestCase {
         let host = nsURL!.normalizedHost()
         XCTAssertEqual(host!, "bugzilla.mozilla.org")
         XCTAssertEqual(nsURL!.fragment!, "h=dupes%7CData%20%26%20BI%20Services%20Team%7C")
+    }
+
+    func testIPv6Domain() {
+        let url = "http://[::1]/foo/bar".asURL!
+        XCTAssertTrue(url.isIPv6)
+        XCTAssertNil(url.baseDomain())
+        XCTAssertEqual(url.normalizedHost()!, "[::1]")
     }
 }

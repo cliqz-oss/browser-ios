@@ -4,87 +4,147 @@
 
 import Foundation
 import WebKit
+@testable import Storage
+@testable import Client
 
 class TopSitesTests: KIFTestCase {
     private var webRoot: String!
+    private var profile: Profile!
 
     override func setUp() {
+        profile = (UIApplication.sharedApplication().delegate as! AppDelegate).profile!
+        profile.prefs.setObject([], forKey: "topSites.deletedSuggestedSites")
         webRoot = SimplePageServer.start()
     }
 
-    func createNewTab(){
+    private func extractTextSizeFromThumbnail(thumbnail: ThumbnailCell) -> CGFloat? {
+        return thumbnail.textLabel.font.pointSize
+    }
+
+    private func accessibilityLabelsForAllTopSites(collection: UICollectionView) -> [String] {
+        return collection.visibleCells().reduce([], combine: { arr, cell in
+            if let label = cell.accessibilityLabel {
+                return arr + [label]
+            }
+            return arr
+        })
+    }
+
+    // Quick way to clear out all our history items
+    private func clearPrivateDataFromHome() {
         tester().tapViewWithAccessibilityLabel("Show Tabs")
-        tester().tapViewWithAccessibilityLabel("Add Tab")
-        tester().waitForViewWithAccessibilityLabel("Search or enter address")
+        tester().tapViewWithAccessibilityLabel("Menu")
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().tapViewWithAccessibilityLabel("Clear Private Data")
+        tester().tapViewWithAccessibilityLabel("Clear Private Data", traits: UIAccessibilityTraitButton)
+        tester().tapViewWithAccessibilityLabel("OK")
+        tester().tapViewWithAccessibilityLabel("Settings")
+        tester().tapViewWithAccessibilityLabel("Done")
+        tester().tapViewWithAccessibilityLabel("home")
     }
 
-    func openURLForPageNumber(pageNo: Int) {
-        let url = "\(webRoot)/numberedPage.html?page=\(pageNo)"
-        tester().tapViewWithAccessibilityIdentifier("url")
-        tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("\(url)\n")
-        tester().waitForWebViewElementWithAccessibilityLabel("Page \(pageNo)")
-    }
+    func testChangingDyamicFontOnTopSites() {
+        DynamicFontUtils.restoreDynamicFontSize(tester())
 
-    func rotateToLandscape() {
-        // Rotate to landscape.
-        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-    }
+        let collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+        let thumbnail = collection.visibleCells().first as! ThumbnailCell
 
-    func rotateToPortrait() {
-        // Rotate to landscape.
-        let value = UIInterfaceOrientation.Portrait.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-    }
+        let size = extractTextSizeFromThumbnail(thumbnail)
 
-    func testRotatingOnTopSites() {
-        // go to top sites. rotate to landscape, rotate back again. ensure it doesn't crash
-        createNewTab()
-        rotateToLandscape()
-        rotateToPortrait()
+        DynamicFontUtils.bumpDynamicFontSize(tester())
+        let bigSize = extractTextSizeFromThumbnail(thumbnail)
 
-        // go to top sites. rotate to landscape, switch to another tab, switch back to top sites, ensure it doesn't crash
-        rotateToLandscape()
-        tester().tapViewWithAccessibilityLabel("History")
-        tester().tapViewWithAccessibilityLabel("Top sites")
-        rotateToPortrait()
+        DynamicFontUtils.lowerDynamicFontSize(tester())
+        let smallSize = extractTextSizeFromThumbnail(thumbnail)
 
-        // go to web page. rotate to landscape. click URL Bar, rotate to portrait. ensure it doesn't crash.
-        openURLForPageNumber(1)
-        rotateToLandscape()
-        tester().tapViewWithAccessibilityIdentifier("url")
-        tester().waitForViewWithAccessibilityLabel("Top sites")
-        rotateToPortrait()
-        tester().tapViewWithAccessibilityLabel("Cancel")
+        XCTAssertGreaterThan(bigSize!, size!)
+        XCTAssertGreaterThanOrEqual(size!, smallSize!)
     }
 
     func testRemovingSite() {
-        // Load a page
-        tester().tapViewWithAccessibilityIdentifier("url")
-        let url1 = "\(webRoot)/numberedPage.html?page=1"
-        tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("\(url1)\n")
-        tester().waitForWebViewElementWithAccessibilityLabel("Page 1")
+        // Switch to the Bookmarks panel so we can later reload Top Sites.
+        tester().tapViewWithAccessibilityLabel("Bookmarks")
 
-        // Open top sites
-        tester().tapViewWithAccessibilityIdentifier("url")
+        // Load a set of dummy domains.
+        for i in 1...10 {
+            BrowserUtils.addHistoryEntry("", url: NSURL(string: "https://test\(i).com")!)
+        }
+
+        // Switch back to the Top Sites panel.
         tester().tapViewWithAccessibilityLabel("Top sites")
 
-        // Verify the row exists and that the Remove Page button is hidden
-        let row = tester().waitForViewWithAccessibilityLabel("127.0.0.1")
+        // Remove the first site and verify that all other sites shift to replace it.
+        let collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+
+        // Get the first cell (test10.com).
+        let cell = collection.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+
+        let cellToDeleteLabel = cell.accessibilityLabel
+        tester().longPressViewWithAccessibilityLabel(cellToDeleteLabel, duration: 1)
+        tester().waitForViewWithAccessibilityLabel("Remove page - \(cellToDeleteLabel!)")
+        cell.tapAtPoint(CGPointZero)
+
+        // Close editing mode.
+        tester().tapViewWithAccessibilityLabel("Done")
         tester().waitForAbsenceOfViewWithAccessibilityLabel("Remove page")
 
-        // Long press the row and click the remove button
-        row.longPressAtPoint(CGPointZero, duration: 1)
-        tester().tapViewWithAccessibilityLabel("Remove page")
+        let postDeletedLabels = accessibilityLabelsForAllTopSites(collection)
+        XCTAssertFalse(postDeletedLabels.contains(cellToDeleteLabel!))
+    }
+
+    func testRemovingSuggestedSites() {
+        // Switch to the Bookmarks panel so we can later reload Top Sites.
+        tester().tapViewWithAccessibilityLabel("Bookmarks")
+        tester().tapViewWithAccessibilityLabel("Top sites")
+
+        var collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+        let firstCell = collection.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+        let cellToDeleteLabel = firstCell.accessibilityLabel
+        tester().longPressViewWithAccessibilityLabel(cellToDeleteLabel, duration: 1)
+        tester().tapViewWithAccessibilityLabel("Remove page - \(cellToDeleteLabel!)")
+        tester().waitForAnimationsToFinish()
 
         // Close editing mode
         tester().tapViewWithAccessibilityLabel("Done")
 
-        // Close top sites
-        tester().tapViewWithAccessibilityLabel("Cancel")
+        // Verify that the tile we removed is removed
+
+        collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+        XCTAssertFalse(accessibilityLabelsForAllTopSites(collection).contains(cellToDeleteLabel!))
+    }
+
+    func testEmptyState() {
+        // Delete all of the suggested tiles
+        var collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+        while collection.visibleCells().count > 0 {
+            let firstCell = collection.visibleCells().first!
+            firstCell.longPressAtPoint(CGPointZero, duration: 3)
+            tester().tapViewWithAccessibilityLabel("Remove page - \(firstCell.accessibilityLabel!)")
+            tester().waitForAnimationsToFinish()
+        }
+
+        // Close editing mode
+        tester().tapViewWithAccessibilityLabel("Done")
+
+        // Check for empty state
+        XCTAssertTrue(tester().viewExistsWithLabel("Welcome to Top Sites"))
+
+        // Add a new history item
+
+        // Verify that empty state no longer appears
+        BrowserUtils.addHistoryEntry("", url: NSURL(string: "https://mozilla.org")!)
+
+        tester().tapViewWithAccessibilityLabel("Bookmarks")
+        tester().tapViewWithAccessibilityLabel("Top sites")
+
+        collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
+        XCTAssertEqual(collection.visibleCells().count, 1)
+        XCTAssertFalse(tester().viewExistsWithLabel("Welcome to Top Sites"))
     }
 
     override func tearDown() {
+        DynamicFontUtils.restoreDynamicFontSize(tester())
         BrowserUtils.resetToAboutHome(tester())
+        clearPrivateDataFromHome()
     }
 }

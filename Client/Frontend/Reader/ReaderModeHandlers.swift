@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+import GCDWebServers
 
 struct ReaderModeHandlers {
     static var readerModeCache: ReaderModeCache = DiskReaderModeCache.sharedInstance
@@ -28,7 +29,7 @@ struct ReaderModeHandlers {
         // Register the handler that accepts /reader-mode/page?url=http://www.example.com requests.
         webServer.registerHandlerForMethod("GET", module: "reader-mode", resource: "page") { (request: GCDWebServerRequest!) -> GCDWebServerResponse! in
             if let url = request.query["url"] as? String {
-                if let url = NSURL(string: url) {
+                if let url = NSURL(string: url) where url.isWebPage() {
                     do {
                         let readabilityResult = try readerModeCache.get(url)
                         // We have this page in our cache, so we can display it. Just grab the correct style from the
@@ -57,13 +58,13 @@ struct ReaderModeHandlers {
                         if let readerViewLoadingPath = NSBundle.mainBundle().pathForResource("ReaderViewLoading", ofType: "html") {
                             do {
                                 let readerViewLoading = try NSMutableString(contentsOfFile: readerViewLoadingPath, encoding: NSUTF8StringEncoding)
-                                readerViewLoading.replaceOccurrencesOfString("%ORIGINAL-URL%", withString: url.absoluteString,
+                                readerViewLoading.replaceOccurrencesOfString("%ORIGINAL-URL%", withString: url.absoluteString!,
                                     options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, readerViewLoading.length))
-                                readerViewLoading.replaceOccurrencesOfString("%LOADING-TEXT%", withString: NSLocalizedString("Loading content…", comment: "Message displayed when the reader mode page is loading. This message will appear only when sharing to Firefox reader mode from another app."),
+                                readerViewLoading.replaceOccurrencesOfString("%LOADING-TEXT%", withString: NSLocalizedString("Loading content…", comment: "Message displayed when the reader mode page is loading. This message will appear only when sharing to Cliqz reader mode from another app."),
                                     options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, readerViewLoading.length))
-                                readerViewLoading.replaceOccurrencesOfString("%LOADING-FAILED-TEXT%", withString: NSLocalizedString("The page could not be displayed in Reader View.", comment: "Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app."),
+                                readerViewLoading.replaceOccurrencesOfString("%LOADING-FAILED-TEXT%", withString: NSLocalizedString("The page could not be displayed in Reader View.", comment: "Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Cliqz reader mode from another app."),
                                     options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, readerViewLoading.length))
-                                readerViewLoading.replaceOccurrencesOfString("%LOAD-ORIGINAL-TEXT%", withString: NSLocalizedString("Load original page", comment: "Link for going to the non-reader page when the reader view could not be loaded. This message will appear only when sharing to Firefox reader mode from another app."),
+                                readerViewLoading.replaceOccurrencesOfString("%LOAD-ORIGINAL-TEXT%", withString: NSLocalizedString("Load original page", comment: "Link for going to the non-reader page when the reader view could not be loaded. This message will appear only when sharing to Cliqz reader mode from another app."),
                                     options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, readerViewLoading.length))
                                 return GCDWebServerDataResponse(HTML: readerViewLoading as String)
                             } catch _ {

@@ -3,7 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCrypto.h>
-
-#import "ThirdParty/NRFileManager/NSFileManager+NRFileManager.h"
+#import "FSUtils.h"
+#import "CrashSimulator.h"
 
 #endif

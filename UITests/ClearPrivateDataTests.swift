@@ -6,17 +6,17 @@ import Foundation
 import Shared
 import WebKit
 import UIKit
+import GCDWebServers
 
 // Needs to be in sync with Client Clearables.
 private enum Clearable: String {
     case History = "Browsing History"
-    case Logins = "Saved Logins"
     case Cache = "Cache"
     case OfflineData = "Offline Website Data"
     case Cookies = "Cookies"
 }
 
-private let AllClearables = Set([Clearable.History, Clearable.Logins, Clearable.Cache, Clearable.OfflineData, Clearable.Cookies])
+private let AllClearables = Set([Clearable.History, Clearable.Cache, Clearable.OfflineData, Clearable.Cookies])
 
 class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
     private var webRoot: String!
@@ -30,21 +30,29 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
     }
 
     private func openClearPrivateDataDialog() {
-        tester().tapViewWithAccessibilityLabel("Show Tabs")
+        tester().tapViewWithAccessibilityLabel("Menu")
         tester().tapViewWithAccessibilityLabel("Settings")
         tester().tapViewWithAccessibilityLabel("Clear Private Data")
     }
 
-    private func closeClearPrivateDataDialog(lastTabLabel lastTabLabel: String) {
+    private func closeClearPrivateDataDialog() {
         tester().tapViewWithAccessibilityLabel("Settings")
         tester().tapViewWithAccessibilityLabel("Done")
-        tester().tapViewWithAccessibilityLabel(lastTabLabel)
+    }
+
+    private func acceptClearPrivateData() {
+        tester().waitForViewWithAccessibilityLabel("OK")
+        tester().tapViewWithAccessibilityLabel("OK")
+        tester().waitForViewWithAccessibilityLabel("Clear Private Data")
+    }
+
+    private func cancelClearPrivateData() {
+        tester().waitForViewWithAccessibilityLabel("Clear")
+        tester().tapViewWithAccessibilityLabel("Cancel")
+        tester().waitForViewWithAccessibilityLabel("Clear Private Data")
     }
 
     private func clearPrivateData(clearables: Set<Clearable>) {
-        let webView = tester().waitForViewWithAccessibilityLabel("Web content") as! WKWebView
-        let lastTabLabel = webView.title!.isEmpty ? "home" : webView.title!
-
         openClearPrivateDataDialog()
 
         // Disable all items that we don't want to clear.
@@ -57,8 +65,9 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
         }
 
         tester().tapViewWithAccessibilityLabel("Clear Private Data", traits: UIAccessibilityTraitButton)
+        acceptClearPrivateData()
 
-        closeClearPrivateDataDialog(lastTabLabel: lastTabLabel)
+        closeClearPrivateDataDialog()
     }
 
     func visitSites(noOfSites noOfSites: Int) -> [(title: String, domain: String, url: String)] {
@@ -85,7 +94,7 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
     }
 
     func testRemembersToggles() {
-        clearPrivateData([Clearable.History, Clearable.Logins])
+        clearPrivateData([Clearable.History])
 
         openClearPrivateDataDialog()
 
@@ -95,12 +104,12 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
             (Clearable.Cookies, "0"),
             (Clearable.OfflineData, "0"),
             (Clearable.History, "1"),
-            (Clearable.Logins, "1"),
         ].forEach { clearable, value in
             XCTAssertEqual(value, tester().waitForViewWithAccessibilityLabel(clearable.rawValue).accessibilityValue)
         }
 
-        closeClearPrivateDataDialog(lastTabLabel: "home")
+
+        closeClearPrivateDataDialog()
     }
 
     func testClearsTopSitesPanel() {
@@ -211,42 +220,6 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
         XCTAssertEqual(cachedServer.requests, requests + 1)
     }
 
-    func testClearsLogins() {
-        tester().tapViewWithAccessibilityIdentifier("url")
-        let url = "\(webRoot)/loginForm.html"
-        tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("\(url)\n")
-        tester().waitForWebViewElementWithAccessibilityLabel("Submit")
-
-        // The form should be empty when we first load it.
-        XCTAssertFalse(tester().hasWebViewElementWithAccessibilityLabel("foo"))
-        XCTAssertFalse(tester().hasWebViewElementWithAccessibilityLabel("bar"))
-
-        // Fill it in and submit.
-        tester().enterText("foo", intoWebViewInputWithName: "username")
-        tester().enterText("bar", intoWebViewInputWithName: "password")
-        tester().tapWebViewElementWithAccessibilityLabel("Submit")
-
-        // Say "Yes" to the remember password prompt.
-        tester().tapViewWithAccessibilityLabel("Yes")
-
-        // Verify that the form is autofilled after reloading.
-        tester().tapViewWithAccessibilityLabel("Reload")
-        XCTAssert(tester().hasWebViewElementWithAccessibilityLabel("foo"))
-        XCTAssert(tester().hasWebViewElementWithAccessibilityLabel("bar"))
-
-        // Ensure that clearing other data has no effect on the saved logins.
-        clearPrivateData(AllClearables.subtract([Clearable.Logins]))
-        tester().tapViewWithAccessibilityLabel("Reload")
-        XCTAssert(tester().hasWebViewElementWithAccessibilityLabel("foo"))
-        XCTAssert(tester().hasWebViewElementWithAccessibilityLabel("bar"))
-
-        // Ensure that clearing logins clears the form.
-        clearPrivateData([Clearable.Logins])
-        tester().tapViewWithAccessibilityLabel("Reload")
-        XCTAssertFalse(tester().hasWebViewElementWithAccessibilityLabel("foo"))
-        XCTAssertFalse(tester().hasWebViewElementWithAccessibilityLabel("bar"))
-    }
-
     private func setCookies(webView: WKWebView, cookie: String) {
         let expectation = expectationWithDescription("Set cookie")
         webView.evaluateJavaScript("document.cookie = \"\(cookie)\"; localStorage.cookie = \"\(cookie)\"; sessionStorage.cookie = \"\(cookie)\";") { result, _ in
@@ -275,7 +248,7 @@ private class CachedPageServer {
     func start() -> String {
         let webServer = GCDWebServer()
         webServer.addHandlerForMethod("GET", path: "/cachedPage.html", requestClass: GCDWebServerRequest.self) { (request) -> GCDWebServerResponse! in
-            self.requests++
+            self.requests += 1
             return GCDWebServerDataResponse(HTML: "<html><head><title>Cached page</title></head><body>Cache test</body></html>")
         }
 

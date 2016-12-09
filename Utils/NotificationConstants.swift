@@ -11,3 +11,19 @@ public let NotificationPrivateDataClearedHistory = "PrivateDataClearedHistoryNot
 
 // Fired when the user finishes navigating to a page and the location has changed
 public let NotificationOnLocationChange = "OnLocationChange"
+
+// Fired when the login synchronizer has finished applying remote changes
+public let NotificationDataRemoteLoginChangesWereApplied = "NotificationDataRemoteLoginChangesWereApplied"
+
+// MARK: Notification UserInfo Keys
+public let NotificationUserInfoKeyHasSyncableAccount = "NotificationUserInfoKeyHasSyncableAccount"
+
+// Cliqz: Fired when trying to clear local history
+public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"
+
+// Cliqz: Fired when tryting to reset top-sites from settings
+public let NotificationShowBlockedTopSites = "NotificationShowBlockedTopSitesNotification"
+
+// Cliqz: Fired when Anti-Tracking module detects a bad request and modified it
+public let NotificationBadRequestDetected = "NotificationBadRequestDetected"
+

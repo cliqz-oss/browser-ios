@@ -2,10 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import UIKit
-import XCTest
 import Shared
 import Storage
+@testable import Sync
+import UIKit
+
+import XCTest
 
 class RecordTests: XCTestCase {
     func testGUIDs() {
@@ -40,6 +42,7 @@ class RecordTests: XCTestCase {
     }
 
     func testRecord() {
+        let malformedPayload = "{\"id\": \"abcdefghijkl\", \"collection\": \"clients\", \"payload\": \"in"
         let invalidPayload = "{\"id\": \"abcdefghijkl\", \"collection\": \"clients\", \"payload\": \"invalid\"}"
         let emptyPayload = "{\"id\": \"abcdefghijkl\", \"collection\": \"clients\", \"payload\": \"{}\"}"
 
@@ -60,15 +63,18 @@ class RecordTests: XCTestCase {
 
         print(clientPayload, terminator: "\n")
 
-        // Only payloads that parse as JSON are valid.
-        XCTAssertNil(Record<CleartextPayloadJSON>.fromEnvelope(EnvelopeJSON(invalidPayload), payloadFactory: clearFactory))
+        // Non-JSON malformed payloads don't even yield a value.
+        XCTAssertNil(Record<CleartextPayloadJSON>.fromEnvelope(EnvelopeJSON(malformedPayload), payloadFactory: clearFactory))
+
+        // Only payloads that parse as JSON objects are valid.
+        XCTAssertFalse(Record<CleartextPayloadJSON>.fromEnvelope(EnvelopeJSON(invalidPayload), payloadFactory: clearFactory)!.payload.isValid())
 
         // Missing ID.
-        XCTAssertNil(Record<CleartextPayloadJSON>.fromEnvelope(EnvelopeJSON(emptyPayload), payloadFactory: clearFactory))
+        XCTAssertFalse(Record<CleartextPayloadJSON>.fromEnvelope(EnvelopeJSON(emptyPayload), payloadFactory: clearFactory)!.payload.isValid())
 
         // Only valid ClientPayloads are valid.
-        XCTAssertNil(Record<ClientPayload>.fromEnvelope(EnvelopeJSON(invalidPayload), payloadFactory: cleartextClientsFactory))
-        XCTAssertNotNil(Record<ClientPayload>.fromEnvelope(EnvelopeJSON(clientPayload), payloadFactory: cleartextClientsFactory))
+        XCTAssertFalse(Record<ClientPayload>.fromEnvelope(EnvelopeJSON(invalidPayload), payloadFactory: cleartextClientsFactory)!.payload.isValid())
+        XCTAssertTrue(Record<ClientPayload>.fromEnvelope(EnvelopeJSON(clientPayload), payloadFactory: cleartextClientsFactory)!.payload.isValid())
     }
 
     func testEncryptedClientRecord() {
@@ -201,7 +207,9 @@ class RecordTests: XCTestCase {
     func testSeparators() {
         // Mistyped parentid.
         let invalidSeparator = JSON(["type": "separator", "arentid": "toolbar", "parentName": "Bookmarks Toolbar", "pos": 3])
-        XCTAssertNil(BookmarkType.payloadFromJSON(invalidSeparator))
+        let sep = BookmarkType.payloadFromJSON(invalidSeparator)
+        XCTAssertTrue(sep is SeparatorPayload)
+        XCTAssertFalse(sep!.isValid())
 
         // This one's right.
         let validSeparator = JSON(["id": "abcabcabcabc", "type": "separator", "parentid": "toolbar", "parentName": "Bookmarks Toolbar", "pos": 3])
@@ -242,6 +250,85 @@ class RecordTests: XCTestCase {
         let bookmark = BookmarkType.payloadFromJSON(json)
         XCTAssertTrue(bookmark is FolderPayload)
         XCTAssertTrue(bookmark?.isValid() ?? false)
+    }
+
+    func testLivemarkMissingFields() {
+        let json = JSON([
+            "id": "M5bwUKK8hPyF",
+            "type": "livemark",
+            "siteUri": "http://www.bbc.co.uk/go/rss/int/news/-/news/",
+            "feedUri": "http://fxfeeds.mozilla.com/en-US/firefox/headlines.xml",
+            "parentName": "Bookmarks Toolbar",
+            "parentid": "toolbar",
+            "children": ["3Qr13GucOtEh"]])
+
+        let bookmark = BookmarkType.payloadFromJSON(json)
+        XCTAssertTrue(bookmark is LivemarkPayload)
+
+        let livemark = bookmark as! LivemarkPayload
+        XCTAssertTrue(livemark.isValid() ?? false)
+        let siteURI = "http://www.bbc.co.uk/go/rss/int/news/-/news/"
+        let feedURI = "http://fxfeeds.mozilla.com/en-US/firefox/headlines.xml"
+        XCTAssertEqual(feedURI, livemark.feedURI)
+        XCTAssertEqual(siteURI, livemark.siteURI)
+
+        let m = (livemark as MirrorItemable).toMirrorItem(NSDate.now())
+        XCTAssertEqual("http://fxfeeds.mozilla.com/en-US/firefox/headlines.xml", m.feedURI)
+        XCTAssertEqual("http://www.bbc.co.uk/go/rss/int/news/-/news/", m.siteURI)
+    }
+
+    func testDeletedRecord() {
+        let json = JSON([
+            "id": "abcdefghijkl",
+            "deleted": true,
+            "type": "bookmark",
+        ])
+
+        guard let payload = BookmarkType.payloadFromJSON(json) else {
+            XCTFail()
+            return
+        }
+
+        XCTAssertFalse(payload is BookmarkPayload)    // Only BookmarkBasePayload.
+        XCTAssertTrue(payload.isValid())
+    }
+
+    func testUnknownRecordType() {
+        // It'll return a base payload that's invalid because its type is unknown.
+        let json = JSON([
+            "parentid": "mobile",
+            "tags": [],
+            "title": "Dispozitivul meu",
+            "id": "pQSMHiA7fD0Z",
+            "type": "something",
+            "parentName": "mobile",
+        ])
+
+        XCTAssertNil(BookmarkType.payloadFromJSON(json))
+
+        let payload = BookmarkType.somePayloadFromJSON(json)
+        XCTAssertFalse(payload.isValid())        // Not valid because type is unknown.
+    }
+
+    func testInvalidRecordWithType() {
+        // It should still return the right payload type, even if it's not valid.
+        let json = JSON([
+            "parentid": "mobile",
+            "bmkUri": JSON.null,
+            "tags": [],
+            "title": "Dispozitivul meu",
+            "id": "pQSMHiA7fD0Z",
+            "type": "bookmark",
+            "parentName": "mobile",
+        ])
+
+        guard let payload = BookmarkType.payloadFromJSON(json) else {
+            XCTFail()
+            return
+        }
+
+        XCTAssertFalse(payload.isValid())
+        XCTAssertTrue(payload is BookmarkPayload)
     }
 
     func testLivemark() {
@@ -308,6 +395,15 @@ class RecordTests: XCTestCase {
         let bookmark = BookmarkType.payloadFromJSON(json)
         XCTAssertTrue(bookmark is BookmarkPayload)
         XCTAssertTrue(bookmark?.isValid() ?? false)
+    }
+
+    func testQuery() {
+        let str = "{\"title\":\"Downloads\",\"parentName\":\"\",\"bmkUri\":\"place:transition=7&sort=4\",\"id\":\"7gdp9S1okhKf\",\"parentid\":\"rq6WHyfHkoUV\",\"type\":\"query\"}"
+        let query = BookmarkType.payloadFromJSON(JSON(string: str))
+        XCTAssertTrue(query is BookmarkQueryPayload)
+        let mirror = query?.toMirrorItem(NSDate.now())
+        let roundtrip = mirror?.asPayload()
+        XCTAssertTrue(roundtrip! is BookmarkQueryPayload)
     }
 
     func testBookmarks() {

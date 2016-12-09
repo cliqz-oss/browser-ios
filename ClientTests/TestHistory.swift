@@ -1,6 +1,12 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@testable import Client
 import Foundation
-import XCTest
 import Storage
+
+import XCTest
 
 class TestHistory : ProfileTest {
     private func addSite(history: BrowserHistory, url: String, title: String, s: Bool = true) {
@@ -44,7 +50,7 @@ class TestHistory : ProfileTest {
         let expectation = self.expectationWithDescription("Wait for history")
         history.getSitesByLastVisit(100).upon { result in
             XCTAssertTrue(result.isSuccess)
-            history.getSitesByFrecencyWithLimit(100, whereURLContains: url).upon { result in
+            history.getSitesByFrecencyWithHistoryLimit(100, whereURLContains: url).upon { result in
                 XCTAssertTrue(result.isSuccess)
                 let cursor = result.successValue!
                 XCTAssertEqual(cursor.status, CursorStatus.Success, "returned success \(cursor.statusMessage)")
@@ -90,7 +96,7 @@ class TestHistory : ProfileTest {
             self.measureBlock({ () -> Void in
                 for _ in 0...self.NumCmds {
                     self.addSite(h, url: "https://someurl\(j).com/", title: "title \(j)")
-                    j++
+                    j += 1
                 }
                 self.clear(h)
             })
@@ -107,7 +113,7 @@ class TestHistory : ProfileTest {
             for _ in 0...self.NumCmds {
                 self.addSite(h, url: "https://someurl\(j).com/", title: "title \(j)")
                 urls["https://someurl\(j).com/"] = "title \(j)"
-                j++
+                j += 1
             }
 
             self.measureBlock({ () -> Void in
@@ -130,7 +136,7 @@ class TestHistory : ProfileTest {
             for _ in 0..<self.NumThreads {
                 var history = profile.history as BrowserHistory
                 self.runRandom(&history, queue: queue, cb: { () -> Void in
-                    counter++
+                    counter += 1
                     if counter == self.NumThreads {
                         expectation.fulfill()
                     }
@@ -150,7 +156,7 @@ class TestHistory : ProfileTest {
             let expectation = self.expectationWithDescription("Wait for history")
             for _ in 0..<self.NumThreads {
                 self.runRandom(&history, queue: queue, cb: { () -> Void in
-                    counter++
+                    counter += 1
                     if counter == self.NumThreads {
                         expectation.fulfill()
                     }

@@ -5,9 +5,15 @@
 import UIKit
 
 private struct UX {
+    // Cliqz: change private mode toggle button background color for selected state to orange color
+    /*
     static let TopColor = UIColor(red: 179 / 255, green: 83 / 255, blue: 253 / 255, alpha: 1)
     static let BottomColor = UIColor(red: 146 / 255, green: 16 / 255, blue: 253, alpha: 1)
-
+    */
+    static let TopColor = UIConstants.OrangeColor
+    static let BottomColor = UIConstants.OrangeColor
+    
+    
     // The amount of pixels the toggle button will expand over the normal size. This results in the larger -> contract animation.
     static let ExpandDelta: CGFloat = 5
     static let ShowDuration: NSTimeInterval = 0.4

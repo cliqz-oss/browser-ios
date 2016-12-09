@@ -1,0 +1,9 @@
+amazondotcom
+google
+qwant
+twitter
+wikipedia
+yahoo
+bing
+duckduckgo
+ecosia
