@@ -1,24 +1,24 @@
 /* Label for preview action on Tab Tray Tab to add current tab to Bookmarks */
-"Add to Bookmarks" = "Add to Bookmarks";
+"Add to Bookmarks" = "Ajouter aux favoris";
 
 /* Label for preview action on Tab Tray Tab to add current tab to Reading List */
-"Add to Reading List" = "Add to Reading List";
+"Add to Reading List" = "Ajouter à la liste de lecture";
 
 /* Label for preview action on Tab Tray Tab to close the current tab */
-"Close Tab" = "Close Tab";
+"Close Tab" = "Fermer l'onglet";
 
 /* Label for preview action on Tab Tray Tab to copy the URL of the current tab to clipboard */
-"Copy URL" = "Copy URL";
+"Copy URL" = "Copier l'URL";
 
 /* String describing the action of opening the last added bookmark from the home screen Quick Actions via 3D Touch */
-"Open Last Bookmark" = "Open Last Bookmark";
+"Open Last Bookmark" = "Ouvrir le dernier favori";
 
 /* String describing the action of opening the last tab sent to Firefox from the home screen Quick Actions via 3D Touch */
-"Open Last Tab" = "Open Last Tab";
+"Open Last Tab" = "Ouvrir le dernier onglet";
 
 /* Accessibility Label for preview in Tab Tray of current tab */
-"Preview of %@" = "Preview of %@";
+"Preview of %@" = "Aperçu du %@";
 
 /* Label for preview action on Tab Tray Tab to send the current tab to another device */
-"Send to Device" = "Send to Device";
+"Send to Device" = "Envoyer au système";
 
