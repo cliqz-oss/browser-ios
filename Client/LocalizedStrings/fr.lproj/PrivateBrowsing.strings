@@ -1,30 +1,30 @@
 /* Setting for closing private tabs */
-"Close Private Tabs" = "Close Private Tabs";
+"Close Private Tabs" = "Fermer les onglets de navigation privée";
 
 /* Description text displayed when there are no open tabs while in private mode */
-"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "CLIQZ won't remember any of your history or cookies, but new bookmarks will be saved.";
+"Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox ne se souviendra pas de votre historique ou cookies, mais de nouveaux favoris seront sauvegardés.";
 
 /* Text button displayed when there are no tabs open while in private mode */
-"Learn More" = "Learn More";
+"Learn More" = "En apprendre plus";
 
 /* Toggled OFF accessibility value */
-"Off" = "Off";
+"Off" = "Désactivé";
 
 /* Toggled ON accessibility value */
-"On" = "On";
+"On" = "Activé";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Private Tab" = "Open In New Private Tab";
+"Open In New Private Tab" = "Ouvrir dans un nouvel onglet de navigation privée";
 
 /* Title displayed for when there are no open tabs while in private mode */
-"Private Browsing" = "Private Browsing";
+"Private Browsing" = "Navigation privée";
 
 /* Accessibility label for toggling on/off private mode */
-"Private Mode" = "Private Mode";
+"Private Mode" = "Mode de navigation privée";
 
 /* Accessiblity hint for toggling on/off private mode */
-"Turns private mode on or off" = "Turns private mode on or off";
+"Turns private mode on or off" = "Activer ou désactiver le mode de navigation privée";
 
 /* Will be displayed in Settings under 'Close Private Tabs' */
-"When Leaving Private Browsing" = "When Leaving Private Browsing";
+"When Leaving Private Browsing" = "Lorsque vous quittez la navigation privée";
 
