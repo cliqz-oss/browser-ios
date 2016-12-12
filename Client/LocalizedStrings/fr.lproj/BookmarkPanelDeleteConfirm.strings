@@ -1,12 +1,11 @@
 /* Main body of the confirmation alert when the user tries to delete a folder that still contains bookmarks and/or folders. */
-"Are you sure you want to delete it and its contents?" = "Are you sure you want to delete it and its contents?";
+"Are you sure you want to delete it and its contents?" = "Êtes-vous sûr de vouloir le supprimer ainsi que tous son contenu?";
 
 /* Button label to cancel deletion when the user tried to delete a non-empty folder. */
-"Cancel" = "Cancel";
+"Cancel" = "Annuler";
 
 /* Button label for the button that deletes a folder and all of its children. */
-"Delete" = "Delete";
+"Delete" = "Supprimer";
 
 /* Title of the confirmation alert when the user tries to delete a folder that still contains bookmarks and/or folders. */
-"This folder isn't empty." = "This folder isn't empty.";
-
+"This folder isn't empty." = "Ce dossier n'est pas vide.";
