@@ -446,6 +446,7 @@
 		4F0552821D74730F00E2A684 /* AntitrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */; };
 		4F0552841D74902A00E2A684 /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552831D74902A00E2A684 /* TrackerViewCell.swift */; };
 		4F0DFC121DF033D200B1C9F0 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */; };
+		4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */; };
 		4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F88A6F31D7714D30039775D /* BrowserNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */; };
@@ -1906,6 +1907,7 @@
 		4F0552831D74902A00E2A684 /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
 		4F0DFC131DF033D200B1C9F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4F0DFC151DF033D500B1C9F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshtabViewController.swift; sourceTree = "<group>"; };
 		4F44ECBC1DC34C6E00E03860 /* WindowTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowTimers.h; sourceTree = "<group>"; };
 		4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowTimers.m; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
@@ -2785,6 +2787,7 @@
 				1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */,
 				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
 				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
+				4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -6295,6 +6298,7 @@
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
 				4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
+				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
 				E660BE061BB0666D009AC090 /* InnerStrokedView.swift in Sources */,
