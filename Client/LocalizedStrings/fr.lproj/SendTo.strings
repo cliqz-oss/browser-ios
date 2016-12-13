@@ -11,7 +11,7 @@
 "Send" = "Envoyer";
 
 /* Title of the dialog that allows you to send a tab to a different device */
-"Send Tab" = "Envoyer Onglet";
+"Send Tab" = "Envoyer l'onglet";
 
 /* See http://mzl.la/1ISlXnU */
 "You are not signed in to your Firefox Account." = "Vous n'êtes pas connecté à votre compte Firefox.";
