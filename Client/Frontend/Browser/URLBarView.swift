@@ -1032,18 +1032,18 @@ class ToolbarTextField: AutocompleteTextField {
 		theme.backgroundColor =  UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
         theme.textColor = UIColor.blackColor()
         theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
-        // Cliqz: Added Button tint color to Black
-        theme.buttonTintColor = UIColor.blackColor()
+        // Cliqz: Added Button tint color to Gray
+        theme.buttonTintColor = UIColor.grayColor()
 
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
         // Cliqz: Changed TextField backgroundColor because of requirements
         theme.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
-        theme.textColor = UIColor.blackColor()
+        theme.textColor = UIColor.grayColor()
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
-		// Cliqz: Added Button tint color to Black
-		theme.buttonTintColor = UIColor.blackColor()
+		// Cliqz: Added Button tint color to Gray
+		theme.buttonTintColor = UIColor.grayColor()
 
         themes[Theme.NormalMode] = theme
 
