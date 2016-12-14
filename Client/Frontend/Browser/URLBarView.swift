@@ -159,6 +159,11 @@ class URLBarView: UIView {
     }()
 
     private lazy var cancelButton: UIButton = {
+        // Cliz: use regular button with icon for cancel button
+        let cancelButton = InsetButton()
+        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+        cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
+        /*
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         let cancelTitle = NSLocalizedString("Cancel", comment: "Label for Cancel button")
@@ -168,6 +173,8 @@ class URLBarView: UIView {
         cancelButton.titleEdgeInsets = UIEdgeInsetsMake(10, 12, 10, 12)
         cancelButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+        */
+        
         cancelButton.alpha = 0
         return cancelButton
     }()
@@ -202,7 +209,7 @@ class URLBarView: UIView {
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton, self.cancelButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -287,6 +294,8 @@ class URLBarView: UIView {
 		cancelButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.trailing.equalTo(self)
+            // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
+            make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
 		// Cliqz: Moved Tabs button to the right of URL bar
