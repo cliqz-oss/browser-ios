@@ -16,6 +16,7 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
     static let LocationLeftPadding = 5
     static let LocationHeight = 28
+    static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
     static let TextFieldBorderWidth: CGFloat = 1
@@ -161,7 +162,7 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         // Cliz: use regular button with icon for cancel button
         let cancelButton = InsetButton()
-        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+        cancelButton.setImage(UIImage(named:"urlExpand"), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         /*
         let cancelButton = InsetButton()
@@ -209,7 +210,7 @@ class URLBarView: UIView {
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton, self.cancelButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -385,7 +386,8 @@ class URLBarView: UIView {
                 
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                 make.trailing.equalTo(self.cancelButton.snp_leading)
-                make.height.equalTo(URLBarViewUX.LocationHeight)
+//                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
                 
             }
@@ -411,6 +413,7 @@ class URLBarView: UIView {
                     */
 					make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self).offset(-URLBarViewUX.LocationLeftPadding)
+                    make.height.equalTo(URLBarViewUX.LocationHeight)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
@@ -631,6 +634,10 @@ class URLBarView: UIView {
                 self.locationTextField?.becomeFirstResponder()
             }
         }
+        
+        
+        // Cliqz: set the background of the URLBar to white so that the search text appear as expanded (emphasis the search)
+        self.backgroundColor = UIColor.whiteColor()
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
@@ -640,6 +647,9 @@ class URLBarView: UIView {
         locationTextField?.enforceResignFirstResponder()
         animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
+        
+        // Cliqz: return back the current theme of the URLBar
+        self.applyTheme(currentTheme)
     }
 
     func prepareOverlayAnimation() {
