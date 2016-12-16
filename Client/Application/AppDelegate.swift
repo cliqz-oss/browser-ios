@@ -250,6 +250,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         log.debug("Making window key and visible…")
         self.window!.makeKeyAndVisible()
+        
+        // Cliqz: changed the tint color of window (ActionSheets, AlertViews, NavigationBar)
+        self.window!.tintColor = UIConstants.CliqzThemeColor
 
         // Now roll logs.
         log.debug("Triggering log roll.")
