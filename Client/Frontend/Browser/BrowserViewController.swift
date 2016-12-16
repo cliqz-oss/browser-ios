@@ -2088,12 +2088,21 @@ extension BrowserViewController: TabToolbarDelegate {
                 self.logWebMenuSignal("click", target: "new_forget_tab")
             }
             
+            var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
+            let tabsCount = self.tabManager.tabs.count
+            if tabsCount > 1 {
+                closeAllTabsHandler = { (action: UIAlertAction) in
+                    self.tabManager.removeAll()
+                    self.logWebMenuSignal("click", target: "close_all_tabs")
+                }
+            }
+            
             let cancelHandler = { (action: UIAlertAction) in
                 self.logWebMenuSignal("click", target: "cancel")
             }
             
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler, closeAllTabsHandler: closeAllTabsHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
