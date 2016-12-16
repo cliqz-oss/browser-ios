@@ -50,7 +50,6 @@ protocol TabToolbarDelegate: class {
     
     // Cliqz: Add delegate methods for new tab button
     func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton)
-    func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton)
 
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton)
@@ -137,8 +136,6 @@ public class TabToolbarHelper: NSObject {
         // Cliqz: Add new tab button
         toolbar.newTabButton.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
         toolbar.newTabButton.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
-        let longPressGestureNewTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressNewTab(_:)))
-        toolbar.newTabButton.addGestureRecognizer(longPressGestureNewTabButton)
         toolbar.newTabButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
 
         // Cliqz: Add tabs button
@@ -237,9 +234,7 @@ public class TabToolbarHelper: NSObject {
     func SELdidClickNewTab() {
         toolbar.tabToolbarDelegate?.tabToolbarDidPressNewTab(toolbar, button: toolbar.backButton)
     }
-    func SELdidLongPressNewTab(recognizer: UILongPressGestureRecognizer) {
-        toolbar.tabToolbarDelegate?.tabToolbarDidLongPressNewTab(toolbar, button: toolbar.backButton)
-    }
+    
     // Cliqz: Add actions for tabs button
     func SELdidClickTabs() {
         toolbar.tabToolbarDelegate?.tabToolbarDidPressTabs(toolbar, button: toolbar.backButton)

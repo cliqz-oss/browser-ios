@@ -2052,33 +2052,6 @@ extension BrowserViewController: TabToolbarDelegate {
         logWebMenuSignal("click", target: "new_tab")
     }
     
-    // Cliqz: Add delegate methods for new tab button
-    func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        if #available(iOS 9, *) {
-            let newTabHandler = { (action: UIAlertAction) in
-                self.preserveSearchState()
-                self.tabManager.addTabAndSelect()
-                self.logWebMenuSignal("click", target: "new_tab")
-            }
-            
-            let newForgetModeTabHandler = { (action: UIAlertAction) in
-                self.preserveSearchState()
-                self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
-                self.logWebMenuSignal("click", target: "new_forget_tab")
-            }
-            
-            let cancelHandler = { (action: UIAlertAction) in
-                self.logWebMenuSignal("click", target: "cancel")
-            }
-            
-            
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
-            
-            self.presentViewController(actionSheetController, animated: true, completion: nil)
-            
-            logWebMenuSignal("longpress", target: "new_tab")
-        }
-    }
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
         // Cliqz: telemetry logging for toolbar
