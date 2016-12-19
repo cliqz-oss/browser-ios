@@ -120,7 +120,7 @@ class TabViewCell: UITableViewCell {
 			}
 			make.left.equalTo(self.cardView).offset(contentLeftOffset)
 			make.height.equalTo(24)
-			make.right.equalTo(self.cardView)
+			make.right.equalTo(self.cardView).offset(-contentLeftOffset)
 		}
 	}
 
