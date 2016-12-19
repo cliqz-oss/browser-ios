@@ -226,6 +226,10 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
             // removeCompletionIfRequiredForEnteredString.
             enteredText = text ?? ""
         }
+        
+        // Cliqz: show/hide clear button according to the text entered
+        updateRightViewMode(text)
+        
         notifyTextChanged?()
     }
 
@@ -272,5 +276,18 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
             self.text = ""
         }
         removeCompletion()
+    }
+    
+    // Cliqz: remove the custom clear button when text is empty
+    private func updateRightViewMode(text: String?) {
+        guard let currentText = text else {
+            return
+        }
+        
+        if currentText.isEmpty {
+            self.rightViewMode = .Never
+        } else {
+            self.rightViewMode = .Always
+        }
     }
 }
