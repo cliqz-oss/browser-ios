@@ -3775,12 +3775,16 @@ extension BrowserViewController: Themeable {
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .ExtraLight
             footerBackground?.blurStyle = .ExtraLight
-			AppDelegate.changeStatusBarColor(UIConstants.AppBackgroundColor)
+            // Cliqz: changed status bar look and feel in normal mode
+			AppDelegate.changeStatusBarStyle(.Default, backgroundColor: UIConstants.AppBackgroundColor)
+            
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
             footerBackground?.blurStyle = .Dark
-			AppDelegate.changeStatusBarColor(UIConstants.PrivateModeBackgroundColor)
+            // Cliqz: changed status bar look and feel in forget mode
+            AppDelegate.changeStatusBarStyle(.LightContent, backgroundColor: UIConstants.PrivateModeBackgroundColor)
+            
         default:
             log.debug("Unknown Theme \(themeName)")
         }
