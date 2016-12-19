@@ -2681,8 +2681,7 @@ extension BrowserViewController: WKNavigationDelegate {
                     if comp.count == 2 {
                         webView.goBack()
                         let query = comp[1].stringByRemovingPercentEncoding!
-                        self.urlBar.locationView.urlTextField.text = query
-                        self.urlBar(self.urlBar, didEnterText: query)
+                        self.urlBar.enterOverlayMode(query, pasted: true)
                     }
                 }
                 decisionHandler(WKNavigationActionPolicy.Cancel)
