@@ -804,7 +804,8 @@ class BrowserViewController: UIViewController {
         
         if homePanelController == nil {
 			
-            homePanelController = FreshtabViewController()
+			homePanelController = FreshtabViewController(profile: self.profile)
+			homePanelController?.delegate = self
 //            homePanelController!.delegate = self
             addChildViewController(homePanelController!)
             view.addSubview(homePanelController!.view)
