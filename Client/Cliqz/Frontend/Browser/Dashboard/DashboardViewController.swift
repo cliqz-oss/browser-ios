@@ -153,7 +153,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		panelSwitchContainerView.snp_makeConstraints { make in
 			make.left.right.equalTo(self.view)
 			make.top.equalTo(snp_topLayoutGuideBottom)
-			make.height.equalTo(45)
+			make.height.equalTo(65)
 		}
 		panelSwitchControl.snp_makeConstraints { make in
 			make.centerY.equalTo(panelSwitchContainerView)
