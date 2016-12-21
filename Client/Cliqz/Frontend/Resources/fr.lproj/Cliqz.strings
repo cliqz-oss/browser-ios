@@ -57,7 +57,7 @@
 "Human Web URL" = "https://cliqz.com/whycliqz/human-web";
 
 /* Title for Human Web deteiled info on settings */
-"What is Human Web?" = "Qu'est-ce que « Human Web »?";
+"What is Human Web?" = "Qu'est-ce que « Human Web » ?";
 
 /* Navigation title in settings */
 "Human Web" = "Human Web";
@@ -71,7 +71,7 @@
 "Fair Blocking" = "Bloquage équitable";
 
 /* More details about Fair Blocking */
-"What is 'fair'?" = "Qu'est-ce que «équitable»?";
+"What is 'fair'?" = "Qu'est-ce que « équitable »?";
 
 /* Settings item for clearing favorite history */
 "Favorites" = "Favoris";
@@ -97,7 +97,7 @@
 "Cancel" = "Annuler";
 
 /* Button label to `Yes please!` in news notification permission screen */
-"Yes please!" = "Oui SVP!";
+"Yes please!" = "Oui SVP !";
 
 /* Button label to `Later` in news notification permission screen */
 "Remind me later" = "Me le rappeler plus tard";
@@ -169,7 +169,7 @@
 "Trackers count title" = "Données personnelles";
 
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Attention : site frauduleux!";
+"Warning: deceptive website!" =  "Attention : site frauduleux !";
 
 /* Antiphishing alert message */
 "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
@@ -214,7 +214,7 @@
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Anti-tracking hint description */
-"Anti-Tracking description" = "Vous êtes aux commandes: Anti-Tracking de Cliqz protège votre vie privée";
+"Anti-Tracking description" = "Vous êtes aux commandes : Anti-Tracking de Cliqz protège votre vie privée";
 
 /* Cliqz search hint title */
 "Fast-search" = "Recherche rapide";
