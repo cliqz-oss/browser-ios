@@ -80,7 +80,8 @@
 "Clear Private data on termination" = "Supprimer les données privées à la fermerture";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "Notifications pour l'actualité";
+"Enable News Push Notifications" = "Notifications
+ pour l'actualité";
 
 /* Show blocked top-sites from settings */
 "Show blocked topsites" = "Restaurer les sites les plus visités";
@@ -235,3 +236,6 @@
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
+
+/* Action sheet item for closing all opened tabs */
+"Close All Tabs" = "Fermer tous les onglets";

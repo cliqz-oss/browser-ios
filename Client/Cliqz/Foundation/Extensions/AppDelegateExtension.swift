@@ -64,9 +64,10 @@ extension AppDelegate {
             
         }
     }
-
-	static func changeStatusBarColor(color: UIColor) {
-		UIApplication.sharedApplication().delegate?.window??.backgroundColor = color
+    // Cliqz: Change the status bar style and color
+    static func changeStatusBarStyle(statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor) {
+        UIApplication.sharedApplication().setStatusBarStyle(statusBarStyle, animated: false)
+		UIApplication.sharedApplication().delegate?.window??.backgroundColor = backgroundColor
 	}
 
 	// MARK:- Private methods

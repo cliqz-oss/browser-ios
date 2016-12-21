@@ -18,7 +18,7 @@ protocol AutocompleteTextFieldDelegate: class {
 
 struct AutocompleteTextFieldUX {
     // Cliqz: Changed URLBar textfield background selection color to make it darker and more readable - Commented out original value
-    static let HighlightColor = UIConstants.CliqzThemeColor //UIColor(rgb: 0xccdded)
+    static let HighlightColor = UIConstants.TextHighlightColor //UIColor(rgb: 0xccdded)
 }
 
 class AutocompleteTextField: UITextField, UITextFieldDelegate {
@@ -226,6 +226,10 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
             // removeCompletionIfRequiredForEnteredString.
             enteredText = text ?? ""
         }
+        
+        // Cliqz: show/hide clear button according to the text entered
+        updateRightViewMode(text)
+        
         notifyTextChanged?()
     }
 
@@ -272,5 +276,18 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
             self.text = ""
         }
         removeCompletion()
+    }
+    
+    // Cliqz: remove the custom clear button when text is empty
+    private func updateRightViewMode(text: String?) {
+        guard let currentText = text else {
+            return
+        }
+        
+        if currentText.isEmpty {
+            self.rightViewMode = .Never
+        } else {
+            self.rightViewMode = .Always
+        }
     }
 }

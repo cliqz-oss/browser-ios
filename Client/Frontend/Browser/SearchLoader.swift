@@ -46,13 +46,14 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                 inProgress.cancel()
                 self.inProgress = nil
             }
-
+            // Cliqz: disable auto complete from both history and top domains
+            /*
             let deferred = self.profile.history.getSitesByFrecencyWithHistoryLimit(100, bookmarksLimit: 5, whereURLContains: query)
             inProgress = deferred as? Cancellable
 
             deferred.uponQueue(dispatch_get_main_queue()) { result in
                 self.inProgress = nil
-
+             
                 // Failed cursors are excluded in .get().
                 if let cursor = result.successValue {
                     // First, see if the query matches any URLs from the user's search history.
@@ -74,6 +75,7 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                     }
                 }
             }
+            */
         }
     }
 

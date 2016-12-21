@@ -8,6 +8,10 @@
 
 import Foundation
 
+@objc protocol TabViewCellDelegate {
+    func closeTab(tab: Tab)
+}
+
 class TabsViewController: UIViewController {
 	
 	private var tabsView: UITableView!
@@ -99,7 +103,7 @@ class TabsViewController: UIViewController {
                 TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
             }
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
@@ -143,6 +147,9 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.tabsView.dequeueReusableCellWithIdentifier(tabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
 		let tab = self.tabs[indexPath.row]
+        cell.delegate = self
+        cell.selectedTab = tab
+        
 		if tab.title != nil && tab.displayURL != nil {
 			cell.titleLabel.text = tab.title
 			cell.URLLabel.text = tab.displayURL?.host
@@ -243,3 +250,15 @@ extension TabsViewController: TabManagerDelegate {
 	}
 }
 
+extension TabsViewController: TabViewCellDelegate {
+    func closeTab(tab: Tab) {
+        var customData: [String : AnyObject] = ["count" : tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
+        if let tabIndex = self.tabManager.getIndex(tab) {
+            customData["index"] = tabIndex
+        }
+        
+        self.tabManager.removeTab(tab)
+        
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
+    }
+}

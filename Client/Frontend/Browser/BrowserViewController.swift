@@ -248,14 +248,11 @@ class BrowserViewController: UIViewController {
             footerBackground = BlurWrapper(view: toolbar!)
             footerBackground?.translatesAutoresizingMaskIntoConstraints = false
 
-            // Cliqz: Use the same BlurWrapper footer style for both private and normal modes
-            /*
             // Need to reset the proper blur style
             if let selectedTab = tabManager.selectedTab where selectedTab.isPrivate {
                 footerBackground!.blurStyle = .Dark
                 toolbar?.applyTheme(Theme.PrivateMode)
             }
-            */
             footer.addSubview(footerBackground!)
         }
 
@@ -1899,6 +1896,19 @@ extension BrowserViewController: URLBarDelegate {
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     
+    // Cliqz: Add delegate methods for new tab button
+    func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton) {
+        preserveSearchState()
+        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
+            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
+        } else {
+            tabManager.addTabAndSelect()
+        }
+        
+        // Cliqz: log telemetry singal for web menu
+        logWebMenuSignal("click", target: "new_tab")
+    }
+
 }
 
 extension BrowserViewController: TabToolbarDelegate {
@@ -2042,21 +2052,29 @@ extension BrowserViewController: TabToolbarDelegate {
         }
     }
     
-    // Cliqz: Add delegate methods for new tab button
-    func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        preserveSearchState()
-        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
-            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
-        } else {
-            tabManager.addTabAndSelect()
+    // Cliqz: Add delegate methods for tabs button
+    func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        // Cliqz: telemetry logging for toolbar
+        self.logToolbarOverviewSignal()
+        
+        self.webViewContainerToolbar.hidden = true
+        updateFindInPageVisibility(visible: false)
+        
+        if let tab = tabManager.selectedTab {
+            screenshotHelper.takeScreenshot(tab)
         }
         
-        // Cliqz: log telemetry singal for web menu
-        logWebMenuSignal("click", target: "new_tab")
+        // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
+        /*
+         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
+         self.navigationController?.pushViewController(tabTrayController, animated: true)
+         self.tabTrayController = tabTrayController
+         */
+        self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
-    // Cliqz: Add delegate methods for new tab button
-    func tabToolbarDidLongPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
+    // Cliqz: Add delegate methods for tabs button
+    func tabToolbarDidLongPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
                 self.preserveSearchState()
@@ -2070,16 +2088,25 @@ extension BrowserViewController: TabToolbarDelegate {
                 self.logWebMenuSignal("click", target: "new_forget_tab")
             }
             
+            var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
+            let tabsCount = self.tabManager.tabs.count
+            if tabsCount > 1 {
+                closeAllTabsHandler = { (action: UIAlertAction) in
+                    self.tabManager.removeAll()
+                    self.logWebMenuSignal("click", target: "close_all_tabs")
+                }
+            }
+            
             let cancelHandler = { (action: UIAlertAction) in
                 self.logWebMenuSignal("click", target: "cancel")
             }
             
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(button, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler, closeAllTabsHandler: closeAllTabsHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
-            logWebMenuSignal("longpress", target: "new_tab")
+            logWebMenuSignal("longpress", target: "tabs")
         }
     }
 }
@@ -2533,6 +2560,7 @@ extension BrowserViewController: TabManagerDelegate {
 //            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
 			let count = tabManager.tabs.count
             urlBar.updateTabCount(max(count, 1), animated: animated)
+            toolbar?.updateTabCount(max(count, 1))
         }
     }
 }
@@ -2654,8 +2682,7 @@ extension BrowserViewController: WKNavigationDelegate {
                     if comp.count == 2 {
                         webView.goBack()
                         let query = comp[1].stringByRemovingPercentEncoding!
-                        self.urlBar.locationView.urlTextField.text = query
-                        self.urlBar(self.urlBar, didEnterText: query)
+                        self.urlBar.enterOverlayMode(query, pasted: true)
                     }
                 }
                 decisionHandler(WKNavigationActionPolicy.Cancel)
@@ -3748,14 +3775,16 @@ extension BrowserViewController: Themeable {
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .ExtraLight
             footerBackground?.blurStyle = .ExtraLight
-			AppDelegate.changeStatusBarColor(UIConstants.AppBackgroundColor)
+            // Cliqz: changed status bar look and feel in normal mode
+			AppDelegate.changeStatusBarStyle(.Default, backgroundColor: UIConstants.AppBackgroundColor)
+            
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
-            // Cliqz: Use same blurStyle for both normal and private modes
-//            footerBackground?.blurStyle = .Dark
-            footerBackground?.blurStyle = .ExtraLight
-			AppDelegate.changeStatusBarColor(UIConstants.PrivateModeBackgroundColor)
+            footerBackground?.blurStyle = .Dark
+            // Cliqz: changed status bar look and feel in forget mode
+            AppDelegate.changeStatusBarStyle(.LightContent, backgroundColor: UIConstants.PrivateModeBackgroundColor)
+            
         default:
             log.debug("Unknown Theme \(themeName)")
         }

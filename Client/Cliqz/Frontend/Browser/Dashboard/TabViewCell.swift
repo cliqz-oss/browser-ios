@@ -13,8 +13,11 @@ class TabViewCell: UITableViewCell {
 	let titleLabel = UILabel()
 	let URLLabel = UILabel()
 	let logoImageView = UIImageView()
+    let closeButton = UIButton()
 	let cardView = UIView()
     var clickedElement: String?
+    var selectedTab: Tab?
+    weak var delegate :TabViewCellDelegate?
 	
 	var animator: SwipeAnimator!
 
@@ -22,6 +25,7 @@ class TabViewCell: UITableViewCell {
 		didSet {
 			cardView.backgroundColor = self.backgroundColor()
 			titleLabel.textColor = self.textColor()
+            closeButton.tintColor = self.closeButtonTintColor()
 			setNeedsDisplay()
 		}
 	}
@@ -41,6 +45,10 @@ class TabViewCell: UITableViewCell {
 		URLLabel.textColor = UIColor(rgb: 0x77ABE6)
 		URLLabel.backgroundColor = UIColor.clearColor()
 		cardView.addSubview(logoImageView)
+        closeButton.setImage(UIImage.templateImageNamed("closeTab"), forState: .Normal)
+        closeButton.addTarget(self, action: #selector(SELcloseTab(_:)), forControlEvents: .TouchUpInside)
+        cardView.addSubview(closeButton)
+        
 		self.isPrivateTabCell = false
 
 		let swipeParams = SwipeAnimationParameters(
@@ -120,8 +128,13 @@ class TabViewCell: UITableViewCell {
 			}
 			make.left.equalTo(self.cardView).offset(contentLeftOffset)
 			make.height.equalTo(24)
-			make.right.equalTo(self.cardView)
+			make.right.equalTo(self.cardView).offset(-contentLeftOffset)
 		}
+        
+        self.closeButton.snp_makeConstraints { (make) in
+            make.right.equalTo(self.cardView).offset(-5)
+            make.top.equalTo(self.cardView).offset(2)
+        }
 	}
 
 	override func prepareForReuse() {
@@ -133,8 +146,16 @@ class TabViewCell: UITableViewCell {
 		return isPrivateTabCell ? UIColor.darkGrayColor() : UIColor.whiteColor()
 	}
 
+    private func closeButtonTintColor() -> UIColor {
+        return isPrivateTabCell ? UIColor.whiteColor() : UIColor.darkGrayColor()
+    }
 	private func textColor() -> UIColor {
 		return isPrivateTabCell ? UIConstants.PrivateModeTextColor : UIConstants.NormalModeTextColor
 	}
 
+    func SELcloseTab(button: UIButton) {
+        if let tab = selectedTab {
+            delegate?.closeTab(tab)
+        }
+    }
 }
