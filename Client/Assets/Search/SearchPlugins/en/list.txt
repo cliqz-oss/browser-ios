@@ -7,3 +7,4 @@ yahoo
 bing
 duckduckgo
 ecosia
+startpage
