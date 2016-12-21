@@ -234,3 +234,6 @@
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Lade Videoinformationen";
+
+/* Action sheet item for closing all opened tabs */
+"Close All Tabs" = "Alle Tabs schliessen";

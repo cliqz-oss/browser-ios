@@ -16,12 +16,15 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
     static let LocationLeftPadding = 5
     static let LocationHeight = 28
+    static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
     static let TextFieldBorderWidth: CGFloat = 1
     // offset from edge of tabs button
     static let URLBarCurveOffset: CGFloat = 14
     static let URLBarCurveOffsetLeft: CGFloat = -10
+    // Cliqz: added offset between buttons
+    static let URLBarButtonOffset: CGFloat = 5
     // buffer so we dont see edges when animation overshoots with spring
     static let URLBarCurveBounceBuffer: CGFloat = 8
     static let ProgressTintColor = UIColor(red:1, green:0.32, blue:0, alpha:1)
@@ -80,6 +83,9 @@ protocol URLBarDelegate: class {
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
     
+    
+    // Cliqz: Add delegate methods for new tab button
+    func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton)
     // Cliqz: Added delegate method for antitracking button
 	func urlBarDidClickAntitracking(urlBar: URLBarView)
     // Cliqz: Added delegate method for notifing deletge that search field was cleared
@@ -150,18 +156,6 @@ class URLBarView: UIView {
         return locationContainer
     }()
 
-	// Cliqz: Added new tabs button for custom background image
-    private lazy var tabsButton: CliqzTabsButton = {
-        let tabsButton = CliqzTabsButton()
-        tabsButton.titleLabel.text = "0"
-        tabsButton.addTarget(self, action: #selector(URLBarView.SELdidClickAddTab), forControlEvents: UIControlEvents.TouchUpInside)
-        tabsButton.accessibilityIdentifier = "URLBarView.tabsButton"
-        tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility Label for the tabs button in the tab toolbar")
-		// Cliqz: Added background image to the button
-		tabsButton.image = UIImage(named: "tabs")
-        return tabsButton
-    }()
-
     private lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView()
         progressBar.progressTintColor = URLBarViewUX.ProgressTintColor
@@ -171,6 +165,11 @@ class URLBarView: UIView {
     }()
 
     private lazy var cancelButton: UIButton = {
+        // Cliz: use regular button with icon for cancel button
+        let cancelButton = InsetButton()
+        cancelButton.setImage(UIImage(named:"urlExpand"), forState: .Normal)
+        cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
+        /*
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         let cancelTitle = NSLocalizedString("Cancel", comment: "Label for Cancel button")
@@ -180,6 +179,8 @@ class URLBarView: UIView {
         cancelButton.titleEdgeInsets = UIEdgeInsetsMake(10, 12, 10, 12)
         cancelButton.setContentHuggingPriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
+        */
+        
         cancelButton.alpha = 0
         return cancelButton
     }()
@@ -206,21 +207,20 @@ class URLBarView: UIView {
 
     lazy var homePageButton: UIButton = { return UIButton() }()
     
-    // Cliqz: Add new tab button
-    lazy var newTabButton: UIButton = { return UIButton() }()
+    lazy var tabsButton: UIButton = { return UIButton() }()
 
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
     }()
 
     // Cliqz: Added to maintain tab count
     private var tabCount = 1
 
-	// Cliqz: Changed tabsbutton type
-    // Used to temporarily store the cloned button so we can respond to layout changes during animation
-    private weak var clonedTabsButton: CliqzTabsButton?
+	// Cliqz: removed cloned tabs button due to removing tabs button animation
+//    // Used to temporarily store the cloned button so we can respond to layout changes during animation
+//    private weak var clonedTabsButton: CliqzTabsButton?
 
     private var rightBarConstraint: Constraint?
     private let defaultRightOffset: CGFloat = URLBarViewUX.URLBarCurveOffset - URLBarViewUX.URLBarCurveBounceBuffer
@@ -252,9 +252,9 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
+        // Cliqz: Add tabs button
         addSubview(tabsButton)
-		// Cliqz: Removed cancelButton accroding to requirements.
-//        addSubview(cancelButton)
+        addSubview(cancelButton)
 
         addSubview(shareButton)
         if AppConstants.MOZ_MENU {
@@ -293,16 +293,17 @@ class URLBarView: UIView {
             make.edges.equalTo(self.locationContainer)
         }
 
-		// Cliqz: Removed cancelButton along with its constraints
-//		cancelButton.snp_makeConstraints { make in
-//			make.centerY.equalTo(self.locationContainer)
-//			make.trailing.equalTo(self)
-//		}
+		cancelButton.snp_makeConstraints { make in
+			make.centerY.equalTo(self.locationContainer)
+			make.trailing.equalTo(self)
+            // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
+            make.size.equalTo(UIConstants.ToolbarHeight)
+		}
 
-		// Cliqz: Moved Tabs button to the left of URL bar
+		// Cliqz: Moved Tabs button to the right of URL bar
 		tabsButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.left.equalTo(self)
+			make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
@@ -316,12 +317,12 @@ class URLBarView: UIView {
 		// Cliqz: changed backButtons constraint to position after tabs button
         backButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self)
-			make.left.equalTo(self.tabsButton.snp_right)
-			make.size.equalTo(UIConstants.ToolbarHeight)
+            make.left.equalTo(self).offset(URLBarViewUX.URLBarButtonOffset)
+            make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
         forwardButton.snp_makeConstraints { make in
-            make.left.equalTo(self.backButton.snp_right)
+            make.left.equalTo(self.backButton.snp_right).offset(URLBarViewUX.URLBarButtonOffset)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
@@ -353,17 +354,18 @@ class URLBarView: UIView {
                 make.size.equalTo(backButton)
             }
         } else {
-			// Cliqz: Changed forwardButton position, now it should be after forward button
+			
             shareButton.snp_makeConstraints { make in
-                make.left.equalTo(self.forwardButton.snp_right)
+                // Cliqz: commented the left constaints as this will be overriden in CliqzURLBarView subclass
+//                make.left.equalTo(self.forwardButton.snp_right)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
-
-			// Cliqz: Changed Bookmark button position, next to share button
+            
+            // Cliqz: Changed Bookmark button position, next to back button
             bookmarkButton.snp_makeConstraints { make in
 //                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-				make.left.equalTo(self.shareButton.snp_right)
+				make.left.equalTo(self.forwardButton.snp_right).offset(URLBarViewUX.URLBarButtonOffset)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
@@ -376,37 +378,37 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
-                /*
+                
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading)
-                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.trailing.equalTo(self.cancelButton.snp_leading).offset(-URLBarViewUX.URLBarButtonOffset)
+//                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
-                */
-				make.leading.equalTo(self.tabsButton.snp_trailing)
-                make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-                make.height.equalTo(URLBarViewUX.LocationHeight)
-                make.centerY.equalTo(self)
+                
             }
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
-				make.left.equalTo(self)
+				make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         } else {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
-				make.trailing.equalTo(self).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
-					make.leading.equalTo(self.bookmarkButton.snp_trailing)
+					make.leading.equalTo(self.bookmarkButton.snp_trailing).offset(URLBarViewUX.URLBarButtonOffset)
+                    make.trailing.equalTo(self.shareButton.snp_leading).offset(-URLBarViewUX.URLBarButtonOffset)
                 } else {
                     // Otherwise, left align the location view
                     /*
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
                     */
-					make.leading.equalTo(self.tabsButton.snp_trailing)
+					make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                    make.trailing.equalTo(self).offset(-URLBarViewUX.LocationLeftPadding)
+                    make.height.equalTo(URLBarViewUX.LocationHeight)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.centerY.equalTo(self)
@@ -414,7 +416,7 @@ class URLBarView: UIView {
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
-					make.left.equalTo(self)
+                make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 				make.size.equalTo(UIConstants.ToolbarHeight)
 			}
         }
@@ -480,6 +482,10 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        self.tabsButton.accessibilityValue = count.description
+        
+        // Cliqz: commented the method as we use regular tabs button with no count
+        /*
         // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
         tabCount = count
         
@@ -488,6 +494,10 @@ class URLBarView: UIView {
         let countToBe = (count < 100) ? count.description : infinity
         // only animate a tab count change if the tab count has actually changed
         if currentCount != countToBe {
+            // Cliqz: remove tabs button animation
+            self.tabsButton.titleLabel.text = self.tabCount.description
+            self.tabsButton.accessibilityValue = self.tabCount.description
+            
             if let _ = self.clonedTabsButton {
                 self.clonedTabsButton?.layer.removeAllAnimations()
                 self.clonedTabsButton?.removeFromSuperview()
@@ -558,7 +568,9 @@ class URLBarView: UIView {
             } else {
                 completion(true)
             }
+ 
         }
+        */
     }
     
     func updateProgressBar(progress: Float) {
@@ -619,6 +631,10 @@ class URLBarView: UIView {
                 self.locationTextField?.becomeFirstResponder()
             }
         }
+        
+        
+        // Cliqz: set the background of the URLBar to white so that the search text appear as expanded (emphasis the search)
+        self.backgroundColor = UIColor.whiteColor()
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
@@ -628,13 +644,15 @@ class URLBarView: UIView {
         locationTextField?.enforceResignFirstResponder()
         animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
+        
+        // Cliqz: return back the current theme of the URLBar
+        self.applyTheme(currentTheme)
     }
 
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
         self.bringSubviewToFront(self.locationContainer)
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.hidden = false
+        self.cancelButton.hidden = false
         self.progressBar.hidden = false
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing
@@ -644,11 +662,13 @@ class URLBarView: UIView {
         self.forwardButton.hidden = !self.toolbarIsShowing
         self.backButton.hidden = !self.toolbarIsShowing
         self.stopReloadButton.hidden = !self.toolbarIsShowing
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.hidden = !self.toolbarIsShowing
+        self.shareButton.hidden = !self.toolbarIsShowing
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+        self.cancelButton.alpha = inOverlayMode ? 1 : 0
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         if AppConstants.MOZ_MENU {
@@ -659,13 +679,14 @@ class URLBarView: UIView {
         self.forwardButton.alpha = inOverlayMode ? 0 : 1
         self.backButton.alpha = inOverlayMode ? 0 : 1
         self.stopReloadButton.alpha = inOverlayMode ? 0 : 1
-
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.alpha = inOverlayMode ? 0 : 1
+        
         let borderColor = inOverlayMode ? locationActiveBorderColor : locationBorderColor
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-			// Cliqz: Commented out cancelButton as we've removed it
-//            self.cancelButton.transform = CGAffineTransformIdentity
+            self.cancelButton.transform = CGAffineTransformIdentity
             // Cliqz: Commented out tabsButton transition as it will be always visible
 //            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
 //            self.tabsButton.transform = tabsButtonTransform
@@ -679,9 +700,9 @@ class URLBarView: UIView {
             }
         } else {
             self.tabsButton.transform = CGAffineTransformIdentity
-            self.clonedTabsButton?.transform = CGAffineTransformIdentity
-			// Cliqz: Commented out cancelButton as we've removed it
-//            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+            // Cliqz: deleted cloned tabs button due to removing tabs button animation
+//            self.clonedTabsButton?.transform = CGAffineTransformIdentity
+            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
@@ -692,8 +713,7 @@ class URLBarView: UIView {
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-		// Cliqz: Commented out cancelButton as we've removed it
-//        self.cancelButton.hidden = !inOverlayMode
+        self.cancelButton.hidden = !inOverlayMode
         self.progressBar.hidden = inOverlayMode
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
@@ -703,6 +723,8 @@ class URLBarView: UIView {
         self.forwardButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.backButton.hidden = !self.toolbarIsShowing || inOverlayMode
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        // Cliqz: Add tabs and new tab buttons to URLBar
+        self.tabsButton.hidden = !self.toolbarIsShowing || inOverlayMode
     }
 
     func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {
@@ -774,8 +796,7 @@ extension URLBarView: TabToolbarProtocol {
         get {
             if inOverlayMode {
                 guard let locationTextField = locationTextField else { return nil }
-				// Cliqz: Removed cancelButton from the list as we don't use it anymore
-                return [locationTextField]
+                return [locationTextField, cancelButton]
             } else {
                 if toolbarIsShowing {
 					// Cliqz: Removed stopReloadButton from the list as we don't use it anymore
@@ -838,12 +859,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     }
 
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool {
-		// Cliqz: Handled cancelation when Clear button is tapped second time
-		if autocompleteTextField.text == nil || autocompleteTextField.text!.isEmpty {
-			self.SELdidClickCancel()
-		} else {
-            delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
-		}
+		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
         return true
     }
 }
@@ -889,8 +905,8 @@ extension URLBarView: Themeable {
         actionButtonTintColor = theme.buttonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         backgroundColor = theme.backgroundColor
-        
-        tabsButton.applyTheme(themeName)
+        // Cliqz: used regular button instead of TabsButton
+//        tabsButton.applyTheme(themeName)
     }
 }
 // Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
@@ -1006,10 +1022,13 @@ class ToolbarTextField: AutocompleteTextField {
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
-		theme.backgroundColor =  UIConstants.PrivateModeLocationBackgroundColor
-        theme.textColor = UIColor.whiteColor()
-        theme.buttonTintColor = UIColor.whiteColor()
-        theme.highlightColor = UIConstants.PrivateModeTextHighlightColor
+        // Cliqz: Changed TextField colors for forget mode theme
+		theme.backgroundColor =  UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
+        theme.textColor = UIColor.blackColor()
+        // Cliqz: changed the highlight color of the text field
+        theme.highlightColor = AutocompleteTextFieldUX.HighlightColor //UIConstants.PrivateModeTextHighlightColor
+        // Cliqz: Added Button tint color to Gray
+        theme.buttonTintColor = UIColor.grayColor()
 
         themes[Theme.PrivateMode] = theme
 
@@ -1018,8 +1037,8 @@ class ToolbarTextField: AutocompleteTextField {
         theme.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
         theme.textColor = UIColor.blackColor()
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
-		// Cliqz: Added Button tint color to Black
-		theme.buttonTintColor = UIColor.blackColor()
+		// Cliqz: Added Button tint color to Gray
+		theme.buttonTintColor = UIColor.grayColor()
 
         themes[Theme.NormalMode] = theme
 
