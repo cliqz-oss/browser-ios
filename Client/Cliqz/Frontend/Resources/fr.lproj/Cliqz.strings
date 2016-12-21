@@ -108,7 +108,7 @@
 "Forget Mode" = "Mode oubli";
 
 /* Description text displayed when there are no open tabs while in Forget mode */
-"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "L'historique de navigation ains que les cookies seront supprimés. Toutefois, les téléchargements et le marque-pages seront sauvegardés.";
+"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "L'historique de navigation ainsi que les cookies seront supprimés. Toutefois, les téléchargements et le marque-pages seront sauvegardés.";
 
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Regarder la vidéo en mode hors connexion";
