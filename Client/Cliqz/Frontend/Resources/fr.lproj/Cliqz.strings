@@ -5,7 +5,7 @@
 "Sorry" = "Désolé";
 
 /* Error message when JS scripts for search can't be loaded */
-"Something went wrong, the script wasn't loaded." = "Quelque chose c'est mal passé, le script n'a pas pu être chargé.";
+"Something went wrong, the script wasn't loaded." = "Quelque chose s'est mal passé, le script n'a pas pu être chargé.";
 
 /* Button label to cancel entering a URL or search query
  Cancel */
@@ -45,13 +45,13 @@
 "Top news" = "Le meilleur de l'actualité";
 
 /* Title for `Last site` home shortcut. */
-"Last site" =  "Derniers sites";
+"Last site" =  "Récemment visités";
 
 /* Block explicit content setting. */
-"Block Explicit Content" = "Bloquer les contenus pornographique";
+"Block Explicit Content" = "Bloquer les contenus pornographiques";
 
 /* Share footer */
-"Shared with CLIQZ for iOS" = "Partager avec CLIQZ pour iOS";
+"Shared with CLIQZ for iOS" = "Partagé avec CLIQZ pour iOS";
 
 /* URL for detailed info for human web */
 "Human Web URL" = "https://cliqz.com/whycliqz/human-web";
@@ -71,7 +71,7 @@
 "Fair Blocking" = "Bloquage équitable";
 
 /* More details about Fair Blocking */
-"What is 'fair'?" = "Qu'est-ce que 'équitable'?";
+"What is 'fair'?" = "Qu'est-ce que «équitable»?";
 
 /* Settings item for clearing favorite history */
 "Favorites" = "Favoris";
@@ -99,7 +99,7 @@
 "Yes please!" = "Oui SVP!";
 
 /* Button label to `Later` in news notification permission screen */
-"Remind me later" = "Me rappeler plus tard";
+"Remind me later" = "Me le rappeler plus tard";
 
 /* Button label to `No` in news notification permission screen */
 "No thanks" = "Non merci";
@@ -111,7 +111,7 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "L'historique de navigation ainsi que les cookies seront supprimés. Toutefois, les téléchargements et le marque-pages seront sauvegardés.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "Regarder la vidéo en mode hors connexion";
+"Download youtube video" = "Regarder la vidéo en mode hors-connexion";
 
 /* History title on dashboard */
 "History" = "Historique";
@@ -126,7 +126,7 @@
 "New Tab" = "Nouvel onglet";
 
 /* New private tab title */
-"New Private Tab" = "Nouvel onglet en mode Oubli";
+"New Private Tab" = "Nouvel onglet en mode oubli";
 
 /* Open new tab title */
 "Open New Tab" = "Ouvrir nouvel onglet";
@@ -156,7 +156,7 @@
 "Topsites" = "Sites les plus visités et actualité";
 
 /* Antitracking UI top title */
-"Data is protected" = "Vont données sont protégées";
+"Data is protected" = "Vos données sont protégées";
 
 /* Antitracking UI subtitle */
 "Private data points" = "Données personnelles sécurisées";
@@ -168,7 +168,7 @@
 "Trackers count title" = "Données personnelles";
 
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Attention: site frauduleux!";
+"Warning: deceptive website!" =  "Attention : site frauduleux!";
 
 /* Antiphishing alert message */
 "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
@@ -180,7 +180,7 @@
 "Continue despite warning" = "Continuer malgré l'avertissement";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Forget Tab" = "Ouvrir dans un onglet en mode Oubli";
+"Open In New Forget Tab" = "Ouvrir dans un onglet en mode oubli";
 
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
@@ -192,7 +192,7 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Commencer!";
+"Let's start!" = "Commencer !";
 
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "La vidéo a été téléchargée.";
@@ -201,7 +201,7 @@
 "The download failed." = "Échec lors du téléchargement.";
 
 /* Toast message shown when youtube video is Successfully downloaded */
-"The download is complete. Open the Photos app to watch the video." = "Le téléchargement est fini. Ouvrir l'application «Vidéo» afin de visionner la vidéo.";
+"The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Vidéo » afin de visionner la vidéo.";
 
 /* Brading label for onBorading */
 "Faster and safer" = "Plus rapide et plus sûr";
@@ -213,7 +213,7 @@
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Anti-tracking hint description */
-"Anti-Tracking description" = "Vous êtes au contrôle: Anti-Tracking de Cliqz protège votre vie privée";
+"Anti-Tracking description" = "Vous êtes aux commandes: Anti-Tracking de Cliqz protège votre vie privée";
 
 /* Cliqz search hint title */
 "Fast-search" = "Recherche rapide";
@@ -222,10 +222,10 @@
 "Fast-search description" = "Tout maintenant. Sans détour";
 
 /* Detailed description on Adblocking settings */
-"AdBlocking settings clarification" = "À noter: le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, vous devez être connecté au Wi-Fi.";
+"AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, vous devez être connecté au Wi-Fi.";
 
 /* [Settings] Show tips and tricks page */
-"Get the best out of CLIQZ" = "Le meilleur de CLIQZ";
+"Get the best out of CLIQZ" = "Obtenez le meilleur de CLIQZ";
 
 /* Youtube downloader action sheet title */
 "Video quality" = "Qualité vidéo";
