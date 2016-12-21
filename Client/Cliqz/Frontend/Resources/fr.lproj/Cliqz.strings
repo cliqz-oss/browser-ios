@@ -15,7 +15,7 @@
 "Retry" = "Réessayer";
 
 /* Search Recommendations and top visited sites title */
-"Search recommendations" = "Recommandés";
+"Search recommendations" = "Recommandations";
 
 /* Search history title */
 "Search history" = "Historique";
@@ -30,7 +30,7 @@
 "Search" = "Moteurs de recherche";
 
 /* Footnote message for feedback */
-"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback pour le navigateur Cliqz (Version %@) de iOS (Version %@) de %@";
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback pour le navigateur Cliqz (Version %@) pour iOS (Version %@) de %@";
 
 /* Title for No Email account pop-up */
 "No Email account title" = "Aucune adresse email";
@@ -57,7 +57,7 @@
 "Human Web URL" = "https://cliqz.com/whycliqz/human-web";
 
 /* Title for Human Web deteiled info on settings */
-"What is Human Web?" = "Qu'est-ce que «Human Web»?";
+"What is Human Web?" = "Qu'est-ce que « Human Web »?";
 
 /* Navigation title in settings */
 "Human Web" = "Human Web";
@@ -80,7 +80,7 @@
 "Clear Private data on termination" = "Supprimer les données privées à la fermerture";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "News Notification"; # context? does 'Alert for News'
+"Enable News Push Notifications" = "Notifications pour l'actualité";
 
 /* Show blocked top-sites from settings */
 "Show blocked topsites" = "Restaurer les sites les plus visités";
