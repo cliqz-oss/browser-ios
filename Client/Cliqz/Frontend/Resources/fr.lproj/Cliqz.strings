@@ -1,144 +1,145 @@
 /* The text shown in the search field */
-"Search" = "Search";
+"Search" = "Rechercher";
 
 /* Error message title */
-"Sorry" = "Sorry";
+"Sorry" = "Désolé";
 
 /* Error message when JS scripts for search can't be loaded */
-"Something went wrong, the script wasn't loaded." = "Something went wrong, the script wasn't loaded.";
+"Something went wrong, the script wasn't loaded." = "Quelque chose s'est mal passé, le script n'a pas pu être chargé.";
 
 /* Button label to cancel entering a URL or search query
  Cancel */
-"Cancel" = "Cancel";
+"Cancel" = "Annuler";
 
 /* Button label on Alert view */
-"Retry" = "Retry";
+"Retry" = "Réessayer";
 
 /* Search Recommendations and top visited sites title */
-"Search recommendations" = "Recommendations";
+"Search recommendations" = "Recommandations";
 
 /* Search history title */
-"Search history" = "History";
+"Search history" = "Historique";
 
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
-"Imprint" = "Imprint";
+"Imprint" = "Légal";
 
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
 "FAQs & Support" = "FAQs & Support";
 
 /* Open search section of settings */
-"Search" = "Search";
+"Search" = "Moteurs de recherche";
 
 /* Footnote message for feedback */
-"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@";
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback pour le navigateur Cliqz (Version %@) pour iOS (Version %@) de %@";
 
 /* Title for No Email account pop-up */
-"No Email account title" = "No Email account";
+"No Email account title" = "Aucune adresse email";
 
 /* Text for the missing email account for sending feedback pop-up */
-"No Email account message" = "Please setup an Email account to be able to send a feedback.";
+"No Email account message" = "Veuillez entrer une adresse email afin d'envoyer un feedback.";
 
 /* Error title */
-"The Internet connection appears to be offline." = "The internet connection appears to be offline.";
+"The Internet connection appears to be offline." = "La connexion internet semble interrompue.";
 
 /* Title for `Top news` home shortcut. */
 "Top news" = "Top news";
 
 /* Title for `Last site` home shortcut. */
-"Last site" =  "Last site";
+"Last site" =  "Récemment visités";
 
 /* Block explicit content setting. */
-"Block Explicit Content" = "Block Explicit Content";
+"Block Explicit Content" = "Bloquer les contenus pornographiques";
 
 /* Share footer */
-"Shared with CLIQZ for iOS" = "Shared with CLIQZ for iOS";
+"Shared with CLIQZ for iOS" = "Partagé avec CLIQZ pour iOS";
 
 /* URL for detailed info for human web */
-"Human Web URL" = "https://cliqz.com/en/whycliqz/human-web";
+"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
 
 /* Title for Human Web deteiled info on settings */
-"What is Human Web?" = "What is Human Web?";
+"What is Human Web?" = "Qu'est-ce que « Human Web » ?";
 
 /* Navigation title in settings */
 "Human Web" = "Human Web";
 
 /* Block Ads setting
  Block Ads toogle title in Block Ads settings */
-"Block Ads" = "Block Ads BETA";
+"Block Ads" = "Bloqueur de pubs BETA";
 
 /* Fair Blocking toogle title in Block Ads settings
   Title of navigation controller of Fair Blocking */
-"Fair Blocking" = "Fair Blocking";
+"Fair Blocking" = "Bloquage équitable";
 
 /* More details about Fair Blocking */
-"What is 'fair'?" = "What is 'fair'?";
+"What is 'fair'?" = "Qu'est-ce que « équitable »?";
 
 /* Settings item for clearing favorite history */
-"Favorites" = "Favorites";
+"Favorites" = "Favoris";
 
 /* Settings item for clearing private data on termination */
-"Clear Private data on termination" = "Clear Private Data on Termination";
+"Clear Private data on termination" = "Supprimer les données privées à la fermerture";
 
 /* Enable News Push Notifications */
-"Enable News Push Notifications" = "News Notification";
+"Enable News Push Notifications" = "Notifications
+ pour l'actualité";
 
 /* Show blocked top-sites from settings */
-"Show blocked topsites" = "Restore Most Visited Websites";
+"Show blocked topsites" = "Restaurer les sites les plus visités";
 
 /* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "Start page shows most-visited websites again.";
+"All blocked topsites will be shown on the start page again." = "La page d'accueil montre les sites les plus visités.";
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
 "OK" = "OK";
 
 /* Cancel button in the 'Show blocked top-sites' alert */
-"Cancel" = "Cancel";
+"Cancel" = "Annuler";
 
 /* Button label to `Yes please!` in news notification permission screen */
-"Yes please!" = "Yes please!";
+"Yes please!" = "Oui SVP !";
 
 /* Button label to `Later` in news notification permission screen */
-"Remind me later" = "Remind me later";
+"Remind me later" = "Me le rappeler plus tard";
 
 /* Button label to `No` in news notification permission screen */
-"No thanks" = "No thanks";
+"No thanks" = "Non merci";
 
 /* Description text displayed when there are no open tabs while in Forget mode */
-"Forget Mode" = "Forget Mode";
+"Forget Mode" = "Mode oubli";
 
 /* Description text displayed when there are no open tabs while in Forget mode */
-"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
+"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "L'historique de navigation ainsi que les cookies seront supprimés. Toutefois, les téléchargements et le marque-pages seront sauvegardés.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "view video offline";
+"Download youtube video" = "Regarder la vidéo en mode hors-connexion";
 
 /* History title on dashboard */
-"History" = "History";
+"History" = "Historique";
 
 /* Add Favorites */
-"Add Favorite" = "Add Favorite";
+"Add Favorite" = "Ajouter aux favoris";
 
 /* Setting menu title */
-"Settings" = "Settings";
+"Settings" = "Paramètres";
 
 /* "Widget item for a new tab" */
-"New Tab" = "New Tab";
+"New Tab" = "Nouvel onglet";
 
 /* New private tab title */
-"New Private Tab" = "New Forget Tab";
+"New Private Tab" = "Nouvel onglet en mode oubli";
 
 /* Open new tab title */
-"Open New Tab" = "Open New Tab";
+"Open New Tab" = "Ouvrir nouvel onglet";
 
 /* Open new forget mode tab title */
-"Open New Forget Tab" = "Open New Forget Tab";
+"Open New Forget Tab" = "Ouvrir nouvel onglet en mode oubli";
 
 /* Show images title */
-"Show Images" = "Show Images";
+"Show Images" = "Montrer les images";
 
 /* Hide images title */
-"Hide Images" = "Hide Images";
+"Hide Images" = "Masquer les images";
 
 /* Night mode title */
 "Night Mode" = "Night Mode";
@@ -147,40 +148,40 @@
 "Night Mode off" = "Night Mode Off";
 
 /* Remove favorites title */
-"Remove Favorites" = "Remove Favorite";
+"Remove Favorites" = "Enlever des Favoris";
 
 /* Dashboard navigation bar title */
-"Overview" = "Overview";
+"Overview" = "Aperçu";
 
 /* Title on the tab view, when no URL is open on the tab */
-"Topsites" = "Most visited sites and News";
+"Topsites" = "Sites les plus visités et actualité";
 
 /* Antitracking UI top title */
-"Data is protected" = "Your data is protected";
+"Data is protected" = "Vos données sont protégées";
 
 /* Antitracking UI subtitle */
-"Private data points" = "Private data points have been removed";
+"Private data points" = "Données personnelles sécurisées";
 
 /* Antitracking UI title for companies column */
-"Companies title" = "Tracking companies";
+"Companies title" = "Entreprises traqueuses";
 
 /* Antitracking UI title for tracked count column */
-"Trackers count title" = "Private data points";
+"Trackers count title" = "Données personnelles";
 
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Warning: deceptive website!";
+"Warning: deceptive website!" =  "Attention : site frauduleux !";
 
 /* Antiphishing alert message */
 "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
 
 /* Back to safe site buttun title in antiphishing alert title */
-"Back to safe site" = "Back to safe site";
+"Back to safe site" = "Retourner à la page sûre";
 
 /* Continue despite warning buttun title in antiphishing alert title */
-"Continue despite warning" = "Continue despite warning";
+"Continue despite warning" = "Continuer malgré l'avertissement";
 
 /* Context menu option for opening a link in a new private tab */
-"Open In New Forget Tab" = "Open In New Forget Tab";
+"Open In New Forget Tab" = "Ouvrir dans un onglet en mode oubli";
 
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
@@ -192,49 +193,49 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Let's start!";
+"Let's start!" = "Commencer !";
 
 /* Toast message shown when youtube video download started */
-"The video is being downloaded." = "The video is being downloaded.";
+"The video is being downloaded." = "La vidéo a été téléchargée.";
 
 /* Toast message shown when youtube video download faild */
-"The download failed." = "The download failed.";
+"The download failed." = "Échec lors du téléchargement.";
 
 /* Toast message shown when youtube video is Successfully downloaded */
-"The download is complete. Open the Photos app to watch the video." = "The download is complete. Open the Photos app to watch the video.";
+"The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Vidéo » afin de visionner la vidéo.";
 
 /* Brading label for onBorading */
-"Faster and safer" = "Faster and safer";
+"Faster and safer" = "Plus rapide et plus sûr";
 
 /* subtitle label for onBorading */
-"SEARCH ENGINE \n IN THE BROWSER" = "SEARCH ENGINE \n IN THE BROWSER";
+"SEARCH ENGINE \n IN THE BROWSER" = "MOTEUR DE RECHERCHE \n DANS LE NAVIGATEUR";
 
 /* Anti-tracking hint title */
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Anti-tracking hint description */
-"Anti-Tracking description" = "You are in control: CLIQZ Anti-Tracking protects your privacy";
+"Anti-Tracking description" = "Vous êtes aux commandes : Anti-Tracking de Cliqz protège votre vie privée";
 
 /* Cliqz search hint title */
-"Fast-search" = "Fast-Search";
+"Fast-search" = "Recherche rapide";
 
 /* Cliqz search hint description */
-"Fast-search description" = "Everything now. No detours";
+"Fast-search description" = "Tout maintenant. Sans détour";
 
 /* Detailed description on Adblocking settings */
-"AdBlocking settings clarification" = "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.";
+"AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, vous devez être connecté au Wi-Fi.";
 
 /* [Settings] Show tips and tricks page */
-"Get the best out of CLIQZ" = "Get the best out of CLIQZ";
+"Get the best out of CLIQZ" = "Obtenez le meilleur de CLIQZ";
 
 /* Youtube downloader action sheet title */
-"Video quality" = "Video quality";
+"Video quality" = "Qualité vidéo";
 
 /* Youtube downloader action sheet message */
-"Please select video quality" = "Please select video quality";
+"Please select video quality" = "Veuillez selectionner la qualité de la vidéo";
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
-"Retrieving video information" = "Retrieving video information";
+"Retrieving video information" = "Récupérer les informations de la vidéo";
 
 /* Action sheet item for closing all opened tabs */
-"Close All Tabs" = "Close All Tabs";
+"Close All Tabs" = "Fermer tous les onglets";

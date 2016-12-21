@@ -5,7 +5,7 @@
 "Firefox won't remember any of your history or cookies, but new bookmarks will be saved." = "Firefox ne se souviendra pas de votre historique ou cookies, mais de nouveaux favoris seront sauvegardés.";
 
 /* Text button displayed when there are no tabs open while in private mode */
-"Learn More" = "En apprendre plus";
+"Learn More" = "En savoir plus";
 
 /* Toggled OFF accessibility value */
 "Off" = "Désactivé";
