@@ -111,7 +111,7 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "view video offline";
+"Download youtube video" = "View Video Offline";
 
 /* History title on dashboard */
 "History" = "History";
