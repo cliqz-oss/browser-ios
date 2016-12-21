@@ -1,7 +1,7 @@
 github "Alamofire/Alamofire"      	"3.5.0"
 github "sleroux/Deferred"           "Swift2.3"
 github "swisspol/GCDWebServer"		"3.3.2"			     
-github "kif-framework/KIF"          "v3.3.2"
+github "kif-framework/KIF"          "v3.5.1"
 github "mozilla/readability"        "master"
 github "rs/SDWebImage"              "3.7.4"           
 github "SnapKit/SnapKit"            "0.22.0"

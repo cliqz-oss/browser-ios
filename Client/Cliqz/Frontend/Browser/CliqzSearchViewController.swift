@@ -85,6 +85,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self
         self.webView?.scrollView.scrollEnabled = false
+        self.webView?.accessibilityLabel = "Web content"
+
         self.view.addSubview(self.webView!)
         
 
