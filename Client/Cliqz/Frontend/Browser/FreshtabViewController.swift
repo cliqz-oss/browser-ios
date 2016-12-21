@@ -15,8 +15,13 @@ import Alamofire
 class TopSiteCollectionViewLayout: UICollectionViewFlowLayout {
 	override init() {
 		super.init()
-		minimumInteritemSpacing = 10
-		sectionInset = UIEdgeInsetsMake(10, 20, 0, 20)
+		let currentOrientation = UIApplication.sharedApplication().statusBarOrientation
+		if UIInterfaceOrientationIsPortrait(currentOrientation) {
+			minimumInteritemSpacing = 10
+		} else {
+			
+		}
+		sectionInset = UIEdgeInsetsMake(10, 27, 0, 27)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -24,8 +29,9 @@ class TopSiteCollectionViewLayout: UICollectionViewFlowLayout {
 	}
 
 	private func cellSizeForCollectionView(collectionView: UICollectionView) -> CGSize {
-		return CGSize(width: 50, height: 50)
+		return CGSize(width: 45, height: 45)
 	}
+
 }
 
 class FreshtabViewController: UIViewController {
@@ -37,6 +43,8 @@ class FreshtabViewController: UIViewController {
 	var news = [[String: AnyObject]]()
 	var profile: Profile!
 	
+	var isNewsExpanded = false
+
 	weak var delegate: SearchViewDelegate?
 
 	override func viewDidLoad() {
@@ -63,14 +71,13 @@ class FreshtabViewController: UIViewController {
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
-		self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: TopSiteCollectionViewLayout())
+		self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
 		self.topSitesCollection.delegate = self
 		self.topSitesCollection.dataSource = self
 		self.topSitesCollection.backgroundColor = UIColor(rgb: 0xE8E8E8)
 		self.newsTableView = UITableView()
 		self.newsTableView.delegate = self
 		self.newsTableView.dataSource = self
-		self.newsTableView.scrollEnabled = false
 		self.newsTableView.backgroundColor = UIColor(rgb: 0xE8E8E8)
 		self.view.backgroundColor = UIColor(rgb: 0xE8E8E8)
 	}
@@ -82,11 +89,6 @@ class FreshtabViewController: UIViewController {
 	func loadTopsites() {
 		self.topSites.removeAll()
 		self.reloadTopSitesWithLimit(15)
-//		reloadTopSitesWithLimit(15, callback: callback) >>> {
-//			return self.profile.history.updateTopSitesCacheIfInvalidated() >>== { result in
-//				return result ? self.reloadTopSitesWithLimit(frecencyLimit, callback: callback) : succeed()
-//			}
-//		}
 	}
 	
 	private func escape(string: String) -> String {
@@ -118,7 +120,7 @@ class FreshtabViewController: UIViewController {
 		}
 		return escaped
 	}
-	
+
 	func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
@@ -158,8 +160,9 @@ class FreshtabViewController: UIViewController {
 		}
 	}
 
-	private func logoURL(forHostURL: String) -> NSURL? {
-		if let url = NSURL(string: forHostURL) {
+	private func getHostComponents(forURL url: String) -> [String] {
+		var result = [String]()
+		if let url = NSURL(string: url) {
 			let host = url.host
 			let comps = host?.componentsSeparatedByString(".")
 			var first = ""
@@ -180,10 +183,30 @@ class FreshtabViewController: UIViewController {
 					second = "\((comps?[1])!)."
 				}
 			}
+			if !first.isEmpty {
+				result.append(first)
+			}
+			if !second.isEmpty {
+				result.append(second)
+			}
+		}
+		return result
+	}
+
+	private func logoURL(forHostURL url: String) -> NSURL? {
+		let hostComps = self.getHostComponents(forURL: url)
+		if hostComps.count > 0 {
+			let first = hostComps[0]
+			let second = hostComps.count > 1 ? hostComps[1] : ""
 			let x = "http://cdn.cliqz.com/brands-database/database/1481192095135/pngs/\(first)/\(second)$_72x72.png"
 			return NSURL(string: x)
 		}
 		return nil
+	}
+	
+	@objc private func showMoreNews() {
+		self.isNewsExpanded = true
+		self.newsTableView.reloadData()
 	}
 }
 
@@ -191,7 +214,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if self.news.count >= 2 {
-			return 2
+			return self.isNewsExpanded ? self.news.count : 2
 		}
 		return 0
 	}
@@ -226,8 +249,8 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 				cell.URLLabel.text =  title
 			}
 			if let url = n["url"] as? String,
-				logoURL = self.logoURL(url) {
-				cell.logoImageView.sd_setImageWithURL(logoURL)
+				logoURL = self.logoURL(forHostURL: url) {
+					cell.logoImageView.sd_setImageWithURL(logoURL)
 			}
 		}
 		cell.selectionStyle = .None
@@ -249,9 +272,38 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			}
 		}
 	}
+
+	func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		if self.isNewsExpanded || self.news.count == 0 {
+			return nil
+		}
+		let v = UIView()
+		let btn = UIButton()
+		btn.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), forState: .Normal)
+		v.addSubview(btn)
+		btn.snp_makeConstraints { (make) in
+			make.right.top.equalTo(v)
+			make.height.equalTo(20)
+			make.width.equalTo(150)
+		}
+		btn.addTarget(self, action: #selector(showMoreNews), forControlEvents: .TouchUpInside)
+		btn.setTitleColor(UIColor.blueColor(), forState: .Normal)
+		return v
+	}
+
+	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		if self.isNewsExpanded {
+			return 0
+		}
+		return 30
+	}
+
+	func scrollViewDidScroll(scrollView: UIScrollView) {
+		self.delegate?.dismissKeyboard()
+	}
 }
 
-extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 5
@@ -262,30 +314,8 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 		cell.backgroundColor = UIColor.lightGrayColor()
 		if indexPath.row < self.topSites.count {
 			let s = self.topSites[indexPath.row]
-			if let url = s["url"] {
-//				let host = url.host
-//				let comps = host?.componentsSeparatedByString(".")
-//				var first = ""
-//				var second = ""
-//				if comps?.count >= 2 {
-//					if comps?[0] == "www" {
-//						first = (comps?[1])!
-//					} else {
-//						first = (comps?[0])!
-//					}
-//				}
-//				if comps?[0] == "www" {
-//					if comps?.count > 3 {
-//						second = "\((comps?[2])!)."
-//					}
-//				} else {
-//					if comps?.count > 2 {
-//						second = "\((comps?[1])!)."
-//					}
-//				}
-//
-//				let x = "http://cdn.cliqz.com/brands-database/database/1481192095135/pngs/\(first)/\(second)$_72x72.png"
-				if let imageURL = logoURL(url) {
+			if let urlString = s["url"] {
+				if let imageURL = logoURL(forHostURL: urlString) {
 					let iv = UIImageView()
 					iv.sd_setImageWithURL(imageURL, completed: {(img, err, cacheType, url) in
 						if err != nil {
@@ -293,7 +323,13 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 							v.backgroundColor = UIColor.blackColor()
 							let l = UILabel()
 							l.textColor = UIColor.whiteColor()
-							l.text = "AI"//first.substringToIndex(first.startIndex.advancedBy(2)).uppercaseString
+							let hostComps = self.getHostComponents(forURL: urlString)
+							if hostComps.count > 0 {
+								let host = hostComps[0]
+								l.text = host.substringToIndex(host.startIndex.advancedBy(2)).capitalizedString
+							} else {
+								l.text = "N/A"//first.substringToIndex(first.startIndex.advancedBy(2)).uppercaseString
+							}
 							v.addSubview(l)
 							l.snp_makeConstraints(closure: { (make) in
 								make.center.equalTo(v)
@@ -326,6 +362,26 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			}
 		}
 	}
+	
+	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+		return CGSizeMake(45, 45)
+	}
+	
+	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+		return UIEdgeInsetsMake(10, 27, 0, 27)
+	}
+	
+	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+		var w: CGFloat = 0
+		if UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication().statusBarOrientation) {
+			w = self.view.frame.size.width
+		} else {
+			w = self.view.frame.size.height
+		}
+		
+		return (w - 5*45 - 2*27) / 4.0
+	}
+
 }
 
 

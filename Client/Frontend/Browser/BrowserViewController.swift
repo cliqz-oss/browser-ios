@@ -1818,8 +1818,15 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
         // Cliqz: always show search controller even if query was empty
-        showSearchController()
-        searchController!.searchQuery = text
+		if text != "" {
+			hideHomePanelController()
+			showSearchController()
+			searchController!.searchQuery = text
+		} else {
+			showSearchController()
+			hideSearchController()
+			showHomePanelController(inline: true)
+		}
         /*
         if text.isEmpty {
             hideSearchController()

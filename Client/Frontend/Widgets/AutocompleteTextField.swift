@@ -94,7 +94,6 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
                 let attributedString = NSMutableAttributedString(string: text)
                 attributedString.addAttribute(NSBackgroundColorAttributeName, value: highlightColor, range: NSMakeRange(0, (text).characters.count))
                 attributedText = attributedString
-
                 enteredText = ""
                 completionActive = true
             }

@@ -241,3 +241,6 @@
 
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Alle Tabs schliessen";
+
+/* Title to expand news stream */
+"MoreNews" = "Mehr Nachrichten";
