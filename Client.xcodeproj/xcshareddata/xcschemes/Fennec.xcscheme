@@ -37,6 +37,17 @@
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ES5CompatTest">
+               </Test>
+               <Test
+                  Identifier = "ES6CompatTest">
+               </Test>
+               <Test
+                  Identifier = "ESCompatTest">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

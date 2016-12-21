@@ -9,28 +9,57 @@
 import XCTest
 import KIF
 
+
 class CliqzUITests: KIFTestCase {
 
-    func testHistoryButton() {
-		// Use recording to get started writing UI tests.
-//		tester.waitForViewWithAccessibilityLabel("HistoryButton")
-//		tester.tapViewWithAccessibilityLabel("HistoryButton")
-//		XCTAssertTrue(tester.viewExistsWithLabel("CloseHistoryButton"))
-//		tester.tapViewWithAccessibilityLabel("CloseHistoryButton")
-	}
+	func testSearchIsFirstResponder() {
 
-	func testSettingsButton() {
-//		tester.waitForViewWithAccessibilityLabel("HistoryButton")
-//		tester.tapViewWithAccessibilityLabel("HistoryButton")
-//		XCTAssertTrue(tester.viewExistsWithLabel("OpenSettingsButton"))
-//		tester.tapViewWithAccessibilityLabel("OpenSettingsButton")
-//		XCTAssertTrue(tester.viewExistsWithLabel(NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar")))
-//		tester.tapViewWithAccessibilityLabel(NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar"))
-	}
-
-	func testSearch() {
 		tester.waitForViewWithAccessibilityLabel(NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns."))
 		tester.enterTextIntoCurrentFirstResponder("Hello")
+        tester.tapViewWithAccessibilityLabel("CliqzClear")
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.waitForViewWithAccessibilityLabel("New Tab")
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        tester.waitForTimeInterval(1)
 	}
 
+    //    func testHistoryButton() {
+    //		// Use recording to get started writing UI tests.
+    ////		tester.waitForViewWithAccessibilityLabel("HistoryButton")
+    ////		tester.tapViewWithAccessibilityLabel("HistoryButton")
+    ////		XCTAssertTrue(tester.viewExistsWithLabel("CloseHistoryButton"))
+    ////		tester.tapViewWithAccessibilityLabel("CloseHistoryButton")
+    //	}
+
+    //    func testHistoryTab(){
+    //        tester.waitForSoftwareKeyboard()
+    //        tester.waitForViewWithAccessibilityLabel("Show Tabs")
+    //        tester.tapViewWithAccessibilityLabel("Show Tabs")
+    //        tester.waitForViewWithAccessibilityLabel("History")
+    //        tester.tapViewWithAccessibilityLabel("History")
+    ////        tester.waitForWebViewElementWithAccessibilityLabel("nohistoryyet")
+    ////        system.waitForTimeInterval(4)
+    ////        system.waitForNotificationName("ExtensionIsReady", object: nil)
+    ////        XCTAssertTrue(tester.hasWebViewElementWithAccessibilityLabel("Her find"), "No element with cf answer")
+    ////        tester.hasWebViewElementWithAccessibilityLabel("Here you will find your history.")
+    //
+    //        tester.tapViewWithAccessibilityLabel("cliqzBack")
+    //        tester.setText("cliqz.com", intoViewWithAccessibilityLabel: "Address and Search")
+    //        tester.waitForSoftwareKeyboard()
+    //        tester.tapViewWithAccessibilityLabel("Go")
+    //
+    //        tester.tapViewWithAccessibilityLabel("OK")
+    //        tester.tapViewWithAccessibilityLabel("Address and Search")
+    //        tester.waitForSoftwareKeyboard()
+    //        tester.tapViewWithAccessibilityLabel("Go")
+    //        tester.waitForTimeInterval(5)
+    //        tester.tapViewWithAccessibilityLabel("Show Tabs")
+    //        tester.tapViewWithAccessibilityLabel("History")
+    //        system.waitForTimeInterval(3)
+    ////        XCTAssertTrue(tester.hasWebViewElementWithAccessibilityLabel("cf answer"), "No element with cf answer")
+    ////        tester.hasWebViewElementWithAccessibilityLabel("Blah blalakjks")
+    //    }
+    //    func testFavoritesTab(){
+    //    
+    //    }
 }
