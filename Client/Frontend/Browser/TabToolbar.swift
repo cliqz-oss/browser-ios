@@ -21,8 +21,6 @@ protocol TabToolbarProtocol {
     var stopReloadButton: UIButton { get }
     var homePageButton: UIButton { get }
     var actionButtons: [UIButton] { get }
-    // Cliqz: Add new Tab button
-    var newTabButton: UIButton { get }
     // Cliqz: Add Tabs button
     var tabsButton: UIButton { get }
 
@@ -48,9 +46,6 @@ protocol TabToolbarDelegate: class {
     func tabToolbarDidPressShare(tabToolbar: TabToolbarProtocol, button: UIButton)
     func tabToolbarDidPressHomePage(tabToolbar: TabToolbarProtocol, button: UIButton)
     
-    // Cliqz: Add delegate methods for new tab button
-    func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton)
-
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton)
     func tabToolbarDidLongPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton)
@@ -133,11 +128,6 @@ public class TabToolbarHelper: NSObject {
         toolbar.homePageButton.accessibilityLabel = NSLocalizedString("Toolbar.OpenHomePage.AccessibilityLabel", value: "Homepage", comment: "Accessibility Label for the tab toolbar Homepage button")
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
         
-        // Cliqz: Add new tab button
-        toolbar.newTabButton.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
-        toolbar.newTabButton.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
-        toolbar.newTabButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
-
         // Cliqz: Add tabs button
 //        toolbar.tabsButton.titleLabel.text = "0"
         toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), forState: .Normal)
@@ -230,11 +220,6 @@ public class TabToolbarHelper: NSObject {
         loading = isLoading
     }
     
-    // Cliqz: Add actions for new tab button
-    func SELdidClickNewTab() {
-        toolbar.tabToolbarDelegate?.tabToolbarDidPressNewTab(toolbar, button: toolbar.backButton)
-    }
-    
     // Cliqz: Add actions for tabs button
     func SELdidClickTabs() {
         toolbar.tabToolbarDelegate?.tabToolbarDidPressTabs(toolbar, button: toolbar.backButton)
@@ -258,8 +243,6 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     let stopReloadButton: UIButton
     let homePageButton: UIButton
     let actionButtons: [UIButton]
-    // Cliqz: Add new tab button
-    let newTabButton: UIButton
     // Cliqz: Add tabs button
     let tabsButton: UIButton
 
@@ -295,9 +278,6 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         menuButton.accessibilityIdentifier = "TabToolbar.menuButton"
         homePageButton = UIButton()
         menuButton.accessibilityIdentifier = "TabToolbar.homePageButton"
-        // Cliqz: Add new Tab button
-        newTabButton = UIButton()
-        newTabButton.accessibilityIdentifier = "TabToolbar.newTabButton"
         // Cliqz: Add Tabs button
         tabsButton = UIButton()
         tabsButton.accessibilityIdentifier = "TabToolbar.TabsButton"
@@ -307,7 +287,7 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         } else {
             // Cliqz: remove Reload button and add tabs & new tab buttons
 //            actionButtons = [backButton, forwardButton, stopReloadButton, shareButton, bookmarkButton]
-            actionButtons = [backButton, forwardButton, shareButton, bookmarkButton, newTabButton, tabsButton]
+            actionButtons = [backButton, forwardButton, shareButton, bookmarkButton, tabsButton]
         }
 
         super.init(frame: frame)

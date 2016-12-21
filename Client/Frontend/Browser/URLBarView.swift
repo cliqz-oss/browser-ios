@@ -83,6 +83,9 @@ protocol URLBarDelegate: class {
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
     
+    
+    // Cliqz: Add delegate methods for new tab button
+    func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton)
     // Cliqz: Added delegate method for antitracking button
 	func urlBarDidClickAntitracking(urlBar: URLBarView)
     // Cliqz: Added delegate method for notifing deletge that search field was cleared
@@ -204,15 +207,12 @@ class URLBarView: UIView {
 
     lazy var homePageButton: UIButton = { return UIButton() }()
     
-    // Cliqz: Add new tab button
-    lazy var newTabButton: UIButton = { return UIButton() }()
-    
     lazy var tabsButton: UIButton = { return UIButton() }()
 
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.newTabButton, self.tabsButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -252,9 +252,8 @@ class URLBarView: UIView {
         addSubview(scrollToTopButton)
 
         addSubview(progressBar)
-        // Cliqz: Add tabs button & new tab button
+        // Cliqz: Add tabs button
         addSubview(tabsButton)
-        addSubview(newTabButton)
         addSubview(cancelButton)
 
         addSubview(shareButton)
@@ -355,21 +354,15 @@ class URLBarView: UIView {
                 make.size.equalTo(backButton)
             }
         } else {
-			// Cliqz: Changed share position, now it should be before new tab button
+			
             shareButton.snp_makeConstraints { make in
-                make.right.equalTo(self.newTabButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+                // Cliqz: commented the left constaints as this will be overriden in CliqzURLBarView subclass
+//                make.left.equalTo(self.forwardButton.snp_right)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
             
-            // Cliqz: Changed new tab position, now it should be befores tabs button
-            newTabButton.snp_makeConstraints { make in
-                make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
-                make.centerY.equalTo(self)
-                make.size.equalTo(backButton)
-            }
-
-			// Cliqz: Changed Bookmark button position, next to back button
+            // Cliqz: Changed Bookmark button position, next to back button
             bookmarkButton.snp_makeConstraints { make in
 //                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
 				make.left.equalTo(self.forwardButton.snp_right).offset(URLBarViewUX.URLBarButtonOffset)
@@ -671,7 +664,6 @@ class URLBarView: UIView {
         self.stopReloadButton.hidden = !self.toolbarIsShowing
         // Cliqz: Add tabs and new tab buttons to URLBar
         self.tabsButton.hidden = !self.toolbarIsShowing
-        self.newTabButton.hidden = !self.toolbarIsShowing
         self.shareButton.hidden = !self.toolbarIsShowing
     }
 
@@ -689,7 +681,6 @@ class URLBarView: UIView {
         self.stopReloadButton.alpha = inOverlayMode ? 0 : 1
         // Cliqz: Add tabs and new tab buttons to URLBar
         self.tabsButton.alpha = inOverlayMode ? 0 : 1
-        self.newTabButton.alpha = inOverlayMode ? 0 : 1
         
         let borderColor = inOverlayMode ? locationActiveBorderColor : locationBorderColor
         locationContainer.layer.borderColor = borderColor.CGColor
@@ -734,7 +725,6 @@ class URLBarView: UIView {
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
         // Cliqz: Add tabs and new tab buttons to URLBar
         self.tabsButton.hidden = !self.toolbarIsShowing || inOverlayMode
-        self.newTabButton.hidden = !self.toolbarIsShowing || inOverlayMode
     }
 
     func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {

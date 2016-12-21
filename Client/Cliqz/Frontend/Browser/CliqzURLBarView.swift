@@ -21,7 +21,14 @@ class CliqzURLBarView: URLBarView {
 		button.backgroundColor = self.antitrackingBackgroundColor
 		return button
 	}()
-	
+    private lazy var newTabButton: UIButton = {
+        let button = UIButton(type: .Custom)
+        button.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
+        button.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
+        button.addTarget(self, action: #selector(CliqzURLBarView.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
+        return button
+    }()
+    
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		commonInit()
@@ -59,7 +66,21 @@ class CliqzURLBarView: URLBarView {
 			})
 		}
 	}
-
+    
+    override func prepareOverlayAnimation() {
+        super.prepareOverlayAnimation()
+        self.newTabButton.hidden = !self.toolbarIsShowing
+    }
+    
+    override func transitionToOverlay(didCancel: Bool = false) {
+        super.transitionToOverlay(didCancel)
+        self.newTabButton.alpha = inOverlayMode ? 0 : 1
+    }
+    override func updateViewsForOverlayModeAndToolbarChanges() {
+        super.updateViewsForOverlayModeAndToolbarChanges()
+        self.newTabButton.hidden = !self.toolbarIsShowing || inOverlayMode
+    }
+    
 	func updateTrackersCount(count: Int) {
 		self.antitrackingButton.setTitle("\(count)", forState: .Normal)
 		self.setNeedsDisplay()
@@ -88,9 +109,30 @@ class CliqzURLBarView: URLBarView {
 			make.leading.equalTo(self.locationContainer.snp_trailing)
 			make.size.equalTo(self.antitrackingButtonSize)
 		}
+        
+        addSubview(newTabButton)
+        // Cliqz: Changed new tab position, now it should be befores tabs button
+        newTabButton.snp_makeConstraints { make in
+            make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+            make.centerY.equalTo(self)
+            make.size.equalTo(backButton)
+        }
+        
+        // Cliqz: Changed share position, now it should be before new tab button
+        shareButton.snp_updateConstraints { make in
+            make.right.equalTo(self.newTabButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+        }
+        
+        self.actionButtons.append(newTabButton)
 	}
 	
 	@objc private func antitrackingButtonPressed(sender: UIButton) {
 		self.delegate?.urlBarDidClickAntitracking(self)
 	}
+    
+    
+    // Cliqz: Add actions for new tab button
+    func SELdidClickNewTab() {
+        delegate?.urlBarDidPressNewTab(self, button: newTabButton)
+    }
 }

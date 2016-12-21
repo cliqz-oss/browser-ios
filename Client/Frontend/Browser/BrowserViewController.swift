@@ -1896,6 +1896,19 @@ extension BrowserViewController: URLBarDelegate {
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     
+    // Cliqz: Add delegate methods for new tab button
+    func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton) {
+        preserveSearchState()
+        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
+            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
+        } else {
+            tabManager.addTabAndSelect()
+        }
+        
+        // Cliqz: log telemetry singal for web menu
+        logWebMenuSignal("click", target: "new_tab")
+    }
+
 }
 
 extension BrowserViewController: TabToolbarDelegate {
@@ -2037,19 +2050,6 @@ extension BrowserViewController: TabToolbarDelegate {
             backForwardViewController.backForwardTransitionDelegate = BackForwardListAnimator()
             self.presentViewController(backForwardViewController, animated: true, completion: nil)
         }
-    }
-    
-    // Cliqz: Add delegate methods for new tab button
-    func tabToolbarDidPressNewTab(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        preserveSearchState()
-        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
-            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
-        } else {
-            tabManager.addTabAndSelect()
-        }
-        
-        // Cliqz: log telemetry singal for web menu
-        logWebMenuSignal("click", target: "new_tab")
     }
     
     // Cliqz: Add delegate methods for tabs button
