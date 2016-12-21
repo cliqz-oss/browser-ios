@@ -117,7 +117,7 @@
 "History" = "Historique";
 
 /* Add Favorites */
-"Add Favorite" = "Ajouter aux Favors";
+"Add Favorite" = "Ajouter aux favoris";
 
 /* Setting menu title */
 "Settings" = "Paramètres";
@@ -132,7 +132,7 @@
 "Open New Tab" = "Ouvrir nouvel onglet";
 
 /* Open new forget mode tab title */
-"Open New Forget Tab" = "Ouvrir nouvel onglet en mode Oubli";
+"Open New Forget Tab" = "Ouvrir nouvel onglet en mode oubli";
 
 /* Show images title */
 "Show Images" = "Montrer les images";
