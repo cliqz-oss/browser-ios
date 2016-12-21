@@ -489,6 +489,8 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        self.tabsButton.accessibilityValue = count.description
+        
         // Cliqz: commented the method as we use regular tabs button with no count
         /*
         // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation

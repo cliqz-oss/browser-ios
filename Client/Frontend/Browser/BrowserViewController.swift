@@ -2560,6 +2560,7 @@ extension BrowserViewController: TabManagerDelegate {
 //            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
 			let count = tabManager.tabs.count
             urlBar.updateTabCount(max(count, 1), animated: animated)
+            toolbar?.updateTabCount(max(count, 1))
         }
     }
 }

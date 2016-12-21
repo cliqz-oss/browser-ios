@@ -141,7 +141,7 @@ public class TabToolbarHelper: NSObject {
         // Cliqz: Add tabs button
 //        toolbar.tabsButton.titleLabel.text = "0"
         toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), forState: .Normal)
-        toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
+        toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
         let longPressGestureTabsButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressTabs(_:)))
         toolbar.tabsButton.addGestureRecognizer(longPressGestureTabsButton)
         toolbar.tabsButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickTabs), forControlEvents: UIControlEvents.TouchUpInside)
@@ -366,6 +366,11 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         CGContextMoveToPoint(context, start.x, start.y)
         CGContextAddLineToPoint(context, end.x, end.y)
         CGContextStrokePath(context)
+    }
+    
+    // Cliqz: update tabs button in the bottom toolbar
+    func updateTabCount(count: Int) {
+        self.tabsButton.accessibilityValue = count.description
     }
 }
 
