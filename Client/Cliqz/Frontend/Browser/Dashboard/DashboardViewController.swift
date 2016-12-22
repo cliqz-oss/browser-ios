@@ -63,10 +63,11 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		panelSwitchContainerView.backgroundColor = UIColor.whiteColor()
 		view.addSubview(panelSwitchContainerView)
 		
-		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Settings item for clearing favorite history")
-		let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
-
-		panelSwitchControl = UISegmentedControl(items: ["Tabs", history, fav])
+        let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
+        let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
+		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
+        
+		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), forControlEvents: .ValueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
