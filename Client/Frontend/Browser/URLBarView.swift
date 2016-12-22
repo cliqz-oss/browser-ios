@@ -14,7 +14,7 @@ struct URLBarViewUX {
     static let TextFieldBorderColor = UIColor(rgb: 0xBBBBBB)
     static let TextFieldActiveBorderColor = UIColor(rgb: 0x4A90E2)
     static let TextFieldContentInset = UIOffsetMake(9, 5)
-    static let LocationLeftPadding = 5
+    static let LocationLeftPadding: CGFloat = 10
     static let LocationHeight = 28
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8

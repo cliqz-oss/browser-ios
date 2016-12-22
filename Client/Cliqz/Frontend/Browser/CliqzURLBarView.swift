@@ -43,14 +43,14 @@ class CliqzURLBarView: URLBarView {
 		super.updateConstraints()
 		if !antitrackingButton.hidden {
             if self.toolbarIsShowing {
+                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.URLBarButtonOffset
                 locationContainer.snp_updateConstraints { make in
-                    let x = -UIConstants.ToolbarHeight
-                    make.trailing.equalTo(shareButton.snp_leading).offset(x)
+                    make.trailing.equalTo(shareButton.snp_leading).offset(-trailingPadding)
                 }
             } else {
+                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.LocationLeftPadding
                 locationContainer.snp_updateConstraints { make in
-                    let x = -(UIConstants.ToolbarHeight + 10)
-                    make.trailing.equalTo(self).offset(x)
+                    make.trailing.equalTo(self).offset(-trailingPadding)
                 }
             }
 			
