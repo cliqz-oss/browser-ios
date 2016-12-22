@@ -241,5 +241,8 @@
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 
+/* Title to expand news stream */
+"MoreNews" = "Plus d'actualités";
+
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";

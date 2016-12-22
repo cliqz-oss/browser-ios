@@ -127,19 +127,19 @@ class FreshtabViewController: UIViewController {
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		]
 		let url = "https://newbeta.cliqz.com/api/v2/rich-header?"
-		let uri  = "path=/v2/map&q=&lang=de,en&locale=en-US&force_country=true&adult=0&loc_pref=ask&count=5"
+		let uri  = "path=/v2/map&q=&lang=de,en&locale=\(NSLocale.currentLocale().localeIdentifier)&force_country=true&adult=0&loc_pref=ask&count=5"
 		
 		Alamofire.request(.PUT, url + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
-			if let result = response.result.value!["results"] as? [[String: AnyObject]] {
-				if let snippet = result[0]["snippet"] as? [String: AnyObject],
-					extra = snippet["extra"] as? [String: AnyObject],
-					articles = extra["articles"] as? [[String: AnyObject]]
-					{
-						self.news = articles
-						self.newsTableView.reloadData()
-						print("ddd --- \(articles)")
-					}
-				print("RRRR -- \(response.result.value)")
+			if response.result.isSuccess {
+				if let result = response.result.value!["results"] as? [[String: AnyObject]] {
+					if let snippet = result[0]["snippet"] as? [String: AnyObject],
+						extra = snippet["extra"] as? [String: AnyObject],
+						articles = extra["articles"] as? [[String: AnyObject]]
+						{
+							self.news = articles
+							self.newsTableView.reloadData()
+						}
+				}
 			}
 		}
 	}
@@ -148,11 +148,18 @@ class FreshtabViewController: UIViewController {
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
+				var filter = Set<String>()
 				for site in r {
-					var d = Dictionary<String, String>()
-					d["url"] = site!.url
-					d["title"] = site!.title
-					self.topSites.append(d)
+					if let url = NSURL(string: site!.url),
+						host = url.host {
+						if !filter.contains(host) {
+							var d = Dictionary<String, String>()
+							d["url"] = site!.url
+							d["title"] = site!.title
+							filter.insert(host)
+							self.topSites.append(d)
+						}
+					}
 				}
 			}
 			self.topSitesCollection.reloadData()
@@ -162,32 +169,45 @@ class FreshtabViewController: UIViewController {
 
 	private func getHostComponents(forURL url: String) -> [String] {
 		var result = [String]()
-		if let url = NSURL(string: url) {
-			let host = url.host
-			let comps = host?.componentsSeparatedByString(".")
-			var first = ""
-			var second = ""
-			if comps?.count >= 2 {
-				if comps?[0] == "www" {
-					first = (comps?[1])!
+		if let url = NSURL(string: url),
+			host = url.host {
+			let comps = host.componentsSeparatedByString(".")
+			var firstIndex = -1
+			var secondIndex = -1
+			if comps.count >= 2 {
+				if comps[0] == "www" {
+					if comps[1] == "m" {
+						if comps.count > 2 {
+							firstIndex = 2
+						}
+						if comps.count >= 5 {
+							secondIndex = 3
+						}
+					} else {
+						firstIndex = 1
+						if comps.count >= 4 {
+							secondIndex = 2
+						}
+					}
 				} else {
-					first = (comps?[0])!
+					if comps[0] == "m" {
+						firstIndex = 1
+						if comps.count > 3 {
+							secondIndex = 2
+						}
+					} else {
+						firstIndex = 0
+						if comps.count > 2 {
+							secondIndex = 1
+						}
+					}
 				}
 			}
-			if comps?[0] == "www" {
-				if comps?.count > 3 {
-					second = "\((comps?[2])!)."
-				}
-			} else {
-				if comps?.count > 2 {
-					second = "\((comps?[1])!)."
-				}
+			if firstIndex > -1 {
+				result.append(comps[firstIndex])
 			}
-			if !first.isEmpty {
-				result.append(first)
-			}
-			if !second.isEmpty {
-				result.append(second)
+			if secondIndex > -1 {
+				result.append(comps[secondIndex])
 			}
 		}
 		return result
