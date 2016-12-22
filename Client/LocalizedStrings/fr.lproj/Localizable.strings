@@ -125,7 +125,7 @@
 /* Accessibility label for default search engine setting.
    Title for default search engine picker.
    Title for default search engine settings section. */
-"Default Search Engine" = "Moteur de recherche par défaut";
+"Default Search Engine" = "Moteurs de recherche par défaut";
 
 /* Pending feature; currently unused string! Checkbox label shown after multiple alerts are shown */
 "Disable additional page dialogs" = "Désactiver les pages de dialogue additionnelles";
@@ -152,7 +152,7 @@
    Done button label on back forward list screen
    Done button on left side of the Settings view controller title bar
    Done editing button */
-"Done" = "Fait";
+"Done" = "Terminé";
 
 /* No comment provided by engineer. */
 "Double tap and hold to open history" = "Appuyer deux fois et maintenir pour ouvrir l'historique";
