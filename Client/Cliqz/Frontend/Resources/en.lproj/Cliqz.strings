@@ -73,9 +73,6 @@
 /* More details about Fair Blocking */
 "What is 'fair'?" = "What is 'fair'?";
 
-/* Settings item for clearing favorite history */
-"Favorites" = "Favorites";
-
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Clear Private Data on Termination";
 
@@ -111,10 +108,17 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "view video offline";
+"Download youtube video" = "View Video Offline";
+
+/* Tabs title on dashboard */
+"Tabs" = "Tabs";
 
 /* History title on dashboard */
 "History" = "History";
+
+/* Favorites title on dashboard
+   Settings item for clearing favorite history */
+"Favorites" = "Favorites";
 
 /* Add Favorites */
 "Add Favorite" = "Add Favorite";

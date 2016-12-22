@@ -72,9 +72,6 @@
 /* More details about Fair Blocking */
 "What is 'fair'?" = "Was bedeutet 'fair'?";
 
-/* Settings item for clearing favorite history */
-"Favorites" = "Favoriten";
-
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
 
@@ -112,8 +109,15 @@
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Video offline ansehen";
 
+/* Tabs title on dashboard */
+"Tabs" = "Tabs";
+
 /* History title on dashboard */
 "History" = "Verlauf";
+
+/* Favorites title on dashboard
+   Settings item for clearing favorite history */
+"Favorites" = "Favoriten";
 
 /* Add Favorites */
 "Add Favorite" = "Favorit hinzufügen";

@@ -46,8 +46,7 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                 inProgress.cancel()
                 self.inProgress = nil
             }
-            // Cliqz: disable auto complete from both history and top domains
-            /*
+            
             let deferred = self.profile.history.getSitesByFrecencyWithHistoryLimit(100, bookmarksLimit: 5, whereURLContains: query)
             inProgress = deferred as? Cancellable
 
@@ -58,6 +57,8 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                 if let cursor = result.successValue {
                     // First, see if the query matches any URLs from the user's search history.
                     self.load(cursor)
+                    // Cliqz: disable auto complete from both history and top domains
+                    /*
                     for site in cursor {
                         if let url = site?.url,
                                completion = self.completionForURL(url) {
@@ -65,7 +66,7 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                             return
                         }
                     }
-
+                    // Cliqz: disable auto complete from both history and top domains
                     // If there are no search history matches, try matching one of the Alexa top domains.
                     for domain in self.topDomains {
                         if let completion = self.completionForDomain(domain) {
@@ -73,9 +74,9 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                             return
                         }
                     }
+                    */
                 }
             }
-            */
         }
     }
 
