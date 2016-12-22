@@ -48,6 +48,7 @@ class SettingsTests: KIFTestCase {
 
     func testSearchEngineChangeCheckmark(){
         //        Test the functionality
+        showToolBar()
         tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
@@ -60,10 +61,12 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(tester.viewExistsWithLabel("Search, Twitter"), "Search Engine Label did not change to Twitter")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
+        tester.waitForTimeInterval(1)
     }
 
     func testBlockPopUpWindowsWhenEnabledByDefault() {
         //        Tests if button functions
+        showToolBar()
         let tabsCounter = tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
@@ -72,7 +75,7 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(popUpSlider.accessibilityValue == "1", "Block Pop-up Windows is not turned on, It should be on!")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.tapViewWithAccessibilityLabel("CliqzClear")
+        
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityIdentifier("url")
         tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
@@ -94,6 +97,7 @@ class SettingsTests: KIFTestCase {
 
     func testBlockPopUpWindowsWhenDisabled(){
         //        Tests if the popups are blocked when pop-up blocker is activated
+        showToolBar()
         let tabsCounter = tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
@@ -104,7 +108,6 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(popUpSlider.accessibilityValue == "0", "Block Pop-up Windows is turned on, it should be off!")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.tapViewWithAccessibilityLabel("CliqzClear")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityIdentifier("url")
         tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
@@ -129,6 +132,7 @@ class SettingsTests: KIFTestCase {
     }
 
     func testBlockPopUpWindowsWhenEnabled(){
+        showToolBar()
         let tabsCounter = tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Settings")
@@ -143,7 +147,7 @@ class SettingsTests: KIFTestCase {
         tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.tapViewWithAccessibilityLabel("CliqzClear")
+//        tester.tapViewWithAccessibilityLabel("urlExpand")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityIdentifier("url")
         tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
@@ -156,6 +160,7 @@ class SettingsTests: KIFTestCase {
             tester.tapViewWithAccessibilityLabel("Go")
         }
         tester.waitForTimeInterval(2)
+//        showToolBar()
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Settings")

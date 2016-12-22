@@ -13,6 +13,11 @@ import KIF
 class TabsManagerTest: KIFTestCase {
 
     func testTabRemoval() {
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
         tester.waitForFirstResponderWithAccessibilityLabel("Address and Search")
         tester.waitForTimeInterval(1)
         tester.setText("cliqz.com", intoViewWithAccessibilityLabel: "Address and Search")
@@ -25,6 +30,7 @@ class TabsManagerTest: KIFTestCase {
             tester.tapViewWithAccessibilityLabel("Go")
         }
         tester.waitForTimeInterval(2)
+        showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.waitForViewWithAccessibilityLabel("http://cliqz.com/")
         tester.swipeViewWithAccessibilityLabel("http://cliqz.com/", inDirection: KIFSwipeDirection.Left)
@@ -32,6 +38,11 @@ class TabsManagerTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("New Tab")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+        tester.tapViewWithAccessibilityIdentifier("url")
+        }
     }
 
     func testBackButton() {
@@ -45,6 +56,12 @@ class TabsManagerTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("New Tab")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
+        
     }
 
 }

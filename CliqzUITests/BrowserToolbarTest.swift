@@ -13,19 +13,19 @@ class BrowserToolbarTest: KIFTestCase {
    
 
     func testToolBarOnSearchPage(){
-        showToolBarOnStartUp()
+        showToolBar()
         let back = tester.waitForViewWithAccessibilityLabel("Back")as! UIButton
         let forward = tester.waitForViewWithAccessibilityLabel("Forward")as! UIButton
         let share = tester.waitForViewWithAccessibilityLabel("Share")as! UIButton
         let bookmark = tester.waitForViewWithAccessibilityLabel("Bookmark")as! UIButton
-        let newtab = tester.waitForViewWithAccessibilityLabel("New tab")as! UIButton
+        let showtabs = tester.waitForViewWithAccessibilityLabel("Show Tabs")as! UIButton
         XCTAssertFalse(back.enabled, "Back button should be Disabled")
         XCTAssertFalse(forward.enabled, "Forward button should be Disabled")
         XCTAssertFalse(share.enabled,"Share button should be Disabled")
         XCTAssertFalse(bookmark.enabled, "Bookmark button should be Disabled")
-        XCTAssertTrue(newtab.enabled, "NewTab button should be Enabled")
+        XCTAssertTrue(showtabs.enabled, "Show Tabs button should be Enabled")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab")
+        tester.waitForViewWithAccessibilityLabel("New Tab, Most visited sites and News")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
         tester.tapViewWithAccessibilityIdentifier("url")
@@ -37,12 +37,12 @@ class BrowserToolbarTest: KIFTestCase {
         let forward = tester.waitForViewWithAccessibilityLabel("Forward")as! UIButton
         let share = tester.waitForViewWithAccessibilityLabel("Share")as! UIButton
         let bookmark = tester.waitForViewWithAccessibilityLabel("Bookmark")as! UIButton
-        let newtab = tester.waitForViewWithAccessibilityLabel("New tab")as! UIButton
+        let showtabs = tester.waitForViewWithAccessibilityLabel("Show Tabs")as! UIButton
         XCTAssertTrue(back.enabled, "Back button should be enabled")
         XCTAssertFalse(forward.enabled, "Forward button should be Disabled")
         XCTAssertTrue(share.enabled, "Share button should be enabled")
         XCTAssertTrue(bookmark.enabled, "Bookmark button should be enabled")
-        XCTAssertTrue(newtab.enabled, "Newtab button should be enabled")
+        XCTAssertTrue(showtabs.enabled, "Show Tabs button should be enabled")
         tester.tapViewWithAccessibilityLabel("Back")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
@@ -83,15 +83,16 @@ class BrowserToolbarTest: KIFTestCase {
     }
     
     func testForgetModeColor(){
-        showToolBarOnStartUp()
-        tester.longPressViewWithAccessibilityLabel("New tab", duration: 1)
+        showToolBar()
+        tester.longPressViewWithAccessibilityLabel("Show Tabs", duration: 1)
         tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
         tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab")
         tester.tapViewWithAccessibilityIdentifier("url")
-        if let x = tester.waitForViewWithAccessibilityLabel("Address and Search") as? UITextField {
+        if let x = tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab") as? UITextView {
             let expectedColor =  UIColor(colorLiteralRed: 0.2, green: 0.2, blue: 0.2, alpha: 1)
             XCTAssertTrue(x.backgroundColor!.description == expectedColor.description, "Forget Mode Color is wrong, it should be \(expectedColor.description) isntead of \(x.backgroundColor!.description)")
         }
+        showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
         tester.waitForTimeInterval(1)

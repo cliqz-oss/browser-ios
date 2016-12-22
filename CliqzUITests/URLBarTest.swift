@@ -13,6 +13,11 @@ import KIF
 class URLBarTest: KIFTestCase {
     
     func testAntiTrackingButton(){
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
         tester.waitForViewWithAccessibilityLabel("Address and Search")
         XCTAssertFalse(tester.viewExistsWithLabel("AntiTrackingButton"), "AntiTracking Button is displayed, It shouldn't be displayed!")
         openTestWebPage()
@@ -23,10 +28,15 @@ class URLBarTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("New Tab")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
-        tester.tapViewWithAccessibilityIdentifier("url")
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
     }
     
     func testTabsChangeNumber() {
+        showToolBar()
         let x = tester.waitForViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(x.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         XCTAssertTrue(tester.viewExistsWithLabel("Show Tabs"), "Show Tabs button should be on this View")
@@ -37,11 +47,17 @@ class URLBarTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("+")
         tester.tapViewWithAccessibilityLabel("+")
         XCTAssertTrue(x.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened!")
+        showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.waitForViewWithAccessibilityLabel("New Tab, Most visited sites and News")
         tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
     }
     
 }

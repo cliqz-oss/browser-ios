@@ -16,7 +16,7 @@ class CliqzUITests: KIFTestCase {
 
 		tester.waitForViewWithAccessibilityLabel(NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns."))
 		tester.enterTextIntoCurrentFirstResponder("Hello")
-        tester.tapViewWithAccessibilityLabel("CliqzClear")
+        tester.tapViewWithAccessibilityLabel("urlExpand")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.waitForViewWithAccessibilityLabel("New Tab")
         tester.tapViewWithAccessibilityLabel("cliqzBack")

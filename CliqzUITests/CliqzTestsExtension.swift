@@ -9,7 +9,12 @@
 extension XCTestCase {
 
     func openTestWebPage(){
-        tester.waitForTimeInterval(2)
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
+        tester.waitForTimeInterval(1)
         tester.setText("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html", intoViewWithAccessibilityLabel: "Address and Search")
         tester.waitForSoftwareKeyboard()
         tester.tapViewWithAccessibilityLabel("Go")
@@ -32,11 +37,14 @@ extension XCTestCase {
         tester.waitForTimeInterval(1)
     }
 
-    func showToolBarOnStartUp(){
-        tester.waitForViewWithAccessibilityLabel("CliqzClear")
-        tester.tapViewWithAccessibilityLabel("CliqzClear")
-        tester.waitForAbsenceOfSoftwareKeyboard()
-        tester.waitForViewWithAccessibilityLabel("New tab")
+    func showToolBar(){
+        if tester.viewExistsWithLabel("urlExpand"){
+            tester.tapViewWithAccessibilityLabel("urlExpand")
+            tester.waitForAbsenceOfSoftwareKeyboard()
+            tester.waitForViewWithAccessibilityLabel("Show Tabs")
+            
+        }
+        
     }
     
 }
