@@ -8,14 +8,14 @@
 
 extension XCTestCase {
 
-    func openTestWebPage(){
+    func openWebPage(url:String){
         if tester.viewExistsWithLabel("Go"){
         }
         else{
             tester.tapViewWithAccessibilityIdentifier("url")
         }
         tester.waitForTimeInterval(1)
-        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html", intoViewWithAccessibilityLabel: "Address and Search")
+        tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
         tester.waitForSoftwareKeyboard()
         tester.tapViewWithAccessibilityLabel("Go")
         if tester.viewExistsWithLabel("OK"){
@@ -27,7 +27,7 @@ extension XCTestCase {
         tester.waitForTimeInterval(1)
     }
 
-    func gotToLinkInWebPage(){
+    func goToLinkInWebPage(){
         tester.waitForViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
         tester.tapViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
         tester.tapViewWithAccessibilityLabel("delete")
@@ -42,9 +42,23 @@ extension XCTestCase {
             tester.tapViewWithAccessibilityLabel("urlExpand")
             tester.waitForAbsenceOfSoftwareKeyboard()
             tester.waitForViewWithAccessibilityLabel("Show Tabs")
-            
         }
-        
+    }
+    
+    func resetApp(accessibilityLabels: [String]){
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
+        for accessibilityLabel in accessibilityLabels {
+            tester.swipeViewWithAccessibilityLabel(accessibilityLabel, inDirection: KIFSwipeDirection.Left)
+            tester.waitForTimeInterval(1)
+        }
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        tester.waitForTimeInterval(1)
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            tester.tapViewWithAccessibilityIdentifier("url")
+        }
     }
     
 }

@@ -13,54 +13,18 @@ import KIF
 class TabsManagerTest: KIFTestCase {
 
     func testTabRemoval() {
-        if tester.viewExistsWithLabel("Go"){
-        }
-        else{
-            tester.tapViewWithAccessibilityIdentifier("url")
-        }
-        tester.waitForFirstResponderWithAccessibilityLabel("Address and Search")
+        openWebPage("http://cliqz.com/")
         tester.waitForTimeInterval(1)
-        tester.setText("cliqz.com", intoViewWithAccessibilityLabel: "Address and Search")
-        tester.waitForSoftwareKeyboard()
-        tester.tapViewWithAccessibilityLabel("Go")
-        if tester.viewExistsWithLabel("OK"){
-            tester.tapViewWithAccessibilityLabel("OK")
-            tester.tapViewWithAccessibilityLabel("Address and Search")
-            tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
-        }
-        tester.waitForTimeInterval(2)
         showToolBar()
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("http://cliqz.com/")
-        tester.swipeViewWithAccessibilityLabel("http://cliqz.com/", inDirection: KIFSwipeDirection.Left)
-        tester.waitForTimeInterval(1)
-        tester.waitForViewWithAccessibilityLabel("New Tab")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-        if tester.viewExistsWithLabel("Go"){
-        }
-        else{
-        tester.tapViewWithAccessibilityIdentifier("url")
-        }
+        resetApp(["http://cliqz.com/"])
     }
 
     func testBackButton() {
-        openTestWebPage()
-        gotToLinkInWebPage()
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
+        goToLinkInWebPage()
         tester.tapViewWithAccessibilityLabel("Back")
-        tester.waitForViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
-        tester.tapViewWithAccessibilityLabel("Back")
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
-        tester.waitForViewWithAccessibilityLabel("New Tab")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-        if tester.viewExistsWithLabel("Go"){
-        }
-        else{
-            tester.tapViewWithAccessibilityIdentifier("url")
-        }
+        XCTAssertTrue(tester.viewExistsWithLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html"), "The initial webpage that was opened is not displayed, It should be!")
+        resetApp(["https://cdn.cliqz.com/mobile/browser/tests/forward_test.html"])
         
     }
 

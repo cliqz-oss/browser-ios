@@ -47,7 +47,6 @@ class SettingsTests: KIFTestCase {
 //    }
 
     func testSearchEngineChangeCheckmark(){
-        //        Test the functionality
         showToolBar()
         tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
@@ -65,7 +64,7 @@ class SettingsTests: KIFTestCase {
     }
 
     func testBlockPopUpWindowsWhenEnabledByDefault() {
-        //        Tests if button functions
+        //        Tests if block PopupButton button functions
         showToolBar()
         let tabsCounter = tester.waitForViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
@@ -77,17 +76,7 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
-        tester.tapViewWithAccessibilityIdentifier("url")
-        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
-        tester.waitForSoftwareKeyboard()
-        tester.tapViewWithAccessibilityLabel("Go")
-        if tester.viewExistsWithLabel("OK"){
-            tester.tapViewWithAccessibilityLabel("OK")
-            tester.tapViewWithAccessibilityLabel("Address and Search")
-            tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
-        }
-        tester.waitForTimeInterval(2)
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
@@ -109,17 +98,7 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
-        tester.tapViewWithAccessibilityIdentifier("url")
-        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
-        tester.waitForSoftwareKeyboard()
-        tester.tapViewWithAccessibilityLabel("Go")
-        if tester.viewExistsWithLabel("OK"){
-            tester.tapViewWithAccessibilityLabel("OK")
-            tester.tapViewWithAccessibilityLabel("Address and Search")
-            tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
-        }
-        tester.waitForTimeInterval(2)
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html")
         XCTAssertTrue(tabsCounter.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
@@ -147,20 +126,8 @@ class SettingsTests: KIFTestCase {
         tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
-//        tester.tapViewWithAccessibilityLabel("urlExpand")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
-        tester.tapViewWithAccessibilityIdentifier("url")
-        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", intoViewWithAccessibilityLabel: "Address and Search")
-        tester.waitForSoftwareKeyboard()
-        tester.tapViewWithAccessibilityLabel("Go")
-        if tester.viewExistsWithLabel("OK"){
-            tester.tapViewWithAccessibilityLabel("OK")
-            tester.tapViewWithAccessibilityLabel("Address and Search")
-            tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
-        }
-        tester.waitForTimeInterval(2)
-//        showToolBar()
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Settings")

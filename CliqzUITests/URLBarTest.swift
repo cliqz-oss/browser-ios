@@ -20,19 +20,11 @@ class URLBarTest: KIFTestCase {
         }
         tester.waitForViewWithAccessibilityLabel("Address and Search")
         XCTAssertFalse(tester.viewExistsWithLabel("AntiTrackingButton"), "AntiTracking Button is displayed, It shouldn't be displayed!")
-        openTestWebPage()
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
         tester.waitForViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
         XCTAssertTrue(tester.viewExistsWithLabel("AntiTrackingButton"), "AntiTracking Button is not displayed, It should be!")
         tester.tapViewWithAccessibilityLabel("Back")
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-        if tester.viewExistsWithLabel("Go"){
-        }
-        else{
-            tester.tapViewWithAccessibilityIdentifier("url")
-        }
+        resetApp(["New Tab, Most visited sites and News"])
     }
     
     func testTabsChangeNumber() {
@@ -48,16 +40,7 @@ class URLBarTest: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("+")
         XCTAssertTrue(x.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened!")
         showToolBar()
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab, Most visited sites and News")
-        tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-        if tester.viewExistsWithLabel("Go"){
-        }
-        else{
-            tester.tapViewWithAccessibilityIdentifier("url")
-        }
+        resetApp(["New Tab, Most visited sites and News"])
     }
     
 }
