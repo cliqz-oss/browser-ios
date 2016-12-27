@@ -245,6 +245,8 @@ class BrowserViewController: UIViewController {
         if showToolbar {
             toolbar = TabToolbar()
             toolbar?.tabToolbarDelegate = self
+            // Cliqz: update tabs button to update newly created toolbar
+            self.updateTabCountUsingTabManager(self.tabManager, animated: false)
             footerBackground = BlurWrapper(view: toolbar!)
             footerBackground?.translatesAutoresizingMaskIntoConstraints = false
 

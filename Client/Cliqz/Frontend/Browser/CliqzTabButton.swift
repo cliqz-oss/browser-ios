@@ -51,12 +51,12 @@ class CliqzTabsButton: TabsButton {
 	override func clone() -> UIView {
 		let button = CliqzTabsButton()
 		button.accessibilityLabel = accessibilityLabel
-		button.titleLabel.text = titleLabel.text
+		button.title.text = title.text
 		
 		// Copy all of the styable properties over to the new TabsButton
-		button.titleLabel.font = titleLabel.font
-		button.titleLabel.textColor = titleLabel.textColor
-		button.titleLabel.layer.cornerRadius = titleLabel.layer.cornerRadius
+		button.title.font = title.font
+		button.title.textColor = title.textColor
+		button.title.layer.cornerRadius = title.layer.cornerRadius
 
 		button.titleBackgroundColor = self.titleBackgroundColor
 
@@ -68,9 +68,9 @@ class CliqzTabsButton: TabsButton {
 	}
 	
 	override dynamic var textColor: UIColor? {
-		get { return titleLabel.textColor }
+		get { return title.textColor }
 		set {
-			titleLabel.textColor = newValue
+			title.textColor = newValue
 			self.backgroundImage.tintColor = textColor
 		}
 	}

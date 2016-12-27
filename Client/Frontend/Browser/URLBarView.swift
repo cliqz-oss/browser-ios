@@ -207,7 +207,7 @@ class URLBarView: UIView {
 
     lazy var homePageButton: UIButton = { return UIButton() }()
     
-    lazy var tabsButton: UIButton = { return UIButton() }()
+    lazy var tabsButton: CliqzTabsButton = { return CliqzTabsButton() }()
 
 
     lazy var actionButtons: [UIButton] = {
@@ -482,8 +482,10 @@ class URLBarView: UIView {
     }
 
     func updateTabCount(count: Int, animated: Bool = true) {
+        // Cliqz: update tabs button in the URLBar
         self.tabsButton.accessibilityValue = count.description
-        
+        self.tabsButton.title.text = count.description
+
         // Cliqz: commented the method as we use regular tabs button with no count
         /*
         // Cliqz: preserve last count to fix the problem of displaying worng tab count when closing opened tabs after sesstion timeout due to the animation
@@ -906,7 +908,7 @@ extension URLBarView: Themeable {
         // Cliqz: Set URLBar backgroundColor because of requirements
         backgroundColor = theme.backgroundColor
         // Cliqz: used regular button instead of TabsButton
-//        tabsButton.applyTheme(themeName)
+        tabsButton.applyTheme(themeName)
     }
 }
 // Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
