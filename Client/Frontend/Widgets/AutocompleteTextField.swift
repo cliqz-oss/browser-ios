@@ -85,6 +85,7 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
         clearButton.addTarget(self, action: #selector(AutocompleteTextField.SELtextDidClear(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.rightViewMode = .Always
         self.rightView = clearButton
+        clearButton.accessibilityLabel = "CliqzClear"
     }
 
     func highlightAll() {

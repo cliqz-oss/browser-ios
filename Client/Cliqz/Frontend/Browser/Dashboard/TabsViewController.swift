@@ -165,7 +165,8 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		} else {
 			cell.logoImageView.image = nil
 		}
-		return cell
+        cell.accessibilityLabel = tab.displayURL?.absoluteString
+        return cell
 	}
 	
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

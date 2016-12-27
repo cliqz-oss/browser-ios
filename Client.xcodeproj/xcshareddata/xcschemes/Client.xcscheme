@@ -186,21 +186,22 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1E32B4271CF5A81C00412468"
-               BuildableName = "CliqzUITests.xctest"
-               BlueprintName = "CliqzUITests"
-               ReferencedContainer = "container:Client.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "1E79DEBE1D5098F6006BEB4A"
                BuildableName = "CliqzUITests.xctest"
                BlueprintName = "CliqzUITests"
                ReferencedContainer = "container:Client.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ES5CompatTest">
+               </Test>
+               <Test
+                  Identifier = "ES6CompatTest">
+               </Test>
+               <Test
+                  Identifier = "ESCompatTest">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

@@ -19,6 +19,7 @@ class CliqzURLBarView: URLBarView {
 		button.setTitle("0", forState: .Normal)
 		button.titleLabel?.font = UIFont.systemFontOfSize(12)
 		button.backgroundColor = self.antitrackingBackgroundColor
+        button.accessibilityLabel = "AntiTrackingButton"
 		return button
 	}()
     private lazy var newTabButton: UIButton = {
