@@ -245,6 +245,8 @@ class BrowserViewController: UIViewController {
         if showToolbar {
             toolbar = TabToolbar()
             toolbar?.tabToolbarDelegate = self
+            // Cliqz: update tabs button to update newly created toolbar
+            self.updateTabCountUsingTabManager(self.tabManager, animated: false)
             footerBackground = BlurWrapper(view: toolbar!)
             footerBackground?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -3459,9 +3461,9 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                         self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
-                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
                     })
                 }
                 actionSheetController.addAction(openNewPrivateTabAction)

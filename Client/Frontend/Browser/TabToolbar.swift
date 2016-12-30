@@ -22,7 +22,7 @@ protocol TabToolbarProtocol {
     var homePageButton: UIButton { get }
     var actionButtons: [UIButton] { get }
     // Cliqz: Add Tabs button
-    var tabsButton: UIButton { get }
+    var tabsButton: CliqzTabsButton { get }
 
     func updateBackStatus(canGoBack: Bool)
     func updateForwardStatus(canGoForward: Bool)
@@ -129,7 +129,6 @@ public class TabToolbarHelper: NSObject {
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
         
         // Cliqz: Add tabs button
-//        toolbar.tabsButton.titleLabel.text = "0"
         toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), forState: .Normal)
         toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
         let longPressGestureTabsButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressTabs(_:)))
@@ -244,7 +243,7 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     let homePageButton: UIButton
     let actionButtons: [UIButton]
     // Cliqz: Add tabs button
-    let tabsButton: UIButton
+    let tabsButton: CliqzTabsButton
 
     var helper: TabToolbarHelper?
 
@@ -279,7 +278,7 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         homePageButton = UIButton()
         menuButton.accessibilityIdentifier = "TabToolbar.homePageButton"
         // Cliqz: Add Tabs button
-        tabsButton = UIButton()
+        tabsButton = CliqzTabsButton()
         tabsButton.accessibilityIdentifier = "TabToolbar.TabsButton"
         
         if AppConstants.MOZ_MENU {
@@ -351,6 +350,7 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     // Cliqz: update tabs button in the bottom toolbar
     func updateTabCount(count: Int) {
         self.tabsButton.accessibilityValue = count.description
+        self.tabsButton.title.text = count.description
     }
 }
 
@@ -372,6 +372,7 @@ extension TabToolbar: Themeable {
             return
         }
         actionButtonTintColor = theme.buttonTintColor!
+        tabsButton.applyTheme(themeName)
     }
 }
 
