@@ -9,7 +9,7 @@
 import Foundation
 import JavaScriptCore
 
-extension BrowserViewController: AntitrackingViewDelegate {
+extension BrowserViewController: ControlCenterViewDelegate {
 
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
@@ -110,22 +110,22 @@ extension BrowserViewController: AntitrackingViewDelegate {
 	}
 
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
-		if let tab = self.tabManager.selectedTab, webView = tab.webView {
-			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId, privateMode: tab.isPrivate)
-			antitrackingVC.delegate = self
-			self.addChildViewController(antitrackingVC)
-			antitrackingVC.antitrackingDelegate = self
+		if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
+            let controlCenterVC = ControlCenterViewController(webViewID: webView.uniqueId, url:url, privateMode: tab.isPrivate)
+			controlCenterVC.delegate = self
+            controlCenterVC.controlCenterDelegate = self
+			self.addChildViewController(controlCenterVC)
 			var r = self.view.bounds
 			r.origin.y = -r.size.height
-			antitrackingVC.view.frame = r
-			self.view.addSubview(antitrackingVC.view)
+			controlCenterVC.view.frame = r
+			self.view.addSubview(controlCenterVC.view)
 			self.view.bringSubviewToFront(self.urlBar)
 			self.urlBar.enableAntitrackingButton(false)
 			UIView.animateWithDuration(0.5, animations: {
-				antitrackingVC.view.center = self.view.center
+				controlCenterVC.view.center = self.view.center
 			}, completion: { (finished) in
 				if finished {
-					self.view.bringSubviewToFront(antitrackingVC.view)
+					self.view.bringSubviewToFront(controlCenterVC.view)
 				}
 			})
 
@@ -140,7 +140,7 @@ extension BrowserViewController: AntitrackingViewDelegate {
         self.urlBar(urlBar, didEnterText: "")
     }
 
-	func antitrackingViewWillClose(antitrackingView: UIView) {
+	func controlCenterViewWillClose(controlCenterView: UIView) {
 		self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}

@@ -270,7 +270,7 @@ class AntiTrackingModule: NSObject {
         loadJavascriptSource("timers")
         
         if #available(iOS 10, *) {
-            loadJavascriptSource("/bower_components/es6-promise/es6-promise")
+//            loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else if #available(iOS 9, *) {
             loadJavascriptSource("/bower_components/es6-promise/es6-promise")
         } else {
