@@ -166,63 +166,6 @@ class FreshtabViewController: UIViewController {
 			return succeed()
 		}
 	}
-
-	private func getHostComponents(forURL url: String) -> [String] {
-		var result = [String]()
-		if let url = NSURL(string: url),
-			host = url.host {
-			let comps = host.componentsSeparatedByString(".")
-			var firstIndex = -1
-			var secondIndex = -1
-			if comps.count >= 2 {
-				if comps[0] == "www" {
-					if comps[1] == "m" {
-						if comps.count > 2 {
-							firstIndex = 2
-						}
-						if comps.count >= 5 {
-							secondIndex = 3
-						}
-					} else {
-						firstIndex = 1
-						if comps.count >= 4 {
-							secondIndex = 2
-						}
-					}
-				} else {
-					if comps[0] == "m" {
-						firstIndex = 1
-						if comps.count > 3 {
-							secondIndex = 2
-						}
-					} else {
-						firstIndex = 0
-						if comps.count > 2 {
-							secondIndex = 1
-						}
-					}
-				}
-			}
-			if firstIndex > -1 {
-				result.append(comps[firstIndex])
-			}
-			if secondIndex > -1 {
-				result.append(comps[secondIndex])
-			}
-		}
-		return result
-	}
-
-	private func logoURL(forHostURL url: String) -> NSURL? {
-		let hostComps = self.getHostComponents(forURL: url)
-		if hostComps.count > 0 {
-			let first = hostComps[0]
-			let second = hostComps.count > 1 ? hostComps[1] : ""
-			let x = "http://cdn.cliqz.com/brands-database/database/1481192095135/pngs/\(first)/\(second)$_72x72.png"
-			return NSURL(string: x)
-		}
-		return nil
-	}
 	
 	@objc private func showMoreNews() {
 		self.isNewsExpanded = true
@@ -268,9 +211,12 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			} else if let title = n["title"] as? String {
 				cell.URLLabel.text =  title
 			}
-			if let url = n["url"] as? String,
-				logoURL = self.logoURL(forHostURL: url) {
-					cell.logoImageView.sd_setImageWithURL(logoURL)
+			if let url = n["url"] as? String {
+				cell.logoImageView.loadLogo(forDomain: url, completed: { (view) in
+					if view != nil {
+						print("Handle custom logo case....")
+					}
+				})
 			}
 		}
 		cell.selectionStyle = .None
@@ -335,38 +281,23 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 		if indexPath.row < self.topSites.count {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
-				if let imageURL = logoURL(forHostURL: urlString) {
-					let iv = UIImageView()
-					iv.sd_setImageWithURL(imageURL, completed: {(img, err, cacheType, url) in
-						if err != nil {
-							let v = UIView()
-							v.backgroundColor = UIColor.blackColor()
-							let l = UILabel()
-							l.textColor = UIColor.whiteColor()
-							let hostComps = self.getHostComponents(forURL: urlString)
-							if hostComps.count > 0 {
-								let host = hostComps[0]
-								l.text = host.substringToIndex(host.startIndex.advancedBy(2)).capitalizedString
-							} else {
-								l.text = "N/A"//first.substringToIndex(first.startIndex.advancedBy(2)).uppercaseString
-							}
-							v.addSubview(l)
-							l.snp_makeConstraints(closure: { (make) in
-								make.center.equalTo(v)
-							})
-							cell.contentView.addSubview(v)
-							v.snp_makeConstraints(closure: { (make) in
-								make.left.right.top.bottom.equalTo(cell.contentView)
-							})
-						}
-					})
-					cell.contentView.addSubview(iv)
-					iv.snp_makeConstraints(closure: { (make) in
-						make.left.right.top.bottom.equalTo(cell.contentView)
-					})
-				}
+				let logoView = UIImageView()
+				logoView.loadLogo(forDomain: urlString, completed: { (view) in
+					if view != nil {
+						logoView.removeFromSuperview()
+						cell.contentView.addSubview(view!)
+						view!.snp_makeConstraints(closure: { (make) in
+							make.left.right.top.bottom.equalTo(cell.contentView)
+						})
+					}
+				})
+				cell.contentView.addSubview(logoView)
+				logoView.snp_makeConstraints(closure: { (make) in
+					make.left.right.top.bottom.equalTo(cell.contentView)
+				})
 			}
 		}
+
 		return cell
 	}
 
