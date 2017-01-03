@@ -56,6 +56,7 @@
 		1E1CB9A31DD46C050098D980 /* FeedbackUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */; };
 		1E705C391D5E052D009FAEE1 /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */; };
 		1E705C3B1D5E059E009FAEE1 /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */; };
+		1E71546F1E1A919C000A3ED7 /* QuerySuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E71546E1E1A919C000A3ED7 /* QuerySuggestionView.swift */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
 		1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */; };
 		1E79DD021D4FB2C5006BEB4A /* AtomicInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */; };
@@ -1142,20 +1143,6 @@
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
 		};
-		7C1315931DEF24C700D37C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
-			remoteInfo = KIFFrameworkConsumer;
-		};
-		7C1315951DEF24C700D37C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB8A0141CAC546A00C6DFC1;
-			remoteInfo = KIFFrameworkConsumerTests;
-		};
 		D30EBB631C75503800105AE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
@@ -1423,6 +1410,7 @@
 		1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackUI.swift; sourceTree = "<group>"; };
 		1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
+		1E71546E1E1A919C000A3ED7 /* QuerySuggestionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuerySuggestionView.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
@@ -2761,6 +2749,7 @@
 				4FF239C71D52464A00EEDE89 /* WebView */,
 				1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
+				1E71546E1E1A919C000A3ED7 /* QuerySuggestionView.swift */,
 				1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */,
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
 				1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */,
@@ -3944,8 +3933,6 @@
 				D30EBB661C75503800105AE9 /* Test Host.app */,
 				D30EBB681C75503800105AE9 /* KIF Tests - XCTest.xctest */,
 				D30EBB6A1C75503800105AE9 /* KIF.framework */,
-				7C1315941DEF24C700D37C6D /* KIFFrameworkConsumer.app */,
-				7C1315961DEF24C700D37C6D /* KIFFrameworkConsumerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5417,20 +5404,6 @@
 			remoteRef = 7B9A62E81C4002B1005C83DC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		7C1315941DEF24C700D37C6D /* KIFFrameworkConsumer.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = KIFFrameworkConsumer.app;
-			remoteRef = 7C1315931DEF24C700D37C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7C1315961DEF24C700D37C6D /* KIFFrameworkConsumerTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = KIFFrameworkConsumerTests.xctest;
-			remoteRef = 7C1315951DEF24C700D37C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		D30EBB641C75503800105AE9 /* libKIF.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -6303,6 +6276,7 @@
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
+				1E71546F1E1A919C000A3ED7 /* QuerySuggestionView.swift in Sources */,
 				1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */,
 				1E79DD171D4FB2C5006BEB4A /* ConnectionManager.swift in Sources */,
 				E69E06C91C76198000D0F926 /* AuthenticationManagerConstants.swift in Sources */,

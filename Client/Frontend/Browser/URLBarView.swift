@@ -452,6 +452,9 @@ class URLBarView: UIView {
         }
         
         locationTextField.applyTheme(currentTheme)
+        let querySuggestionView = QuerySuggestionView()
+        querySuggestionView.delegate = self
+        locationTextField.inputAccessoryView = querySuggestionView
     }
 
     func removeLocationTextField() {
@@ -854,6 +857,10 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 
     func autocompleteTextField(autocompleteTextField: AutocompleteTextField, didEnterText text: String) {
         delegate?.urlBar(self, didEnterText: text)
+        
+        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
+            view.didEnterText(text)
+        }
     }
 
     func autocompleteTextFieldDidBeginEditing(autocompleteTextField: AutocompleteTextField) {
@@ -1137,5 +1144,12 @@ extension ToolbarTextField: Themeable {
         textColor = theme.textColor
         clearButtonTintColor = theme.buttonTintColor
         highlightColor = theme.highlightColor!
+    }
+}
+
+extension URLBarView : QuerySuggestionDelegate {
+    func autoComplete(suggestion: String) {
+        self.locationTextField?.removeCompletion()
+        self.locationTextField?.text = suggestion
     }
 }
