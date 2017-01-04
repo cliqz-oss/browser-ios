@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DC7253AB1B52ADEB009B38B1"
-               BuildableName = ".framework"
+               BlueprintIdentifier = "EE247B3B1C3F3ED000AE3E12"
+               BuildableName = "SQLite.framework"
                BlueprintName = "SQLite Mac"
                ReferencedContainer = "container:SQLite.xcodeproj">
             </BuildableReference>
@@ -43,8 +43,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC7253AB1B52ADEB009B38B1"
-            BuildableName = ".framework"
+            BlueprintIdentifier = "EE247B3B1C3F3ED000AE3E12"
+            BuildableName = "SQLite.framework"
             BlueprintName = "SQLite Mac"
             ReferencedContainer = "container:SQLite.xcodeproj">
          </BuildableReference>
@@ -65,8 +65,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC7253AB1B52ADEB009B38B1"
-            BuildableName = ".framework"
+            BlueprintIdentifier = "EE247B3B1C3F3ED000AE3E12"
+            BuildableName = "SQLite.framework"
             BlueprintName = "SQLite Mac"
             ReferencedContainer = "container:SQLite.xcodeproj">
          </BuildableReference>
@@ -83,8 +83,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC7253AB1B52ADEB009B38B1"
-            BuildableName = ".framework"
+            BlueprintIdentifier = "EE247B3B1C3F3ED000AE3E12"
+            BuildableName = "SQLite.framework"
             BlueprintName = "SQLite Mac"
             ReferencedContainer = "container:SQLite.xcodeproj">
          </BuildableReference>
