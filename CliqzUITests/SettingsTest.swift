@@ -13,7 +13,7 @@ import KIF
 class SettingsTests: KIFTestCase {
 
     func testSettingsAndDoneButtons() {
-        tester.waitForViewWithAccessibilityLabel("Show Tabs")
+        showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
         tester.tapViewWithAccessibilityLabel("Settings")
@@ -22,29 +22,35 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("cliqzBack")
     }
     
-//    func testSearchEngineChange() {
-//        tester.waitForFirstResponderWithAccessibilityLabel("Address and Search")
-//        tester.waitForTimeInterval(3)
-//        tester.setText("abc", intoViewWithAccessibilityLabel: "Address and Search")
-//        tester.waitForSoftwareKeyboard()
-//        tester.tapViewWithAccessibilityLabel("Go")
-//        if tester.viewExistsWithLabel("OK"){
-//            tester.tapViewWithAccessibilityLabel("OK")
-//            tester.tapViewWithAccessibilityLabel("Address and Search")
-//            tester.waitForSoftwareKeyboard()
-//            tester.tapViewWithAccessibilityLabel("Go")
-//        }
-//        tester.waitForTimeInterval(5)
-//        let y = tester.waitForTappableViewWithAccessibilityIdentifier("url") as? UITextField
-//        let z = y?.text
-//        
-//        tester.waitForViewWithAccessibilityLabel("Show Tabs")
-//        tester.tapViewWithAccessibilityLabel("Show Tabs")
-//        XCTAssertTrue(tester.viewExistsWithLabel(z!))
-//        XCTAssertTrue(tester.viewExistsWithLabel("Settings"))
-//        tester.tapViewWithAccessibilityLabel("Settings")
-//        
-//    }
+    func testSearchEngineChange() {
+        showToolBar()
+        tester.waitForViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Search, Google")
+        checkSearchEngineChange("Amazon.com",query:"heli",url:"https://www.amazon.com/gp/aw/s?k=heli")
+        checkSearchEngineChange("Bing",query: "heli", url: "https://www.bing.com/search?q=heli")
+        checkSearchEngineChange("DuckDuckGo", query: "heli", url: "https://duckduckgo.com/?q=heli")
+        checkSearchEngineChange("Ecosia", query: "fir", url: "https://www.ecosia.org/search?q=fir")
+        checkSearchEngineChange("Google", query: "dor", url: "https://www.google.com/search?q=dor")
+        checkSearchEngineChange("Qwant", query: "dor", url: "https://www.qwant.com/?q=dor")
+        checkSearchEngineChange("Twitter", query: "dor", url: "https://mobile.twitter.com/search/?q=dor")
+        checkSearchEngineChange("Wikipedia", query: "germany", url: "https://en.m.wikipedia.org/wiki/Germany")
+        checkSearchEngineChange("Wikipedia", query: "bkjdydgd", url: "https://en.m.wikipedia.org/wiki/Special:Search?search=bkjdydgd")
+        checkSearchEngineChange("Yahoo", query: "blah", url: "https://search.yahoo.com/yhs/search?")
+        tester.tapViewWithAccessibilityLabel("Google")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Done")
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        let searchUrl = tester.waitForViewWithAccessibilityIdentifier("url")
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        let Label = searchUrl.accessibilityValue!
+        tester.swipeViewWithAccessibilityLabel("\(Label)", inDirection: KIFSwipeDirection.Left)
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        tester.waitForTimeInterval(1)
+        
+    }
 
     func testSearchEngineChangeCheckmark(){
         showToolBar()
@@ -54,10 +60,12 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Settings")
         tester.tapViewWithAccessibilityLabel("Search, Google")
         XCTAssertTrue((tester.waitForViewWithAccessibilityLabel("Google", traits: UIAccessibilityTraitSelected)) != nil, "Default Search Engine is not google")
-        tester.tapViewWithAccessibilityLabel("Twitter")
-        XCTAssertTrue((tester.waitForViewWithAccessibilityLabel("Twitter", traits: UIAccessibilityTraitSelected)) != nil, "Search Engine Twitter was not selected after tapping it")
+        let searchEngines = ["Amazon.com","Bing","DuckDuckGo","Ecosia","Google","Qwant","Twitter","Wikipedia","Yahoo"]
+        for searchEngine in searchEngines {
+            changeAndCheckSearchEngineLabel(searchEngine)
+        }
+        tester.tapViewWithAccessibilityLabel("Google")
         tester.tapViewWithAccessibilityLabel("Settings")
-        XCTAssertTrue(tester.viewExistsWithLabel("Search, Twitter"), "Search Engine Label did not change to Twitter")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
