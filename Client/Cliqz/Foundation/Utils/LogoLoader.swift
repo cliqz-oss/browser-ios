@@ -27,7 +27,7 @@ class LogoLoader {
 			}
 			if version != nil {
 				let url = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
-				completionBlock("\(url)/\(first)/\(second)$_72x72.png", first)
+				completionBlock("\(url)/\(first)/\(second)$_72.png", first)
 			} else {
 				completionBlock(nil, first)
 			}
