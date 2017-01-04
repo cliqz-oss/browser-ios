@@ -15,6 +15,7 @@ import Account
 import ReadingList
 import MobileCoreServices
 import WebImage
+import Crashlytics
 
 private let log = Logger.browserLogger
 
@@ -1850,7 +1851,7 @@ extension BrowserViewController: URLBarDelegate {
 				} else {
 					// If we still don't have a valid URL, something is broken. Give up.
 					log.error("Error handling URL entry: \"\(text)\".")
-				}
+		}
 			} else {
 				finishEditingAndSubmit(url!, visitType: VisitType.Typed)
 			}
@@ -2638,10 +2639,13 @@ extension BrowserViewController: WKNavigationDelegate {
 
         if !navigationAction.isAllowed && navigationAction.navigationType != .BackForward {
             log.warning("Denying unprivileged request: \(navigationAction.request)")
-            decisionHandler(WKNavigationActionPolicy.Cancel)
+            decisionHandler(WKNavigationActionPolicy.Allow)
+#if BETA
+			Answers.logCustomEventWithName("UnprivilegedURL", customAttributes: ["URL": url])
+#endif
             return
         }
-        
+		
         //Cliqz: Navigation telemetry signal
         if url.absoluteString!.rangeOfString("localhost") == nil {
             startNavigation(webView, navigationAction: navigationAction)
