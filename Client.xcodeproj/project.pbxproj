@@ -567,6 +567,7 @@
 		7BF5A1CA1B4160EA00EA9DD8 /* SyncCommandsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1C91B4160EA00EA9DD8 /* SyncCommandsTable.swift */; };
 		7BF5A1EA1B41640500EA9DD8 /* SyncQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1E91B41640500EA9DD8 /* SyncQueue.swift */; };
 		7BF5A1EE1B429B3100EA9DD8 /* SyncCommandsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1ED1B429B3100EA9DD8 /* SyncCommandsTests.swift */; };
+		7C346B221E1D313D00C1FD3B /* AntiPhishingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C346B211E1D313D00C1FD3B /* AntiPhishingTest.swift */; };
 		7C4474F81E07F6B2008E34E6 /* SettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4474F71E07F6B2008E34E6 /* SettingsTest.swift */; };
 		7C4475091E07F7BF008E34E6 /* TabsManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4475081E07F7BF008E34E6 /* TabsManagerTest.swift */; };
 		7C44750B1E07F83F008E34E6 /* URLBarTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C44750A1E07F83F008E34E6 /* URLBarTest.swift */; };
@@ -2023,6 +2024,7 @@
 		7BF5A1C91B4160EA00EA9DD8 /* SyncCommandsTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncCommandsTable.swift; sourceTree = "<group>"; };
 		7BF5A1E91B41640500EA9DD8 /* SyncQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncQueue.swift; sourceTree = "<group>"; };
 		7BF5A1ED1B429B3100EA9DD8 /* SyncCommandsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncCommandsTests.swift; sourceTree = "<group>"; };
+		7C346B211E1D313D00C1FD3B /* AntiPhishingTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingTest.swift; sourceTree = "<group>"; };
 		7C4474F71E07F6B2008E34E6 /* SettingsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTest.swift; sourceTree = "<group>"; };
 		7C4475081E07F7BF008E34E6 /* TabsManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsManagerTest.swift; sourceTree = "<group>"; };
 		7C44750A1E07F83F008E34E6 /* URLBarTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLBarTest.swift; sourceTree = "<group>"; };
@@ -3256,6 +3258,7 @@
 				7C44750C1E07F84F008E34E6 /* BrowserToolbarTest.swift */,
 				7C44750E1E07FA6A008E34E6 /* CliqzTestsExtension.swift */,
 				7C4475101E097001008E34E6 /* FreshTabTest.swift */,
+				7C346B211E1D313D00C1FD3B /* AntiPhishingTest.swift */,
 			);
 			path = CliqzUITests;
 			sourceTree = "<group>";
@@ -5947,6 +5950,7 @@
 				1E79DEFE1D509981006BEB4A /* CliqzUITests.swift in Sources */,
 				7C4474F81E07F6B2008E34E6 /* SettingsTest.swift in Sources */,
 				1E79DEFF1D509986006BEB4A /* Global.swift in Sources */,
+				7C346B221E1D313D00C1FD3B /* AntiPhishingTest.swift in Sources */,
 				7C4475091E07F7BF008E34E6 /* TabsManagerTest.swift in Sources */,
 				7C44750B1E07F83F008E34E6 /* URLBarTest.swift in Sources */,
 				7C4475111E097001008E34E6 /* FreshTabTest.swift in Sources */,

@@ -74,7 +74,7 @@ class BrowserToolbarTest: KIFTestCase {
         tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab")
         tester.tapViewWithAccessibilityIdentifier("url")
         tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab")
-                showToolBar()
+        showToolBar()
         resetApp(["New Tab, Most visited sites and News", "New Tab, Most visited sites and News"])
     }
     

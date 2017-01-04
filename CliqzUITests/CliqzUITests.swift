@@ -15,12 +15,17 @@ class CliqzUITests: KIFTestCase {
 	func testSearchIsFirstResponder() {
 
 		tester.waitForViewWithAccessibilityLabel(NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns."))
-		tester.enterTextIntoCurrentFirstResponder("Hello")
-        tester.tapViewWithAccessibilityLabel("urlExpand")
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
+		tester.enterTextIntoCurrentFirstResponder("Cliqz")
         tester.waitForTimeInterval(1)
+        let searchBar = tester.waitForViewWithAccessibilityLabel("Address and Search")
+        XCTAssertTrue(searchBar.accessibilityValue!.startsWith("Cliqz"), "Search Bar is not Focused on Opening the application, It Should be!")
+//        This code tests autocomplete
+        XCTAssertTrue(searchBar.accessibilityValue!.contains(".com/"), "Auto complete does not work, It Should!")
+//        tester.tapViewWithAccessibilityLabel("urlExpand")
+//        tester.tapViewWithAccessibilityLabel("Show Tabs")
+//        tester.waitForViewWithAccessibilityLabel("New Tab")
+//        tester.tapViewWithAccessibilityLabel("cliqzBack")
+//        tester.waitForTimeInterval(5)
 	}
 
     //    func testHistoryButton() {
