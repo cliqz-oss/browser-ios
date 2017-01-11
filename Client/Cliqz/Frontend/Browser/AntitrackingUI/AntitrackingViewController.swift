@@ -240,6 +240,7 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		}
 		return UIColor(rgb: 0xE8E8E8)
 	}
+
     private func createLegendView() -> UIView? {
         let header = UIView()
         header.backgroundColor = UIColor.clearColor()

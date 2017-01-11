@@ -13,6 +13,8 @@ import SnapKit
 class LogoLoader {
 	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
 	static let logoVersionKey: String = "logoVersion"
+	
+	static let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
 
 	internal static func getLogoURL(forDomain domainURL: String, completed completionBlock: (String!, String) -> Void) {
 		self.lastLogoVersion() { (version) in
@@ -90,9 +92,17 @@ class LogoLoader {
 
 	private static func getHostComponents(forURL url: String) -> [String] {
 		var result = [String]()
+		var secondIndexLimit = Int.max
 		if let url = NSURL(string: url),
 			host = url.host {
 			let comps = host.componentsSeparatedByString(".")
+			if let lastComp = comps.last {
+				if let firstLevel = self.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
+					if let _ = self.topDomains[comps[comps.count - 2]] {
+						secondIndexLimit = comps.count - 2
+					}
+				}
+			}
 			var firstIndex = -1
 			var secondIndex = -1
 			if comps.count >= 2 {
@@ -127,7 +137,7 @@ class LogoLoader {
 			if firstIndex > -1 {
 				result.append(comps[firstIndex])
 			}
-			if secondIndex > -1 {
+			if secondIndex > -1 && secondIndex < secondIndexLimit {
 				result.append(comps[secondIndex])
 			}
 		}

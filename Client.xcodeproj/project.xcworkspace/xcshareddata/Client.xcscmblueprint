@@ -17,7 +17,7 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "E084C86B03F81D63323C9E7510697EA528A758C7" : "firefox-ios\/Carthage\/Checkouts\/Base32\/Carthage\/Checkouts\/xcconfigs\/",
     "14F083B06266CB430958E5A1EC338A4CC0D1D55B" : "android-browser\/",
-    "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : "browser-ios\/",
+    "4FF3414541789FD5E4E656F8CB683E7B25CF29E1" : "browser-ios_freshTab\/",
     "4c0a9323-5329-0410-9bdc-e9ce6186880e++505" : "s2fxios\/ThirdParty\/google-breakpad\/",
     "31F61D37FA0E05F17C9C09F96F652B8EC64779B9" : "firefox-ios\/",
     "55011AEBD444630C0E9DF47BD2E18FDBBDCC285D" : "s2fxios\/Carthage\/Checkouts\/SQLite.swift\/Vendor\/sqlcipher\/"
