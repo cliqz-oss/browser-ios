@@ -68,6 +68,11 @@ class FreshtabViewController: UIViewController {
 		loadTopsites()
 	}
 
+	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+		self.topSitesCollection.collectionViewLayout.invalidateLayout()
+	}
+
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
