@@ -412,26 +412,18 @@ class NewsViewCell: UITableViewCell {
 			make.bottom.equalTo(self.contentView).offset(cardViewBottomOffset)
 		}
 		
-		let contentLeftOffset = 15
+		let contentOffset = 15
 		let logoSize = CGSizeMake(28, 28)
 		self.logoImageView.snp_remakeConstraints { (make) in
 			make.top.equalTo(self.cardView)
-			make.left.equalTo(self.cardView).offset(contentLeftOffset)
-//			if let _ = self.logoImageView.image {
-				make.size.equalTo(logoSize)
-//			} else {
-//				make.size.equalTo(CGSizeMake(0, 0))
-//			}
+			make.left.equalTo(self.cardView).offset(contentOffset)
+			make.size.equalTo(logoSize)
 		}
 		let URLLeftOffset = 15
 		let URLHeight = 24
 		self.URLLabel.snp_remakeConstraints { (make) in
 			make.top.equalTo(self.cardView).offset(7)
-//			if let _ = self.logoImageView.image {
-				make.left.equalTo(self.logoImageView.snp_right).offset(URLLeftOffset)
-//			} else {
-//				make.left.equalTo(self.cardView).offset(URLLeftOffset)
-//			}
+			make.left.equalTo(self.logoImageView.snp_right).offset(URLLeftOffset)
 			make.height.equalTo(URLHeight)
 			make.right.equalTo(self.cardView)
 		}
@@ -441,9 +433,9 @@ class NewsViewCell: UITableViewCell {
 			} else {
 				make.top.equalTo(self.URLLabel.snp_bottom)
 			}
-			make.left.equalTo(self.cardView).offset(contentLeftOffset)
+			make.left.equalTo(self.cardView).offset(contentOffset)
 			make.height.equalTo(40)
-			make.right.equalTo(self.cardView)
+			make.right.equalTo(self.cardView).offset(-contentOffset)
 		}
 	}
 	
