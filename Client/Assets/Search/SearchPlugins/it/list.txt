@@ -1,4 +1,11 @@
-google
-wikipedia-it
+amazondotcom
+bing
+duckduckgo
 eBay-it
+ecosia
+google
+qwant
+startpage
 twitter
+wikipedia-it
+yahoo

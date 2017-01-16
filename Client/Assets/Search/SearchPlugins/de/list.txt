@@ -1,9 +1,10 @@
 amazon-de
 bing
 duckduckgo
+ecosia
 google
 qwant
+startpage
 twitter
 wikipedia-de
 yahoo-de
-ecosia
