@@ -18,7 +18,6 @@ class TabsViewController: UIViewController {
 	private var addTabButton: UIButton!
 
 	let tabManager: TabManager!
-	var tabs: [Tab]!
 
 	private let tabCellIdentifier = "TabCell"
 
@@ -26,7 +25,6 @@ class TabsViewController: UIViewController {
     
     init(tabManager: TabManager) {
 		self.tabManager = tabManager
-		self.tabs = tabManager.tabs
 		super.init(nibName: nil, bundle: nil)
 		self.tabManager.addDelegate(self)
 	}
@@ -79,7 +77,7 @@ class TabsViewController: UIViewController {
 	@objc private func addNewTab(sender: UIButton) {
 		self.openNewTab()
         
-        let customData: [String : AnyObject] = ["tab_count" : tabs.count]
+        let customData: [String : AnyObject] = ["tab_count" : self.tabManager.tabs.count]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
 	}
     
@@ -107,7 +105,7 @@ class TabsViewController: UIViewController {
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
-            let customData: [String : AnyObject] = ["count" : tabs.count]
+            let customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count]
             TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
         }
     }
@@ -146,7 +144,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.tabsView.dequeueReusableCellWithIdentifier(tabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
-		let tab = self.tabs[indexPath.row]
+		let tab = self.tabManager.self.tabs[indexPath.row]
         cell.delegate = self
         cell.selectedTab = tab
         
@@ -179,7 +177,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		self.navigationController?.popViewControllerAnimated(false)
         
         if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? TabViewCell {
-            logTabClickSignal(currentCell, indexPath: indexPath, count: tabs.count, isForget: tab.isPrivate)
+            logTabClickSignal(currentCell, indexPath: indexPath, count: self.tabManager.tabs.count, isForget: tab.isPrivate)
         }
         
 
@@ -215,7 +213,7 @@ extension TabsViewController: SwipeAnimatorDelegate {
             action = "swipe_right"
         }
         
-        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : tabs.count, "is_forget" : tab.isPrivate]
+        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
     }
 }
@@ -228,17 +226,11 @@ extension TabsViewController: TabManagerDelegate {
 	}
 	
 	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
-		guard let index = tabManager.tabs.indexOf(tab) else { return }
-		self.tabs.insert(tab, atIndex: index)
-		tabManager.selectTab(tab)
-		self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
+        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
 	}
-
-	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab) {
-		if let i = self.tabs.indexOf(tab) {
-			self.tabsView.deleteRowsAtIndexPaths([NSIndexPath(forRow: i, inSection: 0)], withRowAnimation: .Left)
-			self.tabs.removeAtIndex(i)
-		}
+    
+	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
+        self.tabsView.deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
 	}
 
 	func tabManagerDidAddTabs(tabManager: TabManager) {
@@ -253,7 +245,7 @@ extension TabsViewController: TabManagerDelegate {
 
 extension TabsViewController: TabViewCellDelegate {
     func closeTab(tab: Tab) {
-        var customData: [String : AnyObject] = ["count" : tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
+        var customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
         if let tabIndex = self.tabManager.getIndex(tab) {
             customData["index"] = tabIndex
         }
