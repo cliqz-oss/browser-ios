@@ -380,7 +380,7 @@ class URLBarView: UIView {
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
                 
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading).offset(-URLBarViewUX.URLBarButtonOffset)
+                make.trailing.equalTo(self.cancelButton.snp_leading)
 //                make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
