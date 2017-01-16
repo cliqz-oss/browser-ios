@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SnapKit
+import WebImage
 
 class LogoLoader {
 	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
@@ -16,9 +17,9 @@ class LogoLoader {
 	
 	static let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
 
-	internal static func getLogoURL(forDomain domainURL: String, completed completionBlock: (String!, String) -> Void) {
+	internal static func loadLogo(ofURL url: String, imageView: UIImageView, completed completionBlock: (String!) -> Void) {
 		self.lastLogoVersion() { (version) in
-			let hostComps = self.getHostComponents(forURL: domainURL)
+			let hostComps = self.getHostComponents(forURL: url)
 			var first = ""
 			var second = ""
 			if hostComps.count > 0 {
@@ -28,10 +29,25 @@ class LogoLoader {
 				second = hostComps[1]
 			}
 			if version != nil {
-				let url = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
-				completionBlock("\(url)/\(first)/\(second)$_72.png", first)
+				let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
+				self.loadLogo(withURL: "\(mainURL)/\(first)/\(second)$_72.png", imageView: imageView, completed: { (image, error, imageType, url) in
+					if error != nil && image == nil && !second.isEmpty {
+						let secondAttempt = "\(mainURL)/\(first)/$_72.png"
+						self.loadLogo(withURL: secondAttempt, imageView: imageView, completed: { (image, error, imageType, url) in
+							if error != nil || image == nil {
+								completionBlock(first)
+							} else {
+								completionBlock(nil)
+							}
+						})
+					} else if image != nil {
+						completionBlock(nil)
+					} else {
+						completionBlock(first)
+					}
+				})
 			} else {
-				completionBlock(nil, first)
+				completionBlock(first)
 			}
 		}
 	}
@@ -53,6 +69,16 @@ class LogoLoader {
 			make.center.equalTo(v)
 		})
 		return v
+	}
+
+	private static func loadLogo(withURL urlString: String, imageView: UIImageView, completed completionBlock:SDWebImageCompletionBlock!) {
+		if let url = NSURL(string: urlString) {
+			imageView.sd_setImageWithURL(url, completed: { (image, error, imageType, url) in
+				completionBlock(image, error, imageType, url)
+			})
+		} else {
+			completionBlock?(UIImage(), NSError(domain: "InvalidURL", code: 1, userInfo: nil), .None, NSURL())
+		}
 	}
 
 	private static func isLogoVersionExpired() -> Bool {
@@ -92,52 +118,30 @@ class LogoLoader {
 
 	private static func getHostComponents(forURL url: String) -> [String] {
 		var result = [String]()
-		var secondIndexLimit = Int.max
+		var domainIndex = Int.max
+		let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
 		if let url = NSURL(string: url),
 			host = url.host {
 			let comps = host.componentsSeparatedByString(".")
-			if let lastComp = comps.last {
-				if let firstLevel = self.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
-					if let _ = self.topDomains[comps[comps.count - 2]] {
-						secondIndexLimit = comps.count - 2
-					}
+			domainIndex = comps.count - 1
+			if let lastComp = comps.last,
+				firstLevel = self.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
+				if let _ = self.topDomains[comps[comps.count - 2]] {
+					domainIndex = comps.count - 2
 				}
 			}
-			var firstIndex = -1
+			let firstIndex = domainIndex - 1
 			var secondIndex = -1
-			if comps.count >= 2 {
-				if comps[0] == "www" {
-					if comps[1] == "m" {
-						if comps.count > 2 {
-							firstIndex = 2
-						}
-						if comps.count >= 5 {
-							secondIndex = 3
-						}
-					} else {
-						firstIndex = 1
-						if comps.count >= 4 {
-							secondIndex = 2
-						}
-					}
-				} else {
-					if comps[0] == "m" {
-						firstIndex = 1
-						if comps.count > 3 {
-							secondIndex = 2
-						}
-					} else {
-						firstIndex = 0
-						if comps.count > 2 {
-							secondIndex = 1
-						}
-					}
-				}
+			if firstIndex > 0 {
+				secondIndex = firstIndex - 1
+			}
+			if secondIndex >= 0 && excludablePrefixes.contains(comps[secondIndex]) {
+				secondIndex = -1
 			}
 			if firstIndex > -1 {
 				result.append(comps[firstIndex])
 			}
-			if secondIndex > -1 && secondIndex < secondIndexLimit {
+			if secondIndex > -1 && secondIndex < domainIndex {
 				result.append(comps[secondIndex])
 			}
 		}
@@ -146,23 +150,16 @@ class LogoLoader {
 
 }
 
-public typealias LogoCompletionBlock = (UIView?) -> Void
+public typealias LogoLoaderCompletionBlock = (UIView?) -> Void
 
 extension UIImageView {
 
-	internal func loadLogo(forDomain domainURL: String, completed completionBlock: LogoCompletionBlock) {
-		LogoLoader.getLogoURL(forDomain: domainURL, completed: { (urlString, hostName) in
-			if let u = urlString,
-				url = NSURL(string: u) {
-				self.sd_setImageWithURL(url, completed: { (image, error, imageType, url) in
-					if error != nil {
-						completionBlock(LogoLoader.generateCustomLogo(forHost: hostName))
-					} else {
-						completionBlock(nil)
-					}
-				})
-			} else {
+	internal func loadLogo(ofURL url: String, completed completionBlock: LogoLoaderCompletionBlock) {
+		LogoLoader.loadLogo(ofURL: url, imageView: self, completed: { (hostName) in
+			if hostName != nil && !hostName.isEmpty {
 				completionBlock(LogoLoader.generateCustomLogo(forHost: hostName))
+			} else {
+				completionBlock(nil)
 			}
  		})
 	}

@@ -217,7 +217,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 				cell.URLLabel.text =  title
 			}
 			if let url = n["url"] as? String {
-				cell.logoImageView.loadLogo(forDomain: url, completed: { (view) in
+				cell.logoImageView.loadLogo(ofURL: url, completed: { (view) in
 					if view != nil {
 						print("Handle custom logo case....")
 					}
@@ -287,7 +287,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				let logoView = UIImageView()
-				logoView.loadLogo(forDomain: urlString, completed: { (view) in
+				logoView.loadLogo(ofURL: urlString, completed: { (view) in
 					if view != nil {
 						logoView.removeFromSuperview()
 						cell.contentView.addSubview(view!)
