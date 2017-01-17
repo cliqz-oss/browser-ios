@@ -810,6 +810,10 @@ class BrowserViewController: UIViewController {
             addChildViewController(homePanelController!)
             view.addSubview(homePanelController!.view)
         }
+		if let tab = tabManager.selectedTab {
+			homePanelController?.isForgetMode = tab.isPrivate
+			//            homePanelController?.updatePrivateMode(tab.isPrivate)
+		}
         UIView.animateWithDuration(0.2, animations: { () -> Void in
             self.homePanelController!.view.alpha = 1
             }, completion: { finished in
@@ -818,10 +822,6 @@ class BrowserViewController: UIViewController {
                     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
                 }
         })
-        //Cliqz: update private mode in search view to correctly show the Tabbar theme
-        if let tab = tabManager.selectedTab {
-//            homePanelController?.updatePrivateMode(tab.isPrivate)
-        }
         view.setNeedsUpdateConstraints()
         log.debug("BVC done with showHomePanelController.")
         
@@ -2484,6 +2484,7 @@ extension BrowserViewController: TabManagerDelegate {
             }
             //Cliqz: update private mode in search view to notify JavaScript when switching between normal and private mode
             searchController?.updatePrivateMode(tab.isPrivate)
+			homePanelController?.isForgetMode = tab.isPrivate
         }
 
         if let selected = selected, previous = previous where selected.isPrivate != previous.isPrivate {

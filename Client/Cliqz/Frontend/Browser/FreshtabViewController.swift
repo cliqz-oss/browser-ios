@@ -36,36 +36,130 @@ class TopSiteCollectionViewLayout: UICollectionViewFlowLayout {
 
 class FreshtabViewController: UIViewController {
 
-	var topSitesCollection: UICollectionView!
-	var newsTableView: UITableView!
+	var profile: Profile!
+	var isForgetMode = false {
+		didSet {
+			self.updateView()
+		}
+	}
 
+	private var topSitesCollection: UICollectionView!
+	private var newsTableView: UITableView!
+
+	private var normalModeView: UIView!
+	private var forgetModeView: UIView!
+
+	var isNewsExpanded = false
 	var topSites = [[String: String]]()
 	var news = [[String: AnyObject]]()
-	var profile: Profile!
-	
-	var isNewsExpanded = false
 
 	weak var delegate: SearchViewDelegate?
 
+	private static let forgetModeTextColor = UIColor(rgb: 0x999999)
+
+	private func constructForgetModeView() {
+		if forgetModeView == nil {
+			forgetModeView = UIView()
+			forgetModeView.backgroundColor = UIConstants.PrivateModeBackgroundColor
+			self.view.addSubview(forgetModeView)
+			self.forgetModeView.snp_makeConstraints(closure: { (make) in
+				make.top.left.bottom.right.equalTo(self.view)
+			})
+			let title = UILabel()
+			title.text = NSLocalizedString("Forget Tab", tableName: "Cliqz", comment: "Title on Freshtab for forget mode")
+			title.numberOfLines = 1
+			title.textAlignment = .Center
+			title.font = UIFont.boldSystemFontOfSize(15)
+			title.textColor = FreshtabViewController.forgetModeTextColor
+			self.forgetModeView.addSubview(title)
+			title.snp_makeConstraints(closure: { (make) in
+				make.top.equalTo(self.forgetModeView).offset(20)
+				make.left.right.equalTo(self.forgetModeView)
+				make.height.equalTo(20)
+			})
+			
+			let description = UILabel()
+			description.text = NSLocalizedString("Forget Tab Description", tableName: "Cliqz", comment: "Description on Freshtab for forget mode")
+			self.forgetModeView.addSubview(description)
+			description.numberOfLines = 0
+			description.textAlignment = .Center
+			description.textColor = FreshtabViewController.forgetModeTextColor
+			description.snp_makeConstraints(closure: { (make) in
+				make.top.equalTo(title.snp_bottom).offset(20)
+				make.left.equalTo(self.forgetModeView).offset(20)
+				make.right.equalTo(self.forgetModeView).offset(-20)
+			})
+		}
+	}
+
+	private func constructNormalModeView() {
+		if self.normalModeView == nil {
+			self.normalModeView = UIView()
+			self.normalModeView.backgroundColor = UIConstants.AppBackgroundColor
+			self.view.addSubview(self.normalModeView)
+			self.normalModeView.snp_makeConstraints(closure: { (make) in
+				make.top.left.bottom.right.equalTo(self.view)
+			})
+		}
+		if self.topSitesCollection == nil {
+			self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+			self.topSitesCollection.delegate = self
+			self.topSitesCollection.dataSource = self
+			self.topSitesCollection.backgroundColor = UIConstants.AppBackgroundColor
+			self.topSitesCollection.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "TopSite")
+			self.normalModeView.addSubview(self.topSitesCollection)
+			self.topSitesCollection.snp_makeConstraints { (make) in
+				make.top.equalTo(self.normalModeView).offset(30)
+				make.left.right.equalTo(self.normalModeView)
+				make.height.equalTo(70)
+			}
+		}
+
+		if self.newsTableView == nil {
+			self.newsTableView = UITableView()
+			self.newsTableView.delegate = self
+			self.newsTableView.dataSource = self
+			self.newsTableView.backgroundColor = UIConstants.AppBackgroundColor
+			self.normalModeView.addSubview(self.newsTableView)
+			self.newsTableView.tableFooterView = UIView()
+			self.newsTableView.snp_makeConstraints { (make) in
+				make.left.right.bottom.equalTo(self.view)
+				make.top.equalTo(self.topSitesCollection.snp_bottom).offset(30)
+			}
+			newsTableView.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
+			newsTableView.separatorStyle = .None
+		}
+	}
+
+	init(profile: Profile) {
+		super.init(nibName: nil, bundle: nil)
+		self.profile = profile
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.addSubview(self.topSitesCollection)
-		self.topSitesCollection.snp_makeConstraints { (make) in
-			make.top.equalTo(self.view).offset(30)
-			make.left.right.equalTo(self.view)
-			make.height.equalTo(70)
+		self.view.backgroundColor = UIConstants.AppBackgroundColor
+		updateView()
+	}
+
+	private func updateView() {
+		if isForgetMode {
+			self.constructForgetModeView()
+			self.forgetModeView.hidden = false
+			self.normalModeView?.hidden = true
+		} else {
+			self.constructNormalModeView()
+			self.normalModeView.hidden = false
+			self.forgetModeView?.hidden = true
 		}
-		self.view.addSubview(self.newsTableView)
-		self.newsTableView.tableFooterView = UIView()
-		self.newsTableView.snp_makeConstraints { (make) in
-			make.left.right.bottom.equalTo(self.view)
-			make.top.equalTo(self.topSitesCollection.snp_bottom).offset(30)
+		if !isForgetMode {
+			self.loadNews()
+			self.loadTopsites()
 		}
-		self.topSitesCollection.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "TopSite")
-		newsTableView.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
-		newsTableView.separatorStyle = .None
-		loadNews()
-		loadTopsites()
 	}
 
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -73,25 +167,7 @@ class FreshtabViewController: UIViewController {
 		self.topSitesCollection.collectionViewLayout.invalidateLayout()
 	}
 
-	init(profile: Profile) {
-		super.init(nibName: nil, bundle: nil)
-		self.profile = profile
-		self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
-		self.topSitesCollection.delegate = self
-		self.topSitesCollection.dataSource = self
-		self.topSitesCollection.backgroundColor = UIColor(rgb: 0xE8E8E8)
-		self.newsTableView = UITableView()
-		self.newsTableView.delegate = self
-		self.newsTableView.dataSource = self
-		self.newsTableView.backgroundColor = UIColor(rgb: 0xE8E8E8)
-		self.view.backgroundColor = UIColor(rgb: 0xE8E8E8)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	func loadTopsites() {
+	private func loadTopsites() {
 		self.topSites.removeAll()
 		self.reloadTopSitesWithLimit(15)
 	}
@@ -126,7 +202,7 @@ class FreshtabViewController: UIViewController {
 		return escaped
 	}
 
-	func loadNews() {
+	private func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
@@ -244,6 +320,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 		}
 	}
 
+	/*
 	func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		if self.isNewsExpanded || self.news.count == 0 {
 			return nil
@@ -261,12 +338,16 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 		btn.setTitleColor(UIColor.blueColor(), forState: .Normal)
 		return v
 	}
+*/
 
 	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return 0
+/*
 		if self.isNewsExpanded {
 			return 0
 		}
 		return 30
+*/
 	}
 
 	func scrollViewDidScroll(scrollView: UIScrollView) {

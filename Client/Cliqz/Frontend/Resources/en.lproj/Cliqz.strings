@@ -245,3 +245,9 @@
 
 /* Title to expand news stream */
 "MoreNews" = "More News";
+
+/* Title on Freshtab for forget mode */
+"Forget Tab" = "Forget Tab";
+
+/* Description on Freshtab for forget mode */
+"Forget Tab Description" = "Web sites are not saved to your history. Likewise, temporary files and cookies are not saved. \n However, downloads and bookmarks are saved. Your Internet service provider, employer or the sites themselves can still track which pages you visit.";
