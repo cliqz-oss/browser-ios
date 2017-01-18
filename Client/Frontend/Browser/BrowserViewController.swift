@@ -1885,7 +1885,8 @@ extension BrowserViewController: URLBarDelegate {
         self.urlBar.showAntitrackingButton(false)
         // Cliqz: send `urlbar-focus` to extension
         self.searchController?.sendUrlBarFocusEvent()
-        
+		navigationToolbar.updatePageStatus(isWebPage: false)
+
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {
