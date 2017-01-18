@@ -364,10 +364,20 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath)
 		cell.backgroundColor = UIColor.lightGrayColor()
+		for v in cell.contentView.subviews {
+			v.removeFromSuperview()
+		}
 		if indexPath.row < self.topSites.count {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
+				cell.backgroundColor = UIColor.clearColor()
 				let logoView = UIImageView()
+				cell.contentView.addSubview(logoView)
+				logoView.layer.cornerRadius = 4
+				logoView.clipsToBounds = true
+				logoView.snp_makeConstraints(closure: { (make) in
+					make.left.right.top.bottom.equalTo(cell.contentView)
+				})
 				logoView.loadLogo(ofURL: urlString, completed: { (view) in
 					if view != nil {
 						logoView.removeFromSuperview()
@@ -377,14 +387,24 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 						})
 					}
 				})
-				cell.contentView.addSubview(logoView)
-				logoView.snp_makeConstraints(closure: { (make) in
-					make.left.right.top.bottom.equalTo(cell.contentView)
-				})
 			}
 		}
-
+		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
+		cell.addGestureRecognizer(longPressGestureRecognizer)
 		return cell
+	}
+
+	@objc private func deleteTopSites() {
+		let cells = self.topSitesCollection.visibleCells()
+		let kDeleteAnimationAmplitude: CGFloat = 0.03
+		for cell in cells {
+			cell.transform = CGAffineTransformMakeRotation(-kDeleteAnimationAmplitude)
+		}
+		UIView.animateWithDuration(0.1, delay: 0, options: [.Repeat, .Autoreverse], animations: {
+			for cell in cells {
+				cell.transform = CGAffineTransformMakeRotation(kDeleteAnimationAmplitude)
+			}
+		}, completion: nil)
 	}
 
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -420,7 +440,6 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 }
-
 
 class NewsViewCell: UITableViewCell {
 	
@@ -519,12 +538,12 @@ class NewsViewCell: UITableViewCell {
 			make.right.equalTo(self.cardView).offset(-contentOffset)
 		}
 	}
-	
+
 	override func prepareForReuse() {
 		self.cardView.transform = CGAffineTransformIdentity
 		self.cardView.alpha = 1
 	}
-	
+
 	private func textColor() -> UIColor {
 		return isPrivateTabCell ? UIConstants.PrivateModeTextColor : UIConstants.NormalModeTextColor
 	}
