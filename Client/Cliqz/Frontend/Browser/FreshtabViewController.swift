@@ -34,6 +34,33 @@ class TopSiteCollectionViewLayout: UICollectionViewFlowLayout {
 
 }
 
+class TopSitesCollectionViewCell: UICollectionViewCell {
+
+	lazy var logoImageView: UIImageView = UIImageView()
+	var fakeLogoView: UIView?
+
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		self.contentView.addSubview(self.logoImageView)
+		logoImageView.snp_makeConstraints { make in
+			make.top.left.right.bottom.equalTo(self)
+		}
+		self.logoImageView.backgroundColor = UIColor.lightGrayColor()
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		self.logoImageView.image = nil
+		self.fakeLogoView?.removeFromSuperview()
+		self.fakeLogoView = nil
+	}
+
+}
+
 class FreshtabViewController: UIViewController {
 
 	var profile: Profile!
@@ -106,7 +133,7 @@ class FreshtabViewController: UIViewController {
 			self.topSitesCollection.delegate = self
 			self.topSitesCollection.dataSource = self
 			self.topSitesCollection.backgroundColor = UIConstants.AppBackgroundColor
-			self.topSitesCollection.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "TopSite")
+			self.topSitesCollection.registerClass(TopSitesCollectionViewCell.self, forCellWithReuseIdentifier: "TopSite")
 			self.normalModeView.addSubview(self.topSitesCollection)
 			self.topSitesCollection.snp_makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView).offset(30)
@@ -362,35 +389,29 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath)
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSitesCollectionViewCell
 		cell.backgroundColor = UIColor.lightGrayColor()
-		for v in cell.contentView.subviews {
-			v.removeFromSuperview()
-		}
 		if indexPath.row < self.topSites.count {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				cell.backgroundColor = UIColor.clearColor()
-				let logoView = UIImageView()
-				cell.contentView.addSubview(logoView)
-				logoView.layer.cornerRadius = 4
-				logoView.clipsToBounds = true
-				logoView.snp_makeConstraints(closure: { (make) in
-					make.left.right.top.bottom.equalTo(cell.contentView)
-				})
-				logoView.loadLogo(ofURL: urlString, completed: { (view) in
-					if view != nil {
-						logoView.removeFromSuperview()
-						cell.contentView.addSubview(view!)
-						view!.snp_makeConstraints(closure: { (make) in
+				cell.logoImageView.layer.cornerRadius = 4
+				cell.logoImageView.clipsToBounds = true
+				cell.logoImageView.loadLogo(ofURL: urlString, completed: { (view) in
+					if let v = view {
+						v.layer.cornerRadius = 4
+						v.clipsToBounds = true
+						cell.fakeLogoView = v
+						cell.contentView.addSubview(v)
+						v.snp_makeConstraints(closure: { (make) in
 							make.left.right.top.bottom.equalTo(cell.contentView)
 						})
 					}
 				})
 			}
 		}
-		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
-		cell.addGestureRecognizer(longPressGestureRecognizer)
+//		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
+//		cell.addGestureRecognizer(longPressGestureRecognizer)
 		return cell
 	}
 
