@@ -1,10 +1,10 @@
 amazondotcom
-google
-qwant
-twitter
-wikipedia
-yahoo
 bing
 duckduckgo
 ecosia
+google
+qwant
 startpage
+twitter
+wikipedia
+yahoo

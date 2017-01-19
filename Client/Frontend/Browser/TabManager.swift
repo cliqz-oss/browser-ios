@@ -13,7 +13,9 @@ protocol TabManagerDelegate: class {
     func tabManager(tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?)
     func tabManager(tabManager: TabManager, didCreateTab tab: Tab)
     func tabManager(tabManager: TabManager, didAddTab tab: Tab)
-    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab)
+    // Cliqz: Added removeIndex to didRemoveTab method
+//    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab)
+    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int)
     func tabManagerDidRestoreTabs(tabManager: TabManager)
     func tabManagerDidAddTabs(tabManager: TabManager)
     func tabManagerDidRemoveAllTabs(tabManager: TabManager, toast:ButtonToast?)
@@ -206,6 +208,13 @@ class TabManager : NSObject {
             _selectedIndex = -1
         }
 
+        // Cliqz: re-arranged the tabs to put the last viewed tab at the top
+        if _selectedIndex > 0 {
+            let currentTab = tabs.removeAtIndex(_selectedIndex)
+            tabs.insert(currentTab, atIndex: 0)
+            _selectedIndex = 0
+        }
+        
         preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
@@ -351,7 +360,9 @@ class TabManager : NSObject {
     private func removeTab(tab: Tab, flushToDisk: Bool, notify: Bool) {
         assert(NSThread.isMainThread())
         // If the removed tab was selected, find the new tab to select.
+        var selectedTabRemoved = false
         if tab === selectedTab {
+            selectedTabRemoved = true
             if let index = getIndex(tab) {
                 if index + 1 < count {
                     selectTab(tabs[index + 1])
@@ -388,7 +399,9 @@ class TabManager : NSObject {
 
         if notify {
             for delegate in delegates {
-                delegate.get()?.tabManager(self, didRemoveTab: tab)
+                // Cliqz: Added removeIndex to didRemoveTab method
+//                delegate.get()?.tabManager(self, didRemoveTab: tab)
+                delegate.get()?.tabManager(self, didRemoveTab: tab, removeIndex: selectedTabRemoved ? 0 :  removeIndex)
             }
         }
 

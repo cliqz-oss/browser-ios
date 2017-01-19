@@ -1,8 +1,10 @@
 bing
 duckduckgo
 eBay-france
+ecosia
 google
 qwant
+startpage
 twitter
 wikipedia-fr
 yahoo-france
