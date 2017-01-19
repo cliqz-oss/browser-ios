@@ -194,6 +194,11 @@ class FreshtabViewController: UIViewController {
 		self.topSitesCollection.collectionViewLayout.invalidateLayout()
 	}
 
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		self.topSitesCollection.collectionViewLayout.invalidateLayout()
+	}
+
 	private func loadTopsites() {
 		self.topSites.removeAll()
 		self.reloadTopSitesWithLimit(15)
@@ -451,12 +456,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
 		var w: CGFloat = 0
-		if UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication().statusBarOrientation) {
-			w = self.view.frame.size.width
-		} else {
-			w = self.view.frame.size.height
-		}
-		
+		w = self.view.frame.size.width
 		return (w - 5*45 - 2*27) / 4.0
 	}
 
