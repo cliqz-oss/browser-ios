@@ -200,7 +200,6 @@ class FreshtabViewController: UIViewController {
 	}
 
 	private func loadTopsites() {
-		self.topSites.removeAll()
 		self.reloadTopSitesWithLimit(15)
 	}
 	
@@ -261,6 +260,7 @@ class FreshtabViewController: UIViewController {
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
+				self.topSites.removeAll()
 				var filter = Set<String>()
 				for site in r {
 					if let url = NSURL(string: site!.url),
