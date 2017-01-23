@@ -902,7 +902,7 @@ extension URLBarView: Themeable {
         currentTheme = themeName
         locationBorderColor = theme.borderColor!
         locationActiveBorderColor = theme.activeBorderColor!
-        progressBarTint = theme.tintColor
+        progressBarTint = UIConstants.CliqzThemeColor
         cancelTextColor = theme.textColor
         actionButtonTintColor = theme.buttonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
