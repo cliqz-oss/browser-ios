@@ -130,7 +130,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         javaScriptBridge.setDefaultSearchEngine()
-		self.sendUrlBarFocusEvent()
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
@@ -427,6 +426,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 	
 	func isReady() {
         stopLoadingAnimation()
+		self.sendUrlBarFocusEvent()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}
