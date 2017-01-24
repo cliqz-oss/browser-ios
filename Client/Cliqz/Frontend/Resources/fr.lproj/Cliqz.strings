@@ -36,7 +36,7 @@
 "No Email account title" = "Aucune adresse email";
 
 /* Text for the missing email account for sending feedback pop-up */
-"No Email account message" = "Veuillez entrer une adresse email afin d'envoyer un feedback.";
+"No Email account message" = "Veuille entrer une adresse email afin d'envoyer un feedback.";
 
 /* Error title */
 "The Internet connection appears to be offline." = "La connexion internet semble interrompue.";
@@ -54,7 +54,7 @@
 "Shared with CLIQZ for iOS" = "Partagé avec CLIQZ pour iOS";
 
 /* URL for detailed info for human web */
-"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
+"Human Web URL" = "https://cliqz.com/fr/whycliqz/human-web";
 
 /* Title for Human Web deteiled info on settings */
 "What is Human Web?" = "Qu'est-ce que « Human Web » ?";
@@ -74,7 +74,7 @@
 "What is 'fair'?" = "Qu'est-ce que « équitable »?";
 
 /* Settings item for clearing private data on termination */
-"Clear Private data on termination" = "Supprimer les données privées à la fermerture";
+"Clear Private data on termination" = "Supprimer les données privées à la fermeture";
 
 /* Enable News Push Notifications */
 "Enable News Push Notifications" = "Notifications
@@ -218,7 +218,7 @@
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Anti-tracking hint description */
-"Anti-Tracking description" = "Vous êtes aux commandes : Anti-Tracking de Cliqz protège votre vie privée";
+"Anti-Tracking description" = "Tu es aux commandes : Anti-Tracking de Cliqz protège ta vie privée";
 
 /* Cliqz search hint title */
 "Fast-search" = "Recherche rapide";
@@ -227,7 +227,7 @@
 "Fast-search description" = "Tout maintenant. Sans détour";
 
 /* Detailed description on Adblocking settings */
-"AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, vous devez être connecté au Wi-Fi.";
+"AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, tu dois être connecté(e) au Wi-Fi.";
 
 /* [Settings] Show tips and tricks page */
 "Get the best out of CLIQZ" = "Obtenez le meilleur de CLIQZ";
@@ -236,7 +236,7 @@
 "Video quality" = "Qualité vidéo";
 
 /* Youtube downloader action sheet message */
-"Please select video quality" = "Veuillez selectionner la qualité de la vidéo";
+"Please select video quality" = "Veuille selectionner la qualité de la vidéo";
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
