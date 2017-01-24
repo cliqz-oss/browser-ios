@@ -84,7 +84,7 @@
 "Show blocked topsites" = "Restaurer les sites les plus visités";
 
 /* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "Les sites les plus visités seront affichés sur la page d'accueil montre .";
+"All blocked topsites will be shown on the start page again." = "Les sites les plus visités seront affichés sur la page d'accueil montre.";
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
@@ -161,7 +161,7 @@
 "Topsites" = "Sites les plus visités et actualité";
 
 /* Antitracking UI top title */
-"Data is protected" = "Vos données sont protégées";
+"Data is protected" = "Tes données sont protégées";
 
 /* Antitracking UI subtitle */
 "Private data points" = "Données personnelles sécurisées";
