@@ -173,10 +173,10 @@
 "Trackers count title" = "Données personnelles";
 
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Attention : site frauduleux !";
+"Warning: deceptive website!" =  "Attention: site malveillant !";
 
 /* Antiphishing alert message */
-"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant.\nPhishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.";
 
 /* Back to safe site buttun title in antiphishing alert title */
 "Back to safe site" = "Retourner à la page sûre";
