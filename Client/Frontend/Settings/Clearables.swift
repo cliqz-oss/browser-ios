@@ -107,9 +107,11 @@ class CacheClearable: Clearable {
         if #available(iOS 9.0, *) {
             let dataTypes = Set([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
             WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
-        } else {
+        }
+        // Cliqz: clear the cache in the tranditional way to support UIWebView as well
+        // else {
             // First ensure we close all open tabs first.
-            tabManager.removeAll()
+//            tabManager.removeAll()
 
             // Reset the process pool to ensure no cached data is written back
             tabManager.resetProcessPool()
@@ -123,7 +125,7 @@ class CacheClearable: Clearable {
             } catch {
                 return deferMaybe(ClearableErrorType(err: error))
             }
-        }
+//        }
 
         log.debug("CacheClearable succeeded.")
         return succeed()
@@ -170,7 +172,7 @@ class SiteDataClearable: Clearable {
             WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
         } else {
             // First, close all tabs to make sure they don't hold anything in memory.
-            tabManager.removeAll()
+//            tabManager.removeAll()
 
             // Then we just wipe the WebKit directory from our Library.
             do {
@@ -202,25 +204,27 @@ class CookiesClearable: Clearable {
 //            let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
             let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
             WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
-        } else {
-            // First close all tabs to make sure they aren't holding anything in memory.
-            tabManager.removeAll()
-
-            // Now we wipe the system cookie store (for our app).
-            let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-            if let cookies = storage.cookies {
-                for cookie in cookies {
-                    storage.deleteCookie(cookie)
-                }
-            }
-
-            // And just to be safe, we also wipe the Cookies directory.
-            do {
-                try deleteLibraryFolderContents("Cookies")
-            } catch {
-                return deferMaybe(ClearableErrorType(err: error))
+        }
+        // Cliqz: clear the cookies in the tranditional way to support UIWebView as well
+        // else {
+        // First close all tabs to make sure they aren't holding anything in memory.
+//        tabManager.removeAll()
+        
+        // Now we wipe the system cookie store (for our app).
+        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        if let cookies = storage.cookies {
+            for cookie in cookies {
+                storage.deleteCookie(cookie)
             }
         }
+        
+        // And just to be safe, we also wipe the Cookies directory.
+        do {
+            try deleteLibraryFolderContents("Cookies")
+        } catch {
+            return deferMaybe(ClearableErrorType(err: error))
+        }
+//        }
 
         log.debug("CookiesClearable succeeded.")
         return succeed()
