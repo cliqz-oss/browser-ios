@@ -21,23 +21,23 @@ class CliqzSearch: NSObject {
 			callback((query, data))
 		} else {
             statisticsCollector.startEvent(query)
-            DebugLogger.log(">> Intiating the call the the Mixer with query: \(query)")
+            DebugingLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 
             ConnectionManager.sharedInstance.sendRequest(.GET, url: searchURL, parameters: ["q" : query], responseType: .JSONResponse, queue: dispatch_get_main_queue(),
                 onSuccess: { json in
                     self.statisticsCollector.endEvent(query)
-                    DebugLogger.log("<< Received response for query: \(query)")
+                    DebugingLogger.log("<< Received response for query: \(query)")
                     let jsonDict = json as! [String : AnyObject]
                     self.cachedData[query] = jsonDict
 //                    let html = self.parseResponse(jsonDict, history: history)
                     callback((query, jsonDict))
-                    DebugLogger.log("<< parsed response for query: \(query)")
+                    DebugingLogger.log("<< parsed response for query: \(query)")
                 },
                 onFailure: { (data, error) in
                     self.statisticsCollector.endEvent(query)
-                    DebugLogger.log("Request failed with error: \(error)")
+                    DebugingLogger.log("Request failed with error: \(error)")
                     if let data = data {
-                        DebugLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
+                        DebugingLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
                     }
             })
 		}

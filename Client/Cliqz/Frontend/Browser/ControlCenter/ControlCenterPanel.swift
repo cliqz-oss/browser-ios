@@ -11,6 +11,7 @@ import UIKit
 protocol ControlCenterPanelDelegate: class {
     
     func closeControlCenter()
+    func reloadCurrentPage()
     
 }
 

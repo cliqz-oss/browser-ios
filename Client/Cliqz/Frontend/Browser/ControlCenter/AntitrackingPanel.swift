@@ -8,6 +8,7 @@
 
 import Foundation
 import Shared
+import jsengine
 
 class AntitrackingPanel: ControlCenterPanel {
     //MARK: - Constants
@@ -16,8 +17,8 @@ class AntitrackingPanel: ControlCenterPanel {
     
     //MARK: - Instance variables
     //MARK: data
-    private var trackersList: [(String, Int)]!
-    private var trackersCount = 0
+    var trackersList: [(String, Int)]!
+    var trackersCount = 0
     
     //MARK: views
     private let trackersCountLabel = UILabel()
@@ -148,17 +149,18 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return ControlCenterDummyHelper.isAntiTrakcingEnabledForURL(self.currentURL)
+        return JSEngineAdapter.sharedInstance.isAntiTrakcingEnabledForURL(self.currentURL)
     }
     
     func toggleFeatureForCurrentWebsite() {
-        ControlCenterDummyHelper.toggleAntiTrackingForURL(self.currentURL)
+        JSEngineAdapter.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
+        self.controlCenterPanelDelegate?.reloadCurrentPage()
     }
     
     func updateTrackers() {
-        trackersList = AntiTrackingModule.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
+        trackersList = JSEngineAdapter.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
         trackersCount = trackersList.reduce(0){$0 + $1.1}
     }
     

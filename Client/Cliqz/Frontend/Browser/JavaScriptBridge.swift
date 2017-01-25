@@ -80,10 +80,10 @@ class JavaScriptBridge {
                     handleJSAction(action, data: input["data"], callback: input["callback"] as? String)
                 }
             } else {
-                DebugLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
+                DebugingLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
             }
         default:
-            DebugLogger.log("Unhandled JS message with name : \(message.name) !!!")
+            DebugingLogger.log("Unhandled JS message with name : \(message.name) !!!")
             
         }
     }

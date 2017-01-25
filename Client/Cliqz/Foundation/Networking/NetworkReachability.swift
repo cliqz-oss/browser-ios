@@ -80,15 +80,15 @@ class NetworkReachability : NSObject {
         lastRefreshDate = NSDate()
         let networkStatus = currentReachability.currentReachabilityStatus()
         if networkStatus == NotReachable {
-            DebugLogger.log("NotReachable")
+            DebugingLogger.log("NotReachable")
             self.isReachable = false
             self.networkReachabilityStatus = .NotReachable
         } else if networkStatus == ReachableViaWiFi {
-            DebugLogger.log("ReachableViaWiFi")
+            DebugingLogger.log("ReachableViaWiFi")
             self.isReachable = true
             self.networkReachabilityStatus = .ReachableViaWiFi
         } else if networkStatus == ReachableViaWWAN {
-            DebugLogger.log("ReachableViaWWAN")
+            DebugingLogger.log("ReachableViaWWAN")
             self.isReachable = true
             self.networkReachabilityStatus = .ReachableViaWWAN
         }
