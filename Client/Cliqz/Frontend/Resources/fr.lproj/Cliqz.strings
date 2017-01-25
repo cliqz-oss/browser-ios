@@ -84,7 +84,8 @@
 "Show blocked topsites" = "Restaurer les sites les plus visités";
 
 /* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "Les sites les plus visités seront affichés sur la page d'accueil montre.";
+"All blocked topsites will be shown on the start page again." = "Les sites les plus visités seront affichés sur la page d'accueil.";
+
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
