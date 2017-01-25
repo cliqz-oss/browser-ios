@@ -12,9 +12,12 @@ import Shared
 
 public let NotificationDatabaseWasCreated = "NotificationDatabaseWasCreated"
 
+let TableHiddenTopSites = "hidden_top_sites"
+
 extension BrowserDB {
 
 	func extendTables() {
+		createHiddenTopSitesTable()
 		let columnName = "bookmarked_date"
 		if !isColumnExist(TableBookmarksLocal, columnName: columnName) {
 			let r = alterTableWithExtraColumn(TableBookmarksLocal, columnName: columnName)
@@ -26,6 +29,15 @@ extension BrowserDB {
 				migrateOldBookmarks()
 			}
 		}
+	}
+	
+	private func createHiddenTopSitesTable() {
+		let hiddenTopSitesTableCreate =
+			"CREATE TABLE IF NOT EXISTS \(TableHiddenTopSites) (" +
+				"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"url TEXT UNIQUE " +
+		")"
+		self.run([hiddenTopSitesTableCreate])
 	}
 
 	private func alterTableWithExtraColumn(tableName: String, columnName: String) -> Success {

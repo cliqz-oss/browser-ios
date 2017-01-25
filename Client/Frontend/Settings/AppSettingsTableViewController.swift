@@ -139,7 +139,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
 #endif
 
         privacySettings += [
-            ShowBlockedTopSitesSetting(),
+			ShowBlockedTopSitesSetting(settings: self),
             PrivacyPolicySetting()
         ]
 

@@ -12,40 +12,63 @@ import Storage
 import Shared
 import Alamofire
 
-class TopSiteCollectionViewLayout: UICollectionViewFlowLayout {
-	override init() {
-		super.init()
-		let currentOrientation = UIApplication.sharedApplication().statusBarOrientation
-		if UIInterfaceOrientationIsPortrait(currentOrientation) {
-			minimumInteritemSpacing = 10
-		} else {
-			
-		}
-		sectionInset = UIEdgeInsetsMake(10, 27, 0, 27)
-	}
-	
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
+protocol TopSiteCellDelegate: NSObjectProtocol {
 
-	private func cellSizeForCollectionView(collectionView: UICollectionView) -> CGSize {
-		return CGSize(width: 45, height: 45)
-	}
-
+	func topSiteHided(index: Int)
 }
 
 class TopSitesCollectionViewCell: UICollectionViewCell {
 
+	weak var delegate: TopSiteCellDelegate?
+
+	lazy var logoContainerView = UIView()
 	lazy var logoImageView: UIImageView = UIImageView()
 	var fakeLogoView: UIView?
 
+	lazy var deleteButton: UIButton = {
+		let b = UIButton(type: .Custom)
+		b.setImage(UIImage(named: "removeTopsite"), forState: .Normal)
+		b.addTarget(self, action: #selector(removeCell), forControlEvents: .TouchUpInside)
+		return b
+	}()
+
+	var isDeleteMode = false {
+		didSet {
+			if isDeleteMode && !self.isEmptyContent() {
+				self.contentView.addSubview(self.deleteButton)
+				self.deleteButton.snp_makeConstraints(closure: { (make) in
+					make.right.top.equalTo(self.contentView)
+				})
+				self.startWobbling()
+			} else {
+				self.deleteButton.removeFromSuperview()
+				self.stopWobbling()
+			}
+		}
+	}
+
+	private func isEmptyContent() -> Bool {
+		return self.logoContainerView.subviews.count == 0 || (self.logoImageView.image == nil && self.fakeLogoView?.superview == nil)
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		self.contentView.addSubview(self.logoImageView)
-		logoImageView.snp_makeConstraints { make in
-			make.top.left.right.bottom.equalTo(self)
+		self.backgroundColor = UIColor.clearColor()
+		self.contentView.backgroundColor = UIColor.clearColor()
+		self.contentView.addSubview(self.logoContainerView)
+		logoContainerView.snp_makeConstraints { make in
+			make.top.equalTo(self.contentView).offset(10)
+			make.left.bottom.equalTo(self.contentView)
+			make.right.equalTo(self.contentView).offset(-10)
 		}
-		self.logoImageView.backgroundColor = UIColor.lightGrayColor()
+
+		self.logoContainerView.addSubview(self.logoImageView)
+		logoImageView.snp_makeConstraints { make in
+			make.top.left.bottom.right.equalTo(self.logoContainerView)
+		}
+		self.logoContainerView.backgroundColor = UIColor.lightGrayColor()
+		self.logoContainerView.layer.cornerRadius = 12
+		self.logoContainerView.clipsToBounds = true
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -57,11 +80,35 @@ class TopSitesCollectionViewCell: UICollectionViewCell {
 		self.logoImageView.image = nil
 		self.fakeLogoView?.removeFromSuperview()
 		self.fakeLogoView = nil
+		self.deleteButton.removeFromSuperview()
 	}
 
+	private func startWobbling() {
+		let startAngle = -M_PI_4/10
+		let endAngle = M_PI_4/10
+
+		let wobblingAnimation = CAKeyframeAnimation.init(keyPath: "transform.rotation")
+		wobblingAnimation.values = [startAngle, endAngle]
+		wobblingAnimation.duration = 0.13
+		wobblingAnimation.autoreverses = true
+		wobblingAnimation.repeatCount = FLT_MAX
+		wobblingAnimation.timingFunction = CAMediaTimingFunction.init(name:kCAMediaTimingFunctionLinear)
+		self.layer.shouldRasterize = true
+		self.layer.borderWidth = 3
+		self.layer.borderColor = UIColor.clearColor().CGColor
+		self.layer.addAnimation(wobblingAnimation, forKey: "rotation")
+	}
+	
+	private func stopWobbling() {
+		self.layer.removeAllAnimations()
+	}
+
+	@objc private func removeCell() {
+		self.delegate?.topSiteHided(self.tag)
+	}
 }
 
-class FreshtabViewController: UIViewController {
+class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	var profile: Profile!
 	var isForgetMode = false {
@@ -136,9 +183,9 @@ class FreshtabViewController: UIViewController {
 			self.topSitesCollection.registerClass(TopSitesCollectionViewCell.self, forCellWithReuseIdentifier: "TopSite")
 			self.normalModeView.addSubview(self.topSitesCollection)
 			self.topSitesCollection.snp_makeConstraints { (make) in
-				make.top.equalTo(self.normalModeView).offset(30)
+				make.top.equalTo(self.normalModeView)
 				make.left.right.equalTo(self.normalModeView)
-				make.height.equalTo(70)
+				make.height.equalTo(80)
 			}
 		}
 
@@ -151,7 +198,7 @@ class FreshtabViewController: UIViewController {
 			self.newsTableView.tableFooterView = UIView()
 			self.newsTableView.snp_makeConstraints { (make) in
 				make.left.right.bottom.equalTo(self.view)
-				make.top.equalTo(self.topSitesCollection.snp_bottom).offset(30)
+				make.top.equalTo(self.topSitesCollection.snp_bottom).offset(15)
 			}
 			newsTableView.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
 			newsTableView.separatorStyle = .None
@@ -170,7 +217,29 @@ class FreshtabViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
-		updateView()
+		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cancelActions))
+//		tapGestureRecognizer.cancelsTouchesInView = false
+		tapGestureRecognizer.delegate = self
+		self.view.addGestureRecognizer(tapGestureRecognizer)
+	}
+
+	func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+		if gestureRecognizer is UITapGestureRecognizer {
+			let location = touch.locationInView(self.topSitesCollection)
+			if let index = self.topSitesCollection.indexPathForItemAtPoint(location),
+				cell = self.topSitesCollection.cellForItemAtIndexPath(index) as? TopSitesCollectionViewCell {
+				return cell.isDeleteMode
+			}
+			return true
+		}
+		return false
+	}
+
+	@objc private func cancelActions() {
+		let cells = self.topSitesCollection.visibleCells()
+		for cell in cells as! [TopSitesCollectionViewCell] {
+			cell.isDeleteMode = false
+		}
 	}
 
 	private func updateView() {
@@ -187,6 +256,11 @@ class FreshtabViewController: UIViewController {
 			self.loadNews()
 			self.loadTopsites()
 		}
+	}
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		updateView()
 	}
 
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -313,12 +387,18 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.newsTableView.dequeueReusableCellWithIdentifier("NewsCell", forIndexPath: indexPath) as! NewsViewCell
 		if indexPath.row < self.news.count {
-			let n = self.news[indexPath.row]
-			if let title = n["short_title"] as? String {
-				cell.titleLabel.text = title
-			} else if let title = n["title"] as? String {
-				cell.titleLabel.text = title
+			var n = self.news[indexPath.row]
+			let title = NSMutableAttributedString()
+			if let b = n["breaking"] as? NSNumber,
+				t = n["breaking_label"] as? String where b.boolValue == true {
+				title.appendAttributedString(NSAttributedString(string: t.uppercaseString + ": ", attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0xE64C66)]))
 			}
+			if let t = n["short_title"] as? String {
+				title.appendAttributedString(NSAttributedString(string: t))
+			} else if let t = n["title"] as? String {
+				title.appendAttributedString(NSAttributedString(string: t))
+			}
+			cell.titleLabel.attributedText = title
 			if let domain = n["domain"] as? String {
 				cell.URLLabel.text = domain
 			} else if let title = n["title"] as? String {
@@ -374,12 +454,6 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 
 	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return 0
-/*
-		if self.isNewsExpanded {
-			return 0
-		}
-		return 30
-*/
 	}
 
 	func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -390,47 +464,43 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 5
+		return 4
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSitesCollectionViewCell
-		cell.backgroundColor = UIColor.lightGrayColor()
+		cell.tag = -1
+		cell.delegate = self
 		if indexPath.row < self.topSites.count {
+			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				cell.backgroundColor = UIColor.clearColor()
-				cell.logoImageView.layer.cornerRadius = 4
+				cell.logoImageView.layer.cornerRadius = 12
 				cell.logoImageView.clipsToBounds = true
 				cell.logoImageView.loadLogo(ofURL: urlString, completed: { (view) in
 					if let v = view {
-						v.layer.cornerRadius = 4
+						v.layer.cornerRadius = 12
 						v.clipsToBounds = true
 						cell.fakeLogoView = v
-						cell.contentView.addSubview(v)
+						cell.logoContainerView.addSubview(v)
 						v.snp_makeConstraints(closure: { (make) in
-							make.left.right.top.bottom.equalTo(cell.contentView)
+							make.top.left.right.bottom.equalTo(cell.logoContainerView)
 						})
 					}
 				})
 			}
 		}
-//		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
-//		cell.addGestureRecognizer(longPressGestureRecognizer)
+		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
+		cell.addGestureRecognizer(longPressGestureRecognizer)
 		return cell
 	}
 
 	@objc private func deleteTopSites() {
 		let cells = self.topSitesCollection.visibleCells()
-		let kDeleteAnimationAmplitude: CGFloat = 0.03
-		for cell in cells {
-			cell.transform = CGAffineTransformMakeRotation(-kDeleteAnimationAmplitude)
+		for cell in cells as! [TopSitesCollectionViewCell] {
+			cell.isDeleteMode = true
 		}
-		UIView.animateWithDuration(0.1, delay: 0, options: [.Repeat, .Autoreverse], animations: {
-			for cell in cells {
-				cell.transform = CGAffineTransformMakeRotation(kDeleteAnimationAmplitude)
-			}
-		}, completion: nil)
 	}
 
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -447,19 +517,35 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-		return CGSizeMake(45, 45)
+		return CGSizeMake(70, 70)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-		return UIEdgeInsetsMake(10, 27, 0, 27)
+		return UIEdgeInsetsMake(10, 13, 0, 3)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
 		var w: CGFloat = 0
 		w = self.view.frame.size.width
-		return (w - 5*45 - 2*27) / 4.0
+		return floor((w - 4*70 - 13 - 3) / 3.0)
 	}
 
+}
+
+extension FreshtabViewController: TopSiteCellDelegate {
+
+	func topSiteHided(index: Int) {
+		let s = self.topSites[index]
+		if let url = s["url"] {
+			self.profile.history.hideTopSite(url)
+		}
+		let cells = self.topSitesCollection.visibleCells()
+		for cell in cells as! [TopSitesCollectionViewCell] {
+			cell.isDeleteMode = false
+		}
+		self.topSites.removeAtIndex(index)
+		self.topSitesCollection.reloadData()
+	}
 }
 
 class NewsViewCell: UITableViewCell {
@@ -497,14 +583,14 @@ class NewsViewCell: UITableViewCell {
 		self.isPrivateTabCell = false
 		
 		// tab gesture recognizer
-		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapPressed(_:)))
+		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped(_:)))
 		tapGestureRecognizer.cancelsTouchesInView = false
 		tapGestureRecognizer.delegate = self
 		self.addGestureRecognizer(tapGestureRecognizer)
 		
 	}
 	
-	func tapPressed(gestureRecognizer: UIGestureRecognizer) {
+	func viewTapped(gestureRecognizer: UIGestureRecognizer) {
 		let touchLocation = gestureRecognizer.locationInView(self.cardView)
 		
 		if CGRectContainsPoint(titleLabel.frame, touchLocation) {
@@ -515,15 +601,15 @@ class NewsViewCell: UITableViewCell {
 			clickedElement = "logo"
 		}
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		let cardViewLeftOffset = 25
-		let cardViewRightOffset = -25
+		let cardViewLeftOffset = 13
+		let cardViewRightOffset = -13
 		let cardViewTopOffset = 5
 		let cardViewBottomOffset = -5
 		self.cardView.snp_remakeConstraints { (make) in

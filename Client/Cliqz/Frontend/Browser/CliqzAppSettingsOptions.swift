@@ -139,7 +139,10 @@ class EnablePushNotifications: BoolSetting {
 // Cliqz: setting to reset top sites
 class ShowBlockedTopSitesSetting: Setting {
     
-    init() {
+	let profile: Profile
+	
+	init(settings: SettingsTableViewController) {
+		self.profile = settings.profile
         super.init(title: NSAttributedString(string: NSLocalizedString("Show blocked topsites", tableName: "Cliqz", comment: "Show blocked top-sites from settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
@@ -157,8 +160,8 @@ class ShowBlockedTopSitesSetting: Setting {
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("OK", tableName: "Cliqz", comment: "OK button in the 'Show blocked top-sites' alert"), style: .Default) { (action) in
                 // reset top-sites
-                NSNotificationCenter.defaultCenter().postNotificationName(NotificationShowBlockedTopSites, object: nil)
-                
+				self.profile.history.deleteAllHiddenTopSites()
+				
                 // log telemetry signal
                 let confirmSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "confirm", nil, nil)
                 TelemetryLogger.sharedInstance.logEvent(confirmSignal)
