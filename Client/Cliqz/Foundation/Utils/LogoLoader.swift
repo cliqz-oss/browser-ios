@@ -30,7 +30,7 @@ class LogoLoader {
 			}
 			if version != nil {
 				let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
-				self.loadLogo(withURL: "\(mainURL)/\(first)/\(second)$_192.png", imageView: imageView, completed: { (image, error, imageType, url) in
+				self.loadLogo(withURL: "\(mainURL)/\(first)/\(second).$_192.png", imageView: imageView, completed: { (image, error, imageType, url) in
 					if error != nil && image == nil && !second.isEmpty {
 						let secondAttempt = "\(mainURL)/\(first)/$_192.png"
 						self.loadLogo(withURL: secondAttempt, imageView: imageView, completed: { (image, error, imageType, url) in
