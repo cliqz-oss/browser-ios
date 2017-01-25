@@ -285,7 +285,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		Lookback.sharedLookback() = false
 #endif
         // Configure AntiTracking Module
-        AntiTrackingModule.sharedInstance.initModule()
+        JSEngineAdapter.sharedInstance.startJSEngine()
 
         log.debug("Done with applicationDidFinishLaunching.")
 

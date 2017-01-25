@@ -23,7 +23,3 @@ public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotific
 
 // Cliqz: Fired when tryting to reset top-sites from settings
 public let NotificationShowBlockedTopSites = "NotificationShowBlockedTopSitesNotification"
-
-// Cliqz: Fired when Anti-Tracking module detects a bad request and modified it
-public let NotificationBadRequestDetected = "NotificationBadRequestDetected"
-

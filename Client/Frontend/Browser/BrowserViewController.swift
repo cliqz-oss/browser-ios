@@ -16,6 +16,7 @@ import ReadingList
 import MobileCoreServices
 import WebImage
 import Crashlytics
+import jsengine
 
 private let log = Logger.browserLogger
 

@@ -94,18 +94,15 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	
 	func SELBadRequestDetected(notification: NSNotification) {
 		dispatch_async(dispatch_get_main_queue()) {
-			var x = notification.object as? Int
-			if x == nil {
-				x = 0
+			
+			if let tabId = notification.object as? Int where self.tabManager.selectedTab?.webView?.uniqueId == tabId {
+                let newCount = JSEngineAdapter.sharedInstance.getAntiTrackingCount(tabId)
+                self.urlBar.updateTrackersCount(newCount)
+                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
+                    self.showHint(.Antitracking)
+                }
 			}
-			if self.tabManager.selectedTab?.webView?.uniqueId == x {
-				let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
-				self.urlBar.updateTrackersCount(newCount)
-				if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
-					self.showHint(.Antitracking)
-				}
-				
-			}
+			
 		}
 	}
 
@@ -144,6 +141,11 @@ extension BrowserViewController: ControlCenterViewDelegate {
 		self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}
+    func reloadCurrentPage() {
+        if let tab = self.tabManager.selectedTab, webView = tab.webView {
+            webView.reload()
+        }
+    }
 
     func showAntiPhishingAlert(domainName: String) {
         let antiPhishingShowTime = NSDate.getCurrentMillis()

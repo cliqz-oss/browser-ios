@@ -82,10 +82,10 @@ class EventsLogger: NSObject {
             // periodically persist events to avoid loosing a lot of events in case of app crash
             persistEvents()
         }
-        #if BETA
-        // Dump telemetry signals only in Beta for testing purposes
-        NSLog("[Telemetry]: %@", event)
-        #endif
+//        #if BETA
+//        // Dump telemetry signals only in Beta for testing purposes
+//        NSLog("[Telemetry]: %@", event)
+//        #endif
     }
     internal func persistEvents() {
         do {
