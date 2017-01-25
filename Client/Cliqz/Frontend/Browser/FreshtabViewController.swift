@@ -119,7 +119,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private var topSitesCollection: UICollectionView!
 	private var newsTableView: UITableView!
-
+	private lazy var emptyTopSitesHint: UILabel = {
+		let lbl = UILabel()
+		lbl.text = NSLocalizedString("Empty TopSites hint", tableName: "Cliqz", comment: "Hint on Freshtab when there is no topsites")
+		lbl.font = UIFont.systemFontOfSize(12)
+		lbl.textColor = UIColor.lightGrayColor()
+		lbl.textAlignment = .Center
+		return lbl
+	}()
 	private var normalModeView: UIView!
 	private var forgetModeView: UIView!
 
@@ -348,6 +355,15 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						}
 					}
 				}
+			}
+			if self.topSites.count == 0 {
+				self.normalModeView.addSubview(self.emptyTopSitesHint)
+				self.emptyTopSitesHint.snp_makeConstraints(closure: { (make) in
+					make.left.right.top.equalTo(self.normalModeView)
+					make.height.equalTo(14)
+				})
+			} else {
+				self.emptyTopSitesHint.removeFromSuperview()
 			}
 			self.topSitesCollection.reloadData()
 			return succeed()

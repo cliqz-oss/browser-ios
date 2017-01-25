@@ -250,3 +250,6 @@
 
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "Websites werden nicht in deinem Verlauf gespeichert. Ebenso werden temporäre Dateien und Cookies nicht gespeichert. Downloads und Lesezeichen werden aber gespeichert.\n Dein Internetdienstanbieter oder Arbeitgeber können weiterhin nachvollziehen, welche Seiten du besucht hast.";
+
+/* Hint on Freshtab when there is no topsites */
+"Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";

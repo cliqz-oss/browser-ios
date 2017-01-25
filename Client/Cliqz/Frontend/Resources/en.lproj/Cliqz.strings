@@ -251,3 +251,6 @@
 
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "Web sites are not saved to your history. Likewise, temporary files and cookies are not saved. \n However, downloads and bookmarks are saved. Your Internet service provider, employer or the sites themselves can still track which pages you visit.";
+
+/* Hint on Freshtab when there is no topsites */
+"Empty TopSites hint" = "You will see your most visited sites here";
