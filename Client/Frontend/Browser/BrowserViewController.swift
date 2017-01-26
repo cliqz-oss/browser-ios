@@ -37,9 +37,9 @@ private struct BrowserViewControllerUX {
 
 class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
-    var homePanelController: CliqzSearchViewController?
-//    var homePanelController: HomePanelViewController?
-    
+//    var homePanelController: CliqzSearchViewController?
+    var homePanelController: FreshtabViewController?
+	
     var webViewContainer: UIView!
     var menuViewController: MenuViewController?
 	// Cliqz: replace URLBarView with our custom URLBarView
@@ -261,7 +261,7 @@ class BrowserViewController: UIViewController {
 
         view.setNeedsUpdateConstraints()
         if let home = homePanelController {
-            home.view.setNeedsUpdateConstraints()
+//            home.view.setNeedsUpdateConstraints()
         }
 
         if let tab = tabManager.selectedTab,
@@ -803,11 +803,17 @@ class BrowserViewController: UIViewController {
         homePanelIsInline = inline
         
         if homePanelController == nil {
-            homePanelController = CliqzSearchViewController(profile: self.profile)
-            homePanelController!.delegate = self
+			
+			homePanelController = FreshtabViewController(profile: self.profile)
+			homePanelController?.delegate = self
+//            homePanelController!.delegate = self
             addChildViewController(homePanelController!)
             view.addSubview(homePanelController!.view)
         }
+		if let tab = tabManager.selectedTab {
+			homePanelController?.isForgetMode = tab.isPrivate
+			//            homePanelController?.updatePrivateMode(tab.isPrivate)
+		}
         UIView.animateWithDuration(0.2, animations: { () -> Void in
             self.homePanelController!.view.alpha = 1
             }, completion: { finished in
@@ -816,10 +822,6 @@ class BrowserViewController: UIViewController {
                     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
                 }
         })
-        //Cliqz: update private mode in search view to correctly show the Tabbar theme
-        if let tab = tabManager.selectedTab {
-            homePanelController?.updatePrivateMode(tab.isPrivate)
-        }
         view.setNeedsUpdateConstraints()
         log.debug("BVC done with showHomePanelController.")
         
@@ -1527,7 +1529,7 @@ class BrowserViewController: UIViewController {
 
     private func getCurrentUIState() -> UIState {
         if let homePanelController = homePanelController {
-            return .HomePanels(homePanelState: homePanelController.homePanelState)
+            return .HomePanels(homePanelState: HomePanelState(isPrivate: false	, selectedIndex: 0))  //homePanelController.homePanelState)
         }
         guard let tab = tabManager.selectedTab where !tab.loading else {
             return .Loading
@@ -1816,8 +1818,15 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
         // Cliqz: always show search controller even if query was empty
-        showSearchController()
-        searchController!.searchQuery = text
+		if text != "" {
+			hideHomePanelController()
+			showSearchController()
+			searchController!.searchQuery = text
+		} else {
+			showSearchController()
+			hideSearchController()
+			showHomePanelController(inline: true)
+		}
         /*
         if text.isEmpty {
             hideSearchController()
@@ -1876,7 +1885,8 @@ extension BrowserViewController: URLBarDelegate {
         self.urlBar.showAntitrackingButton(false)
         // Cliqz: send `urlbar-focus` to extension
         self.searchController?.sendUrlBarFocusEvent()
-        
+		navigationToolbar.updatePageStatus(isWebPage: false)
+
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {
@@ -2475,6 +2485,7 @@ extension BrowserViewController: TabManagerDelegate {
             }
             //Cliqz: update private mode in search view to notify JavaScript when switching between normal and private mode
             searchController?.updatePrivateMode(tab.isPrivate)
+			homePanelController?.isForgetMode = tab.isPrivate
         }
 
         if let selected = selected, previous = previous where selected.isPrivate != previous.isPrivate {

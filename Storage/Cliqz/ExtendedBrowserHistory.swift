@@ -21,4 +21,10 @@ public protocol ExtendedBrowserHistory {
 
     // Cliqz: getting History
     func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>>
+
+	// Cliqz: hide TopSite
+	func hideTopSite(url: String) -> Success
+
+	// Cliqz: delete all hided TopSite
+	func deleteAllHiddenTopSites() -> Success
 }

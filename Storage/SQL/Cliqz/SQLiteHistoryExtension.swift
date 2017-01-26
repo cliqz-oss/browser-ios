@@ -28,7 +28,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
     
     public func getOldestVisitDate() -> NSDate? {
         var oldestVisitDate: NSDate?
-        
+
         let visitsSQL = "SELECT MIN(\(TableVisits).date) AS date FROM \(TableVisits) "
         
         let resultSet = db.runQuery(visitsSQL, args: nil, factory: SQLiteHistory.dateFactory).value
@@ -64,6 +64,21 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         // TODO countFactory
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
     }
+
+	public func hideTopSite(url: String) -> Success {
+		let insertSQL = "INSERT INTO \(TableHiddenTopSites) " +
+			"(url) " +
+			"VALUES (?)"
+		let args: Args = [
+			url
+		]
+		return db.run(insertSQL, withArgs: args)
+	}
+
+	public func deleteAllHiddenTopSites() -> Success {
+		return self.db.run([
+			"DELETE FROM \(TableHiddenTopSites)"])
+	}
 
     //MARK: - Factories
     private class func countFactory(row: SDRow) -> Int {

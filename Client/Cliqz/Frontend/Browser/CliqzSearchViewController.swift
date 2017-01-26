@@ -46,8 +46,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         javaScriptBridge.delegate = self
         return javaScriptBridge
         }()
-    
-    
+
 	weak var delegate: SearchViewDelegate?
 
 	private var spinnerView: UIActivityIndicatorView!
@@ -112,7 +111,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         if #available(iOS 9.0, *) {
             return
         }
-        
+
         var currentWidth = "device-width"
         var currentHeight = "device-height"
         if UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight {
@@ -427,6 +426,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 	
 	func isReady() {
         stopLoadingAnimation()
+		self.sendUrlBarFocusEvent()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}

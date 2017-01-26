@@ -446,9 +446,11 @@
 		4F0552821D74730F00E2A684 /* AntitrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */; };
 		4F0552841D74902A00E2A684 /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552831D74902A00E2A684 /* TrackerViewCell.swift */; };
 		4F0DFC121DF033D200B1C9F0 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */; };
+		4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */; };
 		4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F88A6F31D7714D30039775D /* BrowserNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */; };
+		4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E74BB1E1AB1C900E7C590 /* LogoLoader.swift */; };
 		4F97573B1AFA6F37006ECC24 /* readerContent.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F9757391AFA6F37006ECC24 /* readerContent.html */; };
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4F9A7B611D6DDAC6005F02CB /* CliqzExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */; };
@@ -458,6 +460,8 @@
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
 		4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */; };
+		4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */; };
+		4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C661E39F3620008E5CC /* NewsViewCell.swift */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
 		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
@@ -725,7 +729,6 @@
 		E4B7B77D1A793CF20022C5E0 /* FiraSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4B7B7561A793CF20022C5E0 /* FiraSans-Regular.ttf */; };
 		E4B7B77E1A793CF20022C5E0 /* FiraSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4B7B7571A793CF20022C5E0 /* FiraSans-SemiBold.ttf */; };
 		E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4B7B75F1A793CF20022C5E0 /* FiraSans-UltraLight.ttf */; };
-		E4BA8A351B4B0A1700BC2E95 /* ViewLater.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4BA8A2B1B4B0A1600BC2E95 /* ViewLater.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E4BA8A8A1B4B10F400BC2E95 /* Storage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCAE21A1ABB51F800877008 /* Storage.framework */; };
 		E4BA8AA81B4B15EF00BC2E95 /* ActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BA8AA11B4B15EF00BC2E95 /* ActionRequestHandler.swift */; };
 		E4BA8AAD1B4B15EF00BC2E95 /* ViewLater.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4BA8AA61B4B15EF00BC2E95 /* ViewLater.xcassets */; };
@@ -867,8 +870,6 @@
 		F84B22041A0910F600AAB793 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84B21E51A0910F600AAB793 /* AppDelegate.swift */; };
 		F84B220B1A0910F600AAB793 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
 		F84B22241A09122500AAB793 /* HomePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84B22221A09122500AAB793 /* HomePanelViewController.swift */; };
-		F84B22541A0920C600AAB793 /* ShareTo.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F84B22491A0920C600AAB793 /* ShareTo.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F84B22661A09210A00AAB793 /* SendTo.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F84B225C1A09210A00AAB793 /* SendTo.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F8708D2A1A0970B40051AB07 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8708D201A0970990051AB07 /* ActionViewController.swift */; };
 		F8708D2C1A0970B40051AB07 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8708D221A0970990051AB07 /* MainInterface.storyboard */; };
 		F8708D2E1A0970B70051AB07 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8708D251A0970990051AB07 /* Images.xcassets */; };
@@ -1065,6 +1066,20 @@
 			remoteGlobalIDString = 390527491C874D35007E0BB7;
 			remoteInfo = Today;
 		};
+		4F11C34A1E30D52C00028227 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
+			remoteInfo = KIFFrameworkConsumer;
+		};
+		4F11C34C1E30D52C00028227 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FAB8A0141CAC546A00C6DFC1;
+			remoteInfo = KIFFrameworkConsumerTests;
+		};
 		7B9A62DA1C4002B1005C83DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7B9A62B91C4002B1005C83DC /* SQLite.xcodeproj */;
@@ -1141,20 +1156,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
-		};
-		7C1315931DEF24C700D37C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
-			remoteInfo = KIFFrameworkConsumer;
-		};
-		7C1315951DEF24C700D37C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB8A0141CAC546A00C6DFC1;
-			remoteInfo = KIFFrameworkConsumerTests;
 		};
 		D30EBB631C75503800105AE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1339,9 +1340,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */,
-				F84B22541A0920C600AAB793 /* ShareTo.appex in Embed App Extensions */,
-				F84B22661A09210A00AAB793 /* SendTo.appex in Embed App Extensions */,
-				E4BA8A351B4B0A1700BC2E95 /* ViewLater.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1906,10 +1904,12 @@
 		4F0552831D74902A00E2A684 /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
 		4F0DFC131DF033D200B1C9F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4F0DFC151DF033D500B1C9F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshtabViewController.swift; sourceTree = "<group>"; };
 		4F44ECBC1DC34C6E00E03860 /* WindowTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowTimers.h; sourceTree = "<group>"; };
 		4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowTimers.m; sourceTree = "<group>"; };
 		4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserNavigationDelegate.swift; sourceTree = "<group>"; };
+		4F8E74BB1E1AB1C900E7C590 /* LogoLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoLoader.swift; sourceTree = "<group>"; };
 		4F9757391AFA6F37006ECC24 /* readerContent.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readerContent.html; sourceTree = "<group>"; };
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzExtensionViewController.swift; sourceTree = "<group>"; };
@@ -1919,6 +1919,8 @@
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		4FA29B291D64C0CE00C59F5E /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
+		4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSiteViewCell.swift; sourceTree = "<group>"; };
+		4FB77C661E39F3620008E5CC /* NewsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsViewCell.swift; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
 		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
@@ -2739,6 +2741,7 @@
 			children = (
 				1E79DCC41D4FB2C5006BEB4A /* SessionState.swift */,
 				4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */,
+				4F8E74BB1E1AB1C900E7C590 /* LogoLoader.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2755,6 +2758,7 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				4FB77C631E39F0D60008E5CC /* Freshtab */,
 				4F0552711D746D4E00E2A684 /* AntitrackingUI */,
 				4FA29B131D64BFE300C59F5E /* Dashboard */,
 				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
@@ -3754,6 +3758,16 @@
 			path = Dashboard;
 			sourceTree = "<group>";
 		};
+		4FB77C631E39F0D60008E5CC /* Freshtab */ = {
+			isa = PBXGroup;
+			children = (
+				4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */,
+				4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */,
+				4FB77C661E39F3620008E5CC /* NewsViewCell.swift */,
+			);
+			name = Freshtab;
+			sourceTree = "<group>";
+		};
 		4FF239C71D52464A00EEDE89 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3944,8 +3958,8 @@
 				D30EBB661C75503800105AE9 /* Test Host.app */,
 				D30EBB681C75503800105AE9 /* KIF Tests - XCTest.xctest */,
 				D30EBB6A1C75503800105AE9 /* KIF.framework */,
-				7C1315941DEF24C700D37C6D /* KIFFrameworkConsumer.app */,
-				7C1315961DEF24C700D37C6D /* KIFFrameworkConsumerTests.xctest */,
+				4F11C34B1E30D52C00028227 /* KIFFrameworkConsumer.app */,
+				4F11C34D1E30D52C00028227 /* KIFFrameworkConsumerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5361,6 +5375,20 @@
 			remoteRef = 28CE83D11A1D1D5100576538 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		4F11C34B1E30D52C00028227 /* KIFFrameworkConsumer.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = KIFFrameworkConsumer.app;
+			remoteRef = 4F11C34A1E30D52C00028227 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4F11C34D1E30D52C00028227 /* KIFFrameworkConsumerTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = KIFFrameworkConsumerTests.xctest;
+			remoteRef = 4F11C34C1E30D52C00028227 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		7B9A62DB1C4002B1005C83DC /* SQLite.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -5415,20 +5443,6 @@
 			fileType = wrapper.cfbundle;
 			path = "SQLiteCipher Mac Tests.xctest";
 			remoteRef = 7B9A62E81C4002B1005C83DC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7C1315941DEF24C700D37C6D /* KIFFrameworkConsumer.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = KIFFrameworkConsumer.app;
-			remoteRef = 7C1315931DEF24C700D37C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7C1315961DEF24C700D37C6D /* KIFFrameworkConsumerTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = KIFFrameworkConsumerTests.xctest;
-			remoteRef = 7C1315951DEF24C700D37C6D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D30EBB641C75503800105AE9 /* libKIF.a */ = {
@@ -6277,6 +6291,7 @@
 				1E79DE921D508368006BEB4A /* NSError+AWSMTLModelException.m in Sources */,
 				D314E7F71A37B98700426A76 /* TabToolbar.swift in Sources */,
 				7B31E6851CBC09DC00A57805 /* MenuPresentationAnimator.swift in Sources */,
+				4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */,
 				0BB5B2891AC0A2B90052877D /* Toolbar.swift in Sources */,
 				1E79DD261D4FB2C5006BEB4A /* NavigationExtension.swift in Sources */,
 				E6108FF91C84E91C005D25E8 /* BasePasscodeViewController.swift in Sources */,
@@ -6285,6 +6300,7 @@
 				0BB5B2881AC0A2B90052877D /* SnackBar.swift in Sources */,
 				7BEFC6801BFF68C30059C952 /* QuickActions.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
+				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
 				1E79DEA51D508368006BEB4A /* AWSTMMemoryCache.m in Sources */,
 				D31CF65C1CC1959A001D0BD0 /* PrivilegedRequest.swift in Sources */,
 				D3B6923D1B9F9444004B87A4 /* FindInPageBar.swift in Sources */,
@@ -6295,6 +6311,7 @@
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
 				4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
+				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
 				E660BE061BB0666D009AC090 /* InnerStrokedView.swift in Sources */,
@@ -6496,6 +6513,7 @@
 				59A68D66379CFA85C4EAF00B /* TwoLineCell.swift in Sources */,
 				1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */,
 				1E79DD4F1D4FB2F8006BEB4A /* AWSSNSResources.m in Sources */,
+				4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */,
 				E49943F51AE6879C00BF9DE4 /* IntroViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7514,6 +7532,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
@@ -7896,8 +7915,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7929,8 +7948,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "d7d11e0f-ec54-43e1-9c9f-223d8846db0c";
-				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
+				PROVISIONING_PROFILE = "ae459dd1-3b7b-4d0a-97f5-586056af463c";
+				PROVISIONING_PROFILE_SPECIFIER = "CliqzBeta AppStore";
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
@@ -7964,6 +7983,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
@@ -7990,6 +8010,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
@@ -8253,6 +8274,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;

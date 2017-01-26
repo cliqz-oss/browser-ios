@@ -274,6 +274,7 @@ extension SQLiteHistory: BrowserHistory {
                                                 "MAX(\(TableHistory).local_modified, ifnull(\(TableHistory).server_modified,0)) as last_visit_date " +
                                         "from \(TableVisits), \(TableHistory) " +
                                         "where \(TableVisits).date > (strftime('%s', date('now', '-6 months'))*1000000) " +
+												"and \(TableHistory).url NOT IN (SELECT url FROM \(TableHiddenTopSites)) " +
                                                 "and \(TableVisits).siteID == \(TableHistory).id " +
                                                 "and \(TableHistory).is_deleted == 0 " +
                                                 "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +

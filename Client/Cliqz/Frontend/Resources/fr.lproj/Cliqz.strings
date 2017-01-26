@@ -241,5 +241,17 @@
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 
+/* Title to expand news stream */
+"MoreNews" = "Plus d'actualités";
+
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
+
+/* Title on Freshtab for forget mode */
+"Forget Tab" = "Mode oubli";
+
+/* Description on Freshtab for forget mode */
+"Forget Tab Description" = "Les sites visités ne sont pas enregistrés dans votre historique. De même, les fichiers temporaires et cookies sont supprimés. Néanmoins, les téléchargements et marque-pages seront conservés.\n Votre fournisseur d'accès à Internet, votre employeur ou les sites eux-mêmes peuvent toujours voir quelles pages vous visitez.";
+
+/* Hint on Freshtab when there is no topsites */
+"Empty TopSites hint" = "Vous accéderez à vos sites les plus visités ici";
