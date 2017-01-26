@@ -113,14 +113,12 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
     
 	func didSelectURL(url: NSURL) {
 		self.navigationController?.popViewControllerAnimated(false)
-		self.tabManager.selectedTab?.inSearchMode = false
 		self.delegate?.navigateToURL(url)
 	}
 
 	func didSelectQuery(query: String) {
 		CATransaction.begin()
 		CATransaction.setCompletionBlock({
-			self.tabManager.selectedTab?.inSearchMode = false
 			self.delegate?.navigateToQuery(query)
 		})
 		self.navigationController?.popViewControllerAnimated(false)
