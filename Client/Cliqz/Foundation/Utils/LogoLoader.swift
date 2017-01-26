@@ -27,10 +27,13 @@ class LogoLoader {
 			}
 			if hostComps.count > 1 {
 				second = hostComps[1]
+				if !second.isEmpty {
+					second += "."
+				}
 			}
 			if version != nil {
 				let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
-				self.loadLogo(withURL: "\(mainURL)/\(first)/\(second).$_192.png", imageView: imageView, completed: { (image, error, imageType, url) in
+				self.loadLogo(withURL: "\(mainURL)/\(first)/\(second)$_192.png", imageView: imageView, completed: { (image, error, imageType, url) in
 					if error != nil && image == nil && !second.isEmpty {
 						let secondAttempt = "\(mainURL)/\(first)/$_192.png"
 						self.loadLogo(withURL: secondAttempt, imageView: imageView, completed: { (image, error, imageType, url) in
@@ -52,7 +55,7 @@ class LogoLoader {
 		}
 	}
 
-	internal static func generateCustomLogo(forHost hostName: String) -> UIView {
+	internal static func generateFakeLogo(forHost hostName: String) -> UIView {
 		let v = UIView()
 		v.backgroundColor = UIColor.blackColor()
 		let l = UILabel()
@@ -157,7 +160,7 @@ extension UIImageView {
 	internal func loadLogo(ofURL url: String, completed completionBlock: LogoLoaderCompletionBlock) {
 		LogoLoader.loadLogo(ofURL: url, imageView: self, completed: { (hostName) in
 			if hostName != nil && !hostName.isEmpty {
-				completionBlock(LogoLoader.generateCustomLogo(forHost: hostName))
+				completionBlock(LogoLoader.generateFakeLogo(forHost: hostName))
 			} else {
 				completionBlock(nil)
 			}
