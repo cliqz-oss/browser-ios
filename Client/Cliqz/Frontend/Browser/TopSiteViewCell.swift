@@ -51,20 +51,25 @@ class TopSiteViewCell: UICollectionViewCell {
 		super.init(frame: frame)
 		self.backgroundColor = UIColor.clearColor()
 		self.contentView.backgroundColor = UIColor.clearColor()
+        
 		self.contentView.addSubview(self.logoContainerView)
 		logoContainerView.snp_makeConstraints { make in
 			make.top.equalTo(self.contentView).offset(10)
 			make.left.bottom.equalTo(self.contentView)
 			make.right.equalTo(self.contentView).offset(-10)
 		}
-		
+
 		self.logoContainerView.addSubview(self.logoImageView)
 		logoImageView.snp_makeConstraints { make in
 			make.top.left.bottom.right.equalTo(self.logoContainerView)
 		}
 		self.logoContainerView.backgroundColor = UIColor.lightGrayColor()
 		self.logoContainerView.layer.cornerRadius = 12
+        self.logoContainerView.layer.borderWidth = 2
+        self.logoContainerView.layer.borderColor = UIColor.clearColor().CGColor//UIConstants.AppBackgroundColor.CGColor
 		self.logoContainerView.clipsToBounds = true
+
+        
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -89,14 +94,13 @@ class TopSiteViewCell: UICollectionViewCell {
 		wobblingAnimation.autoreverses = true
 		wobblingAnimation.repeatCount = FLT_MAX
 		wobblingAnimation.timingFunction = CAMediaTimingFunction.init(name:kCAMediaTimingFunctionLinear)
-		self.layer.shouldRasterize = true
-		self.layer.borderWidth = 3
-		self.layer.borderColor = UIColor.clearColor().CGColor
+        self.logoContainerView.layer.shouldRasterize = true
 		self.layer.addAnimation(wobblingAnimation, forKey: "rotation")
 	}
 	
 	private func stopWobbling() {
 		self.layer.removeAllAnimations()
+        self.logoContainerView.layer.shouldRasterize = false
 	}
 	
 	@objc private func hideTopSite() {
