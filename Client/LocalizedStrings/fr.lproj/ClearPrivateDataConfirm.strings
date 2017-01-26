@@ -5,4 +5,4 @@
 "OK" = "OK";
 
 /* Description of the confirmation dialog shown when a user tries to clear their private data. */
-"This action will clear all of your private data. It cannot be undone." = "Cette action effacera toutes vos données personnelles. Ceci est irréversible.";
+"This action will clear all of your private data. It cannot be undone." = "Cette action effacera toutes tes données personnelles. Ceci est irréversible.";
