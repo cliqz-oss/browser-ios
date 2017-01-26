@@ -1338,7 +1338,9 @@ class BrowserViewController: UIViewController {
             // Cliqz: log telemetry signal for share menu
             TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "settings"))
         }
-        activities.append(settingsActivity)
+        //activities.append(settingsActivity)
+        
+        activities.insert(settingsActivity, atIndex: 0) //insert the settings activity at the beginning of the list. (Tim).
 
         let helper = ShareExtensionHelper(url: url, tab: tab, activities: activities)
 
