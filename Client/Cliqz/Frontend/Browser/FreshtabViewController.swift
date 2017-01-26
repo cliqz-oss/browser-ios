@@ -149,7 +149,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.topSitesCollection.snp_makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView)
 				make.left.right.equalTo(self.normalModeView)
-				make.height.equalTo(80)
+				make.height.equalTo(95)
 			}
 		}
 		
