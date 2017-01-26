@@ -1914,6 +1914,8 @@ extension BrowserViewController: URLBarDelegate {
             tabManager.addTabAndSelect()
         }
         
+        switchToSearchModeIfNeeded()
+        
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "new_tab")
     }
@@ -2088,11 +2090,13 @@ extension BrowserViewController: TabToolbarDelegate {
             let newTabHandler = { (action: UIAlertAction) in
                 self.tabManager.addTabAndSelect()
                 self.logWebMenuSignal("click", target: "new_tab")
+                self.switchToSearchModeIfNeeded()
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
                 self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
                 self.logWebMenuSignal("click", target: "new_forget_tab")
+                self.switchToSearchModeIfNeeded()
             }
             
             var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
