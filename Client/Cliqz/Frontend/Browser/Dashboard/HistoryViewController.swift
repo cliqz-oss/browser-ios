@@ -71,12 +71,6 @@ extension HistoryViewController {
 
     override func isReady() {
         super.isReady()
-        
-        if profile.clearQueries {
-            clearQueries(favorites: true)
-            clearQueries(favorites: false)
-            self.javaScriptBridge.publishEvent("show")
-        }
     }
 
     // MARK: - Clear History
