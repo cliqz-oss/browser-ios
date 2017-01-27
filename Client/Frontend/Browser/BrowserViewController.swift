@@ -1820,7 +1820,6 @@ extension BrowserViewController: URLBarDelegate {
 			showSearchController()
 			searchController!.searchQuery = text
 		} else {
-			showSearchController()
 			hideSearchController()
 			showHomePanelController(inline: true)
 		}
