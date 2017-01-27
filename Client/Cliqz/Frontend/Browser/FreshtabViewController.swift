@@ -366,11 +366,13 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			if let urlString = s["url"] {
 				cell.logoImageView.loadLogo(ofURL: urlString, completed: { (view) in
 					if let v = view {
-						cell.fakeLogoView = v
-						cell.logoContainerView.addSubview(v)
-						v.snp_makeConstraints(closure: { (make) in
-							make.top.left.right.bottom.equalTo(cell.logoContainerView)
-						})
+                        if indexPath.row == cell.tag {
+                            cell.fakeLogoView = v
+                            cell.logoContainerView.addSubview(v)
+                            v.snp_makeConstraints(closure: { (make) in
+                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
+                            })
+                        }
 					}
 				})
 			}
