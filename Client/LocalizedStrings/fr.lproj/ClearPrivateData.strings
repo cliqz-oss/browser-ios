@@ -1,5 +1,5 @@
 /* Message shown in the dialog prompting users if they want to clear everything */
-"Are you sure you want to clear all of your data? This will also close all open tabs." = "Êtes-vous sûr de vouloir effacer toutes vos données ? Cette action fermera aussi tous les onglets ouverts";
+"Are you sure you want to clear all of your data? This will also close all open tabs." = "Es-tu sûr(e) de vouloir effacer toutes tes données ? Cette action fermera aussi tous les onglets ouverts";
 
 /* Settings item for clearing browsing history */
 "Browsing History" = "Historique de navigation";
@@ -18,7 +18,7 @@
 
 /* Button in settings that clears private data for the selected items.
    Navigation title in settings. */
-"Clear Private Data" = "Effacer vos données personnelles";
+"Clear Private Data" = "Effacer tes données personnelles";
 
 /* Settings item for clearing cookies */
 "Cookies" = "Cookies";
