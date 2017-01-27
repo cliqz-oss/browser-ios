@@ -80,10 +80,14 @@ extension HistoryViewController {
 	}
 
 	func clearQueries(favorites favorites: Bool) {
+        //Cliqz: [IB-946][WORKAROUND] call `jsAPI` directly instead of publishing events because the event is executed when the history is opened next time not immediately
+        //TODO: Queries will be stored in native side not in JavaScript
         if favorites == true {
-            self.javaScriptBridge.publishEvent("clear-favorites")
+//            self.javaScriptBridge.publishEvent("clear-favorites")
+            self.javaScriptBridge.callJSMethod("jsAPI.clearFavorites()", parameter: nil, completionHandler: nil)
         } else {
-            self.javaScriptBridge.publishEvent("clear-history")
+//            self.javaScriptBridge.publishEvent("clear-history")
+            self.javaScriptBridge.callJSMethod("jsAPI.clearHistory()", parameter: nil, completionHandler: nil)
         }
     }
 
