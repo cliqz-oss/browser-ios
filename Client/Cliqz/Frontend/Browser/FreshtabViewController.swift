@@ -88,11 +88,19 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		return false
 	}
 
-	@objc private func cancelActions() {
+    @objc private func cancelActions(sender: UITapGestureRecognizer) {
+        
 		let cells = self.topSitesCollection.visibleCells()
 		for cell in cells as! [TopSiteViewCell] {
 			cell.isDeleteMode = false
 		}
+        
+        // fire `didSelectRowAtIndexPath` when user click on a cell in news table
+        let p = sender.locationInView(self.newsTableView)
+        if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
+            self.tableView(self.newsTableView, didSelectRowAtIndexPath: selectedIndex)
+        }
+        
 	}
 
 	private func constructForgetModeView() {
