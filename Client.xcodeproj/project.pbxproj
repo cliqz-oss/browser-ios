@@ -592,6 +592,7 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
+		AFEC635C1E3B8C9200ED1E7D /* LaunchScreen.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFEC635B1E3B8C9200ED1E7D /* LaunchScreen.xcassets */; };
 		B729F06A1B75CBEF00745F7A /* UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729F0691B75CBEF00745F7A /* UserAgent.swift */; };
 		C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */; };
 		C40046FA1CF8E0B200B08303 /* BackForwardListAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */; };
@@ -2026,6 +2027,7 @@
 		A91528D11D0E637600CD0425 /* NoImageModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NoImageModeHelper.js; sourceTree = "<group>"; };
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
+		AFEC635B1E3B8C9200ED1E7D /* LaunchScreen.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LaunchScreen.xcassets; sourceTree = "<group>"; };
 		B729F0691B75CBEF00745F7A /* UserAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgent.swift; path = ../Shared/UserAgent.swift; sourceTree = "<group>"; };
 		C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListViewController.swift; sourceTree = "<group>"; };
 		C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListAnimator.swift; sourceTree = "<group>"; };
@@ -4502,6 +4504,7 @@
 				28EADE5C1AFC3A6D007FB2FB /* Extensions */,
 				F84B21F11A0910F600AAB793 /* Frontend */,
 				39A359BD1BFCCE7B006B9E87 /* Helpers */,
+				AFEC635B1E3B8C9200ED1E7D /* LaunchScreen.xcassets */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -5715,6 +5718,7 @@
 				A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */,
 				1E79DDC71D507D26006BEB4A /* BookmarkPanel.strings in Resources */,
 				E49C0EB11B46109C009092BB /* WindowCloseHelper.js in Resources */,
+				AFEC635C1E3B8C9200ED1E7D /* LaunchScreen.xcassets in Resources */,
 				1E79DD361D4FB2C5006BEB4A /* Cliqz.strings in Resources */,
 				2F44FB2D1A9D5D8500FD20CC /* FiraSans-BoldItalic.ttf in Resources */,
 				1E79DDDA1D507D26006BEB4A /* Storage.strings in Resources */,
