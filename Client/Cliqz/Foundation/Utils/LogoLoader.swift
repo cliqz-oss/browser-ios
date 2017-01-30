@@ -46,8 +46,6 @@ class LogoLoader {
 							}
 						})
 					} else if image != nil {
-                        //image ok -- add it to the cache
-                        logoImageCache .setObject(image, forKey: url)
 						completionBlock(nil)
 					} else {
 						completionBlock(first)
@@ -84,6 +82,7 @@ class LogoLoader {
                 imageView.image = img as? UIImage
             }else {
                 imageView.sd_setImageWithURL(url, completed: { (image, error, imageType, url) in
+                    logoImageCache .setObject(image, forKey: url)
                     completionBlock(image, error, imageType, url)
                 })
             }

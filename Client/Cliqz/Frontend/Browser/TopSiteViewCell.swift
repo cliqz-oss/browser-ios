@@ -60,7 +60,7 @@ class TopSiteViewCell: UICollectionViewCell {
 			make.right.equalTo(self.contentView).offset(-10)
 		}
 
-		self.logoContainerView.addSubview(self.logoImageView)
+		self.logoContainerView.addSubview(self.logoImageView) //isn't this a retain cycle? 
 		logoImageView.snp_makeConstraints { make in
 			make.top.left.bottom.right.equalTo(self.logoContainerView)
 		}
