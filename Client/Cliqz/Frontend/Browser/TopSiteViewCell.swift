@@ -67,8 +67,8 @@ class TopSiteViewCell: UICollectionViewCell {
 		self.logoContainerView.layer.cornerRadius = 12
         self.logoContainerView.layer.borderWidth = 2
         self.logoContainerView.layer.borderColor = UIColor.clearColor().CGColor//UIConstants.AppBackgroundColor.CGColor
+        self.logoContainerView.layer.shouldRasterize = false
 		self.logoContainerView.clipsToBounds = true
-
         
 	}
 	
@@ -104,6 +104,8 @@ class TopSiteViewCell: UICollectionViewCell {
 	}
 	
 	@objc private func hideTopSite() {
+        self.logoImageView.image = nil
+        self.isDeleteMode = false
 		self.delegate?.topSiteHided(self.tag)
 	}
 }
