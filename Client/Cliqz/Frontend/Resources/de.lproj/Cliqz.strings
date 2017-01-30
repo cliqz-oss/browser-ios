@@ -253,3 +253,15 @@
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
+
+/* Search Results from */
+"Search Results from" = "Suchergebnisse von";
+
+/* Localized String for specific region */
+"region-DE" = "Deutschland";
+
+/* Localized String for specific region */
+"region-US" = "USA";
+
+/* Localized String for specific region */
+"region-FR" = "Frankreich";

@@ -130,6 +130,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         javaScriptBridge.setDefaultSearchEngine()
+        self.updateExtensionPreferences()
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
@@ -138,7 +139,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.javaScriptBridge.publishEvent("show")
-        self.updateExtensionPreferences()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -291,10 +291,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
-		              "incognito" : self.privateMode]
+		              "incognito" : self.privateMode, "backend_country" : self.getCountry()]
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
-
+    private func getCountry() -> String {
+        if let country = SettingsPrefs.getRegionPref() {
+            return country
+        }
+        return SettingsPrefs.getDefaultRegion()
+    }
     //MARK: - Reset TopSites
     func showBlockedTopSites(notification: NSNotification) {
         javaScriptBridge.publishEvent("restore-blocked-topsites")

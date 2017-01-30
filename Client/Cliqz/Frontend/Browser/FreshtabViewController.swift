@@ -24,7 +24,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.updateView()
 		}
 	}
-
+    private let configUrl = "http://newbeta.cliqz.com/api/v1/config"
+    private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
+    
 	private var topSitesCollection: UICollectionView!
 	private var newsTableView: UITableView!
 
@@ -43,6 +45,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: AnyObject]]()
+    var region = SettingsPrefs.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
 
@@ -65,10 +68,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cancelActions))
 		tapGestureRecognizer.delegate = self
 		self.view.addGestureRecognizer(tapGestureRecognizer)
+        loadRegion()
 	}
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+        region = SettingsPrefs.getRegionPref()
 		updateView()
 	}
 	
@@ -216,16 +221,33 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	private func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
 	}
-
+    
+    private func loadRegion() {
+        guard region == nil  else {
+            return
+        }
+        
+        Alamofire.request(.GET, configUrl, parameters: nil, encoding: .JSON, headers: nil).responseJSON { (response) in
+            if response.result.isSuccess {
+                if let location = response.result.value!["location"] as? String {
+                    self.region = location.uppercaseString
+                    SettingsPrefs.updateRegionPref(self.region!)
+                    self.loadNews()
+                }
+            }
+        }
+    }
+    
 	private func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		]
-		let url = "https://newbeta.cliqz.com/api/v2/rich-header?"
-		let uri  = "path=/v2/map&q=&lang=de,en&locale=\(NSLocale.currentLocale().localeIdentifier)&force_country=true&adult=0&loc_pref=ask&count=5"
+        let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
-		Alamofire.request(.PUT, url + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
+        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(NSLocale.currentLocale().localeIdentifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
+		
+		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
 				if let result = response.result.value!["results"] as? [[String: AnyObject]] {
 					if let snippet = result[0]["snippet"] as? [String: AnyObject],
