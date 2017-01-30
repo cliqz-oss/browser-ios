@@ -14,10 +14,12 @@ import WebImage
 class LogoLoader {
 	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
 	static let logoVersionKey: String = "logoVersion"
+    static let logoImageCache = NSMapTable.strongToWeakObjectsMapTable()
 	
 	static let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
 
 	internal static func loadLogo(ofURL url: String, imageView: UIImageView, completed completionBlock: (String!) -> Void) {
+        
 		self.lastLogoVersion() { (version) in
 			let hostComps = self.getHostComponents(forURL: url)
 			var first = ""
@@ -44,6 +46,8 @@ class LogoLoader {
 							}
 						})
 					} else if image != nil {
+                        //image ok -- add it to the cache
+                        logoImageCache .setObject(image, forKey: url)
 						completionBlock(nil)
 					} else {
 						completionBlock(first)
@@ -76,9 +80,13 @@ class LogoLoader {
 
 	private static func loadLogo(withURL urlString: String, imageView: UIImageView, completed completionBlock:SDWebImageCompletionBlock!) {
 		if let url = NSURL(string: urlString) {
-			imageView.sd_setImageWithURL(url, completed: { (image, error, imageType, url) in
-				completionBlock(image, error, imageType, url)
-			})
+            if let img = logoImageCache.objectForKey(url) {
+                imageView.image = img as? UIImage
+            }else {
+                imageView.sd_setImageWithURL(url, completed: { (image, error, imageType, url) in
+                    completionBlock(image, error, imageType, url)
+                })
+            }
 		} else {
 			completionBlock?(UIImage(), NSError(domain: "InvalidURL", code: 1, userInfo: nil), .None, NSURL())
 		}
