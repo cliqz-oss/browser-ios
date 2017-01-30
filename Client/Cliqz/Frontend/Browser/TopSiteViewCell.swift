@@ -33,7 +33,8 @@ class TopSiteViewCell: UICollectionViewCell {
 			if isDeleteMode && !self.isEmptyContent() {
 				self.contentView.addSubview(self.deleteButton)
 				self.deleteButton.snp_makeConstraints(closure: { (make) in
-					make.right.top.equalTo(self.contentView)
+					make.top.equalTo(self.contentView)
+                    make.left.equalTo(self.contentView.frame.origin.x - 10)
 				})
 				self.startWobbling()
 			} else {
