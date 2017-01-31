@@ -148,9 +148,9 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.delegate = self
         cell.selectedTab = tab
         
-		if tab.title != nil && tab.displayURL != nil {
-			cell.titleLabel.text = tab.title
-			cell.URLLabel.text = tab.displayURL?.host
+		if tab.displayURL != nil {
+            cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
+			cell.URLLabel.text = tab.displayURL?.absoluteString
 		} else {
 			cell.URLLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
 			cell.titleLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
