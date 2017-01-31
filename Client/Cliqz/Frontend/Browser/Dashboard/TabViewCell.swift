@@ -132,12 +132,12 @@ class TabViewCell: UITableViewCell {
 		}
         
         self.closeButton.snp_makeConstraints { (make) in
-            make.size.equalTo(36.0)
-            make.right.equalTo(self.cardView).offset(-5)
-            make.top.equalTo(self.cardView).offset(2)
+            make.size.height.equalTo(54.0)
+            make.right.equalTo(self.cardView).offset(18)
+            make.top.equalTo(self.cardView).offset(-6)
         }
         
-        self.closeButton.imageEdgeInsets = UIEdgeInsetsMake(-20, 0, 0, -20)
+        self.closeButton.imageEdgeInsets = UIEdgeInsetsMake(-16, 0, 0, 10)
     }
 
 	override func prepareForReuse() {
