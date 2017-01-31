@@ -234,7 +234,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						{
 							self.news = articles
                             self.topNewsManager?.update(self.news)
-							self.newsTableView.reloadData()
+							self.newsTableView?.reloadData()
 						}
 				}
 			}
