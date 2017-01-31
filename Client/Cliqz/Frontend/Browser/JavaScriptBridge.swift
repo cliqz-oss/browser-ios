@@ -20,7 +20,7 @@ import Storage
     optional func searchForQuery(query: String)
 
 	optional func getFavorites(callback: String?)
-	optional func getSearchHistory(callback: String?)
+	optional func getSearchHistory(offset:Int,limit:Int,callback: String?)
     optional func getSearchHistoryResults(callback: String?)
     optional func shareCard(cardURL: String)
     optional func autoCompeleteQuery(autoCompleteText: String)
@@ -150,7 +150,10 @@ class JavaScriptBridge {
             delegate?.getSearchHistoryResults?(callback)
 			
 		case "getHistoryItems":
-			delegate?.getSearchHistory?(callback)
+            if let actionData = data as? [String: AnyObject],let limit = actionData["limit"] as? Int,let offset = actionData["offset"] as? Int{
+                delegate?.getSearchHistory?(offset,limit:limit,callback: callback)
+            }
+            
 			
 		case "getFavorites":
 			delegate?.getFavorites?(callback)
