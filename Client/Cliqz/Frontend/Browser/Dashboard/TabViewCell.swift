@@ -137,7 +137,7 @@ class TabViewCell: UITableViewCell {
             make.top.equalTo(self.cardView).offset(-6)
         }
         
-        self.closeButton.imageEdgeInsets = UIEdgeInsetsMake(-16, 0, 0, 10)
+        self.closeButton.imageEdgeInsets = UIEdgeInsetsMake(-24, 0, 0, 5)
     }
 
 	override func prepareForReuse() {
