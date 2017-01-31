@@ -18,7 +18,6 @@ protocol HistoryDelegate: class {
 class HistoryViewController: CliqzExtensionViewController {
 
     weak var delegate: HistoryDelegate?
-    let QueryLimit = 100
 	
 	override init(profile: Profile) {
 		super.init(profile: profile, viewType: "history")
@@ -50,9 +49,9 @@ extension HistoryViewController {
 		self.delegate?.didSelectQuery(query)
     }
 
-	func getSearchHistory(callback: String?) {
+    func getSearchHistory(offset:Int,limit:Int,callback: String?) {
 		if let c = callback {
-			self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
+            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(dispatch_get_main_queue()) { result in
 				if let sites = result.successValue {
 					var historyResults = [[String: AnyObject]]()
 					for site in sites {

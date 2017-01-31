@@ -50,7 +50,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
     }
 	
 	// TODO: check if possible to use FF's version of getHistory
-    public func getHistoryVisits(limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
+    public func getHistoryVisits(offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
         args = []
 		
@@ -59,7 +59,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
             "FROM \(TableHistory) " +
             "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
             "ORDER BY \(TableVisits).id DESC " +
-        "LIMIT \(limit) "
+        "LIMIT \(limit) OFFSET \(offset)"
         
         // TODO countFactory
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
