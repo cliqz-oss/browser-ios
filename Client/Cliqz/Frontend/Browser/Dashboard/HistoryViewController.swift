@@ -62,7 +62,7 @@ extension HistoryViewController {
 						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
 						historyResults.append(d)
 					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults.reverse(), completionHandler: nil)
+					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
 				}
 			}
 		}
