@@ -363,6 +363,10 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func cellSize() -> CGSize {
+        return CGSizeMake(60,60)
+    }
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 4
@@ -415,18 +419,23 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-		return CGSizeMake(70, 70)
+		return cellSize()
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-		return UIEdgeInsetsMake(10, 13, 0, 3)
+        let inset_edge = inset()
+		return UIEdgeInsetsMake(20, inset_edge, 0, inset_edge)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-		var w: CGFloat = 0
-		w = self.view.frame.size.width
-		return floor((w - 4*70 - 13 - 3) / 3.0)
+		return inset()
 	}
+    
+    private func inset() -> CGFloat{
+        let width = self.view.frame.size.width
+        return (width - 4 * cellSize().width)/5.0
+    }
+    
 
 }
 
