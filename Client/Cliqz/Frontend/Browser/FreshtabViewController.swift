@@ -107,14 +107,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     
     private func removeDeletedTopSites(){
-        //timpalade
         self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
         for index in self.topSitesIndexesToRemove {
             self.topSites.removeAtIndex(index)
         }
         self.topSitesIndexesToRemove.removeAll()
         self.topSitesCollection.reloadData()
-        //end-timpalade
     }
 
 	private func constructForgetModeView() {
