@@ -38,6 +38,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	var isNewsExpanded = false
 	var topSites = [[String: String]]()
+    var topSitesIndexesToRemove = [Int]()
 	var news = [[String: AnyObject]]()
 
 	weak var delegate: SearchViewDelegate?
@@ -95,6 +96,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			cell.isDeleteMode = false
 		}
         
+        self.removeDeletedTopSites()
+        
         // fire `didSelectRowAtIndexPath` when user click on a cell in news table
         let p = sender.locationInView(self.newsTableView)
         if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
@@ -102,6 +105,15 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
 	}
+    
+    private func removeDeletedTopSites(){
+        self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
+        for index in self.topSitesIndexesToRemove {
+            self.topSites.removeAtIndex(index)
+        }
+        self.topSitesIndexesToRemove.removeAll()
+        self.topSitesCollection.reloadData()
+    }
 
 	private func constructForgetModeView() {
 		if forgetModeView == nil {
@@ -425,12 +437,8 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		if let url = s["url"] {
 			self.profile.history.hideTopSite(url)
 		}
-		let cells = self.topSitesCollection.visibleCells()
-		for cell in cells as! [TopSiteViewCell] {
-			cell.isDeleteMode = false
-		}
-		self.topSites.removeAtIndex(index)
-		self.topSitesCollection.reloadData()
+        
+        self.topSitesIndexesToRemove.append(index)
 	}
 }
 

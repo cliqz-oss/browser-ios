@@ -33,7 +33,8 @@ class TopSiteViewCell: UICollectionViewCell {
 			if isDeleteMode && !self.isEmptyContent() {
 				self.contentView.addSubview(self.deleteButton)
 				self.deleteButton.snp_makeConstraints(closure: { (make) in
-					make.right.top.equalTo(self.contentView)
+					make.top.equalTo(self.contentView)
+                    make.left.equalTo(self.contentView.frame.origin.x - 10)
 				})
 				self.startWobbling()
 			} else {
@@ -59,7 +60,7 @@ class TopSiteViewCell: UICollectionViewCell {
 			make.right.equalTo(self.contentView).offset(-10)
 		}
 
-		self.logoContainerView.addSubview(self.logoImageView)
+		self.logoContainerView.addSubview(self.logoImageView) //isn't this a retain cycle? 
 		logoImageView.snp_makeConstraints { make in
 			make.top.left.bottom.right.equalTo(self.logoContainerView)
 		}
@@ -67,8 +68,8 @@ class TopSiteViewCell: UICollectionViewCell {
 		self.logoContainerView.layer.cornerRadius = 12
         self.logoContainerView.layer.borderWidth = 2
         self.logoContainerView.layer.borderColor = UIColor.clearColor().CGColor//UIConstants.AppBackgroundColor.CGColor
+        self.logoContainerView.layer.shouldRasterize = false
 		self.logoContainerView.clipsToBounds = true
-
         
 	}
 	
@@ -104,6 +105,8 @@ class TopSiteViewCell: UICollectionViewCell {
 	}
 	
 	@objc private func hideTopSite() {
+        self.logoImageView.image = nil
+        self.isDeleteMode = false
 		self.delegate?.topSiteHided(self.tag)
 	}
 }
