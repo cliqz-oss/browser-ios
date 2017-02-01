@@ -14,7 +14,10 @@ import Alamofire
 
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
-
+    
+    var topSiteManager : TopSiteManager?
+    var topNewsManager : TopNewsManager?
+    
 	var profile: Profile!
 	var isForgetMode = false {
 		didSet {
@@ -48,6 +51,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
+        self.topSiteManager = TopSiteManager.shared
+        self.topNewsManager = TopNewsManager.shared
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -111,6 +116,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         for index in self.topSitesIndexesToRemove {
             self.topSites.removeAtIndex(index)
         }
+        
+        self.topSiteManager?.update(self.topSites)
+        
         self.topSitesIndexesToRemove.removeAll()
         self.topSitesCollection.reloadData()
     }
@@ -225,6 +233,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						articles = extra["articles"] as? [[String: AnyObject]]
 						{
 							self.news = articles
+                            self.topNewsManager?.update(self.news)
 							self.newsTableView.reloadData()
 						}
 				}
@@ -233,6 +242,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	private func loadTopSitesWithLimit(limit: Int) -> Success {
+        print("[FreshTab] loadTopSitesWithLimit")
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
@@ -258,6 +268,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 					make.height.equalTo(14)
 				})
 			} else {
+                self.topSiteManager?.update(self.topSites)
 				self.emptyTopSitesHint.removeFromSuperview()
 			}
 			self.topSitesCollection.reloadData()
@@ -301,16 +312,20 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 				cell.URLLabel.text =  title
 			}
 			if let url = n["url"] as? String {
-				cell.logoImageView.loadLogo(ofURL: url, completed: { (view) in
-					if let v = view {
-						cell.fakeLogoView = v
-						cell.logoContainerView.addSubview(v)
-						v.snp_makeConstraints(closure: { (make) in
-							make.top.left.right.bottom.equalTo(cell.logoContainerView)
-						})
-					}
-
-				})
+                if let hostName = self.topNewsManager?.hostName(url){
+                    if (self.topNewsManager != nil && self.topNewsManager?.topNewsDict != nil && self.topNewsManager?.topNewsDict[hostName]?.image == nil) {
+                        let fakeView = self.topNewsManager?.topNewsDict[hostName]?.fakeLogo
+                        if let v = fakeView {
+                            cell.fakeLogoView = v
+                            cell.logoContainerView.addSubview(v)
+                            v.snp_makeConstraints(closure: { (make) in
+                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
+                            })
+                        }
+                    }else if (self.topNewsManager != nil && self.topNewsManager?.topNewsDict != nil && self.topNewsManager?.topNewsDict[hostName]?.image != nil){
+                        cell.logoImageView.image = self.topNewsManager?.topNewsDict[hostName]?.image
+                    }
+                }
 			}
 		}
 		cell.selectionStyle = .None
@@ -365,7 +380,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func cellSize() -> CGSize {
-        return CGSizeMake(60,60)
+        return CGSizeMake(76,76)
     }
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -373,6 +388,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        print("[FreshTab] cellForItemAtIndexPath -> row: \(indexPath.row)")
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSiteViewCell
 		cell.tag = -1
 		cell.delegate = self
@@ -380,17 +396,20 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
-				cell.logoImageView.loadLogo(ofURL: urlString, completed: { (view) in
-					if let v = view {
-                        if indexPath.row == cell.tag {
+                if let hostName = self.topSiteManager?.hostName(urlString){
+                    if (self.topSiteManager != nil && self.topSiteManager?.topSiteDict != nil && self.topSiteManager?.topSiteDict[hostName]?.image == nil) {
+                        let fakeView = self.topSiteManager?.topSiteDict[hostName]?.fakeLogo
+                        if let v = fakeView {
                             cell.fakeLogoView = v
                             cell.logoContainerView.addSubview(v)
                             v.snp_makeConstraints(closure: { (make) in
                                 make.top.left.right.bottom.equalTo(cell.logoContainerView)
                             })
                         }
-					}
-				})
+                    }else if (self.topSiteManager != nil && self.topSiteManager?.topSiteDict != nil && self.topSiteManager?.topSiteDict[hostName]?.image != nil){
+                        cell.logoImageView.image = self.topSiteManager?.topSiteDict[hostName]?.image
+                    }
+                }
 			}
 		}
 		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
@@ -424,16 +443,16 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
         let inset_edge = inset()
-		return UIEdgeInsetsMake(20, inset_edge, 0, inset_edge)
+		return UIEdgeInsetsMake(10, inset_edge + 6, 0, inset_edge + 6)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-		return inset()
+		return inset() - 16
 	}
     
     private func inset() -> CGFloat{
         let width = self.view.frame.size.width
-        return (width - 4 * cellSize().width)/5.0
+        return ((width - 4 * cellSize().width)/5.0)
     }
     
 
