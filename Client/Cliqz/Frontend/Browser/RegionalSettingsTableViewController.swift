@@ -11,7 +11,9 @@ import UIKit
 class RegionalSettingsTableViewController: UITableViewController {
 
     let regions = ["DE", "FR", "US"]
-
+    var settingsOpenTime: Double?
+    let telemetrySignalViewName = "search_results_from"
+    
     var selectedRegion: String {
         get{
             if let region = SettingsPrefs.getRegionPref() {
@@ -23,6 +25,8 @@ class RegionalSettingsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        settingsOpenTime = NSDate.getCurrentMillis()
+        
         navigationItem.title = NSLocalizedString("Search Results from", tableName: "Cliqz" , comment: "Search Results from")
         
         self.tableView.separatorColor = UIConstants.TableViewSeparatorColor
@@ -59,9 +63,25 @@ class RegionalSettingsTableViewController: UITableViewController {
         return cell
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // log telemetry signal
+        if let openTime = settingsOpenTime {
+            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings(telemetrySignalViewName, "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
+    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let region = regions[indexPath.item]
         SettingsPrefs.updateRegionPref(region)
+        
+        let settingsBackSignal = TelemetryLogEventType.Settings(telemetrySignalViewName, "click", region, nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+        
         
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
         

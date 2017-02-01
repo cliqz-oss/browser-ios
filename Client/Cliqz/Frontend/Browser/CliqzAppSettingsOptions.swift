@@ -215,5 +215,9 @@ class RegionalSetting: Setting {
     override func onClick(navigationController: UINavigationController?) {
         let viewController = RegionalSettingsTableViewController()
         navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "search_results_from", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
     }
 }
