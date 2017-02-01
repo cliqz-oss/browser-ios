@@ -4020,6 +4020,8 @@ extension BrowserViewController {
             if (selectedTab.inSearchMode) {
                 self.urlBar.enterOverlayMode("", pasted: true)
                 scrollController.showToolbars(animated: false)
+            } else if self.homePanelController?.view.hidden == false {
+                self.urlBar.leaveOverlayMode()
             }
         }
         print("[switchToSearchModeIfNeeded]")
