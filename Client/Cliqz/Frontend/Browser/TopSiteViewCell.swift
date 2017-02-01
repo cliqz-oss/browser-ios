@@ -33,8 +33,8 @@ class TopSiteViewCell: UICollectionViewCell {
 			if isDeleteMode && !self.isEmptyContent() {
 				self.contentView.addSubview(self.deleteButton)
 				self.deleteButton.snp_makeConstraints(closure: { (make) in
-					make.top.equalTo(self.contentView.frame.origin.y - 10)
-                    make.left.equalTo(self.contentView.frame.origin.x - 10)
+					make.top.equalTo(self.contentView.frame.origin.y)
+                    make.left.equalTo(self.contentView.frame.origin.x)
 				})
 				self.startWobbling()
 			} else {
@@ -55,9 +55,10 @@ class TopSiteViewCell: UICollectionViewCell {
         
 		self.contentView.addSubview(self.logoContainerView)
 		logoContainerView.snp_makeConstraints { make in
-			make.top.equalTo(self.contentView)
-			make.left.bottom.equalTo(self.contentView)
-			make.right.equalTo(self.contentView)
+			make.top.equalTo(self.contentView.frame.origin.y + 8)
+            make.bottom.equalTo(self.contentView.frame.origin.y - 8)
+			make.left.equalTo(self.contentView.frame.origin.x + 8)
+			make.right.equalTo(self.contentView.frame.origin.x - 8)
 		}
 
 		self.logoContainerView.addSubview(self.logoImageView) //isn't this a retain cycle?
