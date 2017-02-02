@@ -184,3 +184,40 @@ class ExtensionVersionSetting : VersionSetting {
     }
     
 }
+
+
+// Opens the search settings pane
+class RegionalSetting: Setting {
+    let profile: Profile
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
+    override var style: UITableViewCellStyle { return .Value1 }
+    
+    override var status: NSAttributedString {
+        var localizedRegionName: String?
+        if let region = SettingsPrefs.getRegionPref() {
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
+        } else {
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.getDefaultRegion())
+            
+        }
+        return NSAttributedString(string: localizedRegionName!)
+    }
+    
+    override var accessibilityIdentifier: String? { return "Search Results from" }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        super.init(title: NSAttributedString(string: NSLocalizedString("Search Results from", tableName: "Cliqz" , comment: "Search Results from"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = RegionalSettingsTableViewController()
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "search_results_from", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+    }
+}

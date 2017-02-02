@@ -7,7 +7,8 @@
  function begins(str, startStr) { // in case no String.startsWith
  return str.indexOf(startStr) == 0
  }
- 
+ // Cliqz: encode url to support German characters
+ url = encodeURI(url);
  if (begins(url, 'newtab:')) {
  url = unescape(url.substring('newtab:'.length))
  }

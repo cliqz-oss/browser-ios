@@ -255,3 +255,15 @@
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Vous accéderez à vos sites les plus visités ici";
+
+/* Search Results from */
+"Search Results from" = "Résultats pour";
+
+/* Localized String for specific region */
+"region-DE" = "Allemagne";
+
+/* Localized String for specific region */
+"region-US" = "États-Unis";
+
+/* Localized String for specific region */
+"region-FR" = "France";

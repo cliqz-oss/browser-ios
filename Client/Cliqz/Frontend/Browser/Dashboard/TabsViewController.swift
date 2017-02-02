@@ -226,7 +226,8 @@ extension TabsViewController: TabManagerDelegate {
 	}
 	
 	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
-        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+        guard let index = tabManager.tabs.indexOf(tab) else { return }
+        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
 	}
     
 	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {

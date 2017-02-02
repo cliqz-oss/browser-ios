@@ -207,13 +207,6 @@ class TabManager : NSObject {
         } else {
             _selectedIndex = -1
         }
-
-        // Cliqz: re-arranged the tabs to put the last viewed tab at the top
-        if _selectedIndex > 0 {
-            let currentTab = tabs.removeAtIndex(_selectedIndex)
-            tabs.insert(currentTab, atIndex: 0)
-            _selectedIndex = 0
-        }
         
         preserveTabs()
 
@@ -355,9 +348,7 @@ class TabManager : NSObject {
     private func removeTab(tab: Tab, flushToDisk: Bool, notify: Bool) {
         assert(NSThread.isMainThread())
         // If the removed tab was selected, find the new tab to select.
-        var selectedTabRemoved = false
         if tab === selectedTab {
-            selectedTabRemoved = true
             if let index = getIndex(tab) {
                 if index + 1 < count {
                     selectTab(tabs[index + 1])
@@ -396,7 +387,7 @@ class TabManager : NSObject {
             for delegate in delegates {
                 // Cliqz: Added removeIndex to didRemoveTab method
 //                delegate.get()?.tabManager(self, didRemoveTab: tab)
-                delegate.get()?.tabManager(self, didRemoveTab: tab, removeIndex: selectedTabRemoved ? 0 :  removeIndex)
+                delegate.get()?.tabManager(self, didRemoveTab: tab, removeIndex: removeIndex)
             }
         }
 

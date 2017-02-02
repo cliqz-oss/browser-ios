@@ -906,24 +906,27 @@ class BrowserViewController: UIViewController {
             }
         }
     }
+    // Cliqz: separate the creating of searchcontroller into a new method
+    private func createSearchController() {
+        guard searchController == nil else {
+            return
+        }
+        
+        searchController = CliqzSearchViewController(profile: self.profile)
+        searchController!.delegate = self
+        searchLoader.addListener(searchController!)
+        view.addSubview(searchController!.view)
+        addChildViewController(searchController!)
+        searchController!.view.snp_makeConstraints { make in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.bottom.equalTo(self.view)
+            return
+        }
+    }
     // Cliqz: modified showSearchController to show SearchViewController insead of searchController
     private func showSearchController() {
-        if searchController == nil {
-            searchController = CliqzSearchViewController(profile: self.profile)
-            searchController!.delegate = self
-            if let selectedTab = tabManager.selectedTab {
-                searchController?.updatePrivateMode(selectedTab.isPrivate)
-            }
-            
-            searchLoader.addListener(searchController!)
-            
-            view.addSubview(searchController!.view)
-            addChildViewController(searchController!)
-            searchController!.view.snp_makeConstraints { make in
-                make.top.equalTo(self.urlBar.snp_bottom)
-                make.left.right.bottom.equalTo(self.view)
-                return
-            }
+        if let selectedTab = tabManager.selectedTab {
+            searchController?.updatePrivateMode(selectedTab.isPrivate)
         }
         
         homePanelController?.view?.hidden = true
@@ -1191,8 +1194,11 @@ class BrowserViewController: UIViewController {
     private func updateURLBarDisplayURL(tab: Tab) {
         urlBar.currentURL = tab.displayURL
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
-        let isPage = tab.displayURL?.isWebPage() ?? false
-        navigationToolbar.updatePageStatus(isWebPage: isPage)
+        // Cliqz: update the toolbar only if the search controller is not visible
+        if searchController?.view.hidden == true {
+            let isPage = tab.displayURL?.isWebPage() ?? false
+            navigationToolbar.updatePageStatus(isWebPage: isPage)
+        }
 
         guard let url = tab.displayURL?.absoluteString else {
             return
@@ -1815,6 +1821,8 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
         // Cliqz: always show search controller even if query was empty
+        createSearchController()
+        
 		if text != "" {
 			hideHomePanelController()
 			showSearchController()
@@ -1896,9 +1904,12 @@ extension BrowserViewController: URLBarDelegate {
         self.logToolbarBlurSignal()
         
         hideSearchController()
-        // Cliqz: update URL bar when leaving overlay
+        // Cliqz: update URL bar and the tab toolbar when leaving overlay
         if let tab = tabManager.selectedTab {
             updateUIForReaderHomeStateForTab(tab)
+            
+            let isPage = tab.displayURL?.isWebPage() ?? false
+            navigationToolbar.updatePageStatus(isWebPage: isPage)
         }
 		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
         updateInContentHomePanel(urlBar.currentURL)
@@ -4009,6 +4020,8 @@ extension BrowserViewController {
             if (selectedTab.inSearchMode) {
                 self.urlBar.enterOverlayMode("", pasted: true)
                 scrollController.showToolbars(animated: false)
+            } else if self.homePanelController?.view.hidden == false {
+                self.urlBar.leaveOverlayMode()
             }
         }
         print("[switchToSearchModeIfNeeded]")
