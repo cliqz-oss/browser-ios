@@ -11,6 +11,9 @@ import Alamofire
 import SnapKit
 import WebImage
 
+
+
+
 class LogoLoader {
     
 	let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
@@ -19,18 +22,40 @@ class LogoLoader {
     
     
      func loadLogo(url: String, completionBlock:(image:UIImage?, error: NSError?) -> Void){
-        self.constructImageURL(url) { (imageUrl) in
+        self.constructImageURL(url) { (imageUrl, hasSecond, urlWithoutSecond) in
             
             guard (imageUrl != nil) else {completionBlock(image: nil, error: self.errorWithMessage("imageUrl is nil")); return}
             
             guard let url = NSURL(string: imageUrl!) else {completionBlock(image: nil, error: self.errorWithMessage("could not convert imageUrl to NSURL")); return}
             
-            SDWebImageManager.sharedManager().downloadImageWithURL(url, options:SDWebImageOptions.HighPriority, progress:{ (receivedSize, expectedSize) in },
-                completed: { (image , error , cacheType , finished, url) in
-                    if error == nil && image != nil {completionBlock(image: image, error: nil)}
-                    else {completionBlock(image:nil, error: self.errorWithMessage("image download failed"))}
+            self.downloadImage(url, completed: { (image, error) in
+                if error == nil && image != nil {completionBlock(image: image, error: nil)}
+                else
+                {
+                    if hasSecond == true {
+                        if let urlString = urlWithoutSecond, let url = NSURL(string: urlString){
+                            self.downloadImage(url, completed: { (image, error) in
+                                if error == nil && image != nil {completionBlock(image: image, error: nil)}
+                                else{
+                                    completionBlock(image:nil, error: self.errorWithMessage("image download failed - \(url)"))
+                                }
+                            })
+                        }
+                        else{
+                            completionBlock(image: nil, error: self.errorWithMessage("could not convert imageUrl to NSURL - urlWithoutFirst"))
+                        }
+                    }
+                    else{
+                       completionBlock(image:nil, error: self.errorWithMessage("image download failed - \(url)"))
+                    }
+                }
             })
         }
+    }
+    
+    func downloadImage(url:NSURL, completed:(image:UIImage?, error: NSError?) -> Void){
+        SDWebImageManager.sharedManager().downloadImageWithURL(url, options:SDWebImageOptions.HighPriority, progress:{ (receivedSize, expectedSize) in },
+                                                               completed: { (image , error , cacheType , finished, url) in  completed(image:image, error:error)})
     }
 
 	func generateFakeLogo(url: String?) -> UIView? {
@@ -62,12 +87,14 @@ class LogoLoader {
     }
     
     
-    func constructImageURL(url: String, completionBlock:(imageUrl: String?) -> Void) {
+    func constructImageURL(url: String, completionBlock:(imageUrl: String?, hasSecond: Bool?, urlWithoutSecond: String?) -> Void) {
         lastLogoVersion() { (version) in
-            if version == nil {completionBlock(imageUrl: nil); return}
+            if version == nil {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let hostComps = self.getHostComponents(forURL: url)
-            if hostComps.count < 1 {completionBlock(imageUrl: nil); return}
+            if hostComps.count < 1 {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
+            
+            var hasSecond = false
             
             let first = hostComps[0]
             let second : String
@@ -75,11 +102,12 @@ class LogoLoader {
             var imageURL = "\(mainURL)/\(first)/$_192.png"
             
             if hostComps.count > 1 {
+                hasSecond = true
                 second = !hostComps[1].isEmpty ? hostComps[1] + "." : hostComps[1]
                 imageURL = "\(mainURL)/\(first)/\(second)$_192.png"
             }
             
-            completionBlock(imageUrl: imageURL)
+            completionBlock(imageUrl: imageURL, hasSecond: hasSecond, urlWithoutSecond:"\(mainURL)/\(first)/$_192.png")
         }
     }
 
