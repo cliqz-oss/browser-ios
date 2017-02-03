@@ -101,11 +101,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc private func cancelActions(sender: UITapGestureRecognizer) {
         
-		let cells = self.topSitesCollection.visibleCells()
-		for cell in cells as! [TopSiteViewCell] {
-			cell.isDeleteMode = false
-		}
-        
         self.removeDeletedTopSites()
         
         // fire `didSelectRowAtIndexPath` when user click on a cell in news table
@@ -117,6 +112,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     
     private func removeDeletedTopSites(){
+        
+        let cells = self.topSitesCollection.visibleCells()
+        for cell in cells as! [TopSiteViewCell] {
+            cell.isDeleteMode = false
+        }
+        
         self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
         for index in self.topSitesIndexesToRemove {
             self.topSites.removeAtIndex(index)
@@ -485,6 +486,9 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		}
         
         self.topSitesIndexesToRemove.append(index)
+        if self.topSites.count == self.topSitesIndexesToRemove.count {
+            self.removeDeletedTopSites()
+        }
 	}
 }
 
