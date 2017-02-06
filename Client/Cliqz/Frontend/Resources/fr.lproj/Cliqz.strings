@@ -176,7 +176,7 @@
 "Warning: deceptive website!" =  "Attention: site malveillant !";
 
 /* Antiphishing alert message */
-"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser vos identifiants, vos mots de passe ou toutes autres données sensibles.";
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser tes identifiants, tes mots de passe ou toutes autres données sensibles.";
 
 /* Back to safe site buttun title in antiphishing alert title */
 "Back to safe site" = "Retourner à la page sûre";
