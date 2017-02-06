@@ -67,10 +67,7 @@ public class BrowserDB {
         }
 
         // Create or update will also delete and create the database if our key was incorrect.
-        self.createOrUpdate(self.schemaTable)
-		
-		// Cliqz: new method call to extend tables if needed
-		self.extendTables()
+		switch self.createOrUpdate(self.schemaTable) {
         case .Failure:
             log.error("Failed to create/update the scheme table. Aborting.")
             fatalError()
@@ -79,6 +76,9 @@ public class BrowserDB {
         case .Success:
             log.debug("db: \(file) with secret = \(secretKey) has been created")
         }
+
+		// Cliqz: new method call to extend tables if needed
+		self.extendTables()
     }
 
     // Creates a table and writes its table info into the table-table database.

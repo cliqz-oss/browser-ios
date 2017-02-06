@@ -62,7 +62,7 @@ class Tab: NSObject {
 
 //  Cliqz:  var webView: WKWebView? = nil
 	var webView: CliqzWebView? = nil
-    var tabDelegate: TabDelegate? = nil
+    weak var tabDelegate: TabDelegate? = nil
     weak var appStateDelegate: AppStateDelegate?
     var bars = [SnackBar]()
     var favicons = [Favicon]()
