@@ -16,51 +16,63 @@ import WebImage
 
 class LogoLoader {
     
-	let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
-	let logoVersionKey: String = "logoVersion"
-    let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
+	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
+	static let logoVersionKey: String = "logoVersion"
+    static let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
     
     
-     func loadLogo(url: String, completionBlock:(image:UIImage?, error: NSError?) -> Void){
-        self.constructImageURL(url) { (imageUrl, hasSecond, urlWithoutSecond) in
+    class func loadLogoImageOrFakeLogo(url:String, completed:(image: UIImage?, fakeLogo:UIView?, error: NSError?) -> Void){
+        LogoLoader.loadLogo(url) { (image, error) in
+            if let img = image {
+                completed(image: img, fakeLogo: nil, error: error)
+            }
+            else{
+                completed(image: nil, fakeLogo: LogoLoader.generateFakeLogo(url), error: error)
+            }
+        }
+    }
+    
+    
+     class func loadLogo(url: String, completionBlock:(image:UIImage?, error: NSError?) -> Void){
+        LogoLoader.constructImageURL(url) { (imageUrl, hasSecond, urlWithoutSecond) in
             
-            guard (imageUrl != nil) else {completionBlock(image: nil, error: self.errorWithMessage("imageUrl is nil")); return}
+            guard (imageUrl != nil) else {completionBlock(image: nil, error: LogoLoader.errorWithMessage("imageUrl is nil")); return}
             
-            guard let url = NSURL(string: imageUrl!) else {completionBlock(image: nil, error: self.errorWithMessage("could not convert imageUrl to NSURL")); return}
+            guard let url = NSURL(string: imageUrl!) else {completionBlock(image: nil, error: LogoLoader.errorWithMessage("could not convert imageUrl to NSURL")); return}
             
-            self.downloadImage(url, completed: { (image, error) in
+            LogoLoader.downloadImage(url, completed: { (image, error) in
                 if error == nil && image != nil {completionBlock(image: image, error: nil)}
                 else
                 {
                     if hasSecond == true {
                         if let urlString = urlWithoutSecond, let url = NSURL(string: urlString){
-                            self.downloadImage(url, completed: { (image, error) in
+                            LogoLoader.downloadImage(url, completed: { (image, error) in
                                 if error == nil && image != nil {completionBlock(image: image, error: nil)}
                                 else{
-                                    completionBlock(image:nil, error: self.errorWithMessage("image download failed - \(url)"))
+                                    completionBlock(image:nil, error: LogoLoader.errorWithMessage("image download failed - \(url)"))
                                 }
                             })
                         }
                         else{
-                            completionBlock(image: nil, error: self.errorWithMessage("could not convert imageUrl to NSURL - urlWithoutFirst"))
+                            completionBlock(image: nil, error: LogoLoader.errorWithMessage("could not convert imageUrl to NSURL - urlWithoutFirst"))
                         }
                     }
                     else{
-                       completionBlock(image:nil, error: self.errorWithMessage("image download failed - \(url)"))
+                       completionBlock(image:nil, error: LogoLoader.errorWithMessage("image download failed - \(url)"))
                     }
                 }
             })
         }
     }
     
-    func downloadImage(url:NSURL, completed:(image:UIImage?, error: NSError?) -> Void){
+    class func downloadImage(url:NSURL, completed:(image:UIImage?, error: NSError?) -> Void){
         SDWebImageManager.sharedManager().downloadImageWithURL(url, options:SDWebImageOptions.HighPriority, progress:{ (receivedSize, expectedSize) in },
                                                                completed: { (image , error , cacheType , finished, url) in  completed(image:image, error:error)})
     }
 
-	func generateFakeLogo(url: String?) -> UIView? {
+	class func generateFakeLogo(url: String?) -> UIView? {
         guard (url != nil) else {return nil}
-        let hostComps = self.getHostComponents(forURL: url!)
+        let hostComps = LogoLoader.getHostComponents(forURL: url!)
         guard hostComps.count > 0 else {return nil}
         let hostName = hostComps[0]
 		let v = UIView()
@@ -82,15 +94,15 @@ class LogoLoader {
 	}
     
     
-    func errorWithMessage(message:String!) -> NSError{
+    class func errorWithMessage(message:String!) -> NSError{
         return NSError(domain: "com.cliqz.LogoLoader", code: 501, userInfo: ["error":message])
     }
     
     
-    func constructImageURL(url: String, completionBlock:(imageUrl: String?, hasSecond: Bool?, urlWithoutSecond: String?) -> Void) {
-        lastLogoVersion() { (version) in
+    class func constructImageURL(url: String, completionBlock:(imageUrl: String?, hasSecond: Bool?, urlWithoutSecond: String?) -> Void) {
+        LogoLoader.lastLogoVersion() { (version) in
             if version == nil {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
-            let hostComps = self.getHostComponents(forURL: url)
+            let hostComps = LogoLoader.getHostComponents(forURL: url)
             if hostComps.count < 1 {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
             
@@ -112,7 +124,7 @@ class LogoLoader {
     }
 
 
-    func isLogoVersionExpired() -> Bool {
+    class func isLogoVersionExpired() -> Bool {
 		let date = LocalDataStore.objectForKey(logoVersionUpdatedDateKey)
 		if date == nil { return true }
 		if let d = date as? NSDate where NSDate().daysSinceDate(d) > 1 {
@@ -121,16 +133,16 @@ class LogoLoader {
 		return false
 	}
 
-	func lastLogoVersion(completionBlock: (String!) -> Void) {
-		if self.isLogoVersionExpired() {
+	class func lastLogoVersion(completionBlock: (String!) -> Void) {
+		if LogoLoader.isLogoVersionExpired() {
 			let logoVersionURL = "https://newbeta.cliqz.com/api/v1/config"
 			if let url = NSURL(string: logoVersionURL) {
 				Alamofire.request(.GET, url).responseJSON { response in
 					if response.result.isSuccess,
 						let data = response.result.value as? [String: AnyObject],
 						let versionID = data["logoVersion"] as? String {
-						LocalDataStore.setObject(versionID, forKey: self.logoVersionKey)
-						LocalDataStore.setObject(NSDate(), forKey: self.logoVersionUpdatedDateKey)
+						LocalDataStore.setObject(versionID, forKey: LogoLoader.logoVersionKey)
+						LocalDataStore.setObject(NSDate(), forKey: LogoLoader.logoVersionUpdatedDateKey)
 						completionBlock(versionID)
 					} else {
 						completionBlock(nil)
@@ -147,7 +159,7 @@ class LogoLoader {
 		}
 	}
 
-    func getHostComponents(forURL url: String) -> [String] {
+    class func getHostComponents(forURL url: String) -> [String] {
 		var result = [String]()
 		var domainIndex = Int.max
 		let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
@@ -156,8 +168,8 @@ class LogoLoader {
 			let comps = host.componentsSeparatedByString(".")
 			domainIndex = comps.count - 1
 			if let lastComp = comps.last,
-				firstLevel = self.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
-				if let _ = self.topDomains[comps[comps.count - 2]] {
+				firstLevel = LogoLoader.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
+				if let _ = LogoLoader.topDomains[comps[comps.count - 2]] {
 					domainIndex = comps.count - 2
 				}
 			}
@@ -180,6 +192,23 @@ class LogoLoader {
 	}
 
 }
+
+extension UICollectionViewCell{
+    func loadLogo(url: String, completed:(image: UIImage?, fakeLogo:UIView?, error: NSError?) -> Void){
+        LogoLoader.loadLogoImageOrFakeLogo(url) { (image, fakeLogo, error) in
+            completed(image: image, fakeLogo: fakeLogo, error: error)
+        }
+    }
+}
+
+extension UITableViewCell{
+    func loadLogo(url: String, completed:(image: UIImage?, fakeLogo:UIView?, error: NSError?) -> Void){
+        LogoLoader.loadLogoImageOrFakeLogo(url) { (image, fakeLogo, error) in
+            completed(image: image, fakeLogo: fakeLogo, error: error)
+        }
+    }
+}
+
 
 
 
