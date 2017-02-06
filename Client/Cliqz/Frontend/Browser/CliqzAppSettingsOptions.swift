@@ -129,7 +129,7 @@ class ReportFormSetting: Setting {
     }
     
     override var url: NSURL? {
-        if let deviceLanguage = UIDevice.deviceLanguage() where deviceLanguage == "de"{
+        if let deviceLanguage = NSLocale.currentLocale().languageCode where deviceLanguage == "de"{
             return NSURL(string: "https://cliqz.com/report-url")
         }
         return NSURL(string: "https://cliqz.com/en/report-url")
@@ -246,43 +246,3 @@ class RegionalSetting: Setting {
 }
 
 
-extension UIDevice{
-    
-    class func deviceLanguage() -> String? {
-        let systemBundle: NSBundle = NSBundle(forClass: UIView.self)
-        let englishLocale: NSLocale = NSLocale(localeIdentifier: "en")
-        
-        let preferredLanguages: [String] = NSLocale.preferredLanguages()
-        
-        for language: String in preferredLanguages {
-            let languageComponents: [String : String] = NSLocale.componentsFromLocaleIdentifier(language)
-            
-            guard let languageCode: String = languageComponents[NSLocaleLanguageCode] else {
-                continue
-            }
-            
-            // ex: es_MX.lproj, zh_CN.lproj
-            if let countryCode: String = languageComponents[NSLocaleCountryCode] {
-                if systemBundle.pathForResource("\(languageCode)_\(countryCode)", ofType: "lproj") != nil {
-                    // returns language and country code because it appears that the actual language is coded within the country code aswell
-                    // for example: zh_CN probably mandarin, zh_HK probably cantonese
-                    return language
-                }
-            }
-            
-            // ex: English.lproj, German.lproj
-            if let languageName: String = englishLocale.displayNameForKey(NSLocaleIdentifier, value: languageCode) {
-                if systemBundle.pathForResource(languageName, ofType: "lproj") != nil {
-                    return languageCode
-                }
-            }
-            
-            // ex: pt.lproj, hu.lproj
-            if systemBundle.pathForResource(languageCode, ofType: "lproj") != nil {
-                return languageCode
-            }
-        }
-        
-        return nil
-    }
-}
