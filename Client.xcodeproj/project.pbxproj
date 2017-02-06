@@ -593,7 +593,6 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
-		AFE8C8E41E432311009DF2CB /* FreshTabUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE8C8E31E432311009DF2CB /* FreshTabUtils.swift */; };
 		AFEC635C1E3B8C9200ED1E7D /* LaunchScreen.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFEC635B1E3B8C9200ED1E7D /* LaunchScreen.xcassets */; };
 		B729F06A1B75CBEF00745F7A /* UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729F0691B75CBEF00745F7A /* UserAgent.swift */; };
 		C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */; };
@@ -2030,7 +2029,6 @@
 		A91528D11D0E637600CD0425 /* NoImageModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NoImageModeHelper.js; sourceTree = "<group>"; };
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
-		AFE8C8E31E432311009DF2CB /* FreshTabUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshTabUtils.swift; sourceTree = "<group>"; };
 		AFEC635B1E3B8C9200ED1E7D /* LaunchScreen.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LaunchScreen.xcassets; sourceTree = "<group>"; };
 		B729F0691B75CBEF00745F7A /* UserAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgent.swift; path = ../Shared/UserAgent.swift; sourceTree = "<group>"; };
 		C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListViewController.swift; sourceTree = "<group>"; };
@@ -3771,7 +3769,6 @@
 				4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */,
 				4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */,
 				4FB77C661E39F3620008E5CC /* NewsViewCell.swift */,
-				AFE8C8E31E432311009DF2CB /* FreshTabUtils.swift */,
 			);
 			name = Freshtab;
 			sourceTree = "<group>";
@@ -6253,7 +6250,6 @@
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
 				1E79DE791D508368006BEB4A /* AWSCancellationToken.m in Sources */,
-				AFE8C8E41E432311009DF2CB /* FreshTabUtils.swift in Sources */,
 				7B0B1B9D1C1B6A3F00DF4AB5 /* InstructionsViewController.swift in Sources */,
 				1E79DD281D4FB2C5006BEB4A /* RecommendationsViewController.swift in Sources */,
 				D308E4E41A5306F500842685 /* SearchEngines.swift in Sources */,

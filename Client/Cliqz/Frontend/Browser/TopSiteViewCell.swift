@@ -107,6 +107,8 @@ class TopSiteViewCell: UICollectionViewCell {
 	
 	@objc private func hideTopSite() {
         self.logoImageView.image = nil
+        self.fakeLogoView?.removeFromSuperview()
+        self.fakeLogoView = nil
         self.isDeleteMode = false
 		self.delegate?.topSiteHided(self.tag)
 	}

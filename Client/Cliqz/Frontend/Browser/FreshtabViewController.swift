@@ -15,9 +15,6 @@ import Alamofire
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    var topSiteManager : TopSiteManager?
-    var topNewsManager : TopNewsManager?
-    
 	var profile: Profile!
 	var isForgetMode = false {
 		didSet {
@@ -54,8 +51,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
-        self.topSiteManager = TopSiteManager.shared
-        self.topNewsManager = TopNewsManager.shared
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -101,11 +96,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc private func cancelActions(sender: UITapGestureRecognizer) {
         
-		let cells = self.topSitesCollection.visibleCells()
-		for cell in cells as! [TopSiteViewCell] {
-			cell.isDeleteMode = false
-		}
-        
         self.removeDeletedTopSites()
         
         // fire `didSelectRowAtIndexPath` when user click on a cell in news table
@@ -117,12 +107,16 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     
     private func removeDeletedTopSites(){
+        
+        let cells = self.topSitesCollection.visibleCells()
+        for cell in cells as! [TopSiteViewCell] {
+            cell.isDeleteMode = false
+        }
+        
         self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
         for index in self.topSitesIndexesToRemove {
             self.topSites.removeAtIndex(index)
         }
-        
-        self.topSiteManager?.update(self.topSites)
         
         self.topSitesIndexesToRemove.removeAll()
         self.topSitesCollection.reloadData()
@@ -220,6 +214,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
+        //self.topSitesCollection.reloadData()
 	}
     
     private func loadRegion() {
@@ -255,7 +250,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						articles = extra["articles"] as? [[String: AnyObject]]
 						{
 							self.news = articles
-                            self.topNewsManager?.update(self.news)
 							self.newsTableView?.reloadData()
 						}
 				}
@@ -290,10 +284,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 					make.height.equalTo(14)
 				})
 			} else {
-                self.topSiteManager?.update(self.topSites)
 				self.emptyTopSitesHint.removeFromSuperview()
+                self.topSitesCollection.reloadData()
 			}
-			self.topSitesCollection.reloadData()
 			return succeed()
 		}
 	}
@@ -333,19 +326,22 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			} else if let title = n["title"] as? String {
 				cell.URLLabel.text =  title
 			}
+            
+            cell.tag = indexPath.row
+            
 			if let url = n["url"] as? String {
-                if let hostName = self.topNewsManager?.hostName(url){
-                    if (self.topNewsManager != nil && self.topNewsManager?.topNewsDict != nil && self.topNewsManager?.topNewsDict[hostName]?.image == nil) {
-                        let fakeView = self.topNewsManager?.topNewsDict[hostName]?.fakeLogo
-                        if let v = fakeView {
-                            cell.fakeLogoView = v
-                            cell.logoContainerView.addSubview(v)
-                            v.snp_makeConstraints(closure: { (make) in
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                    if cell.tag == indexPath.row{
+                        if let img = image {
+                            cell.logoImageView.image = img
+                        }
+                        else if let fakeView = fakeLogo{
+                            cell.fakeLogoView = fakeView
+                            cell.logoContainerView.addSubview(fakeView)
+                            fakeView.snp_makeConstraints(closure: { (make) in
                                 make.top.left.right.bottom.equalTo(cell.logoContainerView)
                             })
                         }
-                    }else if (self.topNewsManager != nil && self.topNewsManager?.topNewsDict != nil && self.topNewsManager?.topNewsDict[hostName]?.image != nil){
-                        cell.logoImageView.image = self.topNewsManager?.topNewsDict[hostName]?.image
                     }
                 }
 			}
@@ -417,19 +413,19 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 		if indexPath.row < self.topSites.count {
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
-			if let urlString = s["url"] {
-                if let hostName = self.topSiteManager?.hostName(urlString){
-                    if (self.topSiteManager != nil && self.topSiteManager?.topSiteDict != nil && self.topSiteManager?.topSiteDict[hostName]?.image == nil) {
-                        let fakeView = self.topSiteManager?.topSiteDict[hostName]?.fakeLogo
-                        if let v = fakeView {
-                            cell.fakeLogoView = v
-                            cell.logoContainerView.addSubview(v)
-                            v.snp_makeConstraints(closure: { (make) in
+			if let url = s["url"] {
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                    if cell.tag == indexPath.row{
+                        if let img = image {
+                            cell.logoImageView.image = img
+                        }
+                        else if let fakeView = fakeLogo{
+                            cell.fakeLogoView = fakeView
+                            cell.logoContainerView.addSubview(fakeView)
+                            fakeView.snp_makeConstraints(closure: { (make) in
                                 make.top.left.right.bottom.equalTo(cell.logoContainerView)
                             })
                         }
-                    }else if (self.topSiteManager != nil && self.topSiteManager?.topSiteDict != nil && self.topSiteManager?.topSiteDict[hostName]?.image != nil){
-                        cell.logoImageView.image = self.topSiteManager?.topSiteDict[hostName]?.image
                     }
                 }
 			}
@@ -489,6 +485,9 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		}
         
         self.topSitesIndexesToRemove.append(index)
+        if self.topSites.count == self.topSitesIndexesToRemove.count {
+            self.removeDeletedTopSites()
+        }
 	}
 }
 
