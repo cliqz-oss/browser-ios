@@ -157,6 +157,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
 				
+				ReportFormSetting(),
+				
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),

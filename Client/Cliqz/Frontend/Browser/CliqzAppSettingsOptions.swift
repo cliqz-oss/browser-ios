@@ -122,6 +122,29 @@ class SendCliqzFeedbackSetting: Setting {
     
 }
 
+//Cliqz: Added Setting for redirecting to report form
+class ReportFormSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"))
+    }
+    
+    override var url: NSURL? {
+        if let deviceLanguage = NSLocale.currentLocale().languageCode where deviceLanguage == "de"{
+            return NSURL(string: "https://cliqz.com/report-url")
+        }
+        return NSURL(string: "https://cliqz.com/en/report-url")
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let contactSignal = TelemetryLogEventType.Settings("main", "click", "contact", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(contactSignal)
+    }
+    
+}
+
 // Cliqz: Custom Bool settings for News Push Notifications
 class EnablePushNotifications: BoolSetting {
 	
@@ -221,3 +244,5 @@ class RegionalSetting: Setting {
         TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
     }
 }
+
+
