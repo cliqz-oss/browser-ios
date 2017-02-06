@@ -26,6 +26,10 @@
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
 "FAQs & Support" = "FAQs & Support";
 
+/* Menu item in settings used to redirect to Report Page where people can report pages */
+
+"Report Website" = "Report Website";
+
 /* Open search section of settings */
 "Search" = "Search";
 
