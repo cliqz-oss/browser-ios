@@ -224,7 +224,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         
         Alamofire.request(.GET, configUrl, parameters: nil, encoding: .JSON, headers: nil).responseJSON { (response) in
             if response.result.isSuccess {
-                if let location = response.result.value!["location"] as? String {
+                if let location = response.result.value!["location"] as? String, backends = response.result.value!["backends"] as? [String]
+                where backends.contains(location) {
+                    
                     self.region = location.uppercaseString
                     SettingsPrefs.updateRegionPref(self.region!)
                     self.loadNews()
