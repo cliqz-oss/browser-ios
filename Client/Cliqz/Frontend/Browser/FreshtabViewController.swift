@@ -330,7 +330,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
             cell.tag = indexPath.row
             
 			if let url = n["url"] as? String {
-                cell.loadLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
                     if cell.tag == indexPath.row{
                         if let img = image {
                             cell.logoImageView.image = img
@@ -414,7 +414,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let url = s["url"] {
-                cell.loadLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
                     if cell.tag == indexPath.row{
                         if let img = image {
                             cell.logoImageView.image = img

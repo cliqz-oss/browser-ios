@@ -193,22 +193,3 @@ class LogoLoader {
 
 }
 
-extension UICollectionViewCell{
-    func loadLogo(url: String, completed:(image: UIImage?, fakeLogo:UIView?, error: NSError?) -> Void){
-        LogoLoader.loadLogoImageOrFakeLogo(url) { (image, fakeLogo, error) in
-            completed(image: image, fakeLogo: fakeLogo, error: error)
-        }
-    }
-}
-
-extension UITableViewCell{
-    func loadLogo(url: String, completed:(image: UIImage?, fakeLogo:UIView?, error: NSError?) -> Void){
-        LogoLoader.loadLogoImageOrFakeLogo(url) { (image, fakeLogo, error) in
-            completed(image: image, fakeLogo: fakeLogo, error: error)
-        }
-    }
-}
-
-
-
-
