@@ -231,8 +231,9 @@ class AppStatus {
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
             let prefs = self.getEnvironmentPrefs(profile)
+            let country = SettingsPrefs.getDefaultRegion()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs, country))
 
         }
     }
