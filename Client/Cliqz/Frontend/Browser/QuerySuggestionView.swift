@@ -18,8 +18,8 @@ class QuerySuggestionView: UIView {
     
     private let kViewHeight: CGFloat = 44
     private let scrollView = UIScrollView()
-    private let suggestionFont = UIFont.systemFontOfSize(17)
-    private let fontAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(17)]
+    private let boldFontAttributes = [NSFontAttributeName: UIFont.boldSystemFontOfSize(17), NSForegroundColorAttributeName: UIColor.whiteColor()]
+    private let normalFontAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(16), NSForegroundColorAttributeName: UIColor.whiteColor()]
     private let bgColor = UIColor(rgb: 0xADB5BD)
     private let separatorBgColor = UIColor(rgb: 0xC7CBD3)
     
@@ -119,6 +119,11 @@ class QuerySuggestionView: UIView {
         }
     }
     
+    private func getWidth(suggestion: String) -> CGFloat {
+        let sizeOfString = (suggestion as NSString).sizeWithAttributes(boldFontAttributes)
+        return sizeOfString.width
+    }
+
     private func createVerticalSeparator(x: CGFloat) -> UIView {
         let verticalSeparator = UIView()
         verticalSeparator.frame = CGRectMake(x-11, 0, 1, kViewHeight)
@@ -128,17 +133,29 @@ class QuerySuggestionView: UIView {
     
     private func createSuggestionButton(x: CGFloat, suggestion: String, suggestionWidth: CGFloat) -> UIButton {
         let button = UIButton(type: .Custom)
-        button.setTitle(suggestion, forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        button.titleLabel?.font = suggestionFont
+        let suggestionTitle = getTitle(suggestion)
+        button.setAttributedTitle(suggestionTitle, forState: .Normal)
         button.frame = CGRectMake(x, 0, suggestionWidth, kViewHeight)
         button.addTarget(self, action: #selector(selectSuggestion(_:)), forControlEvents: .TouchUpInside)
         return button
     }
     
-    private func getWidth(suggestion: String) -> CGFloat {
-        let sizeOfString = (suggestion as NSString).sizeWithAttributes(fontAttributes)
-        return sizeOfString.width
+    private func getTitle(suggestion: String) -> NSAttributedString {
+        guard let prefix = currentText else {
+            return NSMutableAttributedString()
+        }
+        var title: NSMutableAttributedString!
+        
+        if let range = suggestion.rangeOfString(prefix) where range.startIndex == suggestion.startIndex {
+            title = NSMutableAttributedString(string:prefix, attributes:normalFontAttributes)
+            var suffix = suggestion
+            suffix.replaceRange(range, with: "")
+            title.appendAttributedString(NSAttributedString(string: suffix, attributes:boldFontAttributes))
+            
+        } else {
+            title = NSMutableAttributedString(string:suggestion, attributes:boldFontAttributes)
+        }
+        return title
     }
     
     @objc private func selectSuggestion(button: UIButton) {
