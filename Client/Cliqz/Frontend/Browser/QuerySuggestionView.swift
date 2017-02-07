@@ -68,6 +68,14 @@ class QuerySuggestionView: UIView {
         
         
     }
+    
+    func clearSuggestions() {
+        let subViews = scrollView.subviews
+        for subView in subViews {
+            subView.removeFromSuperview()
+        }
+    }
+    
     //MARK:- Helper methods
     
     private func processSuggestionsResponse(query: String, responseData: AnyObject) {
@@ -75,22 +83,12 @@ class QuerySuggestionView: UIView {
         let suggestions = suggestionsResponse["suggestions"] as! [String]
         dispatch_async(dispatch_get_main_queue(), {[weak self] in
             if query == self?.currentText {
-                self?.removeOldSuggestions()
+                self?.clearSuggestions()
                 self?.showSuggestions(suggestions)
             }
         })
     }
     
-    private func clearSuggestions() {
-        removeOldSuggestions()
-    }
-    
-    private func removeOldSuggestions() {
-        let subViews = scrollView.subviews
-        for subView in subViews {
-            subView.removeFromSuperview()
-        }
-    }
     
     private func showSuggestions(suggestions: [String]) {
         var x: CGFloat = 10
