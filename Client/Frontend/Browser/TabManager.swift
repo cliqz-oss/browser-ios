@@ -393,7 +393,7 @@ class TabManager : NSObject {
 
         // Make sure we never reach 0 normal tabs
         if !tab.isPrivate && normalTabs.count == 0 {
-            addTab()
+            addTabAndSelect()
         }
 
         if flushToDisk {
