@@ -39,6 +39,8 @@ class QuerySuggestionView: UIView {
         scrollView.frame = frame
         self.addSubview(self.scrollView)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(QuerySuggestionView.viewRotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -144,5 +146,14 @@ class QuerySuggestionView: UIView {
             return
         }
         delegate?.autoComplete(suggestion + " ")
+    }
+    
+    @objc private func viewRotated() {
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) {
+            self.hidden = true
+        } else if UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) {
+            self.hidden = false
+        }
+        
     }
 }
