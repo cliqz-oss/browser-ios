@@ -269,3 +269,6 @@
 
 /* Localized String for specific region */
 "region-FR" = "Frankreich";
+
+/* Query Suggestion setting */
+"Search Term Suggestions" = "Suchwort-Vorschläge";

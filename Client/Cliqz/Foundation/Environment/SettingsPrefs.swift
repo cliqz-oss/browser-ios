@@ -18,6 +18,7 @@ class SettingsPrefs {
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
     static let blockPopupsPrefKey = "blockPopups"
     static let countryPrefKey = "UserCountry"
+    static let querySuggestionPrefKey = "QuerySuggestion"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -115,6 +116,18 @@ class SettingsPrefs {
     
     class func updateRegionPref(newValue: String) {
         SettingsPrefs.updatePref(countryPrefKey, value: newValue)
+    }
+    
+    class func updateQuerySuggestionPref(newValue: Bool) {
+        SettingsPrefs.updatePref(querySuggestionPrefKey, value: newValue)
+    }
+    
+    class func getQuerySuggestionPref() -> Bool {
+        let defaultValue = true
+        if let querySuggestionPref = SettingsPrefs.getBoolPref(querySuggestionPrefKey) {
+            return querySuggestionPref
+        }
+        return defaultValue
     }
     
     // MARK: - Private helper metods

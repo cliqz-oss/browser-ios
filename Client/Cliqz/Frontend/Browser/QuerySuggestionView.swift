@@ -48,13 +48,16 @@ class QuerySuggestionView: UIView {
     }
     
     func didEnterText(text: String) {
-        currentText = text
-        
+        guard SettingsPrefs.getQuerySuggestionPref() == true else {
+            self.hidden = true
+            return
+        }
         guard !text.isEmpty else {
             clearSuggestions()
             return
         }
-
+        
+        currentText = text
         ConnectionManager.sharedInstance
             .sendPlainPostRequestWithBody(querySuggestionsApiUrl,
                                      body: "query=\(text)",
@@ -147,6 +150,11 @@ class QuerySuggestionView: UIView {
     }
     
     @objc private func viewRotated() {
+        guard SettingsPrefs.getQuerySuggestionPref() == true else {
+            self.hidden = true
+            return
+        }
+        
         if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) {
             self.hidden = true
         } else if UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) {

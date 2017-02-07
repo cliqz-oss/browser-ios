@@ -270,3 +270,6 @@
 
 /* Localized String for specific region */
 "region-FR" = "France";
+
+/* Query Suggestion setting */
+"Search Term Suggestions" = "Search Term Suggestions";
