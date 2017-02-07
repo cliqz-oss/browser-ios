@@ -49,6 +49,7 @@
 		0BF8F8DA1AEFF1C900E90BC2 /* noTitle.html in Resources */ = {isa = PBXBuildFile; fileRef = 0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */; };
 		1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */; };
 		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
+		1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */; };
 		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
 		1E1432321D88539A001C27C9 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
@@ -1392,6 +1393,7 @@
 		0BF8F8D91AEFF1C900E90BC2 /* noTitle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = noTitle.html; sourceTree = "<group>"; };
 		1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Book.otf"; sourceTree = "<group>"; };
 		1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistorySwiper.swift; sourceTree = "<group>"; };
+		1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuerySuggestionView.swift; sourceTree = "<group>"; };
 		1E0926B81DFAB42E0002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/3DTouchActions.strings; sourceTree = "<group>"; };
 		1E0926B91DFAB42F0002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AuthenticationManager.strings; sourceTree = "<group>"; };
 		1E0926BA1DFAB42F0002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/BookmarkPanel.strings; sourceTree = "<group>"; };
@@ -2765,8 +2767,9 @@
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
 				4F0552711D746D4E00E2A684 /* AntitrackingUI */,
 				4FA29B131D64BFE300C59F5E /* Dashboard */,
-				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
 				4FF239C71D52464A00EEDE89 /* WebView */,
+				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
+				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
 				1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
 				1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */,
@@ -6306,6 +6309,7 @@
 				E4CD9F2D1A6DC91200318571 /* TabLocationView.swift in Sources */,
 				1E79DE901D508368006BEB4A /* NSArray+AWSMTLManipulationAdditions.m in Sources */,
 				0BB5B2881AC0A2B90052877D /* SnackBar.swift in Sources */,
+				1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */,
 				7BEFC6801BFF68C30059C952 /* QuickActions.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
 				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
