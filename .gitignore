@@ -76,3 +76,7 @@ MozBuildID.xcconfig
 # Cliqz Extension files
 Extension/*
 !Extension/.gitkeep
+
+# React native
+node_modules/
+Pods/
