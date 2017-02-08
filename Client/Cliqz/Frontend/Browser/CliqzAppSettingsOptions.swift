@@ -129,7 +129,7 @@ class ReportFormSetting: Setting {
     }
     
     override var url: NSURL? {
-        if let deviceLanguage = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) as? String where deviceLanguage == "de" {
+        if let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) where languageCode as! String == "de"{
             return NSURL(string: "https://cliqz.com/report-url")
         }
         return NSURL(string: "https://cliqz.com/en/report-url")
