@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "splashTop@1x.png",
+      "filename" : "iPad_Pro-Landscape@2x-2.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "splashTop@2x.png",
+      "filename" : "iPad_Pro-Landscape@2x-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "splashTop@3x.png",
+      "filename" : "iPad_Pro-Landscape@2x.png",
       "scale" : "3x"
     }
   ],
