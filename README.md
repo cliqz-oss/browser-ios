@@ -63,6 +63,74 @@ Building the code
 
 It is possible to use [App Code](https://www.jetbrains.com/objc/download/) instead of Xcode, but you will still require the Xcode developer tools.
 
+### React Native
+
+This branch uses react-native for background javascript, and requires the following additional steps:
+
+ 1. Get react-native libraries:
+
+ ```shell
+ npm install
+ ```
+
+ 2. Use cocoa pods to setup react-native dependencies:
+
+ ```shell
+ pod install
+ ```
+
+ 3. Now you should open the xcode workspace created by cocoa pods in order to work on the project.
+
+#### React debug tools
+
+You can enable extra debug tools for React by passing a `DEBUG` flag to the react module:
+
+ 1. In the `Pods.xcodeproj` go to build settings
+ 2. Under `Preprocessor Macros` add a `DEBUG=1` option for the `Fennec` build.
+ 3. Now React debug options will be available after a 'shake' gesture in the app.
+
+#### Developing js code
+
+By default React uses the `jsengine.bundle.js` code bundle to run. In order to develop you can use the react-native command line tools to auto re-generate this bundle when you change the code.
+
+ 1. Check out the navigation-extension code on this branch: https://github.com/sam-cliqz/navigation-extension/tree/react
+ 2. Install dependencies:
+
+ ```shell
+ ./fern.js install
+ ```
+ 3. Build the react-native config into the `specific/react-native/build` directory:
+ 
+ ```shell
+ CLIQZ_OUTPUT_PATH=specific/react-native/build ./fern.js serve configs/react-native.json
+ ```
+
+ 4. Install the react-native cli tools
+
+ ```shell
+ cd specific/react-native/
+ npm install
+ ```
+
+ 5. Run the react-native bundler
+
+ ```shell
+ npm start
+ ```
+
+ 6. Configure react to use the debug server: in `Client.xcodeproj` under build settings, go to 'Other Swift Flags' and add `-DReact_Debug` to the `Fennec` flags.
+
+ 7. Now the app will load code provided by the bundler when starting.
+
+#### Creating a new bundle
+
+You can create a new js bundle using the react-native cli:
+
+```shell
+cd navigation-extension/specific/react-native
+node node_modules/react-native/local-cli/cli.js bundle --entry-file index.ios.js --platform ios --bundle-output path/to/jsengine.bundle.js
+```
+
 ## Contributor guidelines
 
 ### Creating a pull request

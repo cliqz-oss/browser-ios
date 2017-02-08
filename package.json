@@ -1,0 +1,25 @@
+{
+  "name": "jsengine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sam-cliqz/jsengine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sam-cliqz/jsengine/issues"
+  },
+  "homepage": "https://github.com/sam-cliqz/jsengine#readme",
+  "dependencies": {
+    "react": "^15.4.0-rc.4",
+    "react-native": "^0.38.0",
+    "react-native-fs": "^2.0.1-rc.2"
+  }
+}
