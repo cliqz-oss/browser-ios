@@ -287,6 +287,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			if self.topSites.count == 0 {
 				self.normalModeView.addSubview(self.emptyTopSitesHint)
 				self.emptyTopSitesHint.snp_makeConstraints(closure: { (make) in
+					make.top.equalTo(self.normalModeView).offset(3)
 					make.left.right.top.equalTo(self.normalModeView)
 					make.height.equalTo(14)
 				})
