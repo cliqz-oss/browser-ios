@@ -51,7 +51,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(loadTopsites), name: NotificationPrivateDataClearedHistory, object: nil)
 	}
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -212,7 +217,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	private func loadTopsites() {
+	@objc private func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
         //self.topSitesCollection.reloadData()
 	}
@@ -287,8 +292,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				})
 			} else {
 				self.emptyTopSitesHint.removeFromSuperview()
-                self.topSitesCollection.reloadData()
 			}
+            self.topSitesCollection.reloadData()
+            
 			return succeed()
 		}
 	}
