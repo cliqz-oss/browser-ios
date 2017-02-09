@@ -42,11 +42,14 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         let prefs = profile.prefs
 
-        var generalSettings = [
+        var generalSettings: [Setting] = [
             // Cliqz: added regional settings for cliqz search
-            RegionalSetting(settings: self),
+            RegionalSetting(settings: self)]
             // Cliqz: add settings for query suggestion
-            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting")),
+        if shouldDisplayQuerySuggestionSettings() {
+            generalSettings += [
+                BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting"))]
+        }
             // Cliqz: removed default search settings
 //            SearchSetting(settings: self),
             // Cliqz: temporarly hide news notification settings
@@ -56,7 +59,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //        if AppConstants.MOZ_NEW_TAB_CHOICES {
 //            generalSettings += [NewTabPageSetting(settings: self)]
 //        }
-//        generalSettings += [
+        generalSettings += [
 //            HomePageSetting(settings: self),
             // Cliqz: Moved `blockPopups` to SettingsPrefs
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true,
@@ -242,6 +245,16 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
         
         return super.tableView(tableView, viewForHeaderInSection: section)
+    }
+    private func shouldDisplayQuerySuggestionSettings() -> Bool {
+        var region: String
+        if let userRegion = SettingsPrefs.getRegionPref() {
+            region = userRegion
+        } else {
+            region = SettingsPrefs.getDefaultRegion()
+        }
+        
+        return region == "DE"
     }
 }
 

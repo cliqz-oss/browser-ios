@@ -42,6 +42,9 @@ class QuerySuggestionView: UIView {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(QuerySuggestionView.viewRotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         
+        if !isEnabled() {
+            self.hidden = true
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -49,7 +52,7 @@ class QuerySuggestionView: UIView {
     }
     
     func didEnterText(text: String) {
-        guard SettingsPrefs.getQuerySuggestionPref() == true else {
+        guard isEnabled() else {
             self.hidden = true
             return
         }
@@ -74,7 +77,16 @@ class QuerySuggestionView: UIView {
     }
     
     //MARK:- Helper methods
-    
+    func isEnabled() -> Bool {
+        var region: String
+        if let userRegion = SettingsPrefs.getRegionPref() {
+            region = userRegion
+        } else {
+            region = SettingsPrefs.getDefaultRegion()
+        }
+        
+        return region == "DE" && SettingsPrefs.getQuerySuggestionPref() == true
+    }
     private func processSuggestionsResponse(query: String, responseData: AnyObject) {
         let suggestionsResponse = responseData as! [String: AnyObject]
         let suggestions = suggestionsResponse["suggestions"] as! [String]
@@ -187,7 +199,7 @@ class QuerySuggestionView: UIView {
     }
     
     @objc private func viewRotated() {
-        guard SettingsPrefs.getQuerySuggestionPref() == true else {
+        guard isEnabled() else {
             self.hidden = true
             return
         }
