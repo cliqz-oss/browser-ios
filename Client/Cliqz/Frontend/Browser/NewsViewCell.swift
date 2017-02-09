@@ -68,7 +68,7 @@ class NewsViewCell: UITableViewCell {
 		let URLLeftOffset = 15
 		let URLHeight = 24
 		self.URLLabel.snp_remakeConstraints { (make) in
-			make.top.equalTo(self.cardView).offset(7)
+			make.top.equalTo(self.cardView).offset(3)
 			make.left.equalTo(self.logoImageView.snp_right).offset(URLLeftOffset)
 			make.height.equalTo(URLHeight)
 			make.right.equalTo(self.cardView)
