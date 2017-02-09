@@ -871,7 +871,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
         
         if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
-            view.clearSuggestions()
+            view.didEnterText("")
         }
         return true
     }
