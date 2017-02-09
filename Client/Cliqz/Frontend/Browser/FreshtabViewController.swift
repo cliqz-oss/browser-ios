@@ -14,14 +14,16 @@ import Alamofire
 
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
-
+    
 	var profile: Profile!
 	var isForgetMode = false {
 		didSet {
 			self.updateView()
 		}
 	}
-
+    private let configUrl = "http://newbeta.cliqz.com/api/v1/config"
+    private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
+    
 	private var topSitesCollection: UICollectionView!
 	private var newsTableView: UITableView!
 
@@ -38,7 +40,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	var isNewsExpanded = false
 	var topSites = [[String: String]]()
+    var topSitesIndexesToRemove = [Int]()
 	var news = [[String: AnyObject]]()
+    var region = SettingsPrefs.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
 
@@ -47,7 +51,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(loadTopsites), name: NotificationPrivateDataClearedHistory, object: nil)
 	}
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -59,10 +68,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cancelActions))
 		tapGestureRecognizer.delegate = self
 		self.view.addGestureRecognizer(tapGestureRecognizer)
+        loadRegion()
 	}
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+        region = SettingsPrefs.getRegionPref()
 		updateView()
 	}
 	
@@ -88,12 +99,33 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		return false
 	}
 
-	@objc private func cancelActions() {
-		let cells = self.topSitesCollection.visibleCells()
-		for cell in cells as! [TopSiteViewCell] {
-			cell.isDeleteMode = false
-		}
+    @objc private func cancelActions(sender: UITapGestureRecognizer) {
+        
+        self.removeDeletedTopSites()
+        
+        // fire `didSelectRowAtIndexPath` when user click on a cell in news table
+        let p = sender.locationInView(self.newsTableView)
+        if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
+            self.tableView(self.newsTableView, didSelectRowAtIndexPath: selectedIndex)
+        }
+        
 	}
+    
+    private func removeDeletedTopSites(){
+        
+        let cells = self.topSitesCollection.visibleCells()
+        for cell in cells as! [TopSiteViewCell] {
+            cell.isDeleteMode = false
+        }
+        
+        self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
+        for index in self.topSitesIndexesToRemove {
+            self.topSites.removeAtIndex(index)
+        }
+        
+        self.topSitesIndexesToRemove.removeAll()
+        self.topSitesCollection.reloadData()
+    }
 
 	private func constructForgetModeView() {
 		if forgetModeView == nil {
@@ -149,7 +181,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.topSitesCollection.snp_makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView)
 				make.left.right.equalTo(self.normalModeView)
-				make.height.equalTo(80)
+				make.height.equalTo(95)
 			}
 		}
 		
@@ -185,19 +217,39 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	private func loadTopsites() {
+	@objc private func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
+        //self.topSitesCollection.reloadData()
 	}
-
+    
+    private func loadRegion() {
+        guard region == nil  else {
+            return
+        }
+        
+        Alamofire.request(.GET, configUrl, parameters: nil, encoding: .JSON, headers: nil).responseJSON { (response) in
+            if response.result.isSuccess {
+                if let location = response.result.value!["location"] as? String, backends = response.result.value!["backends"] as? [String]
+                where backends.contains(location) {
+                    
+                    self.region = location.uppercaseString
+                    SettingsPrefs.updateRegionPref(self.region!)
+                    self.loadNews()
+                }
+            }
+        }
+    }
+    
 	private func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		]
-		let url = "https://newbeta.cliqz.com/api/v2/rich-header?"
-		let uri  = "path=/v2/map&q=&lang=de,en&locale=\(NSLocale.currentLocale().localeIdentifier)&force_country=true&adult=0&loc_pref=ask&count=5"
+        let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
-		Alamofire.request(.PUT, url + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
+        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(NSLocale.currentLocale().localeIdentifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
+		
+		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
 				if let result = response.result.value!["results"] as? [[String: AnyObject]] {
 					if let snippet = result[0]["snippet"] as? [String: AnyObject],
@@ -205,7 +257,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						articles = extra["articles"] as? [[String: AnyObject]]
 						{
 							self.news = articles
-							self.newsTableView.reloadData()
+							self.newsTableView?.reloadData()
 						}
 				}
 			}
@@ -213,6 +265,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	private func loadTopSitesWithLimit(limit: Int) -> Success {
+        print("[FreshTab] loadTopSitesWithLimit")
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
@@ -240,7 +293,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			} else {
 				self.emptyTopSitesHint.removeFromSuperview()
 			}
-			self.topSitesCollection.reloadData()
+            self.topSitesCollection.reloadData()
+            
 			return succeed()
 		}
 	}
@@ -280,17 +334,24 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			} else if let title = n["title"] as? String {
 				cell.URLLabel.text =  title
 			}
+            
+            cell.tag = indexPath.row
+            
 			if let url = n["url"] as? String {
-				cell.logoImageView.loadLogo(ofURL: url, completed: { (view) in
-					if let v = view {
-						cell.fakeLogoView = v
-						cell.logoContainerView.addSubview(v)
-						v.snp_makeConstraints(closure: { (make) in
-							make.top.left.right.bottom.equalTo(cell.logoContainerView)
-						})
-					}
-
-				})
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                    if cell.tag == indexPath.row{
+                        if let img = image {
+                            cell.logoImageView.image = img
+                        }
+                        else if let fakeView = fakeLogo{
+                            cell.fakeLogoView = fakeView
+                            cell.logoContainerView.addSubview(fakeView)
+                            fakeView.snp_makeConstraints(closure: { (make) in
+                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
+                            })
+                        }
+                    }
+                }
 			}
 		}
 		cell.selectionStyle = .None
@@ -343,28 +404,38 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func cellSize() -> CGSize {
+        return CGSizeMake(76,76)
+    }
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 4
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        print("[FreshTab] cellForItemAtIndexPath -> row: \(indexPath.row)")
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSiteViewCell
 		cell.tag = -1
 		cell.delegate = self
 		if indexPath.row < self.topSites.count {
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
-			if let urlString = s["url"] {
-				cell.logoImageView.loadLogo(ofURL: urlString, completed: { (view) in
-					if let v = view {
-						cell.fakeLogoView = v
-						cell.logoContainerView.addSubview(v)
-						v.snp_makeConstraints(closure: { (make) in
-							make.top.left.right.bottom.equalTo(cell.logoContainerView)
-						})
-					}
-				})
+			if let url = s["url"] {
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                    if cell.tag == indexPath.row{
+                        if let img = image {
+                            cell.logoImageView.image = img
+                        }
+                        else if let fakeView = fakeLogo{
+                            cell.fakeLogoView = fakeView
+                            cell.logoContainerView.addSubview(fakeView)
+                            fakeView.snp_makeConstraints(closure: { (make) in
+                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
+                            })
+                        }
+                    }
+                }
 			}
 		}
 		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
@@ -380,7 +451,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-		if indexPath.row < self.topSites.count {
+		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row){
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				if let url = NSURL(string: urlString) {
@@ -393,18 +464,23 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-		return CGSizeMake(70, 70)
+		return cellSize()
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-		return UIEdgeInsetsMake(10, 13, 0, 3)
+        let inset_edge = inset()
+		return UIEdgeInsetsMake(10, inset_edge + 6, 0, inset_edge + 6)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-		var w: CGFloat = 0
-		w = self.view.frame.size.width
-		return floor((w - 4*70 - 13 - 3) / 3.0)
+		return inset() - 16
 	}
+    
+    private func inset() -> CGFloat{
+        let width = self.view.frame.size.width
+        return ((width - 4 * cellSize().width)/5.0)
+    }
+    
 
 }
 
@@ -415,12 +491,12 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		if let url = s["url"] {
 			self.profile.history.hideTopSite(url)
 		}
-		let cells = self.topSitesCollection.visibleCells()
-		for cell in cells as! [TopSiteViewCell] {
-			cell.isDeleteMode = false
-		}
-		self.topSites.removeAtIndex(index)
-		self.topSitesCollection.reloadData()
+        
+        self.topSitesIndexesToRemove.append(index)
+        
+        if self.topSites.count == self.topSitesIndexesToRemove.count {
+            self.removeDeletedTopSites()
+        }
 	}
 }
 

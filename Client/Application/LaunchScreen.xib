@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C68" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="ipad12_9" orientation="portrait">
+    <device id="retina4_0" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -30,9 +30,9 @@
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashTop" translatesAutoresizingMaskIntoConstraints="NO" id="ChO-H2-Dxx">
-                    <rect key="frame" x="-649" y="0.0" width="1399" height="1154"/>
+                    <rect key="frame" x="-1266" y="0.0" width="2016" height="1154"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="ChO-H2-Dxx" secondAttribute="height" multiplier="3059:2523" id="XJD-bp-Nup"/>
+                        <constraint firstAttribute="width" secondItem="ChO-H2-Dxx" secondAttribute="height" multiplier="2732:1564" id="XJD-bp-Nup"/>
                     </constraints>
                 </imageView>
             </subviews>
@@ -53,6 +53,6 @@
     </objects>
     <resources>
         <image name="splashLogo" width="180" height="45"/>
-        <image name="splashTop" width="1019" height="841"/>
+        <image name="splashTop" width="1366" height="781"/>
     </resources>
 </document>

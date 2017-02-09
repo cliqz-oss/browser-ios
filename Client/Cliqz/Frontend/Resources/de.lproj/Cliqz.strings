@@ -26,6 +26,10 @@
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
 "FAQs & Support" = "FAQs & Support";
 
+/* Menu item in settings used to redirect to Report Page where people can report pages */
+
+"Report Website" = "Webseite melden";
+
 /* Open search section of settings */
 "Search" = "Suche";
 
@@ -253,3 +257,15 @@
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
+
+/* Search Results from */
+"Search Results from" = "Suchergebnisse von";
+
+/* Localized String for specific region */
+"region-DE" = "Deutschland";
+
+/* Localized String for specific region */
+"region-US" = "USA";
+
+/* Localized String for specific region */
+"region-FR" = "Frankreich";

@@ -43,9 +43,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let prefs = profile.prefs
 
         var generalSettings = [
-            //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
+            // Cliqz: added regional settings for cliqz search
+            RegionalSetting(settings: self),
+            // Cliqz: removed default search settings
 //            SearchSetting(settings: self),
-            CliqzSearchSetting(settings: self),
             // Cliqz: temporarly hide news notification settings
 //            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
 //				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
@@ -70,7 +71,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
 			*/
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             AdBlockerSetting(settings: self),
-            HumanWebSetting(settings: self)
+            HumanWebSetting(settings: self),
+            //Cliqz: Added CliqzSearchSetting to override the behavior of selecting search engine
+            CliqzSearchSetting(settings: self)
 
         ]
         
@@ -153,6 +156,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
+				
+				ReportFormSetting(),
 				
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),

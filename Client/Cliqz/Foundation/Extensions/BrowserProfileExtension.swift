@@ -25,8 +25,8 @@ extension Profile {
 	}
 
 	func clearPrivateData(tabManager: TabManager) {
-        clearQueries = true
-		let clearables: [Clearable] = [
+
+        let clearables: [Clearable] = [
 			HistoryClearable(profile: self),
 			BookmarksClearable(profile: self),
 			CacheClearable(tabManager: tabManager),

@@ -172,9 +172,6 @@ protocol Profile: class {
 	// Cliqz: Added CliqzShareToDestination and CliqzSQLiteBookmarks protocols to extend bookmarks behaviour
     var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> { get }
     
-    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
-    var clearQueries: Bool { get set }
-    
     // var favicons: Favicons { get }
     var prefs: Prefs { get }
     var queue: TabQueue { get }
@@ -223,9 +220,6 @@ protocol Profile: class {
 public class BrowserProfile: Profile {
     private let name: String
     internal let files: FileAccessor
-
-    // Cliqz: Added to mark profile to clear queries when opening history (due to clearing history when terminating)
-    var clearQueries = false
     
     weak private var app: UIApplication?
 
@@ -300,6 +294,18 @@ public class BrowserProfile: Profile {
     // Extensions don't have a UIApplication.
     convenience init(localName: String) {
         self.init(localName: localName, app: nil)
+    }
+
+    func reopen() {
+        log.debug("Reopening profile.")
+
+        if dbCreated {
+            db.reopenIfClosed()
+        }
+
+        if loginsDBCreated {
+            loginsDB.reopenIfClosed()
+        }
     }
 
     func shutdown() {
@@ -386,7 +392,7 @@ public class BrowserProfile: Profile {
      */
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
     private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
-        return SQLiteHistory(db: self.db, prefs: self.prefs)!
+        return SQLiteHistory(db: self.db, prefs: self.prefs)
     }()
 
     var favicons: Favicons {

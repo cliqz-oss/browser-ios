@@ -691,9 +691,6 @@ class BrowserViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         screenshotHelper.viewIsVisible = false
         super.viewWillDisappear(animated)
-        
-        // Cliqz: preserve search state when dimissing view
-        preserveSearchState()
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -909,24 +906,27 @@ class BrowserViewController: UIViewController {
             }
         }
     }
+    // Cliqz: separate the creating of searchcontroller into a new method
+    private func createSearchController() {
+        guard searchController == nil else {
+            return
+        }
+        
+        searchController = CliqzSearchViewController(profile: self.profile)
+        searchController!.delegate = self
+        searchLoader.addListener(searchController!)
+        view.addSubview(searchController!.view)
+        addChildViewController(searchController!)
+        searchController!.view.snp_makeConstraints { make in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.bottom.equalTo(self.view)
+            return
+        }
+    }
     // Cliqz: modified showSearchController to show SearchViewController insead of searchController
     private func showSearchController() {
-        if searchController == nil {
-            searchController = CliqzSearchViewController(profile: self.profile)
-            searchController!.delegate = self
-            if let selectedTab = tabManager.selectedTab {
-                searchController?.updatePrivateMode(selectedTab.isPrivate)
-            }
-            
-            searchLoader.addListener(searchController!)
-            
-            view.addSubview(searchController!.view)
-            addChildViewController(searchController!)
-            searchController!.view.snp_makeConstraints { make in
-                make.top.equalTo(self.urlBar.snp_bottom)
-                make.left.right.bottom.equalTo(self.view)
-                return
-            }
+        if let selectedTab = tabManager.selectedTab {
+            searchController?.updatePrivateMode(selectedTab.isPrivate)
         }
         
         homePanelController?.view?.hidden = true
@@ -1194,8 +1194,11 @@ class BrowserViewController: UIViewController {
     private func updateURLBarDisplayURL(tab: Tab) {
         urlBar.currentURL = tab.displayURL
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
-        let isPage = tab.displayURL?.isWebPage() ?? false
-        navigationToolbar.updatePageStatus(isWebPage: isPage)
+        // Cliqz: update the toolbar only if the search controller is not visible
+        if searchController?.view.hidden == true {
+            let isPage = tab.displayURL?.isWebPage() ?? false
+            navigationToolbar.updatePageStatus(isWebPage: isPage)
+        }
 
         guard let url = tab.displayURL?.absoluteString else {
             return
@@ -1228,8 +1231,6 @@ class BrowserViewController: UIViewController {
     }
 
     func switchToTabForURLOrOpen(url: NSURL, isPrivate: Bool = false) {
-        // Cliqz: preserve search state for the current tab before switching to the new tab
-        preserveSearchState()
         popToBVC()
         if let tab = tabManager.getTabForURL(url) {
             tabManager.selectTab(tab)
@@ -1820,12 +1821,13 @@ extension BrowserViewController: URLBarDelegate {
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
         // Cliqz: always show search controller even if query was empty
+        createSearchController()
+        
 		if text != "" {
 			hideHomePanelController()
 			showSearchController()
 			searchController!.searchQuery = text
 		} else {
-			showSearchController()
 			hideSearchController()
 			showHomePanelController(inline: true)
 		}
@@ -1902,9 +1904,12 @@ extension BrowserViewController: URLBarDelegate {
         self.logToolbarBlurSignal()
         
         hideSearchController()
-        // Cliqz: update URL bar when leaving overlay
+        // Cliqz: update URL bar and the tab toolbar when leaving overlay
         if let tab = tabManager.selectedTab {
             updateUIForReaderHomeStateForTab(tab)
+            
+            let isPage = tab.displayURL?.isWebPage() ?? false
+            navigationToolbar.updatePageStatus(isWebPage: isPage)
         }
 		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
         updateInContentHomePanel(urlBar.currentURL)
@@ -1913,12 +1918,13 @@ extension BrowserViewController: URLBarDelegate {
     
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton) {
-        preserveSearchState()
         if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
             tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
         } else {
             tabManager.addTabAndSelect()
         }
+        
+        switchToSearchModeIfNeeded()
         
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "new_tab")
@@ -2092,15 +2098,15 @@ extension BrowserViewController: TabToolbarDelegate {
     func tabToolbarDidLongPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
-                self.preserveSearchState()
                 self.tabManager.addTabAndSelect()
                 self.logWebMenuSignal("click", target: "new_tab")
+                self.switchToSearchModeIfNeeded()
             }
             
             let newForgetModeTabHandler = { (action: UIAlertAction) in
-                self.preserveSearchState()
                 self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
                 self.logWebMenuSignal("click", target: "new_forget_tab")
+                self.switchToSearchModeIfNeeded()
             }
             
             var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
@@ -2581,6 +2587,7 @@ extension BrowserViewController: TabManagerDelegate {
             toolbar?.updateTabCount(max(count, 1))
         }
     }
+    
 }
 
 extension BrowserViewController: WKNavigationDelegate {
@@ -2924,9 +2931,6 @@ extension BrowserViewController: WKUIDelegate {
         } else {
             newTab = tabManager.addTab(navigationAction.request, configuration: configuration)
         }
-
-        // Cliqz: preserve search state before switching to the newly created tab
-        preserveSearchState()
         
         tabManager.selectTab(newTab)
         
@@ -3465,7 +3469,6 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
-                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url))
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
                     })
@@ -3481,7 +3484,6 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.Default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(animated: !self.scrollController.toolbarsShowing, completion: { _ in
                         TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
-                        self.preserveSearchState()
                         self.tabManager.addTab(NSURLRequest(URL: url), isPrivate: true)
                     })
                 }
@@ -3990,21 +3992,6 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 // Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
     
-    // Cliqz: preserve search state when dimissing view
-    internal func preserveSearchState() {
-        guard let selectedTab = self.tabManager.selectedTab else {
-            return
-        }
-
-        if self.searchController?.view.hidden == false {
-            urlBar.leaveOverlayMode()
-            selectedTab.lastSearchQuery = searchController?.searchQuery ?? ""
-            selectedTab.inSearchMode = true
-        } else {
-            selectedTab.inSearchMode = false
-        }
-    }
-    
     // reset App state when session expire
     private func resetState() {
         
@@ -4017,11 +4004,6 @@ extension BrowserViewController {
         
         if let selectedTab = tabManager.selectedTab,
             let searchController = self.searchController {
-            
-            selectedTab.inSearchMode = true
-            selectedTab.lastSearchQuery = ""
-            
-            switchToSearchModeIfNeeded()
             
             // added delay before calling resetState to ensure that it is called after calling search with empty string
             let time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
@@ -4036,11 +4018,13 @@ extension BrowserViewController {
     private func switchToSearchModeIfNeeded() {
         if let selectedTab = self.tabManager.selectedTab {
             if (selectedTab.inSearchMode) {
-                self.urlBar.enterOverlayMode(selectedTab.lastSearchQuery, pasted: true)
-                selectedTab.lastSearchQuery = ""
+                self.urlBar.enterOverlayMode("", pasted: true)
                 scrollController.showToolbars(animated: false)
+            } else if self.homePanelController?.view.hidden == false {
+                self.urlBar.leaveOverlayMode()
             }
         }
+        print("[switchToSearchModeIfNeeded]")
         
     }
     

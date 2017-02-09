@@ -148,9 +148,9 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.delegate = self
         cell.selectedTab = tab
         
-		if tab.title != nil && tab.displayURL != nil {
-			cell.titleLabel.text = tab.title
-			cell.URLLabel.text = tab.displayURL?.host
+		if tab.displayURL != nil {
+            cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
+			cell.URLLabel.text = tab.displayURL?.absoluteString
 		} else {
 			cell.URLLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
 			cell.titleLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
@@ -158,11 +158,27 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		cell.selectionStyle = .None
 		cell.isPrivateTabCell = tab.isPrivate
 		cell.animator.delegate = self
-		if let icon = tab.displayFavicon {
-			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
-		} else {
-			cell.logoImageView.image = nil
-		}
+        
+//		if let icon = tab.displayFavicon {
+//			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
+//		} else {
+//			cell.logoImageView.image = nil
+//		}
+        
+        cell.logoImageView.image = nil
+        
+        cell.tag = indexPath.row
+        if let url = tab.displayURL?.absoluteString{
+            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+                if let img = image{
+                    if cell.tag == indexPath.row{
+                        cell.logoImageView.image = img
+                    }
+                }
+            })
+        }
+        
+        
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
 	}
@@ -226,7 +242,8 @@ extension TabsViewController: TabManagerDelegate {
 	}
 	
 	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
-        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+        guard let index = tabManager.tabs.indexOf(tab) else { return }
+        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
 	}
     
 	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {

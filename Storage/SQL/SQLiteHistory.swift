@@ -106,15 +106,21 @@ public class SQLiteHistory {
     let favicons: FaviconsTable<Favicon>
     let prefs: Prefs
 
-    required public init?(db: BrowserDB, prefs: Prefs) {
+    required public init(db: BrowserDB, prefs: Prefs) {
         self.db = db
         self.favicons = FaviconsTable<Favicon>()
         self.prefs = prefs
 
         // BrowserTable exists only to perform create/update etc. operations -- it's not
         // a queryable thing that needs to stick around.
-        if !db.createOrUpdate(BrowserTable()) {
-            return nil
+        switch db.createOrUpdate(BrowserTable()) {
+        case .Failure:
+            log.error("Failed to create/update the scheme table. Aborting.")
+            fatalError()
+        case .Closed:
+            log.info("Database not created as the SQLiteConnection is closed.")
+        case .Success:
+            log.debug("Database succesfully created/updated")
         }
     }
 }

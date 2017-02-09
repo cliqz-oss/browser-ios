@@ -122,6 +122,29 @@ class SendCliqzFeedbackSetting: Setting {
     
 }
 
+//Cliqz: Added Setting for redirecting to report form
+class ReportFormSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"))
+    }
+    
+    override var url: NSURL? {
+        if let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) where languageCode as! String == "de"{
+            return NSURL(string: "https://cliqz.com/report-url")
+        }
+        return NSURL(string: "https://cliqz.com/en/report-url")
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let contactSignal = TelemetryLogEventType.Settings("main", "click", "contact", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(contactSignal)
+    }
+    
+}
+
 // Cliqz: Custom Bool settings for News Push Notifications
 class EnablePushNotifications: BoolSetting {
 	
@@ -184,3 +207,42 @@ class ExtensionVersionSetting : VersionSetting {
     }
     
 }
+
+
+// Opens the search settings pane
+class RegionalSetting: Setting {
+    let profile: Profile
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
+    override var style: UITableViewCellStyle { return .Value1 }
+    
+    override var status: NSAttributedString {
+        var localizedRegionName: String?
+        if let region = SettingsPrefs.getRegionPref() {
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
+        } else {
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.getDefaultRegion())
+            
+        }
+        return NSAttributedString(string: localizedRegionName!)
+    }
+    
+    override var accessibilityIdentifier: String? { return "Search Results from" }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        super.init(title: NSAttributedString(string: NSLocalizedString("Search Results from", tableName: "Cliqz" , comment: "Search Results from"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = RegionalSettingsTableViewController()
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "search_results_from", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+    }
+}
+
+
