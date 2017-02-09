@@ -158,11 +158,20 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		cell.selectionStyle = .None
 		cell.isPrivateTabCell = tab.isPrivate
 		cell.animator.delegate = self
-		if let icon = tab.displayFavicon {
-			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
-		} else {
-			cell.logoImageView.image = nil
-		}
+//		if let icon = tab.displayFavicon {
+//			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
+//		} else {
+//			cell.logoImageView.image = nil
+//		}
+        if let url = tab.displayURL?.absoluteString{
+            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+                if let img = image {
+                    cell.logoImageView.image = img
+                }
+            })
+        }
+        
+        
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
 	}
