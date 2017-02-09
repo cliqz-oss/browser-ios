@@ -199,7 +199,7 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Jetzt loslegen!";
+"Let's start!" = "Jetzt loslegen";
 
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "Das Video wird heruntergeladen.";

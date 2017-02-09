@@ -52,7 +52,7 @@ class CliqzIntroViewController: UIViewController {
         startButton.setTitle(buttonTitle, forState: .Normal)
         startButton.backgroundColor = UIColor.clearColor()
         startButton.layer.cornerRadius = 20.0
-        startButton.layer.borderWidth = 2.5
+        startButton.layer.borderWidth = 1
         startButton.layer.borderColor = buttonColor.CGColor
         startButton.setTitleColor(buttonColor, forState: .Normal)
         self.view.addSubview(startButton)

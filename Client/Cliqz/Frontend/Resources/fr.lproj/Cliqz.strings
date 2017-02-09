@@ -201,7 +201,7 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Commencer !";
+"Let's start!" = "Commencer";
 
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "La vidéo a été téléchargée.";
@@ -213,10 +213,10 @@
 "The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Vidéo » afin de visionner la vidéo.";
 
 /* Brading label for onBorading */
-"Faster and safer" = "Plus rapide et plus sûr";
+"Faster and safer" = "Instantanée et sans intermédiaire";
 
 /* subtitle label for onBorading */
-"SEARCH ENGINE \n IN THE BROWSER" = "MOTEUR DE RECHERCHE \n DANS LE NAVIGATEUR";
+"SEARCH ENGINE \n IN THE BROWSER" = "LA RECHERCHE INTÉGRÉE \nAU NAVIGATEUR";
 
 /* Anti-tracking hint title */
 "Anti-Tracking" = "Anti-Tracking";
