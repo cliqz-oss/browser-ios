@@ -104,7 +104,8 @@ class LogoLoader {
             if version == nil {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let hostComps = LogoLoader.getHostComponents(forURL: url)
             if hostComps.count < 1 {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
-            let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
+            let hardcoded_version = "1483980213630"
+            let mainURL = "http://cdn.cliqz.com/brands-database/database/\(hardcoded_version)/pngs"
             
             var hasSecond = false
             
