@@ -53,12 +53,12 @@ class QuerySuggestionView: UIView {
             self.hidden = true
             return
         }
+        currentText = text
         guard !text.isEmpty else {
             clearSuggestions()
             return
         }
         
-        currentText = text
         ConnectionManager.sharedInstance
             .sendPlainPostRequestWithBody(querySuggestionsApiUrl,
                                      body: "query=\(text)",
@@ -71,13 +71,6 @@ class QuerySuggestionView: UIView {
                                      })
         
         
-    }
-    
-    func clearSuggestions() {
-        let subViews = scrollView.subviews
-        for subView in subViews {
-            subView.removeFromSuperview()
-        }
     }
     
     //MARK:- Helper methods
@@ -93,6 +86,13 @@ class QuerySuggestionView: UIView {
         })
     }
     
+    
+    private func clearSuggestions() {
+        let subViews = scrollView.subviews
+        for subView in subViews {
+            subView.removeFromSuperview()
+        }
+    }
     
     private func showSuggestions(suggestions: [String]) {
         
