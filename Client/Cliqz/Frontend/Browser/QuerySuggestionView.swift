@@ -22,6 +22,7 @@ class QuerySuggestionView: UIView {
     private let normalFontAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(16), NSForegroundColorAttributeName: UIColor.whiteColor()]
     private let bgColor = UIColor(rgb: 0xADB5BD)
     private let separatorBgColor = UIColor(rgb: 0xC7CBD3)
+    private let margin: CGFloat = 10
     
     //MARK:- instance variables
     weak var delegate : QuerySuggestionDelegate? = nil
@@ -94,16 +95,35 @@ class QuerySuggestionView: UIView {
     
     
     private func showSuggestions(suggestions: [String]) {
-        var x: CGFloat = 10
-        var index = 0
         
+        var index = 0
+        var x: CGFloat = margin
+        var difference:CGFloat = 0
+        var offset:CGFloat = 0
+        var displayedSuggestions = [(String, CGFloat)]()
+        
+        // Calcuate extra space after the last suggesion
         for suggestion in suggestions {
             let suggestionWidth = getWidth(suggestion)
             // show Max 3 suggestions which does not exceed screen width
             if x + suggestionWidth > self.frame.width || index > 2 {
                 break;
             }
-            
+            // increment step
+            x = x + suggestionWidth + 2*margin + 1
+            index = index + 1
+            displayedSuggestions.append((suggestion, suggestionWidth))
+        }
+        
+        // distribute the extra space evenly on all suggestions
+        difference = self.frame.width - x
+        offset = round(difference/CGFloat(index))
+        
+        // draw the suggestions inside the view
+        x = margin
+        index = 0
+        for (suggestion, width) in displayedSuggestions {
+            let suggestionWidth = width + offset
             // Adding vertical separator between suggestions
             if index > 0 {
                 let verticalSeparator = createVerticalSeparator(x)
@@ -114,7 +134,7 @@ class QuerySuggestionView: UIView {
             scrollView.addSubview(suggestionButton)
             
             // increment step
-            x = x + suggestionWidth + 21
+            x = x + suggestionWidth + 2*margin + 1
             index = index + 1
         }
     }
