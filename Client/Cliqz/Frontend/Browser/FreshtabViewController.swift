@@ -451,7 +451,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-		if indexPath.row < self.topSites.count {
+		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row){
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				if let url = NSURL(string: urlString) {
@@ -493,6 +493,7 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		}
         
         self.topSitesIndexesToRemove.append(index)
+        
         if self.topSites.count == self.topSitesIndexesToRemove.count {
             self.removeDeletedTopSites()
         }
