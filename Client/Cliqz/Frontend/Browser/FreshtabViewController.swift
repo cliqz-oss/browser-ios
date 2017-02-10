@@ -84,7 +84,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		self.topSitesCollection.collectionViewLayout.invalidateLayout()
+		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
 	}
 
 	func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
