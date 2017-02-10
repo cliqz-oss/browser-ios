@@ -231,9 +231,8 @@ class AppStatus {
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
             let prefs = self.getEnvironmentPrefs(profile)
-            let country = SettingsPrefs.getDefaultRegion()
             
-            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs, country))
+            TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.Environment(device, language, extensionVersion, distVersion, hostVersion, osVersion, defaultSearchEngine, historyUrls, historyDays, prefs))
 
         }
     }
@@ -244,6 +243,7 @@ class AppStatus {
         prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
+        prefs["country"]   = SettingsPrefs.getDefaultRegion()
         
         return prefs
     }
