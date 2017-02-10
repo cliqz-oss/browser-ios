@@ -13,7 +13,7 @@ public enum TelemetryLogEventType {
     case ApplicationUsage   (String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject], String)
+    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
     case Onboarding         (String, Int, Int?)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
@@ -105,8 +105,8 @@ class TelemetryLogger : EventsLogger {
                 // disable sending event when there is query interaction
                 disableSendingEvent = true
                 
-            case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs, let country):
-                event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs, country: country)
+            case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
+                event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
             case .Onboarding(let action, let index, let duration):
                 event = self.createOnboardingEvent(action, index: index, duration: duration)
@@ -253,7 +253,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject], country: String) -> [String: AnyObject] {
+    private func createEnvironmentEvent(device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
@@ -267,7 +267,6 @@ class TelemetryLogger : EventsLogger {
         event["historyUrls"] = historyUrls
         event["historyDays"] = historyDays
         event["prefs"] = prefs
-        event["country"] = country
         
         return event
     }
