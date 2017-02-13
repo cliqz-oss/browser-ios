@@ -23,7 +23,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     private let configUrl = "http://newbeta.cliqz.com/api/v1/config"
     private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
-    
+	
+	// TODO: Change topSitesCollection to optional
 	private var topSitesCollection: UICollectionView!
 	private var newsTableView: UITableView!
 
