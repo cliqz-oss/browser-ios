@@ -254,7 +254,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		
 		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
-				if let result = response.result.value!["results"] as? [[String: AnyObject]] {
+				if let result = response.result.value?["results"] as? [[String: AnyObject]] {
 					if let snippet = result[0]["snippet"] as? [String: AnyObject],
 						extra = snippet["extra"] as? [String: AnyObject],
 						articles = extra["articles"] as? [[String: AnyObject]]
