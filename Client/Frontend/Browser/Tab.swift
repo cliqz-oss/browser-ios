@@ -62,7 +62,7 @@ class Tab: NSObject {
 
 //  Cliqz:  var webView: WKWebView? = nil
 	var webView: CliqzWebView? = nil
-    var tabDelegate: TabDelegate? = nil
+    weak var tabDelegate: TabDelegate? = nil
     weak var appStateDelegate: AppStateDelegate?
     var bars = [SnackBar]()
     var favicons = [Favicon]()
@@ -101,12 +101,17 @@ class Tab: NSObject {
     /// Any time a tab tries to make requests to display a Javascript Alert and we are not the active
     /// tab instance, queue it for later until we become foregrounded.
     private var alertQueue = [JSAlertInfo]()
-
-    // Cliqz: preserve lastsearch query when moving out of browser view while search in progress
-    var lastSearchQuery = ""
     
     // Cliqz: flag to know whether the current tab is in search mode or not
-    var inSearchMode = true
+    var inSearchMode : Bool {
+        get {
+            if url == nil || AboutUtils.isAboutURL(url) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
     
     init(configuration: WKWebViewConfiguration) {
         self.configuration = configuration

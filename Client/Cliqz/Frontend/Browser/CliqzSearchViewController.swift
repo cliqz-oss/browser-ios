@@ -46,8 +46,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         javaScriptBridge.delegate = self
         return javaScriptBridge
         }()
-    
-    
+
 	weak var delegate: SearchViewDelegate?
 
 	private var spinnerView: UIActivityIndicatorView!
@@ -85,6 +84,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         self.webView = WKWebView(frame: self.view.bounds, configuration: config)
 		self.webView?.navigationDelegate = self
         self.webView?.scrollView.scrollEnabled = false
+        self.webView?.accessibilityLabel = "Web content"
+
         self.view.addSubview(self.webView!)
         
 
@@ -110,7 +111,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         if #available(iOS 9.0, *) {
             return
         }
-        
+
         var currentWidth = "device-width"
         var currentHeight = "device-height"
         if UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight {
@@ -129,6 +130,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         javaScriptBridge.setDefaultSearchEngine()
+        self.updateExtensionPreferences()
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
@@ -137,7 +139,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.javaScriptBridge.publishEvent("show")
-        self.updateExtensionPreferences()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -151,7 +152,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func loader(dataLoaded data: Cursor<Site>) {
 		self.historyResults = data
 	}
-
+    
+    func sendUrlBarFocusEvent() {
+        self.javaScriptBridge.publishEvent("urlbar-focus")
+    }
 /*
 	func getHistory() -> Array<Dictionary<String, String>> {
 		var results = Array<Dictionary<String, String>>()
@@ -287,10 +291,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	private func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
-		              "incognito" : self.privateMode]
+		              "incognito" : self.privateMode, "backend_country" : self.getCountry()]
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
-
+    private func getCountry() -> String {
+        if let country = SettingsPrefs.getRegionPref() {
+            return country
+        }
+        return SettingsPrefs.getDefaultRegion()
+    }
     //MARK: - Reset TopSites
     func showBlockedTopSites(notification: NSNotification) {
         javaScriptBridge.publishEvent("restore-blocked-topsites")
@@ -422,6 +431,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 	
 	func isReady() {
         stopLoadingAnimation()
+		self.sendUrlBarFocusEvent()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}

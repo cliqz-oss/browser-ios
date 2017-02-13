@@ -238,11 +238,12 @@ class AppStatus {
     }
     private func getEnvironmentPrefs(profile: Profile) -> [String: AnyObject] {
         var prefs = [String: AnyObject]()
-        prefs["block_popups"] = profile.prefs.boolForKey("blockPopups")
+        prefs["block_popups"] = SettingsPrefs.getBlockPopupsPref()
         prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref()
         prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
+        prefs["country"]   = SettingsPrefs.getDefaultRegion()
         
         return prefs
     }

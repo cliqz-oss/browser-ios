@@ -30,10 +30,10 @@ struct TabLocationViewUX {
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
-		// Cliqz: Changed text color to white from light grey for our styling
-        theme.URLFontColor = UIColor.whiteColor()
-        theme.hostFontColor = UIColor.whiteColor()
-        theme.backgroundColor = UIConstants.PrivateModeLocationBackgroundColor
+        // Cliqz: change the text colors for forget mode theme
+        theme.URLFontColor = BaseURLFontColor
+        theme.hostFontColor = HostFontColor
+        theme.backgroundColor = UIColor.whiteColor()
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()

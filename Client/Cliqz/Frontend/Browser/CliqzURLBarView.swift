@@ -19,9 +19,17 @@ class CliqzURLBarView: URLBarView {
 		button.setTitle("0", forState: .Normal)
 		button.titleLabel?.font = UIFont.systemFontOfSize(12)
 		button.backgroundColor = self.antitrackingBackgroundColor
+        button.accessibilityLabel = "AntiTrackingButton"
 		return button
 	}()
-	
+    private lazy var newTabButton: UIButton = {
+        let button = UIButton(type: .Custom)
+        button.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
+        button.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
+        button.addTarget(self, action: #selector(CliqzURLBarView.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
+        return button
+    }()
+    
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		commonInit()
@@ -35,10 +43,18 @@ class CliqzURLBarView: URLBarView {
 	override func updateConstraints() {
 		super.updateConstraints()
 		if !antitrackingButton.hidden {
-			locationContainer.snp_updateConstraints { make in
-				let x = -(UIConstants.ToolbarHeight + 10)
-				make.trailing.equalTo(self).offset(x)
-			}
+            if self.toolbarIsShowing {
+                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.URLBarButtonOffset
+                locationContainer.snp_updateConstraints { make in
+                    make.trailing.equalTo(shareButton.snp_leading).offset(-trailingPadding)
+                }
+            } else {
+                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.LocationLeftPadding
+                locationContainer.snp_updateConstraints { make in
+                    make.trailing.equalTo(self).offset(-trailingPadding)
+                }
+            }
+			
 			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
 				make.size.equalTo(self.antitrackingButtonSize)
 			})
@@ -51,7 +67,21 @@ class CliqzURLBarView: URLBarView {
 			})
 		}
 	}
-
+    
+    override func prepareOverlayAnimation() {
+        super.prepareOverlayAnimation()
+        self.newTabButton.hidden = !self.toolbarIsShowing
+    }
+    
+    override func transitionToOverlay(didCancel: Bool = false) {
+        super.transitionToOverlay(didCancel)
+        self.newTabButton.alpha = inOverlayMode ? 0 : 1
+    }
+    override func updateViewsForOverlayModeAndToolbarChanges() {
+        super.updateViewsForOverlayModeAndToolbarChanges()
+        self.newTabButton.hidden = !self.toolbarIsShowing || inOverlayMode
+    }
+    
 	func updateTrackersCount(count: Int) {
 		self.antitrackingButton.setTitle("\(count)", forState: .Normal)
 		self.setNeedsDisplay()
@@ -80,9 +110,30 @@ class CliqzURLBarView: URLBarView {
 			make.leading.equalTo(self.locationContainer.snp_trailing)
 			make.size.equalTo(self.antitrackingButtonSize)
 		}
+        
+        addSubview(newTabButton)
+        // Cliqz: Changed new tab position, now it should be befores tabs button
+        newTabButton.snp_makeConstraints { make in
+            make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+            make.centerY.equalTo(self)
+            make.size.equalTo(backButton)
+        }
+        
+        // Cliqz: Changed share position, now it should be before new tab button
+        shareButton.snp_updateConstraints { make in
+            make.right.equalTo(self.newTabButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+        }
+        
+        self.actionButtons.append(newTabButton)
 	}
 	
 	@objc private func antitrackingButtonPressed(sender: UIButton) {
 		self.delegate?.urlBarDidClickAntitracking(self)
 	}
+    
+    
+    // Cliqz: Add actions for new tab button
+    func SELdidClickNewTab() {
+        delegate?.urlBarDidPressNewTab(self, button: newTabButton)
+    }
 }

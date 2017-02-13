@@ -18,7 +18,6 @@ protocol HistoryDelegate: class {
 class HistoryViewController: CliqzExtensionViewController {
 
     weak var delegate: HistoryDelegate?
-    let QueryLimit = 100
 	
 	override init(profile: Profile) {
 		super.init(profile: profile, viewType: "history")
@@ -50,9 +49,9 @@ extension HistoryViewController {
 		self.delegate?.didSelectQuery(query)
     }
 
-	func getSearchHistory(callback: String?) {
+    func getSearchHistory(offset:Int,limit:Int,callback: String?) {
 		if let c = callback {
-			self.profile.history.getHistoryVisits(QueryLimit).uponQueue(dispatch_get_main_queue()) { result in
+            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(dispatch_get_main_queue()) { result in
 				if let sites = result.successValue {
 					var historyResults = [[String: AnyObject]]()
 					for site in sites {
@@ -63,7 +62,7 @@ extension HistoryViewController {
 						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
 						historyResults.append(d)
 					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults.reverse(), completionHandler: nil)
+					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
 				}
 			}
 		}
@@ -71,12 +70,6 @@ extension HistoryViewController {
 
     override func isReady() {
         super.isReady()
-        
-        if profile.clearQueries {
-            clearQueries(favorites: true)
-            clearQueries(favorites: false)
-            self.javaScriptBridge.publishEvent("show")
-        }
     }
 
     // MARK: - Clear History
@@ -86,10 +79,14 @@ extension HistoryViewController {
 	}
 
 	func clearQueries(favorites favorites: Bool) {
+        //Cliqz: [IB-946][WORKAROUND] call `jsAPI` directly instead of publishing events because the event is executed when the history is opened next time not immediately
+        //TODO: Queries will be stored in native side not in JavaScript
         if favorites == true {
-            self.javaScriptBridge.publishEvent("clear-favorites")
+//            self.javaScriptBridge.publishEvent("clear-favorites")
+            self.javaScriptBridge.callJSMethod("jsAPI.clearFavorites()", parameter: nil, completionHandler: nil)
         } else {
-            self.javaScriptBridge.publishEvent("clear-history")
+//            self.javaScriptBridge.publishEvent("clear-history")
+            self.javaScriptBridge.callJSMethod("jsAPI.clearHistory()", parameter: nil, completionHandler: nil)
         }
     }
 

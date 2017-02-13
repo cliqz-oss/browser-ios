@@ -26,6 +26,10 @@
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
 "FAQs & Support" = "FAQs & Support";
 
+/* Menu item in settings used to redirect to Report Page where people can report pages */
+
+"Report Website" = "Webseite melden";
+
 /* Open search section of settings */
 "Search" = "Suche";
 
@@ -72,9 +76,6 @@
 /* More details about Fair Blocking */
 "What is 'fair'?" = "Was bedeutet 'fair'?";
 
-/* Settings item for clearing favorite history */
-"Favorites" = "Favoriten";
-
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Private Daten beim Verlassen löschen";
 
@@ -112,8 +113,15 @@
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Video offline ansehen";
 
+/* Tabs title on dashboard */
+"Tabs" = "Tabs";
+
 /* History title on dashboard */
 "History" = "Verlauf";
+
+/* Favorites title on dashboard
+   Settings item for clearing favorite history */
+"Favorites" = "Favoriten";
 
 /* Add Favorites */
 "Add Favorite" = "Favorit hinzufügen";
@@ -121,7 +129,7 @@
 /* Setting menu title */
 "Settings" = "Einstellungen";
 
-/* New tab title */
+/* "Widget item for a new tab" */
 "New Tab" = "Neuer Tab";
 
 /* New private tab title */
@@ -191,7 +199,7 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "Wenn du Standortdaten aktivierst, kannst du nach Orten in deiner Umgebung suchen (Google Maps).";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Jetzt loslegen!";
+"Let's start!" = "Jetzt loslegen";
 
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "Das Video wird heruntergeladen.";
@@ -234,3 +242,30 @@
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Lade Videoinformationen";
+
+/* Action sheet item for closing all opened tabs */
+"Close All Tabs" = "Alle Tabs schliessen";
+
+/* Title to expand news stream */
+"MoreNews" = "Mehr Nachrichten";
+
+/* Title on Freshtab for forget mode */
+"Forget Tab" = "Vergessen Tab";
+
+/* Description on Freshtab for forget mode */
+"Forget Tab Description" = "Websites werden nicht in deinem Verlauf gespeichert. Ebenso werden temporäre Dateien und Cookies nicht gespeichert. Downloads und Lesezeichen werden aber gespeichert.\n Dein Internetdienstanbieter oder Arbeitgeber können weiterhin nachvollziehen, welche Seiten du besucht hast.";
+
+/* Hint on Freshtab when there is no topsites */
+"Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
+
+/* Search Results from */
+"Search Results from" = "Suchergebnisse für";
+
+/* Localized String for specific region */
+"region-DE" = "Deutschland";
+
+/* Localized String for specific region */
+"region-US" = "USA";
+
+/* Localized String for specific region */
+"region-FR" = "Frankreich";

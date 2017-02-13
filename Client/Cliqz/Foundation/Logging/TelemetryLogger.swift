@@ -51,7 +51,9 @@ class TelemetryLogger : EventsLogger {
     }
     
     func updateForgetModeStatue(newStatus: Bool) {
-        isForgetModeActivate = newStatus
+        dispatch_async(dispatchQueue) {[weak self] in
+            self?.isForgetModeActivate = newStatus
+        }
     }
     
     //MARK: - Instant Variables

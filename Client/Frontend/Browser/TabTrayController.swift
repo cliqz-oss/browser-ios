@@ -639,8 +639,9 @@ extension TabTrayController: TabManagerDelegate {
             }
         })
     }
-
-    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab) {
+    // Cliqz: Added removeIndex to didRemoveTab method
+//    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab) {
+    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
         // it is possible that we are removing a tab that we are not currently displaying
         // through the Close All Tabs feature (which will close tabs that are not in our current privacy mode)
         // check this before removing the item from the collection

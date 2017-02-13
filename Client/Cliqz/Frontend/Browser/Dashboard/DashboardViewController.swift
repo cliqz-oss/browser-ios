@@ -63,10 +63,11 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		panelSwitchContainerView.backgroundColor = UIColor.whiteColor()
 		view.addSubview(panelSwitchContainerView)
 		
-		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Settings item for clearing favorite history")
-		let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
-
-		panelSwitchControl = UISegmentedControl(items: ["Tabs", history, fav])
+        let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
+        let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
+		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
+        
+		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), forControlEvents: .ValueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
@@ -88,7 +89,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		AppDelegate.changeStatusBarColor(self.view.backgroundColor!)
+        AppDelegate.changeStatusBarStyle(.Default, backgroundColor: self.view.backgroundColor!)
 		self.navigationController?.navigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics:  .Default)
@@ -97,7 +98,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	override func viewWillDisappear(animated: Bool) {
 		self.navigationController?.navigationBarHidden = true
-		super.viewWillAppear(animated)
+		super.viewWillDisappear(animated)
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -105,16 +106,19 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.setupConstraints()
 	}
 
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        // setting the navigation bar origin to (0,0) to prevent shifting it when rotating from landscape to portrait orientation
+        self.navigationController?.navigationBar.frame.origin = CGPointMake(0, 0)
+    }
+    
 	func didSelectURL(url: NSURL) {
 		self.navigationController?.popViewControllerAnimated(false)
-		self.tabManager.selectedTab?.inSearchMode = false
 		self.delegate?.navigateToURL(url)
 	}
 
 	func didSelectQuery(query: String) {
 		CATransaction.begin()
 		CATransaction.setCompletionBlock({
-			self.tabManager.selectedTab?.inSearchMode = false
 			self.delegate?.navigateToQuery(query)
 		})
 		self.navigationController?.popViewControllerAnimated(false)
@@ -148,7 +152,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		panelSwitchContainerView.snp_makeConstraints { make in
 			make.left.right.equalTo(self.view)
 			make.top.equalTo(snp_topLayoutGuideBottom)
-			make.height.equalTo(45)
+			make.height.equalTo(65)
 		}
 		panelSwitchControl.snp_makeConstraints { make in
 			make.centerY.equalTo(panelSwitchContainerView)

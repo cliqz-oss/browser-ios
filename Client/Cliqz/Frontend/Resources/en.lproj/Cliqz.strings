@@ -26,6 +26,10 @@
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
 "FAQs & Support" = "FAQs & Support";
 
+/* Menu item in settings used to redirect to Report Page where people can report pages */
+
+"Report Website" = "Report Website";
+
 /* Open search section of settings */
 "Search" = "Search";
 
@@ -73,9 +77,6 @@
 /* More details about Fair Blocking */
 "What is 'fair'?" = "What is 'fair'?";
 
-/* Settings item for clearing favorite history */
-"Favorites" = "Favorites";
-
 /* Settings item for clearing private data on termination */
 "Clear Private data on termination" = "Clear Private Data on Termination";
 
@@ -111,10 +112,17 @@
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
 
 /* Context/Sharing menu item for downloading youtube videos */
-"Download youtube video" = "view video offline";
+"Download youtube video" = "View Video Offline";
+
+/* Tabs title on dashboard */
+"Tabs" = "Tabs";
 
 /* History title on dashboard */
 "History" = "History";
+
+/* Favorites title on dashboard
+   Settings item for clearing favorite history */
+"Favorites" = "Favorites";
 
 /* Add Favorites */
 "Add Favorite" = "Add Favorite";
@@ -122,7 +130,7 @@
 /* Setting menu title */
 "Settings" = "Settings";
 
-/* New tab title */
+/* "Widget item for a new tab" */
 "New Tab" = "New Tab";
 
 /* New private tab title */
@@ -192,7 +200,7 @@
 "When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
 
 /* Start buttun title for onBorading */
-"Let's start!" = "Let's start!";
+"Let's start!" = "Let's start";
 
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "The video is being downloaded.";
@@ -235,3 +243,30 @@
 
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Retrieving video information";
+
+/* Action sheet item for closing all opened tabs */
+"Close All Tabs" = "Close All Tabs";
+
+/* Title to expand news stream */
+"MoreNews" = "More News";
+
+/* Title on Freshtab for forget mode */
+"Forget Tab" = "Forget Tab";
+
+/* Description on Freshtab for forget mode */
+"Forget Tab Description" = "Web sites are not saved to your history. Likewise, temporary files and cookies are not saved. \n However, downloads and bookmarks are saved. Your Internet service provider, employer or the sites themselves can still track which pages you visit.";
+
+/* Hint on Freshtab when there is no topsites */
+"Empty TopSites hint" = "You will see your most visited sites here";
+
+/* Search Results from */
+"Search Results from" = "Search Results for";
+
+/* Localized String for specific region */
+"region-DE" = "Germany";
+
+/* Localized String for specific region */
+"region-US" = "United States";
+
+/* Localized String for specific region */
+"region-FR" = "France";

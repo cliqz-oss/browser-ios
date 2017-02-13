@@ -132,6 +132,7 @@ extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 	}
 
     func isReady() {
+        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "ExtensionIsReady", object: nil))
         evaluateQueuedScripts()
         self.logShowViewSignal()
     }

@@ -10,8 +10,8 @@ import SnapKit
 private let log = Logger.browserLogger
 
 struct TodayUX {
-    // Cliqz: changed privateBrowsingColor to orange
-    static let privateBrowsingColor = UIColor(colorString: "FC2818") //UIColor(colorString: "CE6EFC")
+    // Cliqz: changed privateBrowsingColor to white
+    static let privateBrowsingColor = UIColor.whiteColor() //UIColor(colorString: "CE6EFC")
     static let backgroundHightlightColor = UIColor(white: 216.0/255.0, alpha: 44.0/255.0)
 
     static let linkTextSize: CGFloat = 10.0
@@ -33,12 +33,14 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewTab), forControlEvents: .TouchUpInside)
-        imageButton.labelText = NSLocalizedString("TodayWidget.NewTabButtonLabel", value: "New Tab", tableName: "Today", comment: "New Tab button label")
+		//Cliqz: Changed the localization string
+        imageButton.labelText = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "Widget item for a new tab")
 
         let button = imageButton.button
         button.setImage(UIImage(named: "new_tab_button_normal"), forState: .Normal)
+#if !CLIQZ
         button.setImage(UIImage(named: "new_tab_button_highlight"), forState: .Highlighted)
-
+#endif
         let label = imageButton.label
         label.textColor = UIColor.whiteColor()
         label.font = UIFont.systemFontOfSize(TodayUX.imageButtonTextSize)
@@ -50,12 +52,14 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private lazy var newPrivateTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
         imageButton.addTarget(self, action: #selector(onPressNewPrivateTab), forControlEvents: .TouchUpInside)
-        imageButton.labelText = NSLocalizedString("TodayWidget.NewPrivateTabButtonLabel", value: "New Private Tab", tableName: "Today", comment: "New Private Tab button label")
+		// Cliqz: Changed Button title to ours
+		imageButton.labelText = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "New private tab title")
 
         let button = imageButton.button
         button.setImage(UIImage(named: "new_private_tab_button_normal"), forState: .Normal)
+#if !CLIQZ
         button.setImage(UIImage(named: "new_private_tab_button_highlight"), forState: .Highlighted)
-
+#endif
         let label = imageButton.label
         label.textColor = TodayUX.privateBrowsingColor
         label.font = UIFont.systemFontOfSize(TodayUX.imageButtonTextSize)
@@ -115,10 +119,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         view.addSubview(buttonSpacer)
 
         // New tab button and label.
+		// Cliqz: Updated constraints to center the buttons
         view.addSubview(newTabButton)
         newTabButton.snp_makeConstraints { make in
-            make.top.equalTo(buttonSpacer)
-            make.centerX.equalTo(buttonSpacer.snp_left)
+            make.centerY.equalTo(buttonSpacer).offset(5)
+            make.centerX.equalTo(buttonSpacer.snp_left).offset(-6)
         }
 
         // New private tab button and label.
@@ -162,8 +167,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         }
         
         #if CLIQZ
-            // Cliqz: Hide private tab option from today's widget
-            newPrivateTabButton.hidden = true
+			// Cliqz: Hide private tab option from today's widget
+			openCopiedLinkButton.hidden = true
         #endif
     }
 
@@ -195,7 +200,9 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         // Perform any setup necessary in order to update the view.
         dispatch_async(dispatch_get_main_queue()) {
             // updates need to be made on the main thread
+#if !CLIQZ
             self.updateCopiedLink()
+#endif
             // and we need to call the completion handler in every branch.
             completionHandler(NCUpdateResult.NewData)
         }

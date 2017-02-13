@@ -16,6 +16,8 @@ class SettingsPrefs {
     static let HumanWebPrefKey = "humanweb.toggle"
 	static let ShowAntitrackingHintKey = "showAntitrackingHint"
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
+    static let blockPopupsPrefKey = "blockPopups"
+    static let countryPrefKey = "UserCountry"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -34,11 +36,11 @@ class SettingsPrefs {
 	}
 	
 	class func updateAdBlockerPref(newValue: Bool) {
-		SettingsPrefs.updateBoolPref(AdBlockerPrefKey, value: newValue)
+		SettingsPrefs.updatePref(AdBlockerPrefKey, value: newValue)
 	}
 
 	class func updateFairBlockingPref(newValue: Bool) {
-		SettingsPrefs.updateBoolPref(FairBlockingPrefKey, value: newValue)
+		SettingsPrefs.updatePref(FairBlockingPrefKey, value: newValue)
 	}
 
     class func getBlockExplicitContentPref() -> Bool {
@@ -58,15 +60,15 @@ class SettingsPrefs {
     }
     
     class func updateHumanWebPref(newValue: Bool) {
-        SettingsPrefs.updateBoolPref(HumanWebPrefKey, value: newValue)
+        SettingsPrefs.updatePref(HumanWebPrefKey, value: newValue)
     }
     
 	class func updateShowAntitrackingHintPref(newValue: Bool) {
-		SettingsPrefs.updateBoolPref(ShowAntitrackingHintKey, value: newValue)
+		SettingsPrefs.updatePref(ShowAntitrackingHintKey, value: newValue)
 	}
 
 	class func updateShowCliqzSearchHintPref(newValue: Bool) {
-		SettingsPrefs.updateBoolPref(ShowCliqzSearchHintKey, value: newValue)
+		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue)
 	}
 
 	class func getShowCliqzSearchHintPref() -> Bool {
@@ -85,6 +87,36 @@ class SettingsPrefs {
 		return defaultValue
 	}
 
+    
+    class func getBlockPopupsPref() -> Bool {
+        let defaultValue = true
+        if let blockPopupsPref = SettingsPrefs.getBoolPref(blockPopupsPrefKey) {
+            return blockPopupsPref
+        }
+        return defaultValue
+    }
+    
+    class func updateBlockPopupsPref(newValue: Bool) {
+        SettingsPrefs.updatePref(blockPopupsPrefKey, value: newValue)
+    }
+    
+    class func getRegionPref() -> String? {
+        return SettingsPrefs.getStringPref(countryPrefKey)
+    }
+    
+    class func getDefaultRegion() -> String {
+        let availableCountries = ["DE", "US", "UK", "FR"]
+        let currentLocale = NSLocale.currentLocale()
+        if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String where availableCountries.contains(countryCode) {
+            return countryCode
+        }
+        return "DE"
+    }
+    
+    class func updateRegionPref(newValue: String) {
+        SettingsPrefs.updatePref(countryPrefKey, value: newValue)
+    }
+    
     // MARK: - Private helper metods
 	class private func getBoolPref(forKey: String) -> Bool? {
 		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -94,10 +126,20 @@ class SettingsPrefs {
 		return nil
 	}
 	
-	class private func updateBoolPref(forKey: String, value: Bool) {
+	class private func updatePref(forKey: String, value: AnyObject) {
 		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 		if let profile = appDelegate.profile {
 			profile.prefs.setObject(value, forKey: forKey)
 		}
 	}
+    
+    class private func getStringPref(forKey: String) -> String? {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if let profile = appDelegate.profile {
+            return profile.prefs.stringForKey(forKey)
+        }
+        return nil
+    }
+    
+    
 }

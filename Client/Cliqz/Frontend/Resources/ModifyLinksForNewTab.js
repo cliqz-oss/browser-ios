@@ -13,18 +13,4 @@ function modifyLinkTargets() {
 	}
 }
 
-function modifyWindowOpen() {
-	window.open =
-	function(url,target,param) {
-		if (url && url.length > 0) {
-			if (target == '_blank' && url.startsWith("http")) {
-				location.href = 'newtab:'+escape(url);
-			} else {
-				location.href = url;
-			}
-		}
-	}
-}
-
 modifyLinkTargets();
-modifyWindowOpen();
