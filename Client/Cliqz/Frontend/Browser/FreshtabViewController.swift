@@ -79,7 +79,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-		self.topSitesCollection.collectionViewLayout.invalidateLayout()
+		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
 	}
 	
 	override func viewWillLayoutSubviews() {
@@ -90,8 +90,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
 			let location = touch.locationInView(self.topSitesCollection)
-			if let index = self.topSitesCollection.indexPathForItemAtPoint(location),
-				cell = self.topSitesCollection.cellForItemAtIndexPath(index) as? TopSiteViewCell {
+			if let index = self.topSitesCollection?.indexPathForItemAtPoint(location),
+				cell = self.topSitesCollection?.cellForItemAtIndexPath(index) as? TopSiteViewCell {
 				return cell.isDeleteMode
 			}
 			return true
@@ -113,7 +113,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private func removeDeletedTopSites(){
         
-        let cells = self.topSitesCollection.visibleCells()
+        let cells = self.topSitesCollection?.visibleCells()
         for cell in cells as! [TopSiteViewCell] {
             cell.isDeleteMode = false
         }
@@ -124,7 +124,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
         self.topSitesIndexesToRemove.removeAll()
-        self.topSitesCollection.reloadData()
+        self.topSitesCollection?.reloadData()
     }
 
 	private func constructForgetModeView() {
@@ -219,7 +219,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	@objc private func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
-        //self.topSitesCollection.reloadData()
+        //self.topSitesCollection?.reloadData()
 	}
     
     private func loadRegion() {
@@ -294,7 +294,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			} else {
 				self.emptyTopSitesHint.removeFromSuperview()
 			}
-            self.topSitesCollection.reloadData()
+            self.topSitesCollection?.reloadData()
             
 			return succeed()
 		}
@@ -445,7 +445,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	@objc private func deleteTopSites() {
-		let cells = self.topSitesCollection.visibleCells()
+		let cells = self.topSitesCollection?.visibleCells()
 		for cell in cells as! [TopSiteViewCell] {
 			cell.isDeleteMode = true
 		}
