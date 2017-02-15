@@ -11,6 +11,7 @@ public struct UIConstants {
 
     // Cliqz: Changed Appbackground color, PrivateModePurple, PrivateModeLocationBackgroundColor, PrivateModeLocationBorderColor, PrivateModeActionButtonTintColor, PrivateModeTextHighlightColor, PrivateModeTextHighlightColor according to the requirements
 	static let CliqzThemeColor = UIColor(rgb: 0x45C2CC)
+    static let TextHighlightColor = UIColor(colorString: "8BE0E7")
 	static let AppBackgroundColor = UIColor(rgb: 0xE8E8E8) //UIColor.blackColor()
     static let SystemBlueColor = UIColor(red: 0 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)
     static let PrivateModePurple = UIColor.clearColor() // UIColor(red: 207 / 255, green: 104 / 255, blue: 255 / 255, alpha: 1)

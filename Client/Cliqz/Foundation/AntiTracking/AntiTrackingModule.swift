@@ -47,8 +47,7 @@ class AntiTrackingModule: NSObject {
     
     //MARK: - Public APIs
     func initModule() {
-        // Register interceptor url protocol
-        NSURLProtocol.registerClass(InterceptorURLProtocol)
+        
         
         dispatch_async(dispatchQueue) {
 #if DEBUG
@@ -56,9 +55,17 @@ class AntiTrackingModule: NSObject {
 #endif
 			self.loadWindowTimers()
             self.loadModule()
+            self.registerInterceptor()
         }
     }
-
+    private func registerInterceptor() {
+        // Register interceptor url protocol
+        let delay = SettingsPrefs.getAdBlockerPref() ? 10.0 : 0.0
+        let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            NSURLProtocol.registerClass(InterceptorURLProtocol)
+        })
+    }
     func shouldBlockRequest(request: NSURLRequest) -> Bool {
         guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
             return true
@@ -593,8 +600,7 @@ class AntiTrackingModule: NSObject {
         requestInfo["frameId"] = tabId ?? -1
         requestInfo["isPrivate"] = isPrivate
         requestInfo["originUrl"] = originUrl
-
-        let contentPolicyType = ContentPolicyDetector.getContentPolicy(request, isMainDocument: isMainDocument)
+        let contentPolicyType = ContentPolicyDetector.sharedInstance.getContentPolicy(request, isMainDocument: isMainDocument)
         requestInfo["type"] = contentPolicyType;
 
         requestInfo["requestHeaders"] = request.allHTTPHeaderFields

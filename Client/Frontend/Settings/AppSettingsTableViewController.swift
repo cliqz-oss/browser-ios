@@ -43,9 +43,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let prefs = profile.prefs
 
         var generalSettings = [
-            //Cliqz: replaced SearchSetting by CliqzSearchSetting to verride the behavior of selecting search engine
+            // Cliqz: added regional settings for cliqz search
+            RegionalSetting(settings: self),
+            // Cliqz: removed default search settings
 //            SearchSetting(settings: self),
-            CliqzSearchSetting(settings: self),
             // Cliqz: temporarly hide news notification settings
 //            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
 //				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
@@ -55,8 +56,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //        }
 //        generalSettings += [
 //            HomePageSetting(settings: self),
-
-            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
+            // Cliqz: Moved `blockPopups` to SettingsPrefs
+            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
             // Cliqz: removed save logins settings
             /*
@@ -70,7 +71,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
 			*/
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
             AdBlockerSetting(settings: self),
-            HumanWebSetting(settings: self)
+            HumanWebSetting(settings: self),
+            //Cliqz: Added CliqzSearchSetting to override the behavior of selecting search engine
+            CliqzSearchSetting(settings: self)
 
         ]
         
@@ -139,7 +142,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
 #endif
 
         privacySettings += [
-            ShowBlockedTopSitesSetting(),
+			ShowBlockedTopSitesSetting(settings: self),
             PrivacyPolicySetting()
         ]
 
@@ -154,10 +157,21 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
 				
+				ReportFormSetting(),
+				
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),
 			]
+            
+            settings += [
+                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
+                    VersionSetting(settings: self),
+                    ExtensionVersionSetting(settings: self),
+                    LicenseAndAcknowledgementsSetting(),
+                    ])]
 		#else
 			let supportChildren = [
                 // Cliqz: Added tips and tricks settings option
@@ -166,23 +180,25 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting(),
-				
+				ReportFormSetting(),
+
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),
 			]
+            settings += [
+                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
+                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
+                    VersionSetting(settings: self),
+                    LicenseAndAcknowledgementsSetting(),
+                    //Cliqz: removed unused sections from Settings table
+//                    YourRightsSetting(),
+//                    ExportBrowserDataSetting(settings: self),
+//                    DeleteExportedDataSetting(settings: self),
+                    ])]
 		#endif
-        settings += [
-            SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
-            SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                VersionSetting(settings: self),
-                LicenseAndAcknowledgementsSetting(),
-                //Cliqz: removed unused sections from Settings table
-//                YourRightsSetting(),
-//                ExportBrowserDataSetting(settings: self),
-//                DeleteExportedDataSetting(settings: self),
-            ])]
+        
         //Cliqz: removed unused sections from Settings table
 //            if (profile.hasAccount()) {
 //                settings += [

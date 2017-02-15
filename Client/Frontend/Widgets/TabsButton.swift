@@ -13,12 +13,14 @@ struct TabsButtonUX {
     static let TitleColor: UIColor = UIColor.blackColor()
     static let TitleBackgroundColor: UIColor = UIColor.whiteColor()
     static let CornerRadius: CGFloat = 2
-    static let TitleFont: UIFont = UIConstants.DefaultChromeSmallFontBold
+    // Cliqz: change the the title font of TabsButton
+    static let TitleFont: UIFont = UIFont.boldSystemFontOfSize(10) //UIFont.boldSystemFontOfSize
     static let BorderStrokeWidth: CGFloat = 1
 
     static let BorderColor: UIColor = UIColor.clearColor()
 	// Cliqz: Changed Insets to make Tabs button as big as UITextField
-    static let TitleInsets = UIEdgeInsets(top: 11, left: 5, bottom: 5, right: 11) // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+    static let TitleInsets = UIEdgeInsets(top: 11, left: 8, bottom: 5, right: 11)
+    // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
 
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
@@ -27,7 +29,8 @@ struct TabsButtonUX {
 
 		// Cliqz: Removed Border in Private Mode
         theme.borderWidth = 0 // BorderStrokeWidth
-        theme.font = UIConstants.DefaultChromeBoldFont
+        // Cliqz: use title font same as one in normal mode
+        theme.font = TitleFont//UIConstants.DefaultChromeBoldFont
 		// Cliqz: Changed background&text colors and insets of TabsButton in Private Mode according to requirements (Commented out original color)
         theme.backgroundColor = UIColor.clearColor() // UIConstants.AppBackgroundColor
         theme.textColor = UIColor.whiteColor() // UIConstants.PrivateModePurple
@@ -54,8 +57,9 @@ struct TabsButtonUX {
         return themes
     }()
 }
-
-class TabsButton: UIControl {
+//Cliqz: Change the super class of TabsButton to UIButton to be included into both TabToolBar and URLBar
+//class TabsButton: UIControl {
+class TabsButton: UIButton {
     private var theme: Theme = TabsButtonUX.Themes[Theme.NormalMode]!
     
     override var highlighted: Bool {
@@ -72,8 +76,9 @@ class TabsButton: UIControl {
 //            }
         }
     }
-
-    lazy var titleLabel: UILabel = {
+    // Cliqz: renamed titleLabel to title so as not to confilect with titleLabel? from UIButton super class
+//    lazy var titleLabel: UILabel = {
+    lazy var title: UILabel = {
         let label = UILabel()
         label.font = TabsButtonUX.TitleFont
         label.layer.cornerRadius = TabsButtonUX.CornerRadius
@@ -110,7 +115,9 @@ class TabsButton: UIControl {
         super.init(frame: frame)
         insideButton.addSubview(labelBackground)
         insideButton.addSubview(borderView)
-        insideButton.addSubview(titleLabel)
+        // Cliqz: use new variable title instead of old one titleLabel
+//        insideButton.addSubview(titleLabel)
+        insideButton.addSubview(title)
         addSubview(insideButton)
         isAccessibilityElement = true
         accessibilityTraits |= UIAccessibilityTraitButton
@@ -124,7 +131,8 @@ class TabsButton: UIControl {
         borderView.snp_remakeConstraints { (make) -> Void in
             make.edges.equalTo(insideButton)
         }
-        titleLabel.snp_remakeConstraints { (make) -> Void in
+        // Cliqz: use new variable title instead of old one titleLabel
+        title.snp_remakeConstraints { (make) -> Void in
             make.edges.equalTo(insideButton)
         }
         insideButton.snp_remakeConstraints { (make) -> Void in
@@ -138,14 +146,23 @@ class TabsButton: UIControl {
 
     override func clone() -> UIView {
         let button = TabsButton()
-
         button.accessibilityLabel = accessibilityLabel
-        button.titleLabel.text = titleLabel.text
+        // Cliqz: use new variable title instead of old one titleLabel
+        /*
+         button.titleLabel.text = titleLabel.text
+         
+         // Copy all of the styable properties over to the new TabsButton
+         button.titleLabel.font = titleLabel.font
+         button.titleLabel.textColor = titleLabel.textColor
+         button.titleLabel.layer.cornerRadius = titleLabel.layer.cornerRadius
+
+         */
+        button.title.text = title.text
 
         // Copy all of the styable properties over to the new TabsButton
-        button.titleLabel.font = titleLabel.font
-        button.titleLabel.textColor = titleLabel.textColor
-        button.titleLabel.layer.cornerRadius = titleLabel.layer.cornerRadius
+        button.title.font = title.font
+        button.title.textColor = title.textColor
+        button.title.layer.cornerRadius = title.layer.cornerRadius
 
         button.labelBackground.backgroundColor = labelBackground.backgroundColor
         button.labelBackground.layer.cornerRadius = labelBackground.layer.cornerRadius
@@ -189,13 +206,21 @@ extension TabsButton {
     }
 
     dynamic var textColor: UIColor? {
-        get { return titleLabel.textColor }
-        set { titleLabel.textColor = newValue }
+        // Cliqz: use new variable title instead of old one titleLabel
+//        get { return titleLabel.textColor }
+//        set { titleLabel.textColor = newValue }
+        
+        get { return title.textColor }
+        set { title.textColor = newValue }
     }
 
     dynamic var titleFont: UIFont? {
-        get { return titleLabel.font }
-        set { titleLabel.font = newValue }
+        // Cliqz: use new variable title instead of old one titleLabel
+//        get { return titleLabel.font }
+//        set { titleLable.font = newValue }
+
+        get { return title.font }
+        set { title.font = newValue }
     }
 
     dynamic var titleBackgroundColor: UIColor? {

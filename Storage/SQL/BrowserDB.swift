@@ -24,6 +24,12 @@ protocol Queryable {
     func runQuery<T>(sql: String, args: Args?, factory: SDRow -> T) -> Deferred<Maybe<Cursor<T>>>
 }
 
+public enum DatabaseOpResult {
+    case Success
+    case Failure
+    case Closed
+}
+
 // Version 1 - Basic history table.
 // Version 2 - Added a visits table, refactored the history table to be a GenericTable.
 // Version 3 - Added a favicons table.
@@ -61,8 +67,16 @@ public class BrowserDB {
         }
 
         // Create or update will also delete and create the database if our key was incorrect.
-        self.createOrUpdate(self.schemaTable)
-		
+		switch self.createOrUpdate(self.schemaTable) {
+        case .Failure:
+            log.error("Failed to create/update the scheme table. Aborting.")
+            fatalError()
+        case .Closed:
+            log.info("Database not created as the SQLiteConnection is closed.")
+        case .Success:
+            log.debug("db: \(file) with secret = \(secretKey) has been created")
+        }
+
 		// Cliqz: new method call to extend tables if needed
 		self.extendTables()
     }
@@ -118,7 +132,12 @@ public class BrowserDB {
 
     // Utility for table classes. They should call this when they're initialized to force
     // creation of the table in the database.
-    func createOrUpdate(tables: Table...) -> Bool {
+    func createOrUpdate(tables: Table...) -> DatabaseOpResult {
+        guard !db.closed else {
+            log.info("Database is closed - skipping schema create/updates")
+            return .Closed
+        }
+        
         var success = true
 
         let doCreate = { (table: Table, connection: SQLiteDBConnection) -> () in
@@ -232,6 +251,7 @@ public class BrowserDB {
                 }
             }
 
+            self.reopenIfClosed()
             if let _ = db.transaction({ connection -> Bool in
                 for table in tables {
                     doCreate(table, connection)
@@ -245,7 +265,7 @@ public class BrowserDB {
             }
         }
 
-        return success
+        return success ? .Success : .Failure
     }
 
     typealias IntCallback = (connection: SQLiteDBConnection, inout err: NSError?) -> Int
@@ -389,6 +409,10 @@ extension BrowserDB {
 
     public func forceClose() {
         db.forceClose()
+    }
+
+    public func reopenIfClosed() {
+        db.reopenIfClosed()
     }
 }
 

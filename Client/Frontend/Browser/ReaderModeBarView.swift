@@ -103,6 +103,10 @@ class ReaderModeBarView: UIView {
             make.height.centerY.equalTo(self)
             make.width.equalTo(80)
         }
+        
+        
+        readStatusButton.hidden = true
+        listStatusButton.hidden = true
     }
 
     required init?(coder aDecoder: NSCoder) {

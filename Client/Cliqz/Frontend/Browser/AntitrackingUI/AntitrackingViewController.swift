@@ -238,8 +238,9 @@ class AntitrackingViewController: UIViewController, UIGestureRecognizerDelegate 
 		if self.isPrivateMode == true {
 			return UIColor(rgb: 0x222222)
 		}
-		return UIColor(rgb: 0xE8E8E8)
+		return UIConstants.AppBackgroundColor
 	}
+
     private func createLegendView() -> UIView? {
         let header = UIView()
         header.backgroundColor = UIColor.clearColor()

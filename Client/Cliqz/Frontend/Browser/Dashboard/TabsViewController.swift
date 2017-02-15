@@ -8,13 +8,16 @@
 
 import Foundation
 
+@objc protocol TabViewCellDelegate {
+    func closeTab(tab: Tab)
+}
+
 class TabsViewController: UIViewController {
 	
 	private var tabsView: UITableView!
 	private var addTabButton: UIButton!
 
 	let tabManager: TabManager!
-	var tabs: [Tab]!
 
 	private let tabCellIdentifier = "TabCell"
 
@@ -22,7 +25,6 @@ class TabsViewController: UIViewController {
     
     init(tabManager: TabManager) {
 		self.tabManager = tabManager
-		self.tabs = tabManager.tabs
 		super.init(nibName: nil, bundle: nil)
 		self.tabManager.addDelegate(self)
 	}
@@ -75,7 +77,7 @@ class TabsViewController: UIViewController {
 	@objc private func addNewTab(sender: UIButton) {
 		self.openNewTab()
         
-        let customData: [String : AnyObject] = ["tab_count" : tabs.count]
+        let customData: [String : AnyObject] = ["tab_count" : self.tabManager.tabs.count]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
 	}
     
@@ -99,11 +101,11 @@ class TabsViewController: UIViewController {
                 TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
             }
             
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler:  cancelHandler)
+            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
             
             self.presentViewController(actionSheetController, animated: true, completion: nil)
             
-            let customData: [String : AnyObject] = ["count" : tabs.count]
+            let customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count]
             TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
         }
     }
@@ -142,10 +144,13 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = self.tabsView.dequeueReusableCellWithIdentifier(tabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
-		let tab = self.tabs[indexPath.row]
-		if tab.title != nil && tab.displayURL != nil {
-			cell.titleLabel.text = tab.title
-			cell.URLLabel.text = tab.displayURL?.host
+		let tab = self.tabManager.self.tabs[indexPath.row]
+        cell.delegate = self
+        cell.selectedTab = tab
+        
+		if tab.displayURL != nil {
+            cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
+			cell.URLLabel.text = tab.displayURL?.absoluteString
 		} else {
 			cell.URLLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
 			cell.titleLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
@@ -153,12 +158,29 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		cell.selectionStyle = .None
 		cell.isPrivateTabCell = tab.isPrivate
 		cell.animator.delegate = self
-		if let icon = tab.displayFavicon {
-			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
-		} else {
-			cell.logoImageView.image = nil
-		}
-		return cell
+        
+//		if let icon = tab.displayFavicon {
+//			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
+//		} else {
+//			cell.logoImageView.image = nil
+//		}
+        
+        cell.logoImageView.image = nil
+        
+        cell.tag = indexPath.row
+        if let url = tab.displayURL?.absoluteString{
+            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+                if let img = image{
+                    if cell.tag == indexPath.row{
+                        cell.logoImageView.image = img
+                    }
+                }
+            })
+        }
+        
+        
+        cell.accessibilityLabel = tab.displayURL?.absoluteString
+        return cell
 	}
 	
 	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -171,7 +193,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
 		self.navigationController?.popViewControllerAnimated(false)
         
         if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? TabViewCell {
-            logTabClickSignal(currentCell, indexPath: indexPath, count: tabs.count, isForget: tab.isPrivate)
+            logTabClickSignal(currentCell, indexPath: indexPath, count: self.tabManager.tabs.count, isForget: tab.isPrivate)
         }
         
 
@@ -207,7 +229,7 @@ extension TabsViewController: SwipeAnimatorDelegate {
             action = "swipe_right"
         }
         
-        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : tabs.count, "is_forget" : tab.isPrivate]
+        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
     }
 }
@@ -220,17 +242,12 @@ extension TabsViewController: TabManagerDelegate {
 	}
 	
 	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
-		guard let index = tabManager.tabs.indexOf(tab) else { return }
-		self.tabs.insert(tab, atIndex: index)
-		tabManager.selectTab(tab)
-		self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
+        guard let index = tabManager.tabs.indexOf(tab) else { return }
+        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
 	}
-
-	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab) {
-		if let i = self.tabs.indexOf(tab) {
-			self.tabsView.deleteRowsAtIndexPaths([NSIndexPath(forRow: i, inSection: 0)], withRowAnimation: .Left)
-			self.tabs.removeAtIndex(i)
-		}
+    
+	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
+        self.tabsView.deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
 	}
 
 	func tabManagerDidAddTabs(tabManager: TabManager) {
@@ -243,3 +260,15 @@ extension TabsViewController: TabManagerDelegate {
 	}
 }
 
+extension TabsViewController: TabViewCellDelegate {
+    func closeTab(tab: Tab) {
+        var customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
+        if let tabIndex = self.tabManager.getIndex(tab) {
+            customData["index"] = tabIndex
+        }
+        
+        self.tabManager.removeTab(tab)
+        
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
+    }
+}

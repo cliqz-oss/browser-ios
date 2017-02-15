@@ -13,7 +13,9 @@ protocol TabManagerDelegate: class {
     func tabManager(tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?)
     func tabManager(tabManager: TabManager, didCreateTab tab: Tab)
     func tabManager(tabManager: TabManager, didAddTab tab: Tab)
-    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab)
+    // Cliqz: Added removeIndex to didRemoveTab method
+//    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab)
+    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int)
     func tabManagerDidRestoreTabs(tabManager: TabManager)
     func tabManagerDidAddTabs(tabManager: TabManager)
     func tabManagerDidRemoveAllTabs(tabManager: TabManager, toast:ButtonToast?)
@@ -66,7 +68,10 @@ class TabManager : NSObject {
     lazy private var configuration: WKWebViewConfiguration = {
         let configuration = WKWebViewConfiguration()
         configuration.processPool = WKProcessPool()
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        // Cliqz: Moved `blockPopups` to SettingsPrefs
+//        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        
         return configuration
     }()
 
@@ -75,7 +80,10 @@ class TabManager : NSObject {
     lazy private var privateConfiguration: WKWebViewConfiguration = {
         let configuration = WKWebViewConfiguration()
         configuration.processPool = WKProcessPool()
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        // Cliqz: Moved `blockPopups` to SettingsPrefs
+//        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore()
         return configuration
     }()
@@ -199,7 +207,7 @@ class TabManager : NSObject {
         } else {
             _selectedIndex = -1
         }
-
+        
         preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
@@ -327,11 +335,6 @@ class TabManager : NSObject {
         if flushToDisk {
         	storeChanges()
         }
-        
-        // Cliqz: set inSearchMode of the created tab to false if there is request to open
-        if request != nil {
-            tab.inSearchMode = false
-        }
     }
 
     // This method is duplicated to hide the flushToDisk option from consumers.
@@ -382,13 +385,15 @@ class TabManager : NSObject {
 
         if notify {
             for delegate in delegates {
-                delegate.get()?.tabManager(self, didRemoveTab: tab)
+                // Cliqz: Added removeIndex to didRemoveTab method
+//                delegate.get()?.tabManager(self, didRemoveTab: tab)
+                delegate.get()?.tabManager(self, didRemoveTab: tab, removeIndex: removeIndex)
             }
         }
 
         // Make sure we never reach 0 normal tabs
         if !tab.isPrivate && normalTabs.count == 0 {
-            addTab()
+            addTabAndSelect()
         }
 
         if flushToDisk {
@@ -505,7 +510,10 @@ class TabManager : NSObject {
         // Cliqz: [UIWebview] CliqzWebViewConfiguration does not contain preferences 
 #if !CLIQZ
         dispatch_async(dispatch_get_main_queue()) {
-            let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
+            // Cliqz: Moved `blockPopups` to SettingsPrefs
+//            let allowPopups = !(self.prefs.boolForKey("blockPopups") ?? true)
+            let allowPopups = !SettingsPrefs.getBlockPopupsPref()
+            
             // Each tab may have its own configuration, so we should tell each of them in turn.
             for tab in self.tabs {
                 tab.webView?.configuration.preferences.javaScriptCanOpenWindowsAutomatically = allowPopups
