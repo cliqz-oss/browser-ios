@@ -23,7 +23,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     private let configUrl = "http://newbeta.cliqz.com/api/v1/config"
     private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
-    
+	
+	// TODO: Change topSitesCollection to optional
 	private var topSitesCollection: UICollectionView!
 	private var newsTableView: UITableView!
 
@@ -100,31 +101,33 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
     @objc private func cancelActions(sender: UITapGestureRecognizer) {
-        
-        self.removeDeletedTopSites()
-        
-        // fire `didSelectRowAtIndexPath` when user click on a cell in news table
-        let p = sender.locationInView(self.newsTableView)
-        if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
-            self.tableView(self.newsTableView, didSelectRowAtIndexPath: selectedIndex)
-        }
-        
+		if !isForgetMode {
+			self.removeDeletedTopSites()
+			
+			// fire `didSelectRowAtIndexPath` when user click on a cell in news table
+			let p = sender.locationInView(self.newsTableView)
+			if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
+				self.tableView(self.newsTableView, didSelectRowAtIndexPath: selectedIndex)
+			}
+		}
+		
 	}
     
     private func removeDeletedTopSites(){
         
-        let cells = self.topSitesCollection?.visibleCells()
-        for cell in cells as! [TopSiteViewCell] {
-            cell.isDeleteMode = false
-        }
-        
-        self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
-        for index in self.topSitesIndexesToRemove {
-            self.topSites.removeAtIndex(index)
-        }
-        
-        self.topSitesIndexesToRemove.removeAll()
-        self.topSitesCollection?.reloadData()
+		if let cells = self.topSitesCollection?.visibleCells() as? [TopSiteViewCell] {
+			for cell in cells {
+				cell.isDeleteMode = false
+			}
+			
+			self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
+			for index in self.topSitesIndexesToRemove {
+				self.topSites.removeAtIndex(index)
+			}
+			
+			self.topSitesIndexesToRemove.removeAll()
+			self.topSitesCollection?.reloadData()
+		}
     }
 
 	private func constructForgetModeView() {
@@ -251,7 +254,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		
 		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
-				if let result = response.result.value!["results"] as? [[String: AnyObject]] {
+				if let result = response.result.value?["results"] as? [[String: AnyObject]] {
 					if let snippet = result[0]["snippet"] as? [String: AnyObject],
 						extra = snippet["extra"] as? [String: AnyObject],
 						articles = extra["articles"] as? [[String: AnyObject]]
@@ -265,7 +268,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	private func loadTopSitesWithLimit(limit: Int) -> Success {
-        print("[FreshTab] loadTopSitesWithLimit")
 		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
@@ -415,7 +417,6 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        print("[FreshTab] cellForItemAtIndexPath -> row: \(indexPath.row)")
 		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSiteViewCell
 		cell.tag = -1
 		cell.delegate = self
