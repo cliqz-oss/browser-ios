@@ -1,5 +1,5 @@
 //
-//  DebugLogger.swift
+//  DebugingLogger.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 10/27/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DebugLogger {
+class DebugingLogger {
     class func log<T>(@autoclosure object: () -> T) {
         #if DEBUG
             let value = object()
