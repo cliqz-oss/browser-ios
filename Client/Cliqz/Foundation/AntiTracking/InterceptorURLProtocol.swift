@@ -24,8 +24,18 @@ class InterceptorURLProtocol: NSURLProtocol {
         guard isExcludedUrl(request.URL) == false else {
             return false
         }
+        guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
+            return true
+        }
         
-        return AntiTrackingModule.sharedInstance.shouldBlockRequest(request)
+        if let blockResponse = Engine.sharedInstance.webRequest?.shouldBlockRequest(request) where blockResponse == true {
+            
+            BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
+            
+            return true
+        }
+        
+        return false
     }
     
     override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
