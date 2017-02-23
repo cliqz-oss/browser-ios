@@ -40,6 +40,9 @@ class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
 //    var homePanelController: CliqzSearchViewController?
     var homePanelController: FreshtabViewController?
+    
+    var controlCenterController: ControlCenterViewController?
+    var controlCenterActiveInLandscape: Bool = false
 	
     var webViewContainer: UIView!
     var menuViewController: MenuViewController?
@@ -57,7 +60,7 @@ class BrowserViewController: UIViewController {
     private var searchLoader: SearchLoader!
     private let snackBars = UIView()
     private let webViewContainerToolbar = UIView()
-    private var findInPageBar: FindInPageBar?
+    var findInPageBar: FindInPageBar?
     private let findInPageContainer = UIView()
 
     lazy private var customSearchEngineButton: UIButton = {
@@ -261,12 +264,11 @@ class BrowserViewController: UIViewController {
         }
 
         view.setNeedsUpdateConstraints()
-        if let home = homePanelController {
+//        if let home = homePanelController {
 //            home.view.setNeedsUpdateConstraints()
-        }
+//        }
 
-        if let tab = tabManager.selectedTab,
-               webView = tab.webView {
+        if let tab = tabManager.selectedTab, webView = tab.webView {
             updateURLBarDisplayURL(tab)
             navigationToolbar.updateBackStatus(webView.canGoBack)
             navigationToolbar.updateForwardStatus(webView.canGoForward)
@@ -277,6 +279,10 @@ class BrowserViewController: UIViewController {
     override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
 
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
         // During split screen launching on iPad, this callback gets fired before viewDidLoad gets a chance to
         // set things up. Make sure to only update the toolbar state if the view is ready for it.
         if isViewLoaded() {
@@ -724,8 +730,15 @@ class BrowserViewController: UIViewController {
         }
 
         webViewContainer.snp_remakeConstraints { make in
-            make.left.right.equalTo(self.view)
-
+            
+            if controlCenterActiveInLandscape{
+                make.left.equalTo(self.view)
+                make.width.equalTo(self.view.frame.size.width/2)
+            }
+            else{
+                make.left.right.equalTo(self.view)
+            }
+            
             if let readerModeBarBottom = readerModeBar?.snp_bottom {
                 make.top.equalTo(readerModeBarBottom)
             } else {

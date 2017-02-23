@@ -83,6 +83,7 @@ class ControlCenterViewController: UIViewController {
         let blurEffect = UIBlurEffect(style: .Light)
         self.blurryBackgroundView = UIVisualEffectView(effect: blurEffect)
         self.view.insertSubview(blurryBackgroundView, atIndex: 0)
+        
         self.backgroundView = UIView()
         self.backgroundView.backgroundColor = self.backgroundColor().colorWithAlphaComponent(0.8)
         self.view.addSubview(self.backgroundView)
@@ -127,37 +128,71 @@ class ControlCenterViewController: UIViewController {
     
     private func setupConstraints() {
         
-        blurryBackgroundView.snp_makeConstraints { (make) in
-            make.left.right.bottom.equalTo(self.view)
-            make.top.equalTo(self.view).offset(urlBarHeight)
+        
+        let panelLayout = OrientationUtil.controlPanelLayout()
+        
+        if panelLayout != .LandscapeRegularSize {
+            blurryBackgroundView.snp_makeConstraints { (make) in
+                make.left.right.bottom.equalTo(self.view)
+                make.top.equalTo(self.view).offset(urlBarHeight)
+            }
+            backgroundView.snp_makeConstraints { (make) in
+                make.left.right.bottom.equalTo(self.view)
+                make.top.equalTo(self.view).offset(urlBarHeight)
+            }
+            
+            panelSegmentedContainerView.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.height.equalTo(45)
+            }
+            panelSegmentedControl.snp_makeConstraints { make in
+                make.centerY.equalTo(panelSegmentedContainerView)
+                make.left.equalTo(panelSegmentedContainerView).offset(10)
+                make.right.equalTo(panelSegmentedContainerView).offset(-10)
+                make.height.equalTo(30)
+            }
+            panelContainerView.snp_makeConstraints { make in
+                make.top.equalTo(self.panelSegmentedContainerView.snp_bottom).offset(10)
+                make.left.right.bottom.equalTo(self.view)
+            }
+            panelSegmentedSeparator.snp_makeConstraints { make in
+                make.left.equalTo(panelSegmentedContainerView)
+                make.width.equalTo(panelSegmentedContainerView)
+                make.bottom.equalTo(panelSegmentedContainerView)
+                make.height.equalTo(1)
+            }
         }
-        backgroundView.snp_makeConstraints { (make) in
-            make.left.right.bottom.equalTo(self.view)
-            make.top.equalTo(self.view).offset(urlBarHeight)
+        else
+        {
+            backgroundView.snp_makeConstraints { (make) in
+                make.left.right.bottom.equalTo(self.view)
+                make.top.equalTo(self.view).offset(urlBarHeight)
+            }
+            
+            panelSegmentedContainerView.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.height.equalTo(45)
+            }
+            panelSegmentedControl.snp_makeConstraints { make in
+                make.centerY.equalTo(panelSegmentedContainerView)
+                make.left.equalTo(panelSegmentedContainerView).offset(10)
+                make.right.equalTo(panelSegmentedContainerView).offset(-10)
+                make.height.equalTo(30)
+            }
+            panelContainerView.snp_makeConstraints { make in
+                make.top.equalTo(self.panelSegmentedContainerView.snp_bottom).offset(10)
+                make.left.right.bottom.equalTo(self.view)
+            }
+            panelSegmentedSeparator.snp_makeConstraints { make in
+                make.left.equalTo(panelSegmentedContainerView)
+                make.width.equalTo(panelSegmentedContainerView)
+                make.bottom.equalTo(panelSegmentedContainerView)
+                make.height.equalTo(1)
+            }
         }
         
-        panelSegmentedContainerView.snp_makeConstraints { make in
-            make.left.right.equalTo(self.view)
-            make.top.equalTo(self.view).offset(urlBarHeight)
-            make.height.equalTo(45)
-        }
-        panelSegmentedControl.snp_makeConstraints { make in
-            make.centerY.equalTo(panelSegmentedContainerView)
-            make.left.equalTo(panelSegmentedContainerView).offset(10)
-            make.right.equalTo(panelSegmentedContainerView).offset(-10)
-            make.height.equalTo(30)
-        }
-        panelContainerView.snp_makeConstraints { make in
-            make.top.equalTo(self.panelSegmentedContainerView.snp_bottom).offset(10)
-            make.left.right.bottom.equalTo(self.view)
-        }
-        panelSegmentedSeparator.snp_makeConstraints { make in
-            make.left.equalTo(panelSegmentedContainerView)
-            make.width.equalTo(panelSegmentedContainerView)
-            make.bottom.equalTo(panelSegmentedContainerView)
-            make.height.equalTo(1)
-        }
-
     }
     
     private func backgroundColor() -> UIColor {
@@ -206,22 +241,42 @@ class ControlCenterViewController: UIViewController {
             panel.removeFromParentViewController()
         }
     }
+    
 }
 
 //MARK: - ControlCenterPanelDelegate
 
 extension ControlCenterViewController : ControlCenterPanelDelegate {
+    
     func closeControlCenter() {
+        
+        let panelLayout = OrientationUtil.controlPanelLayout()
+        
         self.controlCenterDelegate?.controlCenterViewWillClose(self.view)
-        UIView.animateWithDuration(0.5, animations: {
-            var p = self.view.center
-            p.y -= self.view.frame.size.height
-            self.view.center = p
-        }) { (finished) in
-            if finished {
-                self.view.removeFromSuperview()
-                self.removeFromParentViewController()
+        
+        if panelLayout != .LandscapeRegularSize {
+            UIView.animateWithDuration(0.2, animations: {
+                var p = self.view.center
+                p.y -= self.view.frame.size.height
+                self.view.center = p
+            }) { (finished) in
+                if finished {
+                    self.view.removeFromSuperview()
+                    self.removeFromParentViewController()
+                }
             }
         }
+        else{
+            UIView.animateWithDuration(0.08, animations: {
+                self.view.frame.origin.x = self.view.frame.origin.x + self.view.frame.size.width
+            }) { (finished) in
+                if finished {
+                    self.view.removeFromSuperview()
+                    self.removeFromParentViewController()
+                }
+            }
+        }
+        
+        
     }
 }

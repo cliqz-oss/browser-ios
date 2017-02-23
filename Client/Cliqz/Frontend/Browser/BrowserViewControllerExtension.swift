@@ -105,29 +105,62 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			
 		}
 	}
-
+    
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
-		if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
+        
+        if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
+        
+            let panelLayout = OrientationUtil.controlPanelLayout()
+            
             let controlCenterVC = ControlCenterViewController(webViewID: webView.uniqueId, url:url, privateMode: tab.isPrivate)
-			controlCenterVC.delegate = self
+            controlCenterVC.delegate = self
             controlCenterVC.controlCenterDelegate = self
-			self.addChildViewController(controlCenterVC)
-			var r = self.view.bounds
-			r.origin.y = -r.size.height
-			controlCenterVC.view.frame = r
-			self.view.addSubview(controlCenterVC.view)
-			self.view.bringSubviewToFront(self.urlBar)
-			self.urlBar.enableAntitrackingButton(false)
-			UIView.animateWithDuration(0.5, animations: {
-				controlCenterVC.view.center = self.view.center
-			}, completion: { (finished) in
-				if finished {
-					self.view.bringSubviewToFront(controlCenterVC.view)
-				}
-			})
-
+            self.addChildViewController(controlCenterVC)
+            self.controlCenterController = controlCenterVC
+            
+            if (panelLayout != .LandscapeRegularSize){
+                var r = self.view.bounds
+                r.origin.y = -r.size.height
+                controlCenterVC.view.frame = r
+            }
+            else{
+                var r = self.view.frame
+                r.origin.x = r.size.width
+                r.size.width = r.size.width/2
+                controlCenterVC.view.frame = r
+            }
+            
+            self.view.addSubview(controlCenterVC.view)
+            self.view.bringSubviewToFront(self.urlBar)
+            self.urlBar.enableAntitrackingButton(false)
+            
             logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
-		}
+            
+            if (panelLayout != .LandscapeRegularSize){
+                UIView.animateWithDuration(0.5, animations: {
+                    controlCenterVC.view.center = self.view.center
+                    }, completion: { (finished) in
+                        if finished {
+                            self.view.bringSubviewToFront(controlCenterVC.view)
+                        }
+                })
+            }
+            else { //Control center in landscape.
+                // First resize the webview
+                self.controlCenterActiveInLandscape = true
+                self.updateViewConstraints()
+                
+                UIView.animateWithDuration(0.12, animations: {
+                    controlCenterVC.view.frame.origin.x = self.view.frame.size.width/2
+                    }, completion: { (finished) in
+                        if finished {
+                            self.view.bringSubviewToFront(controlCenterVC.view)
+                        }
+                })
+            }
+
+        }
+        
 	}
     
     func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?) {
@@ -138,6 +171,11 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
 
 	func controlCenterViewWillClose(controlCenterView: UIView) {
+        if self.controlCenterActiveInLandscape {
+            self.controlCenterActiveInLandscape = false
+            self.updateViewConstraints()
+        }
+        self.controlCenterController = nil
 		self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}
@@ -239,3 +277,4 @@ extension BrowserViewController: ControlCenterViewDelegate {
 		
 	}
 }
+
