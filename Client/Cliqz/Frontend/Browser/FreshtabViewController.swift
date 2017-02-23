@@ -251,7 +251,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
         let uri  = "path=/v2/map&q=&lang=N/A&locale=\(NSLocale.currentLocale().localeIdentifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
-		
+
 		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
 				if let result = response.result.value?["results"] as? [[String: AnyObject]] {
