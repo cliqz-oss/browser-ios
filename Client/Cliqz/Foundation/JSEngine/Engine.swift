@@ -65,7 +65,7 @@ public class Engine {
                 let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
                 return jsonString
             } catch let error as NSError {
-                DebugLogger.log("<< Error while parsing the dictionary into JSON: \(error)")
+                DebugingLogger.log("<< Error while parsing the dictionary into JSON: \(error)")
             }
         }
         return "{}"
