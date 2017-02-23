@@ -294,26 +294,26 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return false//JSEngineAdapter.sharedInstance.isAntiTrakcingEnabledForURL(self.currentURL)
+        return true//JSEngineAdapter.sharedInstance.isAntiTrakcingEnabledForURL(self.currentURL)
     }
     
     func toggleFeatureForCurrentWebsite() {
         //INTEGRATION
         //JSEngineAdapter.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
+        //AntiTrackingModule.sharedInstance.seta
+        //Need to develop method to toggle the feature for the current website.
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()
     }
     
     func updateTrackers() {
-        //IMTEGRATION
-        trackersList = []//JSEngineAdapter.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
-        trackersCount = 0//trackersList.reduce(0){$0 + $1.1}
+        trackersList = AntiTrackingModule.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
+        trackersCount = trackersList.reduce(0){$0 + $1.1}
     }
     
     override func updateView() {
         super.updateView()
-        
         updateTrackers()
         enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
         trackersCountLabel.text = "\(trackersCount)"

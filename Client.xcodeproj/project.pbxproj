@@ -1720,7 +1720,7 @@
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
 		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
-		1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementAtPoint.swift; sourceTree = "<group>"; };
+		1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ElementAtPoint.swift; path = ../../Frontend/Browser/ElementAtPoint.swift; sourceTree = "<group>"; };
 		1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ElementAtPoint.js; sourceTree = "<group>"; };
 		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
 		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = AntiTracking/ContentPolicyDetector.swift; sourceTree = "<group>"; };
@@ -2698,6 +2698,7 @@
 		1E79DCA51D4FB2C5006BEB4A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */,
 				1E79DCA61D4FB2C5006BEB4A /* AppDelegateExtension.swift */,
 				1E79DCA71D4FB2C5006BEB4A /* BrowserProfileExtension.swift */,
 				1E79DCA81D4FB2C5006BEB4A /* NSDateExtension.swift */,
@@ -2799,7 +2800,6 @@
 				4FF239C71D52464A00EEDE89 /* WebView */,
 				1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
-				1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */,
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
 				1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */,
 				1E79DCC91D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift */,
