@@ -452,7 +452,6 @@
 		4F0552821D74730F00E2A684 /* AntitrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */; };
 		4F0DFC121DF033D200B1C9F0 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */; };
 		4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */; };
-		4F44ECBF1DC34C6E00E03860 /* WindowTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F44ECBD1DC34C6E00E03860 /* WindowTimers.m */; };
 		4F514FD41ACD8F2C0022D7EA /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F514FD31ACD8F2C0022D7EA /* HistoryTests.swift */; };
 		4F88A6F31D7714D30039775D /* BrowserNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */; };
 		4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E74BB1E1AB1C900E7C590 /* LogoLoader.swift */; };
@@ -471,7 +470,6 @@
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
 		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
 		4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C51D52464000EEDE89 /* CliqzWebView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
 		4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */; };
@@ -598,6 +596,9 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
+		AF3BA3391E5F37EC0098D8D7 /* OrientationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BA3381E5F37EC0098D8D7 /* OrientationUtil.swift */; };
+		AF3BA3491E5F3A340098D8D7 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
+		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
 		AFEEA8021E5F3081006E1A4F /* AdBlockerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */; };
@@ -1970,7 +1971,6 @@
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
 		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
-		4FF239C51D52464000EEDE89 /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
 		4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsPrefs.swift; sourceTree = "<group>"; };
@@ -2074,6 +2074,8 @@
 		A91528D11D0E637600CD0425 /* NoImageModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NoImageModeHelper.js; sourceTree = "<group>"; };
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
+		AF3BA3381E5F37EC0098D8D7 /* OrientationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationUtil.swift; sourceTree = "<group>"; };
+		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
@@ -3849,7 +3851,7 @@
 		4FF239C71D52464A00EEDE89 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
-				4FF239C51D52464000EEDE89 /* CliqzWebView.swift */,
+				AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */,
 				4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */,
 				1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */,
 				1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */,
@@ -4045,6 +4047,7 @@
 		AFEEA7FB1E5F3081006E1A4F /* ControlCenter */ = {
 			isa = PBXGroup;
 			children = (
+				AF3BA3381E5F37EC0098D8D7 /* OrientationUtil.swift */,
 				AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */,
 				AFEEA7FD1E5F3081006E1A4F /* AntiPhishingPanel.swift */,
 				AFEEA7FE1E5F3081006E1A4F /* AntitrackingPanel.swift */,
@@ -6396,6 +6399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF3BA3491E5F3A340098D8D7 /* BlockedRequestsCache.swift in Sources */,
 				E68E39BE1C46F42000B85F42 /* AppSettingsTableViewController.swift in Sources */,
 				1E79DD1F1D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift in Sources */,
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
@@ -6562,7 +6566,6 @@
 				39DD030D1CD53E1900BC09B3 /* HomePageHelper.swift in Sources */,
 				1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */,
 				C4F3B29A1CFCF93A00966259 /* ButtonToast.swift in Sources */,
-				4FF239C61D52464000EEDE89 /* CliqzWebView.swift in Sources */,
 				E4A961341AC051360069AD6F /* ReadabilityTabHelper.swift in Sources */,
 				D31A0FC71A65D6D000DC8C7E /* SearchSuggestClient.swift in Sources */,
 				1E9775E91E50DED00035EF60 /* JSEngineAdapter.swift in Sources */,
@@ -6608,6 +6611,7 @@
 				D34DC8531A16C40C00D49B7B /* Profile.swift in Sources */,
 				1E79DD091D4FB2C5006BEB4A /* BrowserProfileExtension.swift in Sources */,
 				1E79DE911D508368006BEB4A /* NSDictionary+AWSMTLManipulationAdditions.m in Sources */,
+				AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */,
 				392ED6B71D06E85E009D9B62 /* NewTabChoiceViewController.swift in Sources */,
 				1E71545E1E156553000A3ED7 /* AntiPhishingPanel.swift in Sources */,
 				4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */,
@@ -6643,6 +6647,7 @@
 				7B59FC3E1C68E9B600F58EF5 /* SWCellScrollView.m in Sources */,
 				B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */,
 				1E79DE981D508368006BEB4A /* AWSReachability.m in Sources */,
+				AF3BA3391E5F37EC0098D8D7 /* OrientationUtil.swift in Sources */,
 				1E79DE8D1D508368006BEB4A /* AWSMTLValueTransformer.m in Sources */,
 				B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,

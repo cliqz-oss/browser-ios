@@ -60,12 +60,21 @@ class AdBlockerPanel: AntitrackingPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return ControlCenterDummyHelper.isAdBlockerEnabledForURL(self.currentURL)
+        //INTEGRATION
+        return true//JSEngineAdapter.sharedInstance.isAdBlockerEnabledForURL(self.currentURL)
     }
     
     override func toggleFeatureForCurrentWebsite() {
-        ControlCenterDummyHelper.toggleAdblockerForURL(self.currentURL)
+        //INTEGRATION
+        //JSEngineAdapter.sharedInstance.toggleAdblockerForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
+        self.controlCenterPanelDelegate?.reloadCurrentPage()
+    }
+    
+    override func updateTrackers() {
+        //INTEGRATION
+        trackersList = []//JSEngineAdapter.sharedInstance.getAdBlockerStatistics(self.currentURL)
+        trackersCount = 0//trackersList.reduce(0){$0 + $1.1}
     }
 }

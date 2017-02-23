@@ -9,7 +9,6 @@
 import Foundation
 import Shared
 
-
 class AntitrackingPanel: ControlCenterPanel {
     //MARK: - Constants
     private static let trackerInfoURL = "https://cliqz.com/whycliqz/anti-tracking/tracker#"
@@ -300,14 +299,18 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     func toggleFeatureForCurrentWebsite() {
-        ControlCenterDummyHelper.toggleAntiTrackingForURL(self.currentURL)
+
+        //INTEGRATION
+        //JSEngineAdapter.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
     }
     
     func updateTrackers() {
-        trackersList = AntiTrackingModule.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
-        trackersCount = trackersList.reduce(0){$0 + $1.1}
+
+        //IMTEGRATION
+        trackersList = []//JSEngineAdapter.sharedInstance.getAntiTrackingStatistics(trackedWebViewID)
+        trackersCount = 0//trackersList.reduce(0){$0 + $1.1}
     }
     
     override func updateView() {
