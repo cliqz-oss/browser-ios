@@ -76432,7 +76432,7 @@ VERSIONCHECK_URL:'https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.jso
 URL_ALERT_RULES:'chrome://cliqz/content/anti-tracking-rules.json',
 URL_BLOCK_RULES:'https://cdn.cliqz.com/anti-tracking/whitelist/anti-tracking-block-rules.json',
 ENABLE_PREF:'modules.antitracking.enabled',
-debug:true,
+debug:false,
 msgType:'attrack',
 whitelist:null,
 similarAddon:false,
@@ -81018,6 +81018,8 @@ value:true});
 
 var _coreCliqz=require(576 /* ../core/cliqz */);
 
+var _fetch=require(567 /* ./fetch */);
+
 var VERSION='2.2';
 var _telemetry_req=null;
 var trk=[];
@@ -81063,15 +81065,19 @@ if(trk.length===0)return;
 
 _telemetry_sending=trk.splice(0);
 var data=JSON.stringify(_telemetry_sending);
-_telemetry_req=_coreCliqz.utils.promiseHttpHandler('POST',_coreCliqz.utils.SAFE_BROWSING,data,60000,true);
-_telemetry_req.then(function(){
-try{
-var response=JSON.parse(req.response);
+console.log('telemetry:',data);
+_telemetry_req=new _fetch.Request(_coreCliqz.utils.SAFE_BROWSING,{method:'POST',body:data});
+(0,_fetch.fetch)(_telemetry_req).then(function(response){
+if(response.status===200){
 _telemetry_sending=[];
 _telemetry_req=null;
-}catch(e){}
+}else{
+throw new Error('non 200 status code '+response.status);
+}
+})['catch'](function(error){
+console.error('fetch error',error);
+pushTelemetryError();
 });
-_telemetry_req['catch'](pushTelemetryError);
 }
 
 function pushTelemetryError(req){
@@ -82047,10 +82053,10 @@ var Bridge=function(){
 function Bridge(){
 _classCallCheck(this,Bridge);
 
+this.registeredActions={};
 this.eventEmitter=new _reactNative.NativeEventEmitter(nativeBridge);
 this.eventEmitter.addListener('callAction',this.onAction.bind(this));
 this.eventEmitter.addListener('publishEvent',this.onEvent.bind(this));
-this.registeredActions={};
 }
 
 _createClass(Bridge,[{
