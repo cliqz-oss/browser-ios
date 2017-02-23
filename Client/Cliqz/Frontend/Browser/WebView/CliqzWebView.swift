@@ -10,6 +10,7 @@ import Foundation
 import WebKit
 import Shared
 
+
 class ContainerWebView : WKWebView {
 	weak var legacyWebView: CliqzWebView?
 }
@@ -36,6 +37,40 @@ var nullWKNavigation: WKNavigation = WKNavigation()
 }
 
 
+class WebViewToUAMapper {
+    static private let idToWebview = NSMapTable(keyOptions: .StrongMemory, valueOptions: .WeakMemory)
+    
+    static func setId(uniqueId: Int, webView: CliqzWebView) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        idToWebview.setObject(webView, forKey: uniqueId)
+    }
+    
+    static func removeWebViewWithId(uniqueId: Int) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        idToWebview.removeObjectForKey(uniqueId)
+    }
+    
+    static func idToWebView(uniqueId: Int?) -> CliqzWebView? {
+        return idToWebview.objectForKey(uniqueId) as? CliqzWebView
+    }
+    
+    static func userAgentToWebview(userAgent: String?) -> CliqzWebView? {
+        // synchronize code from this point on.
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        guard let userAgent = userAgent else { return nil }
+        guard let loc = userAgent.rangeOfString("_id/") else {
+            // the first created webview doesn't have this id set (see webviewBuiltinUserAgent to explain)
+            return idToWebview.objectForKey(1) as? CliqzWebView
+        }
+        let keyString = userAgent.substringWithRange(loc.endIndex..<loc.endIndex.advancedBy(6))
+        guard let key = Int(keyString) else { return nil }
+        return idToWebview.objectForKey(key) as? CliqzWebView
+    }
+}
 
 struct CliqzWebViewConstants {
     static let kNotificationWebViewLoadCompleteOrFailed = "kNotificationWebViewLoadCompleteOrFailed"
@@ -148,29 +183,24 @@ class CliqzWebView: UIWebView {
 	init(frame: CGRect, configuration: WKWebViewConfiguration) {
 		super.init(frame: frame)
 		commonInit()
-
 	}
-    
+
     // Anti-Tracking
     var uniqueId = -1
-	var unsafeRequests = 0
-    
-    @objc private func SELBadRequestDetected(notification: NSNotification) {
-        
-        if let tabId = notification.object as? Int where self.uniqueId == tabId {
-            dispatch_sync(lockQueue) { [weak self] in
-                self?.unsafeRequests = JSEngineAdapter.sharedInstance.getAntiTrackingCount(tabId)
-            }
-        }
-    }
-    
+	var unsafeRequests = 0 {
+		didSet {
+			NSNotificationCenter.defaultCenter().postNotificationName(NotificationBadRequestDetected, object: self.uniqueId)
+		}
+	}
 
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		commonInit()
 	}
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationBadRequestDetected, object: nil)
+        
+        WebViewToUAMapper.removeWebViewWithId(self.uniqueId)
+        
         _ = Try(withTry: {
             self.removeProgressObserversOnDeinit?(self)
         }) { (exception) -> Void in
@@ -257,6 +287,13 @@ class CliqzWebView: UIWebView {
 		self.reload()
 	}
     
+    func updateUnsafeRequestsCount(newCount: Int) {
+        dispatch_sync(lockQueue) {
+            self.unsafeRequests = newCount
+        }
+    }
+    
+    
     // On page load, the contentSize of the webview is updated (**). If the webview has not been notified of a page change (i.e. shouldStartLoadWithRequest was never called) then 'loading' will be false, and we should check the page location using JS.
     // (** Not always updated, particularly on back/forward. For instance load duckduckgo.com, then google.com, and go back. No content size change detected.)
     func contentSizeChangeDetected() {
@@ -315,9 +352,6 @@ class CliqzWebView: UIWebView {
 		
         // built-in userScripts
 		self.configuration.userContentController.addUserScript(CliqzWebView.modifyLinksScript!)
-        
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
 	}
 
     // Needed to identify webview in url protocol
@@ -332,14 +366,11 @@ class CliqzWebView: UIWebView {
         
         StaticCounter.counter += 1
         if let webviewBuiltinUserAgent = CliqzWebView.webviewBuiltinUserAgent {
-            self.uniqueId = StaticCounter.counter
-            
-            let userAgent = JSEngineAdapter.sharedInstance.generateUniqueUserAgent(webviewBuiltinUserAgent, tabId: self.uniqueId)
-            
+            let userAgent = webviewBuiltinUserAgent + String(format:" _id/%06d", StaticCounter.counter)
             let defaults = NSUserDefaults(suiteName: AppInfo.sharedContainerIdentifier())!
-            
             defaults.registerDefaults(["UserAgent": userAgent ])
-            
+            self.uniqueId = StaticCounter.counter
+            WebViewToUAMapper.setId(uniqueId, webView:self)
         } else {
             if StaticCounter.counter > 1 {
                 // We shouldn't get here, we allow the first webview to have no user agent, and we special-case the look up. The first webview inits the UA from its built in defaults
@@ -348,6 +379,7 @@ class CliqzWebView: UIWebView {
                 CliqzWebView.webviewBuiltinUserAgent = "Mozilla/5.0 (\(device)) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75"
             }
             self.uniqueId = 1
+            WebViewToUAMapper.idToWebview.setObject(self, forKey: 1) // the first webview, we don't have the user agent just yet
         }
     }
     
