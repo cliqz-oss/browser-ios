@@ -9,7 +9,6 @@
 import Foundation
 import WebKit
 import Shared
-import jsengine
 
 class ContainerWebView : WKWebView {
 	weak var legacyWebView: CliqzWebView?
