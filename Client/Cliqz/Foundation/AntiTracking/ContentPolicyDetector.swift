@@ -1,50 +1,49 @@
 //
 //  ContentPolicyDetector.swift
-//  jsengine
+//  Client
 //
 //  Created by Mahmoud Adam on 9/29/16.
-//  Copyright © 2016 Cliqz GmbH. All rights reserved.
+//  Copyright © 2016 Mozilla. All rights reserved.
 //
 
-import Foundation
-import JavaScriptCore
+import UIKit
 
 class ContentPolicyDetector {
-    
-    enum ContentType: Int {
-        case Other = 1
-        case Script
-        case Image
-        case Stylesheet
-        case Document = 6
-        case Subdocument
-        case XMLHTTPRequest = 11
-        case Font = 14
-    }
-    
+	
+	enum ContentType: Int {
+		case Other = 1
+		case Script
+		case Image
+		case Stylesheet
+		case Document = 6
+		case Subdocument
+		case XMLHTTPRequest = 11
+		case Font = 14
+	}
+	
     // MARK: reqular expressions
-    private var RE_JS : NSRegularExpression?
+	private var RE_JS : NSRegularExpression?
     private var RE_CSS : NSRegularExpression?
     private var RE_IMAGE : NSRegularExpression?
     private var RE_FONT : NSRegularExpression?
     private var RE_HTML : NSRegularExpression?
     private var RE_JSON : NSRegularExpression?
-    
-    static let sharedInstance = ContentPolicyDetector()
-    
-    init () {
-        do {
-            try RE_JS = NSRegularExpression(pattern: "\\.js($|\\|?)", options: .CaseInsensitive)
-            try RE_CSS = NSRegularExpression(pattern: "\\.css($|\\|?)", options: .CaseInsensitive)
-            try RE_IMAGE = NSRegularExpression(pattern: "\\.(?:gif|png|jpe?g|bmp|ico)($|\\|?)", options: .CaseInsensitive)
-            try RE_FONT = NSRegularExpression(pattern: "\\.(?:ttf|woff)($|\\|?)", options: .CaseInsensitive)
-            try RE_HTML = NSRegularExpression(pattern: "\\.html?", options: .CaseInsensitive)
-            try RE_JSON = NSRegularExpression(pattern: "\\.json($|\\|?)", options: .CaseInsensitive)
-        } catch let error as NSError {
-            print("Couldn't initialize regular expressions for detecting Content Policy because of the following error: \(error.description)")
-        }
-    }
-    
+
+	static let sharedInstance = ContentPolicyDetector()
+
+	init () {
+		do {
+			try RE_JS = NSRegularExpression(pattern: "\\.js($|\\|?)", options: .CaseInsensitive)
+			try RE_CSS = NSRegularExpression(pattern: "\\.css($|\\|?)", options: .CaseInsensitive)
+			try RE_IMAGE = NSRegularExpression(pattern: "\\.(?:gif|png|jpe?g|bmp|ico)($|\\|?)", options: .CaseInsensitive)
+			try RE_FONT = NSRegularExpression(pattern: "\\.(?:ttf|woff)($|\\|?)", options: .CaseInsensitive)
+			try RE_HTML = NSRegularExpression(pattern: "\\.html?", options: .CaseInsensitive)
+			try RE_JSON = NSRegularExpression(pattern: "\\.json($|\\|?)", options: .CaseInsensitive)
+		} catch let error as NSError {
+			print("Couldn't initialize regular expressions for detecting Content Policy because of the following error: \(error.description)")
+		}
+	}
+
     // MARK: - Public APIs
     func getContentPolicy(request: NSURLRequest, isMainDocument: Bool) -> Int {
         // set default value
@@ -54,11 +53,11 @@ class ContentPolicyDetector {
         if (isMainDocument) {
             contentPolicy = .Document
         } else if let acceptHeader = request.valueForHTTPHeaderField("Accept") {
-            if acceptHeader.rangeOfString("text/css") != nil {
+            if acceptHeader.contains("text/css") {
                 contentPolicy = .Stylesheet
-            } else if acceptHeader.rangeOfString("image/*") != nil || acceptHeader.rangeOfString("image/webp") != nil {
+            } else if acceptHeader.contains("image/*") || acceptHeader.contains("image/webp") {
                 contentPolicy = .Image
-            } else if acceptHeader.rangeOfString("text/html") != nil {
+            } else if acceptHeader.contains("text/html") {
                 contentPolicy = .Subdocument
             } else {
                 // decide based on the URL pattern
@@ -75,8 +74,8 @@ class ContentPolicyDetector {
     private func getContentPolicy(url: NSURL?) -> ContentType {
         
         // set default value
-        var contentPolicy: ContentType = .XMLHTTPRequest
-        //return contentPolicy
+		var contentPolicy: ContentType = .XMLHTTPRequest
+		//return contentPolicy
         if let urlString = url?.absoluteString {
             let range  = NSMakeRange(0, urlString.characters.count)
             
@@ -94,7 +93,7 @@ class ContentPolicyDetector {
                 contentPolicy = .Other
             }
         }
-        return contentPolicy
+		return contentPolicy
     }
     
 }
