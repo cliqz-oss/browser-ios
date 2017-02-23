@@ -8,13 +8,6 @@
 
 import UIKit
 
-protocol ControlCenterPanelDelegate: class {
-    
-    func closeControlCenter()
-    func reloadCurrentPage()
-    
-}
-
 class ControlCenterPanel: UIViewController {
     //MARK: - Constants
     let enabledColor = UIColor(rgb: 0x2EBA85)
@@ -54,8 +47,14 @@ class ControlCenterPanel: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let panelLayout = OrientationUtil.controlPanelLayout()
+        
         // panel title
         titleLabel.font = UIFont.systemFontOfSize(22)
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.numberOfLines = 1
+        titleLabel.minimumScaleFactor = 0.6
+        
         titleLabel.textAlignment = .Center
         self.view.addSubview(titleLabel)
         
@@ -66,7 +65,18 @@ class ControlCenterPanel: UIViewController {
         self.view.addSubview(panelIcon)
         
         // panel subtitle
-        subtitleLabel.font = UIFont.boldSystemFontOfSize(16)
+        if panelLayout == .Portrait {
+            subtitleLabel.font = UIFont.boldSystemFontOfSize(16)
+        }
+        else if panelLayout == .LandscapeCompactSize{
+            subtitleLabel.font = UIFont.boldSystemFontOfSize(14)
+            subtitleLabel.adjustsFontSizeToFitWidth = true
+            subtitleLabel.numberOfLines = 1
+            subtitleLabel.minimumScaleFactor = 0.6
+        }
+        else{
+            subtitleLabel.font = UIFont.systemFontOfSize(16)
+        }
         subtitleLabel.textAlignment = .Center
         self.view.addSubview(subtitleLabel)
         
@@ -74,9 +84,20 @@ class ControlCenterPanel: UIViewController {
         // learn more label
         let learnMoreTitle = NSLocalizedString("Learn more", tableName: "Cliqz", comment: "Learn more label on control center panel.")
         let underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue])
-        learnMoreButton.setAttributedTitle(underlineTitle, forState: .Normal)
-        learnMoreButton.titleLabel?.font = UIFont.systemFontOfSize(12)
-        learnMoreButton.setTitleColor(textColor(), forState: .Normal)
+        
+        if panelLayout != .LandscapeRegularSize {
+            learnMoreButton.setAttributedTitle(underlineTitle, forState: .Normal)
+            learnMoreButton.titleLabel?.font = UIFont.systemFontOfSize(12)
+            learnMoreButton.setTitleColor(textColor(), forState: .Normal)
+        }
+        else
+        {
+            learnMoreButton.setTitle(learnMoreTitle, forState: .Normal)
+            learnMoreButton.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+            learnMoreButton.setTitleColor(UIConstants.CliqzThemeColor, forState: .Normal)
+            learnMoreButton.backgroundColor  = UIColor.clearColor()
+        }
+        
         learnMoreButton.addTarget(self, action: #selector(learnMorePressed), forControlEvents: .TouchUpInside)
         self.view.addSubview(learnMoreButton)
         
@@ -85,10 +106,17 @@ class ControlCenterPanel: UIViewController {
         let okButtonTitle = NSLocalizedString("OK", comment: "Ok button in Control Center panel.")
         self.okButton.setTitle(okButtonTitle, forState: .Normal)
         self.okButton.setTitleColor(UIConstants.CliqzThemeColor, forState: .Normal)
-        self.okButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
-        self.okButton.layer.borderColor = UIConstants.CliqzThemeColor.CGColor
-        self.okButton.layer.borderWidth = 2.0
-        self.okButton.layer.cornerRadius = 20
+        
+        if panelLayout != .LandscapeRegularSize{
+            self.okButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
+            self.okButton.layer.borderColor = UIConstants.CliqzThemeColor.CGColor
+            self.okButton.layer.borderWidth = 2.0
+            self.okButton.layer.cornerRadius = 20
+        }
+        else{
+            self.okButton.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+        }
+        
         self.okButton.backgroundColor = UIColor.clearColor()
         self.okButton.addTarget(self, action: #selector(dismissView), forControlEvents: .TouchUpInside)
         self.view.addSubview(self.okButton)
@@ -103,6 +131,13 @@ class ControlCenterPanel: UIViewController {
         self.activateButton.addTarget(self, action: #selector(enableFeature), forControlEvents: .TouchUpInside)
         self.view.addSubview(self.activateButton)
         
+        if panelLayout == .LandscapeRegularSize{
+            //for developing purposes
+            //self.okButton.hidden = true
+            //self.learnMoreButton.hidden = true
+            //self.activateButton.hidden = true
+        }
+        
         updateView()
     }
     
@@ -113,36 +148,115 @@ class ControlCenterPanel: UIViewController {
     }
     
     func setupConstraints() {
-        titleLabel.snp_makeConstraints { make in
-            make.left.right.equalTo(self.view)
-            make.top.equalTo(self.view).offset(15)
-            make.height.equalTo(24)
-        }
         
-        panelIcon.snp_makeConstraints { make in
-            make.centerX.equalTo(self.view)
-            make.top.equalTo(titleLabel.snp_bottom).offset(20)
-        }
+        let panelLayout = OrientationUtil.controlPanelLayout()
         
-        subtitleLabel.snp_makeConstraints { make in
-            make.left.right.equalTo(self.view)
-            make.height.equalTo(20)
+        if panelLayout == .Portrait {
+            
+            titleLabel.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.top.equalTo(self.view).offset(15)
+                make.height.equalTo(24)
+            }
+            
+            panelIcon.snp_makeConstraints { make in
+                make.centerX.equalTo(self.view)
+                make.top.equalTo(titleLabel.snp_bottom).offset(20)
+            }
+            
+            subtitleLabel.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.height.equalTo(20)
+            }
+            
+            learnMoreButton.snp_makeConstraints { make in
+                make.right.bottom.equalTo(self.view).offset(-25)
+                make.height.equalTo(24)
+            }
+            
+            okButton.snp_makeConstraints { (make) in
+                make.size.equalTo(CGSizeMake(80, 40))
+                make.centerX.equalTo(self.view)
+                make.bottom.equalTo(self.view).offset(-20)
+            }
+            
+            activateButton.snp_makeConstraints { (make) in
+                make.size.equalTo(okButton)
+                make.centerX.bottom.equalTo(okButton)
+            }
+            
         }
-        
-        learnMoreButton.snp_makeConstraints { make in
-            make.right.bottom.equalTo(self.view).offset(-25)
-            make.height.equalTo(24)
+        else if panelLayout == .LandscapeCompactSize{
+            
+            titleLabel.snp_makeConstraints { make in
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.bounds.width/2 - 40)
+                make.top.equalTo(self.view).offset(4)
+                make.height.equalTo(24)
+            }
+            
+            panelIcon.snp_makeConstraints { make in
+                make.centerX.equalTo(titleLabel)
+                make.top.equalTo(titleLabel.snp_bottom).offset(16)
+            }
+            
+            subtitleLabel.snp_makeConstraints { make in
+                make.left.equalTo(titleLabel)
+                make.width.equalTo(titleLabel)
+                make.height.equalTo(20)
+                
+            }
+
+            learnMoreButton.snp_makeConstraints { make in
+                make.right.bottom.equalTo(self.view).offset(-16)
+                make.height.equalTo(24)
+            }
+            
+            okButton.snp_makeConstraints { (make) in
+                make.size.equalTo(CGSizeMake(80, 40))
+                //make.centerX.equalTo(self.view)
+                make.bottom.equalTo(self.view).offset(-12)
+            }
+            
+            activateButton.snp_makeConstraints { (make) in
+                make.size.equalTo(okButton)
+                make.centerX.bottom.equalTo(okButton)
+            }
         }
-        
-        okButton.snp_makeConstraints { (make) in
-            make.size.equalTo(CGSizeMake(80, 40))
-            make.centerX.equalTo(self.view)
-            make.bottom.equalTo(self.view).offset(-20)
-        }
-        
-        activateButton.snp_makeConstraints { (make) in
-            make.size.equalTo(okButton)
-            make.centerX.bottom.equalTo(okButton)
+        else{
+            
+            titleLabel.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.top.equalTo(self.view).offset(0)
+                make.height.equalTo(24)
+            }
+            
+            panelIcon.snp_makeConstraints { make in
+                make.width.height.equalTo(44)
+                make.centerX.equalTo(self.view)
+                make.top.equalTo(titleLabel.snp_bottom).offset(12)
+            }
+            
+            subtitleLabel.snp_makeConstraints { make in
+                make.left.right.equalTo(self.view)
+                make.height.equalTo(24)
+            }
+            
+            learnMoreButton.snp_makeConstraints { make in
+                make.left.equalTo(self.view).offset(12)
+                make.bottom.equalTo(self.view).offset(-2)
+            }
+            
+            okButton.snp_makeConstraints { (make) in
+                make.right.equalTo(self.view)
+                make.bottom.equalTo(self.view).offset(-2)
+            }
+            
+            activateButton.snp_makeConstraints { (make) in
+                make.size.equalTo(okButton)
+                make.centerX.bottom.equalTo(okButton)
+            }
+            
         }
         
     }
@@ -187,7 +301,7 @@ class ControlCenterPanel: UIViewController {
         
         if isFeatureEnabled() {
             okButton.hidden = false
-            activateButton.hidden = true  
+            activateButton.hidden = true
         } else {
             okButton.hidden = true
             activateButton.hidden = false
@@ -237,6 +351,5 @@ class ControlCenterPanel: UIViewController {
     @objc private func dismissView() {
         closePanel()
     }
-    
     
 }
