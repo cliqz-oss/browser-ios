@@ -580,7 +580,6 @@
 		7C4475111E097001008E34E6 /* FreshTabTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4475101E097001008E34E6 /* FreshTabTest.swift */; };
 		7FB63CC91C08B27E0047F9A4 /* DynamicFontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */; };
 		7FB63CEF1C08D4910047F9A4 /* DynamicFontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */; };
-		8DC821586D08E51D7AFC3B2E /* Pods_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41DA963137B17ABC36FAA23E /* Pods_Client.framework */; };
 		A826F0D21CBEB8160084CF9A /* PhoneNumberFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A826F0D11CBEB8160084CF9A /* PhoneNumberFormatterTests.swift */; };
 		A826F0D31CBEB8F00084CF9A /* PhoneNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86296D61C9EDCB50000B594 /* PhoneNumberFormatter.swift */; };
 		A83E5AB71C1D993D0026D912 /* UIPasteboardExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83E5AB61C1D993D0026D912 /* UIPasteboardExtensions.swift */; };
@@ -596,12 +595,6 @@
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
-		B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BB1E5C5A06001B38A1 /* Engine.swift */; };
-		B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */; };
-		B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */; };
-		B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */; };
-		B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */; };
-		B354B5E41E5DCDAD001B38A1 /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */; };
 		B729F06A1B75CBEF00745F7A /* UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729F0691B75CBEF00745F7A /* UserAgent.swift */; };
 		C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */; };
 		C40046FA1CF8E0B200B08303 /* BackForwardListAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */; };
@@ -1357,7 +1350,6 @@
 
 /* Begin PBXFileReference section */
 		03CCC9171AF05E7300DBF30D /* RelativeDatesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeDatesTests.swift; sourceTree = "<group>"; };
-		08B73FC20D095735606A813A /* Pods-Client.firefoxnightly.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.firefoxnightly.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.firefoxnightly.xcconfig"; sourceTree = "<group>"; };
 		0B1C05D51A798B1F004C78B0 /* UIImageViewAligned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageViewAligned.h; sourceTree = "<group>"; };
 		0B1C05D61A798B1F004C78B0 /* UIImageViewAligned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageViewAligned.m; sourceTree = "<group>"; };
 		0B3E7D931B27A7CE00E2E84D /* AboutHomeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutHomeHandler.swift; sourceTree = "<group>"; };
@@ -1424,13 +1416,13 @@
 		1E0926CD1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OnePasswordExtension.strings; sourceTree = "<group>"; };
 		1E0926CE1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
-		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedRequestsCache.swift; path = AntiTracking/BlockedRequestsCache.swift; sourceTree = "<group>"; };
+		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
 		1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegacyJSContext.m; sourceTree = "<group>"; };
 		1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackUI.swift; sourceTree = "<group>"; };
 		1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
-		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterceptorURLProtocol.swift; path = AntiTracking/InterceptorURLProtocol.swift; sourceTree = "<group>"; };
+		1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
@@ -1719,7 +1711,7 @@
 		1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementAtPoint.swift; sourceTree = "<group>"; };
 		1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ElementAtPoint.js; sourceTree = "<group>"; };
 		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
-		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = AntiTracking/ContentPolicyDetector.swift; sourceTree = "<group>"; };
+		1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES5CompatTest.swift; sourceTree = "<group>"; };
 		1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES6CompatTest.swift; sourceTree = "<group>"; };
 		1ECAE3331DA4EE5800CB8102 /* ESCompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESCompatTest.swift; sourceTree = "<group>"; };
@@ -1906,12 +1898,10 @@
 		39E65D261CA5B92000C63CE3 /* AsyncReducerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncReducerTests.swift; sourceTree = "<group>"; };
 		39E65D351CA5CAF200C63CE3 /* AsyncReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncReducer.swift; sourceTree = "<group>"; };
 		39F6D06F1CD3B0770055D949 /* HomePageSettingsUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePageSettingsUITests.swift; sourceTree = "<group>"; };
-		3B874502879B29CD4C9D0FB9 /* Pods-Client.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.fennec.xcconfig"; sourceTree = "<group>"; };
 		3BCE6D3B1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdPartySearchAlerts.swift; sourceTree = "<group>"; };
 		3BE7274D1CCFE8A30099189F /* CustomSearchHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = CustomSearchHelper.js; sourceTree = "<group>"; };
 		3BE7275C1CCFE8B60099189F /* CustomSearchHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSearchHandler.swift; sourceTree = "<group>"; };
 		3BF56D261CDBBE1F00AC4D75 /* SimpleToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleToast.swift; sourceTree = "<group>"; };
-		41DA963137B17ABC36FAA23E /* Pods_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F0552811D74730F00E2A684 /* AntitrackingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntitrackingViewController.swift; sourceTree = "<group>"; };
 		4F0552831D74902A00E2A684 /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
@@ -1942,7 +1932,6 @@
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
 		4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsPrefs.swift; sourceTree = "<group>"; };
 		50027345B49B967409DDA348 /* StateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateTests.swift; path = SyncTests/StateTests.swift; sourceTree = "<group>"; };
-		50C9528012EFBDDD4C7156CE /* Pods-Client.firefoxbeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.firefoxbeta.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.firefoxbeta.xcconfig"; sourceTree = "<group>"; };
 		59A6825233896FC846499289 /* HistoryPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HistoryPanel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		59A6839879D615FC1C0D71CE /* BookmarksPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksPanel.swift; sourceTree = "<group>"; };
 		59A685F4EAD19EDEC854BCA4 /* ReaderPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderPanel.swift; sourceTree = "<group>"; };
@@ -2029,7 +2018,6 @@
 		7C44750E1E07FA6A008E34E6 /* CliqzTestsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTestsExtension.swift; sourceTree = "<group>"; };
 		7C4475101E097001008E34E6 /* FreshTabTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshTabTest.swift; sourceTree = "<group>"; };
 		7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicFontHelper.swift; sourceTree = "<group>"; };
-		9124B38EC6C7D20DBADF1A74 /* Pods-Client.firefox.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.firefox.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.firefox.xcconfig"; sourceTree = "<group>"; };
 		A826F0D11CBEB8160084CF9A /* PhoneNumberFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberFormatterTests.swift; sourceTree = "<group>"; };
 		A83E5AB61C1D993D0026D912 /* UIPasteboardExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIPasteboardExtensions.swift; path = Extensions/UIPasteboardExtensions.swift; sourceTree = "<group>"; };
 		A83E5B181C1DA8BF0026D912 /* image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = image.gif; sourceTree = "<group>"; };
@@ -2043,12 +2031,6 @@
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
-		B354B5BB1E5C5A06001B38A1 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = JSEngine/Engine.swift; sourceTree = "<group>"; };
-		B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = JSEngine/WebRequest.swift; sourceTree = "<group>"; };
-		B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebRequestBridge.m; path = JSEngine/WebRequestBridge.m; sourceTree = "<group>"; };
-		B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSBridge.swift; path = JSEngine/JSBridge.swift; sourceTree = "<group>"; };
-		B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSBridgeBridge.m; path = JSEngine/JSBridgeBridge.m; sourceTree = "<group>"; };
-		B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jsengine.bundle.js; sourceTree = "<group>"; };
 		B729F0691B75CBEF00745F7A /* UserAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgent.swift; path = ../Shared/UserAgent.swift; sourceTree = "<group>"; };
 		C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListViewController.swift; sourceTree = "<group>"; };
 		C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListAnimator.swift; sourceTree = "<group>"; };
@@ -2339,7 +2321,6 @@
 		F8708D251A0970990051AB07 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F8708D261A0970990051AB07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8708D291A0970990051AB07 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		FFC2487AB8BDC6ECC5486332 /* Pods-Client.fennecaurora.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.fennecaurora.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.fennecaurora.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2423,7 +2404,6 @@
 				1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */,
 				1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */,
 				4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */,
-				8DC821586D08E51D7AFC3B2E /* Pods_Client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2615,6 +2595,9 @@
 			isa = PBXGroup;
 			children = (
 				1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */,
+				1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */,
+				1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */,
+				1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */,
 			);
 			path = AntiTracking;
 			sourceTree = "<group>";
@@ -2631,7 +2614,6 @@
 		1E79DC971D4FB2C5006BEB4A /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				B354B5AD1E5C59C5001B38A1 /* JSEngine */,
 				1E9F4E461D65E277000E4D0A /* Anti-Phishing */,
 				1E705C2A1D5E04F3009FAEE1 /* AntiTracking */,
 				1E79DC9A1D4FB2C5006BEB4A /* Custom UI */,
@@ -3803,18 +3785,6 @@
 			path = WebView;
 			sourceTree = "<group>";
 		};
-		7124382851AB4FA86C0F1FD3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3B874502879B29CD4C9D0FB9 /* Pods-Client.fennec.xcconfig */,
-				9124B38EC6C7D20DBADF1A74 /* Pods-Client.firefox.xcconfig */,
-				50C9528012EFBDDD4C7156CE /* Pods-Client.firefoxbeta.xcconfig */,
-				08B73FC20D095735606A813A /* Pods-Client.firefoxnightly.xcconfig */,
-				FFC2487AB8BDC6ECC5486332 /* Pods-Client.fennecaurora.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		7B0B1B9C1C1B69F500DF4AB5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -3877,7 +3847,6 @@
 				E4B334891BBF23F9004E2BFF /* AdSupport.framework */,
 				E4B334871BBF23F3004E2BFF /* iAd.framework */,
 				3905274B1C874D35007E0BB7 /* NotificationCenter.framework */,
-				41DA963137B17ABC36FAA23E /* Pods_Client.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3985,21 +3954,6 @@
 				7BEDD2B11CB7CC0B004B51F3 /* Animatable.swift */,
 			);
 			path = Animators;
-			sourceTree = "<group>";
-		};
-		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
-			isa = PBXGroup;
-			children = (
-				B354B5BB1E5C5A06001B38A1 /* Engine.swift */,
-				B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */,
-				B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */,
-				1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */,
-				1ECAE2B81D9D5A1C00CB8102 /* ContentPolicyDetector.swift */,
-				1E705C3A1D5E059E009FAEE1 /* InterceptorURLProtocol.swift */,
-				B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */,
-				B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */,
-			);
-			name = JSEngine;
 			sourceTree = "<group>";
 		};
 		D30EBB5B1C75503800105AE9 /* Products */ = {
@@ -4481,7 +4435,6 @@
 			children = (
 				AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */,
 				AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */,
-				B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */,
 				1E79DEB41D5098CC006BEB4A /* CliqzUITests */,
 				1E79DC941D4FB2B3006BEB4A /* Extension */,
 				28CE83CA1A1D1D5100576538 /* FxA.xcodeproj */,
@@ -4513,7 +4466,6 @@
 				D39FA1601A83E0EC00EE869C /* UITests */,
 				E42CCDFF1A24C4E300B794D3 /* Utils */,
 				1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */,
-				7124382851AB4FA86C0F1FD3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5131,7 +5083,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F84B21DD1A090F8100AAB793 /* Build configuration list for PBXNativeTarget "Client" */;
 			buildPhases = (
-				D17B14B9FF8561A668E34FD9 /* [CP] Check Pods Manifest.lock */,
 				7B604F8F1C494AAA006EEEC3 /* Copy Carthage Dependencies */,
 				F84B21BA1A090F8100AAB793 /* Sources */,
 				F84B21BC1A090F8100AAB793 /* Resources */,
@@ -5140,8 +5091,6 @@
 				E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */,
 				E6B09CD31C74EEDB00C63FA1 /* Copy Frameworks */,
 				1E79DD561D4FB3E3006BEB4A /* Fabric Run script */,
-				9AF7B95024985E2D5D124946 /* [CP] Embed Pods Frameworks */,
-				0706FD9BB25C989AA2F14363 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5732,7 +5681,6 @@
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
 				1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
-				B354B5E41E5DCDAD001B38A1 /* jsengine.bundle.js in Resources */,
 				1E79DD351D4FB2C5006BEB4A /* NewsPermissionSettings-6Plus.png in Resources */,
 				1E79DDD51D507D26006BEB4A /* PrivateBrowsing.strings in Resources */,
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
@@ -5814,21 +5762,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0706FD9BB25C989AA2F14363 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Client/Pods-Client-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1E79DD561D4FB3E3006BEB4A /* Fabric Run script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5845,7 +5778,7 @@
 		};
 		7B604F8F1C494AAA006EEEC3 /* Copy Carthage Dependencies */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
@@ -5869,36 +5802,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		9AF7B95024985E2D5D124946 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D17B14B9FF8561A668E34FD9 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 		E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6355,7 +6258,6 @@
 				3BCE6D3C1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift in Sources */,
 				1E79DEA21D508368006BEB4A /* AWSSTSService.m in Sources */,
 				745DAB301CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift in Sources */,
-				B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */,
 				1E79DD101D4FB2C5006BEB4A /* EventsLogger.swift in Sources */,
 				1E79DE771D508368006BEB4A /* AWSSignature.m in Sources */,
 				1E79DD1B1D4FB2C5006BEB4A /* XMLHttpRequest.swift in Sources */,
@@ -6426,7 +6328,6 @@
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
-				B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */,
 				1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */,
 				1E79DD171D4FB2C5006BEB4A /* ConnectionManager.swift in Sources */,
 				E69E06C91C76198000D0F926 /* AuthenticationManagerConstants.swift in Sources */,
@@ -6454,7 +6355,6 @@
 				6BB2FD981B017DAB001A189B /* AuralProgressBar.swift in Sources */,
 				E698FFDA1B4AADF40001F623 /* TabScrollController.swift in Sources */,
 				1E79DD081D4FB2C5006BEB4A /* AppDelegateExtension.swift in Sources */,
-				B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */,
 				4F9A7B751D6F2BFA005F02CB /* CliqzURLBarView.swift in Sources */,
 				7BEDD29B1CB7CB24004B51F3 /* JumpAndSpinAnimator.swift in Sources */,
 				1E79DE8E1D508368006BEB4A /* AWSEXTRuntimeExtensions.m in Sources */,
@@ -6551,10 +6451,8 @@
 				39AC591A1CC574AB0042C2F5 /* HomePageSettingsViewController.swift in Sources */,
 				1E79DE7E1D508368006BEB4A /* AWSTaskCompletionSource.m in Sources */,
 				7B59FC3E1C68E9B600F58EF5 /* SWCellScrollView.m in Sources */,
-				B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */,
 				1E79DE981D508368006BEB4A /* AWSReachability.m in Sources */,
 				1E79DE8D1D508368006BEB4A /* AWSMTLValueTransformer.m in Sources */,
-				B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,
 				1E79DE8A1D508368006BEB4A /* AWSMTLModel+NSCoding.m in Sources */,
 				1E79DE961D508368006BEB4A /* AWSNetworking.m in Sources */,
@@ -7844,7 +7742,6 @@
 		};
 		E421F28C1A8D2BF300971276 /* FirefoxNightly */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08B73FC20D095735606A813A /* Pods-Client.firefoxnightly.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Nightly;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -7876,11 +7773,6 @@
 					"-lxml2",
 					"-framework",
 					Lookback,
-					"$(inherited)",
-					"-framework",
-					"\"React\"",
-					"-framework",
-					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_NIGHTLY -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
@@ -8035,7 +7927,6 @@
 		};
 		E448FC9E1AEE7A6000869B6C /* Firefox */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9124B38EC6C7D20DBADF1A74 /* Pods-Client.firefox.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -8068,11 +7959,6 @@
 					"-lxml2",
 					"-framework",
 					Lookback,
-					"$(inherited)",
-					"-framework",
-					"\"React\"",
-					"-framework",
-					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ -DBETA";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
@@ -8771,7 +8657,6 @@
 		};
 		E682F5211C89E71000ECB6B2 /* FennecAurora */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FFC2487AB8BDC6ECC5486332 /* Pods-Client.fennecaurora.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -8803,11 +8688,6 @@
 					"-lxml2",
 					"-framework",
 					Lookback,
-					"$(inherited)",
-					"-framework",
-					"\"React\"",
-					"-framework",
-					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_AURORA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
@@ -9271,7 +9151,6 @@
 		};
 		E6FCC42A1C40562400DF6113 /* FirefoxBeta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50C9528012EFBDDD4C7156CE /* Pods-Client.firefoxbeta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Beta;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -9305,11 +9184,6 @@
 					"-lxml2",
 					"-framework",
 					Lookback,
-					"$(inherited)",
-					"-framework",
-					"\"React\"",
-					"-framework",
-					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_BETA -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
@@ -9737,7 +9611,6 @@
 		};
 		F84B21DE1A090F8100AAB793 /* Fennec */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B874502879B29CD4C9D0FB9 /* Pods-Client.fennec.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -9752,8 +9625,6 @@
 					"$(PROJECT_DIR)/ThirdParty/PLCrashReporter",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 					"$(PROJECT_DIR)",
-					"\"$PODS_CONFIGURATION_BUILD_DIR/React\"",
-					"\"$PODS_CONFIGURATION_BUILD_DIR/RNFS\"",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -9767,23 +9638,17 @@
 				);
 				INFOPLIST_FILE = Client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
 					"-framework",
 					Lookback,
-					"$(inherited)",
-					"-framework",
-					"\"React\"",
-					"-framework",
-					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "fe1a483b-a38e-4fc0-b477-bcde8e8a70e6";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
