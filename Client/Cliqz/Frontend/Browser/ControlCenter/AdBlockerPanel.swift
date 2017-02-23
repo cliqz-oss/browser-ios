@@ -50,7 +50,7 @@ class AdBlockerPanel: AntitrackingPanel {
         }
     }
     override func isFeatureEnabled() -> Bool {
-        return SettingsPrefs.getAdBlockerPref()
+        return true//SettingsPrefs.getAdBlockerPref()
     }
     
     override func enableFeature() {

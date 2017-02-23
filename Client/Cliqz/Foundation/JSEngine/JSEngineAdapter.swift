@@ -22,16 +22,46 @@ class JSEngineAdapter: NSObject {
     
     //MARK: - Public APIs
     func startJSEngine() {
-        self.jsEngine = Engine.sharedInstance
+
+        self.jsEngine = Engine.sharedInstance//Engine(bundle: NSBundle.mainBundle())
         
         if let jsEngine = self.jsEngine {
-            
-            let defaultPrefs = getDefaultPrefs()
-            jsEngine.startup(defaultPrefs)
+
             
             self.antiTracking = AntiTracking(engine: jsEngine)
             self.adblocker = Adblocker(engine: jsEngine)
-            self.adblocker?.setEnabled(SettingsPrefs.getAdBlockerPref())
+            //self.adblocker?.setEnabled(SettingsPrefs.getAdBlockerPref())
+            
+            let defaultPrefsAttrack = AntiTracking.getDefaultPrefs(true)
+            let defaultPrefsAdblocker = Adblocker.getDefaultPrefs(true)
+            
+            var defaultPrefs = [String: Bool]()
+            defaultPrefsAttrack.forEach { (k,v) in defaultPrefs[k] = v }
+            defaultPrefsAdblocker.forEach { (k,v) in defaultPrefs[k] = v as? Bool }
+            
+            //let defaultPrefs = getDefaultPrefs(defaultPrefs)
+            jsEngine.startup(defaultPrefs)
+            
+            while !(self.jsEngine?.isRunning())! {
+                sleep(1)
+            }
+            
+            do {
+                try jsEngine.systemLoader?.loadModule("antitracking/attrack")
+                sleep(10)
+                
+            } catch _ {
+                print("Exception while Loading the Antitracking Module")
+            }
+            
+            do {
+                
+                try jsEngine.systemLoader?.loadModule("adblocker/adblocker")
+                sleep(10)
+                
+            } catch _ {
+                print("Exception while Loading the Adblocker Module")
+            }
         }
     }
     
@@ -43,11 +73,19 @@ class JSEngineAdapter: NSObject {
     func getAntiTrackingCount(tabId: Int) -> Int {
         //TODO: call antiTracking.getUnsafeRequestsCounter(tabId)
         //TODO: we need to optimize calling getUnsafeRequestsCounter() and optimize its implementation, i.e. it should not get blockingInfo and aggregate the counter
-        return 7
+        
+        if let count = antiTracking?.getUnsafeRequestsCounter(tabId){
+            return count
+        }
+        
+        return 0
     }
     func getAntiTrackingStatistics(tabId: Int) -> [(String, Int)] {
         //TODO: call antiTracking.getTabBlockingInfo(tabId)
-        return [("test1", 3), ("test2", 3), ("test3", 1), ("test4", 0)]
+        if let dict = antiTracking?.getTrackerDetails(tabId){
+            return dict
+        }
+        return []//[("test1", 3), ("test2", 3), ("test3", 1), ("test4", 0)]
     }
     
     func isAntiTrakcingEnabledForURL(url: NSURL) -> Bool {
@@ -80,11 +118,18 @@ class JSEngineAdapter: NSObject {
     
     func getAdBlockerCount(url: NSURL) -> Int {
         // TODO: call AdBlocker.getAdsCounter(url)
-        return 5
+        if let urlString = url.absoluteString, counter = adblocker?.getAdsCounter(urlString){
+            return counter
+        }
+        return 0
     }
     func getAdBlockerStatistics(url: NSURL) -> [(String, Int)] {
         // TODO: call AdBlocker.getAdBlockingInfo(url)
-        return [("test1", 3), ("test2", 2), ("test3", 0)]
+        
+        if let urlString = url.absoluteString, dict = adblocker?.getAdBlockDetails(urlString){
+            return dict
+        }
+        return []//[("test1", 3), ("test2", 2), ("test3", 0)]
     }
     
     func isAdBlockerEnabledForURL(url: NSURL) -> Bool {

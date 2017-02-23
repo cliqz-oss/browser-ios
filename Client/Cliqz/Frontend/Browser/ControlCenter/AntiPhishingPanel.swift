@@ -56,13 +56,71 @@ class AntiPhishingPanel: ControlCenterPanel {
     override func setupConstraints() {
         super.setupConstraints()
         
-        subtitleLabel.snp_updateConstraints { make in
-            make.top.equalTo(panelIcon.snp_bottom).offset(25)
+        let panelLayout = OrientationUtil.controlPanelLayout()
+        
+        if panelLayout == .Portrait {
+            subtitleLabel.snp_updateConstraints { make in
+                make.top.equalTo(panelIcon.snp_bottom).offset(20)
+            }
+            
+            panelIcon.snp_updateConstraints { (make) in
+                make.height.equalTo(70)
+                make.width.equalTo(70 * 0.72)
+            }
+            
+            descriptionLabel.snp_makeConstraints { make in
+                make.left.equalTo(self.view).offset(30)
+                make.right.equalTo(self.view).offset(-30)
+                make.top.equalTo(subtitleLabel.snp_bottom)
+            }
         }
-        descriptionLabel.snp_makeConstraints { make in
-            make.left.equalTo(self.view).offset(30)
-            make.right.equalTo(self.view).offset(-30)
-            make.top.equalTo(subtitleLabel.snp_bottom).offset(25)
+        else if panelLayout == .LandscapeCompactSize{
+            
+            titleLabel.snp_makeConstraints(closure: { (make) in
+                make.top.equalTo(self.view).offset(40)
+            })
+            
+            subtitleLabel.snp_updateConstraints { make in
+                make.top.equalTo(panelIcon.snp_bottom).offset(20)
+                make.left.equalTo(self.view.bounds.width/2).offset(20)
+            }
+            
+            panelIcon.snp_updateConstraints { (make) in
+                make.top.equalTo(titleLabel.snp_bottom).offset(20)
+                make.height.equalTo(70)
+                make.width.equalTo(70 * 0.72)
+            }
+            
+            descriptionLabel.snp_makeConstraints { make in
+                make.left.equalTo(self.view.bounds.width/2 + 20)
+                make.width.equalTo(self.view.bounds.width/2 - 40)
+                make.top.equalTo(self.view).offset(25)
+            }
+            
+            okButton.snp_updateConstraints { (make) in
+                make.centerX.equalTo(descriptionLabel)
+            }
+            
+//            activateButton.snp_makeConstraints { (make) in
+//                make.centerX.equalTo(descriptionLabel)
+//                make.centerY.equalTo(self.view)
+//            }
+        }
+        else{
+            subtitleLabel.snp_updateConstraints { make in
+                make.top.equalTo(panelIcon.snp_bottom).offset(25)
+            }
+            
+            panelIcon.snp_updateConstraints { (make) in
+                make.height.equalTo(44)
+                make.width.equalTo(44 * 0.72)
+            }
+            
+            descriptionLabel.snp_makeConstraints { make in
+                make.left.equalTo(self.view).offset(30)
+                make.right.equalTo(self.view).offset(-30)
+                make.top.equalTo(subtitleLabel.snp_bottom).offset(15)
+            }
         }
 
     }
