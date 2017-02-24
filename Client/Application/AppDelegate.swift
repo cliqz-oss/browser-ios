@@ -288,7 +288,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //INTEGRATION
         //JSEngineAdapter.sharedInstance.startJSEngine()
         AntiTrackingModule.sharedInstance.initModule()
-
+        AdblockingModule.sharedInstance.initModule()
+        
         log.debug("Done with applicationDidFinishLaunching.")
 
         return shouldPerformAdditionalDelegateHandling

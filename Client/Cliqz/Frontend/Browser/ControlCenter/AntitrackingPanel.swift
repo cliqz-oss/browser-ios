@@ -294,15 +294,14 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return true//JSEngineAdapter.sharedInstance.isAntiTrakcingEnabledForURL(self.currentURL)
+        if let host = self.currentURL.host{
+            return !AntiTrackingModule.sharedInstance.isDomainWhiteListed(host)
+        }
+        return false
     }
     
     func toggleFeatureForCurrentWebsite() {
-
-        //INTEGRATION
-        //JSEngineAdapter.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
-        //AntiTrackingModule.sharedInstance.seta
-        //Need to develop method to toggle the feature for the current website.
+        AntiTrackingModule.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
     }
