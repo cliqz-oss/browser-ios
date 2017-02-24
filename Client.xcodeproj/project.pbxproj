@@ -594,6 +594,7 @@
 		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
+		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8021E5F3081006E1A4F /* AdBlockerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */; };
 		AFEEA8031E5F3081006E1A4F /* AntiPhishingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FD1E5F3081006E1A4F /* AntiPhishingPanel.swift */; };
 		AFEEA8041E5F3081006E1A4F /* AntitrackingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FE1E5F3081006E1A4F /* AntitrackingPanel.swift */; };
@@ -2047,6 +2048,7 @@
 		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
 		AFEEA7FD1E5F3081006E1A4F /* AntiPhishingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingPanel.swift; sourceTree = "<group>"; };
 		AFEEA7FE1E5F3081006E1A4F /* AntitrackingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntitrackingPanel.swift; sourceTree = "<group>"; };
@@ -2645,6 +2647,7 @@
 				B354B5AD1E5C59C5001B38A1 /* JSEngine */,
 				1E9F4E461D65E277000E4D0A /* Anti-Phishing */,
 				1E705C2A1D5E04F3009FAEE1 /* AntiTracking */,
+				AFB749931E6076B800195004 /* Adblocking */,
 				1E79DC9A1D4FB2C5006BEB4A /* Custom UI */,
 				1E79DC9C1D4FB2C5006BEB4A /* Data Structures */,
 				1E79DCA01D4FB2C5006BEB4A /* DevTools */,
@@ -3996,6 +3999,14 @@
 				7BEDD2B11CB7CC0B004B51F3 /* Animatable.swift */,
 			);
 			path = Animators;
+			sourceTree = "<group>";
+		};
+		AFB749931E6076B800195004 /* Adblocking */ = {
+			isa = PBXGroup;
+			children = (
+				AFB749941E6076DB00195004 /* AdblockingModule.swift */,
+			);
+			name = Adblocking;
 			sourceTree = "<group>";
 		};
 		AFEEA7FB1E5F3081006E1A4F /* ControlCenter */ = {
@@ -6377,6 +6388,7 @@
 				1E79DD281D4FB2C5006BEB4A /* RecommendationsViewController.swift in Sources */,
 				D308E4E41A5306F500842685 /* SearchEngines.swift in Sources */,
 				1E79DD2B1D4FB2C5006BEB4A /* UIConstantsExtension.swift in Sources */,
+				AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */,
 				7B59FC411C68E9B600F58EF5 /* SWLongPressGestureRecognizer.m in Sources */,
 				3BCE6D3C1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift in Sources */,
 				1E79DEA21D508368006BEB4A /* AWSSTSService.m in Sources */,
@@ -9809,7 +9821,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;

@@ -50,10 +50,11 @@ class AdBlockerPanel: AntitrackingPanel {
         }
     }
     override func isFeatureEnabled() -> Bool {
-        return true//SettingsPrefs.getAdBlockerPref()
+        return AdblockingModule.sharedInstance.isAdblockEnabled()
     }
     
     override func enableFeature() {
+        AdblockingModule.sharedInstance.setAdblockEnabled(true)
         SettingsPrefs.updateAdBlockerPref(true)
         self.updateView()
         self.setupConstraints()
@@ -61,21 +62,21 @@ class AdBlockerPanel: AntitrackingPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        //INTEGRATION
-        return true//JSEngineAdapter.sharedInstance.isAdBlockerEnabledForURL(self.currentURL)
+        if let urlString = self.currentURL.absoluteString {
+            return AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
+        }
+        return false
     }
     
     override func toggleFeatureForCurrentWebsite() {
-        //INTEGRATION
-        //JSEngineAdapter.sharedInstance.toggleAdblockerForURL(self.currentURL)
+        AdblockingModule.sharedInstance.toggleUrl(self.currentURL)
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()
     }
     
     override func updateTrackers() {
-        //INTEGRATION
-        trackersList = []//JSEngineAdapter.sharedInstance.getAdBlockerStatistics(self.currentURL)
-        trackersCount = 0//trackersList.reduce(0){$0 + $1.1}
+        trackersList = AdblockingModule.sharedInstance.getAdBlockingStatistics(self.currentURL)
+        trackersCount = trackersList.reduce(0){$0 + $1.1}
     }
 }
