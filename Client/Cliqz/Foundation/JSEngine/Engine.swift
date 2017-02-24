@@ -12,10 +12,6 @@ import React
 
 public class Engine {
     
-    //MARK: - Instant variables
-    public var webRequest: WebRequest?
-    public let jsbridge: JSBridge
-    
     //MARK: - Singleton
     static let sharedInstance = Engine()
     
@@ -32,8 +28,14 @@ public class Engine {
         
         rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ExtensionApp", initialProperties: nil, launchOptions: nil )
         bridge = rootView.bridge
-        webRequest = bridge.moduleForClass(WebRequest) as? WebRequest
-        jsbridge = bridge.moduleForClass(JSBridge) as! JSBridge
+    }
+    
+    public func getBridge() -> JSBridge {
+        return bridge.moduleForClass(JSBridge) as! JSBridge
+    }
+    
+    public func getWebRequest() -> WebRequest {
+        return bridge.moduleForClass(WebRequest) as! WebRequest
     }
     
     //MARK: - Public APIs
@@ -50,11 +52,11 @@ public class Engine {
     }
     
     func setPref(prefName: String, prefValue: Any) {
-        self.jsbridge.callAction("setPref", args: [prefName, prefValue as! NSObject])
+        self.getBridge().callAction("setPref", args: [prefName, prefValue as! NSObject])
     }
     
     func getPref(prefName: String) -> Any {
-        let result = self.jsbridge.callAction("getPref", args: [prefName])
+        let result = self.getBridge().callAction("getPref", args: [prefName])
         return result["result"]
     }
     
