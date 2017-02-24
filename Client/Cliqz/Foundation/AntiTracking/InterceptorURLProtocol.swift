@@ -28,7 +28,7 @@ class InterceptorURLProtocol: NSURLProtocol {
             return true
         }
         
-        if let blockResponse = Engine.sharedInstance.webRequest?.shouldBlockRequest(request) where blockResponse == true {
+        if Engine.sharedInstance.getWebRequest().shouldBlockRequest(request) == true {
             
             BlockedRequestsCache.sharedInstance.addBlockedRequest(request)
             

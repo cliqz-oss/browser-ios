@@ -70,7 +70,7 @@ class AntiTrackingModule: NSObject {
     
     //MARK: - Private Helpers
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
-        let response = Engine.sharedInstance.jsbridge.callAction("getTrackerListForTab", args: [webViewId])
+        let response = Engine.sharedInstance.getBridge().callAction("getTrackerListForTab", args: [webViewId])
         print(response)
         if let result = response["result"] {
             return result as? Dictionary

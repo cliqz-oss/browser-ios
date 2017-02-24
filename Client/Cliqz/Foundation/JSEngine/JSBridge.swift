@@ -16,6 +16,7 @@ public class JSBridge : RCTEventEmitter {
     var actionCounter: NSInteger = 0
     var replyCache = [NSInteger: [String: NSObject]]()
     var eventSemaphores = [NSInteger: dispatch_semaphore_t]()
+    let ACTION_TIMEOUT : Int64 = 200000000 // 200ms
     
     public override init() {
         super.init()
@@ -49,7 +50,7 @@ public class JSBridge : RCTEventEmitter {
         self.sendEventWithName("callAction", body: ["id": actionId, "action": functionName, "args": args])
         
         // wait for the semaphore
-        let timeout = dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER)
+        let timeout = dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, self.ACTION_TIMEOUT))
 
         // after signal the reply should be ready in the cache
         objc_sync_enter(self.eventSemaphores)

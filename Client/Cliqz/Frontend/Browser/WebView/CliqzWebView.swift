@@ -342,7 +342,7 @@ class CliqzWebView: UIWebView {
 		delegate = self
         scalesPageToFit = true
         generateUniqueUserAgent()
-        Engine.sharedInstance.webRequest?.newTabCreated(self.uniqueId, webView: self)
+        Engine.sharedInstance.getWebRequest().newTabCreated(self.uniqueId, webView: self)
 		progress = WebViewProgress(parent: self)
 		let refresh = UIRefreshControl()
 		refresh.bounds = CGRectMake(0, -10, refresh.bounds.size.width, refresh.bounds.size.height)
