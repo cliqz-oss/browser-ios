@@ -12,6 +12,18 @@ import Storage
 import Shared
 import Alamofire
 
+struct FreshtabViewUX {
+
+	static let TopSitesMinHeight = 95.0
+	static let TopSitesMaxHeight = 185.0
+	static let TopSitesCellSize = CGSizeMake(76, 86)
+	static let TopSitesCountOnRow = 4
+	static let TopSitesOffset = 5.0
+	
+	static let forgetModeTextColor = UIColor(rgb: 0x999999)
+	static let forgetModeOffset = 20.0
+
+}
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -25,8 +37,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
 	
 	// TODO: Change topSitesCollection to optional
-	private var topSitesCollection: UICollectionView!
-	private var newsTableView: UITableView!
+	private var topSitesCollection: UICollectionView?
+	private var newsTableView: UITableView?
 
 	private lazy var emptyTopSitesHint: UILabel = {
 		let lbl = UILabel()
@@ -47,18 +59,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	weak var delegate: SearchViewDelegate?
 
-	private static let forgetModeTextColor = UIColor(rgb: 0x999999)
 
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(loadTopsites), name: NotificationPrivateDataClearedHistory, object: nil)
 	}
-    
+
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -77,15 +88,26 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         region = SettingsPrefs.getRegionPref()
 		updateView()
 	}
-	
+
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
 	}
-	
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
+	}
+
+	override func updateViewConstraints() {
+		super.updateViewConstraints()
+		self.topSitesCollection?.snp_updateConstraints(closure: { (make) in
+			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow {
+				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
+			} else {
+				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
+			}
+		})
 	}
 
 	func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
@@ -106,15 +128,13 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			
 			// fire `didSelectRowAtIndexPath` when user click on a cell in news table
 			let p = sender.locationInView(self.newsTableView)
-			if let selectedIndex = self.newsTableView.indexPathForRowAtPoint(p) {
-				self.tableView(self.newsTableView, didSelectRowAtIndexPath: selectedIndex)
+			if let selectedIndex = self.newsTableView?.indexPathForRowAtPoint(p) {
+				self.tableView(self.newsTableView!, didSelectRowAtIndexPath: selectedIndex)
 			}
 		}
-		
 	}
     
-    private func removeDeletedTopSites(){
-        
+    private func removeDeletedTopSites() {
 		if let cells = self.topSitesCollection?.visibleCells() as? [TopSiteViewCell] {
 			for cell in cells {
 				cell.isDeleteMode = false
@@ -127,6 +147,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			
 			self.topSitesIndexesToRemove.removeAll()
 			self.topSitesCollection?.reloadData()
+			self.updateViewConstraints()
 		}
     }
 
@@ -143,10 +164,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			title.numberOfLines = 1
 			title.textAlignment = .Center
 			title.font = UIFont.boldSystemFontOfSize(15)
-			title.textColor = FreshtabViewController.forgetModeTextColor
+			title.textColor = FreshtabViewUX.forgetModeTextColor
 			self.forgetModeView.addSubview(title)
 			title.snp_makeConstraints(closure: { (make) in
-				make.top.equalTo(self.forgetModeView).offset(20)
+				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
 				make.left.right.equalTo(self.forgetModeView)
 				make.height.equalTo(20)
 			})
@@ -156,11 +177,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.forgetModeView.addSubview(description)
 			description.numberOfLines = 0
 			description.textAlignment = .Center
-			description.textColor = FreshtabViewController.forgetModeTextColor
+			description.textColor = FreshtabViewUX.forgetModeTextColor
 			description.snp_makeConstraints(closure: { (make) in
-				make.top.equalTo(title.snp_bottom).offset(20)
-				make.left.equalTo(self.forgetModeView).offset(20)
-				make.right.equalTo(self.forgetModeView).offset(-20)
+				make.top.equalTo(title.snp_bottom).offset(FreshtabViewUX.forgetModeOffset)
+				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
+				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.forgetModeOffset)
 			})
 		}
 	}
@@ -176,31 +197,33 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 		if self.topSitesCollection == nil {
 			self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
-			self.topSitesCollection.delegate = self
-			self.topSitesCollection.dataSource = self
-			self.topSitesCollection.backgroundColor = UIConstants.AppBackgroundColor
-			self.topSitesCollection.registerClass(TopSiteViewCell.self, forCellWithReuseIdentifier: "TopSite")
-			self.normalModeView.addSubview(self.topSitesCollection)
-			self.topSitesCollection.snp_makeConstraints { (make) in
+			self.topSitesCollection?.delegate = self
+			self.topSitesCollection?.dataSource = self
+			self.topSitesCollection?.backgroundColor = UIConstants.AppBackgroundColor
+			self.topSitesCollection?.registerClass(TopSiteViewCell.self, forCellWithReuseIdentifier: "TopSite")
+			self.topSitesCollection?.scrollEnabled = false
+			self.normalModeView.addSubview(self.topSitesCollection!)
+			self.topSitesCollection?.snp_makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView)
-				make.left.right.equalTo(self.normalModeView)
-				make.height.equalTo(95)
+				make.left.equalTo(self.normalModeView).offset(FreshtabViewUX.TopSitesOffset)
+				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
+				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
 			}
 		}
 		
 		if self.newsTableView == nil {
 			self.newsTableView = UITableView()
-			self.newsTableView.delegate = self
-			self.newsTableView.dataSource = self
-			self.newsTableView.backgroundColor = UIConstants.AppBackgroundColor
-			self.normalModeView.addSubview(self.newsTableView)
-			self.newsTableView.tableFooterView = UIView()
-			self.newsTableView.snp_makeConstraints { (make) in
+			self.newsTableView?.delegate = self
+			self.newsTableView?.dataSource = self
+			self.newsTableView?.backgroundColor = UIConstants.AppBackgroundColor
+			self.normalModeView.addSubview(self.newsTableView!)
+			self.newsTableView?.tableFooterView = UIView()
+			self.newsTableView?.snp_makeConstraints { (make) in
 				make.left.right.bottom.equalTo(self.view)
-				make.top.equalTo(self.topSitesCollection.snp_bottom).offset(15)
+				make.top.equalTo(self.topSitesCollection!.snp_bottom).offset(5)
 			}
-			newsTableView.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
-			newsTableView.separatorStyle = .None
+			newsTableView?.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
+			newsTableView?.separatorStyle = .None
 		}
 	}
 
@@ -242,7 +265,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    
+
 	private func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
@@ -296,6 +319,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			} else {
 				self.emptyTopSitesHint.removeFromSuperview()
 			}
+			self.updateViewConstraints()
             self.topSitesCollection?.reloadData()
             
 			return succeed()
@@ -304,7 +328,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	@objc private func showMoreNews() {
 		self.isNewsExpanded = true
-		self.newsTableView.reloadData()
+		self.newsTableView?.reloadData()
 	}
 }
 
@@ -318,7 +342,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = self.newsTableView.dequeueReusableCellWithIdentifier("NewsCell", forIndexPath: indexPath) as! NewsViewCell
+		let cell = self.newsTableView?.dequeueReusableCellWithIdentifier("NewsCell", forIndexPath: indexPath) as! NewsViewCell
 		if indexPath.row < self.news.count {
 			var n = self.news[indexPath.row]
 			let title = NSMutableAttributedString()
@@ -407,13 +431,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func cellSize() -> CGSize {
-        return CGSizeMake(76,76)
-    }
-
+	
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 4
+		return self.topSites.count > FreshtabViewUX.TopSitesCountOnRow ? 2 * FreshtabViewUX.TopSitesCountOnRow : FreshtabViewUX.TopSitesCountOnRow
 	}
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -438,6 +458,8 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
                         }
                     }
                 }
+				let hostComponents = getHostComponents(forURL: url)
+				cell.logoHostLabel.text = hostComponents[0]
 			}
 		}
 		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
@@ -466,24 +488,21 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-		return cellSize()
+		return FreshtabViewUX.TopSitesCellSize
 	}
 	
+	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+		return 3.0
+	}
+
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        let inset_edge = inset()
-		return UIEdgeInsetsMake(10, inset_edge + 6, 0, inset_edge + 6)
+		return UIEdgeInsetsMake(10, 0, 0, 0)
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-		return inset() - 16
+		return ((collectionView.frame.size.width - CGFloat(FreshtabViewUX.TopSitesCountOnRow) * FreshtabViewUX.TopSitesCellSize.width) / 3.0)
 	}
     
-    private func inset() -> CGFloat{
-        let width = self.view.frame.size.width
-        return ((width - 4 * cellSize().width)/5.0)
-    }
-    
-
 }
 
 extension FreshtabViewController: TopSiteCellDelegate {
@@ -501,5 +520,3 @@ extension FreshtabViewController: TopSiteCellDelegate {
         }
 	}
 }
-
-
