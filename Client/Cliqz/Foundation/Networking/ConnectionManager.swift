@@ -82,25 +82,6 @@ class ConnectionManager {
         }
         
     }
-    internal func sendPlainPostRequestWithBody(url: String, body: String, queue: dispatch_queue_t, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
-        
-        do {
-            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-            request.HTTPMethod = "POST"
-            request.setValue("application/x-www-form-urlencoded; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
-            
-            Alamofire.request(request)
-                .responseJSON(queue: queue) {
-                    response in
-                    self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
-            }
-            
-        } catch let error as NSError {
-            Answers.logCustomEventWithName("sendPlainPostRequestError", customAttributes: ["error": error.localizedDescription])
-        }
-        
-    }
 
     
     // MARK: - Private methods

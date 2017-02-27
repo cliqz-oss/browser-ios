@@ -13,9 +13,6 @@ protocol QuerySuggestionDelegate : class {
 
 class QuerySuggestionView: UIView {
     //MARK:- Constants
-    private let querySuggestionsApiUrl = "http://suggest.test.cliqz.com:7000/suggest"
-    private let dispatchQueue = dispatch_queue_create("com.cliqz.QuerySuggestion", DISPATCH_QUEUE_SERIAL)
-    
     private let kViewHeight: CGFloat = 44
     private let scrollView = UIScrollView()
     private let boldFontAttributes = [NSFontAttributeName: UIFont.boldSystemFontOfSize(17), NSForegroundColorAttributeName: UIColor.whiteColor()]
@@ -42,7 +39,7 @@ class QuerySuggestionView: UIView {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(QuerySuggestionView.viewRotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         
-        if !isEnabled() {
+        if !QuerySuggestions.isEnabled() {
             self.hidden = true
         }
     }
@@ -52,7 +49,7 @@ class QuerySuggestionView: UIView {
     }
     
     func didEnterText(text: String) {
-        guard isEnabled() else {
+        guard QuerySuggestions.isEnabled() else {
             self.hidden = true
             return
         }
@@ -61,32 +58,15 @@ class QuerySuggestionView: UIView {
             clearSuggestions()
             return
         }
-        
-        ConnectionManager.sharedInstance
-            .sendPlainPostRequestWithBody(querySuggestionsApiUrl,
-                                     body: "query=\(text)",
-                                     queue: self.dispatchQueue,
-                                     onSuccess: { [weak self] responseData in
-                                        self?.processSuggestionsResponse(text, responseData: responseData)
-                                     },
-                                     onFailure: {(data, error) in
-                                        print(error)
-                                     })
-        
+
+        QuerySuggestions.getSuggestions(text) { [weak self] responseData in
+            self?.processSuggestionsResponse(text, responseData: responseData)
+        }
         
     }
     
     //MARK:- Helper methods
-    func isEnabled() -> Bool {
-        var region: String
-        if let userRegion = SettingsPrefs.getRegionPref() {
-            region = userRegion
-        } else {
-            region = SettingsPrefs.getDefaultRegion()
-        }
-        
-        return region == "DE" && SettingsPrefs.getQuerySuggestionPref() == true
-    }
+    
     private func processSuggestionsResponse(query: String, responseData: AnyObject) {
         let suggestionsResponse = responseData as! [String: AnyObject]
         let suggestions = suggestionsResponse["suggestions"] as! [String]
@@ -199,7 +179,7 @@ class QuerySuggestionView: UIView {
     }
     
     @objc private func viewRotated() {
-        guard isEnabled() else {
+        guard QuerySuggestions.isEnabled() else {
             self.hidden = true
             return
         }

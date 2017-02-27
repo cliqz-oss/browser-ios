@@ -51,6 +51,7 @@
 		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
 		1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */; };
 		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
+		1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */; };
 		1E1432321D88539A001C27C9 /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
 		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
@@ -1418,6 +1419,7 @@
 		1E0926CD1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OnePasswordExtension.strings; sourceTree = "<group>"; };
 		1E0926CE1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
+		1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QuerySuggestions.swift; path = Client/Cliqz/Foundation/QuertSuggestion/QuerySuggestions.swift; sourceTree = SOURCE_ROOT; };
 		1E1432311D88539A001C27C9 /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
@@ -2797,6 +2799,7 @@
 				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
 				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
 				1EDFA84F1E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift */,
+				1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -6250,6 +6253,7 @@
 				1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */,
 				1ECAE2B91D9D5A1C00CB8102 /* ContentPolicyDetector.swift in Sources */,
 				4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */,
+				1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */,
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
 				1E79DE791D508368006BEB4A /* AWSCancellationToken.m in Sources */,
