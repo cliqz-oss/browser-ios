@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import JavaScriptCore
 import React
 
 public class Engine {
