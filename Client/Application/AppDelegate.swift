@@ -193,10 +193,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             sendCorePing()
         }
 
-
         sendCorePing()
-
-        
+		
         log.debug("Done with setting up the application.")
 
         return true

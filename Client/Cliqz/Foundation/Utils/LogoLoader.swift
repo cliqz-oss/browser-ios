@@ -72,7 +72,7 @@ class LogoLoader {
 
 	class func generateFakeLogo(url: String?) -> UIView? {
         guard (url != nil) else {return nil}
-        let hostComps = LogoLoader.getHostComponents(forURL: url!)
+        let hostComps = getHostComponents(forURL: url!)
         guard hostComps.count > 0 else {return nil}
         let hostName = hostComps[0]
 		let v = UIView()
@@ -102,7 +102,7 @@ class LogoLoader {
     class func constructImageURL(url: String, completionBlock:(imageUrl: String?, hasSecond: Bool?, urlWithoutSecond: String?) -> Void) {
         LogoLoader.lastLogoVersion() { (version) in
             if version == nil {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
-            let hostComps = LogoLoader.getHostComponents(forURL: url)
+            let hostComps = getHostComponents(forURL: url)
             if hostComps.count < 1 {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let hardcoded_version = "1483980213630"
             let mainURL = "http://cdn.cliqz.com/brands-database/database/\(hardcoded_version)/pngs"
@@ -160,37 +160,6 @@ class LogoLoader {
 		}
 	}
 
-    class func getHostComponents(forURL url: String) -> [String] {
-		var result = [String]()
-		var domainIndex = Int.max
-		let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
-		if let url = NSURL(string: url),
-			host = url.host {
-			let comps = host.componentsSeparatedByString(".")
-			domainIndex = comps.count - 1
-			if let lastComp = comps.last,
-				firstLevel = LogoLoader.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
-				if let _ = LogoLoader.topDomains[comps[comps.count - 2]] {
-					domainIndex = comps.count - 2
-				}
-			}
-			let firstIndex = domainIndex - 1
-			var secondIndex = -1
-			if firstIndex > 0 {
-				secondIndex = firstIndex - 1
-			}
-			if secondIndex >= 0 && excludablePrefixes.contains(comps[secondIndex]) {
-				secondIndex = -1
-			}
-			if firstIndex > -1 {
-				result.append(comps[firstIndex])
-			}
-			if secondIndex > -1 && secondIndex < domainIndex {
-				result.append(comps[secondIndex])
-			}
-		}
-		return result
-	}
 
 }
 
