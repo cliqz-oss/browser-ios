@@ -46,7 +46,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
             // Cliqz: added regional settings for cliqz search
             RegionalSetting(settings: self)]
             // Cliqz: add settings for query suggestion
-        if shouldDisplayQuerySuggestionSettings() {
+        if QuerySuggestions.querySuggestionSettingEnabled() {
             generalSettings += [
                 BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting"))]
         }
@@ -245,16 +245,6 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
         
         return super.tableView(tableView, viewForHeaderInSection: section)
-    }
-    private func shouldDisplayQuerySuggestionSettings() -> Bool {
-        var region: String
-        if let userRegion = SettingsPrefs.getRegionPref() {
-            region = userRegion
-        } else {
-            region = SettingsPrefs.getDefaultRegion()
-        }
-        
-        return region == "DE"
     }
 }
 
