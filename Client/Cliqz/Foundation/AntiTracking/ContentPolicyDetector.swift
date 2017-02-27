@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import JavaScriptCore
 
 class ContentPolicyDetector {
     
