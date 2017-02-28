@@ -38,6 +38,7 @@ class SettingsPrefs {
 	
 	class func updateAdBlockerPref(newValue: Bool) {
 		SettingsPrefs.updatePref(AdBlockerPrefKey, value: newValue)
+        AdblockingModule.sharedInstance.setAdblockEnabled(newValue)
 	}
 
 	class func updateFairBlockingPref(newValue: Bool) {
