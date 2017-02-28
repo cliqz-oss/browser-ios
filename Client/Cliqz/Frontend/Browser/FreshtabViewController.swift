@@ -21,7 +21,7 @@ struct FreshtabViewUX {
 	static let TopSitesOffset = 5.0
 	
 	static let forgetModeTextColor = UIColor(rgb: 0x999999)
-	static let forgetModeOffset = 20.0
+	static let forgetModeOffset = 50.0
 
 }
 
@@ -153,21 +153,34 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	private func constructForgetModeView() {
 		if forgetModeView == nil {
-			forgetModeView = UIView()
-			forgetModeView.backgroundColor = UIConstants.PrivateModeBackgroundColor
+			self.forgetModeView = UIView()
+			self.forgetModeView.backgroundColor = UIConstants.PrivateModeBackgroundColor
+			let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+			self.forgetModeView.addSubview(blurEffect)
+			self.forgetModeView.snp_makeConstraints(closure: { (make) in
+				make.top.left.right.bottom.equalTo(self.forgetModeView)
+			})
+			self.view.backgroundColor = UIColor.clearColor()
 			self.view.addSubview(forgetModeView)
 			self.forgetModeView.snp_makeConstraints(closure: { (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
+			let forgetIcon = UIImageView(image: UIImage(named: "forgetModeIcon"))
+			self.forgetModeView.addSubview(forgetIcon)
+			forgetIcon.snp_makeConstraints(closure: { (make) in
+				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
+				make.centerX.equalTo(self.forgetModeView)
+			})
+
 			let title = UILabel()
 			title.text = NSLocalizedString("Forget Tab", tableName: "Cliqz", comment: "Title on Freshtab for forget mode")
 			title.numberOfLines = 1
 			title.textAlignment = .Center
-			title.font = UIFont.boldSystemFontOfSize(15)
-			title.textColor = FreshtabViewUX.forgetModeTextColor
+			title.font = UIFont.boldSystemFontOfSize(19)
+			title.textColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(title)
 			title.snp_makeConstraints(closure: { (make) in
-				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
+				make.top.equalTo(forgetIcon.snp_bottom).offset(20)
 				make.left.right.equalTo(self.forgetModeView)
 				make.height.equalTo(20)
 			})
@@ -177,9 +190,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.forgetModeView.addSubview(description)
 			description.numberOfLines = 0
 			description.textAlignment = .Center
+			description.font = UIFont.systemFontOfSize(13)
+			description.textColor = UIColor(white: 1, alpha: 0.57)
 			description.textColor = FreshtabViewUX.forgetModeTextColor
 			description.snp_makeConstraints(closure: { (make) in
-				make.top.equalTo(title.snp_bottom).offset(FreshtabViewUX.forgetModeOffset)
+				make.top.equalTo(title.snp_bottom).offset(15)
 				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
 				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.forgetModeOffset)
 			})
