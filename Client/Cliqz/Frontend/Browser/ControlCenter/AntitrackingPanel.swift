@@ -111,19 +111,23 @@ class AntitrackingPanel: ControlCenterPanel {
         if panelLayout == .LandscapeRegularSize {
             trackersTableView.hidden = true
             legendView.hidden = true
-            legendView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.size.width/2, 30)
-            
-            var frame = self.view.frame
-            frame.origin.x = self.view.frame.size.width
-            frame.origin.y = legendView.frame.origin.y + legendView.frame.size.height
-            trackersTableView.frame = frame
-            
+//            legendView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.size.width , 30)
+//            
+//            var frame = self.view.frame
+//            frame.origin.x = self.view.frame.size.width
+//            frame.origin.y = legendView.frame.origin.y + legendView.frame.size.height
+//            trackersTableView.frame = frame
         }
         else{
             toTableViewButton.hidden = true
         }
-
+        
 	}
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        resetViewForLandscapeRegularSize()
+    }
     
     override func setupConstraints() {
         super.setupConstraints()
@@ -264,6 +268,20 @@ class AntitrackingPanel: ControlCenterPanel {
                 make.bottom.equalTo(okButton.snp_top)
             }
             
+            legendView.snp_makeConstraints { make in
+                make.left.right.equalTo(self.trackersTableView)
+                make.top.equalTo(self.secondViewTitleLabel.snp_bottom).offset(8)
+                make.height.equalTo(30)
+            }
+            
+            trackersTableView.snp_makeConstraints { (make) in
+                make.left.equalTo(self.view.frame.width)
+                make.width.equalTo(self.view.frame.width - 40)
+                make.top.equalTo(self.legendView.snp_bottom).offset(4)
+                make.bottom.equalTo(self.okButton.snp_top).offset(-15)
+            }
+
+            
         }
  
     }
@@ -325,12 +343,14 @@ class AntitrackingPanel: ControlCenterPanel {
             
             if isFeatureEnabledForCurrentWebsite() {
                 trackersCountLabel.hidden = false
-                legendView.hidden = trackersCount > 0 ? false : true
-                trackersTableView.hidden =  trackersCount > 0 ? false : true
+                legendView.hidden = trackersList.isEmpty ? true : false
+                trackersTableView.hidden =  trackersList.isEmpty ? true : false
+                toTableViewButton.hidden = trackersList.isEmpty ? true : false
             } else {
                 trackersCountLabel.hidden = true
                 legendView.hidden = true
                 trackersTableView.hidden =  true
+                toTableViewButton.hidden = true
             }
         } else {
             configContainerView.hidden = true
@@ -341,6 +361,8 @@ class AntitrackingPanel: ControlCenterPanel {
         }
         
     }
+
+    
     
     func showTableView(){
         UIView.animateWithDuration(0.08, animations: {
@@ -376,19 +398,6 @@ class AntitrackingPanel: ControlCenterPanel {
                     
                     self.secondViewTitleLabel.alpha = 1
                     self.secondViewBackButton.alpha = 1
-                    
-                    self.legendView.snp_makeConstraints { make in
-                        make.left.right.equalTo(self.trackersTableView)
-                        make.top.equalTo(self.secondViewTitleLabel.snp_bottom).offset(8)
-                        make.height.equalTo(30)
-                    }
-                    
-                    self.trackersTableView.snp_makeConstraints { (make) in
-                        make.left.equalTo(self.view).offset(20)
-                        make.right.equalTo(self.view).offset(-20)
-                        make.top.equalTo(self.legendView.snp_bottom).offset(4)
-                        make.bottom.equalTo(self.okButton.snp_top).offset(-15)
-                    }
                     
                 }, completion: {finished in
 
@@ -431,6 +440,31 @@ class AntitrackingPanel: ControlCenterPanel {
                 })
             }
         })
+    }
+    
+    func resetViewForLandscapeRegularSize(){
+        
+        if OrientationUtil.controlPanelLayout() == .LandscapeRegularSize{
+            
+            self.trackersTableView.alpha = 1
+            self.legendView.alpha = 1
+            self.secondViewTitleLabel.alpha = 1
+            self.secondViewBackButton.alpha = 1
+            
+            self.trackersTableView.hidden = true
+            self.legendView.hidden = true
+            self.secondViewTitleLabel.hidden = true
+            self.secondViewBackButton.hidden = true
+            
+            self.titleLabel.alpha = 1
+            self.trackersCountLabel.alpha = 1
+            self.subtitleLabel.alpha = 1
+            self.panelIcon.alpha = 1
+            self.configContainerView.alpha = 1
+            self.toTableViewButton.alpha = 1
+            
+        }
+        
     }
     
     //MARK: - Helper methods
