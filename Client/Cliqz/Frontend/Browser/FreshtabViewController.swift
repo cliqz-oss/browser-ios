@@ -165,7 +165,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.forgetModeView.snp_makeConstraints(closure: { (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
-			let forgetIcon = UIImageView(image: UIImage(named: "forgetModeIcon"))
+			let iconImg = UIImage(named: "forgetModeIcon")
+			let forgetIcon = UIImageView(image: iconImg!.imageWithRenderingMode(.AlwaysTemplate))
+			forgetIcon.tintColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(forgetIcon)
 			forgetIcon.snp_makeConstraints(closure: { (make) in
 				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
