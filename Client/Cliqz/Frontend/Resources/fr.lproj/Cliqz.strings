@@ -255,7 +255,7 @@
 "Forget Tab" = "Mode oubli";
 
 /* Description on Freshtab for forget mode */
-"Forget Tab Description" = "Les sites visités ne sont pas enregistrés dans votre historique. De même, les fichiers temporaires et cookies sont supprimés. Néanmoins, les téléchargements et marque-pages seront conservés.\n Votre fournisseur d'accès à Internet, votre employeur ou les sites eux-mêmes peuvent toujours voir quelles pages vous visitez.";
+"Forget Tab Description" = "Tu surfes en Mode Oubli : les sites web que tu visites dans ce mode ne seront pas sauvegardés dans ton historique et les données locales, cookies inclus, ne seront pas conservées.";
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Vous accéderez à vos sites les plus visités ici";
