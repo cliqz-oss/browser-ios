@@ -63,7 +63,7 @@ class AntiTrackingModule: NSObject {
     }
     
     func isDomainWhiteListed(hostname: String) -> Bool{
-        let response = Engine.sharedInstance.jsbridge.callAction("isSourceWhitelisted", args: [hostname])
+        let response = Engine.sharedInstance.getBridge().callAction("isSourceWhitelisted", args: [hostname])
         if let result = response["result"] as? Int{
             return Bool(result)
         }
@@ -86,6 +86,7 @@ class AntiTrackingModule: NSObject {
     //MARK: - Private Helpers
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
         let response = Engine.sharedInstance.getBridge().callAction("getTrackerListForTab", args: [webViewId])
+        print("getTabBlockingInfo")
         print(response)
         if let result = response["result"] {
             return result as? Dictionary
@@ -95,7 +96,7 @@ class AntiTrackingModule: NSObject {
     }
     
     private func addToWhiteList(domain: String){
-        let response = Engine.sharedInstance.jsbridge.callAction("addSourceDomainToWhitelist", args: [domain])
+        let response = Engine.sharedInstance.getBridge().callAction("addSourceDomainToWhitelist", args: [domain])
         if let res = response["result"]{
             print(res)
         }
@@ -103,7 +104,7 @@ class AntiTrackingModule: NSObject {
     }
     
     private func removeFromWhitelist(domain: String){
-        let response = Engine.sharedInstance.jsbridge.callAction("removeSourceDomainFromWhitelist", args: [domain])
+        let response = Engine.sharedInstance.getBridge().callAction("removeSourceDomainFromWhitelist", args: [domain])
         if let res = response["result"]{
             print(res)
         }

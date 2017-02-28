@@ -54,41 +54,71 @@ class AdblockingModule: NSObject {
     }
     
     func isUrlBlackListed(url:String) -> Bool {
-        let response = Engine.sharedInstance.jsbridge.callAction("isUrlBlacklisted", args: [url])
+        let response = Engine.sharedInstance.getBridge().callAction("isDomainInBlacklist", args: [url])
         if let result = response["result"] as? Int{
             return Bool(result)
         }
         return false
     }
     
+    
     func toggleUrl(url: NSURL){
+        //WORK ON THIS...PUT ON BLACKLIST...REMOVE FROM BLACKLIST
+//        if let urlString = url.absoluteString, host = url.host{
+//            let response = Engine.sharedInstance.getBridge().callAction("toggleUrl", args: [urlString, host])
+//            if let res = response["result"]{
+//                print(res)
+//            }
+//        }
+        guard let host = url.host else {return}
         
-        if let urlString = url.absoluteString, host = url.host{
-            let response = Engine.sharedInstance.jsbridge.callAction("toggleUrl", args: [urlString, host])
-            if let res = response["result"]{
-                print(res)
-            }
+        if isUrlBlackListed(host){
+            removeFromBlacklist(host)
+        }
+        else{
+            addToBlackList(host)
         }
     }
+    
     
     func getAdBlockingStatistics(url: NSURL) -> [(String, Int)] {
         var adblockingStatistics = [(String, Int)]()
         if let urlString = url.absoluteString, tabBlockInfo = getAdBlockingInfo(urlString) {
-            tabBlockInfo.keys.forEach { company in
-                adblockingStatistics.append((company as! String, tabBlockInfo[company] as! Int))
+            if let adDict = tabBlockInfo["advertisersList"]{
+                if let dict = adDict as? Dictionary<String, Array<String>>{
+                    dict.keys.forEach({company in
+                        adblockingStatistics.append((company, dict[company]?.count ?? 0))
+                    })
+                }
             }
         }
         return adblockingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
-    
+
     //MARK: - Private Helpers
     func getAdBlockingInfo(url: String) -> [NSObject : AnyObject]! {
-        let response = Engine.sharedInstance.jsbridge.callAction("getAdBlockInfo", args: [url])
+        let response = Engine.sharedInstance.getBridge().callAction("getAdBlockInfo", args: [url])
+        print("getAdBlockingInfo")
         print(response)
         if let result = response["result"] {
             return result as? Dictionary
         } else {
             return [:]
+        }
+    }
+    
+    private func addToBlackList(domain: String){
+        let response = Engine.sharedInstance.getBridge().callAction("addToBlacklist", args: [domain])
+        if let res = response["result"]{
+            print(res)
+        }
+        
+    }
+    
+    private func removeFromBlacklist(domain: String){
+        let response = Engine.sharedInstance.getBridge().callAction("removeFromBlacklist", args: [domain])
+        if let res = response["result"]{
+            print(res)
         }
     }
     
