@@ -9,7 +9,7 @@
 import Foundation
 import JavaScriptCore
 
-extension BrowserViewController: AntitrackingViewDelegate {
+extension BrowserViewController: ControlCenterViewDelegate {
 
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
@@ -94,43 +94,73 @@ extension BrowserViewController: AntitrackingViewDelegate {
 	
 	func SELBadRequestDetected(notification: NSNotification) {
 		dispatch_async(dispatch_get_main_queue()) {
-			var x = notification.object as? Int
-			if x == nil {
-				x = 0
+			
+			if let tabId = notification.object as? Int where self.tabManager.selectedTab?.webView?.uniqueId == tabId {
+                let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
+                self.urlBar.updateTrackersCount(newCount)
+                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
+                    self.showHint(.Antitracking)
+                }
 			}
-			if self.tabManager.selectedTab?.webView?.uniqueId == x {
-				let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
-				self.urlBar.updateTrackersCount(newCount)
-				if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
-					self.showHint(.Antitracking)
-				}
-				
-			}
+			
 		}
 	}
-
+    
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
-		if let tab = self.tabManager.selectedTab, webView = tab.webView {
-			let antitrackingVC = AntitrackingViewController(webViewID: webView.uniqueId, privateMode: tab.isPrivate)
-			antitrackingVC.delegate = self
-			self.addChildViewController(antitrackingVC)
-			antitrackingVC.antitrackingDelegate = self
-			var r = self.view.bounds
-			r.origin.y = -r.size.height
-			antitrackingVC.view.frame = r
-			self.view.addSubview(antitrackingVC.view)
-			self.view.bringSubviewToFront(self.urlBar)
-			self.urlBar.enableAntitrackingButton(false)
-			UIView.animateWithDuration(0.5, animations: {
-				antitrackingVC.view.center = self.view.center
-			}, completion: { (finished) in
-				if finished {
-					self.view.bringSubviewToFront(antitrackingVC.view)
-				}
-			})
-
+        
+        if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
+        
+            let panelLayout = OrientationUtil.controlPanelLayout()
+            
+            let controlCenterVC = ControlCenterViewController(webViewID: webView.uniqueId, url:url, privateMode: tab.isPrivate)
+            controlCenterVC.delegate = self
+            controlCenterVC.controlCenterDelegate = self
+            self.addChildViewController(controlCenterVC)
+            self.controlCenterController = controlCenterVC
+            
+            if (panelLayout != .LandscapeRegularSize){
+                var r = self.view.bounds
+                r.origin.y = -r.size.height
+                controlCenterVC.view.frame = r
+            }
+            else{
+                var r = self.view.frame
+                r.origin.x = r.size.width
+                r.size.width = r.size.width/2
+                controlCenterVC.view.frame = r
+            }
+            
+            self.view.addSubview(controlCenterVC.view)
+            self.view.bringSubviewToFront(self.urlBar)
+            self.urlBar.enableAntitrackingButton(false)
+            
             logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
-		}
+            
+            if (panelLayout != .LandscapeRegularSize){
+                UIView.animateWithDuration(0.5, animations: {
+                    controlCenterVC.view.center = self.view.center
+                    }, completion: { (finished) in
+                        if finished {
+                            self.view.bringSubviewToFront(controlCenterVC.view)
+                        }
+                })
+            }
+            else { //Control center in landscape.
+                // First resize the webview
+                self.controlCenterActiveInLandscape = true
+                self.updateViewConstraints()
+                
+                UIView.animateWithDuration(0.12, animations: {
+                    controlCenterVC.view.frame.origin.x = self.view.frame.size.width/2
+                    }, completion: { (finished) in
+                        if finished {
+                            self.view.bringSubviewToFront(controlCenterVC.view)
+                        }
+                })
+            }
+
+        }
+        
 	}
     
     func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?) {
@@ -140,10 +170,20 @@ extension BrowserViewController: AntitrackingViewDelegate {
         self.urlBar(urlBar, didEnterText: "")
     }
 
-	func antitrackingViewWillClose(antitrackingView: UIView) {
+	func controlCenterViewWillClose(controlCenterView: UIView) {
+        if self.controlCenterActiveInLandscape {
+            self.controlCenterActiveInLandscape = false
+            self.updateViewConstraints()
+        }
+        self.controlCenterController = nil
 		self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}
+    func reloadCurrentPage() {
+        if let tab = self.tabManager.selectedTab, webView = tab.webView {
+            webView.reload()
+        }
+    }
 
     func showAntiPhishingAlert(domainName: String) {
         let antiPhishingShowTime = NSDate.getCurrentMillis()
@@ -237,3 +277,4 @@ extension BrowserViewController: AntitrackingViewDelegate {
 		
 	}
 }
+

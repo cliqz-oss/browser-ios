@@ -42,7 +42,7 @@ public class WebRequest : RCTEventEmitter {
             }
         }
         
-        let response = Engine.sharedInstance.jsbridge.callAction("webRequest", args: [requestInfo])
+        let response = Engine.sharedInstance.getBridge().callAction("webRequest", args: [requestInfo])
         if let blockResponse = response["result"] as? NSDictionary where blockResponse.count > 0 {
             print("xxxxx -> block \(request.URLString)")
             // update unsafe requests count for the webivew that issued this request

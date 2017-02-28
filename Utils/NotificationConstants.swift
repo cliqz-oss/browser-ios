@@ -26,4 +26,3 @@ public let NotificationShowBlockedTopSites = "NotificationShowBlockedTopSitesNot
 
 // Cliqz: Fired when Anti-Tracking module detects a bad request and modified it
 public let NotificationBadRequestDetected = "NotificationBadRequestDetected"
-

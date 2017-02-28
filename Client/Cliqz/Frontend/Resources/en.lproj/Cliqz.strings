@@ -270,3 +270,58 @@
 
 /* Localized String for specific region */
 "region-FR" = "France";
+
+/* Anti-Trakcing panel name on control center. */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Ad-Blocking panel name on control center. */
+"Ad-Blocking" = "Ad-Blocking";
+
+/* Anti-Phishing panel name on control center. */
+"Anti-Phishing" = "Anti-Phishing";
+
+/* Learn more label on control center panel. */
+"Learn more" = "Learn more";
+
+/* Activate button in control center panel. */
+"Activate" = "Activate";
+
+/* Anti-tracking panel title in the control center when it is enabled. */
+"Your data is protected" = "Your data is protected";
+
+/* Anti-tracking panel title in the control center when it is disabled
+ Anti-Phishing panel title in the control center if the current website is a phishing one. */
+"Your data is not protected" = "Your data is not protected";
+
+/* Anti-tracking panel subtitle in the control center when it is enabled. */
+"Private data points have been removed" = "Private data points have been removed";
+
+/* Anti-tracking panel subtitle in the control center when it is disabled */
+"Anti-Tracking is turned off for this website" = "Anti-Tracking is turned off for this website";
+
+/* AdBlocker panel title in the control center when it is enabled. */
+"You surf the web without ads" = "You surf the web without ads";
+
+/* AdBlocker panel title in the control center when it is disabled. */
+"You surf the web with ads" = "You surf the web with ads";
+
+/* AdBlocker panel subtitle in the control center when it is enabled. */
+"Ads have been blocked" = "Ads have been blocked";
+
+/* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
+"Ad-Blocking is turned off for this website" = "AdBlocking is turned off for this website";
+
+/* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
+"Ad-Blocking is turned off" = "AdBlocking is turned off";
+
+/*Anti-Phishing panel description */
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.";
+
+/* Anti-Phishing panel title in the control center if the current website is safe. */
+"You are safe" = "You are safe";
+
+/* Anti-Phishing panel subtitle in the control center if the current website is safe. */
+"No suspicious activities detected" = "No suspicious activities detected";
+
+/* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
+"Suspicious activities were detected" = "Suspicious activities were detected";

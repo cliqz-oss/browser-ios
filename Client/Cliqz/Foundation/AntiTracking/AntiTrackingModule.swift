@@ -45,12 +45,6 @@ class AntiTrackingModule: NSObject {
     func initModule() {
     }
 
-
-    func setAdblockEnabled(value: Bool, timeout: Int = 0) {
-        Engine.sharedInstance.setPref(self.adBlockPrefName, prefValue: value ? 1 : 0)
-        Engine.sharedInstance.setPref(self.adBlockABTestPrefName, prefValue: value ? true : false)
-    }
-
 	func getTrackersCount(webViewId: Int) -> Int {
 		if let webView = WebViewToUAMapper.idToWebView(webViewId) {
 			return webView.unsafeRequests
@@ -68,14 +62,50 @@ class AntiTrackingModule: NSObject {
         return antiTrackingStatistics.sort { $0.1 == $1.1 ? $0.0.lowercaseString < $1.0.lowercaseString : $0.1 > $1.1 }
     }
     
+    func isDomainWhiteListed(hostname: String) -> Bool{
+        let response = Engine.sharedInstance.jsbridge.callAction("isSourceWhitelisted", args: [hostname])
+        if let result = response["result"] as? Int{
+            return Bool(result)
+        }
+        return false
+    }
+    
+    func toggleAntiTrackingForURL(url: NSURL){
+        
+        guard let host = url.host else{return}
+        
+        if self.isDomainWhiteListed(host){
+            self.removeFromWhitelist(host)
+        }
+        else{
+            self.addToWhiteList(host)
+        }
+    }
+    
+    
     //MARK: - Private Helpers
     private func getTabBlockingInfo(webViewId: Int) -> [NSObject : AnyObject]! {
-        let response = Engine.sharedInstance.jsbridge.callAction("getTrackerListForTab", args: [webViewId])
+        let response = Engine.sharedInstance.getBridge().callAction("getTrackerListForTab", args: [webViewId])
         print(response)
         if let result = response["result"] {
             return result as? Dictionary
         } else {
             return [:]
+        }
+    }
+    
+    private func addToWhiteList(domain: String){
+        let response = Engine.sharedInstance.jsbridge.callAction("addSourceDomainToWhitelist", args: [domain])
+        if let res = response["result"]{
+            print(res)
+        }
+        
+    }
+    
+    private func removeFromWhitelist(domain: String){
+        let response = Engine.sharedInstance.jsbridge.callAction("removeSourceDomainFromWhitelist", args: [domain])
+        if let res = response["result"]{
+            print(res)
         }
     }
 
