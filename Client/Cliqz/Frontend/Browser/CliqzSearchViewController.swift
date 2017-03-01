@@ -134,6 +134,9 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
+        
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(searchWithLastQuery), name: LocationManager.NotificationUserLocationAvailable, object: nil)
 	}
 
     override func viewDidAppear(animated: Bool) {
@@ -143,6 +146,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: LocationManager.NotificationUserLocationAvailable, object: nil)
     }
 
 	override func didReceiveMemoryWarning() {
@@ -185,7 +190,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func isHistoryUptodate() -> Bool {
 		return true
 	}
-	
+    func searchWithLastQuery() {
+        if let query = lastQuery {
+            search(query)
+        }
+    }
+    
 	func loadData(query: String) {
         guard query != lastQuery else {
             return
@@ -194,15 +204,19 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             return
         }
         
-		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-		var parameters = "'\(q)'"
-		if let l = LocationManager.sharedInstance.location {
-			parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
-		}
-        self.javaScriptBridge.publishEvent("search", parameters: parameters)
-
-        lastQuery = query
+		search(query)
 	}
+    
+    private func search(query: String) {
+        let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        var parameters = "'\(q)'"
+        if let l = LocationManager.sharedInstance.getUserLocation() {
+            parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
+        }
+        self.javaScriptBridge.publishEvent("search", parameters: parameters)
+        
+        lastQuery = query
+    }
     
     func updatePrivateMode(privateMode: Bool) {
         if privateMode != self.privateMode {

@@ -10,10 +10,18 @@ import Foundation
 import CoreLocation
 
 public class LocationManager: NSObject, CLLocationManagerDelegate {
+    static let NotificationUserLocationAvailable = "NotificationUserLocationAvailable"
 
-	let manager = CLLocationManager()
-	var location: CLLocation?
-    let locationStatusKey = "currentLocationStatus"
+	private let manager = CLLocationManager()
+    private var location: CLLocation? {
+        didSet {
+            if location != nil {
+                self.manager.stopUpdatingLocation()
+                NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationUserLocationAvailable, object: nil)
+            }
+        }
+    }
+    private let locationStatusKey = "currentLocationStatus"
 
 	public static let sharedInstance: LocationManager = {
 		let m = LocationManager()
@@ -22,25 +30,31 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 		return m
 	}()
 
+    public func getUserLocation() -> CLLocation? {
+        let userLocation = self.location
+        self.location = nil
+        return userLocation
+    }
+    
     public func askForLocationAccess () {
         TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
         self.manager.requestWhenInUseAuthorization()
     }
     
-	public func startUpdateingLocation() {
+	public func shareLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         
-		if CLLocationManager.locationServicesEnabled() &&  authorizationStatus == .NotDetermined {
-			askForLocationAccess()
-		} else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+        if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
             self.manager.startUpdatingLocation()
+            
+        } else if CLLocationManager.locationServicesEnabled() {
+            askForLocationAccess()
         }
+        
 	}
-
+    
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		if locations.count > 0 {
-			self.location = locations[locations.count - 1]
-		}
+        self.location = locations.last
 	}
     
     public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
