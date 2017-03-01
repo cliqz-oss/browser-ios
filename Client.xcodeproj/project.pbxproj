@@ -595,7 +595,10 @@
 		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
-		AF8F29AC1E673A63005DABE5 /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E705C381D5E052D009FAEE1 /* AntiTrackingModule.swift */; };
+		AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */; };
+		AFA6F3B01E673B3500BA630B /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AC1E673B3500BA630B /* BlockedRequestsCache.swift */; };
+		AFA6F3B11E673B3500BA630B /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AD1E673B3500BA630B /* ContentPolicyDetector.swift */; };
+		AFA6F3B21E673B3500BA630B /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AE1E673B3500BA630B /* InterceptorURLProtocol.swift */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8031E5F3081006E1A4F /* AntiPhishingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FD1E5F3081006E1A4F /* AntiPhishingPanel.swift */; };
 		AFEEA8051E5F3081006E1A4F /* ControlCenterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA7FF1E5F3081006E1A4F /* ControlCenterPanel.swift */; };
@@ -2052,6 +2055,10 @@
 		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
+		AFA6F3AC1E673B3500BA630B /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRequestsCache.swift; sourceTree = "<group>"; };
+		AFA6F3AD1E673B3500BA630B /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPolicyDetector.swift; sourceTree = "<group>"; };
+		AFA6F3AE1E673B3500BA630B /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA7FC1E5F3081006E1A4F /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
 		AFEEA7FD1E5F3081006E1A4F /* AntiPhishingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingPanel.swift; sourceTree = "<group>"; };
@@ -2657,6 +2664,7 @@
 				B354B5AD1E5C59C5001B38A1 /* JSEngine */,
 				1E9F4E461D65E277000E4D0A /* Anti-Phishing */,
 				AFB749931E6076B800195004 /* Adblocking */,
+				AFA6F3AA1E673B3500BA630B /* AntiTracking */,
 				1E79DC9A1D4FB2C5006BEB4A /* Custom UI */,
 				1E79DC9C1D4FB2C5006BEB4A /* Data Structures */,
 				1E79DCA01D4FB2C5006BEB4A /* DevTools */,
@@ -3991,6 +3999,17 @@
 				7BEDD2B11CB7CC0B004B51F3 /* Animatable.swift */,
 			);
 			path = Animators;
+			sourceTree = "<group>";
+		};
+		AFA6F3AA1E673B3500BA630B /* AntiTracking */ = {
+			isa = PBXGroup;
+			children = (
+				AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */,
+				AFA6F3AC1E673B3500BA630B /* BlockedRequestsCache.swift */,
+				AFA6F3AD1E673B3500BA630B /* ContentPolicyDetector.swift */,
+				AFA6F3AE1E673B3500BA630B /* InterceptorURLProtocol.swift */,
+			);
+			path = AntiTracking;
 			sourceTree = "<group>";
 		};
 		AFB749931E6076B800195004 /* Adblocking */ = {
@@ -6340,7 +6359,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF8F29AC1E673A63005DABE5 /* AntiTrackingModule.swift in Sources */,
 				E68E39BE1C46F42000B85F42 /* AppSettingsTableViewController.swift in Sources */,
 				1E79DD1F1D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift in Sources */,
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
@@ -6370,6 +6388,7 @@
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
 				1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
+				AFA6F3B21E673B3500BA630B /* InterceptorURLProtocol.swift in Sources */,
 				1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */,
 				4FA29B2A1D64C0CE00C59F5E /* TabViewCell.swift in Sources */,
 				1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */,
@@ -6393,7 +6412,9 @@
 				0BF0DB941A8545800039F300 /* URLBarView.swift in Sources */,
 				1E79DD241D4FB2C5006BEB4A /* JavaScriptBridge.swift in Sources */,
 				E65607611C08B4E200534B02 /* SearchInputView.swift in Sources */,
+				AFA6F3B01E673B3500BA630B /* BlockedRequestsCache.swift in Sources */,
 				0B3E7DB81B27A7F600E2E84D /* AboutUtils.swift in Sources */,
+				AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */,
 				1E79DD231D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift in Sources */,
 				7BC68CC71CC152B70043562A /* MenuItemImageView.swift in Sources */,
 				1E79DE7C1D508368006BEB4A /* AWSExecutor.m in Sources */,
@@ -6589,6 +6610,7 @@
 				B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */,
 				E4A961181AC041C40069AD6F /* ReadabilityService.swift in Sources */,
 				1E79DE8A1D508368006BEB4A /* AWSMTLModel+NSCoding.m in Sources */,
+				AFA6F3B11E673B3500BA630B /* ContentPolicyDetector.swift in Sources */,
 				1E79DE961D508368006BEB4A /* AWSNetworking.m in Sources */,
 				D3BE7B261B054D4400641031 /* main.swift in Sources */,
 				1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */,
