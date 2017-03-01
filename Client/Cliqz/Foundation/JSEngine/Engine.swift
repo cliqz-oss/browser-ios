@@ -20,7 +20,7 @@ public class Engine {
     //MARK: - Init
     public init() {
         #if React_Debug
-            let jsCodeLocation = NSURL(string: "http://192.168.2.37:8081/index.ios.bundle?platform=ios")
+            let jsCodeLocation = NSURL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
         #else
             let jsCodeLocation = NSBundle.mainBundle().URLForResource("jsengine.bundle", withExtension: "js")
         #endif
