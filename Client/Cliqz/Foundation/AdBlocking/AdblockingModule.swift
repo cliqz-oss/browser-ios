@@ -56,7 +56,7 @@ class AdblockingModule: NSObject {
     
     //if url is blacklisted I do not block ads.
     func isUrlBlackListed(url:String) -> Bool {
-        let response = Engine.sharedInstance.getBridge().callAction("isDomainInBlacklist", args: [url])
+        let response = Engine.sharedInstance.getBridge().callAction("adblocker:isDomainInBlacklist", args: [url])
         if let result = response["result"] as? Bool {
             return result
         }
@@ -66,7 +66,7 @@ class AdblockingModule: NSObject {
     
     func toggleUrl(url: NSURL){
         if let urlString = url.absoluteString, host = url.host{
-            Engine.sharedInstance.getBridge().callAction("toggleUrl", args: [urlString, host])
+            Engine.sharedInstance.getBridge().callAction("adblocker:toggleUrl", args: [urlString, host])
         }
     }
     
@@ -87,7 +87,7 @@ class AdblockingModule: NSObject {
 
     //MARK: - Private Helpers
     func getAdBlockingInfo(url: String) -> [NSObject : AnyObject]! {
-        let response = Engine.sharedInstance.getBridge().callAction("getAdBlockInfo", args: [url])
+        let response = Engine.sharedInstance.getBridge().callAction("adblocker:getAdBlockInfo", args: [url])
         if let result = response["result"] {
             return result as? Dictionary
         } else {
