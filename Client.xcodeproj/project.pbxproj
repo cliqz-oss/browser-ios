@@ -1081,20 +1081,6 @@
 			remoteGlobalIDString = 390527491C874D35007E0BB7;
 			remoteInfo = Today;
 		};
-		4F11C34A1E30D52C00028227 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
-			remoteInfo = KIFFrameworkConsumer;
-		};
-		4F11C34C1E30D52C00028227 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FAB8A0141CAC546A00C6DFC1;
-			remoteInfo = KIFFrameworkConsumerTests;
-		};
 		7B9A62DA1C4002B1005C83DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7B9A62B91C4002B1005C83DC /* SQLite.xcodeproj */;
@@ -4045,8 +4031,6 @@
 				D30EBB661C75503800105AE9 /* Test Host.app */,
 				D30EBB681C75503800105AE9 /* KIF Tests - XCTest.xctest */,
 				D30EBB6A1C75503800105AE9 /* KIF.framework */,
-				4F11C34B1E30D52C00028227 /* KIFFrameworkConsumer.app */,
-				4F11C34D1E30D52C00028227 /* KIFFrameworkConsumerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5466,20 +5450,6 @@
 			fileType = wrapper.cfbundle;
 			path = FxATests.xctest;
 			remoteRef = 28CE83D11A1D1D5100576538 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4F11C34B1E30D52C00028227 /* KIFFrameworkConsumer.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = KIFFrameworkConsumer.app;
-			remoteRef = 4F11C34A1E30D52C00028227 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4F11C34D1E30D52C00028227 /* KIFFrameworkConsumerTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = KIFFrameworkConsumerTests.xctest;
-			remoteRef = 4F11C34C1E30D52C00028227 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7B9A62DB1C4002B1005C83DC /* SQLite.framework */ = {
@@ -9821,7 +9791,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
