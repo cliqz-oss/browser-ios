@@ -111,12 +111,6 @@ class AntitrackingPanel: ControlCenterPanel {
         if panelLayout == .LandscapeRegularSize {
             trackersTableView.hidden = true
             legendView.hidden = true
-//            legendView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.size.width , 30)
-//            
-//            var frame = self.view.frame
-//            frame.origin.x = self.view.frame.size.width
-//            frame.origin.y = legendView.frame.origin.y + legendView.frame.size.height
-//            trackersTableView.frame = frame
         }
         else{
             toTableViewButton.hidden = true
@@ -344,7 +338,7 @@ class AntitrackingPanel: ControlCenterPanel {
                 trackersCountLabel.hidden = false
                 legendView.hidden = trackersList.isEmpty ? true : false
                 trackersTableView.hidden =  trackersList.isEmpty ? true : false
-                toTableViewButton.hidden = trackersList.isEmpty ? true : false
+                toTableViewButton.hidden = trackersList.isEmpty || (OrientationUtil.controlPanelLayout() != .LandscapeRegularSize) ? true : false
             } else {
                 trackersCountLabel.hidden = true
                 legendView.hidden = true
