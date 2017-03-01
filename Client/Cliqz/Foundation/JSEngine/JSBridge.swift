@@ -143,7 +143,7 @@ public class JSBridge : RCTEventEmitter {
     }
     
     @objc(replyToAction:response:error:)
-    func replyToAction(actionId: NSInteger, response: NSObject, error: String) {
+    func replyToAction(actionId: NSInteger, response: NSDictionary, error: String) {
         let result = ["result": response, "error": error]
         dispatch_async(semaphoresDispatchQueue) {
             // we should find either a semaphore or a callback for this action

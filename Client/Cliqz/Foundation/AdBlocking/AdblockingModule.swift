@@ -47,16 +47,22 @@ class AdblockingModule: NSObject {
     
     func isAdblockEnabled() -> Bool {
         let result = Engine.sharedInstance.getPref(self.adBlockPrefName)
-        if let value = result as? Int {
-            return Bool(value)
+        if let r = result as? Dictionary<String,Int>{
+            if let value = r["value"]{
+                return Bool(value)
+            }
         }
         return false
     }
     
+    
+    //if url is blacklisted I do not block ads.
     func isUrlBlackListed(url:String) -> Bool {
         let response = Engine.sharedInstance.getBridge().callAction("isDomainInBlacklist", args: [url])
-        if let result = response["result"] as? Int{
-            return Bool(result)
+        if let result = response["result"] as? Dictionary<String,Int>{
+            if let r = result["value"]{
+                return Bool(r)
+            }
         }
         return false
     }
@@ -64,20 +70,21 @@ class AdblockingModule: NSObject {
     
     func toggleUrl(url: NSURL){
         //WORK ON THIS...PUT ON BLACKLIST...REMOVE FROM BLACKLIST
-//        if let urlString = url.absoluteString, host = url.host{
-//            let response = Engine.sharedInstance.getBridge().callAction("toggleUrl", args: [urlString, host])
-//            if let res = response["result"]{
-//                print(res)
-//            }
-//        }
-        guard let host = url.host else {return}
+        if let urlString = url.absoluteString, host = url.host{
+            let response = Engine.sharedInstance.getBridge().callAction("toggleUrl", args: [urlString, host])
+            if let res = response["result"]{
+                print(res)
+            }
+        }
         
-        if isUrlBlackListed(host){
-            removeFromBlacklist(host)
-        }
-        else{
-            addToBlackList(host)
-        }
+//        guard let host = url.host else {return}
+//        
+//        if isUrlBlackListed(host){
+//            removeFromBlacklist(host)
+//        }
+//        else{
+//            addToBlackList(host)
+//        }
     }
     
     

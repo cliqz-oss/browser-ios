@@ -64,8 +64,10 @@ class AntiTrackingModule: NSObject {
     
     func isDomainWhiteListed(hostname: String) -> Bool{
         let response = Engine.sharedInstance.getBridge().callAction("isSourceWhitelisted", args: [hostname])
-        if let result = response["result"] as? Int{
-            return Bool(result)
+        if let result = response["result"] as? Dictionary<String,Int>{
+            if let value = result["value"]{
+                return Bool(value)
+            }
         }
         return false
     }
