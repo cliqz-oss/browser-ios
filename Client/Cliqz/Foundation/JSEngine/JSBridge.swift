@@ -12,12 +12,12 @@ import React
 @objc(JSBridge)
 public class JSBridge : RCTEventEmitter {
 
-    public typealias Callback = ([String: NSObject]) -> Void
+    public typealias Callback = (NSDictionary) -> Void
     
     var registeredActions: Set<String> = []
     var actionCounter: NSInteger = 0
     // cache for responses from js
-    var replyCache = [NSInteger: [String: NSObject]]()
+    var replyCache = [NSInteger: NSDictionary]()
     // semaphores waiting for replies from js
     var eventSemaphores = [NSInteger: dispatch_semaphore_t]()
     // callbacks waiting for replies from js
@@ -67,7 +67,7 @@ public class JSBridge : RCTEventEmitter {
     ///  * "timeout": timeout occured waiting for the reply
     ///  * "exception when running action": javascript exception when running this action (see JS logs for details)
     ///  * "invalid action": action was not known on the Javascript side
-    public func callAction(functionName: String, args: Array<AnyObject>) -> [String: NSObject] {
+    public func callAction(functionName: String, args: Array<AnyObject>) -> NSDictionary {
         // check listener is registered on other end
         guard self.registeredActions.contains(functionName) else {
             return ["error": "function not registered"]
@@ -88,7 +88,7 @@ public class JSBridge : RCTEventEmitter {
         // wait for the semaphore
         let timeout = dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, self.ACTION_TIMEOUT))
 
-        var reply : [String: NSObject] = [:]
+        var reply = NSDictionary()
         // after signal the reply should be ready in the cache
         dispatch_sync(semaphoresDispatchQueue) {
             if timeout != 0 {
@@ -142,9 +142,8 @@ public class JSBridge : RCTEventEmitter {
         self.sendEventWithName("publishEvent", body: ["event": eventName, "args": args])
     }
     
-    @objc(replyToAction:response:error:)
-    func replyToAction(actionId: NSInteger, response: NSDictionary, error: String) {
-        let result = ["result": response, "error": error]
+    @objc(replyToAction:result:)
+    func replyToAction(actionId: NSInteger, result: NSDictionary) {
         dispatch_async(semaphoresDispatchQueue) {
             // we should find either a semaphore or a callback for this action
             if let sem = self.eventSemaphores[actionId] {
