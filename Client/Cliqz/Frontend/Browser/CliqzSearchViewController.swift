@@ -134,6 +134,9 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if self.webView?.URL == nil {
 			loadExtension()
 		}
+        
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(searchWithLastQuery), name: LocationManager.NotificationUserLocationAvailable, object: nil)
 	}
 
     override func viewDidAppear(animated: Bool) {
@@ -143,6 +146,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: LocationManager.NotificationUserLocationAvailable, object: nil)
     }
 
 	override func didReceiveMemoryWarning() {
@@ -185,7 +190,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func isHistoryUptodate() -> Bool {
 		return true
 	}
-	
+    func searchWithLastQuery() {
+        if let query = lastQuery {
+            search(query)
+        }
+    }
+    
 	func loadData(query: String) {
         guard query != lastQuery else {
             return
@@ -194,15 +204,19 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             return
         }
         
-		let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-		var parameters = "'\(q)'"
-		if let l = LocationManager.sharedInstance.location {
-			parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
-		}
-        self.javaScriptBridge.publishEvent("search", parameters: parameters)
-
-        lastQuery = query
+		search(query)
 	}
+    
+    private func search(query: String) {
+        let q = query.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        var parameters = "'\(q.escape())'"
+        if let l = LocationManager.sharedInstance.getUserLocation() {
+            parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
+        }
+        self.javaScriptBridge.publishEvent("search", parameters: parameters)
+        
+        lastQuery = query
+    }
     
     func updatePrivateMode(privateMode: Bool) {
         if privateMode != self.privateMode {
@@ -348,36 +362,7 @@ extension CliqzSearchViewController {
             LocalDataStore.setObject(nil, forKey: lastTitleKey)
         }
         
-    }
-
-    func resetState() {
-
-        var configs = [String: AnyObject]()
-        if let lastURL = LocalDataStore.objectForKey(lastURLKey) as? String { // the app was closed while showing a url
-            configs["url"] = lastURL
-            // get title if possible
-            if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
-                configs["title"] = lastTitle
-            }
-            
-            javaScriptBridge.publishEvent("reset-state", parameters: configs)
-        } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
-            configs["q"] = query
-            // get current location if possible
-            if let currentLocation = LocationManager.sharedInstance.location {
-                configs["lat"] = currentLocation.coordinate.latitude
-                configs["long"] = currentLocation.coordinate.longitude
-            }
-            javaScriptBridge.publishEvent("reset-state", parameters: configs)
-        }
-        
-        // reset local stored values
-        LocalDataStore.setObject(nil, forKey: lastQueryKey)
-        LocalDataStore.setObject(nil, forKey: lastURLKey)
-        LocalDataStore.setObject(nil, forKey: lastTitleKey)
-        
-    }
-    
+    }    
 }
 
 extension CliqzSearchViewController: JavaScriptBridgeDelegate {

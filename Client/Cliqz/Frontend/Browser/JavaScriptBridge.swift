@@ -164,6 +164,8 @@ class JavaScriptBridge {
                     self.callPhoneNumber(phoneNumber)
                 } else if let mapURL = actionData["data"] as? String where actionType == "map" {
                     self.openGoogleMaps(mapURL)
+                } else if actionType == "shareLocation" {
+                    LocationManager.sharedInstance.shareLocation()
                 }
 
             }
@@ -207,6 +209,7 @@ class JavaScriptBridge {
             }
         case "isReady":
             delegate?.isReady?()
+            
         default:
 			print("Unhandles JS action")
         }
