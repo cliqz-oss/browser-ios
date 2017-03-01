@@ -51,11 +51,11 @@ public class Engine {
     }
     
     func setPref(prefName: String, prefValue: Any) {
-        self.getBridge().callAction("setPref", args: [prefName, prefValue as! NSObject])
+        self.getBridge().callAction("core:setPref", args: [prefName, prefValue as! NSObject])
     }
     
     func getPref(prefName: String) -> Any {
-        let result = self.getBridge().callAction("getPref", args: [prefName])
+        let result = self.getBridge().callAction("core:getPref", args: [prefName])
         return result["result"]
     }
     

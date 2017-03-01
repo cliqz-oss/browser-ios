@@ -87,7 +87,7 @@ class AdblockingModule: NSObject {
 
     //MARK: - Private Helpers
     func getAdBlockingInfo(url: String) -> [NSObject : AnyObject]! {
-        let response = Engine.sharedInstance.getBridge().callAction("adblocker:getAdBlockInfo", args: [url])
+        let response = Engine.sharedInstance.getBridge().callAction("adblocker:getAdBlockInfo", args: [url])    
         if let result = response["result"] {
             return result as? Dictionary
         } else {
