@@ -22,7 +22,7 @@ enum ControlPanelLayout{
     case LandscapeCompactSize
 }
 
-protocol ControlCenterPanelDelegate: class {
+protocol ControlCenterPanelDelegate: class{
     
     func closeControlCenter()
     func reloadCurrentPage()

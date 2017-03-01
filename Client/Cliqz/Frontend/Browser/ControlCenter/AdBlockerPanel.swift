@@ -10,6 +10,9 @@ import UIKit
 
 class AdBlockerPanel: AntitrackingPanel {
     
+    var trackersList = [(String, Int)]()
+    var trackersCount = 0
+    
     //MARK: - Abstract methods implementation
     override func getPanelTitle() -> String {
         if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite() {
@@ -60,7 +63,6 @@ class AdBlockerPanel: AntitrackingPanel {
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        //INVESTIGATE
         if let urlString = self.currentURL.absoluteString {
             return isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
         }

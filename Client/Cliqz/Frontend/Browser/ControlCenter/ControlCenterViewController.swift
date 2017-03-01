@@ -276,7 +276,9 @@ extension ControlCenterViewController : ControlCenterPanelDelegate {
                 }
             }
         }
-        
-        
+    }
+    
+    func reloadCurrentPage(){
+        //nothing
     }
 }
