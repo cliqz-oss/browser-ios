@@ -1,13 +1,19 @@
 PODS:
-  - React/Core (0.38.1)
-  - React/RCTNetwork (0.38.1):
+  - React/Core (0.42.0-rc.3):
+    - React/cxxreact
+    - Yoga (= 0.42.0-rc.3.React)
+  - React/cxxreact (0.42.0-rc.3):
+    - React/jschelpers
+  - React/jschelpers (0.42.0-rc.3)
+  - React/RCTNetwork (0.42.0-rc.3):
     - React/Core
-  - React/RCTText (0.38.1):
+  - React/RCTText (0.42.0-rc.3):
     - React/Core
-  - React/RCTWebSocket (0.38.1):
+  - React/RCTWebSocket (0.42.0-rc.3):
     - React/Core
-  - RNFS (2.0.1-rc.3):
+  - RNFS (2.1.0-rc.1):
     - React/Core
+  - Yoga (0.42.0-rc.3.React)
 
 DEPENDENCIES:
   - React/Core (from `./node_modules/react-native`)
@@ -15,17 +21,21 @@ DEPENDENCIES:
   - React/RCTText (from `./node_modules/react-native`)
   - React/RCTWebSocket (from `./node_modules/react-native`)
   - RNFS (from `./node_modules/react-native-fs`)
+  - Yoga (from `./node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
   React:
     :path: ./node_modules/react-native
   RNFS:
     :path: ./node_modules/react-native-fs
+  Yoga:
+    :path: ./node_modules/react-native/ReactCommon/yoga
 
 SPEC CHECKSUMS:
-  React: 2c6b27dcaea89b3d3398df8b598330fd18abbe46
-  RNFS: 0322ab78c79a3ae3e69c192e85cfc7734ad91385
+  React: 595dd56966a44d51a8f720fb1751ec165181b3b0
+  RNFS: a4b688281f77ab6659119c342d7a85c8663c83da
+  Yoga: 29d2c370c8fb8bf892d3c3a3fe6aec68ea8cc450
 
-PODFILE CHECKSUM: 633806bd0e08a818e9521d1640dd55684a8e2fea
+PODFILE CHECKSUM: e31f9b87757ebb37cf8fc87cbb636124879cdf82
 
 COCOAPODS: 1.2.0

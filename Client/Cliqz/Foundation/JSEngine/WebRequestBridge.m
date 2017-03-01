@@ -6,7 +6,7 @@
 //  Copyright © 2017 Cliqz GmbH. All rights reserved.
 //
 
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
 
 @interface RCT_EXTERN_MODULE(WebRequest, NSObject)
 
