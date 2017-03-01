@@ -1546,7 +1546,7 @@ return Array.from(arr);
 }
 };
 })(typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : this);
-__d(/* jsengine/index.ios.js */function(global, require, module, exports) {'use strict';
+__d(/* jsengine/build/index.ios.js */function(global, require, module, exports) {'use strict';
 
 var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
@@ -1557,7 +1557,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _startup=require(555 /* ./build/modules/platform/startup */);var _startup2=babelHelpers.interopRequireDefault(_startup);var
+var _startup=require(555 /* ./modules/platform/startup */);var _startup2=babelHelpers.interopRequireDefault(_startup);var
 
 ExtensionApp=function(_React$Component){babelHelpers.inherits(ExtensionApp,_React$Component);
 
@@ -1626,7 +1626,7 @@ marginBottom:5}});
 
 
 _reactNative.AppRegistry.registerComponent('ExtensionApp',function(){return ExtensionApp;});
-}, 0, null, "jsengine/index.ios.js");
+}, 0, null, "jsengine/build/index.ios.js");
 __d(/* react/react.js */function(global, require, module, exports) {'use strict';
 
 module.exports=require(13 /* ./lib/React */);
@@ -72862,19 +72862,23 @@ var _coreConsole=require(558 /* ../core/console */);
 
 var _coreConsole2=_interopRequireDefault(_coreConsole);
 
-var _app=require(572 /* ./app */);
+var _app=require(579 /* ./app */);
 
 var _app2=_interopRequireDefault(_app);
 
-var _nativeBridge=require(619 /* ./native-bridge */);
+var _nativeBridge=require(630 /* ./native-bridge */);
 
 var _nativeBridge2=_interopRequireDefault(_nativeBridge);
 
-var _antitrackingAttrack=require(589 /* ../antitracking/attrack */);
+var _antitrackingAttrack=require(595 /* ../antitracking/attrack */);
 
 var _antitrackingAttrack2=_interopRequireDefault(_antitrackingAttrack);
 
-var _publicSuffixList=require(599 /* ./public-suffix-list */);
+var _adblockerAdblocker=require(646 /* ../adblocker/adblocker */);
+
+var _adblockerAdblocker2=_interopRequireDefault(_adblockerAdblocker);
+
+var _coreKordInject=require(596 /* ../core/kord/inject */);
 
 var app;
 
@@ -72882,9 +72886,33 @@ var startup=(0,_prefs.loadPrefs)().then(function(){
 app=new _app2['default']();
 return app.load();
 }).then(function(){
-_nativeBridge2['default'].registerAction('getTrackerListForTab',_antitrackingAttrack2['default'].getTrackerListForTab);
-_nativeBridge2['default'].registerAction('getPref',_prefs.getPref);
-_nativeBridge2['default'].registerAction('setPref',_prefs.setPref);
+(0,_coreKordInject.setGlobal)(app);
+_nativeBridge2['default'].registerAction('antitracking:getTrackerListForTab',_antitrackingAttrack2['default'].getTrackerListForTab);
+_nativeBridge2['default'].registerAction('antitracking:isSourceWhitelisted',function(domain){
+return _antitrackingAttrack2['default'].isSourceWhitelisted(domain);
+});
+_nativeBridge2['default'].registerAction('antitracking:addSourceDomainToWhitelist',_antitrackingAttrack2['default'].addSourceDomainToWhitelist);
+_nativeBridge2['default'].registerAction('antitracking:removeSourceDomainFromWhitelist',_antitrackingAttrack2['default'].removeSourceDomainFromWhitelist);
+_nativeBridge2['default'].registerAction('core:getPref',function(prefname,defaultValue){
+return(0,_prefs.getPref)(prefname,defaultValue);
+});
+_nativeBridge2['default'].registerAction('core:setPref',_prefs.setPref);
+_nativeBridge2['default'].registerAction('adblocker:getAdBlockInfo',_adblockerAdblocker2['default'].adbStats.report.bind(_adblockerAdblocker2['default'].adbStats));
+_nativeBridge2['default'].registerAction('adblocker:isDomainInBlacklist',function(domain){
+if(_adblockerAdblocker2['default'].adBlocker){
+_coreConsole2['default'].log('isDomainInBlacklist -- adblocker exists.');
+return _adblockerAdblocker2['default'].adBlocker.isDomainInBlacklist(domain);
+}
+_coreConsole2['default'].log('isDomainInBlacklist -- return default value');
+return false;
+});
+_nativeBridge2['default'].registerAction('adblocker:toggleUrl',function(url,domain){
+if(_adblockerAdblocker2['default'].adBlocker){
+_adblockerAdblocker2['default'].adBlocker.toggleUrl(url,domain);
+}else{
+_coreConsole2['default'].log('toggleUrl -- adblocker is undefined');
+}
+});
 return Promise.resolve(app);
 });
 
@@ -72910,9 +72938,13 @@ var _coreEvents=require(557 /* ../core/events */);
 
 var _coreEvents2=_interopRequireDefault(_coreEvents);
 
+var _coreConfig=require(578 /* ../core/config */);
+
+var _coreConfig2=_interopRequireDefault(_coreConfig);
+
 var PREFIX="@cliqzprefs:";
 
-var prefs={};
+var prefs=_coreConfig2['default'].default_prefs||{};
 
 
 
@@ -73008,7 +73040,7 @@ var _this=this;
 var args=Array.prototype.slice.call(arguments,1);
 
 var callbacks=(CliqzEvents.cache[id]||[]).map(function(ev){
-return new _utils2["default"].Promise(function(resolve){
+return new Promise(function(resolve){
 _utils2["default"].setTimeout(function(){
 try{
 ev.apply(null,args);
@@ -73020,7 +73052,7 @@ resolve();
 });
 });
 
-var finishedPromise=_utils2["default"].Promise.all(callbacks).then(function(){
+var finishedPromise=Promise.all(callbacks).then(function(){
 var index=_this.queue.indexOf(finishedPromise);
 _this.queue.splice(index,1);
 if(_this.queue.length===0){
@@ -73142,22 +73174,30 @@ var _prefs=require(560 /* ./prefs */);
 
 var _prefs2=_interopRequireDefault(_prefs);
 
-var isLoggingEnabled=_prefs2["default"].get('showConsoleLogs',true);
+var isLoggingEnabled=_prefs2["default"].get('showConsoleLogs',false);
 
 var log=undefined;
 var error=undefined;
+var debug=undefined;
 
 if(isLoggingEnabled){
 log=_platformConsole2["default"].log.bind(_platformConsole2["default"],'CLIQZ');
 error=_platformConsole2["default"].error.bind(_platformConsole2["default"],'CLIQZ error');
+if(_prefs2["default"].get('developer')){
+debug=log;
+}else{
+debug=function debug(){};
+}
 }else{
 log=function log(){};
 error=function error(){};
+debug=function debug(){};
 }
 
 exports["default"]={
 log:log,
-error:error};
+error:error,
+debug:debug};
 
 module.exports=exports["default"];
 }, 558, null, "jsengine/build/modules/core/console.js");
@@ -73202,11 +73242,16 @@ has:_platformPrefs.hasPref,
 
 
 
-clear:_platformPrefs.clearPref};
+clear:_platformPrefs.clearPref,
+
+enableChangeEvents:_platformPrefs.enableChangeEvents,
+
+disableChangeEvents:_platformPrefs.disableChangeEvents};
 
 module.exports=exports["default"];
 }, 560, null, "jsengine/build/modules/core/prefs.js");
-__d(/* jsengine/build/modules/core/utils.js */function(global, require, module, exports) {"use strict";
+__d(/* jsengine/build/modules/core/utils.js */function(global, require, module, exports) {
+"use strict";
 
 Object.defineProperty(exports,"__esModule",{
 value:true});
@@ -73238,8 +73283,6 @@ var _events2=_interopRequireDefault(_events);
 
 var _tlds=require(565 /* ./tlds */);
 
-
-
 var _http=require(566 /* ./http */);
 
 var CliqzLanguage;
@@ -73267,9 +73310,9 @@ ipv6_regex=new RegExp("^\\[?(([0-9]|[a-f]|[A-F])*[:.]+([0-9]|[a-f]|[A-F])+[:.]*)
 var CliqzUtils={
 RESULTS_PROVIDER:_platformEnvironment2["default"].RESULTS_PROVIDER,
 RICH_HEADER:_platformEnvironment2["default"].RICH_HEADER,
-RESULTS_PROVIDER_LOG:'https://newbeta.cliqz.com/api/v1/logging?q=',
-RESULTS_PROVIDER_PING:'https://newbeta.cliqz.com/ping',
-CONFIG_PROVIDER:'https://newbeta.cliqz.com/api/v1/config',
+RESULTS_PROVIDER_LOG:'https://api.cliqz.com/api/v1/logging?q=',
+RESULTS_PROVIDER_PING:'https://api.cliqz.com/ping',
+CONFIG_PROVIDER:'https://api.cliqz.com/api/v1/config',
 SAFE_BROWSING:'https://safe-browsing.cliqz.com',
 TUTORIAL_URL:'https://cliqz.com/home/onboarding',
 UNINSTALL:'https://cliqz.com/home/offboarding',
@@ -73281,7 +73324,7 @@ RESULTS_TIMEOUT:_platformEnvironment2["default"].RESULTS_TIMEOUT,
 BRANDS_DATABASE:BRANDS_DATABASE,
 
 
-BRANDS_DATABASE_VERSION:1481799943898,
+BRANDS_DATABASE_VERSION:1483980213630,
 GEOLOC_WATCH_ID:null,
 VERTICAL_TEMPLATES:{
 'n':'news',
@@ -73327,6 +73370,7 @@ _platformEnvironment2["default"].gzip=gzip;
 _platformEnvironment2["default"].getLogoDetails=CliqzUtils.getLogoDetails.bind(CliqzUtils);
 _platformEnvironment2["default"].getDetailsFromUrl=CliqzUtils.getDetailsFromUrl.bind(CliqzUtils);
 _platformEnvironment2["default"].getLocalizedString=CliqzUtils.getLocalizedString.bind(CliqzUtils);
+_platformEnvironment2["default"].app=CliqzUtils.app;
 System["import"]('platform/language').then(function(module){
 CliqzLanguage=module["default"];
 });
@@ -73350,43 +73394,8 @@ CliqzUtils.PREFERRED_LANGUAGE=locale;
 CliqzUtils.getLocaleFile(supportedLang);
 },
 
-initPlatform:function initPlatform(System){
-System.baseURL=_platformEnvironment2["default"].SYSTEM_BASE_URL;
-CliqzUtils.System=System;
-},
-
 importModule:function importModule(moduleName){
-return CliqzUtils.System["import"](moduleName);
-},
-
-callAction:function callAction(moduleName,actionName,args){
-var module=CliqzUtils.System.get(moduleName+"/background");
-if(!module){
-return Promise.reject("module \""+moduleName+"\" does not exist");
-}
-
-var action=module["default"].actions[actionName];
-if(!action){
-return Promise.reject("module "+moduleName+" does not implement action \""+actionName+"\"");
-}
-
-try{
-var response=action.apply(null,args);
-return Promise.resolve(response);
-}catch(e){
-_console2["default"].error("callAction",moduleName,actionName,e);
-return Promise.reject(e);
-}
-},
-
-callWindowAction:function callWindowAction(win,moduleName,actionName,args){
-try{
-var module=win.CLIQZ.Core.windowModules[moduleName];
-var action=module.actions[actionName];
-return action.apply(null,args);
-}catch(e){
-CliqzUtils.log('Failed to call "'+actionName+'" on "'+moduleName+'"'+'. With error: '+e,"callWindowAction failed");
-}
+return System["import"](moduleName);
 },
 
 isNumber:function isNumber(n){
@@ -73409,30 +73418,6 @@ return VERTICAL_ENCODINGS.hasOwnProperty(type)&&type;
 
 makeUri:_platformEnvironment2["default"].makeUri,
 
-
-setSupportInfo:function setSupportInfo(status){
-var prefs=Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch),
-host='firefox',
-hostVersion='';
-
-if(prefs.getPrefType('distribution.id')==32&&prefs.getPrefType('distribution.version')==32){
-host=prefs.getCharPref('distribution.id');
-hostVersion=prefs.getCharPref('distribution.version');
-}
-var info=JSON.stringify({
-version:CliqzUtils.extensionVersion,
-host:host,
-hostVersion:hostVersion,
-status:status!=undefined?status:"active"}),
-
-sites=["http://cliqz.com","https://cliqz.com"];
-
-sites.forEach(function(url){
-var ls=new _storage2["default"](url);
-
-if(ls)ls.setItem("extension-info",info);
-});
-},
 setLogoDb:function setLogoDb(db){
 BRANDS_DATABASE=CliqzUtils.BRANDS_DATABASE=db;
 },
@@ -73565,13 +73550,13 @@ return[action,url];
 cleanUrlProtocol:function cleanUrlProtocol(url,cleanWWW){
 if(!url)return'';
 
-var protocolPos=url.indexOf('://');
+
+var urlLowered=url.toLowerCase();
+if(urlLowered.startsWith('http://'))url=url.slice(7);
+if(urlLowered.startsWith('https://'))url=url.slice(8);
 
 
-if(protocolPos!=-1&&protocolPos<=6)url=url.split('://')[1];
-
-
-if(cleanWWW&&url.toLowerCase().indexOf('www.')==0)url=url.slice(4);
+if(cleanWWW&&url.toLowerCase().startsWith('www.'))url=url.slice(4);
 
 return url;
 },
@@ -73967,8 +73952,25 @@ CliqzUtils.setPref('config_'+k,JSON.stringify(config[k]));
 CliqzUtils.setPref('config_'+k,config[k]);
 }
 }
+
+
 if(CliqzUtils.getPref('backend_country','')===''){
-CliqzUtils.setPref('backend_country',CliqzUtils.getPref('config_location',''));
+if(CliqzUtils.getPref('config_location','de')==='de'&&Date.now()<1487073600000){
+var rand=Math.random();
+
+if(rand<0.33){
+CliqzUtils.setPref('dropDownABCGroup','simple');
+}else if(rand>0.66){
+CliqzUtils.setPref('dropDownABCGroup','ff');
+}else{
+CliqzUtils.setPref('dropDownABCGroup','cliqz');
+}
+}
+
+
+CliqzUtils.setTimeout(function(){
+CliqzUtils.setDefaultIndexCountry(CliqzUtils.getPref('config_location','de'),true);
+},2000);
 }
 }catch(e){
 CliqzUtils.log(e);
@@ -73976,11 +73978,38 @@ CliqzUtils.log(e);
 }
 resolve();
 },resolve,
-2000);
+10000);
 });
 },
-setDefaultIndexCountry:function setDefaultIndexCountry(country){
+setDefaultIndexCountry:function setDefaultIndexCountry(country,restart){
 CliqzUtils.setPref('backend_country',country);
+CliqzUtils._country=country;
+
+if(country!=='de'){
+
+CliqzUtils.setPref('dropDownStyle','simple');
+}else{
+var group=CliqzUtils.getPref('dropDownABCGroup');
+if(group==='simple'){
+CliqzUtils.setPref('dropDownStyle','simple');
+}else if(group==='ff'){
+CliqzUtils.setPref('dropDownStyle','ff');
+}else if(group==='cliqz'){
+CliqzUtils.clearPref('dropDownStyle');
+}else{
+
+CliqzUtils.clearPref('dropDownStyle');
+}
+}
+
+if(restart){
+CliqzUtils.setPref('modules.ui.enabled',false);
+
+
+CliqzUtils.setTimeout(function(){
+CliqzUtils.setPref('modules.ui.enabled',true);
+},0);
+}
 },
 encodeLocale:function encodeLocale(){
 
@@ -73995,15 +74024,23 @@ disableWikiDedup:function disableWikiDedup(){
 var doDedup=CliqzUtils.getPref("languageDedup",false);
 if(doDedup)return'&ddl=0';else return"";
 },
-encodeFilter:function encodeFilter(){
+getAdultContentFilterState:function getAdultContentFilterState(){
 var data={
 'conservative':3,
 'moderate':0,
 'liberal':1},
 
-state=data[CliqzUtils.getPref('adultContentFilter','moderate')];
+pref=CliqzUtils.getPref('adultContentFilter','moderate');
+if(CliqzUtils.dropDownStyle=='ff'&&pref=='moderate'){
 
-return'&adult='+state;
+
+
+pref='conservative';
+}
+return data[pref];
+},
+encodeFilter:function encodeFilter(){
+return'&adult='+CliqzUtils.getAdultContentFilterState();
 },
 encodeResultCount:function encodeResultCount(count){
 count=count||5;
@@ -74151,33 +74188,6 @@ var el=locale[i];
 el.textContent=CliqzUtils.getLocalizedString(el.getAttribute('key'));
 }
 },
-extensionRestart:function extensionRestart(changes){
-
-var enumerator=Services.wm.getEnumerator('navigator:browser');
-while(enumerator.hasMoreElements()){
-var win=enumerator.getNext();
-if(win.CLIQZ&&win.CLIQZ.Core){
-CliqzUtils.Extension.app.unloadWindow(win);
-}
-}
-
-CliqzUtils.Extension.app.unload();
-
-
-changes&&changes();
-
-
-return CliqzUtils.Extension.app.load().then(function(){
-
-var corePromises=[];
-var enumerator=Services.wm.getEnumerator('navigator:browser');
-while(enumerator.hasMoreElements()){
-var win=enumerator.getNext();
-corePromises.push(CliqzUtils.Extension.app.loadWindow(win));
-}
-return CliqzUtils.Promise.all(corePromises);
-});
-},
 isWindows:function isWindows(){
 return _platformEnvironment2["default"].OS.indexOf("win")===0;
 },
@@ -74189,9 +74199,6 @@ return _platformEnvironment2["default"].OS.indexOf("linux")===0;
 },
 getWindow:_platformEnvironment2["default"].getWindow,
 getWindowID:_platformEnvironment2["default"].getWindowID,
-hasClass:function hasClass(element,className){
-return(' '+element.className+' ').indexOf(' '+className+' ')>-1;
-},
 
 
 
@@ -74295,8 +74302,6 @@ return true;
 },
 
 getNoResults:_platformEnvironment2["default"].getNoResults,
-disableCliqzResults:_platformEnvironment2["default"].disableCliqzResults,
-enableCliqzResults:_platformEnvironment2["default"].enableCliqzResults,
 getParameterByName:function getParameterByName(name,location){
 name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");
 var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),
@@ -74329,9 +74334,8 @@ getDefaultSearchEngine:_platformEnvironment2["default"].getDefaultSearchEngine,
 copyResult:_platformEnvironment2["default"].copyResult,
 openPopup:_platformEnvironment2["default"].openPopup,
 isOnPrivateTab:_platformEnvironment2["default"].isOnPrivateTab,
-getCliqzPrefs:_platformEnvironment2["default"].getCliqzPrefs,
+getAllCliqzPrefs:_platformEnvironment2["default"].getAllCliqzPrefs,
 isDefaultBrowser:_platformEnvironment2["default"].isDefaultBrowser,
-initHomepage:_platformEnvironment2["default"].initHomepage,
 setDefaultSearchEngine:_platformEnvironment2["default"].setDefaultSearchEngine,
 isUnknownTemplate:_platformEnvironment2["default"].isUnknownTemplate,
 historySearch:_platformEnvironment2["default"].historySearch,
@@ -74341,6 +74345,23 @@ getEngineByAlias:_platformEnvironment2["default"].getEngineByAlias,
 getSearchEngines:_platformEnvironment2["default"].getSearchEngines,
 updateAlias:_platformEnvironment2["default"].updateAlias,
 openLink:_platformEnvironment2["default"].openLink,
+getCliqzPrefs:function getCliqzPrefs(){
+function filterer(entry){
+
+
+
+return entry.indexOf('.')==-1&&entry.indexOf('backup')==-1||entry.indexOf('.enabled')!=-1;
+}
+
+var cliqzPrefs={};
+var cliqzPrefsKeys=CliqzUtils.getAllCliqzPrefs().filter(filterer);
+
+for(var i=0;i<cliqzPrefsKeys.length;i++){
+cliqzPrefs[cliqzPrefsKeys[i]]=_prefs2["default"].get(cliqzPrefsKeys[i]);
+}
+
+return cliqzPrefs;
+},
 promiseHttpHandler:_http.promiseHttpHandler,
 registerResultProvider:function registerResultProvider(o){
 _platformEnvironment2["default"].CliqzResultProviders=o.ResultProviders;
@@ -74606,19 +74627,19 @@ exports.Response=Response;
 
 
 function defaultHttpHandler(method,url,callback,onerror,timeout,data,sync,encoding,background){
-if(method==='GET'&&url.startsWith('chrome://')){
+if(method==='GET'&&url.startsWith('chrome://')&&_platformChromeUrlHandler.chromeUrlHandler){
 (0,_platformChromeUrlHandler.chromeUrlHandler)(url,callback,onerror);
 return;
 }
-
-var req=new _platformXmlhttprequest.XMLHttpRequest();
+var XMLHttpRequest=(0,_platformXmlhttprequest.XMLHttpRequestFactory)();
+var req=new XMLHttpRequest();
 req.timestamp=+new Date();
 if(background){
 (0,_platformXmlhttprequest.setBackgroundRequest)(req);
 }
 req.open(method,url,!sync);
 (0,_platformXmlhttprequest.setPrivateFlags)(req);
-
+req.overrideMimeType&&req.overrideMimeType('application/json');
 
 
 if(encoding){
@@ -74761,30 +74782,2196 @@ __d(/* jsengine/build/modules/platform/xmlhttprequest.js */function(global, requ
 Object.defineProperty(exports,"__esModule",{
 value:true});
 
-exports["default"]={
-XMLHttpRequest:XMLHttpRequest,
-setPrivateFlags:function setPrivateFlags(){},
-setBackgroundRequest:function setBackgroundRequest(){}};
 
-module.exports=exports["default"];
+function setPrivateFlags(){}
+function setBackgroundRequest(){}
+function XMLHttpRequestFactory(){
+return XMLHttpRequest;
+}
+
+exports.XMLHttpRequestFactory=XMLHttpRequestFactory;
+exports.setPrivateFlags=setPrivateFlags;
+exports.setBackgroundRequest=setBackgroundRequest;
 }, 570, null, "jsengine/build/modules/platform/xmlhttprequest.js");
-__d(/* jsengine/build/modules/platform/chrome-url-handler.js */function(global, require, module, exports) {'use strict';
+__d(/* jsengine/build/modules/platform/chrome-url-handler.js */function(global, require, module, exports) {
+'use strict';
 
 Object.defineProperty(exports,'__esModule',{
 value:true});
 
 exports.chromeUrlHandler=chromeUrlHandler;
+var bundledFiles={
+'antitracking/prob.json':require(572 /* ../antitracking/prob.json */),
+'antitracking/tracker_owners.json':require(573 /* ../antitracking/tracker_owners.json */),
+'antitracking/anti-tracking-report-list.json':require(574 /* ../antitracking/anti-tracking-report-list.json */),
+'antitracking/cookie_whitelist.json':require(575 /* ../antitracking/cookie_whitelist.json */),
+'antitracking/anti-tracking-block-rules.json':require(576 /* ../antitracking/anti-tracking-block-rules.json */),
+'adblocker/mobile/checksums':require(577 /* ../adblocker/mobile/checksums.json */)};
+
 
 function chromeUrlHandler(url,callback,onerror){
-var path=url.replace('chrome://cliqz/content/','../');
-try{
-var _data=require(path);
-}catch(e){
-onerror(e);
+var path=url.replace('chrome://cliqz/content/','');
+
+if(bundledFiles[path]){
+callback(bundledFiles[path]);
+}else{
+console.log('chromeUrlHandler: not bundled',path);
+onerror();
 }
-callback(data);
 }
 }, 571, null, "jsengine/build/modules/platform/chrome-url-handler.js");
+__d(/* jsengine/build/modules/antitracking/prob.json */function(global, require, module, exports) {module.exports = {"logM":[[-5.317193109695505,-3.913874405861832,-2.9381665079978383,-3.191773525248805,-3.7998673319383616,-4.345439435400599,-3.2318181091222926,-4.0115754219957696,-3.6177876283722235,-7.304959588802769,-4.086587827961371,-2.4934668495341517,-2.900130610423348,-2.0358548114690445,-6.470340186675337,-3.8789458371913224,-6.60892942891667,-2.30640750219933,-2.92314951300914,-2.2528985979367016,-2.813060976891666,-5.056683799455272,-5.62960615098086,-5.242592116855742,-3.535964746434304,-3.9784518141894374,-6.985122896496697,-7.274967682087109,-7.9594919332349345,-6.164538915616592,-8.320505278772265,-8.280727307315345,-8.550921589415555,-8.54909843485404,-7.934552984887683,-8.127372805874096,-3.109412750730325,-3.90126314517224,-11.219610716637185],[-1.817961182029586,-4.477008918746111,-3.982294685743666,-5.596742628697303,-1.3277338286038127,-5.81319091362829,-5.706241389831284,-4.704855751509904,-2.3707799708377664,-6.688098536219502,-5.946054348175743,-3.0303647822952886,-4.927999302824114,-5.459013629433194,-2.0897428400753895,-6.037348386957373,-8.202702345982763,-3.0256690344728256,-3.7332038394562588,-5.308746692899046,-2.4949707632290035,-6.088580077804754,-5.296210276492634,-8.130539899734533,-5.057641495903164,-6.320488830892931,-6.656443335170194,-6.082438809782672,-6.9118032022964,-7.14931515531959,-7.6756820362967915,-5.536088462601377,-7.86768889882521,-7.907396348420323,-7.959356087351034,-7.501087714323719,-3.2616674937184142,-4.221686469067666,-11.94037196426613],[-3.1504260003263047,-5.8946485140234195,-4.462130109094279,-5.654975660757999,-2.6862615330360584,-6.254615079727427,-6.115732555639961,-1.0345299818896994,-4.339707120241444,-8.364050977275454,-2.9637094236602577,-4.067987318306986,-5.314777936793433,-5.937887707129599,-1.1763414859058363,-6.325832151419573,-8.626415241742945,-4.2703048846988825,-4.649478785472155,-3.572869468862069,-4.49847473009233,-7.7949564453854885,-7.003074424139854,-8.55875659326913,-5.4163783655419495,-6.99586836609861,-6.300439195958324,-6.140398097670918,-4.296032840221402,-7.198499205932236,-7.707461392449307,-8.361490156413781,-7.774840824588481,-7.207331057800064,-8.254851685310463,-7.607567921543699,-4.452335711501991,-4.652168893134668,-12.384287567343833],[-3.162725777484131,-5.217203426524381,-5.551773316344876,-5.225969121348031,-0.49466356298299,-4.277110633369936,-5.803309498701423,-5.115021553085183,-2.3928970315355627,-7.271882693744789,-5.616223149619324,-5.101503026330162,-5.2502736229337845,-6.030238363252401,-3.3753725823208587,-4.7569364291327325,-8.75633959600018,-3.910798063850956,-4.10691723970344,-4.33316315169083,-3.5462564103937786,-5.795781588710692,-5.60645664261893,-8.160690779925112,-5.5179826355601564,-7.002162837921167,-5.66318809155304,-7.047625211997925,-7.459294583710373,-7.8790510219292935,-7.686366678099793,-7.89740016059749,-7.970618215454785,-8.252092943332231,-7.545830820694459,-8.350874487892016,-3.7994740567963308,-3.2784138216874594,-12.09402357194001],[-3.7189886827898455,-3.136327618286749,-3.758404308148985,-3.1734627642603788,-4.270043208702629,-3.9851745789702915,-4.073191269596321,-4.243313073155838,-2.7366356984012534,-6.69301445301315,-4.289361094233771,-2.9225173480317617,-3.7994772042488547,-1.9820771807446453,-4.744874009923719,-4.076925681216796,-7.571527682479396,-1.8537894256636591,-2.6732861064668727,-3.07540677713879,-3.8623600914903835,-4.956475298209049,-4.087386942308493,-4.097862478306168,-6.172798016825123,-5.615949932671272,-6.334419930219192,-6.653374688453774,-7.6080871143035695,-7.667839399208454,-8.064223854680872,-8.372070201736241,-8.654386220683383,-8.289488297564219,-8.649302325646111,-7.949080835643628,-2.4290509512920795,-2.9832968468317835,-11.736296190478427],[-1.8610170544945401,-5.020582941750675,-4.821798725236716,-5.14763132949712,-1.9970397814929628,-2.9637268592690686,-5.4773413442463905,-5.226847392244456,-2.1516913692262554,-7.139830733830931,-5.003454059487709,-3.071744448015679,-4.70568319038359,-4.537956069904344,-1.961246272242613,-5.7210740965663796,-8.830298869007885,-2.386838772856728,-4.40737684801158,-2.9024924967110852,-2.8901517595050215,-6.133318891659922,-5.897516165575739,-7.453221162992919,-6.484619136550752,-5.488961875269409,-6.440778854546247,-6.356926372465171,-6.85596303345462,-6.983506927469359,-7.1954972780819295,-6.954974321433788,-7.412399168472664,-6.290359746909414,-7.331331345383882,-7.597390953822497,-3.640302563386591,-3.4894582036851673,-10.749058028997247],[-2.670791162329886,-4.801794512175134,-5.370352088589672,-4.771716320175903,-1.3789480193077568,-4.985947863046129,-4.867460915336402,-4.1641163040595135,-2.9077027799919124,-7.340436895180519,-5.469216169986365,-2.2755965131414464,-3.7442985057391613,-4.534865389130813,-2.166823499104593,-4.579327537409528,-8.437790530441433,-3.186109987787664,-3.298269839791393,-4.600572401777362,-3.3763664717270916,-5.467859974873916,-2.96249605191553,-7.974887522745274,-5.6773030354806195,-6.235130020840195,-6.231799459893031,-6.453800688013288,-7.568630962280797,-7.862662262411237,-7.8928369655334505,-8.557934842283496,-8.426533375916797,-8.775773341368012,-8.508132019799678,-7.68958357269846,-2.792677043930547,-2.9092902958635007,-11.309470155325444],[-2.2482601312819104,-5.126347808963377,-5.7772675133943325,-4.69443449591098,-1.6533205151057395,-5.850684281096827,-5.961298395421176,-5.748036025541178,-3.0296509371927796,-6.940148696631176,-5.3943774114013525,-3.4425959982219547,-4.336900017361096,-3.2755737205206654,-2.2900711271934324,-2.9452842712742293,-7.154167933816175,-2.9876200659170675,-4.121847012655317,-1.604793914367351,-3.462265449036904,-6.3092899943704515,-4.502909548838425,-8.340196441388679,-5.352513973469052,-5.84513742013666,-7.716458712200901,-7.503365496740193,-8.214347544936173,-8.636663343396192,-9.468396687242285,-9.02463529405684,-9.208113588978618,-9.065939100198076,-9.14097428614099,-8.193990607867429,-3.446652002735739,-3.471160539621863,-12.568488976120518],[-3.0007497362890985,-4.443273506683785,-2.600406125797639,-3.5506673813608214,-2.3088581699376767,-4.3884112328791565,-3.3240861733092757,-5.410693842604261,-6.299225959971416,-6.948909412333564,-2.6175027037374363,-2.6781627546892772,-3.4886131234798126,-1.599774904001608,-3.3606225411317303,-3.247255852518435,-7.115193970217702,-3.7280955129350484,-2.6923907966021092,-2.555377813224534,-5.807844434815872,-3.9345110232700735,-6.202911259741086,-5.561268767713861,-6.650031586366622,-4.712928097133364,-8.304128897179098,-8.244734179760869,-8.889828189920294,-9.755160804215802,-9.131234000547042,-9.921057481342356,-10.257529717963568,-9.736232794330283,-9.278017120836589,-9.921057481342356,-4.768461508802108,-4.254995091958906,-12.17234927994885],[-1.4940919539963653,-5.922446524399309,-5.289777262802165,-5.624256474349113,-1.8851775294076067,-5.715394186347637,-6.021048501203849,-5.908460282424569,-3.396905691153677,-6.504615196997205,-5.1924288080310355,-6.3420962674994295,-5.674266894923774,-5.49377851921148,-1.2976578392687523,-4.257311881409098,-5.917762675086882,-5.734662605213514,-2.8117520915305754,-5.762277772246487,-1.8476980380366512,-5.307387780810799,-6.036714617948248,-7.7872311286422535,-6.783929019778468,-6.349264756978042,-6.096352884267978,-6.889289535436295,-7.223295679562314,-6.208564874874907,-7.391918391998107,-7.172864825935423,-8.450525346052517,-7.570166623404426,-7.700219751652623,-6.7404439078387295,-4.628298339741086,-4.624444770425097,-9.674300777674633],[-2.250334306208922,-4.933230325278283,-5.466394927126537,-5.398473579985344,-2.2268113016383833,-4.748334764489155,-5.788809806497209,-5.0078142235138055,-1.6140601096159817,-7.389966098099587,-5.057421922662515,-2.898611313783839,-5.522933405597031,-5.010356328473512,-2.4628493813340273,-5.379885684217253,-9.141316028989765,-3.3594119596664482,-3.041463375786868,-2.419747191598849,-2.9442671356242585,-5.592780369662592,-5.212796184399939,-8.509412473670539,-4.991914636312223,-6.204724330479714,-7.0945818052857135,-6.033759029363022,-8.23098360669924,-7.725751285569761,-8.376539192290565,-8.49374635692614,-9.161316695696435,-8.63844273341427,-9.141316028989765,-5.336635700423437,-2.320068203582952,-3.2058981086279252,-10.760704272277033],[-2.1974731235858997,-4.3388628455791665,-4.967718897078009,-3.2621688771724497,-1.4308113982798378,-4.213389336390515,-4.802169512504785,-5.329295377389805,-1.9331585330356604,-7.11868966103088,-4.521078867045072,-2.582112507472284,-4.200019071522844,-4.723762515330896,-2.5458289029974734,-4.394052068089149,-8.833409345865157,-5.542835649905102,-3.525590022142182,-3.219261585927306,-3.440694886256806,-5.260002606130265,-5.707719973255917,-8.134374022679989,-4.815821121322918,-5.001435609811865,-6.751510196656888,-6.440177758649728,-7.115152338630028,-8.064468325935678,-7.64931791209305,-8.538861135600177,-8.306958404196084,-9.077438788159201,-8.079174473325374,-8.31395959965507,-3.143648602335109,-3.23841992629694,-11.375011339329703],[-1.870891141376203,-3.7591745118646447,-4.371273060301154,-3.2791332861386615,-1.9107706682716499,-4.624061777758882,-4.956148042436841,-5.010189937826345,-2.784451177890736,-6.334089349722556,-5.299830748963299,-2.0044177702017865,-3.1473482277763787,-5.127479879790951,-2.673071856202927,-3.240994097679745,-6.869939166060555,-4.868141840731485,-3.233492162505462,-4.180898334655049,-3.485611756924462,-4.7287102962346195,-3.225464419775572,-4.446417109530032,-4.675740725834205,-6.102661940484367,-6.8918082037979795,-6.5504745964216236,-7.780375621470422,-7.458715195376792,-8.381149481899353,-8.51588207586951,-8.729456176167568,-8.721550996660454,-8.733432324547207,-8.690540759917894,-3.3429426189259286,-3.357692904656495,-11.956300170684946],[-2.931405039512769,-3.8790732080718975,-4.208598923580739,-2.1460310544551073,-2.0679892632481707,-3.8710594894771995,-2.317196987858577,-4.558600992200827,-3.129123860689175,-6.201820607270832,-3.4226514708493125,-3.4916353014100454,-4.8054768369101755,-3.8517699588791987,-3.587068773614783,-4.65485761895647,-8.027890699333087,-4.962007805103018,-2.9316585302933995,-2.740903095629866,-4.065599090041162,-5.257029590537684,-4.870572036830945,-6.895709352566281,-5.060638408544645,-3.818366324945421,-6.598521417385409,-6.123432914955803,-7.4421519040830475,-8.0244444006895,-8.313656695322049,-7.836785431300824,-7.908702182067969,-9.014490308806149,-8.476265710852045,-8.108125216731965,-2.395207538044643,-2.5176780774464413,-11.537137286576998],[-4.582048172975939,-3.6721608040964133,-4.013673492134655,-3.6768208008095375,-3.683218218775885,-4.040490497653242,-2.8457319454164787,-4.659595811215548,-5.290561241831474,-6.533679855748992,-3.3658001316957837,-3.333626612775081,-1.7116898687428947,-2.2145540058139983,-2.5876318074065163,-3.5857620783742234,-9.233970561080291,-2.041442328336181,-3.235672531430412,-3.3788363510457717,-3.013819880171509,-4.581149576108947,-3.8712335663317337,-5.071922202638369,-5.807727147492048,-5.946082541240341,-7.605156369683052,-6.784716119911276,-8.590973164205817,-8.865410009907578,-9.817418824383811,-9.451694044925162,-8.627834757509975,-10.034089861192404,-9.964022298575687,-9.39053962177183,-3.6613757818291144,-4.031896780839415,-12.215314097182182],[-2.2729171158438817,-5.285919434448688,-4.6696834973756935,-3.4923420438473705,-2.005653594665365,-3.9271504148616305,-5.967450755562108,-2.467301079019551,-2.669148729684826,-7.333133556946934,-5.6270375739531495,-2.8463660347468736,-5.229687197958054,-6.062723071637988,-2.0304045709327947,-2.9545066115874072,-8.904721245249936,-2.0999087720223852,-3.1552145260461386,-3.8745167778097698,-3.6803195616520683,-5.739547628912189,-6.22467866913463,-4.787195083684797,-5.8804709327747124,-6.0757184337300645,-6.564290009765776,-6.376709494927113,-6.038447038932833,-7.098777141029926,-7.479893220127803,-7.87255405598998,-8.328910771394533,-8.222346161671902,-8.681577693935727,-8.081172565074397,-3.4561997517901255,-4.009603697373822,-12.23692575542514],[-3.873157429206279,-4.830270155600689,-4.43527634735982,-4.14496615250177,-5.111031785207897,-5.025170494601504,-5.5551660344752145,-4.63672707406277,-3.2260541871477404,-5.770277414092161,-5.681046280364217,-3.716153680396614,-4.740657996911002,-5.610428713150264,-4.55437603890095,-4.152871332008883,-5.227953123266799,-4.9344739331306915,-4.11395591575921,-3.788816280772528,-0.5653919923366761,-3.6759472599185736,-4.500516869228221,-5.56597695057943,-6.532417466139057,-5.656948728785157,-4.969771715211715,-4.493054148026632,-5.227953123266799,-5.770277414092161,-5.5027980489578985,-5.853659023031211,-5.599129157896331,-5.621857408973887,-6.686568145966315,-6.303575893710209,-2.8328807175511326,-3.2115009157377044,-8.47832761519437],[-2.3501201454598113,-3.877286819275504,-4.035451330252564,-3.7231361394482456,-1.995970055224952,-4.265044156081665,-2.736694869216493,-4.688450598496515,-2.5992406567264554,-7.320698648200759,-3.583928454056477,-3.8563530232043615,-3.7853331501533014,-3.214809130719206,-2.5959281587718417,-4.532099917781923,-8.54022004727565,-4.417618701124041,-3.048279251990644,-2.5942436477724358,-3.1242479465432065,-4.469309439914175,-4.806633372411803,-7.394619249171621,-4.555828431285585,-4.358563465976057,-6.866501378881329,-6.331832351396451,-7.673379491145088,-8.197874078642343,-8.347641990314505,-8.913227945236432,-8.569510844196715,-8.740432657525941,-8.47054012663766,-8.548501668107372,-2.9529559443829054,-2.699051077505382,-10.812345932784986],[-3.232187843032739,-4.0820117364975985,-2.303935084897713,-4.462431762002812,-2.090040838747268,-4.810263669875053,-5.098149818280902,-3.3427415006907157,-3.0890624986145476,-7.01228575724969,-4.1419364125858,-4.24045222699042,-4.229931087854754,-5.100601983730359,-3.4039828305010356,-2.8099921854072107,-7.214019479079884,-4.907194618144589,-2.643507033442835,-1.7540357631259802,-3.3854048552772955,-5.184041819845991,-4.47680113344124,-7.6899519794478985,-4.808040087881555,-5.219185131072912,-6.5678322420137585,-6.167867875813282,-6.8402501017818516,-6.916380979124739,-7.5678834584129655,-7.658729931186539,-7.2613021593846385,-8.191570040629912,-8.226544462901742,-6.8015999555430176,-2.6010778450351553,-2.6904387628877977,-11.662228020635066],[-2.5098219012317164,-4.866751265554057,-3.6932794196268826,-4.771537513115893,-1.6104104195979998,-4.786730809524362,-4.844014888999637,-3.3324721430935713,-2.6555999682102924,-6.936119330196025,-4.965055025885696,-4.38862097481251,-2.432270482023462,-5.312502160603078,-2.847025899013536,-4.704861692289055,-9.182649668516397,-3.038045783139583,-2.9173621825204403,-3.3068877414035236,-2.6889941420441494,-4.419119006921773,-4.457628790520158,-6.774956799381695,-4.746475063409969,-4.034966308526627,-6.2439271683315285,-5.181571647712297,-7.664630599996934,-7.674169623043693,-7.670979827675593,-8.475165324810046,-8.85602462211601,-8.257016432469927,-9.032115629159328,-8.277248336441511,-2.8651461842364894,-2.981401171615819,-12.609442597367517],[-4.82838528988538,-2.5104681625450804,-2.951707407664075,-3.9834528948235115,-2.3794671622228702,-3.722207396872334,-4.073477470440828,-4.736386791191092,-4.61444776796882,-7.109351077520736,-4.004146193053924,-3.3735707029212727,-2.8270580994946104,-1.6595892968356591,-6.219331412258552,-3.6728896449692385,-8.956279393027199,-2.4527988314729923,-2.3891799588738047,-1.9700952733996555,-6.565069913996628,-6.177167490448294,-6.0378013973162945,-6.0787883752796565,-6.7157925201514495,-5.626883610473226,-8.156463652149412,-7.909603574217885,-8.514820682271129,-9.603382635085737,-9.4294293279623,-9.364365734615237,-9.675953327920572,-9.891064707537518,-10.16550155323928,-9.231819078653254,-4.345314510445386,-4.3673662947350795,-11.905967728079784],[-2.551610846439679,-4.59048814225872,-5.259589857964013,-4.259853450863533,-1.1156080256590044,-5.401623465644263,-4.935087379845991,-5.400393453189063,-1.3071455789769282,-7.1854147652231415,-5.445012855669765,-5.087823905037628,-5.008750122625029,-5.1547633877127375,-2.169032888642808,-4.896846869643483,-8.317549745929895,-4.666006418282462,-4.2373194748535905,-5.115635134455043,-5.417752847574147,-5.408415711578208,-5.246330581238229,-6.892253227006735,-6.129202842625693,-5.637151076158195,-6.570328131132742,-6.203212828399443,-7.0234454372780855,-7.215156734421879,-7.732291527381134,-7.42891054538625,-7.7514614434888545,-7.659088123357839,-8.28402705389125,-7.585400407566681,-3.1725689967085313,-3.4451321326492406,-11.185448647974],[-3.5382996343990234,-7.1760564396779465,-7.488247397543631,-6.978396994387756,-3.398439769465693,-8.09689706565408,-7.810641091029813,-6.264185317233577,-2.968073461539628,-9.363600399303442,-7.725108891071505,-7.288866452774152,-7.557968428244685,-5.535336053029335,-4.5411070357698415,-6.77470700942525,-11.082904789316075,-7.3709075260868335,-4.656599039852368,-5.964331658547692,-6.005918102198901,-7.595727027909167,-0.579558571288889,-10.350226769999495,-8.488613473570524,-8.30528840439933,-7.625774355972108,-7.973699831606823,-8.575405816499481,-9.312885306724427,-9.398898181384466,-10.261279283982999,-10.297384288625114,-9.708780963816439,-11.184687483626018,-10.039555179323015,-1.2639829265502496,-5.643283892252112,-13.600601261927066],[-3.951201982257603,-4.948319428117503,-3.8408143360232323,-4.127704956118702,-3.401870040429183,-4.1851341708539485,-4.22681983296669,-3.693877198102415,-2.386139109555554,-7.1165564685804705,-5.351825671740334,-4.565327175861397,-4.402429530206852,-4.592429105639189,-4.457696511669032,-2.7633703227684006,-6.892270712687483,-5.932203451124186,-4.564436307205596,-2.7602140093615457,-4.842958912459677,-4.597938761450158,-5.194604507993407,-2.1480138172059253,-3.910100306572051,-6.664571344837413,-5.3372552342744575,-5.347919416773269,-5.5696020474478045,-6.346448246884397,-6.8696963906489446,-6.594367086164165,-7.044900479674035,-6.747952953776464,-7.35408875734678,-6.883179740986232,-1.1390604573665573,-2.768456016427479,-9.642285112888725],[-3.0360878131472138,-3.975479876294767,-3.522670425065406,-3.914638217038522,-2.864136346767505,-4.612425777154969,-4.692904626436059,-4.686936334807632,-4.041084976685928,-6.232090221372901,-4.721994099636263,-3.71645641175006,-3.413582384868336,-3.715626093215908,-1.439131316676773,-3.4289523544300353,-7.025552744548839,-4.153383163751057,-2.8472271859566614,-3.8317949474225292,-4.996465089014618,-5.35198223751004,-5.0316478708463475,-7.279188975590903,-6.915010870149015,-5.547052189562215,-6.037847832498722,-6.144956482804655,-7.540716769913428,-7.951631482789157,-7.765219940743677,-8.191304336054577,-8.140532010681154,-7.842997641786361,-8.994452411828851,-8.019454079127918,-1.8661802841111401,-1.988283949929875,-10.047602326420204],[-2.927583140905028,-3.7903328441395248,-5.2764489864630795,-4.2312936047344305,-1.1559880630047743,-4.676272330389096,-5.23287773816944,-4.767939518914919,-2.360571468321946,-6.515141371061506,-5.032358065889634,-4.165573658508511,-5.198053762297738,-5.042834135281574,-2.0300547691548245,-5.266664735746823,-7.98681534378312,-5.87003613166564,-4.661779323086529,-3.113677890408956,-2.513120766550449,-5.334185936622318,-3.8859702169579258,-8.799921839422044,-5.109572877328748,-4.437697832044343,-6.624724584404116,-7.034653985640966,-7.280709018580669,-7.53879062125616,-8.00435965343403,-6.735295383527349,-6.9696960893661934,-8.20995889509733,-7.995549023751875,-7.566961498222856,-2.8709586741433575,-2.9027679717853037,-10.785837323091057],[-4.5775657751997905,-4.58992365604639,-5.367705221747046,-5.055747550889418,-4.967954414902319,-5.149703069933254,-5.805746500289823,-6.008135620134587,-5.960633286149583,-7.194250807060516,-5.562064757100479,-5.347958458812211,-5.83941971539641,-6.072313845825997,-6.5793043738080454,-5.7499380283619415,-7.970394907191429,-6.262156410013235,-4.791540115647279,-4.74691431593648,-3.4961222229285234,-6.555662610751005,-6.416307089840494,-6.1947908781856595,-8.137448991854596,-6.679891610713214,-2.7802196992630956,-2.466158404610568,-3.0417486580993924,-3.02177141454927,-2.7040247698301756,-2.4146812172873138,-3.502499374832007,-3.2062505284063745,-3.0890509233383026,-2.0082007423835604,-1.9175368032041353,-2.586870675421622,-10.312200713338756],[-4.921223474189089,-4.633780664808195,-5.167356543727998,-4.784586859912606,-5.003981187922294,-4.974281104258012,-5.405296912483647,-6.479368092235639,-5.3348558148203304,-7.762121774414689,-5.227904669082356,-4.539319242930317,-5.096488646215818,-6.355542742123293,-4.81682035448759,-5.405296912483647,-7.6833408965615755,-5.624952764079572,-5.278582178838222,-5.650419370516632,-6.5597896595462135,-5.779425868542865,-5.973098285005509,-4.457820528974706,-7.847643947852851,-7.516286811898409,-3.139562672174348,-2.809879986368343,-3.3729486060067337,-1.5438156042637392,-3.314852460842809,-3.441578224193167,-3.6923946909935523,-3.36202174698568,-3.7087699863221735,-1.5359739580161158,-2.537345075646371,-2.5622670925805493,-10.2635577261539],[-2.6379446880572806,-1.8895218268654912,-5.130742122338827,-3.6507176890243387,-4.63168566715247,-4.895604969143138,-5.535293571178316,-5.663749801630792,-5.119832923238473,-7.117702811224498,-5.818419827094236,-5.094831621033055,-5.034933479451987,-6.0645528966331455,-6.305292209837734,-4.891279079196016,-6.935381254430543,-5.411743331799775,-4.677096420333077,-5.154795085800613,-6.59890901780933,-5.471611581142362,-5.929859388828445,-6.559993601559657,-7.483947206179381,-7.131125831556638,-3.0812227944475366,-3.110854592053908,-3.1324293440567588,-3.3680418848507023,-3.1575247639093043,-2.993368040369347,-3.438200518923158,-3.3137105500100565,-2.897999046837881,-2.6189307160262256,-2.2814209042730194,-2.350300403502041,-9.489280775705495],[-4.719359742571733,-4.431677670119952,-4.66010070115941,-4.320018352314098,-4.691663812182475,-4.175389874571988,-4.862178856389441,-4.88353198086001,-5.75412055925331,-7.136984385276411,-4.58582834994721,-5.1930331007064305,-4.641856181416872,-4.366967460425001,-6.623422781691546,-4.757945736566923,-6.973096530171294,-4.57308932416978,-4.3618304628270845,-3.8255418665496363,-4.397470914718416,-5.75412055925331,-5.836456845913945,-6.085109574459991,-5.527546472842311,-7.178948584375443,-3.297974061640572,-3.3416491251432334,-3.3921649152801354,-3.472369553162106,-3.2787090174876337,-3.53238032833323,-3.4897120511646937,-3.6058007001848207,-3.111632694541262,-2.771010567917061,-1.1162270641274428,-2.332177662294085,-9.818005913990701],[-4.392055704741102,-4.537713277163465,-4.263724531843686,-4.233764232247812,-4.531333670199426,-4.66554664867335,-4.994050715645386,-5.470133390967503,-5.446035839388443,-6.606017074432845,-5.365993131714907,-4.772929409711944,-4.671016124477886,-5.9715186209544076,-6.163280571527449,-4.748928257612401,-7.214264811206304,-5.667197229498662,-4.7197148851465,-5.4580120304351585,-6.179674381303125,-5.568293155439748,-5.604826898772203,-5.34784381320923,-7.168802437129547,-6.4428654337466105,-2.875303479963259,-2.9835344070473893,-2.9463578722801302,-3.0961734418175957,-2.957827766991389,-3.104917082392155,-3.232195226070862,-3.1765316168586497,-3.1926576640601723,-2.0775092400158366,-2.0518737293268643,-1.8088674778716027,-8.14225158284365],[-4.160429085723273,-4.311682262617893,-4.346457176794503,-4.105388739787635,-5.004829443177838,-4.23027728948118,-5.1606693125959415,-4.8267362224934045,-6.063734282250835,-6.994731161514686,-5.4039853820927375,-3.6785269926859225,-4.926931194850336,-4.600208573194954,-5.641380956114149,-4.613814225250733,-7.2701431413746525,-3.717586428522509,-4.060086579940533,-4.405853850357913,-6.794060466052534,-5.705600548848443,-5.458262268947176,-5.5499932045247204,-7.294835753965024,-5.973079913982704,-2.939088928311623,-2.9536311138113973,-3.0495599745426376,-2.926654526113195,-2.8183515756049773,-3.110879033053236,-3.2632535134792384,-3.056390847769166,-3.2365502415586254,-2.485093402248158,-2.252217414015717,-1.9042811059505762,-8.49880855829096],[-4.6360984222176,-4.799462065266941,-4.404379306200994,-4.322440863362559,-4.413912266859718,-4.779935642916586,-5.9094059199446,-5.4193064266957265,-5.6089848217153895,-6.759556849314211,-6.0968688762389736,-5.348569875603949,-5.047562348555018,-6.628528586907806,-6.264860607478103,-4.897028309197948,-7.375742988738027,-6.217232558488849,-4.9545521533361345,-5.040368072920991,-6.842938458253261,-6.086612376071785,-5.388376126004368,-6.027188955600984,-6.381120413593965,-6.512696771382685,-2.7731687619307577,-2.6782975266407654,-2.830480089320237,-2.848734564462583,-2.7727974977720473,-2.708815924574242,-2.758058837458462,-2.900512768676951,-2.978098213907181,-2.5702051835137754,-2.200430601827526,-1.9914178350479794,-9.062141942308257],[-4.582473439004593,-4.754993084804229,-4.998702913699916,-4.321922710604176,-4.998702913699916,-4.818006052632963,-5.75898939709749,-5.610808884256736,-5.659898494453259,-6.539147954647065,-5.381695165956022,-5.29945706771905,-4.9890097844942565,-6.113682179832232,-6.240166326941351,-5.286384986151697,-6.539147954647065,-5.11567459028542,-5.183625252193928,-5.041827340333671,-6.113682179832232,-5.966628761875734,-5.949679203561962,-5.8767724327538735,-6.63445813445139,-6.398069356387159,-2.9455786803374537,-2.890853780648207,-2.785374928797118,-2.8810401591998827,-2.844226186077166,-2.950591222160998,-2.8659206620320004,-2.962385798653835,-2.9290493783862432,-2.175084730574881,-2.0525565754026527,-1.9973049026102476,-9.11936478423939],[-4.543401159590459,-4.823115062393064,-3.9860737021730492,-4.4553902822677465,-4.626782768529511,-3.1798637855931853,-4.774072977325461,-6.066661375783507,-6.3635601033402125,-6.315358001522335,-5.921727351061174,-5.495319069107766,-5.152207191716654,-5.604717663514872,-6.866188959902025,-4.689583669768541,-6.951346768242331,-5.646021469656108,-4.508034015753168,-5.670412922780267,-6.3635601033402125,-5.774402636304314,-4.9408980980494475,-6.225409764859395,-7.069129803898715,-6.845986252584505,-2.730859151179876,-2.4339154965622467,-2.826006105651267,-3.0005304914284725,-2.771844397679924,-2.829963657137874,-2.9877860538538656,-2.8145814901362787,-2.6436845488573124,-2.654817505726865,-2.429558191193291,-2.2946388732939207,-9.148571345578551],[-4.725109169299543,-4.8920815045246915,-3.9074073677574606,-4.618580271717583,-4.733235624856568,-5.307693562176592,-4.572758669976433,-5.510513640518887,-5.762673734812137,-6.741812370345956,-4.947803181383885,-4.846383002937982,-4.158324891885508,-5.898382986736673,-6.406305850844702,-4.702876150359534,-7.123904127268811,-5.54258051631555,-4.607326133643159,-5.0810135982393225,-6.025291838600702,-5.939931989649545,-5.3109193714254745,-5.302874275740643,-8.128106731465847,-7.104295655880435,-1.614636052812513,-3.0395098958998785,-3.254561277316752,-3.266619635483967,-3.589134099707649,-3.5175456968428787,-3.536816207673623,-3.603970735498501,-3.4677319911306594,-1.8912612403463043,-2.455712659678065,-2.0020640424692564,-9.54180006677385],[-3.0571113135980825,-3.6881540513013364,-1.8979707427255759,-1.2943462356308515,-3.718142414898046,-3.529032437735793,-3.056990559456546,-2.595180349879562,-4.19957318353627,-5.163760465623824,-4.283245007257953,-4.389915665629348,-3.7239696638225332,-3.6638309678336567,-3.339808005324408,-3.2232840549585458,-7.201600756421915,-4.424436511454205,-3.4318215195509154,-3.7600626508030572,-4.889716612123718,-4.907633282095024,-3.3897747516398495,-5.280394676088581,-3.746319271008434,-5.383591676103269,-6.004427278244468,-7.145088546158573,-7.502467467599099,-7.389874232982313,-8.34616042141476,-8.160485969610496,-8.582297342028976,-9.363761666902276,-8.540136531204698,-7.242105372816881,-9.197243775281446,-8.16678189806731,-12.826019305325678],[-2.7788146555274436,-2.8216148673471526,-3.490269174255095,-2.629595716118393,-3.303540064657417,-3.0594591567393,-3.267058338000351,-3.3605744282568595,-3.338572680204692,-4.862200431472076,-3.079621451687009,-3.4779532672383615,-2.9171539676677303,-3.715133767598423,-3.489484464837551,-3.1815170461700744,-6.351573294671603,-3.497698294421097,-2.435128706315454,-3.021635590790534,-3.45696216959138,-3.6719853295036016,-3.335125700110903,-6.06609954111505,-5.887715966274562,-4.246403490039957,-4.1187166377434625,-4.176821573187442,-5.030253279494612,-5.2339703619139595,-5.394178255190106,-5.739040880804595,-5.797763310103027,-5.845070727353406,-6.104151691418398,-5.559409206065855,-8.002718669789934,-5.329333984788067,-12.431833340562715],[-3.371344418512474,-2.7388218597689638,-3.9019726695746444,-3.2088254890146994,-3.4965075614664802,-3.4965075614664802,-2.5669716028423046,-3.431969040328909,-3.9019726695746444,-3.6396084051071536,-4.258647613513377,-3.3141860046725258,-3.26011878340225,-4.59511985013459,-2.9856819377004897,-3.3141860046725258,-4.59511985013459,-4.007333185232471,-2.3978952727983707,-3.0690635466395406,-4.258647613513377,-4.258647613513377,-3.2088254890146994,-4.59511985013459,-4.59511985013459,-4.59511985013459,-4.125116220888854,-3.371344418512474,-4.258647613513377,-4.59511985013459,-4.59511985013459,-4.59511985013459,-4.59511985013459,-4.59511985013459,-4.59511985013459,-4.258647613513377,-4.59511985013459,-4.258647613513377,-4.59511985013459]],"thresh":0.029769981539181603};
+}, 572, null, "jsengine/build/modules/antitracking/prob.json");
+__d(/* jsengine/build/modules/antitracking/tracker_owners.json */function(global, require, module, exports) {module.exports = {
+"1&1 Mail & Media GmbH":[
+"gmx.net"],
+
+"1000mercis":[
+"mmtro.com"],
+
+"33Across":[
+"tynt.com",
+"33across.com"],
+
+"A.Mob":[
+"adotmob.com"],
+
+"AD Solution Media Associates":[
+"am15.net"],
+
+"ADTECH":[
+"adtech.de",
+"adtechus.com"],
+
+"ADTELLIGENCE":[
+"adtelligence.de"],
+
+"ADTHINK MEDIA":[
+"audienceinsights.net"],
+
+"ADVERTICA LTD.":[
+"yx-ads6.com"],
+
+"AK":[
+"agkn.com"],
+
+"ALDI Einkauf GmbH & Co. oHG":[
+"aldi-international.com"],
+
+"AOL":[
+"5min.com",
+"aol.com",
+"atwola.com",
+"advertising.com",
+"adsonar.com",
+"tacoda.com",
+"pictela.net",
+"huffingtonpost.com",
+"huffpost.com",
+"huffpo.net",
+"mapquestapi.com",
+"aolcdn.com",
+"goviral-content.com",
+"srvntrk.com",
+"blogsmithmedia.com",
+"mirabilis.com",
+"mqcdn.com"],
+
+"AT Internet":[
+"xiti.com"],
+
+"AWeber":[
+"aweber.com"],
+
+"Aabaco Small Business, LLC":[
+"lexity.com"],
+
+"AccuWeather, Inc.":[
+"accuweather.com"],
+
+"Acxiom Corporation":[
+"acxiom-online.com"],
+
+"Ad Decisive":[
+"a2dfp.net"],
+
+"Ad4Game":[
+"ad4game.com"],
+
+"AdClear GmbH":[
+"adclear.net"],
+
+"AdF.ly":[
+"adf.ly"],
+
+"AdFox":[
+"adfox.ru"],
+
+"AdGear Technologies Inc.":[
+"adgrx.com"],
+
+"AdJug":[
+"adjug.com"],
+
+"AdMedia":[
+"admedia.com"],
+
+"AdOcean":[
+"adocean.pl"],
+
+"AdPredictive":[
+"adpredictive.com"],
+
+"AdRiver":[
+"adriver.ru"],
+
+"AdRoll":[
+"adroll.com"],
+
+"AdSafe Media":[
+"adsafeprotected.com"],
+
+"AdServerPub":[
+"adserverpub.com"],
+
+"AdSpirit":[
+"adspirit.net",
+"adspirit.de"],
+
+"AdSupply":[
+"4dsply.com",
+"trklnks.com"],
+
+"AdTiger":[
+"adtiger.de"],
+
+"AdXpansion":[
+"adxpansion.com"],
+
+"Adap.tv":[
+"adap.tv"],
+
+"Adara Media":[
+"yieldoptimizer.com"],
+
+"Adcash OU":[
+"adcash.com"],
+
+"Adconion":[
+"amgdgt.com"],
+
+"AddFreeStats":[
+"addfreestats.com"],
+
+"AddThis":[
+"addthis.com",
+"addthisedge.com",
+"addthiscdn.com"],
+
+"Adelphic, Inc.":[
+"ipredictive.com"],
+
+"Adform":[
+"adform.net"],
+
+"AdgravityGroup S.L.":[
+"cdnwebcloud.com"],
+
+"Adiant":[
+"adblade.com"],
+
+"Admeta":[
+"admeta.com",
+"atemda.com"],
+
+"Adnetik":[
+"wtp101.com"],
+
+"Adobe":[
+"adobe.com",
+"2o7.net",
+"demdex.net",
+"omtrdc.net",
+"everesttech.net",
+"typekit.net",
+"edgefonts.net",
+"omniture.com"],
+
+"Adometry":[
+"dmtry.com"],
+
+"Adventori":[
+"adventori.com"],
+
+"Advert Stream":[
+"advertstream.com"],
+
+"Advertising Technologies Ltd.":[
+"oclaserver.com",
+"mobisla.com",
+"pub2srv.com"],
+
+"Adzerk":[
+"adzerk.net"],
+
+"Akamai":[
+"akamaihd.net",
+"edgesuite.net",
+"edgekey.net"],
+
+"Alenty":[
+"alenty.com"],
+
+"Amazon.com":[
+"assoc-amazon.com",
+"amazon-adsystem.com",
+"amazon.de",
+"amazon.com",
+"amazon.co.uk",
+"alexa.com",
+"cloudfront.net",
+"amazonaws.com",
+"images-amazon.com",
+"elasticbeanstalk.com",
+"ssl-images-amazon.com"],
+
+"Ancestry.com":[
+"mfcreative.com"],
+
+"Andrea Fiore":[
+"dotandad.com"],
+
+"Answers Corporation":[
+"dsply.com"],
+
+"AppDynamics, Inc":[
+"eum-appdynamics.com"],
+
+"AppNexus":[
+"adnxs.com"],
+
+"Appier":[
+"appier.net"],
+
+"AudienceScience":[
+"revsci.net",
+"wunderloop.net"],
+
+"Auditorius":[
+"audsp.com",
+"audtd.com"],
+
+"Augur":[
+"augur.io"],
+
+"Automattic":[
+"gravatar.com",
+"intensedebate.com",
+"polldaddy.com",
+"wp.com"],
+
+"Avazu Inc.":[
+"avazu.net"],
+
+"Baidu":[
+"baidu.com",
+"baidustatic.com",
+"hao123.com",
+"hao123img.com",
+"bdstatic.com",
+"bdimg.com",
+"hao123.com.br"],
+
+"Bannerconnect":[
+"bncnt.com"],
+
+"Bao Yu":[
+"rafomedia.com"],
+
+"Barilliance Ltd":[
+"barilliance.net"],
+
+"Baynote":[
+"baynote.net"],
+
+"Bazaarvoice":[
+"bazaarvoice.com"],
+
+"Begun":[
+"begun.ru"],
+
+"Beijing Xingyunwang Technology Co., Ltd.":[
+"xingcloud.com"],
+
+"Betgenius":[
+"connextra.com"],
+
+"BidVertiser":[
+"bidvertiser.com"],
+
+"Bigpoint GmbH":[
+"bigpoint.net"],
+
+"Bizo":[
+"bizographics.com"],
+
+"Blucora, Inc.":[
+"inspsearchapi.com"],
+
+"BlueCava":[
+"bluecava.com"],
+
+"BlueKai":[
+"bkrtx.com",
+"bluekai.com"],
+
+"BlueResult":[
+"blueresult.com"],
+
+"Bombora":[
+"ml314.com"],
+
+"Brandscreen":[
+"rtbidder.net"],
+
+"BrightRoll":[
+"btrll.com"],
+
+"BrightTag":[
+"btstatic.com",
+"thebrighttag.com"],
+
+"Brightcove":[
+"brightcove.com"],
+
+"Bubblestat":[
+"bubblestat.com"],
+
+"Burst Media":[
+"burstnet.com",
+"blinkx.com"],
+
+"BuySellAds":[
+"buysellads.com"],
+
+"CBS Interactive Inc.":[
+"cnetcontent.com",
+"cbsi.com"],
+
+"CDNetworks Co., LTD.":[
+"cdnetworks.net"],
+
+"CEDATO TECHNOLOGIES LTD":[
+"algovid.com"],
+
+"CNZZ":[
+"cnzz.com"],
+
+"COMVEL GmbH":[
+"comvel.media"],
+
+"CONTEXTWEB":[
+"contextweb.com"],
+
+"CONVERSANT SOLUTIONS":[
+"swiftserve.com"],
+
+"COULLER LTD":[
+"coullmedia.com"],
+
+"CPMStar":[
+"cpmstar.com"],
+
+"CPX Interactive":[
+"cpxinteractive.com"],
+
+"Eventim AG":[
+"eventim.com"],
+
+"CacheNetworks, LLC":[
+"cachefly.net"],
+
+"Campaign Monitor Pty Ltd":[
+"createsend1.com"],
+
+"CaptchaAd GmbH":[
+"captchaad.com"],
+
+"Casale Media":[
+"indexww.com"],
+
+"Cbox":[
+"cbox.ws"],
+
+"Cedexis":[
+"cmdolb.com"],
+
+"Cedexis Inc.":[
+"cdxcf.info"],
+
+"Certona":[
+"res-x.com"],
+
+"Chargepay B.V.":[
+"gammae.com"],
+
+"Chartbeat":[
+"chartbeat.net",
+"chartbeat.com"],
+
+"ChoiceStream":[
+"choicestream.com"],
+
+"ClickDistrict":[
+"creative-serving.com"],
+
+"ClickTale":[
+"clicktale.net"],
+
+"Cliplister GmbH":[
+"mycliplister.com",
+"cliplister.com"],
+
+"Cloud Technologies S.A.":[
+"behavioralengine.com"],
+
+"Collective":[
+"collective-media.net"],
+
+"Commission Junction":[
+"tqlkg.com",
+"awltovhc.com"],
+
+"Conversant LLC":[
+"mplxtms.com"],
+
+"Convertro":[
+"convertro.com"],
+
+"Conviva":[
+"conviva.com"],
+
+"Cox Digital Solutions":[
+"afy11.net"],
+
+"Crazy Egg":[
+"cetrk.com",
+"crazyegg.com"],
+
+"Creative Networks Corporation":[
+"smi2.net"],
+
+"Criteo":[
+"criteo.net",
+"criteo.com"],
+
+"Cross Pixel":[
+"crsspxl.com"],
+
+"CrossWorXs S.L.":[
+"adworxs.net"],
+
+"Cya2":[
+"cya2.net"],
+
+"Cybernet Quest":[
+"cqcounter.com"],
+
+"D.C. Media Networks GmbH":[
+"dcmn.com"],
+
+"DC Storm":[
+"dc-storm.com"],
+
+"DC Storm Ltd.":[
+"stormcontainertag.com"],
+
+"DG":[
+"serving-sys.com"],
+
+"DK Production Co. Ltd.":[
+"cackle.me"],
+
+"DNStination Inc":[
+"fastly.net"],
+
+"DNStination Inc.":[
+"riotgames.com"],
+
+"DYNAMIC YIELD":[
+"dynamicyield.com"],
+
+"DaWanda GmbH":[
+"dawandastatic.com"],
+
+"Dailymotion":[
+"dmcdn.net"],
+
+"Daimler AG":[
+"mercedes-benz.com"],
+
+"DataCamp Limited":[
+"cdn77.org"],
+
+"DataXu":[
+"w55c.net",
+"dataxu.net"],
+
+"Datalogix":[
+"nexac.com"],
+
+"Datonics":[
+"pro-market.net"],
+
+"Deal Ply Technologies Ltd.":[
+"dealply.com"],
+
+"Decibel Insight Ltd":[
+"decibelinsight.net"],
+
+"Deep Forest Media":[
+"dpclk.com"],
+
+"Delta Projects":[
+"de17a.com"],
+
+"Demandbase":[
+"demandbase.com"],
+
+"Demandbase, Inc.":[
+"company-target.com"],
+
+"Digital Gateway Networks A.S.":[
+"maps-4-u.com"],
+
+"Digital Millennium Copyright Act Services Ltd.":[
+"dmca.com"],
+
+"Digital River, Inc.":[
+"digitalriverws.com"],
+
+"DirectCORP":[
+"ipcounter.de"],
+
+"Disney Enterprises, Inc.":[
+"disneyinternational.com"],
+
+"Disqus":[
+"disqus.com"],
+
+"DoublePimp":[
+"doublepimp.com"],
+
+"DoubleVerify":[
+"doubleverify.com"],
+
+"Drawbridge":[
+"adsymptotic.com"],
+
+"DuoDecad IT Services Luxembourg S.a r.l.":[
+"dditscdn.com",
+"awempire.com"],
+
+"EASYmedia GmbH":[
+"rvty.net"],
+
+"ELIAS AGENCY LIMITED":[
+"ochze.com"],
+
+"Effective Measure":[
+"effectivemeasure.net"],
+
+"Electronic Arts Inc.":[
+"ea.com"],
+
+"Eloqua":[
+"eloqua.com"],
+
+"Emediate":[
+"emediate.eu"],
+
+"Emego":[
+"usemax.de"],
+
+"Ensighten":[
+"ensighten.com"],
+
+"EroAdvertising":[
+"ero-advertising.com"],
+
+"Europe Entertainment Ltd.":[
+"stargames.com"],
+
+"Evidon":[
+"betrad.com"],
+
+"ExoClick":[
+"exoclick.com"],
+
+"Expedia, Inc":[
+"expedia.com"],
+
+"Exponential Interactive":[
+"tribalfusion.com",
+"adotube.com"],
+
+"FALK TECHNOLOGIES GMBH":[
+"angsrvr.com"],
+
+"FEWORKS LTD UK FILIAL":[
+"adultblogtoplist.com"],
+
+"FLATTR AB":[
+"flattr.net"],
+
+"Facebook":[
+"fbcdn.net",
+"facebook.com",
+"instagram.com",
+"facebook.net"],
+
+"Federated Media":[
+"lijit.com"],
+
+"Flashtalking":[
+"flashtalking.com"],
+
+"Flattr":[
+"flattr.com"],
+
+"Flite":[
+"flite.com"],
+
+"Flixmedia Limited":[
+"flix360.com",
+"flixcar.com"],
+
+"FlxOne":[
+"flxpxl.com",
+"flxads.com"],
+
+"Fordaq":[
+"adswizz.com"],
+
+"Fox One Stop Media":[
+"rubiconproject.com"],
+
+"FreeWheel":[
+"fwmrm.net"],
+
+"FriendFinder Networks":[
+"pop6.com",
+"adultfriendfinder.com"],
+
+"Future Ad Labs":[
+"futureadlabs.com"],
+
+"GDM":[
+"gdmdigital.com"],
+
+"GETSENTRY LLC":[
+"getsentry.com"],
+
+"GOODLIFE CORPORATION L.P.":[
+"adx1.com"],
+
+"GP Interactive":[
+"skadtec.com"],
+
+"Gameforge Productions GmbH":[
+"gameforge.com"],
+
+"Gemius":[
+"gemius.pl"],
+
+"GetIntent Ltd":[
+"adhigh.net"],
+
+"Gigya":[
+"gigya.com"],
+
+"Glam Media":[
+"glam.com"],
+
+"Go Daddy":[
+"godaddy.com"],
+
+"GoSquared":[
+"gosquared.com"],
+
+"Goldbach Management AG":[
+"goldbach.com"],
+
+"Doubleclick by Google":[
+"doubleclick.net",
+"2mdn.net"],
+
+"Google Analytics":[
+"google-analytics.com"],
+
+"Youtube":[
+"youtube.com",
+"googlevideo.com",
+"ytimg.com"],
+
+"Google":[
+"gstatic.com",
+"google.de",
+"googlesyndication.com",
+"ggpht.com",
+"invitemedia.com",
+"googleusercontent.com",
+"googleapis.com",
+"google.com",
+"recaptcha.net",
+"panoramio.com",
+"gmodules.com",
+"google.ad",
+"google.ae",
+"google.com.af",
+"google.com.ag",
+"google.com.ai",
+"google.al",
+"google.am",
+"google.co.ao",
+"google.com.ar",
+"google.as",
+"google.at",
+"google.com.au",
+"google.az",
+"google.ba",
+"google.com.bd",
+"google.be",
+"google.bf",
+"google.bg",
+"google.com.bh",
+"google.bi",
+"google.bj",
+"google.com.bn",
+"google.com.bo",
+"google.com.br",
+"google.bs",
+"google.bt",
+"google.co.bw",
+"google.by",
+"google.com.bz",
+"google.ca",
+"google.cd",
+"google.cf",
+"google.cg",
+"google.ch",
+"google.ci",
+"google.co.ck",
+"google.cl",
+"google.cm",
+"google.cn",
+"google.com.co",
+"google.co.cr",
+"google.com.cu",
+"google.cv",
+"google.com.cy",
+"google.cz",
+"google.de",
+"google.dj",
+"google.dk",
+"google.dm",
+"google.com.do",
+"google.dz",
+"google.com.ec",
+"google.ee",
+"google.com.eg",
+"google.es",
+"google.com.et",
+"google.fi",
+"google.com.fj",
+"google.fm",
+"google.fr",
+"google.ga",
+"google.ge",
+"google.gg",
+"google.com.gh",
+"google.com.gi",
+"google.gl",
+"google.gm",
+"google.gp",
+"google.gr",
+"google.com.gt",
+"google.gy",
+"google.com.hk",
+"google.hn",
+"google.hr",
+"google.ht",
+"google.hu",
+"google.co.id",
+"google.ie",
+"google.co.il",
+"google.im",
+"google.co.in",
+"google.iq",
+"google.is",
+"google.it",
+"google.je",
+"google.com.jm",
+"google.jo",
+"google.co.jp",
+"google.co.ke",
+"google.com.kh",
+"google.ki",
+"google.kg",
+"google.co.kr",
+"google.com.kw",
+"google.kz",
+"google.la",
+"google.com.lb",
+"google.li",
+"google.lk",
+"google.co.ls",
+"google.lt",
+"google.lu",
+"google.lv",
+"google.com.ly",
+"google.co.ma",
+"google.md",
+"google.me",
+"google.mg",
+"google.mk",
+"google.ml",
+"google.com.mm",
+"google.mn",
+"google.ms",
+"google.com.mt",
+"google.mu",
+"google.mv",
+"google.mw",
+"google.com.mx",
+"google.com.my",
+"google.co.mz",
+"google.com.na",
+"google.com.nf",
+"google.com.ng",
+"google.com.ni",
+"google.ne",
+"google.nl",
+"google.no",
+"google.com.np",
+"google.nr",
+"google.nu",
+"google.co.nz",
+"google.com.om",
+"google.com.pa",
+"google.com.pe",
+"google.com.pg",
+"google.com.ph",
+"google.com.pk",
+"google.pl",
+"google.pn",
+"google.com.pr",
+"google.ps",
+"google.pt",
+"google.com.py",
+"google.com.qa",
+"google.ro",
+"google.ru",
+"google.rw",
+"google.com.sa",
+"google.com.sb",
+"google.sc",
+"google.se",
+"google.com.sg",
+"google.sh",
+"google.si",
+"google.sk",
+"google.com.sl",
+"google.sn",
+"google.so",
+"google.sm",
+"google.st",
+"google.com.sv",
+"google.td",
+"google.tg",
+"google.co.th",
+"google.com.tj",
+"google.tk",
+"google.tl",
+"google.tm",
+"google.tn",
+"google.to",
+"google.com.tr",
+"google.tt",
+"google.com.tw",
+"google.co.tz",
+"google.com.ua",
+"google.co.ug",
+"google.co.uk",
+"google.com.uy",
+"google.co.uz",
+"google.com.vc",
+"google.co.ve",
+"google.vg",
+"google.co.vi",
+"google.com.vn",
+"google.vu",
+"google.ws",
+"google.rs",
+"google.co.za",
+"google.co.zm",
+"google.co.zw",
+"google.cat",
+"googletagmanager.com",
+"googleadservices.com",
+"googletagservices.com"],
+
+"Granify Inc.":[
+"granify.com"],
+
+"Graphinium":[
+"crm4d.com"],
+
+"Gravity":[
+"gravity.com",
+"grvcdn.com"],
+
+"Greentube Internet Entertainment Solutions GmbH":[
+"greentube.com"],
+
+"Group M Worldwide, Inc.":[
+"qservz.com"],
+
+"Gruner + Jahr":[
+"guj.de"],
+
+"GumGum":[
+"gumgum.com"],
+
+"H&M Hennes & Mauritz AB":[
+"hm.com"],
+
+"HI-MEDIA":[
+"himediads.com"],
+
+"HOXIE COMPUTERS":[
+"swiftype.com"],
+
+"HP":[
+"optimost.com"],
+
+"HealthPricer":[
+"adacado.com"],
+
+"Histats":[
+"histats.com"],
+
+"HolidayCheck AG":[
+"holidaycheck.com"],
+
+"HookLogic":[
+"hlserve.com"],
+
+"Hotel Reservation Service Robert Ragge GmbH":[
+"hrs.com"],
+
+"HubSpot":[
+"hubspot.com"],
+
+"Hurra.com":[
+"hurra.com"],
+
+"I-Behavior":[
+"ib-ibi.com"],
+
+"IBM":[
+"coremetrics.com"],
+
+"INFOnline GmbH":[
+"ivwbox.de",
+"ioam.de"],
+
+"IP Broadcasting B.V.":[
+"amateurcommunity.com"],
+
+"IST Partnership LLP":[
+"ist-track.com"],
+
+"Imperia Online Ltd.":[
+"ioimg.org"],
+
+"Improve Digital":[
+"360yield.com"],
+
+"InPage Group":[
+"opendsp.com"],
+
+"Indeed, Inc":[
+"indeed.com"],
+
+"InfoStars":[
+"hotlog.ru"],
+
+"Infolinks":[
+"infolinks.com"],
+
+"InnoGames GmbH":[
+"innogamescdn.com"],
+
+"InsightExpress":[
+"insightexpressai.com"],
+
+"Inspectlet":[
+"inspectlet.com"],
+
+"Intergi":[
+"intergi.com"],
+
+"Internap Network Services":[
+"internapcdn.net"],
+
+"Internet BillBoard s.r.o.":[
+"bbelements.com"],
+
+"Internet Giant Inc.":[
+"realitytraffic.com"],
+
+"Interrogare GmbH":[
+"irquest.com",
+"biscuittin.net"],
+
+"Issuu ApS":[
+"issuu.com"],
+
+"JSC Mamba":[
+"wambacdn.net"],
+
+"Jimdo GmbH":[
+"jimdo.com"],
+
+"JuicyAds":[
+"juicyads.com"],
+
+"Justpremium":[
+"justpremium.com"],
+
+"KATO CAPITAL GROUP SL":[
+"brandcrumb.com"],
+
+"KISSmetrics":[
+"kissmetrics.com"],
+
+"Kaltura":[
+"kaltura.com"],
+
+"Kelkoo SAS":[
+"kelkoo.com"],
+
+"Kenshoo":[
+"xg4ken.com"],
+
+"Klarna AB":[
+"klarna.com"],
+
+"Kokteyl":[
+"admost.com"],
+
+"Komoona":[
+"komoona.com"],
+
+"Koninklijke Philips N.V.":[
+"philips.com"],
+
+"Krux":[
+"krxd.net"],
+
+"Layer-Ad.org":[
+"layer-ad.org"],
+
+"Legolas Media":[
+"legolas-media.com"],
+
+"Lerna LLC":[
+"yield-atx.com"],
+
+"Level 3 Communications, LLC":[
+"footprint.net"],
+
+"Levexis":[
+"levexis.com"],
+
+"LifeStreet":[
+"lfstmedia.com"],
+
+"Ligatus GmbH":[
+"ligadx.com",
+"ligatus.com"],
+
+"Likqid Media, LLC":[
+"lkqd.net"],
+
+"Limelight Networks":[
+"llnwd.net"],
+
+"LinkedIn":[
+"licdn.com",
+"linkedin.com"],
+
+"Linkpulse":[
+"lp4.io"],
+
+"LiveInternet":[
+"liveinternet.ru",
+"yadro.ru"],
+
+"LivePerson":[
+"liveperson.net"],
+
+"LiveRail":[
+"liverail.com"],
+
+"Livefyre":[
+"livefyre.com",
+"fyre.co"],
+
+"Livestream, LLC":[
+"livestream.com"],
+
+"Liwio":[
+"abtasty.com"],
+
+"LogMeIn, Inc.":[
+"boldchat.com"],
+
+"Loggly, Inc.":[
+"loggly.com"],
+
+"LongTail Ad Solutions, Inc.":[
+"jwpltx.com"],
+
+"Lotame":[
+"crwdcntrl.net"],
+
+"MAD ADS MEDIA LP":[
+"madadsmedia.com"],
+
+"MOMO-NET GMBH":[
+"trafficfabrik.com"],
+
+"MYADWISE LTD.":[
+"eclkmpsa.com",
+"eclkmpbn.com"],
+
+"Magnetic":[
+"domdex.com"],
+
+"Mail.Ru":[
+"list.ru",
+"mail.ru"],
+
+"MailChimp":[
+"list-manage.com"],
+
+"Mapbox":[
+"mapbox.com"],
+
+"MarketGid":[
+"marketgid.com",
+"dt00.net",
+"dt07.net"],
+
+"Marketo, Inc":[
+"mktoresp.com"],
+
+"Martin Suess":[
+"netbiscuits.net"],
+
+"MaxPoint":[
+"mxptint.net"],
+
+"MdotLabs":[
+"mdotlabs.com"],
+
+"MediaMath":[
+"mathtag.com"],
+
+"Mediahead AG":[
+"web-analytics.services",
+"mediahead.com"],
+
+"Medianova Internet Hizmetleri A.S.":[
+"mncdn.com"],
+
+"Meetrics":[
+"meetrics.net",
+"mxcdn.net"],
+
+"Methilonia ltd":[
+"adquantix.com"],
+
+"MicroAd":[
+"microad.jp"],
+
+"Microsoft":[
+"msn.com",
+"skype.com",
+"bing.com",
+"office.com",
+"microsoft.com",
+"outlook.com",
+"atdmt.com",
+"s-msn.com",
+"live.com",
+"windowsupdate.com",
+"azurewebsites.net",
+"msedge.net",
+"microsofttranslator.com",
+"msecnd.net"],
+
+"Mirago Plc":[
+"mirago.com"],
+
+"Mirando":[
+"mirando.de"],
+
+"Mixpanel":[
+"mixpanel.com"],
+
+"Moat":[
+"moatads.com"],
+
+"Monetate":[
+"monetate.net"],
+
+"Monetology":[
+"fullstory.com"],
+
+"Monotype GmbH":[
+"fonts.net"],
+
+"Monster":[
+"monster.com"],
+
+"Mouse3K UG (haftungsbeschraenkt)":[
+"mouse3k.com"],
+
+"Mouseflow":[
+"mouseflow.com"],
+
+"Mozilla Corporation":[
+"mozilla.net"],
+
+"MyBuys":[
+"veruta.com"],
+
+"Myze":[
+"deals-way.com"],
+
+"Médiamétrie-eStat":[
+"estat.com"],
+
+"NATIONAL CLOUD":[
+"cloudwatt.com"],
+
+"NAVER Corp.":[
+"naver.net"],
+
+"NBCUniversal Media, LLC":[
+"nbcuni.com"],
+
+"NESSLY HOLDINGS LIMITED":[
+"mycdn.me"],
+
+"NETWORK SYNERGY CORPORATION PTY LTD":[
+"fastestcdn.net"],
+
+"Nanigans":[
+"nanigans.com"],
+
+"Navegg":[
+"navdmp.com"],
+
+"Net Entertainment Malta Ltd.":[
+"casinomodule.com"],
+
+"NetDNA, LLC.":[
+"netdna-cdn.com"],
+
+"NetSeer":[
+"netseer.com"],
+
+"Netmining":[
+"netmng.com"],
+
+"Neustar":[
+"adadvisor.net"],
+
+"New Relic":[
+"nr-data.net"],
+
+"Next Tuesday GmbH":[
+"nt.vc"],
+
+"NextPerformance":[
+"nxtck.com"],
+
+"Nextag, Inc.":[
+"wizecommerce.com"],
+
+"Nielsen":[
+"imrworldwide.com"],
+
+"Nosto Solutions Ltd":[
+"nosto.com"],
+
+"ONAPP LIMITED":[
+"worldssl.net"],
+
+"OPT":[
+"advg.jp"],
+
+"Ocom IP B.V.":[
+"leasewebcdn.com"],
+
+"Olark":[
+"olark.com"],
+
+"Omniga GmbH & Co. KG":[
+"twinplan.com"],
+
+"Online Solution Int Ltd":[
+"adsafety.net"],
+
+"Ooyala":[
+"ooyala.com"],
+
+"OpenX":[
+"servedbyopenx.com",
+"openx.net"],
+
+"OpenX Technologies, Inc":[
+"openxadexchange.com"],
+
+"Optimizely":[
+"optimizely.com"],
+
+"Oracle":[
+"atgsvcs.com",
+"estara.com"],
+
+"Outbrain":[
+"outbrain.com"],
+
+"OwnerIQ":[
+"owneriq.net"],
+
+"PIXALATE, INC.":[
+"adrta.com"],
+
+"PLYmedia Israel Ltd.":[
+"adstract.com"],
+
+"Pacnet Global":[
+"cdndelivery.net"],
+
+"PageFair Limited":[
+"pagefair.com",
+"pagefair.net"],
+
+"Pardot":[
+"pardot.com"],
+
+"Parse.ly":[
+"parsely.com"],
+
+"Peerius":[
+"peerius.com"],
+
+"Permodo International GmbH":[
+"permodo.net"],
+
+"Pingdom AB":[
+"pingdom.net"],
+
+"Pinterest":[
+"pinterest.com"],
+
+"Placed":[
+"placed.com"],
+
+"Po.st":[
+"po.st"],
+
+"Polar Mobile Group Inc.":[
+"polarmobile.com"],
+
+"PopAds":[
+"popads.net"],
+
+"PreviewNetworks":[
+"maxplatform.com"],
+
+"Prisma Information Filtering BV":[
+"crowdynews.com"],
+
+"Proclivity":[
+"pswec.com"],
+
+"Project Wonderful":[
+"projectwonderful.com"],
+
+"Psyma Group AG":[
+"psyma.com"],
+
+"PubMatic":[
+"pubmatic.com"],
+
+"Pusher Ltd":[
+"pusherapp.com",
+"pusher.com"],
+
+"QUALTRICS LLC":[
+"qualtrics.com"],
+
+"QUISMA":[
+"quisma.com"],
+
+"QuBit Digital Ltd":[
+"qubitproducts.com"],
+
+"Quality Unit LLC":[
+"ladesk.com"],
+
+"Quality Unit, s.r.o.":[
+"postaffiliatepro.com"],
+
+"Quantcast":[
+"quantcount.com"],
+
+"R&E Media GmbH":[
+"foxydeal.com"],
+
+"RST Holding BV":[
+"webshopapp.com"],
+
+"RUN":[
+"rundsp.com"],
+
+"Rackspace US, Inc.":[
+"rackcdn.com"],
+
+"RadiumOne":[
+"gwallet.com"],
+
+"Rambler":[
+"rambler.ru"],
+
+"Rapleaf":[
+"rlcdn.com"],
+
+"Rating-Widget, Inc.":[
+"rating-widget.com"],
+
+"Red Pineapple Media GmbH":[
+"redpineapplemedia.com"],
+
+"Reddit Inc":[
+"redditmedia.com"],
+
+"Refined Labs GmbH":[
+"refinedads.com"],
+
+"Registrant of adovida.com":[
+"adovida.com"],
+
+"Reklam Store":[
+"reklamstore.com"],
+
+"Reklamport":[
+"reklamport.com"],
+
+"Relevad":[
+"relestar.com"],
+
+"Research Now":[
+"researchnow.com"],
+
+"Revieworld Ltd":[
+"reevoo.com"],
+
+"RichRelevance":[
+"richrelevance.com"],
+
+"Rockabox Media Ltd":[
+"rockabox.co"],
+
+"Rocket Fuel":[
+"rfihub.com",
+"rfihub.net"],
+
+"Roxr":[
+"getclicky.com"],
+
+"RuTarget":[
+"rutarget.ru"],
+
+"SC-Networks GmbH":[
+"scnem.com"],
+
+"SCTR Services LLC":[
+"try9.com"],
+
+"SIEN":[
+"iminent.com"],
+
+"SMARTYADS LLP":[
+"smartyads.com"],
+
+"SOASTA, Inc.":[
+"mpstat.us"],
+
+"SUBLIME SKINZ LABS":[
+"ayads.co"],
+
+"Safecount":[
+"questionmarket.com"],
+
+"Sayyac.com":[
+"sayyac.net"],
+
+"Scarab Research Kft":[
+"scarabresearch.com"],
+
+"Semasio GmbH":[
+"semasio.net"],
+
+"SessionCam Ltd":[
+"sessioncam.com"],
+
+"ShareThis":[
+"sharethis.com"],
+
+"Shareaholic":[
+"shareaholic.com"],
+
+"ShinyStat":[
+"shinystat.com"],
+
+"Shopping International Holding Inc.":[
+"shopping.com",
+"shoppingshadow.com"],
+
+"Shopzilla, Inc.":[
+"connexity.net",
+"connexity-cdn.com"],
+
+"Shortest":[
+"shorte.st"],
+
+"Simpli.fi":[
+"simpli.fi"],
+
+"SimplyGen":[
+"widdit.com"],
+
+"Sirdata":[
+"sddan.com"],
+
+"SiteScout":[
+"sitescout.com"],
+
+"Siteimprove AS":[
+"siteimprove.com"],
+
+"Skimlinks":[
+"skimresources.com"],
+
+"Smart AdServer":[
+"smartadserver.com",
+"sascdn.com"],
+
+"Smarter Travel Media LLC":[
+"smartertravel.com"],
+
+"SnapEngage":[
+"snapengage.com"],
+
+"Soft-Ware International Ltd.":[
+"mysecuresurfer.com"],
+
+"Softonic International SA":[
+"softonic-analytics.net"],
+
+"Sojern Inc":[
+"sojern.com"],
+
+"SoundCloud Ltd.":[
+"sndcdn.com"],
+
+"Sovendus GmbH":[
+"sovendus.com"],
+
+"Specific Media":[
+"sitemeter.com",
+"specificclick.net"],
+
+"Specific Media LLC":[
+"adtricity.com"],
+
+"Spil Games Intangibles B.V.":[
+"configar.org"],
+
+"Spongecell":[
+"spongecell.com"],
+
+"SponsorAds":[
+"sponsorads.de"],
+
+"Sportradar AG":[
+"betradar.com"],
+
+"SpotXchange":[
+"spotxchange.com"],
+
+"Sputnyx LLC":[
+"r24-tech.com"],
+
+"Stack Exchange, Inc.":[
+"sstatic.net"],
+
+"Stailamedia AG":[
+"stailamedia.com"],
+
+"StatCounter":[
+"statcounter.com"],
+
+"SteelHouse":[
+"steelhousemedia.com"],
+
+"Streamray":[
+"cams.com"],
+
+"StumbleUpon":[
+"stumble-upon.com",
+"stumbleupon.com"],
+
+"Sub2 Technologies":[
+"sub2tech.com"],
+
+"Sumo Logic, Inc.":[
+"sumologic.com"],
+
+"Superfish":[
+"superfish.com"],
+
+"SupersonicAds":[
+"supersonicads.com"],
+
+"Surecom Corp. NV":[
+"cam4.com",
+"cam4ads.com"],
+
+"Switch":[
+"switchadhub.com"],
+
+"Switch Concepts Ltd":[
+"myswitchads.com"],
+
+"Symantec Corporation":[
+"symantec.com",
+"thawte.com",
+"norton.com"],
+
+"TLVMedia":[
+"tlvmedia.com"],
+
+"TRAFFIC F, s.r.o.":[
+"trafficfactory.biz"],
+
+"TRUSTe":[
+"truste.com"],
+
+"TV Squared Ltd":[
+"tvsquared.com"],
+
+"TWENGA SA":[
+"c4tw.net"],
+
+"Taboola":[
+"taboola.com"],
+
+"Tapad":[
+"tapad.com"],
+
+"Taptica":[
+"adsrvmedia.net"],
+
+"Targetix":[
+"targetix.net"],
+
+"Tatami Solutions Limited":[
+"ctxserv.com"],
+
+"Tealium Inc":[
+"tiqcdn.com"],
+
+"Technorati":[
+"technoratimedia.com"],
+
+"Telemetry Ltd":[
+"tekblue.net"],
+
+"Teradata":[
+"flx1.com",
+"flxone.com"],
+
+"The Interpublic Group of Companies, Inc.":[
+"mbww.com"],
+
+"The Trade Desk":[
+"adsrvr.org"],
+
+"The Weather Channel, LLC":[
+"wfxtriggers.com"],
+
+"ToneMedia":[
+"clickfuse.com"],
+
+"Toro Advertising":[
+"toroadvertisingmedia.com"],
+
+"TouchCommerce":[
+"inq.com"],
+
+"TradeTracker":[
+"tradetracker.net"],
+
+"Tradedoubler":[
+"tradedoubler.com"],
+
+"TrafficHaus":[
+"traffichaus.com"],
+
+"Travel audience GmbH":[
+"travelaudience.com"],
+
+"Treepodia Ltd.":[
+"treepodia.com"],
+
+"Tremor Video":[
+"scanscout.com"],
+
+"TrialPay, Inc.":[
+"trialpay.com"],
+
+"Triggit":[
+"triggit.com"],
+
+"TripAdvisor LLC":[
+"jscache.com"],
+
+"Trustpilot A/S":[
+"trustpilot.com"],
+
+"TubeMogul":[
+"tubemogul.com"],
+
+"Tumblr":[
+"tumblr.com"],
+
+"Turbobytes B.V.":[
+"turbobytes.com",
+"turbobytes.net",
+"trbbts14.net"],
+
+"Turn":[
+"turn.com"],
+
+"Turner Broadcasting System, Inc.":[
+"turner.com"],
+
+"Twitter":[
+"twimg.com",
+"twitter.com",
+"t.co"],
+
+"UDG München GmbH":[
+"nonstoppartner.net"],
+
+"USERZOOM TECHNOLOGIES SL":[
+"userzoom.com"],
+
+"UberTags":[
+"ubertags.com"],
+
+"Underdog Media":[
+"udmserve.net"],
+
+"Undertone":[
+"undertone.com"],
+
+"United Internet Media":[
+"ui-portal.de",
+"uimserv.net"],
+
+"Unruly":[
+"unrulymedia.com"],
+
+"UserVoice":[
+"uservoice.com"],
+
+"Userlike UG (haftungsbeschraenkt)":[
+"userlike.com"],
+
+"VIDCOIN":[
+"vidcoin.com"],
+
+"VINDICO":[
+"vindicosuite.com"],
+
+"VKontakte":[
+"vkontakte.ru",
+"vk.com",
+"userapi.com"],
+
+"ValueClick":[
+"dotomi.com",
+"fastclick.net",
+"mediaplex.com",
+"emjcd.com",
+"dtmpub.com"],
+
+"Verein sicherer und serioeser Internetshopbetreiber e. V.":[
+"internet-siegel.net"],
+
+"Verizon Trademark Services LLC":[
+"alphacdn.net"],
+
+"Verlagsgesellschaft Madsack GmbH & Co. KG":[
+"niedersachsen.com"],
+
+"Vertika Alkalmazas-szolgaltato Kft.":[
+"adverticum.net"],
+
+"Vibrant Media":[
+"intellitxt.com",
+"picadmedia.com"],
+
+"Videology":[
+"tidaltv.com"],
+
+"VigLink":[
+"viglink.com"],
+
+"Vimeo":[
+"vimeo.com",
+"vimeocdn.com"],
+
+"Vine Labs, Inc.":[
+"vine.co"],
+
+"VisualDNA":[
+"visualdna.com"],
+
+"Vizu":[
+"vizu.com"],
+
+"Vizury":[
+"vizury.com"],
+
+"Volkswagen of America":[
+"volkswagen.com"],
+
+"WHITE OPS, INC":[
+"acexedge.com"],
+
+"WPP":[
+"mookie1.com",
+"247realmedia.com",
+"gmads.net"],
+
+"Wargaming Public Company Limited":[
+"gcdn.co"],
+
+"WebShop Marketing Kft.":[
+"optimonk.com"],
+
+"Weborama":[
+"weborama.fr"],
+
+"Webtrekk":[
+"webtrekk.net",
+"webtrekk.com"],
+
+"Webtrekk GmbH":[
+"wbtrk.net",
+"wt-eu02.net",
+"wt-safetag.com"],
+
+"Webtrends":[
+"webtrends.com",
+"webtrendslive.com"],
+
+"Webtype LLC":[
+"webtype.com"],
+
+"Westdeutsche Lotterie GmbH & Co. OHG":[
+"westlotto.com"],
+
+"Wikia, Inc.":[
+"wikia.net"],
+
+"Wikimedia Foundation, Inc.":[
+"wikimedia.org"],
+
+"Wingify":[
+"visualwebsiteoptimizer.com"],
+
+"WiredMinds":[
+"wiredminds.de"],
+
+"Wirtualna Polska":[
+"wp.pl"],
+
+"Woopra":[
+"woopra.com"],
+
+"Yahoo!":[
+"yimg.com",
+"yieldmanager.com",
+"staticflickr.com",
+"flickr.com",
+"yahoo.com",
+"yahooapis.com",
+"bluelithium.com"],
+
+"Yandex":[
+"yandex.ru"],
+
+"YieldKit UG":[
+"yieldkit.com"],
+
+"Yieldlab":[
+"yieldlab.net"],
+
+"Youngtek Solutions Ltd.":[
+"tnaflix.com"],
+
+"YuMe":[
+"yume.com",
+"yumenetworks.com"],
+
+"ZAM Network, LLC":[
+"zam.com"],
+
+"ZEDO":[
+"zedo.com"],
+
+"ZEUS ENTERPRISE LTD":[
+"yieldify.com"],
+
+"Zemanta":[
+"zemanta.com"],
+
+"Zopim":[
+"zopim.com"],
+
+"[x+1]":[
+"ru4.com"],
+
+"ad6media":[
+"ad6media.fr"],
+
+"adality GmbH":[
+"adrtx.net"],
+
+"adc media gmbh":[
+"adc-serv.net"],
+
+"adhood":[
+"adhood.com"],
+
+"adnologies":[
+"heias.com"],
+
+"adrolays":[
+"adrolays.de"],
+
+"adscale":[
+"adscale.de"],
+
+"adwebster AG":[
+"adwssc.com"],
+
+"bet365 Group Limited":[
+"bet365affiliates.com"],
+
+"c/o whoisproxy.com Ltd.":[
+"motherlessmedia.com",
+"xfreeservice.com"],
+
+"cXense":[
+"cxense.com"],
+
+"clipkit GmbH":[
+"clipkit.com"],
+
+"comScore":[
+"adxpose.com",
+"scorecardresearch.com",
+"sitestat.com",
+"voicefive.com",
+"securestudies.com"],
+
+"deviantART":[
+"dapxl.com"],
+
+"eBay":[
+"ebay.com",
+"ebay-us.com",
+"ebayimg.com",
+"ebayrtm.com",
+"ebaystatic.com",
+"ebayc3.com"],
+
+"eTarget":[
+"etargetnet.com"],
+
+"eXTReMe digital":[
+"extreme-dm.com"],
+
+"eXelate":[
+"exelator.com"],
+
+"engage:BDR":[
+"bnmla.com"],
+
+"etracker":[
+"etracker.com",
+"etracker.de"],
+
+"exorbyte GmbH":[
+"exorbyte.com"],
+
+"eyeReturn Marketing":[
+"eyereturn.com"],
+
+"eyeota Limited":[
+"eyeota.net"],
+
+"feratel media technologies AG":[
+"deskline.net",
+"feratel.com"],
+
+"hagai shechter":[
+"lporirxe.com"],
+
+"lead alliance GmbH":[
+"lead-alliance.net"],
+
+"m6d":[
+"media6degrees.com"],
+
+"malin":[
+"worlderror.org"],
+
+"mashero":[
+"mashero.com"],
+
+"media.net":[
+"media.net"],
+
+"mediaFORGE":[
+"mediaforge.com"],
+
+"mov.ad GmbH":[
+"movad.net"],
+
+"myThings":[
+"mythings.com"],
+
+"neXeps GmbH":[
+"nexeps.com"],
+
+"netzeffekt GmbH":[
+"netrk.net"],
+
+"newtention":[
+"newtention.net"],
+
+"nugg.ad":[
+"nuggad.net"],
+
+"nurago":[
+"sensic.net"],
+
+"plista":[
+"plista.com"],
+
+"reddit":[
+"reddit.com"],
+
+"seekda GmbH":[
+"seekda.com"],
+
+"sociomantic labs":[
+"sociomantic.com"],
+
+"sophus3":[
+"sophus3.com"],
+
+"target performance GmbH":[
+"ad-srv.net"],
+
+"target value GmbH":[
+"de-cdn.com"],
+
+"twyn group":[
+"twyn.com"],
+
+"uCoz":[
+"ucoz.net"],
+
+"up-value":[
+"up-value.de"],
+
+"veeseo GmbH":[
+"veeseo.com"],
+
+"wetter.com AG":[
+"wetter.com",
+"wettercomassets.com"],
+
+"whos.amung.us":[
+"amung.us"],
+
+"wywy GmbH":[
+"wywyuserservice.com"],
+
+"xplosion interactive":[
+"xplosion.de"],
+
+"zanox":[
+"zanox-affiliate.de",
+"zanox.com"],
+
+"ÖWA":[
+"oewabox.at"]};
+}, 573, null, "jsengine/build/modules/antitracking/tracker_owners.json");
+__d(/* jsengine/build/modules/antitracking/anti-tracking-report-list.json */function(global, require, module, exports) {module.exports = {};
+}, 574, null, "jsengine/build/modules/antitracking/anti-tracking-report-list.json");
+__d(/* jsengine/build/modules/antitracking/cookie_whitelist.json */function(global, require, module, exports) {module.exports = [
+""];
+}, 575, null, "jsengine/build/modules/antitracking/cookie_whitelist.json");
+__d(/* jsengine/build/modules/antitracking/anti-tracking-block-rules.json */function(global, require, module, exports) {module.exports = [];
+}, 576, null, "jsengine/build/modules/antitracking/anti-tracking-block-rules.json");
+__d(/* jsengine/build/modules/adblocker/mobile/checksums.json */function(global, require, module, exports) {module.exports = {"allowed_lists":{"rules.txt":{"checksum":"aaa"}}};
+}, 577, null, "jsengine/build/modules/adblocker/mobile/checksums.json");
+__d(/* jsengine/build/modules/core/config.js */function(global, require, module, exports) {
+
+"use strict";
+
+Object.defineProperty(exports,"__esModule",{
+value:true});
+
+exports["default"]=Object.freeze({"platform":"react-native","format":"common","settings":{"antitrackingButton":false,"telemetryProvider":"platform/telemetry","frameScriptWhitelist":["http://localhost:3000/"]},"default_prefs":{"attrackBloomFilter":true,"attrackForceBlock":true,"cliqz-adb-disk-cache":false},"modules":["core","antitracking","adblocker"],"environment":"development","sourceMaps":true,"EXTENSION_VERSION":"1.14.0"});
+module.exports=exports["default"];
+}, 578, null, "jsengine/build/modules/core/config.js");
 __d(/* jsengine/build/modules/platform/app.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -74797,7 +76984,7 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreConfig=require(573 /* ../core/config */);
+var _coreConfig=require(578 /* ../core/config */);
 
 var _coreConfig2=_interopRequireDefault(_coreConfig);
 
@@ -74811,17 +76998,21 @@ var _corePrefs=require(560 /* ../core/prefs */);
 
 var _corePrefs2=_interopRequireDefault(_corePrefs);
 
-var _browser=require(574 /* ./browser */);
+var _browser=require(580 /* ./browser */);
 
-var _coreBackground=require(575 /* ../core/background */);
+var _coreUtils=require(561 /* ../core/utils */);
+
+var _coreUtils2=_interopRequireDefault(_coreUtils);
+
+var _coreBackground=require(581 /* ../core/background */);
 
 var _coreBackground2=_interopRequireDefault(_coreBackground);
 
-var _antitrackingBackground=require(587 /* ../antitracking/background */);
+var _antitrackingBackground=require(592 /* ../antitracking/background */);
 
 var _antitrackingBackground2=_interopRequireDefault(_antitrackingBackground);
 
-var _adblockerBackground=require(631 /* ../adblocker/background */);
+var _adblockerBackground=require(645 /* ../adblocker/background */);
 
 var _adblockerBackground2=_interopRequireDefault(_adblockerBackground);
 
@@ -74844,6 +77035,7 @@ this.availableModules=_coreConfig2['default'].modules.reduce(function(hash,modul
 hash[moduleName]=new Module(moduleName);
 return hash;
 },Object.create(null));
+_coreUtils2['default'].app=this;
 }
 
 _createClass(_default,[{
@@ -75136,17 +77328,7 @@ return Module;
 }();
 
 module.exports=exports['default'];
-}, 572, null, "jsengine/build/modules/platform/app.js");
-__d(/* jsengine/build/modules/core/config.js */function(global, require, module, exports) {
-
-"use strict";
-
-Object.defineProperty(exports,"__esModule",{
-value:true});
-
-exports["default"]=Object.freeze({"platform":"react-native","settings":{"antitrackingButton":false,"telemetryProvider":"platform/telemetry","frameScriptWhitelist":["http://localhost:3000/"]},"modules":["core","antitracking","adblocker"],"environment":"development","sourceMaps":true,"EXTENSION_VERSION":"1.13.0"});
-module.exports=exports["default"];
-}, 573, null, "jsengine/build/modules/core/config.js");
+}, 579, null, "jsengine/build/modules/platform/app.js");
 __d(/* jsengine/build/modules/platform/browser.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75157,6 +77339,8 @@ exports.contextFromEvent=contextFromEvent;
 exports.isWindowActive=isWindowActive;
 exports.checkIsWindowActive=checkIsWindowActive;
 exports.forEachWindow=forEachWindow;
+exports.mapWindows=mapWindows;
+exports.getLang=getLang;
 
 var _reactNative=require(42 /* react-native */);
 
@@ -75181,7 +77365,15 @@ return nativeWebRequest.isWindowActive(parseInt(windowID));
 function forEachWindow(fn){
 return;
 }
-}, 574, null, "jsengine/build/modules/platform/browser.js");
+
+function mapWindows(fn){
+return[];
+}
+
+function getLang(){
+return'';
+}
+}, 580, null, "jsengine/build/modules/platform/browser.js");
 __d(/* jsengine/build/modules/core/background.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -75190,7 +77382,9 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
 
-var _cliqz=require(576 /* ./cliqz */);
+var _events=require(557 /* ./events */);
+
+var _events2=_interopRequireDefault(_events);
 
 var _utils=require(561 /* ./utils */);
 
@@ -75200,19 +77394,19 @@ var _console=require(558 /* ./console */);
 
 var _console2=_interopRequireDefault(_console);
 
-var _language=require(578 /* ./language */);
+var _language=require(582 /* ./language */);
 
 var _language2=_interopRequireDefault(_language);
 
-var _config=require(573 /* ./config */);
+var _config=require(578 /* ./config */);
 
 var _config2=_interopRequireDefault(_config);
 
-var _platformProcessScriptManager=require(580 /* ../platform/process-script-manager */);
+var _platformProcessScriptManager=require(584 /* ../platform/process-script-manager */);
 
 var _platformProcessScriptManager2=_interopRequireDefault(_platformProcessScriptManager);
 
-var _historyManager=require(581 /* ./history-manager */);
+var _historyManager=require(585 /* ./history-manager */);
 
 var _historyManager2=_interopRequireDefault(_historyManager);
 
@@ -75220,19 +77414,23 @@ var _prefs=require(560 /* ./prefs */);
 
 var _prefs2=_interopRequireDefault(_prefs);
 
-var _baseBackground=require(582 /* ./base/background */);
+var _baseBackground=require(587 /* ./base/background */);
 
 var _baseBackground2=_interopRequireDefault(_baseBackground);
 
-var _platformBrowser=require(574 /* ../platform/browser */);
+var _platformBrowser=require(580 /* ../platform/browser */);
 
-var _platformLoadLogoDb=require(583 /* ../platform/load-logo-db */);
+var _platformLoadLogoDb=require(588 /* ../platform/load-logo-db */);
 
 var _platformLoadLogoDb2=_interopRequireDefault(_platformLoadLogoDb);
 
-var _platform=require(584 /* ./platform */);
+var _platform=require(589 /* ./platform */);
 
-var _resourceManager=require(586 /* ./resource-manager */);
+var _storage=require(563 /* ./storage */);
+
+var _storage2=_interopRequireDefault(_storage);
+
+var _resourceManager=require(591 /* ./resource-manager */);
 
 var _resourceManager2=_interopRequireDefault(_resourceManager);
 
@@ -75242,6 +77440,10 @@ var callbacks={};
 exports["default"]=(0,_baseBackground2["default"])({
 
 init:function init(settings){
+this.settings=settings;
+_utils2["default"].init({
+lang:(0,_platformBrowser.getLang)()});
+
 if(!_platform.isMobile){
 this.checkSession();
 _language2["default"].init();
@@ -75258,6 +77460,11 @@ this.mm.init();
 
 this.report=_utils2["default"].setTimeout(this.reportStartupTime.bind(this),1000*60);
 
+_resourceManager2["default"].init();
+
+if(_utils2["default"].app){
+this.report=_utils2["default"].setTimeout(this.reportStartupTime.bind(this),1000*60);
+}
 _resourceManager2["default"].init();
 },
 
@@ -75280,9 +77487,18 @@ modules:status.modules});
 },
 
 checkSession:function checkSession(){
+var _this=this;
+
 if(!_prefs2["default"].has('session')){
 var session=[_utils2["default"].rand(18),_utils2["default"].rand(6,'0123456789'),'|',_utils2["default"].getDay(),'|',_config2["default"].settings.channel||'NONE'].join('');
-_utils2["default"].setSupportInfo();
+
+_utils2["default"].setTimeout(function(){
+_this.setSupportInfo();
+if(_config2["default"].settings.channel==40){
+_this.browserDetection();
+}
+},30000);
+
 _prefs2["default"].set('session',session);
 _prefs2["default"].set('install_date',session.split('|')[1]);
 _prefs2["default"].set('new_session',true);
@@ -75302,28 +77518,31 @@ this.handleRequest(msg);
 },
 
 handleRequest:function handleRequest(msg){
-var _this=this;
+var _this2=this;
 
 var payload=msg.data.payload;
+
 if(!payload){
 return;
 }
 var action=payload.action;
-var module=payload.module;
+var moduleName=payload.module;
 var args=payload.args;
 var requestId=payload.requestId;
 var windowId=msg.data.windowId;
-_utils2["default"].importModule(module+"/background").then(function(module){
-var background=module["default"];
+
+_utils2["default"].importModule(moduleName+"/background").then(function(_ref){
+var background=_ref["default"];
+
 return background.actions[action].apply(null,args);
 }).then(function(response){
-_this.mm.broadcast("window-"+windowId,{
+_this2.mm.broadcast("window-"+windowId,{
 response:response,
 action:action,
-module:module,
+module:moduleName,
 requestId:requestId});
 
-})["catch"](_console2["default"].error.bind(null,"Process Script",modules+"/"+action));
+})["catch"](_console2["default"].error.bind(null,"Process Script",moduleName+"/"+action));
 },
 
 handleResponse:function handleResponse(msg){
@@ -75337,18 +77556,55 @@ return module&&module.status?module.status():null;
 });
 },
 
-events:{
-'core:tab_select':function onTabSelect(_ref){
-var url=_ref.url;
-var isPrivate=_ref.isPrivate;
+setSupportInfo:function setSupportInfo(status){
+var version=this.settings.version;
+var host=_prefs2["default"].get('distribution.id','','');
+var hostVersion=_prefs2["default"].get('distribution.version','','');
+var info=JSON.stringify({
+version:version,
+host:host,
+hostVersion:hostVersion,
+country:CliqzUtils.getPref('config_location',''),
+status:status||'active'});
 
-_cliqz.events.pub('core.location_change',url,isPrivate);
+
+['http://cliqz.com','https://cliqz.com'].forEach(function(url){
+var ls=new _storage2["default"](url);
+ls.setItem('extension-info',info);
+});
 },
-'content:location-change':function onLocationChange(_ref2){
+
+browserDetection:function browserDetection(){
+var pref='detection',
+sites=["https://www.ghostery.com","https://ghostery.com"];
+
+
+if(CliqzUtils.getPref(pref,false)!==true){
+CliqzUtils.setPref(pref,true);
+
+sites.forEach(function(url){
+var ls=new _storage2["default"](url);
+if(ls)ls.setItem("cliqz",true);
+});
+}
+},
+
+events:{
+'core:tab_select':function onTabSelect(_ref2){
 var url=_ref2.url;
 var isPrivate=_ref2.isPrivate;
 
-_cliqz.events.pub('core.location_change',url,isPrivate);
+_events2["default"].pub('core.location_change',url,isPrivate);
+},
+'content:location-change':function onLocationChange(_ref3){
+var url=_ref3.url;
+var isPrivate=_ref3.isPrivate;
+
+_events2["default"].pub('core.location_change',url,isPrivate);
+_utils2["default"].telemetry({
+'type':'navigation',
+'action':'location_change'});
+
 }},
 
 
@@ -75358,35 +77614,36 @@ for(var _len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){
 args[_key]=arguments[_key];
 }
 
-_cliqz.events.pub.apply(_cliqz.events,['content:location-change'].concat(args));
+_events2["default"].pub.apply(_events2["default"],['content:location-change'].concat(args));
 },
 notifyStateChange:function notifyStateChange(){
 for(var _len2=arguments.length,args=Array(_len2),_key2=0;_key2<_len2;_key2++){
 args[_key2]=arguments[_key2];
 }
 
-
-_cliqz.events.pub('content:state-change',{
-url:args[0].url});
+var ev=args[0];
 
 
-_cliqz.events.pub.apply(_cliqz.events,['core.tab_state_change'].concat(args));
+_events2["default"].pub('content:state-change',{
+url:ev.urlSpec,
+triggeringUrl:ev.triggeringUrl});
+
+
+
+_events2["default"].pub.apply(_events2["default"],['core.tab_state_change'].concat(args));
 },
 recordMouseDown:function recordMouseDown(){
 for(var _len3=arguments.length,args=Array(_len3),_key3=0;_key3<_len3;_key3++){
 args[_key3]=arguments[_key3];
 }
 
-_cliqz.events.pub.apply(_cliqz.events,['core:mouse-down'].concat(args));
+_events2["default"].pub.apply(_events2["default"],['core:mouse-down'].concat(args));
 },
 restart:function restart(){
-return _utils2["default"].extensionRestart();
+return _utils2["default"].app.extensionRestart();
 },
 status:function status(){
-if(!_utils2["default"].Extension){
-return{};
-}
-var availableModules=_utils2["default"].Extension.app.availableModules;
+var availableModules=_utils2["default"].app.availableModules;
 var modules=_config2["default"].modules.reduce(function(hash,moduleName){
 var module=availableModules[moduleName];
 var windowWrappers=(0,_platformBrowser.mapWindows)(function(window){
@@ -75421,7 +77678,7 @@ args:[JSON.stringify(message)]});
 
 },
 getWindowStatus:function getWindowStatus(win){
-return _cliqz.Promise.all(this.getWindowStatusFromModules(win)).then(function(allStatus){
+return Promise.all(this.getWindowStatusFromModules(win)).then(function(allStatus){
 var result={};
 
 allStatus.forEach(function(status,moduleIdx){
@@ -75433,7 +77690,7 @@ return result;
 },
 sendTelemetry:function sendTelemetry(msg){
 _utils2["default"].telemetry(msg);
-return _cliqz.Promise.resolve();
+return Promise.resolve();
 },
 queryCliqz:function queryCliqz(query){
 var urlBar=_utils2["default"].getWindow().document.getElementById("urlbar");
@@ -75449,17 +77706,18 @@ popup.hidePopup();
 },
 
 setUrlbar:function setUrlbar(value){
-return this.actions.queryCliqz(value);
+var urlBar=_utils2["default"].getWindow().document.getElementById("urlbar");
+urlBar.mInputField.value=value;
 },
 recordLang:function recordLang(url,lang){
-_cliqz.events.pub('content:dom-ready',url);
+_events2["default"].pub('content:dom-ready',url);
 if(lang){
 _language2["default"].addLocale(url,lang);
 }
-return _cliqz.Promise.resolve();
+return Promise.resolve();
 },
 recordMeta:function recordMeta(url,meta){
-_cliqz.events.pub("core:url-meta",url,meta);
+_events2["default"].pub("core:url-meta",url,meta);
 },
 openFeedbackPage:function openFeedbackPage(){
 var window=_utils2["default"].getWindow();
@@ -75467,10 +77725,10 @@ var tab=_utils2["default"].openLink(window,_utils2["default"].FEEDBACK_URL,true)
 window.gBrowser.selectedTab=tab;
 },
 enableModule:function enableModule(moduleName){
-return _utils2["default"].Extension.app.enableModule(moduleName);
+return _utils2["default"].app.enableModule(moduleName);
 },
 disableModule:function disableModule(moduleName){
-_utils2["default"].Extension.app.disableModule(moduleName);
+_utils2["default"].app.disableModule(moduleName);
 },
 resizeWindow:function resizeWindow(width,height){
 _utils2["default"].getWindow().resizeTo(width,height);
@@ -75486,7 +77744,7 @@ args:[selector,attribute],
 requestId:requestId});
 
 
-return new _cliqz.Promise(function(resolve,reject){
+return new Promise(function(resolve,reject){
 callbacks[requestId]=function(attributeValues){
 delete callbacks[requestId];
 resolve(attributeValues);
@@ -75516,7 +77774,7 @@ callbacks[requestId]=function(doc){
 documents.push(doc);
 };
 
-return new _cliqz.Promise(function(resolve){
+return new Promise(function(resolve){
 _utils2["default"].setTimeout(function(){
 delete callbacks[requestId];
 resolve(documents);
@@ -75535,7 +77793,7 @@ args:[],
 requestId:requestId});
 
 
-return new _cliqz.Promise(function(resolve,reject){
+return new Promise(function(resolve,reject){
 callbacks[requestId]=function(attributeValues){
 delete callbacks[requestId];
 resolve(attributeValues);
@@ -75550,38 +77808,7 @@ reject();
 
 
 module.exports=exports["default"];
-}, 575, null, "jsengine/build/modules/core/background.js");
-__d(/* jsengine/build/modules/core/cliqz.js */function(global, require, module, exports) {"use strict";
-
-Object.defineProperty(exports,"__esModule",{
-value:true});
-
-
-function _interopRequire(obj){return obj&&obj.__esModule?obj["default"]:obj;}
-
-function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
-
-var _utils=require(561 /* ./utils */);
-
-var _utils2=_interopRequireDefault(_utils);
-
-var _events=require(557 /* ./events */);
-
-var _events2=_interopRequireDefault(_events);
-
-var _platformHistoryManager=require(577 /* ../platform/history-manager */);
-
-exports.historyManager=_interopRequire(_platformHistoryManager);
-var utils=_utils2["default"];
-exports.utils=utils;
-var events=_events2["default"];
-
-exports.events=events;
-var Promise=_utils2["default"].Promise;
-exports.Promise=Promise;
-}, 576, null, "jsengine/build/modules/core/cliqz.js");
-__d(/* jsengine/build/modules/platform/history-manager.js */function(global, require, module, exports) {"use strict";
-}, 577, null, "jsengine/build/modules/platform/history-manager.js");
+}, 581, null, "jsengine/build/modules/core/background.js");
 __d(/* jsengine/build/modules/core/language.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75590,13 +77817,13 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _platformLanguage=require(579 /* ../platform/language */);
+var _platformLanguage=require(583 /* ../platform/language */);
 
 var _platformLanguage2=_interopRequireDefault(_platformLanguage);
 
 exports['default']=_platformLanguage2['default'];
 module.exports=exports['default'];
-}, 578, null, "jsengine/build/modules/core/language.js");
+}, 582, null, "jsengine/build/modules/core/language.js");
 __d(/* jsengine/build/modules/platform/language.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75608,7 +77835,7 @@ return['de','en'];
 }};
 
 module.exports=exports['default'];
-}, 579, null, "jsengine/build/modules/platform/language.js");
+}, 583, null, "jsengine/build/modules/platform/language.js");
 __d(/* jsengine/build/modules/platform/process-script-manager.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -75646,7 +77873,7 @@ return _default;
 
 exports["default"]=_default;
 module.exports=exports["default"];
-}, 580, null, "jsengine/build/modules/platform/process-script-manager.js");
+}, 584, null, "jsengine/build/modules/platform/process-script-manager.js");
 __d(/* jsengine/build/modules/core/history-manager.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75655,13 +77882,15 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _platformHistoryManager=require(577 /* ../platform/history-manager */);
+var _platformHistoryManager=require(586 /* ../platform/history-manager */);
 
 var _platformHistoryManager2=_interopRequireDefault(_platformHistoryManager);
 
 exports['default']=_platformHistoryManager2['default'];
 module.exports=exports['default'];
-}, 581, null, "jsengine/build/modules/core/history-manager.js");
+}, 585, null, "jsengine/build/modules/core/history-manager.js");
+__d(/* jsengine/build/modules/platform/history-manager.js */function(global, require, module, exports) {"use strict";
+}, 586, null, "jsengine/build/modules/platform/history-manager.js");
 __d(/* jsengine/build/modules/core/base/background.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75715,7 +77944,7 @@ return background;
 };
 
 module.exports=exports['default'];
-}, 582, null, "jsengine/build/modules/core/base/background.js");
+}, 587, null, "jsengine/build/modules/core/base/background.js");
 __d(/* jsengine/build/modules/platform/load-logo-db.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -75727,7 +77956,7 @@ return Promise.resolve();
 };
 
 module.exports=exports["default"];
-}, 583, null, "jsengine/build/modules/platform/load-logo-db.js");
+}, 588, null, "jsengine/build/modules/platform/load-logo-db.js");
 __d(/* jsengine/build/modules/core/platform.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75737,7 +77966,7 @@ exports.notImplemented=notImplemented;
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _platformPlatform=require(585 /* ../platform/platform */);
+var _platformPlatform=require(590 /* ../platform/platform */);
 
 var _platformPlatform2=_interopRequireDefault(_platformPlatform);
 
@@ -75749,9 +77978,11 @@ var isFirefox=_platformPlatform2['default'].isFirefox;
 exports.isFirefox=isFirefox;
 var isMobile=_platformPlatform2['default'].isMobile;
 exports.isMobile=isMobile;
+var isChromium=_platformPlatform2['default'].isChromium;
+exports.isChromium=isChromium;
 var platformName=_platformPlatform2['default'].platformName;
 exports.platformName=platformName;
-}, 584, null, "jsengine/build/modules/core/platform.js");
+}, 589, null, "jsengine/build/modules/core/platform.js");
 __d(/* jsengine/build/modules/platform/platform.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -75764,7 +77995,7 @@ isChromium:false,
 platformName:"mobile"};
 
 module.exports=exports["default"];
-}, 585, null, "jsengine/build/modules/platform/platform.js");
+}, 590, null, "jsengine/build/modules/platform/platform.js");
 __d(/* jsengine/build/modules/core/resource-manager.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -75829,7 +78060,7 @@ var manager=new ResourceManager();
 
 exports["default"]=manager;
 module.exports=exports["default"];
-}, 586, null, "jsengine/build/modules/core/resource-manager.js");
+}, 591, null, "jsengine/build/modules/core/resource-manager.js");
 __d(/* jsengine/build/modules/antitracking/background.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -75838,38 +78069,47 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreBaseBackground=require(582 /* ../core/base/background */);
+var _coreBaseBackground=require(587 /* ../core/base/background */);
 
 var _coreBaseBackground2=_interopRequireDefault(_coreBaseBackground);
 
-var _popupButton=require(588 /* ./popup-button */);
+var _popupButton=require(593 /* ./popup-button */);
 
 var _popupButton2=_interopRequireDefault(_popupButton);
 
-var _attrack=require(589 /* ./attrack */);
+var _attrack=require(595 /* ./attrack */);
 
 var _attrack2=_interopRequireDefault(_attrack);
 
-var _privacyScore=require(630 /* ./privacy-score */);
+var _privacyScore=require(643 /* ./privacy-score */);
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _trackerTxt=require(608 /* ./tracker-txt */);
+var _trackerTxt=require(617 /* ./tracker-txt */);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _telemetry=require(612 /* ./telemetry */);
+var _telemetry=require(621 /* ./telemetry */);
 
 var _telemetry2=_interopRequireDefault(_telemetry);
 
+var _config=require(644 /* ./config */);
+
+var _config2=_interopRequireDefault(_config);
+
+var _coreKordInject=require(596 /* ../core/kord/inject */);
+
+var _coreKordInject2=_interopRequireDefault(_coreKordInject);
 
 
 
 
 
 exports['default']=(0,_coreBaseBackground2['default'])({
+controlCenter:_coreKordInject2['default'].module('control-center'),
+
 
 
 
@@ -75894,10 +78134,15 @@ _coreCliqz.utils.bindObjectFunctions(this.popupActions,this);
 
 _telemetry2['default'].loadFromProvider(settings.telemetryProvider||'human-web/human-web');
 
-return _attrack2['default'].init().then(function(){
+
+this.config=new _config2['default']({});
+
+return this.config.init().then(function(){
+return _attrack2['default'].init(_this.config).then(function(){
 if(_this.popup){
 _this.popup.updateState(_coreCliqz.utils.getWindow(),true);
 }
+});
 });
 },
 
@@ -75917,6 +78162,22 @@ _attrack2['default'].unload();
 
 this.enabled=false;
 },
+
+actions:{
+addPipelineStep:function addPipelineStep(opts){
+if(_attrack2['default'].pipeline){
+_attrack2['default'].pipeline.addPipelineStep(opts);
+}
+},
+removePipelineStep:function removePipelineStep(name){
+if(_attrack2['default'].pipeline){
+_attrack2['default'].pipeline.removePipelineStep(name);
+}
+},
+telemetry:function telemetry(opts){
+return _attrack2['default'].telemetry(opts);
+}},
+
 
 popupActions:{
 
@@ -75946,7 +78207,7 @@ ps:ps});
 if(this.popup){
 this.popup.setBadge(_coreCliqz.utils.getWindow(),info.cookies.blocked+info.requests.unsafe);
 }else{
-_coreCliqz.utils.callWindowAction(_coreCliqz.utils.getWindow(),'control-center','setBadge',[info.cookies.blocked+info.requests.unsafe]);
+this.controlCenter.windowAction(_coreCliqz.utils.getWindow(),'setBadge',info.cookies.blocked+info.requests.unsafe);
 }
 },
 
@@ -76098,11 +78359,18 @@ _coreCliqz.utils.setPref('attrackForceBlock',!_coreCliqz.utils.getPref('attrackF
 if(_attrack2['default'].pipelineSteps.cookieContext){
 _attrack2['default'].pipelineSteps.cookieContext.setContextFromEvent.apply(_attrack2['default'].pipelineSteps.cookieContext,arguments);
 }
+},
+"control-center:antitracking-clearcache":function controlCenterAntitrackingClearcache(){
+_attrack2['default'].clearCache();
+this.popupActions.telemetry({
+action:'click',
+target:'clearcache'});
+
 }}});
 
 
 module.exports=exports['default'];
-}, 587, null, "jsengine/build/modules/antitracking/background.js");
+}, 592, null, "jsengine/build/modules/antitracking/background.js");
 __d(/* jsengine/build/modules/antitracking/popup-button.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -76111,7 +78379,7 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
 var _coreEvents=require(557 /* ../core/events */);
 
@@ -76243,7 +78511,7 @@ if(!button.classList.contains('badged-button')){
 button.classList.add('badged-button');
 }
 
-CliqzUtils.setTimeout(function(){
+_coreCliqz.utils.setTimeout(function(){
 var badge=button.ownerDocument.getAnonymousElementByAttribute(button,'class','toolbarbutton-badge');
 
 
@@ -76289,7 +78557,35 @@ handler(functionArgs,callback);
 _coreEvents2["default"].sub(channelName+"-popup",popupMessageHandler);
 };
 module.exports=exports["default"];
-}, 588, null, "jsengine/build/modules/antitracking/popup-button.js");
+}, 593, null, "jsengine/build/modules/antitracking/popup-button.js");
+__d(/* jsengine/build/modules/core/cliqz.js */function(global, require, module, exports) {"use strict";
+
+Object.defineProperty(exports,"__esModule",{
+value:true});
+
+
+function _interopRequire(obj){return obj&&obj.__esModule?obj["default"]:obj;}
+
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
+
+var _utils=require(561 /* ./utils */);
+
+var _utils2=_interopRequireDefault(_utils);
+
+var _events=require(557 /* ./events */);
+
+var _events2=_interopRequireDefault(_events);
+
+var _platformHistoryManager=require(586 /* ../platform/history-manager */);
+
+exports.historyManager=_interopRequire(_platformHistoryManager);
+
+var CliqzPromise=_utils2["default"].Promise;
+
+exports.utils=_utils2["default"];
+exports.events=_events2["default"];
+exports.Promise=CliqzPromise;
+}, 594, null, "jsengine/build/modules/core/cliqz.js");
 __d(/* jsengine/build/modules/antitracking/attrack.js */function(global, require, module, exports) {
 
 
@@ -76303,65 +78599,69 @@ function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{v
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _pacemaker=require(590 /* ./pacemaker */);
+var _coreKordInject=require(596 /* ../core/kord/inject */);
+
+var _coreKordInject2=_interopRequireDefault(_coreKordInject);
+
+var _pacemaker=require(598 /* ./pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _persistentState=require(591 /* ./persistent-state */);
+var _persistentState=require(599 /* ./persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _tempSet=require(593 /* ./temp-set */);
+var _tempSet=require(601 /* ./temp-set */);
 
 var _tempSet2=_interopRequireDefault(_tempSet);
 
-var _tp_events=require(594 /* ./tp_events */);
+var _tp_events=require(602 /* ./tp_events */);
 
 var _tp_events2=_interopRequireDefault(_tp_events);
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _url=require(600 /* ./url */);
+var _url=require(609 /* ./url */);
 
-var _domain=require(598 /* ./domain */);
+var _domain=require(607 /* ./domain */);
 
-var _hash=require(601 /* ./hash */);
+var _hash=require(610 /* ./hash */);
 
-var _trackerTxt2=require(608 /* ./tracker-txt */);
+var _trackerTxt2=require(617 /* ./tracker-txt */);
 
-var _bloomFilter=require(610 /* ./bloom-filter */);
+var _bloomFilter=require(619 /* ./bloom-filter */);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _qsWhitelists=require(614 /* ./qs-whitelists */);
+var _qsWhitelists=require(623 /* ./qs-whitelists */);
 
 var _qsWhitelists2=_interopRequireDefault(_qsWhitelists);
 
-var _blockLog=require(615 /* ./block-log */);
+var _blockLog=require(624 /* ./block-log */);
 
 var _blockLog2=_interopRequireDefault(_blockLog);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
-var _utils=require(616 /* ./utils */);
+var _utils=require(625 /* ./utils */);
 
-var _platformBrowser=require(574 /* ../platform/browser */);
+var _platformBrowser=require(580 /* ../platform/browser */);
 
 var browser=_interopRequireWildcard(_platformBrowser);
 
-var _coreWebrequest=require(617 /* ../core/webrequest */);
+var _coreWebrequest=require(628 /* ../core/webrequest */);
 
 var _coreWebrequest2=_interopRequireDefault(_coreWebrequest);
 
-var _telemetry2=require(612 /* ./telemetry */);
+var _telemetry2=require(621 /* ./telemetry */);
 
 var _telemetry3=_interopRequireDefault(_telemetry2);
 
@@ -76369,82 +78669,85 @@ var _coreConsole=require(558 /* ../core/console */);
 
 var _coreConsole2=_interopRequireDefault(_coreConsole);
 
-var _coreDomainInfo=require(620 /* ../core/domain-info */);
+var _coreDomainInfo=require(631 /* ../core/domain-info */);
 
 var _coreDomainInfo2=_interopRequireDefault(_coreDomainInfo);
 
 var _coreHttp=require(566 /* ../core/http */);
 
-var _stepsContext=require(621 /* ./steps/context */);
+var _pipeline=require(632 /* ./pipeline */);
 
-var _stepsPageLogger=require(623 /* ./steps/page-logger */);
+var _pipeline2=_interopRequireDefault(_pipeline);
+
+var _stepsContext=require(633 /* ./steps/context */);
+
+var _stepsPageLogger=require(635 /* ./steps/page-logger */);
 
 var _stepsPageLogger2=_interopRequireDefault(_stepsPageLogger);
 
-var _stepsTokenExaminer=require(624 /* ./steps/token-examiner */);
+var _stepsTokenExaminer=require(636 /* ./steps/token-examiner */);
 
 var _stepsTokenExaminer2=_interopRequireDefault(_stepsTokenExaminer);
 
-var _stepsTokenTelemetry=require(625 /* ./steps/token-telemetry */);
+var _stepsTokenTelemetry=require(637 /* ./steps/token-telemetry */);
 
 var _stepsTokenTelemetry2=_interopRequireDefault(_stepsTokenTelemetry);
 
-var _stepsDomChecker=require(626 /* ./steps/dom-checker */);
+var _stepsDomChecker=require(638 /* ./steps/dom-checker */);
 
 var _stepsDomChecker2=_interopRequireDefault(_stepsDomChecker);
 
-var _stepsTokenChecker=require(627 /* ./steps/token-checker */);
+var _stepsTokenChecker=require(639 /* ./steps/token-checker */);
 
 var _stepsTokenChecker2=_interopRequireDefault(_stepsTokenChecker);
 
-var _stepsBlockRules=require(628 /* ./steps/block-rules */);
+var _stepsBlockRules=require(640 /* ./steps/block-rules */);
 
 var _stepsBlockRules2=_interopRequireDefault(_stepsBlockRules);
 
-var _stepsCookieContext=require(629 /* ./steps/cookie-context */);
+var _stepsCookieContext=require(641 /* ./steps/cookie-context */);
 
 var _stepsCookieContext2=_interopRequireDefault(_stepsCookieContext);
 
 
-var CliqzUtils=_coreCliqz.utils;
+
+var _stepsRedirectTagger=require(642 /* ./steps/redirect-tagger */);
+
+var _stepsRedirectTagger2=_interopRequireDefault(_stepsRedirectTagger);
+
+var countReload=false;
 
 function queryHTML(){
+var core=_coreKordInject2['default'].module('core');
+
 for(var _len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){
 args[_key]=arguments[_key];
 }
 
-return _coreCliqz.utils.callAction('core','queryHTML',args);
+return core.action.apply(core,['queryHTML'].concat(args));
 }
 
 function getCookie(){
+var core=_coreKordInject2['default'].module('core');
+
 for(var _len2=arguments.length,args=Array(_len2),_key2=0;_key2<_len2;_key2++){
 args[_key2]=arguments[_key2];
 }
 
-return _coreCliqz.utils.callAction('core','getCookie',args);
+return core.action.apply(core,['getCookie'].concat(args));
 }
 
 var CliqzAttrack={
 VERSION:'0.97',
 MIN_BROWSER_VERSION:35,
 LOG_KEY:'attrack',
-VERSIONCHECK_URL:'https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json',
-URL_ALERT_RULES:'chrome://cliqz/content/anti-tracking-rules.json',
-URL_BLOCK_RULES:'https://cdn.cliqz.com/anti-tracking/whitelist/anti-tracking-block-rules.json',
 ENABLE_PREF:'modules.antitracking.enabled',
 debug:false,
 msgType:'attrack',
 whitelist:null,
 similarAddon:false,
-tokenDomainCountThreshold:2,
-safeKeyExpire:7,
-localBlockExpire:24,
-shortTokenLength:8,
-safekeyValuesThreshold:4,
-placeHolder:'',
 tp_events:null,
 recentlyModified:new _tempSet2['default'](),
-cliqzHeader:'CLIQZ-AntiTracking',
 obfuscate:function obfuscate(s,method){
 
 
@@ -76456,9 +78759,9 @@ return(0,_url.shuffle)(s);
 case'same':
 return s;
 case'placeholder':
-return CliqzAttrack.placeHolder;
+return CliqzAttrack.config.placeHolder;
 default:
-return CliqzAttrack.placeHolder;}
+return CliqzAttrack.config.placeHolder;}
 
 },
 visitCache:{},
@@ -76485,38 +78788,19 @@ p[name]=true;
 }
 CliqzAttrack.privateValues=p;
 },
-executePipeline:function executePipeline(pipeline,initialState,logKey){
-var state=initialState;
-var response={};
-var i=0;
-for(;i<pipeline.length;i++){
-try{
-var cont=pipeline[i](state,response);
-if(!cont){
-break;
-}
-}catch(e){
-_coreConsole2['default'].error(logKey,state.url,'Step exception',e);
-break;
-}
-}
-if(CliqzAttrack.debug){
-_coreConsole2['default'].log(logKey,state.url,'Break at',(pipeline[i]||{name:"end"}).name);
-}
+httpopenObserver:function httpopenObserver(requestDetails){
+var response=CliqzAttrack.pipeline.execute('open',requestDetails);
 
 if(Object.keys(response).length>0){
-response.source=logKey;
+response.source='ATTRACK';
 }
 return response;
 },
-httpopenObserver:function httpopenObserver(requestDetails){
-return CliqzAttrack.executePipeline(CliqzAttrack.onOpenPipeline,requestDetails,'ATTRACK.OPEN');
-},
 httpResponseObserver:function httpResponseObserver(requestDetails){
-return CliqzAttrack.executePipeline(CliqzAttrack.responsePipeline,requestDetails,'ATTRACK.RESP');
+return CliqzAttrack.pipeline.execute('response',requestDetails);
 },
 httpmodObserver:function httpmodObserver(requestDetails){
-return CliqzAttrack.executePipeline(CliqzAttrack.onModifyPipeline,requestDetails,'ATTRACK.MOD');
+return CliqzAttrack.pipeline.execute('modify',requestDetails);
 },
 getDefaultRule:function getDefaultRule(){
 if(CliqzAttrack.isForceBlockEnabled()){
@@ -76526,32 +78810,31 @@ return(0,_trackerTxt2.getDefaultTrackerTxtRule)();
 }
 },
 isEnabled:function isEnabled(){
-return CliqzUtils.getPref(CliqzAttrack.ENABLE_PREF,false);
+return _coreCliqz.utils.getPref(CliqzAttrack.ENABLE_PREF,false);
 },
 isCookieEnabled:function isCookieEnabled(source_hostname){
 if(source_hostname!=undefined&&CliqzAttrack.isSourceWhitelisted(source_hostname)){
 return false;
 }
-return CliqzUtils.getPref('attrackBlockCookieTracking',true);
+return _coreCliqz.utils.getPref('attrackBlockCookieTracking',true);
 },
 isQSEnabled:function isQSEnabled(){
-return CliqzUtils.getPref('attrackRemoveQueryStringTracking',true);
+return _coreCliqz.utils.getPref('attrackRemoveQueryStringTracking',true);
 },
 isFingerprintingEnabled:function isFingerprintingEnabled(){
-return CliqzUtils.getPref('attrackCanvasFingerprintTracking',false);
+return _coreCliqz.utils.getPref('attrackCanvasFingerprintTracking',false);
 },
 isReferrerEnabled:function isReferrerEnabled(){
-return CliqzUtils.getPref('attrackRefererTracking',false);
+return _coreCliqz.utils.getPref('attrackRefererTracking',false);
 },
 isTrackerTxtEnabled:function isTrackerTxtEnabled(){
-return CliqzUtils.getPref('trackerTxt',false);
+return _coreCliqz.utils.getPref('trackerTxt',false);
 },
 isBloomFilterEnabled:function isBloomFilterEnabled(){
-return CliqzUtils.getPref('attrackBloomFilter',true);
+return _coreCliqz.utils.getPref('attrackBloomFilter',true);
 },
 isForceBlockEnabled:function isForceBlockEnabled(){
-return true;
-
+return _coreCliqz.utils.getPref('attrackForceBlock',false);
 },
 initPacemaker:function initPacemaker(){
 var two_mins=2*60*1000;
@@ -76567,7 +78850,7 @@ return timestamp!=lastHour;
 };
 }
 
-_pacemaker2['default'].register(CliqzAttrack.updateConfig,3*60*60*1000);
+
 
 
 _pacemaker2['default'].register(CliqzAttrack.hourChanged,two_mins,timeChangeConstraint("hourChanged","hour"));
@@ -76600,14 +78883,15 @@ _telemetry3['default'].telemetry(message);
 },
 
 
-init:function init(){
+init:function init(config){
+this.config=config;
 
 if(CliqzAttrack.getBrowserMajorVersion()<CliqzAttrack.MIN_BROWSER_VERSION){
 return;
 }
 
 
-if(CliqzAttrack.debug)CliqzUtils.log("Init function called:",CliqzAttrack.LOG_KEY);
+if(CliqzAttrack.debug)_coreCliqz.utils.log("Init function called:",CliqzAttrack.LOG_KEY);
 
 if(!CliqzAttrack.hashProb){
 CliqzAttrack.hashProb=new _hash.HashProb();
@@ -76653,18 +78937,10 @@ _coreWebrequest2['default'].onBeforeSendHeaders.addListener(CliqzAttrack.httpmod
 _coreWebrequest2['default'].onHeadersReceived.addListener(CliqzAttrack.httpResponseObserver,undefined,['responseHeaders']);
 
 try{
-CliqzAttrack.disabled_sites=new Set(JSON.parse(CliqzUtils.getPref(CliqzAttrack.DISABLED_SITES_PREF,"[]")));
+CliqzAttrack.disabled_sites=new Set(JSON.parse(_coreCliqz.utils.getPref(CliqzAttrack.DISABLED_SITES_PREF,"[]")));
 }catch(e){
 CliqzAttrack.disabled_sites=new Set();
 }
-
-
-
-CliqzAttrack.safekeyValuesThreshold=parseInt(persist.getValue('safekeyValuesThreshold'))||4;
-CliqzAttrack.shortTokenLength=parseInt(persist.getValue('shortTokenLength'))||8;
-
-CliqzAttrack.placeHolder=persist.getValue('placeHolder',CliqzAttrack.placeHolder);
-CliqzAttrack.cliqzHeader=persist.getValue('cliqzHeader',CliqzAttrack.cliqzHeader);
 
 CliqzAttrack.tp_events=new _tp_events2['default'](function(payloadData){
 
@@ -76697,16 +78973,20 @@ return Promise.all(initPromises);
 },
 initPipeline:function initPipeline(){
 CliqzAttrack.unloadPipeline();
+var pipeline=CliqzAttrack.pipeline;
 
 
 var steps={
 pageLogger:new _stepsPageLogger2['default'](CliqzAttrack.tp_events,CliqzAttrack.blockLog),
-tokenExaminer:new _stepsTokenExaminer2['default'](CliqzAttrack.qs_whitelist,CliqzAttrack.shortTokenLength,CliqzAttrack.safekeyValuesThreshold,CliqzAttrack.safeKeyExpire),
+tokenExaminer:new _stepsTokenExaminer2['default'](CliqzAttrack.qs_whitelist,this.config),
 tokenTelemetry:new _stepsTokenTelemetry2['default'](CliqzAttrack.telemetry),
 domChecker:new _stepsDomChecker2['default'](),
-tokenChecker:new _stepsTokenChecker2['default'](CliqzAttrack.qs_whitelist,CliqzAttrack.blockLog,CliqzAttrack.tokenDomainCountThreshold,CliqzAttrack.shortTokenLength,{},CliqzAttrack.hashProb),
+tokenChecker:new _stepsTokenChecker2['default'](CliqzAttrack.qs_whitelist,CliqzAttrack.blockLog,{},CliqzAttrack.hashProb,CliqzAttrack.config),
 blockRules:new _stepsBlockRules2['default'](),
-cookieContext:new _stepsCookieContext2['default']()};
+cookieContext:new _stepsCookieContext2['default'](),
+
+redirectTagger:new _stepsRedirectTagger2['default']()};
+
 
 CliqzAttrack.pipelineSteps=steps;
 
@@ -76719,7 +78999,9 @@ step.init();
 });
 
 
-CliqzAttrack.onOpenPipeline=[CliqzAttrack.qs_whitelist.isReady.bind(CliqzAttrack.qs_whitelist),_stepsContext.determineContext,steps.pageLogger.checkIsMainDocument.bind(steps.pageLogger),_stepsContext.skipInternalProtocols,_stepsContext.checkSameGeneralDomain,CliqzAttrack.cancelRecentlyModified.bind(CliqzAttrack),steps.tokenExaminer.examineTokens.bind(steps.tokenExaminer),steps.tokenTelemetry.extractKeyTokens.bind(steps.tokenTelemetry),steps.pageLogger.attachStatCounter.bind(steps.pageLogger),steps.pageLogger.logRequestMetadata.bind(steps.pageLogger),steps.domChecker.checkDomLinks.bind(steps.domChecker),steps.domChecker.parseCookies.bind(steps.domChecker),steps.tokenChecker.findBadTokens.bind(steps.tokenChecker),function checkHasBadTokens(state){
+pipeline.addAll(['open'],[CliqzAttrack.qs_whitelist.isReady.bind(CliqzAttrack.qs_whitelist),_stepsContext.determineContext,steps.pageLogger.logMainDocument.bind(steps.pageLogger),_stepsContext.skipInternalProtocols,_stepsContext.checkSameGeneralDomain,CliqzAttrack.cancelRecentlyModified.bind(CliqzAttrack),steps.tokenExaminer.examineTokens.bind(steps.tokenExaminer),steps.tokenTelemetry.extractKeyTokens.bind(steps.tokenTelemetry),steps.pageLogger.attachStatCounter.bind(steps.pageLogger),steps.pageLogger.logRequestMetadata.bind(steps.pageLogger),steps.domChecker.checkDomLinks.bind(steps.domChecker),steps.domChecker.parseCookies.bind(steps.domChecker),steps.tokenChecker.findBadTokens.bind(steps.tokenChecker),
+
+function checkHasBadTokens(state){
 return state.badTokens.length>0;
 },steps.blockRules.applyBlockRules.bind(steps.blockRules),CliqzAttrack.isQSEnabled.bind(CliqzAttrack),function checkSourceWhitelisted(state){
 if(CliqzAttrack.isSourceWhitelisted(state.sourceUrlParts.hostname)){
@@ -76729,13 +79011,13 @@ return false;
 return true;
 },function checkShouldBlock(state){
 return state.badTokens.length>0&&CliqzAttrack.qs_whitelist.isUpToDate();
-},CliqzAttrack.applyBlock.bind(CliqzAttrack)];
+},CliqzAttrack.applyBlock.bind(CliqzAttrack)]);
 
 
-CliqzAttrack.onModifyPipeline=[_stepsContext.determineContext,function checkIsMainDocument(state){
+pipeline.addAll(['modify'],[_stepsContext.determineContext,function checkIsMainDocument(state){
 return!state.requestContext.isFullPage();
 },_stepsContext.skipInternalProtocols,_stepsContext.checkSameGeneralDomain,steps.pageLogger.attachStatCounter.bind(steps.pageLogger),function catchMissedOpenListener(state,response){
-if(state.reqLog&&state.reqLog.c===0){
+if(state.reqLog&&state.reqLog.c===0||steps.redirectTagger.isFromRedirect(state.url)){
 (function(){
 
 var openResponse=CliqzAttrack.httpopenObserver(state)||{};
@@ -76774,12 +79056,12 @@ state.incrementStat('cookie_blocked');
 state.incrementStat('cookie_block_tp1');
 response.requestHeaders=response.requestHeaders||[];
 response.requestHeaders.push({name:'Cookie',value:''});
-response.requestHeaders.push({name:CliqzAttrack.cliqzHeader,value:' '});
+response.requestHeaders.push({name:CliqzAttrack.config.cliqzHeader,value:' '});
 return true;
-}];
+}]);
 
 
-CliqzAttrack.responsePipeline=[CliqzAttrack.qs_whitelist.isReady.bind(CliqzAttrack.qs_whitelist),_stepsContext.determineContext,function checkMainDocumentRedirects(state){
+pipeline.addAll(['response'],[CliqzAttrack.qs_whitelist.isReady.bind(CliqzAttrack.qs_whitelist),_stepsContext.determineContext,function checkMainDocumentRedirects(state){
 if(state.requestContext.isFullPage()){
 if([300,301,302,303,307].indexOf(state.requestContext.channel.responseStatus)>=0){
 
@@ -76798,7 +79080,7 @@ return false;
 return true;
 },_stepsContext.skipInternalProtocols,function skipBadSource(state){
 return state.sourceUrl!==''&&state.sourceUrl.indexOf('about:')===-1;
-},_stepsContext.checkSameGeneralDomain,steps.pageLogger.attachStatCounter.bind(steps.pageLogger),function logResponseStats(state){
+},_stepsContext.checkSameGeneralDomain,steps.redirectTagger.checkRedirectStatus.bind(steps.redirectTagger),steps.pageLogger.attachStatCounter.bind(steps.pageLogger),function logResponseStats(state){
 if(state.incrementStat){
 state.incrementStat('resp_ob');
 state.incrementStat('content_length',parseInt(state.requestContext.getResponseHeader('Content-Length'))||0);
@@ -76820,7 +79102,7 @@ return CliqzAttrack.isCookieEnabled(state.sourceUrlParts.hostname);
 response.responseHeaders=[{name:'Set-Cookie',value:''}];
 state.incrementStat('set_cookie_blocked');
 return true;
-}];
+}]);
 },
 unloadPipeline:function unloadPipeline(){
 Object.keys(CliqzAttrack.pipelineSteps||{}).forEach(function(key){
@@ -76829,7 +79111,7 @@ if(step.unload){
 step.unload();
 }
 });
-CliqzAttrack.pipelineSteps={};
+CliqzAttrack.pipeline=new _pipeline2['default']();
 },
 
 
@@ -76868,7 +79150,9 @@ _coreCliqz.events.clean_channel("attrack:safekeys_updated");
 checkInstalledAddons:function checkInstalledAddons(){
 if(typeof System!=='undefined'){
 System['import']('platform/antitracking/addon-check').then(function(addons){
-CliqzAttrack.similarAddon=addons.checkInstalledAddons();
+addons.checkInstalledAddons().then(function(adds){
+CliqzAttrack.similarAddon=adds;
+});
 })['catch'](function(e){
 _coreCliqz.utils.log("Error loading addon checker","attrack");
 });
@@ -76883,50 +79167,6 @@ return(0,_utils.generatePayload)(data,ts,false,extraAttrs);
 hourChanged:function hourChanged(){
 
 _coreCliqz.events.pub("attrack:hour_changed");
-},
-updateConfig:function updateConfig(){
-var today=datetime.getTime().substring(0,10);
-return(0,_coreHttp.fetch)(CliqzAttrack.VERSIONCHECK_URL+"?"+today,{
-credentials:'omit',
-cache:'default'}).
-then(function(resp){
-if(!resp.ok){
-throw"Request not ok: "+resp.status;
-}
-return resp.json();
-}).then(function(versioncheck){
-var requiresReload=parseInt(versioncheck.shortTokenLength)!==CliqzAttrack.shortTokenLength||parseInt(versioncheck.safekeyValuesThreshold)!==CliqzAttrack.safekeyValuesThreshold;
-
-
-if(versioncheck.placeHolder){
-persist.setValue('placeHolder',versioncheck.placeHolder);
-CliqzAttrack.placeHolder=versioncheck.placeHolder;
-}
-
-if(versioncheck.shortTokenLength){
-persist.setValue('shortTokenLength',versioncheck.shortTokenLength);
-CliqzAttrack.shortTokenLength=parseInt(versioncheck.shortTokenLength)||CliqzAttrack.shortTokenLength;
-}
-
-if(versioncheck.safekeyValuesThreshold){
-persist.setValue('safekeyValuesThreshold',versioncheck.safekeyValuesThreshold);
-CliqzAttrack.safekeyValuesThreshold=parseInt(versioncheck.safekeyValuesThreshold)||CliqzAttrack.safekeyValuesThreshold;
-}
-
-if(versioncheck.cliqzHeader){
-persist.setValue('cliqzHeader',versioncheck.cliqzHeader);
-CliqzAttrack.cliqzHeader=versioncheck.cliqzHeader;
-}
-
-
-if(requiresReload){
-CliqzAttrack.initPipeline();
-}
-
-_coreCliqz.events.pub("attrack:updated_config",versioncheck);
-})['catch'](function(err){
-_coreConsole2['default'].error('versioncheck fetch error',err);
-});
 },
 isInWhitelist:function isInWhitelist(domain){
 if(!CliqzAttrack.whitelist)return false;
@@ -76987,15 +79227,15 @@ return false;
 state.incrementStat('token_blocked_'+rule);
 
 
-if(CliqzAttrack.pipelineSteps.trackerProxy&&CliqzAttrack.pipelineSteps.trackerProxy.shouldProxy(tmp_url)){
-state.incrementStat('proxy');
-}
+
+
+
 CliqzAttrack.recentlyModified.add(state.requestContext.getOriginWindowID()+state.url,30000);
 CliqzAttrack.recentlyModified.add(state.requestContext.getOriginWindowID()+tmp_url,30000);
 
 response.redirectUrl=tmp_url;
 response.requestHeaders=response.requestHeaders||[];
-response.requestHeaders.push({name:CliqzAttrack.cliqzHeader,value:' '});
+response.requestHeaders.push({name:CliqzAttrack.config.cliqzHeader,value:' '});
 return true;
 }
 },
@@ -77088,7 +79328,7 @@ return result;
 getCurrentTabBlockingInfo:function getCurrentTabBlockingInfo(_gBrowser){
 var tabId,urlForTab;
 try{
-var gBrowser=_gBrowser||CliqzUtils.getWindow().gBrowser,
+var gBrowser=_gBrowser||_coreCliqz.utils.getWindow().gBrowser,
 selectedBrowser=gBrowser.selectedBrowser;
 
 tabId=selectedBrowser.outerWindowID||selectedBrowser._loadContext.DOMWindowID;
@@ -77120,21 +79360,21 @@ enableModule:function enableModule(module_only){
 if(CliqzAttrack.isEnabled()){
 return;
 }
-CliqzUtils.setPref(CliqzAttrack.ENABLE_PREF,true);
+_coreCliqz.utils.setPref(CliqzAttrack.ENABLE_PREF,true);
 if(!module_only){
-CliqzUtils.setPref('attrackBlockCookieTracking',true);
-CliqzUtils.setPref('attrackRemoveQueryStringTracking',true);
+_coreCliqz.utils.setPref('attrackBlockCookieTracking',true);
+_coreCliqz.utils.setPref('attrackRemoveQueryStringTracking',true);
 }
 },
 
 
 disableModule:function disableModule(){
-CliqzUtils.setPref(CliqzAttrack.ENABLE_PREF,false);
+_coreCliqz.utils.setPref(CliqzAttrack.ENABLE_PREF,false);
 },
 disabled_sites:new Set(),
 DISABLED_SITES_PREF:"attrackSourceDomainWhitelist",
 saveSourceDomainWhitelist:function saveSourceDomainWhitelist(){
-CliqzUtils.setPref(CliqzAttrack.DISABLED_SITES_PREF,JSON.stringify(Array.from(CliqzAttrack.disabled_sites)));
+_coreCliqz.utils.setPref(CliqzAttrack.DISABLED_SITES_PREF,JSON.stringify(Array.from(CliqzAttrack.disabled_sites)));
 },
 isSourceWhitelisted:function isSourceWhitelisted(hostname){
 return CliqzAttrack.disabled_sites.has(hostname);
@@ -77158,12 +79398,169 @@ CliqzAttrack.saveSourceDomainWhitelist();
 },
 onUrlbarFocus:function onUrlbarFocus(){
 countReload=true;
+},
+clearCache:function clearCache(){
+if(CliqzAttrack.pipelineSteps.tokenExaminer){
+CliqzAttrack.pipelineSteps.tokenExaminer.clearCache();
+}
+if(CliqzAttrack.pipelineSteps.tokenChecker){
+CliqzAttrack.pipelineSteps.tokenChecker.blockLog.clear();
+}
 }};
 
 
 exports['default']=CliqzAttrack;
 module.exports=exports['default'];
-}, 589, null, "jsengine/build/modules/antitracking/attrack.js");
+}, 595, null, "jsengine/build/modules/antitracking/attrack.js");
+__d(/* jsengine/build/modules/core/kord/inject.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value'in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+var _get=function get(_x,_x2,_x3){var _again=true;_function:while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value'in desc){return desc.value;}else{var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};
+
+exports.setGlobal=setGlobal;
+
+function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
+
+function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
+
+var _browser=require(597 /* ../browser */);
+
+var app=undefined;
+
+var ModuleMissingError=function(_Error){
+_inherits(ModuleMissingError,_Error);
+
+function ModuleMissingError(moduleName){
+_classCallCheck(this,ModuleMissingError);
+
+_get(Object.getPrototypeOf(ModuleMissingError.prototype),'constructor',this).call(this);
+this.name='ModuleMissingError';
+this.message='module \''+moduleName+'\' is missing';
+}
+
+return ModuleMissingError;
+}(Error);
+
+exports.ModuleMissingError=ModuleMissingError;
+
+var ModuleDisabledError=function(_Error2){
+_inherits(ModuleDisabledError,_Error2);
+
+function ModuleDisabledError(moduleName){
+_classCallCheck(this,ModuleDisabledError);
+
+_get(Object.getPrototypeOf(ModuleDisabledError.prototype),'constructor',this).call(this);
+this.name='ModuleDisabledError';
+this.message='module \''+moduleName+'\' is disabled';
+}
+
+return ModuleDisabledError;
+}(Error);
+
+exports.ModuleDisabledError=ModuleDisabledError;
+
+var ModuleWrapper=function(){
+function ModuleWrapper(moduleName){
+_classCallCheck(this,ModuleWrapper);
+
+this.moduleName=moduleName;
+}
+
+_createClass(ModuleWrapper,[{
+key:'isWindowReady',
+value:function isWindowReady(window){
+var _this=this;
+
+var win=new _browser.Window(window);
+return this.isReady().then(function(){
+var module=app.availableModules[_this.moduleName];
+return module.windows[win.id].loadingPromise;
+});
+}},
+{
+key:'isReady',
+value:function isReady(){
+var module=app.availableModules[this.moduleName];
+
+if(!module){
+return Promise.reject(new ModuleMissingError(this.moduleName));
+}
+
+if(!module.isEnabled&&!module.isLoading){
+return Promise.reject(new ModuleDisabledError(this.moduleName));
+}
+
+return module.isReady();
+}},
+{
+key:'action',
+value:function action(actionName){
+var _this2=this;
+
+for(var _len=arguments.length,args=Array(_len>1?_len-1:0),_key=1;_key<_len;_key++){
+args[_key-1]=arguments[_key];
+}
+
+return this.isReady().then(function(){
+var _module$background$actions;
+
+var module=app.availableModules[_this2.moduleName];
+return(_module$background$actions=module.background.actions)[actionName].apply(_module$background$actions,args);
+});
+}},
+{
+key:'windowAction',
+value:function windowAction(window,actionName){
+for(var _len2=arguments.length,args=Array(_len2>2?_len2-2:0),_key2=2;_key2<_len2;_key2++){
+args[_key2-2]=arguments[_key2];
+}
+
+var _this3=this;
+
+return this.isWindowReady(window).then(function(){
+var module=window.CLIQZ.Core.windowModules[_this3.moduleName];
+var action=module.actions[actionName];
+return Promise.resolve(action.apply(undefined,args));
+});
+}}]);
+
+
+return ModuleWrapper;
+}();
+
+exports['default']={
+
+
+
+
+module:function module(moduleName){
+return new ModuleWrapper(moduleName);
+}};
+
+
+function setGlobal(cliqzApp){
+app=cliqzApp;
+}
+}, 596, null, "jsengine/build/modules/core/kord/inject.js");
+__d(/* jsengine/build/modules/core/browser.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+
+function _interopExportWildcard(obj,defaults){var newObj=defaults({},obj);delete newObj['default'];return newObj;}
+
+function _defaults(obj,defaults){var keys=Object.getOwnPropertyNames(defaults);for(var i=0;i<keys.length;i++){var key=keys[i];var value=Object.getOwnPropertyDescriptor(defaults,key);if(value&&value.configurable&&obj[key]===undefined){Object.defineProperty(obj,key,value);}}return obj;}
+
+var _platformBrowser=require(580 /* ../platform/browser */);
+
+_defaults(exports,_interopExportWildcard(_platformBrowser,_defaults));
+}, 597, null, "jsengine/build/modules/core/browser.js");
 __d(/* jsengine/build/modules/antitracking/pacemaker.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -77172,9 +79569,13 @@ value:true});
 
 var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
 
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
+
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreUtils=require(561 /* ../core/utils */);
+
+var _coreUtils2=_interopRequireDefault(_coreUtils);
 
 var default_tpace=10*1000;
 
@@ -77196,12 +79597,12 @@ value:function start(){
 if(this._id){
 this.stop();
 }
-this._id=_coreCliqz.utils.setInterval(this._tick.bind(this),this.tpace,null);
+this._id=_coreUtils2["default"].setInterval(this._tick.bind(this),this.tpace,null);
 }},
 {
 key:"stop",
 value:function stop(){
-_coreCliqz.utils.clearTimeout(this._id);
+_coreUtils2["default"].clearTimeout(this._id);
 this._id=null;
 this._tasks=new Set();
 }},
@@ -77211,24 +79612,24 @@ value:function _tick(){
 var now=new Date().getTime();
 
 if(this.twait>now){
-_coreCliqz.utils.log("tick wait","pacemaker");
+_coreUtils2["default"].log("tick wait","pacemaker");
 return;
 }
 
 
 this._tasks.forEach(function(task){
 if(now>task.last+task.freq){
-_coreCliqz.utils.setTimeout(function(){
+_coreUtils2["default"].setTimeout(function(){
 var task_name=task.fn.name||"<anon>";
 try{
 
 if(!task.when||task.when(task)){
-_coreCliqz.utils.log("run task: "+task_name,"pacemaker");
+_coreUtils2["default"].log("run task: "+task_name,"pacemaker");
 task.fn(now);
 }
 task.last=now;
 }catch(e){
-_coreCliqz.utils.log("Error executing task "+task_name+": "+e,"pacemaker");
+_coreUtils2["default"].log("Error executing task "+task_name+": "+e,"pacemaker");
 }
 },0);
 }
@@ -77268,7 +79669,7 @@ return Pacemaker;
 var pm=new Pacemaker(30000,30000);
 exports["default"]=pm;
 module.exports=exports["default"];
-}, 590, null, "jsengine/build/modules/antitracking/pacemaker.js");
+}, 598, null, "jsengine/build/modules/antitracking/pacemaker.js");
 __d(/* jsengine/build/modules/antitracking/persistent-state.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -77290,13 +79691,15 @@ function _inherits(subClass,superClass){if(typeof superClass!=="function"&&super
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreUtils=require(561 /* ../core/utils */);
 
-var _pacemaker=require(590 /* ./pacemaker */);
+var _coreUtils2=_interopRequireDefault(_coreUtils);
+
+var _pacemaker=require(598 /* ./pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _platformAntitrackingStorage=require(592 /* ../platform/antitracking/storage */);
+var _platformAntitrackingStorage=require(600 /* ../platform/antitracking/storage */);
 
 var _platformAntitrackingStorage2=_interopRequireDefault(_platformAntitrackingStorage);
 
@@ -77403,14 +79806,14 @@ delete value[k];
 ;
 
 function getValue(key,default_value){
-var val=_coreCliqz.utils.getPref("attrack."+key,default_value);
+var val=_coreUtils2["default"].getPref("attrack."+key,default_value);
 return val;
 }
 
 ;
 
 function setValue(key,value){
-_coreCliqz.utils.setPref("attrack."+key,value);
+_coreUtils2["default"].setPref("attrack."+key,value);
 }
 
 ;
@@ -77563,7 +79966,7 @@ return AutoPersistentObject;
 
 exports.AutoPersistentObject=AutoPersistentObject;
 ;
-}, 591, null, "jsengine/build/modules/antitracking/persistent-state.js");
+}, 599, null, "jsengine/build/modules/antitracking/persistent-state.js");
 __d(/* jsengine/build/modules/platform/antitracking/storage.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -77578,7 +79981,7 @@ var _storage2=_interopRequireDefault(_storage);
 
 exports['default']=_storage2['default'];
 module.exports=exports['default'];
-}, 592, null, "jsengine/build/modules/platform/antitracking/storage.js");
+}, 600, null, "jsengine/build/modules/platform/antitracking/storage.js");
 __d(/* jsengine/build/modules/antitracking/temp-set.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -77587,9 +79990,13 @@ value:true});
 
 var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value'in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
 
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreUtils=require(561 /* ../core/utils */);
+
+var _coreUtils2=_interopRequireDefault(_coreUtils);
 
 
 
@@ -77616,7 +80023,7 @@ return this.contains(item);
 key:'add',
 value:function add(item,ttl){
 this._items.add(item);
-var timeout=_coreCliqz.utils.setTimeout(function(){
+var timeout=_coreUtils2['default'].setTimeout(function(){
 this['delete'](item);
 this._timeouts['delete'](timeout);
 }.bind(this),ttl||0);
@@ -77638,7 +80045,7 @@ try{
 for(var _iterator=this._timeouts[typeof Symbol==='function'?Symbol.iterator:'@@iterator'](),_step;!(_iteratorNormalCompletion=(_step=_iterator.next()).done);_iteratorNormalCompletion=true){
 var t=_step.value;
 
-_coreCliqz.utils.clearTimeout(t);
+_coreUtils2['default'].clearTimeout(t);
 }
 }catch(err){
 _didIteratorError=true;
@@ -77666,7 +80073,7 @@ return _default;
 exports['default']=_default;
 ;
 module.exports=exports['default'];
-}, 593, null, "jsengine/build/modules/antitracking/temp-set.js");
+}, 601, null, "jsengine/build/modules/antitracking/temp-set.js");
 __d(/* jsengine/build/modules/antitracking/tp_events.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -77679,36 +80086,35 @@ function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{v
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
+function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}
+
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _background=require(587 /* ./background */);
+var _background=require(592 /* ./background */);
 
 var _background2=_interopRequireDefault(_background);
 
-var _attrack=require(589 /* ./attrack */);
+var _attrack=require(595 /* ./attrack */);
 
 var _attrack2=_interopRequireDefault(_attrack);
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _domain=require(598 /* ./domain */);
+var _domain=require(607 /* ./domain */);
 
-var _platformBrowser=require(574 /* ../platform/browser */);
+var _platformBrowser=require(580 /* ../platform/browser */);
 
 var browser=_interopRequireWildcard(_platformBrowser);
 
 
-function PageLoadData(url,isPrivate){
 
-
-this._shortHash=function(s){
-if(!s)return'';
-return(0,_md52['default'])(s).substring(0,16);
-};
+var PageLoadData=function(){
+function PageLoadData(url,isPrivate,reloaded){
+_classCallCheck(this,PageLoadData);
 
 this.url=url.toString();
 this.hostname=url.hostname;
@@ -77720,12 +80126,27 @@ this.s=new Date().getTime();
 this.e=null;
 this.tps={};
 this.redirects=[];
+this.ra=reloaded;
 
+this.triggeringTree={};
 this._plainObject=null;
+this._tpStatCounter=_newStatCounter;
+}
 
 
 
-this.getTpUrl=function(tp_host,tp_path){
+_createClass(PageLoadData,[{
+key:'_shortHash',
+value:function _shortHash(s){
+if(!s)return'';
+return(0,_md52['default'])(s).substring(0,16);
+}},
+
+
+
+{
+key:'getTpUrl',
+value:function getTpUrl(tp_host,tp_path){
 
 this._plainObject=null;
 var path_key=tp_path;
@@ -77736,13 +80157,15 @@ if(!(path_key in this.tps[tp_host])){
 this.tps[tp_host][path_key]=this._tpStatCounter();
 }
 return this.tps[tp_host][path_key];
-};
+}},
 
 
 
 
 
-this.isReferredFrom=function(ref_parts){
+{
+key:'isReferredFrom',
+value:function isReferredFrom(ref_parts){
 if(!ref_parts)return false;
 if((0,_domain.sameGeneralDomain)(ref_parts.hostname,this.hostname)){
 return true;
@@ -77752,17 +80175,37 @@ if(ref_parts.hostname in this.tps){
 return true;
 }
 return false;
-};
-
-this._tpStatCounter=_newStatCounter;
+}},
 
 
 
-this.asPlainObject=function(){
+{
+key:'asPlainObject',
+value:function asPlainObject(){
 return this._plainObject||this._buildPlainObject();
-};
+}},
+{
+key:'addTrigger',
+value:function addTrigger(host,triggeredBy){
+if(triggeredBy.indexOf('://')>0){
+var triggerDomain=triggeredBy.split('://')[1];
 
-this._buildPlainObject=function(){
+if(triggerDomain===this.hostname){
+triggerDomain="first party";
+}
+
+if((0,_domain.sameGeneralDomain)(triggerDomain,host)){
+return;
+}
+if(!this.triggeringTree[triggerDomain]){
+this.triggeringTree[triggerDomain]=new Set();
+}
+this.triggeringTree[triggerDomain].add(host);
+}
+}},
+{
+key:'_buildPlainObject',
+value:function _buildPlainObject(){
 var _this=this;
 
 var self=this,
@@ -77776,7 +80219,8 @@ ra:this.ra||0,
 tps:{},
 redirects:this.redirects.filter(function(hostname){
 return!(0,_domain.sameGeneralDomain)(hostname,self.hostname);
-})};
+}),
+triggeringTree:{}};
 
 if(!obj.hostname)return obj;
 
@@ -77813,13 +80257,20 @@ var _ret=_loop(tp_domain);
 if(_ret==='continue')continue;
 }
 
+Object.keys(this.triggeringTree).forEach(function(trigger){
+
+obj.triggeringTree[trigger]=[].concat(_toConsumableArray(_this.triggeringTree[trigger]));
+});
+
+
 
 
 this._plainObject=obj;
 return obj;
-};
-
-this._sumStats=function(a,b){
+}},
+{
+key:'_sumStats',
+value:function _sumStats(a,b){
 var c={},
 stats_keys=new Set(Object.keys(a).concat(Object.keys(b)));
 
@@ -77829,8 +80280,13 @@ c[s]=(a[s]||0)+(b[s]||0);
 });
 c['paths']=a['paths'].concat(b['paths']);
 return c;
-};
-};
+}}]);
+
+
+return PageLoadData;
+}();
+
+;
 
 var stats=['c'];
 
@@ -77858,10 +80314,14 @@ _createClass(PageEventTracker,[{
 key:'onFullPage',
 value:function onFullPage(url,tab_id,isPrivate){
 
-this.stage(tab_id);
+var prevPage=this.stage(tab_id);
 
 if(url&&url.hostname&&tab_id>0&&!this.ignore.has(url.hostname)){
-this._active[tab_id]=new PageLoadData(url,isPrivate||false);
+
+
+var reloaded=prevPage&&url.toString()===prevPage.url&&Date.now()-prevPage.s<30000;
+
+this._active[tab_id]=new PageLoadData(url,isPrivate||false,reloaded||false);
 return this._active[tab_id];
 }else{
 return null;
@@ -77872,7 +80332,7 @@ key:'onRedirect',
 value:function onRedirect(url_parts,tab_id,isPrivate){
 if(tab_id in this._active){
 var prev=this._active[tab_id];
-this._active[tab_id]=new PageLoadData(url_parts,isPrivate);
+this._active[tab_id]=new PageLoadData(url_parts,isPrivate,prev.ra||false);
 this._active[tab_id].redirects=prev.redirects;
 this._active[tab_id].redirects.push(prev.hostname);
 }else{
@@ -77919,6 +80379,7 @@ return page_graph.getTpUrl(url_parts.hostname,url_parts.path);
 }},
 
 
+
 {
 key:'stage',
 value:function stage(windowID){
@@ -77927,6 +80388,8 @@ this._active[windowID]['e']=new Date().getTime();
 
 this._old_tab_idx[windowID]=this._staged.push(this._active[windowID])-1;
 delete this._active[windowID];
+
+return this._staged[this._old_tab_idx[windowID]];
 }
 }},
 
@@ -78013,7 +80476,7 @@ return ctr;
 
 exports['default']=PageEventTracker;
 module.exports=exports['default'];
-}, 594, null, "jsengine/build/modules/antitracking/tp_events.js");
+}, 602, null, "jsengine/build/modules/antitracking/tp_events.js");
 __d(/* jsengine/build/modules/antitracking/md5.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -78022,11 +80485,11 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _fixedSizeCache=require(596 /* ./fixed-size-cache */);
+var _fixedSizeCache=require(604 /* ./fixed-size-cache */);
 
 var _fixedSizeCache2=_interopRequireDefault(_fixedSizeCache);
 
-var _coreHelpersMd5=require(597 /* ../core/helpers/md5 */);
+var _coreHelpersMd5=require(606 /* ../core/helpers/md5 */);
 
 var _coreHelpersMd52=_interopRequireDefault(_coreHelpersMd5);
 
@@ -78040,11 +80503,8 @@ return md5Cache.get(s);
 };
 
 module.exports=exports['default'];
-}, 595, null, "jsengine/build/modules/antitracking/md5.js");
+}, 603, null, "jsengine/build/modules/antitracking/md5.js");
 __d(/* jsengine/build/modules/antitracking/fixed-size-cache.js */function(global, require, module, exports) {"use strict";
-
-
-
 
 Object.defineProperty(exports,"__esModule",{
 value:true});
@@ -78052,7 +80512,17 @@ value:true});
 
 var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
 
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}
+
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
+
+var _coreLRU=require(605 /* ../core/LRU */);
+
+var _coreLRU2=_interopRequireDefault(_coreLRU);
+
+
+
+
 
 var _default=function(){
 
@@ -78072,7 +80542,7 @@ this._maxKeySize=1000;
 this._hitCounter=0;
 this._missCounter=0;
 
-this.lru=new LRU(size);
+this.lru=new _coreLRU2["default"](size);
 }
 
 
@@ -78114,6 +80584,19 @@ return _default;
 }();
 
 exports["default"]=_default;
+module.exports=exports["default"];
+}, 604, null, "jsengine/build/modules/antitracking/fixed-size-cache.js");
+__d(/* jsengine/build/modules/core/LRU.js */function(global, require, module, exports) {
+
+"use strict";
+
+Object.defineProperty(exports,"__esModule",{
+value:true});
+
+
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}
 
 var LRU=function(){
 function LRU(size){
@@ -78148,9 +80631,8 @@ var node=this.cache.get(key);
 if(node){
 this._touch(node);
 return node.value;
-}else{
-return undefined;
 }
+return undefined;
 }},
 
 
@@ -78192,10 +80674,10 @@ this._pushFront(node);
 key:"_newNode",
 value:function _newNode(key,value){
 return{
-"prev":null,
-"next":null,
-"key":key,
-"value":value};
+prev:null,
+next:null,
+key:key,
+value:value};
 
 }},
 
@@ -78228,7 +80710,7 @@ this.tail=node.prev;
 node.next.prev=node.prev;
 }
 
-this.size--;
+this.size-=1;
 }
 }},
 
@@ -78252,7 +80734,7 @@ if(this.tail===null){
 this.tail=node;
 }
 
-this.size++;
+this.size+=1;
 }
 }}]);
 
@@ -78260,8 +80742,9 @@ this.size++;
 return LRU;
 }();
 
+exports["default"]=LRU;
 module.exports=exports["default"];
-}, 596, null, "jsengine/build/modules/antitracking/fixed-size-cache.js");
+}, 605, null, "jsengine/build/modules/core/LRU.js");
 __d(/* jsengine/build/modules/core/helpers/md5.js */function(global, require, module, exports) {
 
 
@@ -78459,7 +80942,7 @@ return hex(md51(s));
 
 exports['default']=md5;
 module.exports=exports['default'];
-}, 597, null, "jsengine/build/modules/core/helpers/md5.js");
+}, 606, null, "jsengine/build/modules/core/helpers/md5.js");
 __d(/* jsengine/build/modules/antitracking/domain.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -78471,7 +80954,7 @@ exports.isIpv4Address=isIpv4Address;
 
 function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj['default']=obj;return newObj;}}
 
-var _platformPublicSuffixList=require(599 /* ../platform/public-suffix-list */);
+var _platformPublicSuffixList=require(608 /* ../platform/public-suffix-list */);
 
 var psl=_interopRequireWildcard(_platformPublicSuffixList);
 
@@ -78503,7 +80986,7 @@ return digits.length===4&&digits.map(Number).every(function(d){
 return d>=0&&d<256;
 });
 }
-}, 598, null, "jsengine/build/modules/antitracking/domain.js");
+}, 607, null, "jsengine/build/modules/antitracking/domain.js");
 __d(/* jsengine/build/modules/platform/public-suffix-list.js */function(global, require, module, exports) {"use strict";
 
 Object.defineProperty(exports,"__esModule",{
@@ -78534,7 +81017,7 @@ continue;
 }
 return v1.slice(0,pos+1).reverse().join('.');
 }
-}, 599, null, "jsengine/build/modules/platform/public-suffix-list.js");
+}, 608, null, "jsengine/build/modules/platform/public-suffix-list.js");
 __d(/* jsengine/build/modules/antitracking/url.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -78543,11 +81026,11 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _fixedSizeCache=require(596 /* ./fixed-size-cache */);
+var _fixedSizeCache=require(604 /* ./fixed-size-cache */);
 
 var _fixedSizeCache2=_interopRequireDefault(_fixedSizeCache);
 
@@ -78659,36 +81142,49 @@ return null;
 return o;
 };
 
+function isMaybeJson(v){
+if(typeof v!=='string'){
+return false;
+}
+var trimmed=v.trim();
+var first=trimmed[0];
+var last=trimmed[trimmed.length-1];
+return first==='{'&&last==='}'||first==='['&&last===']';
+}
+
+function getJson(v){
+if(isMaybeJson(v)){
+return _flattenJson(v);
+}
+return false;
+}
+
 function getParametersQS(qs){
-var res={},
-_blacklist={};
+var res={};
+var keysMultiValue=new Set();
 var state='key';
 var k='';
 var v='';
-var _reviewQS=function _reviewQS(k,v){
-if(v.indexOf('=')>-1){
-var items=v.split('=');
-k=k+'_'+items[0];
-v=items.splice(1).join('=');
-}
-return[k,v];
-};
-var _updateQS=function _updateQS(k,v){
-if(k in res||k in _blacklist){
-_blacklist[k]=true;
-var kv=_reviewQS(k,v);
-res[kv[0]]=kv[1];
 
-if(k in res){
-v=res[k];
-kv=_reviewQS(k,v);
-res[kv[0]]=kv[1];
-delete res[k];
-}
+var _updateQS=function _updateQS(k,v){
+
+var jsonParts=getJson(v);
+if(jsonParts){
+Object.keys(jsonParts).forEach(function(jk){
+res[k+jk]=jsonParts[jk];
+});
+}else{
+if(keysMultiValue.has(k)){
+res[k].push(v);
+}else if(k in res){
+keysMultiValue.add(k);
+res[k]=[res[k],v];
 }else{
 res[k]=v;
 }
+}
 };
+
 var quotes='';
 for(var i=0;i<qs.length;i++){
 var c=qs.charAt(i);
@@ -78732,7 +81228,36 @@ _updateQS(k,v);
 }else if(state=='key'&&k.length>0){
 res[k]='true';
 }
-return _flattenJson(res);
+
+
+keysMultiValue.forEach(function(mvKey){
+var doubleKeys=res[mvKey].filter(function(v){
+return v.indexOf('=')>-1;
+});
+if(doubleKeys.length>0){
+
+doubleKeys.forEach(function(v){
+var items=v.split('=');
+var k2=mvKey+'_'+items[0];
+var v2=items.splice(1).join('=');
+_updateQS(k2,v2);
+});
+
+if(doubleKeys.length===res[mvKey].length){
+delete res[mvKey];
+}else{
+res[mvKey]=res[mvKey].filter(function(v){
+return v.indexOf('=')===-1;
+});
+
+if(res[mvKey].length===1){
+res[mvKey]=res[mvKey][0];
+}
+}
+}
+});
+
+return res;
 };
 
 
@@ -78754,14 +81279,6 @@ for(var _key in r){
 res[key+_key]=r[_key];
 }
 }
-break;
-case'array':
-obj.forEach(function(e,i){
-var r=_flattenJson(e);
-for(var _key in r){
-res[i+_key]=r[_key];
-}
-});
 break;
 case'number':
 obj=JSON.stringify(obj);
@@ -78824,8 +81341,19 @@ var kvList=[];
 var _arr=[this.query_keys,this.parameter_keys];
 for(var _i=0;_i<_arr.length;_i++){
 var kv=_arr[_i];
-for(var key in kv){
+var _loop=function _loop(key){
+
+if(Array.isArray(kv[key])){
+kv[key].forEach(function(val){
+kvList.push({k:key,v:val});
+});
+}else{
 kvList.push({k:key,v:kv[key]});
+}
+};
+
+for(var key in kv){
+_loop(key);
 }
 }
 return kvList;
@@ -78910,17 +81438,18 @@ exports.getHeaderMD5=getHeaderMD5;
 exports.URLInfo=URLInfo;
 exports.shuffle=shuffle;
 exports.findOauth=findOauth;
-}, 600, null, "jsengine/build/modules/antitracking/url.js");
+}, 609, null, "jsengine/build/modules/antitracking/url.js");
 __d(/* jsengine/build/modules/antitracking/hash.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
 value:true});
 
 exports.HashProb=HashProb;
+exports.isMostlyNumeric=isMostlyNumeric;
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
@@ -78972,7 +81501,21 @@ HashProb.prototype.isHash=function(str){
 var p=this.isHashProb(str);
 return p<this.probHashThreshold;
 };
-}, 601, null, "jsengine/build/modules/antitracking/hash.js");
+
+var numberThreshold=0.8;
+
+function isMostlyNumeric(str){
+var numbers=0;
+var length=str.length;
+for(var i=0;i<str.length;i++){
+var code=str.charCodeAt(i);
+if(code>=48&&code<58){
+numbers+=1;
+}
+}
+return numbers/length>numberThreshold;
+}
+}, 610, null, "jsengine/build/modules/antitracking/hash.js");
 __d(/* jsengine/build/modules/core/resource-loader.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -78991,9 +81534,9 @@ function _inherits(subClass,superClass){if(typeof superClass!=='function'&&super
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreFs=require(603 /* ../core/fs */);
+var _coreFs=require(612 /* ../core/fs */);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
 
 var ONE_SECOND=1000;
@@ -79241,7 +81784,7 @@ return _default;
 }(UpdateCallbackHandler);
 
 exports['default']=_default;
-}, 602, null, "jsengine/build/modules/core/resource-loader.js");
+}, 611, null, "jsengine/build/modules/core/resource-loader.js");
 __d(/* jsengine/build/modules/core/fs.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -79250,9 +81793,9 @@ value:true});
 
 function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj['default']=obj;return newObj;}}
 
-var _platform=require(584 /* ./platform */);
+var _platform=require(589 /* ./platform */);
 
-var _platformFs=require(604 /* ../platform/fs */);
+var _platformFs=require(613 /* ../platform/fs */);
 
 var fs=_interopRequireWildcard(_platformFs);
 
@@ -79390,7 +81933,7 @@ exports.getFileSize=getFileSize;
 
 var pathJoin=fs.pathJoin||_platform.notImplemented;
 exports.pathJoin=pathJoin;
-}, 603, null, "jsengine/build/modules/core/fs.js");
+}, 612, null, "jsengine/build/modules/core/fs.js");
 __d(/* jsengine/build/modules/platform/fs.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -79402,9 +81945,9 @@ exports.mkdir=mkdir;
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _reactNativeFs=require(605 /* react-native-fs */);
+var _reactNativeFs=require(614 /* react-native-fs */);
 
 var _reactNativeFs2=_interopRequireDefault(_reactNativeFs);
 
@@ -79434,7 +81977,7 @@ return _reactNativeFs2['default'].writeFile(BASEDIR+'/'+fileName,data);
 function mkdir(dirPath){
 return Promise.resolve();
 }
-}, 604, null, "jsengine/build/modules/platform/fs.js");
+}, 613, null, "jsengine/build/modules/platform/fs.js");
 __d(/* react-native-fs/FS.common.js */function(global, require, module, exports) {
 
 
@@ -79448,8 +81991,8 @@ var RNFSManager=require(42 /* react-native */).NativeModules.RNFSManager;
 
 var NativeAppEventEmitter=require(42 /* react-native */).NativeAppEventEmitter;
 var DeviceEventEmitter=require(42 /* react-native */).DeviceEventEmitter;
-var base64=require(606 /* base-64 */);
-var utf8=require(607 /* utf8 */);
+var base64=require(615 /* base-64 */);
+var utf8=require(616 /* utf8 */);
 
 var RNFSFileTypeRegular=RNFSManager.RNFSFileTypeRegular;
 var RNFSFileTypeDirectory=RNFSManager.RNFSFileTypeDirectory;
@@ -79864,7 +82407,7 @@ PicturesDirectoryPath:RNFSManager.RNFSPicturesDirectoryPath};
 
 
 module.exports=RNFS;
-}, 605, null, "react-native-fs/FS.common.js");
+}, 614, null, "react-native-fs/FS.common.js");
 __d(/* base-64/base64.js */function(global, require, module, exports) {
 ;(function(root){
 
@@ -80030,7 +82573,7 @@ root.base64=base64;
 }
 
 })(this);
-}, 606, null, "base-64/base64.js");
+}, 615, null, "base-64/base64.js");
 __d(/* utf8/utf8.js */function(global, require, module, exports) {
 ;(function(root){
 
@@ -80275,7 +82818,7 @@ root.utf8=utf8;
 }
 
 })(this);
-}, 607, null, "utf8/utf8.js");
+}, 616, null, "utf8/utf8.js");
 __d(/* jsengine/build/modules/antitracking/tracker-txt.js */function(global, require, module, exports) {
 
 
@@ -80291,13 +82834,13 @@ exports.updateDefaultTrackerTxtRule=updateDefaultTrackerTxtRule;
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _fixedSizeCache=require(596 /* ./fixed-size-cache */);
+var _fixedSizeCache=require(604 /* ./fixed-size-cache */);
 
 var _fixedSizeCache2=_interopRequireDefault(_fixedSizeCache);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
 var trackerTxtActions=new Set(['placeholder','block','empty','replace']);
 
@@ -80396,7 +82939,7 @@ return getDefaultTrackerTxtRule();
 
 exports.TrackerTXT=TrackerTXT;
 exports.trackerRuleParser=trackerRuleParser;
-}, 608, null, "jsengine/build/modules/antitracking/tracker-txt.js");
+}, 617, null, "jsengine/build/modules/antitracking/tracker-txt.js");
 __d(/* jsengine/build/modules/antitracking/time.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -80408,13 +82951,17 @@ exports.hourString=hourString;
 exports.dateString=dateString;
 exports.getHourTimestamp=getHourTimestamp;
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
+var _coreUtils=require(561 /* ../core/utils */);
+
+var _coreUtils2=_interopRequireDefault(_coreUtils);
 
 
 
 
 function getTime(){
-var ts=_coreCliqz.utils.getPref('config_ts',null);
+var ts=_coreUtils2['default'].getPref('config_ts',null);
 if(!ts){
 var d=null;
 var m=null;
@@ -80462,7 +83009,7 @@ return yyyy+(mm[1]?mm:"0"+mm[0])+(dd[1]?dd:"0"+dd[0]);
 function getHourTimestamp(){
 return getTime().slice(0,10);
 }
-}, 609, null, "jsengine/build/modules/antitracking/time.js");
+}, 618, null, "jsengine/build/modules/antitracking/time.js");
 __d(/* jsengine/build/modules/antitracking/bloom-filter.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -80483,25 +83030,25 @@ function _classCallCheck(instance,Constructor){if(!(instance instanceof Construc
 
 function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _pacemaker=require(590 /* ./pacemaker */);
+var _pacemaker=require(598 /* ./pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _qsWhitelistBase=require(611 /* ./qs-whitelist-base */);
+var _qsWhitelistBase=require(620 /* ./qs-whitelist-base */);
 
 var _qsWhitelistBase2=_interopRequireDefault(_qsWhitelistBase);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 function BloomFilter(a,k){
 
@@ -80792,7 +83339,7 @@ return AttrackBloomFilter;
 }(_qsWhitelistBase2['default']);
 
 exports.AttrackBloomFilter=AttrackBloomFilter;
-}, 610, null, "jsengine/build/modules/antitracking/bloom-filter.js");
+}, 619, null, "jsengine/build/modules/antitracking/bloom-filter.js");
 __d(/* jsengine/build/modules/antitracking/qs-whitelist-base.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -80807,25 +83354,25 @@ function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{v
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _persistentState=require(591 /* ./persistent-state */);
+var _persistentState=require(599 /* ./persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _attrack=require(589 /* ./attrack */);
+var _attrack=require(595 /* ./attrack */);
 
 var _attrack2=_interopRequireDefault(_attrack);
 
-var _pacemaker=require(590 /* ./pacemaker */);
+var _pacemaker=require(598 /* ./pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _telemetry=require(612 /* ./telemetry */);
+var _telemetry=require(621 /* ./telemetry */);
 
 var _telemetry2=_interopRequireDefault(_telemetry);
 
@@ -80979,7 +83526,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 611, null, "jsengine/build/modules/antitracking/qs-whitelist-base.js");
+}, 620, null, "jsengine/build/modules/antitracking/qs-whitelist-base.js");
 __d(/* jsengine/build/modules/antitracking/telemetry.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -80988,9 +83535,9 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _platformTelemetry=require(613 /* ../platform/telemetry */);
+var _platformTelemetry=require(622 /* ../platform/telemetry */);
 
 var _platformTelemetry2=_interopRequireDefault(_platformTelemetry);
 
@@ -81002,21 +83549,31 @@ _coreCliqz.utils.log("No telemetry provider loaded","attrack");
 msgType:'humanweb',
 
 loadFromProvider:function loadFromProvider(provider){
+var _this=this;
+
 _coreCliqz.utils.log("Load telemetry provider: "+provider,"attrack");
+if(typeof System!=='undefined'){
+return System['import'](provider).then(function(mod){
+_this.telemetry=mod['default'].telemetry.bind(mod);
+_this.msgType=mod['default'].msgType;
+return _this;
+});
+}else{
 this.telemetry=_platformTelemetry2['default'].telemetry.bind(_platformTelemetry2['default']);
 this.msgType=_platformTelemetry2['default'].msgType;
 return Promise.resolve(this);
+}
 }};
 
 module.exports=exports['default'];
-}, 612, null, "jsengine/build/modules/antitracking/telemetry.js");
+}, 621, null, "jsengine/build/modules/antitracking/telemetry.js");
 __d(/* jsengine/build/modules/platform/telemetry.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
 value:true});
 
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
 var _fetch=require(567 /* ./fetch */);
 
@@ -81102,7 +83659,7 @@ hwTelemetry(payload,instantPush);
 msgType:'humanweb'};
 
 module.exports=exports['default'];
-}, 613, null, "jsengine/build/modules/platform/telemetry.js");
+}, 622, null, "jsengine/build/modules/platform/telemetry.js");
 __d(/* jsengine/build/modules/antitracking/qs-whitelists.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -81121,21 +83678,21 @@ function _classCallCheck(instance,Constructor){if(!(instance instanceof Construc
 
 function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}
 
-var _persistentState=require(591 /* ./persistent-state */);
+var _persistentState=require(599 /* ./persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _qsWhitelistBase=require(611 /* ./qs-whitelist-base */);
+var _qsWhitelistBase=require(620 /* ./qs-whitelist-base */);
 
 var _qsWhitelistBase2=_interopRequireDefault(_qsWhitelistBase);
 
@@ -81374,7 +83931,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 614, null, "jsengine/build/modules/antitracking/qs-whitelists.js");
+}, 623, null, "jsengine/build/modules/antitracking/qs-whitelists.js");
 __d(/* jsengine/build/modules/antitracking/block-log.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -81389,25 +83946,25 @@ function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{v
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _persistentState=require(591 /* ./persistent-state */);
+var _persistentState=require(599 /* ./persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _pacemaker=require(590 /* ./pacemaker */);
+var _pacemaker=require(598 /* ./pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _md5=require(595 /* ./md5 */);
+var _md5=require(603 /* ./md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
@@ -81843,7 +84400,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 615, null, "jsengine/build/modules/antitracking/block-log.js");
+}, 624, null, "jsengine/build/modules/antitracking/block-log.js");
 __d(/* jsengine/build/modules/antitracking/utils.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -81855,7 +84412,13 @@ exports.splitTelemetryData=splitTelemetryData;
 exports.generatePayload=generatePayload;
 exports.cleanTimestampCache=cleanTimestampCache;
 
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
 var _coreGzip=require(568 /* ../core/gzip */);
+
+var _coreCryptoRandom=require(626 /* ../core/crypto/random */);
+
+var _coreCryptoRandom2=_interopRequireDefault(_coreCryptoRandom);
 
 function _arrayBufferToBase64(buffer){
 var binary='';
@@ -81912,7 +84475,7 @@ function generatePayload(data,ts,instant,attachAttrs){
 var payl={
 'data':data,
 'ts':ts,
-'anti-duplicates':Math.floor(Math.random()*10000000)};
+'anti-duplicates':Math.floor((0,_coreCryptoRandom2['default'])()*10000000)};
 
 if(instant)payl['instant']=true;
 if(attachAttrs){
@@ -81931,7 +84494,50 @@ delete cacheObj[k];
 }
 });
 }
-}, 616, null, "jsengine/build/modules/antitracking/utils.js");
+}, 625, null, "jsengine/build/modules/antitracking/utils.js");
+__d(/* jsengine/build/modules/core/crypto/random.js */function(global, require, module, exports) {
+
+'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+exports['default']=random;
+
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
+var _platformCrypto=require(627 /* ../../platform/crypto */);
+
+var _platformCrypto2=_interopRequireDefault(_platformCrypto);
+
+
+
+
+
+
+
+function random(){
+var values=_platformCrypto2['default'].getRandomValues(new Uint32Array(2));
+return(Math.pow(2,32)*(values[0]&0x1FFFFF)+values[1])/Math.pow(2,53);
+}
+
+module.exports=exports['default'];
+}, 626, null, "jsengine/build/modules/core/crypto/random.js");
+__d(/* jsengine/build/modules/platform/crypto.js */function(global, require, module, exports) {"use strict";
+
+Object.defineProperty(exports,"__esModule",{
+value:true});
+
+exports["default"]={
+getRandomValues:function getRandomValues(array){
+for(var i=0;i<array.length;i++){
+array[i]=Math.random();
+}
+return array;
+}};
+
+module.exports=exports["default"];
+}, 627, null, "jsengine/build/modules/platform/crypto.js");
 __d(/* jsengine/build/modules/core/webrequest.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -81940,13 +84546,13 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _platformWebrequest=require(618 /* ../platform/webrequest */);
+var _platformWebrequest=require(629 /* ../platform/webrequest */);
 
 var _platformWebrequest2=_interopRequireDefault(_platformWebrequest);
 
 exports['default']=_platformWebrequest2['default'];
 module.exports=exports['default'];
-}, 617, null, "jsengine/build/modules/core/webrequest.js");
+}, 628, null, "jsengine/build/modules/core/webrequest.js");
 __d(/* jsengine/build/modules/platform/webrequest.js */function(global, require, module, exports) {
 'use strict';
 
@@ -81956,7 +84562,7 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _nativeBridge=require(619 /* ./native-bridge */);
+var _nativeBridge=require(630 /* ./native-bridge */);
 
 var _nativeBridge2=_interopRequireDefault(_nativeBridge);
 
@@ -82026,7 +84632,7 @@ _nativeBridge2['default'].registerAction('webRequest',webRequest.onBeforeRequest
 
 exports['default']=webRequest;
 module.exports=exports['default'];
-}, 618, null, "jsengine/build/modules/platform/webrequest.js");
+}, 629, null, "jsengine/build/modules/platform/webrequest.js");
 __d(/* jsengine/build/modules/platform/native-bridge.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82049,6 +84655,22 @@ var _coreEvents2=_interopRequireDefault(_coreEvents);
 
 var nativeBridge=_reactNative.NativeModules.JSBridge;
 
+
+
+
+
+
+function makePromise(fn){
+return function(){
+try{
+var ret=fn.apply(undefined,arguments);
+return Promise.resolve(ret);
+}catch(e){
+return Promise.reject(e);
+}
+};
+}
+
 var Bridge=function(){
 function Bridge(){
 _classCallCheck(this,Bridge);
@@ -82068,17 +84690,18 @@ var args=_ref.args;
 
 var fn=this.registeredActions[action];
 if(!fn){
-nativeBridge.replyToAction(id,null,'invalid action');
+nativeBridge.replyToAction(id,{error:'invalid action'});
 return;
 }
 
-try{
-var ret=fn.apply(undefined,_toConsumableArray(args||[]));
-nativeBridge.replyToAction(id,ret,null);
-}catch(e){
+var call=fn.apply(undefined,_toConsumableArray(args||[]));
+call.then(function(ret){
+nativeBridge.replyToAction(id,{result:ret});
+});
+call['catch'](function(e){
 console.log('onAction err',e);
-nativeBridge.replyToAction(id,null,'exception when running action');
-}
+nativeBridge.replyToAction(id,{error:'exception when running action'});
+});
 }},
 {
 key:'onEvent',
@@ -82091,11 +84714,11 @@ _coreEvents2['default'].pub.apply(_coreEvents2['default'],[event].concat(_toCons
 }},
 {
 key:'registerAction',
-value:function registerAction(name,fn){
+value:function registerAction(name,fn,isPromise){
 if(this.registeredActions[name]!==undefined){
 throw new Error("action already exists");
 }
-this.registeredActions[name]=fn;
+this.registeredActions[name]=isPromise?fn:makePromise(fn);
 nativeBridge.registerAction(name);
 }}]);
 
@@ -82106,7 +84729,7 @@ return Bridge;
 var bridge=new Bridge();
 exports['default']=bridge;
 module.exports=exports['default'];
-}, 619, null, "jsengine/build/modules/platform/native-bridge.js");
+}, 630, null, "jsengine/build/modules/platform/native-bridge.js");
 __d(/* jsengine/build/modules/core/domain-info.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82115,11 +84738,11 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
-var _coreResourceManager=require(586 /* ../core/resource-manager */);
+var _coreResourceManager=require(591 /* ../core/resource-manager */);
 
 var _coreResourceManager2=_interopRequireDefault(_coreResourceManager);
 
@@ -82129,16 +84752,11 @@ domainOwners:{}};
 
 function parseDomainOwners(companyList){
 var revList={};
-
-var _loop=function _loop(company){
+Object.keys(companyList).forEach(function(company){
 companyList[company].forEach(function(d){
 revList[d]=company;
 });
-};
-
-for(var company in companyList){
-_loop(company);
-}
+});
 domainInfo.domainOwners=revList;
 }
 
@@ -82149,7 +84767,226 @@ parseDomainOwners);
 
 exports['default']=domainInfo;
 module.exports=exports['default'];
-}, 620, null, "jsengine/build/modules/core/domain-info.js");
+}, 631, null, "jsengine/build/modules/core/domain-info.js");
+__d(/* jsengine/build/modules/antitracking/pipeline.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value'in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
+function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}
+
+function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
+
+var _coreConsole=require(558 /* ../core/console */);
+
+var _coreConsole2=_interopRequireDefault(_coreConsole);
+
+
+
+
+
+
+
+
+
+
+var _default=function(){
+
+
+
+
+
+
+function _default(){
+_classCallCheck(this,_default);
+
+this.debug=false;
+this.stages=['open','modify','response'];
+
+this.pipelines={
+open:[],
+modify:[],
+response:[]};
+
+
+this.stepFns={};
+}
+
+
+
+
+
+
+
+
+_createClass(_default,[{
+key:'add',
+value:function add(_stages,fn,name){
+var resolvedName=name||this._getNameFromFunction(fn);
+var stages=Array.isArray(_stages)?_stages:[_stages];
+
+var resFn=this.stepFns[resolvedName]||fn;
+return this.addPipelineStep({name:resolvedName,stages:stages,fn:resFn});
+}},
+
+
+
+
+
+
+{
+key:'addAll',
+value:function addAll(stages,fns){
+var _this=this;
+
+fns.forEach(function(fn){
+_this.add(stages,fn);
+});
+}},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+key:'addPipelineStep',
+value:function addPipelineStep(_ref){
+var _this2=this;
+
+var name=_ref.name;
+var stages=_ref.stages;
+var fn=_ref.fn;
+var after=_ref.after;
+var before=_ref.before;
+
+
+if(this.stepFns[name]&&this.stepFns[name]!==fn){
+throw new Error('trying to overwrite existing stepFn '+name);
+}
+this.stepFns[name]=fn;
+var afterArr=after||[];
+var beforeArr=before||[];
+
+stages.forEach(function(stage){
+var emptyPipeline=_this2.pipelines[stage].length===0;
+var hasAfter=afterArr.length>0;
+var hasBefore=beforeArr.length>0;
+
+if(!hasAfter&&!hasBefore||emptyPipeline){
+
+_this2.pipelines[stage].push(name);
+}else if(hasAfter&&!hasBefore){
+
+var afterIndices=afterArr.map(function(s){
+return _this2.pipelines[stage].indexOf(s);
+});
+var insertMin=Math.max.apply(Math,_toConsumableArray(afterIndices));
+if(afterIndices.indexOf(-1)>=0){
+throw new Error('missing steps from \'after\' list, after='+afterArr+', pipeline='+_this2.pipelines[stage]);
+}
+
+_this2.pipelines[stage].splice(insertMin+1,0,name);
+}else if(hasBefore&&!hasAfter){
+var beforeIndices=beforeArr.map(function(s){
+return _this2.pipelines[stage].indexOf(s);
+});
+var insertMax=Math.min.apply(Math,_toConsumableArray(beforeIndices));
+if(insertMax<0){
+throw new Error('missing steps from \'before\' list, before='+beforeArr+', pipeline='+_this2.pipelines[stage]);
+}
+
+_this2.pipelines[stage].splice(insertMax,0,name);
+}else{
+throw new Error('cannot take both before and after constraints');
+}
+});
+}},
+
+
+
+
+
+{
+key:'removePipelineStep',
+value:function removePipelineStep(name){
+var _this3=this;
+
+
+this.stages.map(function(s){
+return _this3.pipelines[s];
+}).forEach(function(pipeline){
+var index=pipeline.indexOf(name);
+if(index!==-1){
+pipeline.splice(index,1);
+}
+});
+
+delete this.stepFns[name];
+}},
+
+
+
+
+
+
+
+{
+key:'execute',
+value:function execute(stage,initialState){
+return this._executePipeline(this.pipelines[stage],initialState,'ATTRACK.'+stage.toUpperCase());
+}},
+{
+key:'_executePipeline',
+value:function _executePipeline(pipeline,initialState,logKey){
+var state=initialState;
+var response={};
+var i=0;
+for(;i<pipeline.length;i+=1){
+try{
+var cont=this.stepFns[pipeline[i]](state,response);
+if(!cont){
+break;
+}
+}catch(e){
+_coreConsole2['default'].error(logKey,state.url,'Step exception',e);
+break;
+}
+}
+if(this.debug){
+_coreConsole2['default'].log(logKey,state.url,'Break at',pipeline[i]||'end');
+}
+return response;
+}},
+{
+key:'_getNameFromFunction',
+value:function _getNameFromFunction(fn){
+return fn.name.startsWith('bound ')?fn.name.substring(6):fn.name;
+}}]);
+
+
+return _default;
+}();
+
+exports['default']=_default;
+module.exports=exports['default'];
+}, 632, null, "jsengine/build/modules/antitracking/pipeline.js");
 __d(/* jsengine/build/modules/antitracking/steps/context.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82161,13 +84998,13 @@ exports.checkSameGeneralDomain=checkSameGeneralDomain;
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _webrequestContext=require(622 /* ../webrequest-context */);
+var _webrequestContext=require(634 /* ../webrequest-context */);
 
 var _webrequestContext2=_interopRequireDefault(_webrequestContext);
 
-var _url=require(600 /* ../url */);
+var _url=require(609 /* ../url */);
 
-var _domain=require(598 /* ../domain */);
+var _domain=require(607 /* ../domain */);
 
 function determineContext(state){
 var requestContext=new _webrequestContext2['default'](state);
@@ -82205,7 +85042,7 @@ return true;
 function checkSameGeneralDomain(state){
 return!(0,_domain.sameGeneralDomain)(state.urlParts.hostname,state.sourceUrlParts.hostname);
 }
-}, 621, null, "jsengine/build/modules/antitracking/steps/context.js");
+}, 633, null, "jsengine/build/modules/antitracking/steps/context.js");
 __d(/* jsengine/build/modules/antitracking/webrequest-context.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82321,7 +85158,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 622, null, "jsengine/build/modules/antitracking/webrequest-context.js");
+}, 634, null, "jsengine/build/modules/antitracking/webrequest-context.js");
 __d(/* jsengine/build/modules/antitracking/steps/page-logger.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82341,8 +85178,8 @@ this.blockLog=blockLog;
 }
 
 _createClass(_default,[{
-key:'checkIsMainDocument',
-value:function checkIsMainDocument(state){
+key:'logMainDocument',
+value:function logMainDocument(state){
 var requestContext=state.requestContext;
 if(state.requestContext.isFullPage()){
 this.tpEvents.onFullPage(state.urlParts,requestContext.getOuterWindowID(),requestContext.isChannelPrivate());
@@ -82366,6 +85203,12 @@ var incrementStat=function incrementStat(statName,c){
 _this.tpEvents.incrementStat(request,statName,c||1);
 };
 state.incrementStat=incrementStat;
+
+
+var pageLoad=this.tpEvents._active[state.tabId];
+if(pageLoad&&state.trigger){
+pageLoad.addTrigger(urlParts.hostname,state.trigger);
+}
 
 return true;
 }},
@@ -82413,7 +85256,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 623, null, "jsengine/build/modules/antitracking/steps/page-logger.js");
+}, 635, null, "jsengine/build/modules/antitracking/steps/page-logger.js");
 __d(/* jsengine/build/modules/antitracking/steps/token-examiner.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82428,36 +85271,34 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _pacemaker=require(590 /* ../pacemaker */);
+var _pacemaker=require(598 /* ../pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _persistentState=require(591 /* ../persistent-state */);
+var _persistentState=require(599 /* ../persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _time=require(609 /* ../time */);
+var _time=require(618 /* ../time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _domain=require(598 /* ../domain */);
+var _domain=require(607 /* ../domain */);
 
-var _md5=require(595 /* ../md5 */);
+var _md5=require(603 /* ../md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
 
 
 var _default=function(){
-function _default(qsWhitelist,shortTokenLength,safekeyValuesThreshold,safeKeyExpire){
+function _default(qsWhitelist,config){
 var _this=this;
 
 _classCallCheck(this,_default);
 
 this.qsWhitelist=qsWhitelist;
-this.shortTokenLength=shortTokenLength;
-this.safekeyValuesThreshold=safekeyValuesThreshold;
-this.safeKeyExpire=safeKeyExpire;
+this.config=config;
 this.requestKeyValue={};
 this._requestKeyValue=new persist.AutoPersistentObject("requestKeyValue",function(v){
 return _this.requestKeyValue=v;
@@ -82504,7 +85345,7 @@ var today=datetime.dateString(day);
 var s=(0,_domain.getGeneralDomain)(url_parts.hostname);
 s=(0,_md52['default'])(s).substr(0,16);
 url_parts.getKeyValuesMD5().filter(function(kv){
-return kv.v_len>=_this2.shortTokenLength;
+return kv.v_len>=_this2.config.shortTokenLength;
 }).forEach(function(kv){
 var key=kv.k,
 tok=kv.v;
@@ -82515,7 +85356,7 @@ if(_this2.requestKeyValue[s][key]==null)_this2.requestKeyValue[s][key]={};
 _this2.requestKeyValue[s][key][tok]=today;
 
 var valueCount=Object.keys(_this2.requestKeyValue[s][key]).length;
-if(valueCount>_this2.safekeyValuesThreshold){
+if(valueCount>_this2.config.safekeyValuesThreshold){
 _this2.qsWhitelist.addSafeKey(s,key,valueCount);
 
 _this2.requestKeyValue[s][key]={tok:today};
@@ -82527,7 +85368,7 @@ _this2._requestKeyValue.setDirty();
 key:'_pruneRequestKeyValue',
 value:function _pruneRequestKeyValue(){
 var day=datetime.newUTCDate();
-day.setDate(day.getDate()-this.safeKeyExpire);
+day.setDate(day.getDate()-this.config.safeKeyExpire);
 var dayCutoff=datetime.dateString(day);
 for(var s in this.requestKeyValue){
 for(var key in this.requestKeyValue[s]){
@@ -82554,7 +85395,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 624, null, "jsengine/build/modules/antitracking/steps/token-examiner.js");
+}, 636, null, "jsengine/build/modules/antitracking/steps/token-examiner.js");
 __d(/* jsengine/build/modules/antitracking/steps/token-telemetry.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82569,23 +85410,27 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _md5=require(595 /* ../md5 */);
+var _md5=require(603 /* ../md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _time=require(609 /* ../time */);
+var _time=require(618 /* ../time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _persistentState=require(591 /* ../persistent-state */);
+var _persistentState=require(599 /* ../persistent-state */);
 
 var persist=_interopRequireWildcard(_persistentState);
 
-var _utils=require(616 /* ../utils */);
+var _utils=require(625 /* ../utils */);
 
-var _pacemaker=require(590 /* ../pacemaker */);
+var _pacemaker=require(598 /* ../pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
+
+var _coreCryptoRandom=require(626 /* ../../core/crypto/random */);
+
+var _coreCryptoRandom2=_interopRequireDefault(_coreCryptoRandom);
 
 
 
@@ -82624,7 +85469,7 @@ function anonymizeTrackerTokens(trackerData){
 
 var min=1;
 var max=Number.MAX_SAFE_INTEGER;
-var randId=Math.floor(Math.random()*(max-min+1))+min;
+var randId=Math.floor((0,_coreCryptoRandom2['default'])()*(max-min+1))+min;
 
 
 var anonymizedTrackerData={};
@@ -82773,7 +85618,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 625, null, "jsengine/build/modules/antitracking/steps/token-telemetry.js");
+}, 637, null, "jsengine/build/modules/antitracking/steps/token-telemetry.js");
 __d(/* jsengine/build/modules/antitracking/steps/dom-checker.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82786,15 +85631,15 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _pacemaker=require(590 /* ../pacemaker */);
+var _pacemaker=require(598 /* ../pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
-var _coreBackground=require(575 /* ../../core/background */);
+var _coreBackground=require(581 /* ../../core/background */);
 
 var _coreBackground2=_interopRequireDefault(_coreBackground);
 
-var _url=require(600 /* ../url */);
+var _url=require(609 /* ../url */);
 
 var DOM_CHECK_PERIOD=1000;
 
@@ -82965,7 +85810,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 626, null, "jsengine/build/modules/antitracking/steps/dom-checker.js");
+}, 638, null, "jsengine/build/modules/antitracking/steps/dom-checker.js");
 __d(/* jsengine/build/modules/antitracking/steps/token-checker.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -82980,30 +85825,33 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _md5=require(595 /* ../md5 */);
+var _md5=require(603 /* ../md5 */);
 
 var _md52=_interopRequireDefault(_md5);
 
-var _domain=require(598 /* ../domain */);
+var _domain=require(607 /* ../domain */);
 
-var _time=require(609 /* ../time */);
+var _time=require(618 /* ../time */);
 
 var datetime=_interopRequireWildcard(_time);
 
-var _hash=require(601 /* ../hash */);
+var _hash=require(610 /* ../hash */);
 
-var _url=require(600 /* ../url */);
+var _url=require(609 /* ../url */);
+
+var _coreUtils=require(561 /* ../../core/utils */);
+
+var _coreUtils2=_interopRequireDefault(_coreUtils);
 
 var STAT_KEYS=['cookie','private','cookie_b64','private_b64','safekey','whitelisted','cookie_newToken','cookie_countThreshold','private_newToken','private_countThreshold','short_no_hash','cookie_b64_newToken','cookie_b64_countThreshold','private_b64_newToken','private_b64_countThreshold','qs_newToken','qs_countThreshold'];
 
 var _default=function(){
-function _default(qsWhitelist,blockLog,tokenDomainCountThreshold,shortTokenLength,privateValues,hashProb){
+function _default(qsWhitelist,blockLog,privateValues,hashProb,config){
 _classCallCheck(this,_default);
 
 this.qsWhitelist=qsWhitelist;
 this.blockLog=blockLog;
-this.tokenDomainCountThreshold=tokenDomainCountThreshold;
-this.shortTokenLength=shortTokenLength;
+this.config=config;
 this.debug=false;
 this.privateValues=privateValues;
 this.hashProb=hashProb;
@@ -83057,7 +85905,15 @@ stats[k]=0;
 
 var _countCheck=function _countCheck(tok){
 
-if(tok.length<12&&!self.hashProb.isHash(tok))return 0;
+if(tok.length<12){
+if((0,_hash.isMostlyNumeric)(tok)){
+stats.short_numeric++;
+}else if(self.hashProb.isHash(tok)){
+stats.short_hash++;
+}else{
+return 0;
+}
+}
 
 tok=(0,_md52['default'])(tok);
 self.blockLog.tokenDomain.addTokenOnFirstParty(tok,sourceD);
@@ -83065,10 +85921,10 @@ return self.blockLog.tokenDomain.getNFirstPartiesForToken(tok);
 };
 
 var _incrStats=function _incrStats(cc,prefix,tok,key,val){
-if(cc==0)stats['short_no_hash']++;else if(cc<self.tokenDomainCountThreshold)stats[prefix+'_newToken']++;else{
+if(cc==0)stats['short_no_hash']++;else if(cc<self.config.tokenDomainCountThreshold)stats[prefix+'_newToken']++;else{
 _addBlockLog(s,key,val,prefix);
 badTokens.push(val);
-if(cc==self.tokenDomainCountThreshold)stats[prefix+'_countThreshold']++;
+if(cc==self.config.tokenDomainCountThreshold)stats[prefix+'_countThreshold']++;
 stats[prefix]++;
 return true;
 }
@@ -83087,12 +85943,12 @@ while(tok!=(0,_url.dURIC)(tok)){
 tok=(0,_url.dURIC)(tok);
 }
 
-if(tok.length<self.shortTokenLength||source_url.indexOf(tok)>-1)return;
+if(tok.length<self.config.shortTokenLength||source_url.indexOf(tok)>-1)return;
 
 
 for(var c in cookievalue){
-if(tok.indexOf(c)>-1&&c.length>=self.shortTokenLength||c.indexOf(tok)>-1){
-if(self.debug)CliqzUtils.log('same value as cookie '+val,'tokk');
+if(tok.indexOf(c)>-1&&c.length>=self.config.shortTokenLength||c.indexOf(tok)>-1){
+if(self.debug)_coreUtils2['default'].log('same value as cookie '+val,'tokk');
 var cc=_countCheck(tok);
 if(c!=tok){
 cc=Math.max(cc,_countCheck(c));
@@ -83103,8 +85959,8 @@ if(_incrStats(cc,'cookie',tok,key,val))return;
 
 
 for(var c in self.privateValues){
-if(tok.indexOf(c)>-1&&c.length>=self.shortTokenLength||c.indexOf(tok)>-1){
-if(self.debug)CliqzUtils.log('same private values '+val,'tokk');
+if(tok.indexOf(c)>-1&&c.length>=self.config.shortTokenLength||c.indexOf(tok)>-1){
+if(self.debug)_coreUtils2['default'].log('same private values '+val,'tokk');
 var cc=_countCheck(tok);
 if(c!=tok){
 cc=Math.max(cc,_countCheck(c));
@@ -83118,8 +85974,8 @@ b64=atob(tok);
 }catch(e){}
 if(b64!=null){
 for(var c in cookievalue){
-if(b64.indexOf(c)>-1&&c.length>=self.shortTokenLength||c.indexOf(b64)>-1){
-if(self.debug)CliqzUtils.log('same value as cookie '+b64,'tokk-b64');
+if(b64.indexOf(c)>-1&&c.length>=self.config.shortTokenLength||c.indexOf(b64)>-1){
+if(self.debug)_coreUtils2['default'].log('same value as cookie '+b64,'tokk-b64');
 var cc=_countCheck(tok);
 if(c!=tok){
 cc=Math.max(cc,_countCheck(c));
@@ -83128,8 +85984,8 @@ if(_incrStats(cc,'cookie_b64',tok,key,val))return;
 }
 }
 for(var c in self.privateValues){
-if(b64.indexOf(c)>-1&&c.length>=self.shortTokenLength){
-if(self.debug)CliqzUtils.log('same private values '+b64,'tokk-b64');
+if(b64.indexOf(c)>-1&&c.length>=self.config.shortTokenLength){
+if(self.debug)_coreUtils2['default'].log('same private values '+b64,'tokk-b64');
 var cc=_countCheck(tok);
 if(c!=tok){
 cc=Math.max(cc,_countCheck(c));
@@ -83168,7 +86024,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 627, null, "jsengine/build/modules/antitracking/steps/token-checker.js");
+}, 639, null, "jsengine/build/modules/antitracking/steps/token-checker.js");
 __d(/* jsengine/build/modules/antitracking/steps/block-rules.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -83181,7 +86037,7 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreResourceLoader=require(602 /* ../../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
@@ -83244,7 +86100,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 628, null, "jsengine/build/modules/antitracking/steps/block-rules.js");
+}, 640, null, "jsengine/build/modules/antitracking/steps/block-rules.js");
 __d(/* jsengine/build/modules/antitracking/steps/cookie-context.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -83257,15 +86113,15 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _domain=require(598 /* ../domain */);
+var _domain=require(607 /* ../domain */);
 
-var _url=require(600 /* ../url */);
+var _url=require(609 /* ../url */);
 
-var _coreCliqz=require(576 /* ../../core/cliqz */);
+var _coreCliqz=require(594 /* ../../core/cliqz */);
 
-var _utils=require(616 /* ../utils */);
+var _utils=require(625 /* ../utils */);
 
-var _pacemaker=require(590 /* ../pacemaker */);
+var _pacemaker=require(598 /* ../pacemaker */);
 
 var _pacemaker2=_interopRequireDefault(_pacemaker);
 
@@ -83327,12 +86183,14 @@ var stage=state.responseStatus!==undefined?'set_cookie':'cookie';
 var time=Date.now();
 var url=state.url;
 var tabId=state.tabId;
+var urlParts=state.urlParts;
+var sourceGD=state.sourceGD||(0,_domain.getGeneralDomain)(state.sourceUrlParts.hostname);
 var hostGD=state.hostGD||(0,_domain.getGeneralDomain)(state.urlParts.hostname);
 
 var diff=time-(this.contextFromEvent.ts||0);
 if(diff<this.timeAfterLink){
 
-if(hostGD===this.contextFromEvent.cGD){
+if(hostGD===this.contextFromEvent.cGD&&sourceGD===this.contextFromEvent.pageGD){
 this.visitCache[tabId+':'+hostGD]=time;
 state.incrementStat(stage+'_allow_userinit_same_context_gd');
 return false;
@@ -83340,7 +86198,7 @@ return false;
 var pu=url.split(/[?&;]/)[0];
 if(this.contextFromEvent.html.indexOf(pu)!=-1){
 
-if(url_parts&&url_parts.hostname&&url_parts.hostname!=''){
+if(urlParts&&urlParts.hostname&&urlParts.hostname!=''){
 this.visitCache[tabId+':'+hostGD]=time;
 state.incrementStat(stage+'_allow_userinit_same_gd_link');
 return false;
@@ -83386,7 +86244,65 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 629, null, "jsengine/build/modules/antitracking/steps/cookie-context.js");
+}, 641, null, "jsengine/build/modules/antitracking/steps/cookie-context.js");
+__d(/* jsengine/build/modules/antitracking/steps/redirect-tagger.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value'in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
+function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
+
+var _tempSet=require(601 /* ../temp-set */);
+
+var _tempSet2=_interopRequireDefault(_tempSet);
+
+
+
+
+
+
+var _default=function(){
+function _default(){
+_classCallCheck(this,_default);
+
+this.redirectCache=new _tempSet2['default']();
+this.cacheTimeout=10000;
+}
+
+_createClass(_default,[{
+key:'isFromRedirect',
+value:function isFromRedirect(url){
+return this.redirectCache.has(url);
+}},
+{
+key:'checkRedirectStatus',
+value:function checkRedirectStatus(state){
+if(state.requestContext.channel.responseStatus===302){
+var _location=state.getResponseHeader('Location');
+if(_location.startsWith('/')){
+
+var redirectUrl=state.urlParts.protocol+'://'+state.urlParts.hostname+_location;
+this.redirectCache.add(redirectUrl,this.cacheTimeout);
+}else if(_location.startsWith('http://')||_location.startsWith('https://')){
+
+this.redirectCache.add(_location,this.cacheTimeout);
+}
+}
+return true;
+}}]);
+
+
+return _default;
+}();
+
+exports['default']=_default;
+module.exports=exports['default'];
+}, 642, null, "jsengine/build/modules/antitracking/steps/redirect-tagger.js");
 __d(/* jsengine/build/modules/antitracking/privacy-score.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -83397,13 +86313,13 @@ function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{v
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _fixedSizeCache=require(596 /* ./fixed-size-cache */);
+var _fixedSizeCache=require(604 /* ./fixed-size-cache */);
 
 var _fixedSizeCache2=_interopRequireDefault(_fixedSizeCache);
 
-var _time=require(609 /* ./time */);
+var _time=require(618 /* ./time */);
 
 var datetime=_interopRequireWildcard(_time);
 
@@ -83443,7 +86359,118 @@ this.score=res[suffix];
 };
 
 exports.PrivacyScore=PrivacyScore;
-}, 630, null, "jsengine/build/modules/antitracking/privacy-score.js");
+}, 643, null, "jsengine/build/modules/antitracking/privacy-score.js");
+__d(/* jsengine/build/modules/antitracking/config.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,'__esModule',{
+value:true});
+
+
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value'in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();
+
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
+function _interopRequireWildcard(obj){if(obj&&obj.__esModule){return obj;}else{var newObj={};if(obj!=null){for(var key in obj){if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key]=obj[key];}}newObj['default']=obj;return newObj;}}
+
+function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
+
+var _persistentState=require(599 /* ./persistent-state */);
+
+var persist=_interopRequireWildcard(_persistentState);
+
+var _coreEvents=require(557 /* ../core/events */);
+
+var _coreEvents2=_interopRequireDefault(_coreEvents);
+
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
+
+var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
+
+var _coreCliqz=require(594 /* ../core/cliqz */);
+
+var VERSIONCHECK_URL='https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json';
+
+var DEFAULTS={
+safekeyValuesThreshold:4,
+shortTokenLength:8,
+placeHolder:'cliqz.com/tracking',
+cliqzHeader:'CLIQZ-AntiTracking'};
+
+
+var _default=function(){
+function _default(_ref){
+var _ref$defaults=_ref.defaults;
+var defaults=_ref$defaults===undefined?DEFAULTS:_ref$defaults;
+var _ref$versionUrl=_ref.versionUrl;
+var versionUrl=_ref$versionUrl===undefined?VERSIONCHECK_URL:_ref$versionUrl;
+
+_classCallCheck(this,_default);
+
+this.versionCheckUrl=versionUrl;
+
+this.tokenDomainCountThreshold=2;
+this.safeKeyExpire=7;
+this.localBlockExpire=24;
+
+this.safekeyValuesThreshold=parseInt(persist.getValue('safekeyValuesThreshold'),10)||defaults.safekeyValuesThreshold;
+this.shortTokenLength=parseInt(persist.getValue('shortTokenLength'),10)||defaults.shortTokenLength;
+this.placeHolder=persist.getValue('placeHolder')||defaults.placeHolder;
+this.cliqzHeader=persist.getValue('cliqzHeader')||defaults.cliqzHeader;
+}
+
+_createClass(_default,[{
+key:'init',
+value:function init(){
+this._versioncheckLoader=new _coreResourceLoader2['default'](['antitracking','versioncheck.json'],{
+remoteURL:this.versionCheckUrl,
+cron:1000*60*60*12});
+
+this._versioncheckLoader.load().then(this._updateVersionCheck.bind(this));
+this._versioncheckLoader.onUpdate(this._updateVersionCheck.bind(this));
+return _coreCliqz.Promise.resolve();
+}},
+{
+key:'unload',
+value:function unload(){
+if(this._versioncheckLoader){
+this._versioncheckLoader.stop();
+}
+}},
+{
+key:'_updateVersionCheck',
+value:function _updateVersionCheck(versioncheck){
+
+if(versioncheck.placeHolder){
+persist.setValue('placeHolder',versioncheck.placeHolder);
+this.placeHolder=versioncheck.placeHolder;
+}
+
+if(versioncheck.shortTokenLength){
+persist.setValue('shortTokenLength',versioncheck.shortTokenLength);
+this.shortTokenLength=parseInt(versioncheck.shortTokenLength,10)||this.shortTokenLength;
+}
+
+if(versioncheck.safekeyValuesThreshold){
+persist.setValue('safekeyValuesThreshold',versioncheck.safekeyValuesThreshold);
+this.safekeyValuesThreshold=parseInt(versioncheck.safekeyValuesThreshold,10)||this.safekeyValuesThreshold;
+}
+
+if(versioncheck.cliqzHeader){
+persist.setValue('cliqzHeader',versioncheck.cliqzHeader);
+this.cliqzHeader=versioncheck.cliqzHeader;
+}
+
+
+_coreEvents2['default'].pub('attrack:updated_config',versioncheck);
+}}]);
+
+
+return _default;
+}();
+
+exports['default']=_default;
+module.exports=exports['default'];
+}, 644, null, "jsengine/build/modules/antitracking/config.js");
 __d(/* jsengine/build/modules/adblocker/background.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -83452,65 +86479,83 @@ value:true});
 
 function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _coreBaseBackground=require(582 /* ../core/base/background */);
+var _coreBaseBackground=require(587 /* ../core/base/background */);
 
 var _coreBaseBackground2=_interopRequireDefault(_coreBaseBackground);
 
-var _adblockerAdblocker=require(632 /* ../adblocker/adblocker */);
+var _adblocker=require(646 /* ./adblocker */);
 
-var _adblockerAdblocker2=_interopRequireDefault(_adblockerAdblocker);
+var _adblocker2=_interopRequireDefault(_adblocker);
+
+var _coreKordInject=require(596 /* ../core/kord/inject */);
+
+var _coreKordInject2=_interopRequireDefault(_coreKordInject);
+
+var _filtersEngine=require(648 /* ./filters-engine */);
+
+var _filtersEngine2=_interopRequireDefault(_filtersEngine);
 
 function isAdbActive(url){
-return(0,_adblockerAdblocker.adbEnabled)()&&!_adblockerAdblocker2['default'].adBlocker.isDomainInBlacklist(url)&&!_adblockerAdblocker2['default'].adBlocker.isUrlInBlacklist(url);
+return(0,_adblocker.adbEnabled)()&&!_adblocker2['default'].adBlocker.isDomainInBlacklist(url)&&!_adblocker2['default'].adBlocker.isUrlInBlacklist(url);
 }
 
 exports['default']=(0,_coreBaseBackground2['default'])({
+humanWeb:_coreKordInject2['default'].module('human-web'),
+
 enabled:function enabled(){
 return true;
 },
 
 init:function init(){
-if(_adblockerAdblocker2['default'].getBrowserMajorVersion()<_adblockerAdblocker2['default'].MIN_BROWSER_VERSION){
-return;
+if(_adblocker2['default'].getBrowserMajorVersion()<_adblocker2['default'].MIN_BROWSER_VERSION){
+return Promise.resolve();
 }
-_adblockerAdblocker2['default'].init();
+return _adblocker2['default'].init(this.humanWeb);
 },
 
 unload:function unload(){
-if(_adblockerAdblocker2['default'].getBrowserMajorVersion()<_adblockerAdblocker2['default'].MIN_BROWSER_VERSION){
+if(_adblocker2['default'].getBrowserMajorVersion()<_adblocker2['default'].MIN_BROWSER_VERSION){
 return;
 }
-_adblockerAdblocker2['default'].unload();
+_adblocker2['default'].unload();
 },
 
 events:{
-"control-center:adb-optimized":function controlCenterAdbOptimized(){
-_coreCliqz.utils.setPref(_adblockerAdblocker.ADB_PREF_OPTIMIZED,!_coreCliqz.utils.getPref(_adblockerAdblocker.ADB_PREF_OPTIMIZED,false));
+'control-center:adb-optimized':function controlCenterAdbOptimized(){
+_coreCliqz.utils.setPref(_adblocker.ADB_PREF_OPTIMIZED,!_coreCliqz.utils.getPref(_adblocker.ADB_PREF_OPTIMIZED,false));
 },
-"control-center:adb-activator":function controlCenterAdbActivator(data){
-var isUrlInBlacklist=_adblockerAdblocker2['default'].adBlocker.isUrlInBlacklist(data.url),
-isDomainInBlacklist=_adblockerAdblocker2['default'].adBlocker.isDomainInBlacklist(data.url);
+'control-center:adb-activator':function controlCenterAdbActivator(data){
+var isUrlInBlacklist=_adblocker2['default'].adBlocker.isUrlInBlacklist(data.url);
+var isDomainInBlacklist=_adblocker2['default'].adBlocker.isDomainInBlacklist(data.url);
 
 
 if(isUrlInBlacklist){
-_adblockerAdblocker2['default'].adBlocker.toggleUrl(data.url);
+_adblocker2['default'].adBlocker.toggleUrl(data.url);
 }
 
 if(isDomainInBlacklist){
-_adblockerAdblocker2['default'].adBlocker.toggleUrl(data.url,true);
+_adblocker2['default'].adBlocker.toggleUrl(data.url,true);
 }
 
-if(data.status=='active'){
-_coreCliqz.utils.setPref(_adblockerAdblocker.ADB_PREF,_adblockerAdblocker.ADB_PREF_VALUES.Enabled);
-}else if(data.status=='off'){
-if(data.option=='all-sites'){
-_coreCliqz.utils.setPref(_adblockerAdblocker.ADB_PREF,_adblockerAdblocker.ADB_PREF_VALUES.Disabled);
+if(data.status==='active'){
+_coreCliqz.utils.setPref(_adblocker.ADB_PREF,_adblocker.ADB_PREF_VALUES.Enabled);
+}else if(data.status==='off'){
+if(data.option==='all-sites'){
+_coreCliqz.utils.setPref(_adblocker.ADB_PREF,_adblocker.ADB_PREF_VALUES.Disabled);
 }else{
-_coreCliqz.utils.setPref(_adblockerAdblocker.ADB_PREF,_adblockerAdblocker.ADB_PREF_VALUES.Enabled);
-_adblockerAdblocker2['default'].adBlocker.toggleUrl(data.url,data.option=='domain'?true:false);
+_coreCliqz.utils.setPref(_adblocker.ADB_PREF,_adblocker.ADB_PREF_VALUES.Enabled);
+_adblocker2['default'].adBlocker.toggleUrl(data.url,data.option==='domain');
 }
+}
+},
+prefchange:function prefchange(pref){
+if(pref===_adblocker.ADB_USER_LANG||pref===_adblocker.ADB_USER_LANG_OVERRIDE){
+
+_adblocker2['default'].adBlocker.engine=new _filtersEngine2['default']();
+_adblocker2['default'].adBlocker.listsManager.initLists();
+_adblocker2['default'].adBlocker.listsManager.load();
 }
 }},
 
@@ -83524,7 +86569,7 @@ rules:[],
 active:false};
 
 }
-var candidates=_adblockerAdblocker2['default'].adBlocker.engine.getCosmeticsFilters(url,_nodes);
+var candidates=_adblocker2['default'].adBlocker.engine.getCosmeticsFilters(url,_nodes);
 return{
 rules:candidates.map(function(rule){
 return rule.selector;
@@ -83543,7 +86588,7 @@ active:false};
 
 }
 
-var candidates=_adblockerAdblocker2['default'].adBlocker.engine.getDomainFilters(_url);
+var candidates=_adblocker2['default'].adBlocker.engine.getDomainFilters(_url);
 return{
 styles:candidates.filter(function(rule){
 return!rule.scriptInject&&!rule.scriptBlock;
@@ -83567,7 +86612,7 @@ active:true};
 
 
 module.exports=exports['default'];
-}, 631, null, "jsengine/build/modules/adblocker/background.js");
+}, 645, null, "jsengine/build/modules/adblocker/background.js");
 __d(/* jsengine/build/modules/adblocker/adblocker.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -83588,52 +86633,47 @@ function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(a
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreCliqz=require(576 /* ../core/cliqz */);
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
-var _coreWebrequest=require(617 /* ../core/webrequest */);
+var _coreWebrequest=require(628 /* ../core/webrequest */);
 
 var _coreWebrequest2=_interopRequireDefault(_coreWebrequest);
 
-var _antitrackingUrl=require(600 /* ../antitracking/url */);
+var _antitrackingUrl=require(609 /* ../antitracking/url */);
 
-var _antitrackingDomain=require(598 /* ../antitracking/domain */);
+var _antitrackingDomain=require(607 /* ../antitracking/domain */);
 
-var _platformBrowser=require(574 /* ../platform/browser */);
+var _platformBrowser=require(580 /* ../platform/browser */);
 
 var browser=_interopRequireWildcard(_platformBrowser);
 
-var _antitrackingPersistentState=require(591 /* ../antitracking/persistent-state */);
+var _antitrackingPersistentState=require(599 /* ../antitracking/persistent-state */);
 
-var _antitrackingFixedSizeCache=require(596 /* ../antitracking/fixed-size-cache */);
+var _antitrackingFixedSizeCache=require(604 /* ../antitracking/fixed-size-cache */);
 
 var _antitrackingFixedSizeCache2=_interopRequireDefault(_antitrackingFixedSizeCache);
 
-var _antitrackingWebrequestContext=require(622 /* ../antitracking/webrequest-context */);
+var _antitrackingWebrequestContext=require(634 /* ../antitracking/webrequest-context */);
 
 var _antitrackingWebrequestContext2=_interopRequireDefault(_antitrackingWebrequestContext);
 
-var _utils=require(633 /* ./utils */);
+var _utils=require(647 /* ./utils */);
 
 var _utils2=_interopRequireDefault(_utils);
 
-var _adblockerFiltersEngine=require(634 /* ../adblocker/filters-engine */);
+var _adblockerFiltersEngine=require(648 /* ../adblocker/filters-engine */);
 
 var _adblockerFiltersEngine2=_interopRequireDefault(_adblockerFiltersEngine);
 
-var _adblockerFiltersLoader=require(637 /* ../adblocker/filters-loader */);
+var _adblockerFiltersLoader=require(651 /* ../adblocker/filters-loader */);
 
 var _adblockerFiltersLoader2=_interopRequireDefault(_adblockerFiltersLoader);
 
-var _adblockerAdbStats=require(638 /* ../adblocker/adb-stats */);
+var _adblockerAdbStats=require(652 /* ../adblocker/adb-stats */);
 
 var _adblockerAdbStats2=_interopRequireDefault(_adblockerAdbStats);
 
-
-
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
-
-var CliqzUtils=_coreCliqz.utils;
-var CliqzHumanWeb=undefined;
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 
 var SERIALIZED_ENGINE_PATH=['antitracking','adblocking','engine.json'];
@@ -83658,23 +86698,25 @@ Disabled:0};
 exports.ADB_PREF_VALUES=ADB_PREF_VALUES;
 var ADB_DEFAULT_VALUE=ADB_PREF_VALUES.Disabled;
 exports.ADB_DEFAULT_VALUE=ADB_DEFAULT_VALUE;
-var ADB_ONDISKCACHE_PREF=ADB_PREF+"-onDiskCache";
+var ADB_USER_LANG='cliqz-adb-lang';
+exports.ADB_USER_LANG=ADB_USER_LANG;
+var ADB_USER_LANG_OVERRIDE='cliqz-adb-lang-override';
 
-exports.ADB_ONDISKCACHE_PREF=ADB_ONDISKCACHE_PREF;
+exports.ADB_USER_LANG_OVERRIDE=ADB_USER_LANG_OVERRIDE;
 
 function autoBlockAds(){
 return true;
 }
 
 function adbABTestEnabled(){
-return CliqzUtils.getPref(ADB_ABTEST_PREF,false);
+return _coreCliqz.utils.getPref(ADB_ABTEST_PREF,false);
 }
 
 function adbEnabled(){
 
 
 
-return adbABTestEnabled()&&CliqzUtils.getPref(ADB_PREF,ADB_PREF_VALUES.Disabled)!==0;
+return adbABTestEnabled()&&_coreCliqz.utils.getPref(ADB_PREF,ADB_PREF_VALUES.Disabled)!==0;
 }
 
 function extractGeneralDomain(uri){
@@ -83693,12 +86735,13 @@ return(0,_antitrackingDomain.getGeneralDomain)(hostname);
 
 
 var AdBlocker=function(){
-function AdBlocker(onDiskCache){
+function AdBlocker(onDiskCache,humanWeb){
 var _this=this;
 
 _classCallCheck(this,AdBlocker);
 
 this.onDiskCache=onDiskCache;
+this.humanWeb=humanWeb;
 this.logs=[];
 this.engine=new _adblockerFiltersEngine2['default']();
 
@@ -83781,7 +86824,7 @@ value:function log(msg){
 var date=new Date();
 var message=date.getHours()+':'+date.getMinutes()+' '+msg;
 this.logs.push(message);
-(0,_utils2['default'])(msg,'adblocker');
+_coreCliqz.utils.log(msg,'adblocker');
 }},
 {
 key:'initCache',
@@ -83909,10 +86952,9 @@ var type='url';
 if(domain){
 type='domain';
 }
-if(!CliqzHumanWeb.state.v[url].adblocker_blacklist){
-CliqzHumanWeb.state.v[url].adblocker_blacklist={};
-}
-CliqzHumanWeb.state.v[url].adblocker_blacklist[action]=type;
+var data={};
+data[action]=type;
+return this.humanWeb.action('addDataToUrl',url,'adblocker_blacklist',data);
 }},
 {
 key:'toggleUrl',
@@ -83930,18 +86972,23 @@ return;
 processedURL=_coreCliqz.utils.cleanUrlProtocol(processedURL,true);
 }
 
-var existHW=CliqzHumanWeb&&CliqzHumanWeb.state.v[url];
+var checkProcessing=this.humanWeb.action('isProcessingUrl',url);
+checkProcessing['catch'](function(){
+(0,_utils2['default'])('no humanweb -> black/whitelist will not be logged');
+});
+var existHW=checkProcessing.then(function(exists){
+if(exists){
+return Promise.resolve();
+}
+return Promise.reject();
+});
 if(this.blacklist.has(processedURL)){
 this.blacklist['delete'](processedURL);
 
-if(existHW){
-this.logActionHW(url,'remove',domain);
-}
+existHW.then(this.logActionHW.bind(this,url,'remove',domain));
 }else{
 this.blacklist.add(processedURL);
-if(existHW){
-this.logActionHW(url,'add',domain);
-}
+existHW.then(this.logActionHW.bind(this,url,'add',domain));
 }
 
 this.persistBlacklist();
@@ -84018,7 +87065,7 @@ return AdBlocker;
 }();
 
 var CliqzADB={
-onDiskCache:CliqzUtils.getPref(ADB_DISK_CACHE,true),
+onDiskCache:_coreCliqz.utils.getPref(ADB_DISK_CACHE,true),
 adblockInitialized:false,
 adbMem:{},
 adbStats:new _adblockerAdbStats2['default'](),
@@ -84027,13 +87074,13 @@ adbDebug:false,
 MIN_BROWSER_VERSION:35,
 timers:[],
 
-init:function init(){
+init:function init(humanWeb){
 
-if(CliqzUtils.getPref(ADB_PREF,undefined)===undefined){
-CliqzUtils.setPref(ADB_PREF,ADB_PREF_VALUES.Disabled);
+if(_coreCliqz.utils.getPref(ADB_PREF,undefined)===undefined){
+_coreCliqz.utils.setPref(ADB_PREF,ADB_PREF_VALUES.Disabled);
 }
 
-CliqzADB.adBlocker=new AdBlocker(CliqzADB.onDiskCache);
+CliqzADB.adBlocker=new AdBlocker(CliqzADB.onDiskCache,humanWeb);
 
 var initAdBlocker=function initAdBlocker(){
 return CliqzADB.adBlocker.init().then(function(){
@@ -84140,7 +87187,7 @@ var browserWin=browserEnumerator.getNext();
 var tabbrowser=browserWin.gBrowser;
 
 var numTabs=tabbrowser.browsers.length;
-for(var index=0;index<numTabs;index++){
+for(var index=0;index<numTabs;index+=1){
 var currentBrowser=tabbrowser.getBrowserAtIndex(index);
 if(currentBrowser){
 var tabURL=currentBrowser.currentURI.spec;
@@ -84158,7 +87205,7 @@ return false;
 
 
 exports['default']=CliqzADB;
-}, 632, null, "jsengine/build/modules/adblocker/adblocker.js");
+}, 646, null, "jsengine/build/modules/adblocker/adblocker.js");
 __d(/* jsengine/build/modules/adblocker/utils.js */function(global, require, module, exports) {
 
 "use strict";
@@ -84167,16 +87214,17 @@ Object.defineProperty(exports,"__esModule",{
 value:true});
 
 exports["default"]=log;
+var debug=false;
 
 function log(msg){
 var message="[adblock] "+msg;
-if(false){
+if(debug){
 dump(message+"\n");
 }
 }
 
 module.exports=exports["default"];
-}, 633, null, "jsengine/build/modules/adblocker/utils.js");
+}, 647, null, "jsengine/build/modules/adblocker/utils.js");
 __d(/* jsengine/build/modules/adblocker/filters-engine.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -84193,17 +87241,17 @@ function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':o
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _antitrackingUrl=require(600 /* ../antitracking/url */);
+var _antitrackingUrl=require(609 /* ../antitracking/url */);
 
-var _utils=require(633 /* ./utils */);
+var _utils=require(647 /* ./utils */);
 
 var _utils2=_interopRequireDefault(_utils);
 
-var _adblockerFiltersParsing=require(635 /* ../adblocker/filters-parsing */);
+var _adblockerFiltersParsing=require(649 /* ../adblocker/filters-parsing */);
 
 var _adblockerFiltersParsing2=_interopRequireDefault(_adblockerFiltersParsing);
 
-var _adblockerFiltersMatching=require(636 /* ../adblocker/filters-matching */);
+var _adblockerFiltersMatching=require(650 /* ../adblocker/filters-matching */);
 
 var _coreTlds=require(565 /* ../core/tlds */);
 
@@ -85519,7 +88567,7 @@ engine.redirect=deserializeSourceDomainDispatch(redirect,filtersReverseIndex);
 engine.filters=deserializeSourceDomainDispatch(filters,filtersReverseIndex);
 engine.size=size;
 }
-}, 634, null, "jsengine/build/modules/adblocker/filters-engine.js");
+}, 648, null, "jsengine/build/modules/adblocker/filters-engine.js");
 __d(/* jsengine/build/modules/adblocker/filters-parsing.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -85536,11 +88584,15 @@ exports.parseFilter=parseFilter;
 exports['default']=parseList;
 exports.parseJSResource=parseJSResource;
 
+function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}
+
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _adblockerUtils=require(633 /* ../adblocker/utils */);
+var _adblockerUtils=require(647 /* ../adblocker/utils */);
 
-var _corePlatform=require(584 /* ../core/platform */);
+var _adblockerUtils2=_interopRequireDefault(_adblockerUtils);
+
+var _corePlatform=require(589 /* ../core/platform */);
 
 
 var uidGen=0;
@@ -85878,7 +88930,7 @@ if(this.supported){
 
 
 if(line.startsWith('127.0.0.1')){
-this.hostname=line.substring(line.lastIndexOf(' '));
+this.hostname=line.substring(line.lastIndexOf(' ')+1);
 this._f='';
 this.setMask(NETWORK_FILTER_MASK.isHostname);
 this.setMask(NETWORK_FILTER_MASK.isPlain);
@@ -86017,7 +89069,7 @@ return new RegExp(filter);
 }
 return new RegExp(filter,'i');
 }catch(ex){
-(0,_adblockerUtils.log)('failed to compile regex '+filter+' with error '+ex+' '+ex.stack);
+(0,_adblockerUtils2['default'])('failed to compile regex '+filter+' with error '+ex+' '+ex.stack);
 
 return{test:function test(){
 return false;
@@ -86413,7 +89465,7 @@ cosmeticFilters:cosmeticFilters}};
 
 if(typeof _ret2==='object')return _ret2.v;
 }catch(ex){
-(0,_adblockerUtils.log)('ERROR WHILE PARSING '+typeof list+' '+ex+' '+ex.stack);
+(0,_adblockerUtils2['default'])('ERROR WHILE PARSING '+typeof list+' '+ex+' '+ex.stack);
 return null;
 }
 }
@@ -86493,7 +89545,7 @@ parsed.get(type).set(name,tmpContent);
 }
 return parsed;
 }
-}, 635, null, "jsengine/build/modules/adblocker/filters-parsing.js");
+}, 649, null, "jsengine/build/modules/adblocker/filters-parsing.js");
 __d(/* jsengine/build/modules/adblocker/filters-matching.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -86739,7 +89791,7 @@ result=true;
 
 return result;
 }
-}, 636, null, "jsengine/build/modules/adblocker/filters-matching.js");
+}, 650, null, "jsengine/build/modules/adblocker/filters-matching.js");
 __d(/* jsengine/build/modules/adblocker/filters-loader.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -86756,17 +89808,23 @@ function _inherits(subClass,superClass){if(typeof superClass!=='function'&&super
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _coreResourceLoader=require(602 /* ../core/resource-loader */);
+var _coreResourceLoader=require(611 /* ../core/resource-loader */);
 
 var _coreResourceLoader2=_interopRequireDefault(_coreResourceLoader);
 
-var _coreLanguage=require(578 /* ../core/language */);
+var _coreLanguage=require(582 /* ../core/language */);
 
 var _coreLanguage2=_interopRequireDefault(_coreLanguage);
 
-var _corePlatform=require(584 /* ../core/platform */);
+var _corePlatform=require(589 /* ../core/platform */);
 
-var _adblockerUtils=require(633 /* ../adblocker/utils */);
+var _adblockerUtils=require(647 /* ../adblocker/utils */);
+
+var _adblockerUtils2=_interopRequireDefault(_adblockerUtils);
+
+var _adblocker=require(646 /* ./adblocker */);
+
+var _coreCliqz=require(594 /* ../core/cliqz */);
 
 
 var RESOURCES_PATH=['adblocker'];
@@ -86777,9 +89835,7 @@ var ONE_MINUTE=60*ONE_SECOND;
 var ONE_HOUR=60*ONE_MINUTE;
 
 
-var BASE_URL='https://s3.amazonaws.com/cdn.cliqz.com/adblocking/mobile-test/';
-
-var LANGS=_coreLanguage2['default'].state();
+var BASE_URL='https://cdn.cliqz.com/adblocking/latest-filters/';
 var EOL='\n';
 
 function stripProtocol(url){
@@ -86793,13 +89849,6 @@ result=result.substring(prefix.length);
 return result;
 }
 
-var FILTER_BOWER_PREFIX="adb_";
-
-function getBowerUrl(assetName){
-var bowerName=FILTER_BOWER_PREFIX+assetName.replace(/\//g,'_').replace(/\./g,'-');
-return'chrome://cliqz/content/adblocker/mobile/'+assetName;
-}
-
 var FiltersList=function(){
 function FiltersList(checksum,asset,remoteURL){
 _classCallCheck(this,FiltersList);
@@ -86808,11 +89857,7 @@ this.checksum=checksum;
 this.baseRemoteURL=remoteURL;
 this.assetName=stripProtocol(asset);
 
-this.resource=new _coreResourceLoader.Resource(RESOURCES_PATH.concat(this.assetName.split('/')),{
-remoteURL:this.remoteURL(),
-chromeURL:getBowerUrl(this.assetName),
-dataType:'plainText'});
-
+this.resource=new _coreResourceLoader.Resource(RESOURCES_PATH.concat(this.assetName.split('/')),{remoteURL:this.remoteURL(),dataType:'plainText'});
 }
 
 
@@ -86829,7 +89874,7 @@ value:function load(){
 var _this=this;
 
 return this.resource.load().then(this.updateList.bind(this))['catch'](function(e){
-(0,_adblockerUtils.log)('exception while loading '+_this.assetName+' '+e+' '+e.stack);
+(0,_adblockerUtils2['default'])('exception while loading '+_this.assetName+' '+e+' '+e.stack);
 });
 }},
 {
@@ -86838,7 +89883,7 @@ value:function update(){
 var _this2=this;
 
 return this.resource.updateFromRemote().then(this.updateList.bind(this))['catch'](function(e){
-(0,_adblockerUtils.log)('exception while updating '+_this2.assetName+' '+e+' '+e.stack);
+(0,_adblockerUtils2['default'])('exception while updating '+_this2.assetName+' '+e+' '+e.stack);
 });
 }},
 {
@@ -86887,14 +89932,23 @@ remoteURL:this.remoteURL()});
 
 this.allowedListsLoader.onUpdate(this.updateChecksums.bind(this));
 
-
-this.lists=new Map();
+this.initLists();
 }
 
 _createClass(_default,[{
+key:'initLists',
+value:function initLists(){
+
+this.lists=new Map();
+
+this.availableLang=new Set();
+
+this.loadedLang=new Set();
+}},
+{
 key:'remoteURL',
 value:function remoteURL(){
-return'https://s3.amazonaws.com/cdn.cliqz.com/adblocking/mobile-test/allowed-lists.json?t='+parseInt(Date.now()/60/60/1000,10);
+return'https://cdn.cliqz.com/adblocking/'+_corePlatform.platformName+'/allowed-lists.json?t='+parseInt(Date.now()/60/60/1000,10);
 }},
 {
 key:'stop',
@@ -86905,27 +89959,57 @@ this.allowedListsLoader.stop();
 key:'load',
 value:function load(){
 return this.allowedListsLoader.load().then(this.updateChecksums.bind(this))['catch'](function(e){
-(0,_adblockerUtils.log)('exception while loading allowed lists '+e+' '+e.stack);
+(0,_adblockerUtils2['default'])('exception while loading allowed lists '+e+' '+e.stack);
 });
 }},
 {
 key:'update',
 value:function update(){
 return this.allowedListsLoader.updateFromRemote()['catch'](function(e){
-(0,_adblockerUtils.log)('exception while updating allowed lists '+e+' '+e.stack);
+(0,_adblockerUtils2['default'])('exception while updating allowed lists '+e+' '+e.stack);
 });
 }},
 
 
+{
+key:'userOverrides',
+value:function userOverrides(){
+var langOverride=_coreCliqz.utils.getPref(_adblocker.ADB_USER_LANG_OVERRIDE,'');
+if(typeof langOverride==='string'&&langOverride!==''){
+return langOverride.split(';');
+}
+return[];
+}},
+{
+key:'userLang',
+value:function userLang(){
 
+if(!_coreCliqz.utils.getPref(_adblocker.ADB_USER_LANG,true)){
+
+return[];
+}
+
+
+var overrides=this.userOverrides();
+if(overrides.length>0){
+return overrides;
+}
+
+return _coreLanguage2['default'].state();
+}},
 {
 key:'updateChecksums',
 value:function updateChecksums(allowedLists){
+var _this3=this;
+
 
 this.allowedListsLoader.resource.remoteURL=this.remoteURL();
 
 var filtersLists=[];
 
+this.availableLang=new Set();
+this.loadedLang=new Set();
+var userLang=this.userLang();
 Object.keys(allowedLists).forEach(function(list){
 Object.keys(allowedLists[list]).forEach(function(asset){
 var checksum=allowedLists[list][asset].checksum;
@@ -86933,18 +90017,22 @@ var lang=null;
 
 if(list==='country_lists'){
 lang=allowedLists[list][asset].language;
+_this3.availableLang.add(lang);
 }
 
 var assetName=stripProtocol(asset);
 var filterRemoteURL=BASE_URL+assetName;
 
-if(lang===null||LANGS.indexOf(lang)>-1){
+if(lang===null||userLang.includes(lang)){
 filtersLists.push({
 checksum:checksum,
 asset:asset,
 remoteURL:filterRemoteURL,
 key:list});
 
+if(lang!==null){
+_this3.loadedLang.add(lang);
+}
 }
 });
 });
@@ -86954,7 +90042,7 @@ return this.updateLists(filtersLists);
 {
 key:'updateLists',
 value:function updateLists(filtersLists){
-var _this3=this;
+var _this4=this;
 
 var updatedLists=[];
 
@@ -86966,11 +90054,11 @@ var key=newList.key;
 
 var isFiltersList=key!=='js_resources';
 
-if(!_this3.lists.has(asset)){
+if(!_this4.lists.has(asset)){
 (function(){
 
 var list=new FiltersList(checksum,asset,remoteURL);
-_this3.lists.set(asset,list);
+_this4.lists.set(asset,list);
 
 
 updatedLists.push(list.load().then(function(filters){
@@ -86990,7 +90078,7 @@ return undefined;
 }else{
 (function(){
 
-var list=_this3.lists.get(asset);
+var list=_this4.lists.get(asset);
 
 
 if(list.needsToUpdate(checksum)){
@@ -87019,7 +90107,7 @@ return filters.filter(function(f){
 return f!==undefined;
 });
 }).then(function(filters){
-return _this3.triggerCallbacks(filters);
+return _this4.triggerCallbacks(filters);
 });
 }}]);
 
@@ -87029,7 +90117,7 @@ return _default;
 
 exports['default']=_default;
 module.exports=exports['default'];
-}, 637, null, "jsengine/build/modules/adblocker/filters-loader.js");
+}, 651, null, "jsengine/build/modules/adblocker/filters-loader.js");
 __d(/* jsengine/build/modules/adblocker/adb-stats.js */function(global, require, module, exports) {'use strict';
 
 Object.defineProperty(exports,'__esModule',{
@@ -87044,15 +90132,15 @@ function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(a
 
 function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}
 
-var _antitrackingDomain=require(598 /* ../antitracking/domain */);
+var _antitrackingDomain=require(607 /* ../antitracking/domain */);
 
-var _adblockerAdblocker=require(632 /* ../adblocker/adblocker */);
+var _adblockerAdblocker=require(646 /* ../adblocker/adblocker */);
 
 var _adblockerAdblocker2=_interopRequireDefault(_adblockerAdblocker);
 
-var _antitrackingUrl=require(600 /* ../antitracking/url */);
+var _antitrackingUrl=require(609 /* ../antitracking/url */);
 
-var _coreDomainInfo=require(620 /* ../core/domain-info */);
+var _coreDomainInfo=require(631 /* ../core/domain-info */);
 
 var _coreDomainInfo2=_interopRequireDefault(_coreDomainInfo);
 
@@ -87082,12 +90170,12 @@ company=domain;
 }
 if(this.blocked.get(company)){
 if(!this.blocked.get(company).has(url)){
-this.count++;
+this.count+=1;
 }
 this.blocked.get(company).add(url);
 }else{
 this.blocked.set(company,new Set([url]));
-this.count++;
+this.count+=1;
 }
 }},
 {
@@ -87156,6 +90244,6 @@ return AdbStats;
 
 exports['default']=AdbStats;
 module.exports=exports['default'];
-}, 638, null, "jsengine/build/modules/adblocker/adb-stats.js");
+}, 652, null, "jsengine/build/modules/adblocker/adb-stats.js");
 ;require(214);
 ;require(0);
