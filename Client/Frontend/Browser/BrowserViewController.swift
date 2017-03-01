@@ -346,10 +346,7 @@ class BrowserViewController: UIViewController {
             if self.initialURL != nil {
                 // Cliqz: Added call for initial URL if one exists
                 self.loadInitialURL()
-            } else if SessionState.isSessionExpired() {
-                // Cliqz: Added call for reset state in case of session timeout
-                self.resetState()
-            }
+            } 
             // Cliqz: ask for news notification permission according to our workflow
             self.askForNewsNotificationPermissionIfNeeded()
         })
@@ -3992,28 +3989,6 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 // Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
     
-    // reset App state when session expire
-    private func resetState() {
-        
-        // remove all tabs except the first tab
-        let lastIndex = tabManager.tabs.count-1
-        for index in lastIndex.stride(to: 0, by: -1) {
-            let tab = tabManager.tabs[index]
-            tabManager.removeTab(tab)
-        }
-        
-        if let selectedTab = tabManager.selectedTab,
-            let searchController = self.searchController {
-            
-            // added delay before calling resetState to ensure that it is called after calling search with empty string
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-            dispatch_after(time, dispatch_get_main_queue(), {
-                searchController.resetState()
-                
-            })
-        }
-    }
-
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
         if let selectedTab = self.tabManager.selectedTab {

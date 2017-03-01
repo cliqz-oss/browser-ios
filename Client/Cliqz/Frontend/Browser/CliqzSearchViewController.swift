@@ -348,36 +348,7 @@ extension CliqzSearchViewController {
             LocalDataStore.setObject(nil, forKey: lastTitleKey)
         }
         
-    }
-
-    func resetState() {
-
-        var configs = [String: AnyObject]()
-        if let lastURL = LocalDataStore.objectForKey(lastURLKey) as? String { // the app was closed while showing a url
-            configs["url"] = lastURL
-            // get title if possible
-            if let lastTitle = LocalDataStore.objectForKey(lastTitleKey) {
-                configs["title"] = lastTitle
-            }
-            
-            javaScriptBridge.publishEvent("reset-state", parameters: configs)
-        } else if let query = LocalDataStore.objectForKey(lastQueryKey) { // the app was closed while searching
-            configs["q"] = query
-            // get current location if possible
-            if let currentLocation = LocationManager.sharedInstance.location {
-                configs["lat"] = currentLocation.coordinate.latitude
-                configs["long"] = currentLocation.coordinate.longitude
-            }
-            javaScriptBridge.publishEvent("reset-state", parameters: configs)
-        }
-        
-        // reset local stored values
-        LocalDataStore.setObject(nil, forKey: lastQueryKey)
-        LocalDataStore.setObject(nil, forKey: lastURLKey)
-        LocalDataStore.setObject(nil, forKey: lastTitleKey)
-        
-    }
-    
+    }    
 }
 
 extension CliqzSearchViewController: JavaScriptBridgeDelegate {
