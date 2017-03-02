@@ -129,6 +129,7 @@ class ControlCenterPanel: UIViewController {
         self.activateButton.backgroundColor = UIColor(rgb: 0x4CBB17)
         self.activateButton.layer.cornerRadius = 10
         self.activateButton.addTarget(self, action: #selector(enableFeature), forControlEvents: .TouchUpInside)
+        self.activateButton.contentEdgeInsets = UIEdgeInsetsMake(6, 4, 6, 4)
         self.view.addSubview(self.activateButton)
         
         updateView()
@@ -246,8 +247,9 @@ class ControlCenterPanel: UIViewController {
             }
             
             activateButton.snp_makeConstraints { (make) in
-                make.size.equalTo(okButton)
-                make.centerX.bottom.equalTo(okButton)
+                //make.height.equalTo(30)
+                make.bottom.equalTo(self.view).inset(6)
+                make.right.equalTo(self.view).inset(4)
             }
             
         }
