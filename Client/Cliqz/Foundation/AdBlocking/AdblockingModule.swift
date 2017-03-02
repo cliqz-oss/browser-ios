@@ -12,22 +12,11 @@ import Crashlytics
 
 class AdblockingModule: NSObject {
 
-    //MARK: Constants
-    private let context: JSContext? = nil
-    private let antiTrackingDirectory = "Extension/build/mobile/search/v8"
-    private let documentDirectory = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! as String
-    private let fileManager = NSFileManager.defaultManager()
-    private let dispatchQueue = dispatch_queue_create("com.cliqz.AntiTracking", DISPATCH_QUEUE_SERIAL)
-    
+    //MARK: Constants    
     private let adBlockABTestPrefName = "cliqz-adb-abtest"
     private let adBlockPrefName = "cliqz-adb"
     
-    private let telemetryWhiteList = ["attrack.FP", "attrack.tp_events"]
-    private let urlsWhiteList = ["https://cdn.cliqz.com/anti-tracking/bloom_filter/",
-                                 "https://cdn.cliqz.com/anti-tracking/whitelist/versioncheck.json",
-                                 "https://cdn.cliqz.com/adblocking/mobile/allowed-lists.json"]
     
-    let adBlockerLastUpdateDateKey = "AdBlockerLastUpdateDate"
     
     //MARK: - Singltone
     static let sharedInstance = AdblockingModule()

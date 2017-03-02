@@ -284,9 +284,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
 #endif
-        // Configure AntiTracking Module
-        //INTEGRATION
-        //JSEngineAdapter.sharedInstance.startJSEngine()
+        // Configure AntiTracking/AdBlocking Module
         AntiTrackingModule.sharedInstance.initModule()
         AdblockingModule.sharedInstance.initModule()
         
