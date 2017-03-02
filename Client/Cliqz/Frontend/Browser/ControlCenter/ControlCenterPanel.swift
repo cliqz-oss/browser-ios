@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class ControlCenterPanel: UIViewController {
     //MARK: - Constants
     let enabledColor = UIColor(rgb: 0x2EBA85)

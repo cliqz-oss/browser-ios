@@ -12,6 +12,7 @@ import UIKit
 protocol ControlCenterViewDelegate: class {
     
     func controlCenterViewWillClose(antitrackingView: UIView)
+    func reloadCurrentPage()
     
 }
 
@@ -276,9 +277,11 @@ extension ControlCenterViewController : ControlCenterPanelDelegate {
                 }
             }
         }
+        
+        
     }
     
-    func reloadCurrentPage(){
-        //nothing
+    func reloadCurrentPage() {
+        self.controlCenterDelegate?.reloadCurrentPage()
     }
 }
