@@ -328,3 +328,9 @@
 
 /* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
 "Suspicious activities were detected" = "Suspicious activities were detected";
+
+/* AntiTracking Information text for landscape mode. */
+"AntiTracking Information" = "Tracking-Information";
+
+/* AdBlocking Information text for landscape mode. */
+"AdBlocking Information" = "AdBlocking-Information";
