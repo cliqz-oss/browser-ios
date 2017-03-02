@@ -10,8 +10,13 @@ import UIKit
 
 class AdBlockerPanel: AntitrackingPanel {
     
-    var trackersList = [(String, Int)]()
-    var trackersCount = 0
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        secondViewTitleLabel.text = NSLocalizedString("AdBlocking Information", tableName: "Cliqz", comment: "AAdBlocking Information text for landscape mode.")
+        if let label = toTableViewButton.subviews.first as? UILabel {
+            label.text = NSLocalizedString("AdBlocking Information", tableName: "Cliqz", comment: "AdBlocking Information text for landscape mode.")
+        }
+    }
     
     //MARK: - Abstract methods implementation
     override func getPanelTitle() -> String {
@@ -60,9 +65,11 @@ class AdBlockerPanel: AntitrackingPanel {
         SettingsPrefs.updateAdBlockerPref(true)
         self.updateView()
         self.setupConstraints()
+        self.controlCenterPanelDelegate?.reloadCurrentPage()
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
+        //INVESTIGATE
         if let urlString = self.currentURL.absoluteString {
             return isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
         }

@@ -16,8 +16,8 @@ class AntitrackingPanel: ControlCenterPanel {
     
     //MARK: - Instance variables
     //MARK: data
-    private var trackersList: [(String, Int)]!
-    private var trackersCount = 0
+    var trackersList: [(String, Int)]!
+    var trackersCount = 0
     
     //MARK: views
     private let trackersCountLabel = UILabel()
@@ -89,7 +89,7 @@ class AntitrackingPanel: ControlCenterPanel {
         self.view.addSubview(toTableViewButton)
         
         //TODO: Localize this string
-        let secondViewTitle = "Tracking-Information"
+        let secondViewTitle = NSLocalizedString("AntiTracking Information", tableName: "Cliqz", comment: "AntiTracking Information text for landscape mode.")
         secondViewTitleLabel.text = secondViewTitle
         secondViewTitleLabel.textColor = UIConstants.CliqzThemeColor
         secondViewTitleLabel.font = UIFont.boldSystemFontOfSize(18)
@@ -316,6 +316,7 @@ class AntitrackingPanel: ControlCenterPanel {
         AntiTrackingModule.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
+        self.controlCenterPanelDelegate?.reloadCurrentPage()
     }
     
     func updateTrackers() {
@@ -516,7 +517,7 @@ class AntitrackingPanel: ControlCenterPanel {
         button.addTarget(self, action: #selector(showTableView), forControlEvents: .TouchUpInside)
         
         //TODO: Localize this string
-        let toTableViewButtonTitle = "Tracking-Information"
+        let toTableViewButtonTitle = NSLocalizedString("AntiTracking Information", tableName: "Cliqz", comment: "AntiTracking Information text for landscape mode.")
         
         let label = UILabel()
         label.text = toTableViewButtonTitle
