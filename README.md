@@ -65,21 +65,7 @@ It is possible to use [App Code](https://www.jetbrains.com/objc/download/) inste
 
 ### React Native
 
-This branch uses react-native for background javascript, and requires the following additional steps:
-
- 1. Get react-native libraries:
-
- ```shell
- npm install
- ```
-
- 2. Use cocoa pods to setup react-native dependencies:
-
- ```shell
- pod install
- ```
-
- 3. Now you should open the xcode workspace created by cocoa pods in order to work on the project.
+This branch uses react-native for background javascript. The bootstrap setup will automatically setup the react-native environment, and create a XCode workspace which you should use to open the project.
 
 #### React debug tools
 

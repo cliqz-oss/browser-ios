@@ -604,12 +604,12 @@
 		AFA6F3E91E67424700BA630B /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
+		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
 		B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BB1E5C5A06001B38A1 /* Engine.swift */; };
 		B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */; };
 		B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */; };
 		B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */; };
 		B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */; };
-		B354B5E41E5DCDAD001B38A1 /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */; };
 		B729F06A1B75CBEF00745F7A /* UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729F0691B75CBEF00745F7A /* UserAgent.swift */; };
 		C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */; };
 		C40046FA1CF8E0B200B08303 /* BackForwardListAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */; };
@@ -1160,14 +1160,14 @@
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
 		};
-		AF8F298D1E672E33005DABE5 /* PBXContainerItemProxy */ = {
+		B31A31A01E6717C600A9DA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
 			remoteInfo = KIFFrameworkConsumer;
 		};
-		AF8F298F1E672E33005DABE5 /* PBXContainerItemProxy */ = {
+		B31A31A21E6717C600A9DA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
 			proxyType = 2;
@@ -2058,12 +2058,12 @@
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
+		B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
 		B354B5BB1E5C5A06001B38A1 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = JSEngine/Engine.swift; sourceTree = "<group>"; };
 		B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = JSEngine/WebRequest.swift; sourceTree = "<group>"; };
 		B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebRequestBridge.m; path = JSEngine/WebRequestBridge.m; sourceTree = "<group>"; };
 		B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSBridge.swift; path = JSEngine/JSBridge.swift; sourceTree = "<group>"; };
 		B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSBridgeBridge.m; path = JSEngine/JSBridgeBridge.m; sourceTree = "<group>"; };
-		B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jsengine.bundle.js; sourceTree = "<group>"; };
 		B729F0691B75CBEF00745F7A /* UserAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgent.swift; path = ../Shared/UserAgent.swift; sourceTree = "<group>"; };
 		C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListViewController.swift; sourceTree = "<group>"; };
 		C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListAnimator.swift; sourceTree = "<group>"; };
@@ -4010,6 +4010,7 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
+				B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */,
 				B354B5BB1E5C5A06001B38A1 /* Engine.swift */,
 				B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */,
 				B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */,
@@ -4501,7 +4502,6 @@
 			children = (
 				AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */,
 				AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */,
-				B354B5E31E5DCDAD001B38A1 /* jsengine.bundle.js */,
 				1E79DEB41D5098CC006BEB4A /* CliqzUITests */,
 				1E79DC941D4FB2B3006BEB4A /* Extension */,
 				28CE83CA1A1D1D5100576538 /* FxA.xcodeproj */,
@@ -5508,18 +5508,18 @@
 			remoteRef = 7B9A62E81C4002B1005C83DC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		AF8F298E1E672E33005DABE5 /* KIFFrameworkConsumer.app */ = {
+		B31A31A11E6717C600A9DA7B /* KIFFrameworkConsumer.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = KIFFrameworkConsumer.app;
-			remoteRef = AF8F298D1E672E33005DABE5 /* PBXContainerItemProxy */;
+			remoteRef = B31A31A01E6717C600A9DA7B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		AF8F29901E672E33005DABE5 /* KIFFrameworkConsumerTests.xctest */ = {
+		B31A31A31E6717C600A9DA7B /* KIFFrameworkConsumerTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = KIFFrameworkConsumerTests.xctest;
-			remoteRef = AF8F298F1E672E33005DABE5 /* PBXContainerItemProxy */;
+			remoteRef = B31A31A21E6717C600A9DA7B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D30EBB641C75503800105AE9 /* libKIF.a */ = {
@@ -5750,10 +5750,10 @@
 				0BDA568B1B26B1BE008C9B96 /* LoginsHelper.js in Resources */,
 				E4B7B7791A793CF20022C5E0 /* FiraSans-Light.ttf in Resources */,
 				D38A1BF01A9FA2CA00F6A386 /* SiteTableViewControllerHeader.xib in Resources */,
+				B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */,
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
 				1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
-				B354B5E41E5DCDAD001B38A1 /* jsengine.bundle.js in Resources */,
 				1E79DD351D4FB2C5006BEB4A /* NewsPermissionSettings-6Plus.png in Resources */,
 				1E79DDD51D507D26006BEB4A /* PrivateBrowsing.strings in Resources */,
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
