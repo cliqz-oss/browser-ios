@@ -1160,14 +1160,14 @@
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
 		};
-		B31A31A01E6717C600A9DA7B /* PBXContainerItemProxy */ = {
+		B31A31D71E68824400A9DA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FAB89FFC1CAC546900C6DFC1;
 			remoteInfo = KIFFrameworkConsumer;
 		};
-		B31A31A21E6717C600A9DA7B /* PBXContainerItemProxy */ = {
+		B31A31D91E68824400A9DA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30EBB5A1C75503800105AE9 /* KIF.xcodeproj */;
 			proxyType = 2;
@@ -1718,8 +1718,6 @@
 		1E79DEB81D5098CC006BEB4A /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		1E79DEB91D5098CC006BEB4A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "UITests copy-Info.plist"; path = "/Users/mahmoud/Cliqz/Repositories/cliqzfox-ios/UITests copy-Info.plist"; sourceTree = "<absolute>"; };
-		1E97773B1E50EEAE0035EF60 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "Carthage/Checkouts/jsengine/jsengine-android/jsengine/src/main/assets"; sourceTree = SOURCE_ROOT; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
 		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
@@ -4030,8 +4028,8 @@
 				D30EBB661C75503800105AE9 /* Test Host.app */,
 				D30EBB681C75503800105AE9 /* KIF Tests - XCTest.xctest */,
 				D30EBB6A1C75503800105AE9 /* KIF.framework */,
-				AF8F298E1E672E33005DABE5 /* KIFFrameworkConsumer.app */,
-				AF8F29901E672E33005DABE5 /* KIFFrameworkConsumerTests.xctest */,
+				B31A31D81E68824400A9DA7B /* KIFFrameworkConsumer.app */,
+				B31A31DA1E68824400A9DA7B /* KIFFrameworkConsumerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4532,7 +4530,6 @@
 				28CE83EF1A1D246900576538 /* Third-Party Source */,
 				D39FA1601A83E0EC00EE869C /* UITests */,
 				E42CCDFF1A24C4E300B794D3 /* Utils */,
-				1E79DEFC1D5098F6006BEB4A /* UITests copy-Info.plist */,
 				7124382851AB4FA86C0F1FD3 /* Pods */,
 			);
 			sourceTree = "<group>";
@@ -5508,18 +5505,18 @@
 			remoteRef = 7B9A62E81C4002B1005C83DC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B31A31A11E6717C600A9DA7B /* KIFFrameworkConsumer.app */ = {
+		B31A31D81E68824400A9DA7B /* KIFFrameworkConsumer.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = KIFFrameworkConsumer.app;
-			remoteRef = B31A31A01E6717C600A9DA7B /* PBXContainerItemProxy */;
+			remoteRef = B31A31D71E68824400A9DA7B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B31A31A31E6717C600A9DA7B /* KIFFrameworkConsumerTests.xctest */ = {
+		B31A31DA1E68824400A9DA7B /* KIFFrameworkConsumerTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = KIFFrameworkConsumerTests.xctest;
-			remoteRef = B31A31A21E6717C600A9DA7B /* PBXContainerItemProxy */;
+			remoteRef = B31A31D91E68824400A9DA7B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D30EBB641C75503800105AE9 /* libKIF.a */ = {
