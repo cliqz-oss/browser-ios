@@ -16,26 +16,26 @@ PODS:
   - Yoga (0.42.0-rc.3.React)
 
 DEPENDENCIES:
-  - React/Core (from `./node_modules/react-native`)
-  - React/RCTNetwork (from `./node_modules/react-native`)
-  - React/RCTText (from `./node_modules/react-native`)
-  - React/RCTWebSocket (from `./node_modules/react-native`)
-  - RNFS (from `./node_modules/react-native-fs`)
-  - Yoga (from `./node_modules/react-native/ReactCommon/yoga`)
+  - React/Core (from `./JSEngine/node_modules/react-native`)
+  - React/RCTNetwork (from `./JSEngine/node_modules/react-native`)
+  - React/RCTText (from `./JSEngine/node_modules/react-native`)
+  - React/RCTWebSocket (from `./JSEngine/node_modules/react-native`)
+  - RNFS (from `./JSEngine/node_modules/react-native-fs`)
+  - Yoga (from `./JSEngine/node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
   React:
-    :path: ./node_modules/react-native
+    :path: ./JSEngine/node_modules/react-native
   RNFS:
-    :path: ./node_modules/react-native-fs
+    :path: ./JSEngine/node_modules/react-native-fs
   Yoga:
-    :path: ./node_modules/react-native/ReactCommon/yoga
+    :path: ./JSEngine/node_modules/react-native/ReactCommon/yoga
 
 SPEC CHECKSUMS:
   React: 595dd56966a44d51a8f720fb1751ec165181b3b0
   RNFS: a4b688281f77ab6659119c342d7a85c8663c83da
   Yoga: 29d2c370c8fb8bf892d3c3a3fe6aec68ea8cc450
 
-PODFILE CHECKSUM: e31f9b87757ebb37cf8fc87cbb636124879cdf82
+PODFILE CHECKSUM: 70686f177c9501b2f82a5721fe25fa561761c24e
 
 COCOAPODS: 1.2.0
