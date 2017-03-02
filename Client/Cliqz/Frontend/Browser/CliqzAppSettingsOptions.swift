@@ -86,8 +86,8 @@ class TestReact: Setting {
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let humanWebTitle = "Test React"
-        super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let reactTitle = "Test React"
+        super.init(title: NSAttributedString(string: reactTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }

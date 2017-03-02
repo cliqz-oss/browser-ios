@@ -131,13 +131,6 @@ class ControlCenterPanel: UIViewController {
         self.activateButton.addTarget(self, action: #selector(enableFeature), forControlEvents: .TouchUpInside)
         self.view.addSubview(self.activateButton)
         
-        if panelLayout == .LandscapeRegularSize{
-            //for developing purposes
-            //self.okButton.hidden = true
-            //self.learnMoreButton.hidden = true
-            //self.activateButton.hidden = true
-        }
-        
         updateView()
     }
     

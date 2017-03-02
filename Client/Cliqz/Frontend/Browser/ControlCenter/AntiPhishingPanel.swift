@@ -101,10 +101,6 @@ class AntiPhishingPanel: ControlCenterPanel {
                 make.centerX.equalTo(descriptionLabel)
             }
             
-//            activateButton.snp_makeConstraints { (make) in
-//                make.centerX.equalTo(descriptionLabel)
-//                make.centerY.equalTo(self.view)
-//            }
         }
         else{
             subtitleLabel.snp_updateConstraints { make in
