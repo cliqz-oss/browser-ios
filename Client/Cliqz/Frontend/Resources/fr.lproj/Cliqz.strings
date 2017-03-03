@@ -335,3 +335,12 @@
 
 /* AdBlocking Information text for landscape mode. */
 "AdBlocking Information" = "Informations sur le bloquage Bloqueur de Pubs";
+
+/* Alert title for turning on location service when clicking share location on local card */
+"Turn on Location Services" = "Turn on Location Services";
+
+/* Alert message for turning on location service when clicking share location on local card */
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les Réglages de l'application CLIQZ :\n1. Clique sur 'Service de localisation'\n2. Saisis 'Lorsque l'app est active'";
+
+/* Not now option for turning on location service */
+"Not Now" = "Pas maintenant";

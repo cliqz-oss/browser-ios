@@ -74,6 +74,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationShowBlockedTopSites, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
+
     }
 
 	override func viewDidLoad() {
@@ -104,7 +106,33 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: UIDeviceOrientationDidChangeNotification, object: UIDevice.currentDevice())
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showOpenSettingsAlert), name: LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
 
+
+    }
+    func showOpenSettingsAlert() {
+        let title = NSLocalizedString("Turn on Location Services", tableName: "Cliqz", comment: "Alert title for turning on location service when clicking share location on local card")
+        let message = NSLocalizedString("To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
+        
+        let alertController = UIAlertController (title: title, message: message, preferredStyle: .Alert)
+        
+        let settingsOptionTitle = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings option for turning on location service")
+        let settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
+            if let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(settingsUrl)
+            }
+        }
+        
+        
+        let notNowOptionTitle = NSLocalizedString("Not Now", tableName: "Cliqz", comment: "Not now option for turning on location service")
+        let cancelAction = UIAlertAction(title: notNowOptionTitle, style: .Default, handler: nil)
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(settingsAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
     }
 
     func fixViewport() {
