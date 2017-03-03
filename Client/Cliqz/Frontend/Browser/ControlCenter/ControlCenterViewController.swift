@@ -22,7 +22,9 @@ class ControlCenterViewController: UIViewController {
     private let controlCenterThemeColor = UIConstants.CliqzThemeColor
     private let urlBarHeight: CGFloat = 40.0
     
-    //MARK: - Private variables
+    //MARK: - Variables
+    public var visible = false
+    
     //MARK: Views
     private var blurryBackgroundView: UIVisualEffectView!
     private var backgroundView: UIView!
@@ -110,9 +112,9 @@ class ControlCenterViewController: UIViewController {
         view.addSubview(panelContainerView)
         
         // Close tap
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapRecognizer))
-        tap.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(tap)
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(tapRecognizer))
+//        tap.cancelsTouchesInView = false
+//        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -135,16 +137,16 @@ class ControlCenterViewController: UIViewController {
         if panelLayout != .LandscapeRegularSize {
             blurryBackgroundView.snp_makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
-                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.top.equalTo(self.view)
             }
             backgroundView.snp_makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
-                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.top.equalTo(self.view)
             }
             
             panelSegmentedContainerView.snp_makeConstraints { make in
                 make.left.right.equalTo(self.view)
-                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.top.equalTo(self.view)
                 make.height.equalTo(45)
             }
             panelSegmentedControl.snp_makeConstraints { make in
@@ -168,12 +170,12 @@ class ControlCenterViewController: UIViewController {
         {
             backgroundView.snp_makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
-                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.top.equalTo(self.view)
             }
             
             panelSegmentedContainerView.snp_makeConstraints { make in
                 make.left.right.equalTo(self.view)
-                make.top.equalTo(self.view).offset(urlBarHeight)
+                make.top.equalTo(self.view)
                 make.height.equalTo(45)
             }
             panelSegmentedControl.snp_makeConstraints { make in
@@ -203,12 +205,12 @@ class ControlCenterViewController: UIViewController {
         return UIColor(rgb: 0xE8E8E8)
     }
     
-    @objc private func tapRecognizer(sender: UITapGestureRecognizer) {
-        let p = sender.locationInView(self.view)
-        if p.y <= urlBarHeight {
-            closeControlCenter()
-        }
-    }
+//    @objc private func tapRecognizer(sender: UITapGestureRecognizer) {
+//        let p = sender.locationInView(self.view)
+//        if p.y <= urlBarHeight {
+//            closeControlCenter()
+//        }
+//    }
 
     //MARK: Switching panels
     @objc private func switchPanel(sender: UISegmentedControl) {
