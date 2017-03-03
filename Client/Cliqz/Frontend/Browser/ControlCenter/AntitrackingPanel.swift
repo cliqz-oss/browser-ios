@@ -88,7 +88,6 @@ class AntitrackingPanel: ControlCenterPanel {
         self.customizeToTableViewButton(toTableViewButton)
         self.view.addSubview(toTableViewButton)
         
-        //TODO: Localize this string
         let secondViewTitle = NSLocalizedString("AntiTracking Information", tableName: "Cliqz", comment: "AntiTracking Information text for landscape mode.")
         secondViewTitleLabel.text = secondViewTitle
         secondViewTitleLabel.textColor = UIConstants.CliqzThemeColor
@@ -307,7 +306,8 @@ class AntitrackingPanel: ControlCenterPanel {
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
         if let host = self.currentURL.host{
-            return !AntiTrackingModule.sharedInstance.isDomainWhiteListed(host)
+            let whitelisted = AntiTrackingModule.sharedInstance.isDomainWhiteListed(host)
+            return !whitelisted
         }
         return false
     }

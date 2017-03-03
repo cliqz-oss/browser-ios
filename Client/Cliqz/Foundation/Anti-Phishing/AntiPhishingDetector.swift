@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Shared
 
 class AntiPhishingDetector: NSObject {
     
@@ -51,6 +52,7 @@ class AntiPhishingDetector: NSObject {
 							dispatch_async(dispatch_get_main_queue(), { 
 								completion(true)
                                 detectedPhishingURLs.append(url)
+                                NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: nil)
 							})
 						}
 					}
