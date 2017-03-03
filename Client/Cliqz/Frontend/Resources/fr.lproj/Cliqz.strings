@@ -24,14 +24,14 @@
 "Imprint" = "Légal";
 
 /* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
-"FAQs & Support" = "FAQs & Support";
+"FAQs & Support" = "FAQ & Support";
 
 /* Menu item in settings used to redirect to Report Page where people can report pages */
 
-"Report Website" = "Rapporter le site Web";
+"Report Website" = "Signaler le site Web";
 
 /* Open search section of settings */
-"Search" = "Rechercher";
+"Search" = "Rechercher avec";
 
 /* Footnote message for feedback */
 "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback pour le navigateur Cliqz (Version %@) pour iOS (Version %@) de %@";
@@ -68,7 +68,7 @@
 
 /* Block Ads setting
  Block Ads toogle title in Block Ads settings */
-"Block Ads" = "Bloqueur de pubs BETA";
+"Block Ads" = "Bloqueur de Pubs BETA";
 
 /* Fair Blocking toogle title in Block Ads settings
   Title of navigation controller of Fair Blocking */
@@ -177,7 +177,7 @@
 "Trackers count title" = "Données personnelles";
 
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Attention: site malveillant !";
+"Warning: deceptive website!" =  "Attention : site malveillant !";
 
 /* Antiphishing alert message */
 "CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser tes identifiants, tes mots de passe ou toutes autres données sensibles.";
@@ -234,7 +234,7 @@
 "AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, tu dois être connecté(e) au Wi-Fi.";
 
 /* [Settings] Show tips and tricks page */
-"Get the best out of CLIQZ" = "Obtiens le meilleur de CLIQZ";
+"Get the best out of CLIQZ" = "Obtenir le meilleur de CLIQZ";
 
 /* Youtube downloader action sheet title */
 "Video quality" = "Qualité vidéo";
@@ -258,7 +258,7 @@
 "Forget Tab Description" = "Tu surfes en Mode Oubli : les sites web que tu visites dans ce mode ne seront pas sauvegardés dans ton historique et les données locales, cookies inclus, ne seront pas conservées.";
 
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "Vous accéderez à vos sites les plus visités ici";
+"Empty TopSites hint" = "Tu accéderas à tes sites les plus visités ici";
 
 /* Search Results from */
 "Search Results from" = "Résultats pour";
@@ -279,7 +279,7 @@
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Ad-Blocking panel name on control center. */
-"Ad-Blocking" = "Ad-Blocking";
+"Ad-Blocking" = "Bloqueur de Pubs";
 
 /* Anti-Phishing panel name on control center. */
 "Anti-Phishing" = "Anti-Phishing";
@@ -288,50 +288,50 @@
 "Learn more" = "Learn more";
 
 /* Activate button in control center panel. */
-"Activate" = "Activate";
+"Activate" = "Activer";
 
 /* Anti-tracking panel title in the control center when it is enabled. */
-"Your data is protected" = "Your data is protected";
+"Your data is protected" = "Tes données personnelles sont protegées";
 
 /* Anti-tracking panel title in the control center when it is disabled
  Anti-Phishing panel title in the control center if the current website is a phishing one. */
-"Your data is not protected" = "Your data is not protected";
+"Your data is not protected" = "Tes données personnelles ne sont pas protegées";
 
 /* Anti-tracking panel subtitle in the control center when it is enabled. */
-"Private data points have been removed" = "Private data points have been removed";
+"Private data points have been removed" = "données personnelles sécurisées";
 
 /* Anti-tracking panel subtitle in the control center when it is disabled */
-"Anti-Tracking is turned off for this website" = "Anti-Tracking is turned off for this website";
+"Anti-Tracking is turned off for this website" = "Anti-Tracking est désactivé pour ce site";
 
 /* AdBlocker panel title in the control center when it is enabled. */
-"You surf the web without ads" = "You surf the web without ads";
+"You surf the web without ads" = "Tu surferas sans pubs";
 
 /* AdBlocker panel title in the control center when it is disabled. */
-"You surf the web with ads" = "You surf the web with ads";
+"You surf the web with ads" = "Tu verras des pubs";
 
 /* AdBlocker panel subtitle in the control center when it is enabled. */
 "Ads have been blocked" = "Ads have been blocked";
 
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
-"Ad-Blocking is turned off for this website" = "AdBlocking is turned off for this website";
+"Ad-Blocking is turned off for this website" = "Bloqueur de Pubs est désactivé pour ce site";
 
 /* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
-"Ad-Blocking is turned off" = "AdBlocking is turned off";
+"Ad-Blocking is turned off" = "Bloqueur de Pubs est désactivé";
 
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.";
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "La technologie Anti-Phishing détecte et bloque les sites Web frauduleux qui tentent d'obtenir tes mots de passe ou tes données personnelles avant de visiter le site.";
 
 /* Anti-Phishing panel title in the control center if the current website is safe. */
-"You are safe" = "You are safe";
+"You are safe" = "Tu es en sûreté";
 
 /* Anti-Phishing panel subtitle in the control center if the current website is safe. */
-"No suspicious activities detected" = "No suspicious activities detected";
+"No suspicious activities detected" = "Aucune activité suspicieuse détectée";
 
 /* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
-"Suspicious activities were detected" = "Suspicious activities were detected";
+"Suspicious activities were detected" = "Des activités suspectes ont été détectées";
 
 /* AntiTracking Information text for landscape mode. */
-"AntiTracking Information" = "Tracking-Information";
+"AntiTracking Information" = "Informations sur le tracking";
 
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "AdBlocking-Information";
+"AdBlocking Information" = "Informations sur le bloquage Bloqueur de Pubs";

@@ -312,10 +312,10 @@
 "Ads have been blocked" = "Ads have been blocked";
 
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
-"Ad-Blocking is turned off for this website" = "AdBlocking is turned off for this website";
+"Ad-Blocking is turned off for this website" = "Ad-Blocking is turned off for this website";
 
 /* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
-"Ad-Blocking is turned off" = "AdBlocking is turned off";
+"Ad-Blocking is turned off" = "Ad-Blocking is turned off";
 
 /*Anti-Phishing panel description */
 "Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.";
@@ -333,4 +333,4 @@
 "AntiTracking Information" = "Tracking-Information";
 
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "AdBlocking-Information";
+"AdBlocking Information" = "Ad-Blocking-Information";
