@@ -11,6 +11,7 @@ import CoreLocation
 
 public class LocationManager: NSObject, CLLocationManagerDelegate {
     static let NotificationUserLocationAvailable = "NotificationUserLocationAvailable"
+    static let NotificationShowOpenLocationSettingsAlert = "NotificationShowOpenLocationSettingsAlert"
 
 	private let manager = CLLocationManager()
     private var location: CLLocation? {
@@ -43,8 +44,9 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
     
 	public func shareLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        
-        if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+        if authorizationStatus == .Denied {
+            NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
+        } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
             self.manager.startUpdatingLocation()
             
         } else if CLLocationManager.locationServicesEnabled() {

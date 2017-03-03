@@ -333,4 +333,14 @@
 "AntiTracking Information" = "Tracking-Information";
 
 /* AdBlocking Information text for landscape mode. */
+
 "AdBlocking Information" = "Ad-Blocking-Information";
+
+/* Alert title for turning on location service when clicking share location on local card */
+"Turn on Location Services" = "Turn on Location Services";
+
+/* Alert message for turning on location service when clicking share location on local card */
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2. Enable 'While Using'";
+
+/* Not now option for turning on location service */
+"Not Now" = "Not Now";
