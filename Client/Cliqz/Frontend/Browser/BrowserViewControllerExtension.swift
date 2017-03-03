@@ -108,6 +108,14 @@ extension BrowserViewController: ControlCenterViewDelegate {
     
 	func urlBarDidClickAntitracking(urlBar: URLBarView) {
         
+        if let controlCenter = self.controlCenterController {
+            if controlCenter.visible == true {
+                self.controlCenterController?.closeControlCenter()
+                self.controlCenterController?.visible = false
+                return
+            }
+        }
+        
         if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
         
             let panelLayout = OrientationUtil.controlPanelLayout()
@@ -118,30 +126,36 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.addChildViewController(controlCenterVC)
             self.controlCenterController = controlCenterVC
             
+            let toolbarHeight: CGFloat = 40.0
+            
             if (panelLayout != .LandscapeRegularSize){
                 var r = self.view.bounds
                 r.origin.y = -r.size.height
+                r.size.height = r.size.height - toolbarHeight
                 controlCenterVC.view.frame = r
             }
             else{
                 var r = self.view.frame
                 r.origin.x = r.size.width
+                r.origin.y = r.origin.y + toolbarHeight
                 r.size.width = r.size.width/2
+                r.size.height = r.size.height - toolbarHeight
                 controlCenterVC.view.frame = r
             }
             
             self.view.addSubview(controlCenterVC.view)
             self.view.bringSubviewToFront(self.urlBar)
-            self.urlBar.enableAntitrackingButton(false)
+            //self.urlBar.enableAntitrackingButton(false)
             
             logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
             
             if (panelLayout != .LandscapeRegularSize){
                 UIView.animateWithDuration(0.5, animations: {
-                    controlCenterVC.view.center = self.view.center
+                    controlCenterVC.view.frame.origin.y = self.view.frame.origin.y + toolbarHeight
                     }, completion: { (finished) in
                         if finished {
                             self.view.bringSubviewToFront(controlCenterVC.view)
+                            self.controlCenterController?.visible = true
                         }
                 })
             }
@@ -155,6 +169,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
                     }, completion: { (finished) in
                         if finished {
                             self.view.bringSubviewToFront(controlCenterVC.view)
+                            self.controlCenterController?.visible = true
                         }
                 })
             }
@@ -176,7 +191,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.updateViewConstraints()
         }
         self.controlCenterController = nil
-		self.urlBar.enableAntitrackingButton(true)
+		//self.urlBar.enableAntitrackingButton(true)
 		self.view.bringSubviewToFront(self.urlBar)
 	}
     func reloadCurrentPage() {
