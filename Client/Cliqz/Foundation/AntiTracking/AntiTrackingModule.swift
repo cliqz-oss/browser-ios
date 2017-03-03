@@ -9,6 +9,7 @@
 import Foundation
 import JavaScriptCore
 import Crashlytics
+import Shared
 
 class AntiTrackingModule: NSObject {
     
@@ -73,13 +74,18 @@ class AntiTrackingModule: NSObject {
     func toggleAntiTrackingForURL(url: NSURL){
         
         guard let host = url.host else{return}
+        var whitelisted = false
         
         if self.isDomainWhiteListed(host){
             self.removeFromWhitelist(host)
         }
         else{
             self.addToWhiteList(host)
+            whitelisted = true
         }
+        
+        //Doc: If the observer checks if the website is whitelisted after this, it might get the wrong value, since the correct value may not be set yet. 
+        NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: ["whitelisted":whitelisted])
     }
     
     

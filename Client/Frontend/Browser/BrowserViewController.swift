@@ -1199,7 +1199,9 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     private func updateURLBarDisplayURL(tab: Tab) {
-        urlBar.currentURL = tab.displayURL
+        if (urlBar.currentURL != tab.displayURL){
+            urlBar.currentURL = tab.displayURL
+        }
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
         // Cliqz: update the toolbar only if the search controller is not visible
         if searchController?.view.hidden == true {
