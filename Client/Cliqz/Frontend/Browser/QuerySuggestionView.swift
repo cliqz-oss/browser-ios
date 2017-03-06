@@ -23,7 +23,7 @@ class QuerySuggestionView: UIView {
     
     //MARK:- instance variables
     weak var delegate : QuerySuggestionDelegate? = nil
-    private var currentText: String?
+    private var currentText = ""
     
     
     init() {
@@ -49,11 +49,13 @@ class QuerySuggestionView: UIView {
     }
     
     func didEnterText(text: String) {
-        guard QuerySuggestions.isEnabled() else {
+        currentText = text
+        
+        guard QuerySuggestions.isEnabled() && OrientationUtil.isPortrait() else {
             self.hidden = true
             return
         }
-        currentText = text
+        
         guard !text.isEmpty else {
             clearSuggestions()
             return
@@ -158,9 +160,8 @@ class QuerySuggestionView: UIView {
     }
     
     private func getTitle(suggestion: String) -> NSAttributedString {
-        guard let prefix = currentText else {
-            return NSMutableAttributedString()
-        }
+        
+        let prefix = currentText
         var title: NSMutableAttributedString!
         
         if let range = suggestion.rangeOfString(prefix) where range.startIndex == suggestion.startIndex {
@@ -192,10 +193,12 @@ class QuerySuggestionView: UIView {
             return
         }
         
-        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) {
-            self.hidden = true
-        } else if UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) {
+        if OrientationUtil.isPortrait() {
             self.hidden = false
+            self.didEnterText(currentText)
+        } else {
+            self.hidden = true
+            clearSuggestions()
         }
         
     }
