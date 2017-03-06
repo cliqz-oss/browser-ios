@@ -129,7 +129,7 @@ class AdBlockerSetting: Setting {
 //Cliqz: Added Settings for redirecting to feedback page
 class SendCliqzFeedbackSetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"))
+        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"),attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {
@@ -148,8 +148,9 @@ class SendCliqzFeedbackSetting: Setting {
 
 //Cliqz: Added Setting for redirecting to report form
 class ReportFormSetting: Setting {
+    
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"))
+        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {
