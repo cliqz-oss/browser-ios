@@ -31,6 +31,7 @@ public enum TelemetryLogEventType {
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: AnyObject]?)
     case ContextMenu            (String, String)
+    case QuerySuggestions        (String, [String: AnyObject]?)
 }
 
 
@@ -162,6 +163,10 @@ class TelemetryLogger : EventsLogger {
             case .ContextMenu (let target, let view):
                 event = self.createContextMenuEvent(target, view: view)
             
+            case .QuerySuggestions (let action, let customData):
+                event = self.createQuerySuggestionsEvent(action, customData: customData)
+                
+                
             default:
                 return
             }
@@ -541,5 +546,19 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
+    private func createQuerySuggestionsEvent(action: String, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "query_suggestions"
+        event["action"] = action
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
+        return event
+    }
     
 }

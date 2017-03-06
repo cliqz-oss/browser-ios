@@ -122,13 +122,17 @@ class QuerySuggestionView: UIView {
                 scrollView.addSubview(verticalSeparator)
             }
             // Adding the suggestion button
-            let suggestionButton = createSuggestionButton(x, suggestion: suggestion, suggestionWidth: suggestionWidth)
+            let suggestionButton = createSuggestionButton(x, index: index, suggestion: suggestion, suggestionWidth: suggestionWidth)
             scrollView.addSubview(suggestionButton)
             
             // increment step
             x = x + suggestionWidth + 2*margin + 1
             index = index + 1
         }
+        
+        let availableCount = suggestions.count > 3 ? 3 : suggestions.count
+        let customData = ["qs_show_count" : displayedSuggestions.count, "qs_available_count" : availableCount]
+        TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("show", customData))
     }
     
     private func getWidth(suggestion: String) -> CGFloat {
@@ -143,12 +147,13 @@ class QuerySuggestionView: UIView {
         return verticalSeparator;
     }
     
-    private func createSuggestionButton(x: CGFloat, suggestion: String, suggestionWidth: CGFloat) -> UIButton {
+    private func createSuggestionButton(x: CGFloat, index: Int, suggestion: String, suggestionWidth: CGFloat) -> UIButton {
         let button = UIButton(type: .Custom)
         let suggestionTitle = getTitle(suggestion)
         button.setAttributedTitle(suggestionTitle, forState: .Normal)
         button.frame = CGRectMake(x, 0, suggestionWidth, kViewHeight)
         button.addTarget(self, action: #selector(selectSuggestion(_:)), forControlEvents: .TouchUpInside)
+        button.tag = index
         return button
     }
     
@@ -176,6 +181,9 @@ class QuerySuggestionView: UIView {
             return
         }
         delegate?.autoComplete(suggestion + " ")
+        
+        let customData = ["index" : button.tag]
+        TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("click", customData))
     }
     
     @objc private func viewRotated() {
