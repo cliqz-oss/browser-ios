@@ -59,6 +59,7 @@ class AntiPhishingPanel: ControlCenterPanel {
         let panelLayout = OrientationUtil.controlPanelLayout()
         
         if panelLayout == .Portrait {
+            
             subtitleLabel.snp_updateConstraints { make in
                 make.top.equalTo(panelIcon.snp_bottom).offset(20)
             }
@@ -71,7 +72,7 @@ class AntiPhishingPanel: ControlCenterPanel {
             descriptionLabel.snp_makeConstraints { make in
                 make.left.equalTo(self.view).offset(30)
                 make.right.equalTo(self.view).offset(-30)
-                make.top.equalTo(subtitleLabel.snp_bottom)
+                make.top.equalTo(subtitleLabel.snp_bottom).offset(20)
             }
         }
         else if panelLayout == .LandscapeCompactSize{
