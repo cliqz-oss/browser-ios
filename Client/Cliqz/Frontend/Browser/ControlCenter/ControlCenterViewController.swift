@@ -111,10 +111,6 @@ class ControlCenterViewController: UIViewController {
 
         view.addSubview(panelContainerView)
         
-        // Close tap
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(tapRecognizer))
-//        tap.cancelsTouchesInView = false
-//        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -204,13 +200,6 @@ class ControlCenterViewController: UIViewController {
         }
         return UIColor(rgb: 0xE8E8E8)
     }
-    
-//    @objc private func tapRecognizer(sender: UITapGestureRecognizer) {
-//        let p = sender.locationInView(self.view)
-//        if p.y <= urlBarHeight {
-//            closeControlCenter()
-//        }
-//    }
 
     //MARK: Switching panels
     @objc private func switchPanel(sender: UISegmentedControl) {

@@ -148,10 +148,14 @@ class CliqzURLBarView: URLBarView {
         }
         
         guard let domain = theURL.host else {return antitrackingGreenBackgroundColor}
-        var isAntiTrackingEnabled = !AntiTrackingModule.sharedInstance.isDomainWhiteListed(domain)
+        var isAntiTrackingEnabled = false
         
+        //Doc: If the observer checks if the website is whitelisted, it might get the wrong value, since the correct value may not be set yet. 
+        //To avoid that whitelisted is sent as an argument, and takes precedence over isDomainWhiteListed.
         if whitelisted != .undefined{
             isAntiTrackingEnabled = whitelisted == .yes ? false : true
+        }else{
+            isAntiTrackingEnabled = !AntiTrackingModule.sharedInstance.isDomainWhiteListed(domain)
         }
         
         let isWebsiteOnPhisingList = AntiPhishingDetector.isDetectedPhishingURL(theURL)
