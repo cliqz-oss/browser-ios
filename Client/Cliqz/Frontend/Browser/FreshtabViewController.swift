@@ -513,12 +513,32 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-		return UIEdgeInsetsMake(10, 0, 0, 0)
+		return UIEdgeInsetsMake(10, sideInset(collectionView), 0, sideInset(collectionView))
 	}
 	
 	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-		return ((collectionView.frame.size.width - CGFloat(FreshtabViewUX.TopSitesCountOnRow) * FreshtabViewUX.TopSitesCellSize.width) / 3.0)
+		return cellSpacing(collectionView)
 	}
+    
+    func sideInset(collectionView: UICollectionView) -> CGFloat {
+        //Constraint = cellSpacing should never be negative
+        let v = collectionView.frame.size.width - CGFloat(FreshtabViewUX.TopSitesCountOnRow) * FreshtabViewUX.TopSitesCellSize.width
+        
+        if v > 0 {
+            let inset = v / 5.0
+            return floor(inset)
+        }
+        
+        return 0.0
+    }
+    
+    func cellSpacing(collectionView: UICollectionView) -> CGFloat{
+        let inset = sideInset(collectionView)
+        if inset > 1.0 {
+            return inset - 1
+        }
+        return 0.0
+    }
     
 }
 
