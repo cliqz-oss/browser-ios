@@ -53,9 +53,10 @@ class AdBlockerPanel: AntitrackingPanel {
     override func getThemeColor() -> UIColor {
         if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite() {
             return enabledColor
-        } else {
-            return disabledColor
+        } else if isFeatureEnabled(){
+            return partiallyDisabledColor
         }
+        return disabledColor
     }
     override func isFeatureEnabled() -> Bool {
         return SettingsPrefs.getAdBlockerPref() //&& AdblockingModule.sharedInstance.isAdblockEnabled()
