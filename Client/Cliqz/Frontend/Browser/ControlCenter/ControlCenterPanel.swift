@@ -11,7 +11,7 @@ import UIKit
 class ControlCenterPanel: UIViewController {
     //MARK: - Constants
     let enabledColor = UIColor(rgb: 0x2EBA85)
-    let partiallyDisabledColor = UIColor(rgb: 0xFF7F00)
+    let partiallyDisabledColor = UIColor(rgb: 0xF5C03E)
     let disabledColor = UIColor(rgb: 0x858585)
     
     //MARK: - Instance variables
