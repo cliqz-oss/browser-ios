@@ -20,7 +20,7 @@ enum Whitelisted{
 class CliqzURLBarView: URLBarView {
 
 	private let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
-    private let antitrackingOrangeBackgroundColor = UIColor.orangeColor()
+    private let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
 	private let antitrackingButtonSize = CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight))
 	
 	private lazy var antitrackingButton: UIButton = {
