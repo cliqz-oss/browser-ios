@@ -17,7 +17,6 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
     private var location: CLLocation? {
         didSet {
             if location != nil {
-                self.manager.stopUpdatingLocation()
                 NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationUserLocationAvailable, object: nil)
             }
         }
@@ -32,9 +31,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 	}()
 
     public func getUserLocation() -> CLLocation? {
-        let userLocation = self.location
-        self.location = nil
-        return userLocation
+        return self.location
     }
     
     public func askForLocationAccess () {
@@ -47,13 +44,23 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
         if authorizationStatus == .Denied {
             NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
         } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
-            self.manager.startUpdatingLocation()
+            self.startUpdatingLocation()
             
         } else if CLLocationManager.locationServicesEnabled() {
             askForLocationAccess()
         }
         
 	}
+    
+    
+    public func startUpdatingLocation() {
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        guard authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse else {
+            return
+        }
+        
+        self.manager.startUpdatingLocation()
+    }
     
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.location = locations.last

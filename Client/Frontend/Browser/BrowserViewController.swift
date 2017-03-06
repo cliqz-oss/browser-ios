@@ -468,6 +468,9 @@ class BrowserViewController: UIViewController {
         setupConstraints()
         log.debug("BVC done.")
 
+        // Cliqz: start listening for user location changes
+        LocationManager.sharedInstance.startUpdatingLocation()
+        
 		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
         
