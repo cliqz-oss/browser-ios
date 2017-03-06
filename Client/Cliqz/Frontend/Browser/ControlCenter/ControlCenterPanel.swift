@@ -70,13 +70,15 @@ class ControlCenterPanel: UIViewController {
         }
         else if panelLayout == .LandscapeCompactSize{
             subtitleLabel.font = UIFont.boldSystemFontOfSize(14)
-            subtitleLabel.adjustsFontSizeToFitWidth = true
-            subtitleLabel.numberOfLines = 1
-            subtitleLabel.minimumScaleFactor = 0.6
         }
         else{
             subtitleLabel.font = UIFont.systemFontOfSize(16)
         }
+        
+        subtitleLabel.adjustsFontSizeToFitWidth = true
+        subtitleLabel.numberOfLines = 1
+        subtitleLabel.minimumScaleFactor = 0.6
+        
         subtitleLabel.textAlignment = .Center
         self.view.addSubview(subtitleLabel)
         
@@ -159,7 +161,8 @@ class ControlCenterPanel: UIViewController {
             }
             
             subtitleLabel.snp_makeConstraints { make in
-                make.left.right.equalTo(self.view)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.frame.width - 40)
                 make.height.equalTo(20)
             }
             
