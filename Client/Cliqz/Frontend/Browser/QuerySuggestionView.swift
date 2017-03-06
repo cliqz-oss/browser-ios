@@ -139,7 +139,7 @@ class QuerySuggestionView: UIView {
     
     private func getWidth(suggestion: String) -> CGFloat {
         let sizeOfString = (suggestion as NSString).sizeWithAttributes(boldFontAttributes)
-        return sizeOfString.width
+        return sizeOfString.width + 5
     }
 
     private func createVerticalSeparator(x: CGFloat) -> UIView {
