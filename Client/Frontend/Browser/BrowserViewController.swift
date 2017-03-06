@@ -724,9 +724,19 @@ class BrowserViewController: UIViewController {
         }
 
         readerModeBar?.snp_remakeConstraints { make in
-            make.top.equalTo(self.header.snp_bottom).constraint
-            make.height.equalTo(UIConstants.ToolbarHeight)
-            make.leading.trailing.equalTo(self.view)
+            if controlCenterActiveInLandscape{
+                make.top.equalTo(self.header.snp_bottom).constraint
+                make.height.equalTo(UIConstants.ToolbarHeight)
+                //make.leading.equalTo(self.view)
+                //make.trailing.equalTo(self.controlCenterController?)
+                make.left.equalTo(self.view)
+                make.width.equalTo(self.view.frame.width/2)
+            }
+            else{
+                make.top.equalTo(self.header.snp_bottom).constraint
+                make.height.equalTo(UIConstants.ToolbarHeight)
+                make.leading.trailing.equalTo(self.view)
+            }
         }
 
         webViewContainer.snp_remakeConstraints { make in
@@ -1726,6 +1736,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidPressReaderMode(urlBar: URLBarView) {
+        self.controlCenterController?.closeControlCenter()
         if let tab = tabManager.selectedTab {
             if let readerMode = tab.getHelper(name: "ReaderMode") as? ReaderMode {
                 switch readerMode.state {
@@ -1743,6 +1754,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLongPressReaderMode(urlBar: URLBarView) -> Bool {
+        self.controlCenterController?.closeControlCenter()
         guard let tab = tabManager.selectedTab,
                url = tab.displayURL,
                result = profile.readingList?.createRecordWithURL(url.absoluteString!, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
@@ -1892,6 +1904,7 @@ extension BrowserViewController: URLBarDelegate {
     }
     
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
+        self.controlCenterController?.closeControlCenter()
         // Cliqz: telemetry logging for toolbar
         self.logToolbarFocusSignal()
         // Cliqz: hide AntiTracking button in overlay mode
