@@ -98,6 +98,9 @@ class QuerySuggestionView: UIView {
         
         // Calcuate extra space after the last suggesion
         for suggestion in suggestions {
+            if suggestion.trim() == self.currentText.trim() {
+                continue
+            }
             let suggestionWidth = getWidth(suggestion)
             // show Max 3 suggestions which does not exceed screen width
             if x + suggestionWidth > self.frame.width || index > 2 {
