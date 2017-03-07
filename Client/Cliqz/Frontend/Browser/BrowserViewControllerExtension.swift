@@ -147,7 +147,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.view.bringSubviewToFront(self.urlBar)
             //self.urlBar.enableAntitrackingButton(false)
             
-            logToolbarSignal("click", target: "attack", customData: webView.unsafeRequests)
+            logToolbarSignal("click", target: "attack", customData: ["tracker_count" : webView.unsafeRequests])
             
             if (panelLayout != .LandscapeRegularSize){
                 UIView.animateWithDuration(0.5, animations: {
@@ -239,18 +239,18 @@ extension BrowserViewController: ControlCenterViewDelegate {
         logToolbarSignal("blur", target: "search", customData: nil)
     }
     func logToolbarDeleteSignal(charCount: Int) {
-        logToolbarSignal("click", target: "delete", customData: charCount)
+        logToolbarSignal("click", target: "delete", customData: ["char_count": charCount])
         
     }
     func logToolbarOverviewSignal() {
         let openTabs = self.tabManager.tabs.count
-        logToolbarSignal("click", target: "overview", customData: openTabs)
+        logToolbarSignal("click", target: "overview", customData: ["open_tabs_count" :openTabs])
     }
-    func logToolbarReaderModeSignal(state: Int) {
-        logToolbarSignal("click", target: "reader_mode", customData: state)
+    func logToolbarReaderModeSignal(state: Bool) {
+        logToolbarSignal("click", target: "reader_mode", customData: ["state" :state])
     }
     
-    private func logToolbarSignal(action: String, target: String, customData: Int?) {
+    private func logToolbarSignal(action: String, target: String, customData: [String: AnyObject]?) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
             let view = getCurrentView() {
             TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, view, isForgetMode, customData))
