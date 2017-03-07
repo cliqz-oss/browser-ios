@@ -22,7 +22,8 @@ class CliqzURLBarView: URLBarView {
 	private let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
     private let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
 	private let antitrackingButtonSize = CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight))
-	
+	private var trackersCount = 0
+    
 	private lazy var antitrackingButton: UIButton = {
 		let button = UIButton(type: .Custom)
 		button.setTitle("0", forState: .Normal)
@@ -98,6 +99,7 @@ class CliqzURLBarView: URLBarView {
     }
     
 	func updateTrackersCount(count: Int) {
+        trackersCount = count
 		self.antitrackingButton.setTitle("\(count)", forState: .Normal)
 		self.setNeedsDisplay()
 	}
@@ -202,7 +204,8 @@ class CliqzURLBarView: URLBarView {
 	}
 	
 	@objc private func antitrackingButtonPressed(sender: UIButton) {
-		self.delegate?.urlBarDidClickAntitracking(self)
+        let status = antitrackingGreenBackgroundColor == sender.backgroundColor ? "green" : "Orange"
+		self.delegate?.urlBarDidClickAntitracking(self, trackersCount: trackersCount, status: status)
 	}
     
     
