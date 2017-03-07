@@ -106,12 +106,17 @@ extension BrowserViewController: ControlCenterViewDelegate {
 		}
 	}
     
-	func urlBarDidClickAntitracking(urlBar: URLBarView) {
+	func urlBarDidClickAntitracking(urlBar: URLBarView, trackersCount: Int, status: String) {
         
         if let controlCenter = self.controlCenterController {
             if controlCenter.visible == true {
                 self.controlCenterController?.closeControlCenter()
                 self.controlCenterController?.visible = false
+                
+                // log telemetry signal
+                let customData : [String: AnyObject] = ["tracker_count": trackersCount, "status": status, "state": "open"]
+                logToolbarSignal("click", target: "control_center", customData: customData)
+                
                 return
             }
         }
@@ -147,7 +152,10 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.view.bringSubviewToFront(self.urlBar)
             //self.urlBar.enableAntitrackingButton(false)
             
-            logToolbarSignal("click", target: "attack", customData: ["tracker_count" : webView.unsafeRequests])
+            // log telemetry signal
+            let customData : [String: AnyObject] = ["tracker_count": trackersCount, "status": status, "state": "closed"]
+            logToolbarSignal("click", target: "control_center", customData: customData)
+            
             
             if (panelLayout != .LandscapeRegularSize){
                 UIView.animateWithDuration(0.5, animations: {

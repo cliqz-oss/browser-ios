@@ -87,7 +87,7 @@ protocol URLBarDelegate: class {
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton)
     // Cliqz: Added delegate method for antitracking button
-	func urlBarDidClickAntitracking(urlBar: URLBarView)
+    func urlBarDidClickAntitracking(urlBar: URLBarView, trackersCount: Int, status: String)
     // Cliqz: Added delegate method for notifing deletge that search field was cleared
     func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?)
 }
