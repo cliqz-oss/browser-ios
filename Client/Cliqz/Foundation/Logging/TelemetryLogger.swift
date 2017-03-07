@@ -23,7 +23,7 @@ public enum TelemetryLogEventType {
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool?, Int?)
+    case Toolbar            (String, String, String, Bool?, [String: AnyObject]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case Attrack            (String, String?, Int?)
@@ -418,7 +418,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: Int?) -> [String: AnyObject] {
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: AnyObject]?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
@@ -430,16 +430,10 @@ class TelemetryLogger : EventsLogger {
             event["is_forget"] = isForgetMode
         }
         
-        if let customData = customData where target == "overview" {
-            event["open_tabs_count"] = customData
-        } else if let customData = customData where target == "delete" {
-            event["char_count"] = customData
-        } else if let customData = customData where target == "attack" {
-            event["tracker_count"] = customData
-        } else if let customData = customData where target == "reader_mode" {
-            event["state"] = customData == 1 ? "true" : "false"
-        } else if let customData = customData where view == "overview" {
-            event["show_duration"] = customData == 1 ? "true" : "false"
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
         }
         
         return event

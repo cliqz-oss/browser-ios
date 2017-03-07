@@ -191,7 +191,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.navigationController?.popViewControllerAnimated(false)
         if let openTime = viewOpenTime {
             let duration = Int(NSDate.getCurrentMillis() - openTime)
-            logToolbarSignal("click", target: "back", customData: duration)
+            logToolbarSignal("click", target: "back", customData: ["show_duration" :duration])
             viewOpenTime = nil
         }
 	}
@@ -232,7 +232,7 @@ extension DashboardViewController:PresentingModalViewControllerDelegate {
 
 extension DashboardViewController {
     
-    private func logToolbarSignal(action: String, target: String, customData: Int?) {
+    private func logToolbarSignal(action: String, target: String, customData: [String: AnyObject]?) {
         TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, "overview", nil, customData))
     }
     
