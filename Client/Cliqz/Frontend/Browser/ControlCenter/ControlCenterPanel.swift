@@ -87,12 +87,16 @@ class ControlCenterPanel: UIViewController {
         
         // learn more label
         let learnMoreTitle = NSLocalizedString("Learn more", tableName: "Cliqz", comment: "Learn more label on control center panel.")
-        let underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue])
+        var underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue])
         
         if panelLayout != .LandscapeRegularSize {
+            if let privateMode = self.isPrivateMode where privateMode == true {
+                underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.whiteColor()])
+            }
             learnMoreButton.setAttributedTitle(underlineTitle, forState: .Normal)
             learnMoreButton.titleLabel?.font = UIFont.systemFontOfSize(12)
             learnMoreButton.setTitleColor(textColor(), forState: .Normal)
+            
         }
         else
         {

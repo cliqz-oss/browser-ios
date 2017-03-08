@@ -93,7 +93,7 @@ class ControlCenterViewController: UIViewController {
         
         // Segmented control
         panelSegmentedContainerView.backgroundColor = UIConstants.AppBackgroundColor
-        view.addSubview(panelSegmentedContainerView)
+        self.view.addSubview(panelSegmentedContainerView)
         
         let antiTrakcingTitle = NSLocalizedString("Anti-Tracking", tableName: "Cliqz", comment: "Anti-Trakcing panel name on control center.")
         let adBlockingTitle = NSLocalizedString("Ad-Blocking", tableName: "Cliqz", comment: "Ad-Blocking panel name on control center.")
@@ -110,6 +110,10 @@ class ControlCenterViewController: UIViewController {
         panelSegmentedContainerView.addSubview(panelSegmentedSeparator)
 
         view.addSubview(panelContainerView)
+        
+        if let privateMode = self.isPrivateMode where privateMode == true {
+            panelSegmentedContainerView.backgroundColor = self.backgroundColor().colorWithAlphaComponent(0.0)
+        }
         
     }
     
