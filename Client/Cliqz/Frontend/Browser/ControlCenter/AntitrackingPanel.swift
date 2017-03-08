@@ -313,6 +313,7 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     func toggleFeatureForCurrentWebsite() {
+        logDomainSwitchTelemetrySignal()
         AntiTrackingModule.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
         self.updateView()
         self.setupConstraints()
@@ -398,6 +399,9 @@ class AntitrackingPanel: ControlCenterPanel {
                 })
             }
         })
+        
+        logTelemetrySignal("click", target: getAdditionalInfoName(), customData: nil)
+        isAdditionalInfoVisible = true
     }
     
     func hideTableView(){
@@ -434,6 +438,9 @@ class AntitrackingPanel: ControlCenterPanel {
                 })
             }
         })
+        
+        logTelemetrySignal("back", target: getViewName(), customData: nil)
+        isAdditionalInfoVisible = false
     }
     
     func resetViewForLandscapeRegularSize(){
@@ -459,6 +466,14 @@ class AntitrackingPanel: ControlCenterPanel {
             
         }
         
+    }
+    
+    override func getViewName() -> String {
+        return "attrack"
+    }
+    
+    override func getAdditionalInfoName() -> String {
+        return "info_trakcer"
     }
     
     //MARK: - Helper methods
@@ -623,9 +638,9 @@ extension AntitrackingPanel: UITableViewDataSource, UITableViewDelegate {
 		let tracker = item.0.stringByReplacingOccurrencesOfString(" ", withString: "-")
 		let url = NSURL(string: AntitrackingPanel.trackerInfoURL.stringByAppendingString(tracker))
 		if let u = url {
+            logTelemetrySignal("click", target: "info_company", customData: ["index": indexPath.row])
 			self.delegate?.navigateToURLInNewTab(u)
 			closePanel()
-            TelemetryLogger.sharedInstance.logEvent(.Attrack("click", "info_company", indexPath.row))
 		}
 	}
 }

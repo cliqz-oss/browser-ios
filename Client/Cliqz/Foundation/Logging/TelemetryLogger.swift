@@ -26,12 +26,12 @@ public enum TelemetryLogEventType {
     case Toolbar            (String, String, String, Bool?, [String: AnyObject]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
-    case Attrack            (String, String?, Int?)
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: AnyObject]?)
     case ContextMenu            (String, String)
     case QuerySuggestions        (String, [String: AnyObject]?)
+    case ControlCenter         (String, String?, String?, [String: AnyObject]?)
 }
 
 
@@ -136,7 +136,7 @@ class TelemetryLogger : EventsLogger {
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
                 
-            case .Toolbar(let action, let target, let view, let isForgetMode?, let customData):
+            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
                 event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
                 
             case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
@@ -146,9 +146,6 @@ class TelemetryLogger : EventsLogger {
             case .WebMenu(let action, let target, let isForgetMode):
                 event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
             
-            case .Attrack(let action, let target, let customData):
-                event = self.createAttrackEvent(action, target: target, customData: customData)
-                
             case .AntiPhishing(let action, let target, let showDuration):
                 event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
             
@@ -166,9 +163,9 @@ class TelemetryLogger : EventsLogger {
             case .QuerySuggestions (let action, let customData):
                 event = self.createQuerySuggestionsEvent(action, customData: customData)
                 
+            case .ControlCenter (let action, let view, let target, let customData):
+                event = self.ControlCenterEvent(action, view: view, target: target, customData: customData)
                 
-            default:
-                return
             }
             
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -465,25 +462,6 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createAttrackEvent(action: String, target: String?, customData: Int?) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "attrack"
-        event["action"] = action
-        if let target = target {
-            event["target"] = target
-            if let customData = customData where target == "info_company" {
-                event["index"] = customData
-            }
-        }
-        
-        if let customData = customData where action == "hide" {
-            event["show_duration"] = customData
-        }
-        
-        return event
-    }
-    
     private func createAntiPhishingEvent(action: String, target: String?, showDuration: Int?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
@@ -554,5 +532,31 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
+    
+    
+    private func ControlCenterEvent(action: String, view: String?, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "control_center"
+        event["action"] = action
+        
+        
+        if let view = view {
+            event["view"] = view
+        }
+
+        if let target = target {
+            event["target"] = target
+        }
+
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
+        return event
+    }
+    
     
 }

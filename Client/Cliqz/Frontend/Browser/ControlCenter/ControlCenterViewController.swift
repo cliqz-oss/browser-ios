@@ -23,7 +23,7 @@ class ControlCenterViewController: UIViewController {
     private let urlBarHeight: CGFloat = 40.0
     
     //MARK: - Variables
-    public var visible = false
+    internal var visible = false
     
     //MARK: Views
     private var blurryBackgroundView: UIVisualEffectView!
@@ -115,7 +115,7 @@ class ControlCenterViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.switchPanel(self.panelSegmentedControl)
+        self.showPanelViewController(self.antitrackingPanel)
     }
     
     override func viewWillLayoutSubviews() {
@@ -204,16 +204,21 @@ class ControlCenterViewController: UIViewController {
     //MARK: Switching panels
     @objc private func switchPanel(sender: UISegmentedControl) {
         self.hideCurrentPanelViewController()
+        var newPanel: ControlCenterPanel?
         
         switch sender.selectedSegmentIndex {
         case 0:
-            self.showPanelViewController(self.antitrackingPanel)
+            newPanel = self.antitrackingPanel
         case 1:
-            self.showPanelViewController(self.adBlockerPanel)
+            newPanel = self.adBlockerPanel
         case 2:
-            self.showPanelViewController(self.antiPhishingPanel)
+            newPanel = self.antiPhishingPanel
         default:
             break
+        }
+        if let panel = newPanel {
+            TelemetryLogger.sharedInstance.logEvent(.ControlCenter("click", nil, panel.getViewName(), nil))
+            self.showPanelViewController(panel)
         }
     }
     
