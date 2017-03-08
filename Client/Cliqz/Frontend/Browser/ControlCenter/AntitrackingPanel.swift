@@ -66,6 +66,9 @@ class AntitrackingPanel: ControlCenterPanel {
         }
         domainLabel.font = UIFont.boldSystemFontOfSize(16)
         domainLabel.textColor = UIColor.blackColor()
+        if let privateMode = self.isPrivateMode where privateMode == true {
+            domainLabel.textColor = UIColor.whiteColor()
+        }
         self.configContainerView.addSubview(domainLabel)
         
         enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
@@ -558,6 +561,11 @@ class AntitrackingPanel: ControlCenterPanel {
         button.addSubview(separatorView1)
         button.addSubview(separatorView2)
         
+        if let privateMode = self.isPrivateMode where privateMode == true {
+            label.textColor = UIColor.whiteColor()
+            changeTintColor(arrowImageView, color: UIColor.whiteColor())
+            changeTintColor(infoImageView, color: UIColor.whiteColor())
+        }
         
         label.snp_makeConstraints { (make) in
             make.centerY.equalTo(button)
@@ -590,6 +598,12 @@ class AntitrackingPanel: ControlCenterPanel {
         
     }
     
+}
+
+func changeTintColor(imageView: UIImageView, color: UIColor){
+    let templateImage = imageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+    imageView.image = templateImage
+    imageView.tintColor = color
 }
 
 extension AntitrackingPanel: UITableViewDataSource, UITableViewDelegate {

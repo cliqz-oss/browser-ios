@@ -131,7 +131,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.addChildViewController(controlCenterVC)
             self.controlCenterController = controlCenterVC
             
-            let toolbarHeight: CGFloat = 40.0
+            let toolbarHeight: CGFloat = 44.0
             
             if (panelLayout != .LandscapeRegularSize){
                 var r = self.view.bounds
