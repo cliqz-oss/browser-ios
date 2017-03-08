@@ -139,10 +139,10 @@ class CliqzURLBarView: URLBarView {
         
         var theURL : NSURL
         
-        if let url = self.currentURL {
+        if let url = newURL {
             theURL = url
         }
-        else if let url = newURL{
+        else if let url = self.currentURL{
             theURL = url
         }
         else{
