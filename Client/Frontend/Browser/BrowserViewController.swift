@@ -819,6 +819,9 @@ class BrowserViewController: UIViewController {
         log.debug("BVC showHomePanelController.")
         homePanelIsInline = inline
         
+        navigationToolbar.updateForwardStatus(false)
+        navigationToolbar.updateBackStatus(false)
+        
         if homePanelController == nil {
 			
 			homePanelController = FreshtabViewController(profile: self.profile)
@@ -905,6 +908,9 @@ class BrowserViewController: UIViewController {
                     if let readerMode = self.tabManager.selectedTab?.getHelper(name: ReaderMode.name()) as? ReaderMode where readerMode.state == .Active {
                         self.showReaderModeBar(animated: false)
                     }
+                    
+                    self.navigationToolbar.updateBackStatus(self.tabManager.selectedTab?.webView?.canGoBack ?? false)
+                    
                 }
             })
         }
