@@ -231,11 +231,12 @@ class URLBarView: UIView {
         }
 
         set(newURL) {
-            guard let url = newURL else {return}
-            if(url.host != currentURL?.host){
-                NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: ["newURL":url])
+            if let url = newURL {
+                if(url.host != currentURL?.host){
+                    NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: ["newURL":url])
+                }
             }
-            locationView.url = url
+            locationView.url = newURL
         }
     }
 
