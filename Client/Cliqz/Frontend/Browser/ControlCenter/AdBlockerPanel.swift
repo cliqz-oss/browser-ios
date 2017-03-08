@@ -67,6 +67,7 @@ class AdBlockerPanel: AntitrackingPanel {
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()
+        logTelemetrySignal("click", target: "activate", customData: nil)
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
@@ -78,6 +79,7 @@ class AdBlockerPanel: AntitrackingPanel {
     }
     
     override func toggleFeatureForCurrentWebsite() {
+        logDomainSwitchTelemetrySignal()
         AdblockingModule.sharedInstance.toggleUrl(self.currentURL)
         self.updateView()
         self.setupConstraints()
@@ -88,4 +90,13 @@ class AdBlockerPanel: AntitrackingPanel {
         trackersList = AdblockingModule.sharedInstance.getAdBlockingStatistics(self.currentURL)
         trackersCount = trackersList.reduce(0){$0 + $1.1}
     }
+    
+    override func getViewName() -> String {
+        return "adblock"
+    }
+    
+    override func getAdditionalInfoName() -> String {
+        return "info_ad"
+    }
+    
 }

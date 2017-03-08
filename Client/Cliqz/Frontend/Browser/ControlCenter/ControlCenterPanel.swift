@@ -18,6 +18,8 @@ class ControlCenterPanel: UIViewController {
     let trackedWebViewID: Int!
     let isPrivateMode: Bool!
     let currentURL: NSURL!
+    var openTime = NSDate.getCurrentMillis()
+    var isAdditionalInfoVisible = false
 
     weak var delegate: BrowserNavigationDelegate? = nil
     weak var controlCenterPanelDelegate: ControlCenterPanelDelegate? = nil
@@ -143,6 +145,18 @@ class ControlCenterPanel: UIViewController {
         self.setupConstraints()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        openTime = NSDate.getCurrentMillis()
+        let state = isFeatureEnabledForCurrentWebsite() ? "on" : "off"
+        logTelemetrySignal("show", target: nil, customData: ["sate": state])
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        let duration = Int(NSDate.getCurrentMillis() - openTime)
+        logTelemetrySignal("hide", target: nil, customData: ["show_duration": duration])
+    }
     func setupConstraints() {
         
         let panelLayout = OrientationUtil.controlPanelLayout()
@@ -307,6 +321,14 @@ class ControlCenterPanel: UIViewController {
         
     }
     
+    func getViewName() -> String {
+        return ""
+    }
+    
+    func getAdditionalInfoName() -> String {
+        return ""
+    }
+    
     //MARK: - Helper methods
     func closePanel() {
         self.controlCenterPanelDelegate?.closeControlCenter()
@@ -339,8 +361,10 @@ class ControlCenterPanel: UIViewController {
     }
     
     @objc private func learnMorePressed() {
+        
         let url = getLearnMoreURL()
         if let u = url {
+            logTelemetrySignal("click", target: "learn_more", customData: nil)
             self.delegate?.navigateToURLInNewTab(u)
             closePanel()
         }
@@ -348,6 +372,19 @@ class ControlCenterPanel: UIViewController {
     
     @objc private func dismissView() {
         closePanel()
+        logTelemetrySignal("click", target: "ok", customData: nil)
+    }
+    func logDomainSwitchTelemetrySignal() {
+        let state = isFeatureEnabledForCurrentWebsite() ? "on" : "off"
+        logTelemetrySignal("click", target: "domain_switch", customData: ["state": state])
+    }
+    func logTelemetrySignal(action: String, target: String?, customData: [String: AnyObject]?) {
+        var viewName = getViewName()
+        if "info_company" == target && isAdditionalInfoVisible {
+            viewName = getAdditionalInfoName()
+        }
+        
+        TelemetryLogger.sharedInstance.logEvent(.ControlCenter(action, viewName, target, customData))
     }
     
 }

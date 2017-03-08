@@ -125,5 +125,11 @@ class AntiPhishingPanel: ControlCenterPanel {
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
         return !AntiPhishingDetector.isDetectedPhishingURL(self.currentURL)
     }
+    
+    override func getViewName() -> String {
+        return "atphish"
+    }
+    
+    
 
 }
