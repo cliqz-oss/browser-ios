@@ -104,8 +104,7 @@ class LogoLoader {
             if version == nil {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
             let hostComps = getHostComponents(forURL: url)
             if hostComps.count < 1 {completionBlock(imageUrl: nil, hasSecond: nil, urlWithoutSecond: nil); return}
-            let hardcoded_version = "1483980213630"
-            let mainURL = "http://cdn.cliqz.com/brands-database/database/\(hardcoded_version)/pngs"
+            let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
             
             var hasSecond = false
             
@@ -141,7 +140,7 @@ class LogoLoader {
 				Alamofire.request(.GET, url).responseJSON { response in
 					if response.result.isSuccess,
 						let data = response.result.value as? [String: AnyObject],
-						let versionID = data["logoVersion"] as? String {
+						let versionID = data["png_logoVersion"] as? String {
 						LocalDataStore.setObject(versionID, forKey: LogoLoader.logoVersionKey)
 						LocalDataStore.setObject(NSDate(), forKey: LogoLoader.logoVersionUpdatedDateKey)
 						completionBlock(versionID)
