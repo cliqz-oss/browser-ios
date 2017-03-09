@@ -29,7 +29,6 @@ extension XCTestCase {
 		return KIFSystemTestActor(inFile: file, atLine: line, delegate: self)
 	}
     
-    
 }
 
 extension KIFUITestActor {
