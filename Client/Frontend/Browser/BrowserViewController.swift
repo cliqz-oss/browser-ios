@@ -1010,6 +1010,8 @@ class BrowserViewController: UIViewController {
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
+        
+        self.hideHomePanelController()
 
         guard let tab = tabManager.selectedTab else {
             return
