@@ -9,8 +9,21 @@
 import XCTest
 import KIF
 
-
 class SettingsTests: KIFTestCase {
+    
+    override func tearDown() {
+        if tester.viewExistsWithLabel("Settings"){
+            tester.tapViewWithAccessibilityLabel("Settings")
+        }
+        if tester.viewExistsWithLabel("Done"){
+            tester.tapViewWithAccessibilityLabel("Done")
+        }
+        if tester.viewExistsWithLabel("cliqzBack"){
+            tester.tapViewWithAccessibilityLabel("closeTab")
+            tester.tapViewWithAccessibilityLabel("cliqzBack")
+        }
+        super.tearDown()
+    }
 
     func testSettingsAndDoneButtons() {
         showToolBar()

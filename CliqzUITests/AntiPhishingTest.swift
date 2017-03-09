@@ -10,26 +10,41 @@ import XCTest
 import KIF
 
 class AntiPhishingTest: KIFTestCase{
-    
+    override func tearDown() {
+        if tester.viewExistsWithLabel("Back to safe site"){
+            tester.tapViewWithAccessibilityLabel("Back to safe site")
+        }
+        if tester.viewExistsWithLabel("Show Tabs"){
+            tester.tapViewWithAccessibilityLabel("Show Tabs")
+        }
+        if tester.viewExistsWithLabel("Settings"){
+            tester.tapViewWithAccessibilityLabel("Settings")
+        }
+        if tester.viewExistsWithLabel("Done"){
+            tester.tapViewWithAccessibilityLabel("Done")
+        }
+        if tester.viewExistsWithLabel("cliqzBack"){
+            tester.tapViewWithAccessibilityLabel("closeTab")
+            tester.tapViewWithAccessibilityLabel("cliqzBack")
+        }
+        super.tearDown()
+    }
     func testAntiPhishing() {
-        openWebPage("http://www.acorporateaffair.in/wp-content/uploads/2013/10/098/payuk/575e6cf71a991cedcb2d37e5275e5071/")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
-        tester.tapViewWithAccessibilityLabel("Back to safe site")
-        resetApp(["http://www.acorporateaffair.in/wp-content/uploads/2013/10/098/payuk/575e6cf71a991cedcb2d37e5275e5071/"])
-        openWebPage("https://suport.customer-alerts.com/webapps/e362f/websrc")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
-        tester.tapViewWithAccessibilityLabel("Back to safe site")
-        resetApp(["https://suport.customer-alerts.com/webapps/e362f/websrc"])
-        openWebPage("http://account-reconfirm-secure.com216541261958151621261651495815.smk-diponegoro.sch.id/")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
-        tester.tapViewWithAccessibilityLabel("Back to safe site")
-        resetApp(["http://account-reconfirm-secure.com216541261958151621261651495815.smk-diponegoro.sch.id/"])
+        openWebPage("http://link43wow.com.s3-website.eu-central-1.amazonaws.com/Stake7_DE_FB/desk/index.html")
+        XCTAssertFalse(tester.viewExistsWithLabel("Warning: deceptive website!"))
         openWebPage("http://marketing-customer.info/webapps/ab983f6f33/")
         XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
         tester.tapViewWithAccessibilityLabel("Back to safe site")
-        resetApp(["http://marketing-customer.info/webapps/ab983f6f33/"])
+        openWebPage("http://www.goatd.net/")
+        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
+        tester.tapViewWithAccessibilityLabel("Back to safe site")
         openWebPage("http://mouyondzi.com/dropbox-file/dropbox-secured/document/")
         XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
-        resetApp(["http://mouyondzi.com/dropbox-file/dropbox-secured/document/"])
+        tester.tapViewWithAccessibilityLabel("Back to safe site")
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("closeTab")
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        tester.waitForTimeInterval(3)
     }
+    
 }

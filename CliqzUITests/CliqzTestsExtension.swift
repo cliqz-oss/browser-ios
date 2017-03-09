@@ -9,16 +9,24 @@
 extension XCTestCase {
 
     func openWebPage(url:String){
+        // TO DO cater for navigating to a web page when not at the inital state
+//        tester.acknowledgeSystemAlert()
         if tester.viewExistsWithLabel("Go"){
         }
         else{
-            tester.tapViewWithAccessibilityIdentifier("url")
+            if tester.viewExistsWithLabel("Address and Search"){
+                tester.tapViewWithAccessibilityLabel("Address and Search")
+            }
+            else{
+                tester.tapViewWithAccessibilityIdentifier("url")
+            }
         }
-        
+        tester.tapViewWithAccessibilityLabel("delete")
         tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
         tester.waitForSoftwareKeyboard()
         tester.tapViewWithAccessibilityLabel("Go")
-        if tester.viewExistsWithLabel("OK"){
+//        let checkOnboarding = try tester.tryFindingTappableViewWithAccessibilityLabel("OK")
+        if  tester.viewExistsWithLabel("Fast-Search") {
             tester.tapViewWithAccessibilityLabel("OK")
             tester.tapViewWithAccessibilityLabel("Address and Search")
             tester.waitForSoftwareKeyboard()
@@ -44,9 +52,11 @@ extension XCTestCase {
             tester.waitForAbsenceOfSoftwareKeyboard()
             tester.waitForViewWithAccessibilityLabel("Show Tabs")
         }
+        
     }
     
     func resetApp(accessibilityLabels: [String]){
+        showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
         for accessibilityLabel in accessibilityLabels {
@@ -58,7 +68,13 @@ extension XCTestCase {
         if tester.viewExistsWithLabel("Go"){
         }
         else{
-            tester.tapViewWithAccessibilityIdentifier("url")
+            if tester.viewExistsWithLabel("Address and Search"){
+                tester.tapViewWithAccessibilityLabel("")
+                tester.tapViewWithAccessibilityLabel("Search")
+            }
+            else{
+                tester.tapViewWithAccessibilityIdentifier("url")
+            }
         }
     }
     
@@ -75,17 +91,27 @@ extension XCTestCase {
         tester.tapViewWithAccessibilityLabel("Settings")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
+        if tester.viewExistsWithLabel("Address and Search"){
+        tester.tapViewWithAccessibilityLabel("Address and Search")
+        }
+        else{
         tester.tapViewWithAccessibilityIdentifier("url")
+        }
         let urlBar = tester.waitForViewWithAccessibilityLabel("Address and Search")
         if urlBar.accessibilityValue == query{
             tester.tapViewWithAccessibilityLabel("Go")
             if tester.viewExistsWithLabel("OK"){
                 tester.tapViewWithAccessibilityLabel("OK")
-                tester.tapViewWithAccessibilityLabel("Address and Search")
+                if tester.viewExistsWithLabel("Address and Search"){
+                    tester.tapViewWithAccessibilityLabel("Address and Search")
+                }
+                else{
+                    tester.tapViewWithAccessibilityIdentifier("url")
+                }
                 tester.waitForSoftwareKeyboard()
                 tester.tapViewWithAccessibilityLabel("Go")
             }
-            tester.waitForTimeInterval(1)
+            tester.waitForTimeInterval(3)
         }
         else{
             tester.tapViewWithAccessibilityLabel("delete")
@@ -94,14 +120,19 @@ extension XCTestCase {
             tester.tapViewWithAccessibilityLabel("Go")
             if tester.viewExistsWithLabel("OK"){
                 tester.tapViewWithAccessibilityLabel("OK")
-                tester.tapViewWithAccessibilityLabel("Address and Search")
+                if tester.viewExistsWithLabel("Address and Search"){
+                    tester.tapViewWithAccessibilityLabel("Address and Search")
+                }
+                else{
+                    tester.tapViewWithAccessibilityIdentifier("url")
+                }
                 tester.waitForSoftwareKeyboard()
                 tester.tapViewWithAccessibilityLabel("Go")
             }
-            tester.waitForTimeInterval(1)
+            tester.waitForTimeInterval(3)
         }
         let searchUrl = tester.waitForViewWithAccessibilityIdentifier("url")
-        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url))
+        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url), "Search Engine name is  \(accessibilityValue) instead of \(url)")
         XCTAssertTrue(searchUrl.accessibilityValue!.localizedCaseInsensitiveContainsString(query))
         if tester.viewExistsWithLabel("OK"){
             tester.tapViewWithAccessibilityLabel("OK")
