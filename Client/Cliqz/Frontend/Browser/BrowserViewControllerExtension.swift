@@ -291,6 +291,9 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
 
 	func showHint(type: HintType) {
+        if type == HintType.Antitracking && self.urlBar.isAntiTrackingButtonHidden(){
+            return
+        }
 		let intro = InteractiveIntroViewController()
 		intro.modalPresentationStyle = .OverFullScreen
 		intro.showHint(type)
