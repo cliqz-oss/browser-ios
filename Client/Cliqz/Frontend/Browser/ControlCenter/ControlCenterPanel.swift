@@ -152,8 +152,7 @@ class ControlCenterPanel: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         openTime = NSDate.getCurrentMillis()
-        let state = isFeatureEnabledForCurrentWebsite() ? "on" : "off"
-        logTelemetrySignal("show", target: nil, customData: ["sate": state])
+        logTelemetrySignal("show", target: nil, customData: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {

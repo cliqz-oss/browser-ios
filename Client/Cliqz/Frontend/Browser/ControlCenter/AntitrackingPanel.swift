@@ -442,7 +442,7 @@ class AntitrackingPanel: ControlCenterPanel {
             }
         })
         
-        logTelemetrySignal("back", target: getViewName(), customData: nil)
+        logTelemetrySignal("click", target: "back", customData: nil)
         isAdditionalInfoVisible = false
     }
     
