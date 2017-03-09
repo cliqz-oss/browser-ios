@@ -277,62 +277,62 @@
 "Anti-Tracking" = "Anti-Tracking";
 
 /* Ad-Blocking panel name on control center. */
-"Ad-Blocking" = "Ad-Blocking";
+"Ad-Blocking" = "Werbeblocker";
 
 /* Anti-Phishing panel name on control center. */
 "Anti-Phishing" = "Anti-Phishing";
 
 /* Learn more label on control center panel. */
-"Learn more" = "Learn more";
+"Learn more" = "mehr erfahren";
 
 /* Activate button in control center panel. */
-"Activate" = "Activate";
+"Activate" = "Aktivieren";
 
 /* Anti-tracking panel title in the control center when it is enabled. */
-"Your data is protected" = "Your data is protected";
+"Your data is protected" = "Deine Daten sind geschützt";
 
 /* Anti-tracking panel title in the control center when it is disabled
  Anti-Phishing panel title in the control center if the current website is a phishing one. */
-"Your data is not protected" = "Your data is not protected";
+"Your data is not protected" = "Deine Daten sind nicht geschützt";
 
 /* Anti-tracking panel subtitle in the control center when it is enabled. */
-"Private data points have been removed" = "Private data points have been removed";
+"Private data points have been removed" = "Persönliche Daten wurden entfernt";
 
 /* Anti-tracking panel subtitle in the control center when it is disabled */
-"Anti-Tracking is turned off for this website" = "Anti-Tracking is turned off for this website";
+"Anti-Tracking is turned off for this website" = "Anti-Tracking ist deaktiviert für diese Webseite";
 
 /* AdBlocker panel title in the control center when it is enabled. */
-"You surf the web without ads" = "You surf the web without ads";
+"You surf the web without ads" = "Du surfst werbefrei";
 
 /* AdBlocker panel title in the control center when it is disabled. */
-"You surf the web with ads" = "You surf the web with ads";
+"You surf the web with ads" = "Du surfst mit Werbung";
 
 /* AdBlocker panel subtitle in the control center when it is enabled. */
-"Ads have been blocked" = "Ads have been blocked";
+"Ads have been blocked" = "Werbungen wurden geblockt";
 
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
-"Ad-Blocking is turned off for this website" = "AdBlocking is turned off for this website";
+"Ad-Blocking is turned off for this website" = "Werbeblocker ist deaktivert für diese Webseite";
 
 /* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
-"Ad-Blocking is turned off" = "AdBlocking is turned off";
+"Ad-Blocking is turned off" = "Werbeblocker ist deaktiviert";
 
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.";
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert";
 
 /* Anti-Phishing panel title in the control center if the current website is safe. */
-"You are safe" = "You are safe";
+"You are safe" = "Du bist sicher";
 
 /* Anti-Phishing panel subtitle in the control center if the current website is safe. */
-"No suspicious activities detected" = "No suspicious activities detected";
+"No suspicious activities detected" = "Keine verdächtigen Aktivitäten entdeckt";
 
 /* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
-"Suspicious activities were detected" = "Suspicious activities were detected";
+"Suspicious activities were detected" = "Verdächtige Aktivitäten wurden bemerkt";
 
 /* AntiTracking Information text for landscape mode. */
-"AntiTracking Information" = "Tracking-Information";
+"AntiTracking Information" = "Anti-Tracking Informationen";
 
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "AdBlocking-Information";
+"AdBlocking Information" = "Ad-Blocking Informationen";
 
 /* Alert title for turning on location service when clicking share location on local card */
 "Turn on Location Services" = "Ortungsdienste aktivieren";
