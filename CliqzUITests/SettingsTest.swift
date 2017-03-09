@@ -11,6 +11,7 @@ import KIF
 
 class SettingsTests: KIFTestCase {
     
+
     override func tearDown() {
         if tester.viewExistsWithLabel("Settings"){
             tester.tapViewWithAccessibilityLabel("Settings")
