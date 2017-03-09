@@ -111,7 +111,7 @@ class ControlCenterPanel: UIViewController {
         
         // Ok button
         
-        let okButtonTitle = NSLocalizedString("OK", comment: "Ok button in Control Center panel.")
+        let okButtonTitle = NSLocalizedString("OK", tableName: "Cliqz", comment: "Ok button in Control Center panel.")
         self.okButton.setTitle(okButtonTitle, forState: .Normal)
         self.okButton.setTitleColor(UIConstants.CliqzThemeColor, forState: .Normal)
         
@@ -130,7 +130,7 @@ class ControlCenterPanel: UIViewController {
         self.view.addSubview(self.okButton)
         
         
-        let activateButtonTitle = NSLocalizedString("Activate", comment: "Activate button in control center panel.")
+        let activateButtonTitle = NSLocalizedString("Activate", tableName: "Cliqz", comment: "Activate button in control center panel.")
         self.activateButton.setTitle(activateButtonTitle, forState: .Normal)
         self.activateButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.activateButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
