@@ -107,23 +107,35 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: UIDeviceOrientationDidChangeNotification, object: UIDevice.currentDevice())
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showOpenSettingsAlert), name: LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showOpenSettingsAlert(_:)), name: LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
 
 
     }
-    func showOpenSettingsAlert() {
-        let title = NSLocalizedString("Turn on Location Services", tableName: "Cliqz", comment: "Alert title for turning on location service when clicking share location on local card")
-        let message = NSLocalizedString("To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
-        
-        let alertController = UIAlertController (title: title, message: message, preferredStyle: .Alert)
+    func showOpenSettingsAlert(notification: NSNotification) {
+        var message: String!
+        var settingsAction: UIAlertAction!
         
         let settingsOptionTitle = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings option for turning on location service")
-        let settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
-            if let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(settingsUrl)
+        
+        if let locationServicesEnabled = notification.object as? Bool where locationServicesEnabled == true {
+            message = NSLocalizedString("To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
+            settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
+                if let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString) {
+                    UIApplication.sharedApplication().openURL(settingsUrl)
+                }
+            }
+        } else {
+            message = NSLocalizedString("To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
+            settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
+                if let settingsUrl = NSURL(string: "App-Prefs:root=Privacy&path=LOCATION") {
+                    UIApplication.sharedApplication().openURL(settingsUrl)
+                }
             }
         }
         
+        let title = NSLocalizedString("Turn on Location Services", tableName: "Cliqz", comment: "Alert title for turning on location service when clicking share location on local card")
+        
+        let alertController = UIAlertController (title: title, message: message, preferredStyle: .Alert)
         
         let notNowOptionTitle = NSLocalizedString("Not Now", tableName: "Cliqz", comment: "Not now option for turning on location service")
         let cancelAction = UIAlertAction(title: notNowOptionTitle, style: .Default, handler: nil)

@@ -42,7 +42,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 	public func shareLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .Denied {
-            NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: CLLocationManager.locationServicesEnabled())
         } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
             self.startUpdatingLocation()
             

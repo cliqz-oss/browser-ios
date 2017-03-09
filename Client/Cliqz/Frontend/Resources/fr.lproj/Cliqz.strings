@@ -342,5 +342,8 @@
 /* Alert message for turning on location service when clicking share location on local card */
 "To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les Réglages de l'application CLIQZ :\n1. Clique sur 'Service de localisation'\n2. Saisis 'Lorsque l'app est active'";
 
+/* Alert message for turning on location service when clicking share location on local card */
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les réglages du téléphone:\n1.Active le service de localisation\n2.Sélectionne CLIQZ\n3.Sélectionne \"Lorsque l'app est active\"";
+
 /* Not now option for turning on location service */
 "Not Now" = "Pas maintenant";
