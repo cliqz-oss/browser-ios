@@ -420,7 +420,6 @@
 		2FFC4D1B1ABE3C360081D675 /* FxAState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D1A1ABE3C360081D675 /* FxAState.swift */; };
 		2FFC4D381ABE3C420081D675 /* FxAStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D371ABE3C420081D675 /* FxAStateTests.swift */; };
 		3905274C1C874D35007E0BB7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3905274B1C874D35007E0BB7 /* NotificationCenter.framework */; };
-		3905274F1C874D35007E0BB7 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3905274E1C874D35007E0BB7 /* TodayViewController.swift */; };
 		390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3905274A1C874D35007E0BB7 /* Today.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39098DC41CAD5ACB00AE87F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 391AEFD11C8F11ED00691F84 /* Images.xcassets */; };
 		392ED6B71D06E85E009D9B62 /* NewTabChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392ED6B61D06E85E009D9B62 /* NewTabChoiceViewController.swift */; };
@@ -567,6 +566,7 @@
 		7BF5A1CA1B4160EA00EA9DD8 /* SyncCommandsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1C91B4160EA00EA9DD8 /* SyncCommandsTable.swift */; };
 		7BF5A1EA1B41640500EA9DD8 /* SyncQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1E91B41640500EA9DD8 /* SyncQueue.swift */; };
 		7BF5A1EE1B429B3100EA9DD8 /* SyncCommandsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1ED1B429B3100EA9DD8 /* SyncCommandsTests.swift */; };
+		7C18EF921E6458880081697F /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3905274E1C874D35007E0BB7 /* TodayViewController.swift */; };
 		7C346B221E1D313D00C1FD3B /* AntiPhishingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C346B211E1D313D00C1FD3B /* AntiPhishingTest.swift */; };
 		7C4474F81E07F6B2008E34E6 /* SettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4474F71E07F6B2008E34E6 /* SettingsTest.swift */; };
 		7C4475091E07F7BF008E34E6 /* TabsManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4475081E07F7BF008E34E6 /* TabsManagerTest.swift */; };
@@ -5254,7 +5254,9 @@
 				ORGANIZATIONNAME = Mozilla;
 				TargetAttributes = {
 					1E79DEBE1D5098F6006BEB4A = {
+						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 					};
 					2827315D1ABC9BE600AA1954 = {
 						CreatedOnToolsVersion = 6.2;
@@ -6187,7 +6189,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3905274F1C874D35007E0BB7 /* TodayViewController.swift in Sources */,
+				7C18EF921E6458880081697F /* TodayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7272,12 +7274,20 @@
 		1E79DEF51D5098F6006BEB4A /* Fennec */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				INFOPLIST_FILE = CliqzUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/UITests/UITests-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
@@ -7287,12 +7297,20 @@
 		1E79DEF61D5098F6006BEB4A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				INFOPLIST_FILE = "UITests copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
 			};
@@ -7301,9 +7319,17 @@
 		1E79DEF71D5098F6006BEB4A /* Firefox */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Firefox;
@@ -7311,9 +7337,17 @@
 		1E79DEF81D5098F6006BEB4A /* FirefoxBeta */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = FirefoxBeta;
@@ -7321,9 +7355,17 @@
 		1E79DEF91D5098F6006BEB4A /* FirefoxNightly */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = FirefoxNightly;
@@ -7331,9 +7373,17 @@
 		1E79DEFA1D5098F6006BEB4A /* FennecAurora */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armvs7,
+				);
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = FennecAurora;
@@ -7355,6 +7405,7 @@
 				);
 				INFOPLIST_FILE = Sync/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7381,6 +7432,7 @@
 				);
 				INFOPLIST_FILE = Sync/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -7438,6 +7490,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7458,6 +7511,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7492,6 +7546,7 @@
 				);
 				INFOPLIST_FILE = Account/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7526,6 +7581,7 @@
 				);
 				INFOPLIST_FILE = Account/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -7583,6 +7639,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = Storage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -7604,6 +7661,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = Storage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -7856,7 +7914,7 @@
 					"$(BUILD_DIR)/Debug$(EFFECTIVE_PLATFORM_NAME)/include/**",
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MOZ_INTERNAL_URL_SCHEME = "firefox-nightly";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -7879,10 +7937,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 08B73FC20D095735606A813A /* Pods-Client.firefoxnightly.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Nightly;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7903,6 +7963,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -7923,6 +7984,7 @@
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = FirefoxNightly;
 		};
@@ -7957,6 +8019,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8047,7 +8110,7 @@
 					"$(BUILD_DIR)/Debug$(EFFECTIVE_PLATFORM_NAME)/include/**",
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MOZ_INTERNAL_URL_SCHEME = "firefox-internal";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -8070,11 +8133,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9124B38EC6C7D20DBADF1A74 /* Pods-Client.firefox.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8095,6 +8160,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -8116,6 +8182,7 @@
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Firefox;
 		};
@@ -8157,6 +8224,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8214,6 +8282,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8234,6 +8303,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = Storage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -8285,6 +8355,7 @@
 				);
 				INFOPLIST_FILE = Account/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -8331,6 +8402,7 @@
 				);
 				INFOPLIST_FILE = Sync/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -8378,6 +8450,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ReadingList/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
@@ -8500,6 +8573,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ReadingList/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8527,6 +8601,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ReadingList/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
@@ -8783,7 +8858,7 @@
 					"$(BUILD_DIR)/Debug$(EFFECTIVE_PLATFORM_NAME)/include/**",
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MOZ_INTERNAL_URL_SCHEME = "fennec-aurora";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -8806,10 +8881,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FFC2487AB8BDC6ECC5486332 /* Pods-Client.fennecaurora.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8830,6 +8907,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -8850,6 +8928,7 @@
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = FennecAurora;
 		};
@@ -8891,6 +8970,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8936,6 +9016,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8956,6 +9037,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = Storage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -8993,6 +9075,7 @@
 				);
 				INFOPLIST_FILE = Account/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9020,6 +9103,7 @@
 				);
 				INFOPLIST_FILE = Sync/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9048,6 +9132,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ReadingList/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9283,7 +9368,7 @@
 					"$(BUILD_DIR)/Debug$(EFFECTIVE_PLATFORM_NAME)/include/**",
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MOZ_INTERNAL_URL_SCHEME = "firefox-beta";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -9306,10 +9391,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 50C9528012EFBDDD4C7156CE /* Pods-Client.firefoxbeta.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon_Beta;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9332,6 +9419,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -9352,6 +9440,7 @@
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = FirefoxBeta;
 		};
@@ -9413,6 +9502,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -9491,6 +9581,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = "Shared/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -9511,6 +9602,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				INFOPLIST_FILE = Storage/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -9562,6 +9654,7 @@
 				);
 				INFOPLIST_FILE = Account/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9608,6 +9701,7 @@
 				);
 				INFOPLIST_FILE = Sync/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9655,6 +9749,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ReadingList/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.ios.$(PRODUCT_NAME:rfc1034identifier)";
@@ -9749,7 +9844,7 @@
 					"$(BUILD_DIR)/Debug$(EFFECTIVE_PLATFORM_NAME)/include/**",
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MOZ_INTERNAL_URL_SCHEME = fennec;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -9772,10 +9867,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B874502879B29CD4C9D0FB9 /* Pods-Client.fennec.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9799,6 +9896,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
@@ -9821,6 +9919,7 @@
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Fennec;
 		};
@@ -9856,6 +9955,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

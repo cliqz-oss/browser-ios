@@ -226,6 +226,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
 			}
+            self.topSitesCollection.accessibilityLabel = "topSites"
 		}
 		
 		if self.newsTableView == nil {
@@ -239,8 +240,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.right.bottom.equalTo(self.view)
 				make.top.equalTo(self.topSitesCollection!.snp_bottom).offset(5)
 			}
-			newsTableView?.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
-			newsTableView?.separatorStyle = .None
+			newsTableView.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
+			newsTableView.separatorStyle = .None
+            self.newsTableView.accessibilityLabel = "topNews"
 		}
 	}
 

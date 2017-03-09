@@ -20,7 +20,7 @@ class CliqzUITests: KIFTestCase {
         let searchBar = tester.waitForViewWithAccessibilityLabel("Address and Search")
         XCTAssertTrue(searchBar.accessibilityValue!.startsWith("Cliqz"), "Search Bar is not Focused on Opening the application, It Should be!")
 //        This code tests autocomplete
-        XCTAssertTrue(searchBar.accessibilityValue!.contains(".com/"), "Auto complete does not work, It Should!")
+        tester.tapViewWithAccessibilityLabel("CliqzClear")
 //        tester.tapViewWithAccessibilityLabel("urlExpand")
 //        tester.tapViewWithAccessibilityLabel("Show Tabs")
 //        tester.waitForViewWithAccessibilityLabel("New Tab")

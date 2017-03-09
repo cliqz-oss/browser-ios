@@ -10,8 +10,23 @@ import XCTest
 import KIF
 
 class BrowserToolbarTest: KIFTestCase {
-   
-
+    override func tearDown() {
+        if tester.viewExistsWithLabel("Back to safe site"){
+            tester.tapViewWithAccessibilityLabel("Back to safe site")
+        }
+        if tester.viewExistsWithLabel("Settings"){
+            tester.tapViewWithAccessibilityLabel("Settings")
+        }
+        if tester.viewExistsWithLabel("Done"){
+            tester.tapViewWithAccessibilityLabel("Done")
+        }
+        if tester.viewExistsWithLabel("cliqzBack"){
+            tester.tapViewWithAccessibilityLabel("closeTab")
+            tester.tapViewWithAccessibilityLabel("cliqzBack")
+        }
+        super.tearDown()
+    }
+ 
     func testToolBarStatusOnSearchPage(){
         showToolBar()
         let back = tester.waitForViewWithAccessibilityLabel("Back")as! UIButton
@@ -68,13 +83,12 @@ class BrowserToolbarTest: KIFTestCase {
     
     func testForgetMode(){
 //        TO DO Check the background color
+        tester.waitForAnimationsToFinish()
         showToolBar()
         tester.longPressViewWithAccessibilityLabel("Show Tabs", duration: 1)
         tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
-        tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab")
-        tester.tapViewWithAccessibilityIdentifier("url")
-        tester.waitForWebViewElementWithAccessibilityLabel("Forget Tab")
-        showToolBar()
+        tester.waitForViewWithAccessibilityLabel("Forget Tab")
+        XCTAssertTrue(tester.viewExistsWithLabel("Forget Tab"))
         resetApp(["New Tab, Most visited sites and News", "New Tab, Most visited sites and News"])
     }
     

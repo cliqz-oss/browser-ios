@@ -181,6 +181,7 @@ class URLBarView: UIView {
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         */
         
+        cancelButton.accessibilityLabel = "urlExpand"
         cancelButton.alpha = 0
         return cancelButton
     }()
