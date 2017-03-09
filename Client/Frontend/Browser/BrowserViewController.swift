@@ -2746,7 +2746,8 @@ extension BrowserViewController: WKNavigationDelegate {
                         self.urlBar.enterOverlayMode(query, pasted: true)
                     }
                 }
-                decisionHandler(WKNavigationActionPolicy.Cancel)
+                self.urlBar.currentURL = nil
+                decisionHandler(WKNavigationActionPolicy.Allow)
             } else if navigationAction.navigationType == .LinkActivated {
                 resetSpoofedUserAgentIfRequired(webView, newURL: url)
             } else if navigationAction.navigationType == .BackForward {
