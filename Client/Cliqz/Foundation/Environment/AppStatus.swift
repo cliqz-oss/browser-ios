@@ -244,6 +244,9 @@ class AppStatus {
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
         prefs["country"]   = SettingsPrefs.getDefaultRegion()
+        if let abTests = ABTestsManager.getABTests() {
+            prefs["ABTests"]   = abTests
+        }
         
         return prefs
     }
