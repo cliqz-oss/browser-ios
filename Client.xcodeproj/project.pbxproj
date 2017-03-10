@@ -230,12 +230,13 @@
 		1E79DEFE1D509981006BEB4A /* CliqzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB71D5098CC006BEB4A /* CliqzUITests.swift */; };
 		1E79DEFF1D509986006BEB4A /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB81D5098CC006BEB4A /* Global.swift */; };
 		1E79DF001D50998D006BEB4A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DEB91D5098CC006BEB4A /* Info.plist */; };
-		1E97773C1E50EEAE0035EF60 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 1E97773B1E50EEAE0035EF60 /* assets */; };
+		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
 		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
 		1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */; };
 		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
+		1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC603A51E718926007921BF /* ABTestsManager.swift */; };
 		1ECAE3401DA4EE5800CB8102 /* core.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE3381DA4EE5800CB8102 /* core.js */; };
 		1ECAE3411DA4EE5800CB8102 /* es6-promise.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33A1DA4EE5800CB8102 /* es6-promise.js */; };
 		1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33B1DA4EE5800CB8102 /* es5tests.json */; };
@@ -1724,6 +1725,7 @@
 		1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ElementAtPoint.swift; path = ../../Frontend/Browser/ElementAtPoint.swift; sourceTree = "<group>"; };
 		1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ElementAtPoint.js; sourceTree = "<group>"; };
 		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
+		1EC603A51E718926007921BF /* ABTestsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABTestsManager.swift; sourceTree = "<group>"; };
 		1ECAE3311DA4EE5800CB8102 /* ES5CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES5CompatTest.swift; sourceTree = "<group>"; };
 		1ECAE3321DA4EE5800CB8102 /* ES6CompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ES6CompatTest.swift; sourceTree = "<group>"; };
 		1ECAE3331DA4EE5800CB8102 /* ESCompatTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESCompatTest.swift; sourceTree = "<group>"; };
@@ -2771,6 +2773,7 @@
 				1E79DCC41D4FB2C5006BEB4A /* SessionState.swift */,
 				4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */,
 				4F8E74BB1E1AB1C900E7C590 /* LogoLoader.swift */,
+				1EC603A51E718926007921BF /* ABTestsManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -5726,7 +5729,7 @@
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				1E79DDD41D507D26006BEB4A /* OnePasswordExtension.strings in Resources */,
 				7B4980A81CE363ED0017547C /* Settings.xcassets in Resources */,
-				1E97773C1E50EEAE0035EF60 /* assets in Resources */,
+				1E97773C1E50EEAE0035EF60 /* (null) in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityTabHelper.js in Resources */,
 				1E79DDC81D507D26006BEB4A /* BookmarkPanelDeleteConfirm.strings in Resources */,
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
@@ -6494,6 +6497,7 @@
 				E653422D1C5944F90039DD9E /* BrowserPrompts.swift in Sources */,
 				D3921DBE1CEFD33600679798 /* ClientTelemetry.swift in Sources */,
 				1E79DD061D4FB2C5006BEB4A /* StatisticsCollector.swift in Sources */,
+				1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */,
 				E664B45A1CD7ECDB0045A6A4 /* NotificationRootViewController.swift in Sources */,
 				2FDE87FE1ABB3817005317B1 /* RemoteTabsPanel.swift in Sources */,
 				39DD030D1CD53E1900BC09B3 /* HomePageHelper.swift in Sources */,

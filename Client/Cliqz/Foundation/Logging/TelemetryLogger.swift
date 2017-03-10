@@ -49,6 +49,7 @@ class TelemetryLogger : EventsLogger {
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
         loadTelemetrySeq()
+        ABTestsManager.checkABTests(sessionId)
     }
     
     func updateForgetModeStatue(newStatus: Bool) {

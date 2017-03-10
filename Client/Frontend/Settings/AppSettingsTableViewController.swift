@@ -46,7 +46,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
             // Cliqz: added regional settings for cliqz search
             RegionalSetting(settings: self)]
             // Cliqz: add settings for query suggestion
-        if QuerySuggestions.querySuggestionSettingEnabled() {
+        if QuerySuggestions.querySuggestionEnabledForCurrentRegion() {
             generalSettings += [
                 BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting"))]
         }

@@ -15,7 +15,7 @@ class QuerySuggestions: NSObject {
 
     
     //MARK:- public APIs
-    class func querySuggestionSettingEnabled() -> Bool {
+    class func querySuggestionEnabledForCurrentRegion() -> Bool {
         var region: String
         if let userRegion = SettingsPrefs.getRegionPref() {
             region = userRegion
@@ -27,8 +27,11 @@ class QuerySuggestions: NSObject {
     }
     
     class func isEnabled() -> Bool {
-        
-        return QuerySuggestions.querySuggestionSettingEnabled() && SettingsPrefs.getQuerySuggestionPref() == true
+        guard let querySuggestionEnabledByABTest = LocalDataStore.objectForKey(LocalDataStore.enableQuerySuggestionKey) as? Bool else {
+            // query suggestion is disabled by default except it is specified in ABTests
+            return false
+        }
+        return querySuggestionEnabledByABTest && QuerySuggestions.querySuggestionEnabledForCurrentRegion() && SettingsPrefs.getQuerySuggestionPref()
     }
     
     class func getSuggestions(query: String, completionHandler: AnyObject -> ()){

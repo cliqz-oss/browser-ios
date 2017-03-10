@@ -11,6 +11,10 @@ import Crashlytics
 
 class LocalDataStore {
     static let defaults = NSUserDefaults.standardUserDefaults()
+    
+    // Constants
+    static let enableQuerySuggestionKey = "enableQuerySuggestion"
+    
     // wrtiting operation is done on Main thread because of a bug in FireFox that it is changing UI when any change is done to user defaults
     static let dispatchQueue = dispatch_get_main_queue()
 
