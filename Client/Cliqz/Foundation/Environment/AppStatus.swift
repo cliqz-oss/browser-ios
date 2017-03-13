@@ -21,9 +21,6 @@ class AppStatus {
     var lastOpenedDate: NSDate?
     var lastEnvironmentEventDate: NSDate?
     
-    lazy var isRelease: Bool  = self.isReleasedVersion()
-    lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
-    
     lazy var extensionVersion: String = {
         
         if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "Extension/build/mobile/search"),
@@ -52,13 +49,16 @@ class AppStatus {
         return ""
     }()
     
-    private func isReleasedVersion() -> Bool {
-//        let infoDict = NSBundle.mainBundle().infoDictionary;
-//        if let isRelease = infoDict!["Release"] {
-//            return isRelease.boolValue
-//        }
-//        return false
-        return true
+    func isRelease() -> Bool {
+        #if BETA
+            return false
+        #else
+            return true
+        #endif
+    }
+    
+    func isDebug() -> Bool {
+        return _isDebugAssertConfiguration()
     }
     
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
