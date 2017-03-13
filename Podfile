@@ -23,6 +23,5 @@ target 'Client' do
 end
 
 target 'CliqzUITests' do
-    pod 'KIF', '~> 3.0', :configurations => ['fennec']
     project_pods
 end
