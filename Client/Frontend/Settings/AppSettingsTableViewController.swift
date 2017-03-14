@@ -163,7 +163,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting(),
+				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
 				
 				ReportFormSetting(),
 				
@@ -187,7 +187,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting(),
+				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
 				
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
