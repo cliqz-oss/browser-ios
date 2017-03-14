@@ -291,7 +291,7 @@
 "Activate" = "Activer";
 
 /* Anti-tracking panel title in the control center when it is enabled. */
-"Your data is protected" = "Tes données personnelles sont protegées";
+"Your data is protected" = "Tes données personnelles sont protégées";
 
 /* Anti-tracking panel title in the control center when it is disabled
  Anti-Phishing panel title in the control center if the current website is a phishing one. */
@@ -331,10 +331,10 @@
 "Suspicious activities were detected" = "Des activités suspectes ont été détectées";
 
 /* AntiTracking Information text for landscape mode. */
-"AntiTracking Information" = "Informations";//"Informations sur le tracking";
+"AntiTracking Information" = "Liste détaillée";//"Informations sur le tracking";
 
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "Informations";//"Informations sur le bloquage Bloqueur de Pubs";
+"AdBlocking Information" = "Liste détaillée";//"Informations sur le bloquage Bloqueur de Pubs";
 
 /* Alert title for turning on location service when clicking share location on local card */
 "Turn on Location Services" = "Activer le service de localisation";
