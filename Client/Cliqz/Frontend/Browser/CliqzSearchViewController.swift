@@ -118,14 +118,14 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         let settingsOptionTitle = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings option for turning on location service")
         
         if let locationServicesEnabled = notification.object as? Bool where locationServicesEnabled == true {
-            message = NSLocalizedString("To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
+            message = NSLocalizedString("To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'", tableName: "Cliqz", comment: "Alert message for turning on location service when clicking share location on local card")
             settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
                 if let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString) {
                     UIApplication.sharedApplication().openURL(settingsUrl)
                 }
             }
         } else {
-            message = NSLocalizedString("To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'", comment: "Alert message for turning on location service when clicking share location on local card")
+            message = NSLocalizedString("To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'", tableName: "Cliqz", comment: "Alert message for turning on location service when clicking share location on local card")
             settingsAction = UIAlertAction(title: settingsOptionTitle, style: .Default) { (_) -> Void in
                 if let settingsUrl = NSURL(string: "App-Prefs:root=Privacy&path=LOCATION") {
                     UIApplication.sharedApplication().openURL(settingsUrl)
