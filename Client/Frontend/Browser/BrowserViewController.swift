@@ -2108,6 +2108,10 @@ extension BrowserViewController: TabToolbarDelegate {
     
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        // check if the dashboard is already pushed before
+        guard self.navigationController?.topViewController != dashboard else {
+            return
+        }
         // Cliqz: telemetry logging for toolbar
         self.logToolbarOverviewSignal()
         

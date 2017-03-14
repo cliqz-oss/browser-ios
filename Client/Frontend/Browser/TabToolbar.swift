@@ -221,7 +221,7 @@ public class TabToolbarHelper: NSObject {
     
     // Cliqz: Add actions for tabs button
     func SELdidClickTabs() {
-        toolbar.tabToolbarDelegate?.tabToolbarDidPressTabs(toolbar, button: toolbar.backButton)
+        toolbar.tabToolbarDelegate?.tabToolbarDidPressTabs(toolbar, button: toolbar.tabsButton)
     }
     
     func SELdidLongPressTabs(recognizer: UILongPressGestureRecognizer) {
