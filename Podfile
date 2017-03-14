@@ -24,5 +24,4 @@ end
 
 target 'CliqzUITests' do
     project_pods
-    
 end

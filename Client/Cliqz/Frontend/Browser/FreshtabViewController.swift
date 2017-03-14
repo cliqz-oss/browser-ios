@@ -463,7 +463,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let url = s["url"] {
-                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                LogoLoader.loadLogoImageOrFakeLogo(url) { (image: UIImage?, fakeLogo:UIView?, error: NSError?) in
                     if cell.tag == indexPath.row{
                         if let img = image {
                             cell.logoImageView.image = img
@@ -478,7 +478,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
                     }
                 }
 				let hostComponents = getHostComponents(forURL: url)
-				cell.logoHostLabel.text = hostComponents[0]
+				cell.logoHostLabel.text = hostComponents[0].capitalizedString
 			}
 		}
 		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
