@@ -310,7 +310,7 @@
 "You surf the web with ads" = "Tu verras des pubs";
 
 /* AdBlocker panel subtitle in the control center when it is enabled. */
-"Ads have been blocked" = "Ads have been blocked";
+"Ads have been blocked" = "Les pubs ont été bloquées";
 
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
 "Ad-Blocking is turned off for this website" = "Bloqueur de Pubs est désactivé pour ce site";
@@ -331,13 +331,13 @@
 "Suspicious activities were detected" = "Des activités suspectes ont été détectées";
 
 /* AntiTracking Information text for landscape mode. */
-"AntiTracking Information" = "Informations sur le tracking";
+"AntiTracking Information" = "Informations";//"Informations sur le tracking";
 
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "Informations sur le bloquage Bloqueur de Pubs";
+"AdBlocking Information" = "Informations";//"Informations sur le bloquage Bloqueur de Pubs";
 
 /* Alert title for turning on location service when clicking share location on local card */
-"Turn on Location Services" = "Turn on Location Services";
+"Turn on Location Services" = "Activer le service de localisation";
 
 /* Alert message for turning on location service when clicking share location on local card */
 "To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les Réglages de l'application CLIQZ :\n1. Clique sur 'Service de localisation'\n2. Saisis 'Lorsque l'app est active'";
