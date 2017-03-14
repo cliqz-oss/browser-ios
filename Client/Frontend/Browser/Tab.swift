@@ -71,7 +71,7 @@ class Tab: NSObject {
     private var lastRequest: NSURLRequest? = nil
     var pendingScreenshot = false
     var url: NSURL?
-
+    var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
 
@@ -105,7 +105,7 @@ class Tab: NSObject {
     // Cliqz: flag to know whether the current tab is in search mode or not
     var inSearchMode : Bool {
         get {
-            if url == nil || AboutUtils.isAboutURL(url) {
+            if !requestInProgress && (url == nil || AboutUtils.isAboutURL(url)) {
                 return true
             } else {
                 return false
@@ -347,6 +347,7 @@ class Tab: NSObject {
         if let webView = webView {
             lastRequest = request
 #if CLIQZ
+        requestInProgress = true
 		// Cliqz:[UIWebView] Replaced with fake WKNavigation
 		webView.loadRequest(request)
 		return DangerousReturnWKNavigation.emptyNav
@@ -485,6 +486,7 @@ class Tab: NSObject {
         }
 
         updateAppState()
+        requestInProgress = false
     }
 
     func setNoImageMode(enabled: Bool = false, force: Bool) {
