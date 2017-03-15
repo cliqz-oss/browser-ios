@@ -347,7 +347,9 @@ class Tab: NSObject {
         if let webView = webView {
             lastRequest = request
 #if CLIQZ
-        requestInProgress = true
+        if !AboutUtils.isAboutURL(request.URL) {
+            requestInProgress = true
+        }
 		// Cliqz:[UIWebView] Replaced with fake WKNavigation
 		webView.loadRequest(request)
 		return DangerousReturnWKNavigation.emptyNav
