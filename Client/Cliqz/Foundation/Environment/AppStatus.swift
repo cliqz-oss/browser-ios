@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Crashlytics
 
 class AppStatus {
 
@@ -244,8 +245,14 @@ class AppStatus {
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
         prefs["country"]   = SettingsPrefs.getDefaultRegion()
-        if let abTests = ABTestsManager.getABTests() {
-            prefs["ABTests"]   = abTests
+        if let abTests = ABTestsManager.getABTests() where NSJSONSerialization.isValidJSONObject(abTests) {
+            do {
+                let data = try NSJSONSerialization.dataWithJSONObject(abTests, options: .PrettyPrinted)
+                let stringifiedAbTests = NSString(data: data, encoding: NSUTF8StringEncoding)
+                prefs["ABTests"]   = stringifiedAbTests
+            } catch let error as NSError {
+                Answers.logCustomEventWithName("stringifyABTests", customAttributes: ["error": error.localizedDescription])
+            }
         }
         
         return prefs
