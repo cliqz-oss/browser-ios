@@ -476,7 +476,7 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     override func getAdditionalInfoName() -> String {
-        return "info_trakcer"
+        return "info_tracker"
     }
     
     //MARK: - Helper methods
