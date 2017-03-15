@@ -563,12 +563,15 @@ class BrowserViewController: UIViewController {
         super.viewWillAppear(animated)
         log.debug("BVC super.viewWillAppear done.")
 
+        // Cliqz: Remove onboarding screen
+        /*
         // On iPhone, if we are about to show the On-Boarding, blank out the tab so that it does
         // not flash before we present. This change of alpha also participates in the animation when
         // the intro view is dismissed.
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             self.view.alpha = (profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil) ? 1.0 : 0.0
         }
+         */
 
 		// Cliqz: Disable FF crash reporting and restoring Tabs
 /*
@@ -641,13 +644,15 @@ class BrowserViewController: UIViewController {
 
     override func viewDidAppear(animated: Bool) {
         log.debug("BVC viewDidAppear.")
-        // Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
+        
+        // Cliqz: Remove onboarding screen
 //        presentIntroViewController()
-        if (!presentIntroViewController()) {
-            switchToSearchModeIfNeeded()
-            // Cliqz: ask for news notification permission according to our workflow
-            askForNewsNotificationPermissionIfNeeded()
-		}
+        
+        // Cliqz: switch to search mode if needed
+        switchToSearchModeIfNeeded()
+        // Cliqz: ask for news notification permission according to our workflow
+        askForNewsNotificationPermissionIfNeeded()
+        
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
