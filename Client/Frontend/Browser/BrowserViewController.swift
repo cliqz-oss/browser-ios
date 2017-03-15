@@ -192,6 +192,10 @@ class BrowserViewController: UIViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
 
 		displayedPopoverController?.dismissViewControllerAnimated(true) {
 			self.displayedPopoverController = nil
