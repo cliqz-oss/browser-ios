@@ -129,11 +129,6 @@ class AdBlockerSetting: Setting {
 //Cliqz: Added Settings for redirecting to feedback page
 class SendCliqzFeedbackSetting: Setting {
     
-    override init(title: NSAttributedString? = nil, delegate: SettingsDelegate?, enabled: Bool? = nil) {
-        super.init(title: title, delegate: delegate, enabled: enabled)
-        self.delegate = delegate
-    }
-    
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"),attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
