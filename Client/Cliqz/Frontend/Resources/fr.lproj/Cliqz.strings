@@ -310,7 +310,7 @@
 "You surf the web with ads" = "Tu verras des pubs";
 
 /* AdBlocker panel subtitle in the control center when it is enabled. */
-"Ads have been blocked" = "Les pubs ont été bloquées";
+"Ads have been blocked" = "pubs ont été bloquées";
 
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
 "Ad-Blocking is turned off for this website" = "Bloqueur de Pubs est désactivé pour ce site";
