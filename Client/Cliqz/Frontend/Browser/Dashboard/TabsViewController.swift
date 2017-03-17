@@ -148,7 +148,9 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.delegate = self
         cell.selectedTab = tab
         
-		if tab.displayURL != nil {
+        let freshtab = tab.displayURL?.absoluteString?.contains("cliqz/goto.html") ?? false
+        
+		if tab.displayURL != nil && !freshtab{
             cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
 			cell.URLLabel.text = tab.displayURL?.absoluteString
 		} else {

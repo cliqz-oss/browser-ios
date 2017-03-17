@@ -16,7 +16,12 @@ class URLBarTest: KIFTestCase {
         if tester.viewExistsWithLabel("Go"){
         }
         else{
-            tester.tapViewWithAccessibilityIdentifier("url")
+            if tester.viewExistsWithLabel("Address and Search"){
+                tester.tapViewWithAccessibilityLabel("Address and Search")
+            }
+            else{
+                tester.tapViewWithAccessibilityIdentifier("url")
+            }
         }
         tester.waitForViewWithAccessibilityLabel("Address and Search")
         XCTAssertFalse(tester.viewExistsWithLabel("AntiTrackingButton"), "AntiTracking Button is displayed, It shouldn't be displayed!")
@@ -39,7 +44,7 @@ class URLBarTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("+")
         tester.tapViewWithAccessibilityLabel("+")
         XCTAssertTrue(x.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened!")
-        showToolBar()
+        
         resetApp(["New Tab, Most visited sites and News"])
     }
     

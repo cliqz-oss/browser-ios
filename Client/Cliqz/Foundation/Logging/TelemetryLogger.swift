@@ -23,14 +23,15 @@ public enum TelemetryLogEventType {
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool?, Int?)
+    case Toolbar            (String, String, String, Bool?, [String: AnyObject]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
-    case Attrack            (String, String?, Int?)
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: AnyObject]?)
     case ContextMenu            (String, String)
+    case QuerySuggestions        (String, [String: AnyObject]?)
+    case ControlCenter         (String, String?, String?, [String: AnyObject]?)
 }
 
 
@@ -48,6 +49,7 @@ class TelemetryLogger : EventsLogger {
     init() {
         super.init(endPoint: "https://logging.cliqz.com")        
         loadTelemetrySeq()
+        ABTestsManager.checkABTests(sessionId)
     }
     
     func updateForgetModeStatue(newStatus: Bool) {
@@ -135,7 +137,7 @@ class TelemetryLogger : EventsLogger {
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
                 
-            case .Toolbar(let action, let target, let view, let isForgetMode?, let customData):
+            case .Toolbar(let action, let target, let view, let isForgetMode, let customData):
                 event = self.createToolbarEvent(action, target: target, view: view, isForgetMode: isForgetMode, customData: customData)
                 
             case .Keyboard(let action, let view, let isForgetMode, let showDuration):event = self.createKeyboardEvent(action, view: view, isForgetMode: isForgetMode, showDuration: showDuration)
@@ -145,9 +147,6 @@ class TelemetryLogger : EventsLogger {
             case .WebMenu(let action, let target, let isForgetMode):
                 event = self.createWebMenuEvent(action, target: target, isForgetMode: isForgetMode)
             
-            case .Attrack(let action, let target, let customData):
-                event = self.createAttrackEvent(action, target: target, customData: customData)
-                
             case .AntiPhishing(let action, let target, let showDuration):
                 event = self.createAntiPhishingEvent(action, target: target, showDuration: showDuration)
             
@@ -162,8 +161,12 @@ class TelemetryLogger : EventsLogger {
             case .ContextMenu (let target, let view):
                 event = self.createContextMenuEvent(target, view: view)
             
-            default:
-                return
+            case .QuerySuggestions (let action, let customData):
+                event = self.createQuerySuggestionsEvent(action, customData: customData)
+                
+            case .ControlCenter (let action, let view, let target, let customData):
+                event = self.ControlCenterEvent(action, view: view, target: target, customData: customData)
+                
             }
             
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -413,7 +416,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: Int?) -> [String: AnyObject] {
+    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: AnyObject]?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
@@ -425,16 +428,10 @@ class TelemetryLogger : EventsLogger {
             event["is_forget"] = isForgetMode
         }
         
-        if let customData = customData where target == "overview" {
-            event["open_tabs_count"] = customData
-        } else if let customData = customData where target == "delete" {
-            event["char_count"] = customData
-        } else if let customData = customData where target == "attack" {
-            event["tracker_count"] = customData
-        } else if let customData = customData where target == "reader_mode" {
-            event["state"] = customData == 1 ? "true" : "false"
-        } else if let customData = customData where view == "overview" {
-            event["show_duration"] = customData == 1 ? "true" : "false"
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
         }
         
         return event
@@ -462,25 +459,6 @@ class TelemetryLogger : EventsLogger {
         event["action"] = action
         event["target"] = target
         event["is_forget"] = isForgetMode
-        
-        return event
-    }
-    
-    private func createAttrackEvent(action: String, target: String?, customData: Int?) -> [String: AnyObject] {
-        var event = createBasicEvent()
-        
-        event["type"] = "attrack"
-        event["action"] = action
-        if let target = target {
-            event["target"] = target
-            if let customData = customData where target == "info_company" {
-                event["index"] = customData
-            }
-        }
-        
-        if let customData = customData where action == "hide" {
-            event["show_duration"] = customData
-        }
         
         return event
     }
@@ -537,6 +515,46 @@ class TelemetryLogger : EventsLogger {
         event["action"] = "click"
         event["target"] = target
         event["view"] = view
+        
+        return event
+    }
+    
+    private func createQuerySuggestionsEvent(action: String, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "query_suggestions"
+        event["action"] = action
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
+        return event
+    }
+    
+    
+    private func ControlCenterEvent(action: String, view: String?, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "control_center"
+        event["action"] = action
+        
+        
+        if let view = view {
+            event["view"] = view
+        }
+
+        if let target = target {
+            event["target"] = target
+        }
+
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
         
         return event
     }

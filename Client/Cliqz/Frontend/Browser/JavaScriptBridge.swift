@@ -80,10 +80,10 @@ class JavaScriptBridge {
                     handleJSAction(action, data: input["data"], callback: input["callback"] as? String)
                 }
             } else {
-                DebugLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
+                DebugingLogger.log("Unhandled JS Bridge message with name :\(message.name), and body: \(message.body) !!!")
             }
         default:
-            DebugLogger.log("Unhandled JS message with name : \(message.name) !!!")
+            DebugingLogger.log("Unhandled JS message with name : \(message.name) !!!")
             
         }
     }
@@ -164,6 +164,8 @@ class JavaScriptBridge {
                     self.callPhoneNumber(phoneNumber)
                 } else if let mapURL = actionData["data"] as? String where actionType == "map" {
                     self.openGoogleMaps(mapURL)
+                } else if actionType == "shareLocation" {
+                    LocationManager.sharedInstance.shareLocation()
                 }
 
             }
@@ -207,6 +209,7 @@ class JavaScriptBridge {
             }
         case "isReady":
             delegate?.isReady?()
+            
         default:
 			print("Unhandles JS action")
         }

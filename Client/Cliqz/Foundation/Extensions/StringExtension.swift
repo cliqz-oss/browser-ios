@@ -46,9 +46,7 @@ extension String {
             return self
         } else {
             let allowedCharacterSet = NSMutableCharacterSet()
-            allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
-            allowedCharacterSet.removeCharactersInString("=")
-            
+            allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())            
             return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
         }
     }

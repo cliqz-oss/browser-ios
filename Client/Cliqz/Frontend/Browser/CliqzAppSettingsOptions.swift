@@ -10,6 +10,7 @@ import Foundation
 import MessageUI
 import Shared
 
+import React
 
 //Cliqz: Added to modify the behavior of changing default search engine 
 class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
@@ -77,6 +78,29 @@ class HumanWebSetting: Setting {
         TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
     }
 }
+
+class TestReact: Setting {
+    
+    let profile: Profile
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let reactTitle = "Test React"
+        super.init(title: NSAttributedString(string: reactTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = UIViewController()
+        viewController.view = Engine.sharedInstance.rootView
+
+//        navigationController?.presentViewController(viewController, animated: true, completion: nil)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
 //Cliqz: Added new settings item for Ad Blocker
 class AdBlockerSetting: Setting {
     
@@ -104,8 +128,9 @@ class AdBlockerSetting: Setting {
 
 //Cliqz: Added Settings for redirecting to feedback page
 class SendCliqzFeedbackSetting: Setting {
+    
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"))
+        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"),attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {
@@ -113,7 +138,8 @@ class SendCliqzFeedbackSetting: Setting {
     }
     
     override func onClick(navigationController: UINavigationController?) {
-        setUpAndPushSettingsContentViewController(navigationController)
+        navigationController?.dismissViewControllerAnimated(true, completion: {})
+        self.delegate?.settingsOpenURLInNewTab(self.url!)
         
         // Cliqz: log telemetry signal
         let contactSignal = TelemetryLogEventType.Settings("main", "click", "contact", nil, nil)
@@ -124,8 +150,9 @@ class SendCliqzFeedbackSetting: Setting {
 
 //Cliqz: Added Setting for redirecting to report form
 class ReportFormSetting: Setting {
+    
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"))
+        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {

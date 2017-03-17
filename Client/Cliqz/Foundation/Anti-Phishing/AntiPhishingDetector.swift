@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import Shared
 
 class AntiPhishingDetector: NSObject {
     
     //MARK: - Singltone
     static let antiPhisingAPIURL = "http://antiphishing.cliqz.com/api/bwlist?md5="
+    static var detectedPhishingURLs = [NSURL]()
     
     //MARK: - public APIs
     class func isPhishingURL(url: NSURL, completion:(Bool) -> Void) {
@@ -25,6 +27,10 @@ class AntiPhishingDetector: NSObject {
 		}
 	}
 
+    class func isDetectedPhishingURL(url: NSURL) -> Bool {
+        return detectedPhishingURLs.contains(url)
+    }
+    
 	private class func scanURL(url: NSURL, queue: dispatch_queue_t, completion:(Bool) -> Void) {
 		if let host = url.host {
 			let md5Hash = md5(host)
@@ -45,9 +51,12 @@ class AntiPhishingDetector: NSObject {
 							where md5Suffix == suffix {
 							dispatch_async(dispatch_get_main_queue(), { 
 								completion(true)
+                                detectedPhishingURLs.append(url)
+                                NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: nil)
 							})
 						}
 					}
+                    completion(false)
 				}
 				}, onFailure: { (data, error) in
 					print(error)

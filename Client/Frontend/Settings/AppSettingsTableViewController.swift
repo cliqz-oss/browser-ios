@@ -42,9 +42,14 @@ class AppSettingsTableViewController: SettingsTableViewController {
 
         let prefs = profile.prefs
 
-        var generalSettings = [
+        var generalSettings: [Setting] = [
             // Cliqz: added regional settings for cliqz search
-            RegionalSetting(settings: self),
+            RegionalSetting(settings: self)]
+            // Cliqz: add settings for query suggestion
+        if QuerySuggestions.querySuggestionEnabledForCurrentRegion() {
+            generalSettings += [
+                BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting"))]
+        }
             // Cliqz: removed default search settings
 //            SearchSetting(settings: self),
             // Cliqz: temporarly hide news notification settings
@@ -54,7 +59,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //        if AppConstants.MOZ_NEW_TAB_CHOICES {
 //            generalSettings += [NewTabPageSetting(settings: self)]
 //        }
-//        generalSettings += [
+        generalSettings += [
 //            HomePageSetting(settings: self),
             // Cliqz: Moved `blockPopups` to SettingsPrefs
             BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true,
@@ -76,6 +81,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
             CliqzSearchSetting(settings: self)
 
         ]
+        #if React_Debug
+            generalSettings.append(TestReact(settings: self))
+        #endif
         
         //Cliqz: removed unused sections from Settings table
 //        let accountChinaSyncSetting: [Setting]
@@ -155,7 +163,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting(),
+				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
 				
 				ReportFormSetting(),
 				
@@ -179,9 +187,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
                 
 				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
 				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting(),
+				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
+				
 				ReportFormSetting(),
-
 				//Cliqz: removed unused sections from Settings table
 				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
 				//                OpenSupportPageSetting(delegate: settingsDelegate),

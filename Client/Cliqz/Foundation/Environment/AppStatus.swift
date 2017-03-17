@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Crashlytics
 
 class AppStatus {
 
@@ -20,9 +21,6 @@ class AppStatus {
     var versionDescriptor: (String, String)?
     var lastOpenedDate: NSDate?
     var lastEnvironmentEventDate: NSDate?
-    
-    lazy var isRelease: Bool  = self.isReleasedVersion()
-    lazy var isDebug: Bool  = false//_isDebugAssertConfiguration()
     
     lazy var extensionVersion: String = {
         
@@ -52,13 +50,16 @@ class AppStatus {
         return ""
     }()
     
-    private func isReleasedVersion() -> Bool {
-//        let infoDict = NSBundle.mainBundle().infoDictionary;
-//        if let isRelease = infoDict!["Release"] {
-//            return isRelease.boolValue
-//        }
-//        return false
-        return true
+    func isRelease() -> Bool {
+        #if BETA
+            return false
+        #else
+            return true
+        #endif
+    }
+    
+    func isDebug() -> Bool {
+        return _isDebugAssertConfiguration()
     }
     
     func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
@@ -244,6 +245,15 @@ class AppStatus {
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
         prefs["human_web"] = SettingsPrefs.getHumanWebPref()
         prefs["country"]   = SettingsPrefs.getDefaultRegion()
+        if let abTests = ABTestsManager.getABTests() where NSJSONSerialization.isValidJSONObject(abTests) {
+            do {
+                let data = try NSJSONSerialization.dataWithJSONObject(abTests, options: .PrettyPrinted)
+                let stringifiedAbTests = NSString(data: data, encoding: NSUTF8StringEncoding)
+                prefs["ABTests"]   = stringifiedAbTests
+            } catch let error as NSError {
+                Answers.logCustomEventWithName("stringifyABTests", customAttributes: ["error": error.localizedDescription])
+            }
+        }
         
         return prefs
     }

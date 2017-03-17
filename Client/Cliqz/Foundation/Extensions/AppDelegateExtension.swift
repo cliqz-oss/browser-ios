@@ -19,8 +19,8 @@ extension AppDelegate {
     var topNewsIdentifier       : String { get { return "com.cliqz.TopNews"     } }
     var topSitesIdentifier      : String { get { return "com.cliqz.TopSites"    } }
 
-    var topNewsURL              : String { get { return "https://newbeta.cliqz.com/api/v1/rich-header?path=/map&bmresult=rotated-top-news.cliqz.com"    } }
-    
+    var topNewsURL              : String { get { return "https://newbeta.cliqz.com/api/v2/rich-header?path=/map&bmresult=rotated-top-news.cliqz.com&locale=\(NSLocale.currentLocale().localeIdentifier)"    } }
+	
 	// MARK:- Delegate methods
 	// Handeling user action when opening the app from home quick action
 	@available(iOS 9.0, *)

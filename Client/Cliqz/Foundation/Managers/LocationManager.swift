@@ -10,10 +10,18 @@ import Foundation
 import CoreLocation
 
 public class LocationManager: NSObject, CLLocationManagerDelegate {
+    static let NotificationUserLocationAvailable = "NotificationUserLocationAvailable"
+    static let NotificationShowOpenLocationSettingsAlert = "NotificationShowOpenLocationSettingsAlert"
 
-	let manager = CLLocationManager()
-	var location: CLLocation?
-    let locationStatusKey = "currentLocationStatus"
+	private let manager = CLLocationManager()
+    private var location: CLLocation? {
+        didSet {
+            if location != nil {
+                NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationUserLocationAvailable, object: nil)
+            }
+        }
+    }
+    private let locationStatusKey = "currentLocationStatus"
 
 	public static let sharedInstance: LocationManager = {
 		let m = LocationManager()
@@ -22,25 +30,40 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 		return m
 	}()
 
+    public func getUserLocation() -> CLLocation? {
+        return self.location
+    }
+    
     public func askForLocationAccess () {
         TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
         self.manager.requestWhenInUseAuthorization()
     }
     
-	public func startUpdateingLocation() {
+	public func shareLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        
-		if CLLocationManager.locationServicesEnabled() &&  authorizationStatus == .NotDetermined {
-			askForLocationAccess()
-		} else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
-            self.manager.startUpdatingLocation()
+        if authorizationStatus == .Denied {
+            NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: CLLocationManager.locationServicesEnabled())
+        } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+            self.startUpdatingLocation()
+            
+        } else if CLLocationManager.locationServicesEnabled() {
+            askForLocationAccess()
         }
+        
 	}
-
+    
+    
+    public func startUpdatingLocation() {
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        guard authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse else {
+            return
+        }
+        
+        self.manager.startUpdatingLocation()
+    }
+    
 	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		if locations.count > 0 {
-			self.location = locations[locations.count - 1]
-		}
+        self.location = locations.last
 	}
     
     public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {

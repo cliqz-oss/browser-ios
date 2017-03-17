@@ -87,7 +87,7 @@ protocol URLBarDelegate: class {
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton)
     // Cliqz: Added delegate method for antitracking button
-	func urlBarDidClickAntitracking(urlBar: URLBarView)
+    func urlBarDidClickAntitracking(urlBar: URLBarView, trackersCount: Int, status: String)
     // Cliqz: Added delegate method for notifing deletge that search field was cleared
     func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?)
 }
@@ -181,6 +181,7 @@ class URLBarView: UIView {
         cancelButton.setContentCompressionResistancePriority(1000, forAxis: UILayoutConstraintAxis.Horizontal)
         */
         
+        cancelButton.accessibilityLabel = "urlExpand"
         cancelButton.alpha = 0
         return cancelButton
     }()
@@ -231,6 +232,11 @@ class URLBarView: UIView {
         }
 
         set(newURL) {
+            if let url = newURL {
+                if(url.host != currentURL?.host){
+                    NSNotificationCenter.defaultCenter().postNotificationName(NotificationRefreshAntiTrackingButton, object: nil, userInfo: ["newURL":url])
+                }
+            }
             locationView.url = newURL
         }
     }
@@ -452,6 +458,9 @@ class URLBarView: UIView {
         }
         
         locationTextField.applyTheme(currentTheme)
+        let querySuggestionView = QuerySuggestionView()
+        querySuggestionView.delegate = self
+        locationTextField.inputAccessoryView = querySuggestionView
     }
 
     func removeLocationTextField() {
@@ -854,6 +863,10 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 
     func autocompleteTextField(autocompleteTextField: AutocompleteTextField, didEnterText text: String) {
         delegate?.urlBar(self, didEnterText: text)
+        
+        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
+            view.didEnterText(text)
+        }
     }
 
     func autocompleteTextFieldDidBeginEditing(autocompleteTextField: AutocompleteTextField) {
@@ -862,6 +875,10 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 
     func autocompleteTextFieldShouldClear(autocompleteTextField: AutocompleteTextField) -> Bool {
 		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
+        
+        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
+            view.didEnterText("")
+        }
         return true
     }
 }
@@ -1137,5 +1154,12 @@ extension ToolbarTextField: Themeable {
         textColor = theme.textColor
         clearButtonTintColor = theme.buttonTintColor
         highlightColor = theme.highlightColor!
+    }
+}
+
+extension URLBarView : QuerySuggestionDelegate {
+    func autoComplete(suggestion: String) {
+        self.locationTextField?.removeCompletion()
+        self.locationTextField?.text = suggestion
     }
 }

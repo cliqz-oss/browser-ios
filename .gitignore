@@ -60,6 +60,7 @@ python-env/
 # IDEA
 .idea
 
+Cartfile.resolved
 Carthage/
 
 ThirdParty/google-breakpad
@@ -76,3 +77,9 @@ MozBuildID.xcconfig
 # Cliqz Extension files
 Extension/*
 !Extension/.gitkeep
+
+# React native
+JSEngine/*
+!JSEngine/.gitkeep
+Pods/
+Podfile.lock

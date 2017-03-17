@@ -27,9 +27,9 @@ class EventsLogger: NSObject {
     //MARK: - Dealing with SessionId
     private var source: String {
         get {
-            if AppStatus.sharedInstance.isDebug {
+            if AppStatus.sharedInstance.isDebug() {
                 return "MI02" // Debug
-            } else if AppStatus.sharedInstance.isRelease {
+            } else if AppStatus.sharedInstance.isRelease() {
                 return "MI00" // Release
             } else {
                 return "MI01" // TestFlight
@@ -82,10 +82,10 @@ class EventsLogger: NSObject {
             // periodically persist events to avoid loosing a lot of events in case of app crash
             persistEvents()
         }
-        #if BETA
-        // Dump telemetry signals only in Beta for testing purposes
-        NSLog("[Telemetry]: %@", event)
-        #endif
+//        #if BETA
+//        // Dump telemetry signals only in Beta for testing purposes
+//        NSLog("[Telemetry]: %@", event)
+//        #endif
     }
     internal func persistEvents() {
         do {
