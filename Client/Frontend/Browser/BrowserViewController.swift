@@ -827,7 +827,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC showHomePanelController.")
         homePanelIsInline = inline
         
-        navigationToolbar.updateForwardStatus(false)
+        //navigationToolbar.updateForwardStatus(false)
         navigationToolbar.updateBackStatus(false)
         
         if homePanelController == nil {
@@ -1481,8 +1481,12 @@ class BrowserViewController: UIViewController {
         }
     }
     func goForward(){
-        if(tabManager.selectedTab?.canGoForward == true && homePanelController == nil){
+        if(tabManager.selectedTab?.canGoForward == true) {
             tabManager.selectedTab?.goForward()
+            if (homePanelController != nil) {
+                urlBar.leaveOverlayMode()
+                self.hideHomePanelController()
+            }
         }
     }
 
