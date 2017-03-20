@@ -165,6 +165,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
 				//                SendFeedbackSetting(),
 				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
 				
+				ExportLocalDatabaseSetting(settings: self),
+				
 				ReportFormSetting(),
 				
 				//Cliqz: removed unused sections from Settings table
