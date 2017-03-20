@@ -273,3 +273,39 @@ class RegionalSetting: Setting {
 }
 
 
+
+
+//Cliqz: Added new settings item sending local data
+class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
+    
+    let profile: Profile
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        super.init(title: NSAttributedString(string: "Export Local Database", attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let localDataBaseFile = ((try! profile.files.getAndEnsureDirectory()) as NSString).stringByAppendingPathComponent("browser.db")
+        if let data = NSData(contentsOfFile: localDataBaseFile) where MFMailComposeViewController.canSendMail() {
+            let mailComposeViewController = configuredMailComposeViewController(data)
+            navigationController?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func configuredMailComposeViewController(data: NSData) -> MFMailComposeViewController {
+        let mailComposerVC = MFMailComposeViewController()
+        mailComposerVC.mailComposeDelegate = self
+        mailComposerVC.setSubject("CLIQZ Local Database")
+        mailComposerVC.addAttachmentData(data, mimeType: "application/sqlite", fileName: "browser.sqlite")
+        
+        return mailComposerVC
+    }
+    // MARK: MFMailComposeViewControllerDelegate Method
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+
