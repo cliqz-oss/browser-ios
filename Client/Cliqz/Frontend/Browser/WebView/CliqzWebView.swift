@@ -83,7 +83,7 @@ class CliqzWebView: UIWebView {
 	weak var UIDelegate: WKUIDelegate?
 
 	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
-	lazy var backForwardList: WKBackForwardList = { return globalContainerWebView.backForwardList } ()
+	lazy var backForwardList: WebViewBackForwardList = { return WebViewBackForwardList(webView: self) } ()
 	
 	var progress: WebViewProgress?
 	
@@ -151,13 +151,13 @@ class CliqzWebView: UIWebView {
     }
     
 	dynamic var estimatedProgress: Double = 0
-	var title: String = "" /* {
+	var title: String = "" {
 		didSet {
 			if let item = backForwardList.currentItem {
 				item.title = title
 			}
 		}
-	}*/
+	}
     
     var knownFrameContexts = Set<NSObject>()
 
@@ -208,7 +208,7 @@ class CliqzWebView: UIWebView {
         }
     }
 	
-	func goToBackForwardListItem(item: WKBackForwardListItem) {
+	func goToBackForwardListItem(item: LegacyBackForwardListItem) {
 		if let index = backForwardList.backList.indexOf(item) {
 			let backCount = backForwardList.backList.count - index
 			for _ in 0..<backCount {
@@ -484,6 +484,7 @@ extension CliqzWebView: UIWebViewDelegate {
 	}
 
 	func webViewDidStartLoad(webView: UIWebView) {
+        backForwardList.update()
 		progress?.webViewDidStartLoad()
 		if let nd = self.navigationDelegate {
 			globalContainerWebView.legacyWebView = self
@@ -508,6 +509,7 @@ extension CliqzWebView: UIWebViewDelegate {
 		}
 		progress?.webViewDidFinishLoad(documentReadyState: readyState)
         updateObservableAttributes()
+        backForwardList.update()
 	}
 	
 	func webView(webView: UIWebView, didFailLoadWithError error: NSError) {

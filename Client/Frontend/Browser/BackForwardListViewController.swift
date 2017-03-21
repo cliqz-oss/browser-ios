@@ -205,7 +205,11 @@ class BackForwardListViewController: UIViewController, UITableViewDataSource, UI
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // Cliqz: discarded the call to selectedTab because this class is not used in our code and fixing this line requires a chain of modification
+#if !CLIQZ
         tabManager.selectedTab?.goToBackForwardListItem(listData[indexPath.item].item)
+#endif
+            
         dismissViewControllerAnimated(true, completion: nil)
     }
     

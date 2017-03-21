@@ -2102,6 +2102,8 @@ extension BrowserViewController: TabToolbarDelegate {
     }
     
     func showBackForwardList() {
+        // Cliqz: Discarded the code as it is not used in our flow instead of doing a ching of modification to fix the compilation errors
+#if !CLIQZ
         guard AppConstants.MOZ_BACK_FORWARD_LIST else {
             return
         }
@@ -2113,6 +2115,7 @@ extension BrowserViewController: TabToolbarDelegate {
             backForwardViewController.backForwardTransitionDelegate = BackForwardListAnimator()
             self.presentViewController(backForwardViewController, animated: true, completion: nil)
         }
+#endif
     }
     
     // Cliqz: Add delegate methods for tabs button
