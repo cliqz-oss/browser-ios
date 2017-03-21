@@ -242,21 +242,41 @@ class Tab: NSObject {
     var estimatedProgress: Double {
         return webView?.estimatedProgress ?? 0
     }
-
+    
+#if CLIQZ
+    var backList: [LegacyBackForwardListItem]? {
+        return webView?.backForwardList.backList
+    }
+    
+    var forwardList: [LegacyBackForwardListItem]? {
+        return webView?.backForwardList.forwardList
+    }
+    
+    var historyList: [NSURL] {
+        func listToUrl(item: LegacyBackForwardListItem) -> NSURL { return item.URL }
+        var tabs = self.backList?.map(listToUrl) ?? [NSURL]()
+        tabs.append(self.url!)
+        return tabs
+    }
+    
+#else
+    
     var backList: [WKBackForwardListItem]? {
         return webView?.backForwardList.backList
     }
-
+    
     var forwardList: [WKBackForwardListItem]? {
         return webView?.backForwardList.forwardList
     }
-
+    
     var historyList: [NSURL] {
         func listToUrl(item: WKBackForwardListItem) -> NSURL { return item.URL }
         var tabs = self.backList?.map(listToUrl) ?? [NSURL]()
         tabs.append(self.url!)
         return tabs
     }
+    
+#endif
 
     var title: String? {
         return webView?.title
@@ -339,10 +359,16 @@ class Tab: NSObject {
         webView?.goForward()
     }
 
+#if CLIQZ
+    func goToBackForwardListItem(item: LegacyBackForwardListItem) {
+        webView?.goToBackForwardListItem(item)
+    }
+#else
     func goToBackForwardListItem(item: WKBackForwardListItem) {
         webView?.goToBackForwardListItem(item)
     }
-
+#endif
+    
     func loadRequest(request: NSURLRequest) -> WKNavigation? {
         if let webView = webView {
             lastRequest = request

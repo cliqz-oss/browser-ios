@@ -575,7 +575,9 @@ extension TabManager {
             super.init()
 
             if tab.sessionData == nil {
-                let currentItem: WKBackForwardListItem! = tab.webView?.backForwardList.currentItem
+                // Cliqz: changed type of currentItem from WKBackForwardListItem to LegacyBackForwardListItem
+//                let currentItem: WKBackForwardListItem! = tab.webView?.backForwardList.currentItem
+                let currentItem: LegacyBackForwardListItem! = tab.webView?.backForwardList.currentItem
 
                 // Freshly created web views won't have any history entries at all.
                 // If we have no history, abort.
