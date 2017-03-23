@@ -72,6 +72,8 @@ class Tab: NSObject {
     var restoring: Bool = false
     var pendingScreenshot = false
     var url: NSURL?
+    // Cliqz: save restoring url for the tab
+    var restoringUrl: NSURL?
     var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
@@ -106,7 +108,7 @@ class Tab: NSObject {
     // Cliqz: flag to know whether the current tab is in search mode or not
     var inSearchMode : Bool {
         get {
-            if !requestInProgress && (url == nil || AboutUtils.isAboutURL(url)) {
+            if !requestInProgress && !SessionRestoreHandler.isRestorePageURL(url) && (url == nil || AboutUtils.isAboutURL(url)) {
                 return true
             } else {
                 return false
