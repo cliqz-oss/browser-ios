@@ -8,6 +8,9 @@ import GCDWebServers
 
 /// Handles requests to /about/sessionrestore to restore session history.
 struct SessionRestoreHandler {
+    
+    private static let SessionRestorePath = "/about/sessionrestore"
+    
     static func register(webServer: WebServer) {
         // Register the handler that accepts /about/sessionrestore?history=...&currentpage=... requests.
         webServer.registerHandlerForMethod("GET", module: "about", resource: "sessionrestore") { _ in
@@ -20,5 +23,14 @@ struct SessionRestoreHandler {
 
             return GCDWebServerResponse(statusCode: 404)
         }
+    }
+    
+    static func isRestorePageURL(url: NSURL?) -> Bool {
+        if let scheme = url?.scheme, host = url?.host, path = url?.path {
+            if scheme == "http" && host == "localhost" && path.startsWith(SessionRestorePath) {
+                return true
+            }
+        }
+        return false
     }
 }

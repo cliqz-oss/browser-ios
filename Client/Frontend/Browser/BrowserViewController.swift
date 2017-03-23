@@ -2892,6 +2892,14 @@ extension BrowserViewController: WKNavigationDelegate {
         if #available(iOS 9.0, *) {
             tab.desktopSite = webView.customUserAgent?.isEmpty == false
         }
+        
+        //Cliqz: store changes of tabs 
+        if let url = tab.url {
+            if !ErrorPageHelper.isErrorPageURL(url) {
+                self.tabManager.storeChanges()
+            }
+        }
+
     }
 #if CLIQZ
     func webView(_webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -3824,6 +3832,11 @@ extension BrowserViewController: SessionRestoreHelperDelegate {
 
         if let tab = tabManager.selectedTab where tab.webView === tab.webView {
             updateUIForReaderHomeStateForTab(tab)
+
+            // Cliqz: switch to search mode if the restored tab was FreshTab
+            self.switchToSearchModeIfNeeded()
+            // Cliqz: set the currentURL of the urlBar to the restoring url of the restored tab
+            urlBar.currentURL = tab.restoringUrl
         }
     }
 }

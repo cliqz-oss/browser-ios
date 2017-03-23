@@ -151,7 +151,7 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
         let freshtab = tab.displayURL?.absoluteString?.contains("cliqz/goto.html") ?? false
         
 		if tab.displayURL != nil && !freshtab{
-            cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
+            cell.titleLabel.text = tab.displayTitle
 			cell.URLLabel.text = tab.displayURL?.absoluteString
 		} else {
 			cell.URLLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
