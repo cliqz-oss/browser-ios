@@ -12,12 +12,14 @@ import CoreLocation
 public class LocationManager: NSObject, CLLocationManagerDelegate {
     static let NotificationUserLocationAvailable = "NotificationUserLocationAvailable"
     static let NotificationShowOpenLocationSettingsAlert = "NotificationShowOpenLocationSettingsAlert"
+    private var enableLocationInProgress = false
 
 	private let manager = CLLocationManager()
     private var location: CLLocation? {
         didSet {
-            if location != nil {
+            if location != nil && enableLocationInProgress {
                 NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationUserLocationAvailable, object: nil)
+                enableLocationInProgress = false
             }
         }
     }
@@ -37,6 +39,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
     public func askForLocationAccess () {
         TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
         self.manager.requestWhenInUseAuthorization()
+        enableLocationInProgress = true
     }
     
 	public func shareLocation() {
