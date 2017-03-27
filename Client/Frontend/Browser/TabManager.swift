@@ -88,6 +88,9 @@ class TabManager : NSObject {
         return configuration
     }()
 
+    // Cliqz: dispatch queue used to presit tabs in background
+    private let preserveTabsQueue = dispatch_queue_create("com.cliqz.tabManager.preserveTabs", DISPATCH_QUEUE_SERIAL)
+    
     private let imageStore: DiskImageStore?
 
     private let prefs: Prefs
@@ -565,7 +568,8 @@ extension TabManager {
         }
 
         init?(tab: Tab, isSelected: Bool) {
-            assert(NSThread.isMainThread())
+            // Cliqz: preserve tabs is done now in background thread
+//            assert(NSThread.isMainThread())
 
             self.screenshotUUID = tab.screenshotUUID
             self.isSelected = isSelected
@@ -638,28 +642,30 @@ extension TabManager {
     }
 
     private func preserveTabsInternal() {
-        assert(NSThread.isMainThread())
+        // Cliqz: preserve tabs is done now in background thread
+//        assert(NSThread.isMainThread())
 
         guard !isRestoring else { return }
 
         let path = TabManager.tabsStateArchivePath()
         var savedTabs = [SavedTab]()
+        // Cliqz: commented any code related to tab screenshot for performance as we don't use it
         var savedUUIDs = Set<String>()
         for (tabIndex, tab) in tabs.enumerate() {
             if let savedTab = SavedTab(tab: tab, isSelected: tabIndex == selectedIndex) {
                 savedTabs.append(savedTab)
-
-                if let screenshot = tab.screenshot,
-                   let screenshotUUID = tab.screenshotUUID
-                {
-                    savedUUIDs.insert(screenshotUUID.UUIDString)
-                    imageStore?.put(screenshotUUID.UUIDString, image: screenshot)
-                }
+                // Cliqz: commented any code related to tab screenshot for performance as we don't use it
+//                if let screenshot = tab.screenshot,
+//                   let screenshotUUID = tab.screenshotUUID
+//                {
+//                    savedUUIDs.insert(screenshotUUID.UUIDString)
+//                    imageStore?.put(screenshotUUID.UUIDString, image: screenshot)
+//                }
             }
         }
-
-        // Clean up any screenshots that are no longer associated with a tab.
-        imageStore?.clearExcluding(savedUUIDs)
+        // Cliqz: commented any code related to tab screenshot for performance as we don't use it
+//        // Clean up any screenshots that are no longer associated with a tab.
+//        imageStore?.clearExcluding(savedUUIDs)
 
         let tabStateData = NSMutableData()
         let archiver = NSKeyedArchiver(forWritingWithMutableData: tabStateData)
@@ -671,7 +677,10 @@ extension TabManager {
     func preserveTabs() {
         // This is wrapped in an Objective-C @try/@catch handler because NSKeyedArchiver may throw exceptions which Swift cannot handle
         _ = Try(withTry: { () -> Void in
-            self.preserveTabsInternal()
+                // Cliqz: call preserveTabsInternal in background thread
+                dispatch_async(self.preserveTabsQueue, {
+                    self.preserveTabsInternal()
+                })
             }) { (exception) -> Void in
             print("Failed to preserve tabs: \(exception)")
         }
