@@ -46,7 +46,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 						bm["timestamp"] = Double(item.bookmarkedDate)
 						favorites.append(bm)
 					default:
-						print("Not a bookmark item")
+						debugPrint("Not a bookmark item")
 					}
 				}
 				self.javaScriptBridge.callJSMethod(callback!, parameter: favorites.reverse(), completionHandler: nil)

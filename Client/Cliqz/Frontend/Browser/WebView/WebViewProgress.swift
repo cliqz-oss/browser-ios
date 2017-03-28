@@ -177,7 +177,7 @@ public class WebViewProgress
 
 		#if DEBUG
 			//let documentLocation = webView?.stringByEvaluatingJavaScriptFromString("window.location.href")
-			//print("State:\(documentReadyState ?? "") \(documentLocation ?? "")")
+			//debugPrint("State:\(documentReadyState ?? "") \(documentLocation ?? "")")
 		#endif
 		
 		if let readyState = documentReadyState {

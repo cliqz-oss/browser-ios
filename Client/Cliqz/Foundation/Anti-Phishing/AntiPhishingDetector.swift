@@ -59,7 +59,7 @@ class AntiPhishingDetector: NSObject {
                     completion(false)
 				}
 				}, onFailure: { (data, error) in
-					print(error)
+					debugPrint(error)
 					dispatch_async(dispatch_get_main_queue(), {
 						completion(false)
 					})

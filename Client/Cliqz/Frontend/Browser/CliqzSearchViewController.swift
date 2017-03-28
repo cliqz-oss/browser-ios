@@ -301,7 +301,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		case 1:
 			loadExtension()
 		default:
-			print("Unhandled Button Click")
+			debugPrint("Unhandled Button Click")
 		}
 	}
 

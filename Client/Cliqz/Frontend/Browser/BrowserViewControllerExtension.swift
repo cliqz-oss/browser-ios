@@ -46,7 +46,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 				let httpRequest = XMLHttpRequest()
 				httpRequest.extendJSContext(context)
 				context.exceptionHandler = { context, exception in
-					print("JS Error: \(exception)")
+					debugPrint("JS Error: \(exception)")
 				}
 				context.evaluateScript(jsString as String)
 				let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
@@ -56,7 +56,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 				context.setObject(unsafeBitCast(callback, AnyObject.self), forKeyedSubscript: callbackName)
 				context.evaluateScript("window.ytdownloader.getUrls('\(url)', \(callbackName))")
 			} catch {
-				print("Couldn't load file")
+				debugPrint("Couldn't load file")
 			}
 		}
 	}

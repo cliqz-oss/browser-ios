@@ -26,7 +26,7 @@ class ABTestsManager: NSObject {
                                                             processABTests(tests)
                                                         }
                                                     }, onFailure: { (response, error) in
-                                                        print("Could not check AB tests because of the following error \(error)")
+                                                        debugPrint("Could not check AB tests because of the following error \(error)")
                                                     })
     }
     

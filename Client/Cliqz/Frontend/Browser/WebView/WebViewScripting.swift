@@ -29,7 +29,7 @@ class LegacyUserContentController
     func addUserScript(script:WKUserScript) {
         var mainFrameOnly = true
         if !script.forMainFrameOnly {
-            print("Inject to subframes")
+            debugPrint("Inject to subframes")
             // Only contextMenu injection to subframes for now,
             // whitelist this explicitly, don't just inject scripts willy-nilly into frames without
             // careful consideration. For instance, there are security implications with password management in frames

@@ -47,7 +47,7 @@ class QuerySuggestions: NSObject {
                          queue: QuerySuggestions.dispatchQueue,
                          onSuccess: completionHandler,
                          onFailure: {(data, error) in
-                            print("Couldn't get suggestions for query: \(query) because of the following error: \(error)")
+                            debugPrint("Couldn't get suggestions for query: \(query) because of the following error: \(error)")
             })
     }
     

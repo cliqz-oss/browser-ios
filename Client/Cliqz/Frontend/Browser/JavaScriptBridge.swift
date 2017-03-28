@@ -59,10 +59,10 @@ class JavaScriptBridge {
                     let json = try NSJSONSerialization.dataWithJSONObject(parameter, options: NSJSONWritingOptions(rawValue: 0))
                     parameterString = String(data:json, encoding: NSUTF8StringEncoding)!
                 } else {
-                    print("couldn't convert object \(parameter) to JSON because it is not valid JSON")
+                    debugPrint("couldn't convert object \(parameter) to JSON because it is not valid JSON")
                 }
             } catch let error as NSError {
-                print("Json conversion is failed with error: \(error)")
+                debugPrint("Json conversion is failed with error: \(error)")
             }
         }
         
@@ -113,10 +113,10 @@ class JavaScriptBridge {
                     let json = try NSJSONSerialization.dataWithJSONObject(parameters, options: NSJSONWritingOptions(rawValue: 0))
                     return String(data:json, encoding: NSUTF8StringEncoding)!
                 } else {
-                    print("couldn't convert object \(parameters) to JSON because it is not valid JSON")
+                    debugPrint("couldn't convert object \(parameters) to JSON because it is not valid JSON")
                 }
             } catch let error as NSError {
-                print("Json conversion is failed with error: \(error)")
+                debugPrint("Json conversion is failed with error: \(error)")
             }
         }
         
@@ -211,7 +211,7 @@ class JavaScriptBridge {
             LocationManager.sharedInstance.shareLocation()
             
         default:
-			print("Unhandles JS action")
+			debugPrint("Unhandles JS action")
         }
     }
     
