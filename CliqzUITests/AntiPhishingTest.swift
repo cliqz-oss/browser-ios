@@ -33,13 +33,16 @@ class AntiPhishingTest: KIFTestCase{
         openWebPage("http://link43wow.com.s3-website.eu-central-1.amazonaws.com/Stake7_DE_FB/desk/index.html")
         XCTAssertFalse(tester.viewExistsWithLabel("Warning: deceptive website!"))
         openWebPage("http://marketing-customer.info/webapps/ab983f6f33/")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
+        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"),
+                      "AntiPhishing Warning is not shown for http://marketing-customer.info/webapps/ab983f6f33")
         tester.tapViewWithAccessibilityLabel("Back to safe site")
         openWebPage("http://www.goatd.net/")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
+        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"),
+                      "AntiPhishing Warning is not shown for http://www.goatd.net/" )
         tester.tapViewWithAccessibilityLabel("Back to safe site")
         openWebPage("http://mouyondzi.com/dropbox-file/dropbox-secured/document/")
-        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"))
+        XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"),
+                      "AntiPhishing Warning is not shown for http://mouyondzi.com/dropbox-file/dropbox-secured/document/")
         tester.tapViewWithAccessibilityLabel("Back to safe site")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("closeTab")
