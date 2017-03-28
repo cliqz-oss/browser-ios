@@ -1968,14 +1968,15 @@ extension BrowserViewController: URLBarDelegate {
     
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton) {
-        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
-            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
-        } else {
-            tabManager.addTabAndSelect()
-        }
         
         if let controlCenter = controlCenterController {
             controlCenter.closeControlCenter()
+        }
+        
+        if let selectedTab = self.tabManager.selectedTab {
+            tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
+        } else {
+            tabManager.addTabAndSelect()
         }
         
         switchToSearchModeIfNeeded()
