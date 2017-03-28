@@ -1750,6 +1750,10 @@ extension BrowserViewController: URLBarDelegate {
             screenshotHelper.takeScreenshot(tab)
         }
         
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
 		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
         /*
         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
@@ -1970,6 +1974,10 @@ extension BrowserViewController: URLBarDelegate {
             tabManager.addTabAndSelect()
         }
         
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
         switchToSearchModeIfNeeded()
         
         // Cliqz: log telemetry singal for web menu
@@ -2136,6 +2144,10 @@ extension BrowserViewController: TabToolbarDelegate {
         
         if let tab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(tab)
+        }
+        
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
         }
         
         // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
