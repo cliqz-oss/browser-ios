@@ -154,7 +154,6 @@ class JavaScriptBridge {
                 delegate?.getSearchHistory?(offset,limit:limit,callback: callback)
             }
             
-			
 		case "getFavorites":
 			delegate?.getFavorites?(callback)
 			
@@ -164,10 +163,7 @@ class JavaScriptBridge {
                     self.callPhoneNumber(phoneNumber)
                 } else if let mapURL = actionData["data"] as? String where actionType == "map" {
                     self.openGoogleMaps(mapURL)
-                } else if actionType == "shareLocation" {
-                    LocationManager.sharedInstance.shareLocation()
                 }
-
             }
             
         case "pushTelemetry":
@@ -207,8 +203,12 @@ class JavaScriptBridge {
             if let ids = data as? [Int] {
                 self.profile.history.removeHistory(ids)
             }
+        
         case "isReady":
             delegate?.isReady?()
+        
+        case "shareLocation":
+            LocationManager.sharedInstance.shareLocation()
             
         default:
 			print("Unhandles JS action")
