@@ -40,7 +40,7 @@ class ContentPolicyDetector {
             try RE_HTML = NSRegularExpression(pattern: "\\.html?", options: .CaseInsensitive)
             try RE_JSON = NSRegularExpression(pattern: "\\.json($|\\|?)", options: .CaseInsensitive)
         } catch let error as NSError {
-            print("Couldn't initialize regular expressions for detecting Content Policy because of the following error: \(error.description)")
+            debugPrint("Couldn't initialize regular expressions for detecting Content Policy because of the following error: \(error.description)")
         }
     }
     

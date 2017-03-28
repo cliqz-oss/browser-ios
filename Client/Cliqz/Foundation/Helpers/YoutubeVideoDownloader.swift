@@ -86,7 +86,7 @@ class YoutubeVideoDownloader {
                 try fileManager.removeItemAtPath(path)
             }
         } catch let error as NSError {
-            print("[VedioDownloader] Could not delete local video at path \(localPath) because of the following error \(error)")
+            debugPrint("[VedioDownloader] Could not delete local video at path \(localPath) because of the following error \(error)")
         }
     }
 }

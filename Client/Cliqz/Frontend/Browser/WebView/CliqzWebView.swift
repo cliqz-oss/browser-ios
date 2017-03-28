@@ -204,7 +204,7 @@ class CliqzWebView: UIWebView {
         _ = Try(withTry: {
             self.removeProgressObserversOnDeinit?(self)
         }) { (exception) -> Void in
-            print("Failed remove: \(exception)")
+            debugPrint("Failed remove: \(exception)")
         }
     }
 	
@@ -399,7 +399,7 @@ class CliqzWebView: UIWebView {
 				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [String:AnyObject]
 				return json
 			} catch {
-				print("Something went wrong")
+				debugPrint("Something went wrong")
 			}
 		}
 		return nil
@@ -515,7 +515,7 @@ extension CliqzWebView: UIWebViewDelegate {
         
 		let pageInfoArray = pageInfo.componentsSeparatedByString("|")
 		
-		let readyState = pageInfoArray.first // ;print("readyState:\(readyState)")
+		let readyState = pageInfoArray.first // ;debugPrint("readyState:\(readyState)")
 		if let t = pageInfoArray.last where !t.isEmpty {
 			title = t
 		}

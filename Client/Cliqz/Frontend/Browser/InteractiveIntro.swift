@@ -37,7 +37,7 @@ class InteractiveIntro {
 		case .CliqzSearch:
 			shouldShowCliqzSearchHint = value
 		default:
-			print("Wront Hint Type")
+			debugPrint("Wront Hint Type")
 		}
 	}
 
@@ -83,7 +83,7 @@ class InteractiveIntroViewController: UIViewController {
 		case .CliqzSearch:
 			bgView?.layer.mask = self.cliqzSearchMaskLayer()
 		default:
-			print("Wrong Type")
+			debugPrint("Wrong Type")
 		}
 	}
 
@@ -95,7 +95,7 @@ class InteractiveIntroViewController: UIViewController {
 		case .CliqzSearch:
 			showCliqzSearchHint()
 		default:
-			print("Wrong type")
+			debugPrint("Wrong type")
 		}
 	}
 
