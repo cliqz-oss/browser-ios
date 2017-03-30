@@ -234,7 +234,7 @@
 "Logins" = "Zugangsdaten";
 
 /* Restore Tabs Prompt Description */
-"Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Firefox scheint zuvor abgestürzt zu sein. Sollen Ihre Tabs wiederhergestellt werden?";
+"Looks like Cliqz crashed previously. Would you like to restore your tabs?" = "Cliqz scheint zuvor abgestürzt zu sein. Sollen deine Tabs wiederhergestellt werden?";
 
 /* Name for Mark as read button in reader mode
    Title for the button that marks a reading list item as read */
