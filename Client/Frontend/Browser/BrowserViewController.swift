@@ -167,6 +167,9 @@ class BrowserViewController: UIViewController {
     // Cliqz: swipe back and forward
     var historySwiper = HistorySwiper()
     
+    // Cliqz: added to mark if pervious run was crashed or not
+    var hasPendingCrashReport = false
+    
     
     init(profile: Profile, tabManager: TabManager) {
         self.profile = profile
@@ -572,16 +575,17 @@ class BrowserViewController: UIViewController {
          */
 
 		// Cliqz: Disable FF crash reporting
-/*
+        /*
         if PLCrashReporter.sharedReporter().hasPendingCrashReport() {
             PLCrashReporter.sharedReporter().purgePendingCrashReport()
+        */
+        if hasPendingCrashReport {
             showRestoreTabsAlert()
         } else {
-*/
             log.debug("Restoring tabs.")
             tabManager.restoreTabs()
             log.debug("Done restoring tabs.")
-//        }
+        }
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
@@ -611,7 +615,9 @@ class BrowserViewController: UIViewController {
             self.tabManager.addTabAndSelect()
             return
         }
-
+        // Cliqz: apply normal theme to the urlbar when showing the restore alert to avoid weird look
+        self.urlBar.applyTheme(Theme.NormalMode)
+        
         let alert = UIAlertController.restoreTabsAlert(
             okayCallback: { _ in
                 self.tabManager.restoreTabs()
@@ -4218,3 +4224,14 @@ extension BrowserViewController {
     }
 }
 
+
+
+extension BrowserViewController: CrashlyticsDelegate {
+    func crashlyticsDidDetectReportForLastExecution(report: CLSReport, completionHandler: (Bool) -> Void) {
+        hasPendingCrashReport = true
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            completionHandler(true);
+        }
+    }
+    
+}

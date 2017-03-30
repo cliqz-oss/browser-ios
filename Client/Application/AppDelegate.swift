@@ -262,10 +262,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 
         // Cliqz: Start Crashlytics
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            Fabric.with([Crashlytics.self])
-        }
-
+        Crashlytics.sharedInstance().delegate = self.browserViewController
+        Fabric.with([Crashlytics.self])
+        
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
 //            // If a shortcut was launched, display its information and take the appropriate action
