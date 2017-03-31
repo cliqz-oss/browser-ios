@@ -498,6 +498,8 @@ extension CliqzWebView: UIWebViewDelegate {
 			return
 		}
         
+        backForwardList.update()
+        
         // prevent the default context menu on UIWebView
         stringByEvaluatingJavaScriptFromString("document.body.style.webkitTouchCallout='none';")
         
@@ -509,7 +511,7 @@ extension CliqzWebView: UIWebViewDelegate {
 		}
 		progress?.webViewDidFinishLoad(documentReadyState: readyState)
         updateObservableAttributes()
-        backForwardList.update()
+        
 	}
 	
 	func webView(webView: UIWebView, didFailLoadWithError error: NSError) {

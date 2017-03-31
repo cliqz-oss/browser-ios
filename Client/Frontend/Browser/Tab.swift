@@ -108,7 +108,7 @@ class Tab: NSObject {
     // Cliqz: flag to know whether the current tab is in search mode or not
     var inSearchMode : Bool {
         get {
-            if !requestInProgress && !SessionRestoreHandler.isRestorePageURL(url) && (url == nil || AboutUtils.isAboutURL(url)) {
+            if !requestInProgress && !SessionRestoreHandler.isRestorePageURL(url) && (url == nil || AboutUtils.isAboutURL(url) || isCliqzGoToURL(url)) {
                 return true
             } else {
                 return false
@@ -326,7 +326,9 @@ class Tab: NSObject {
             if ReaderModeUtils.isReaderModeURL(url) {
                 return ReaderModeUtils.decodeURL(url)
             }
-
+            if isCliqzGoToURL(url) {
+                return nil
+            }
             if ErrorPageHelper.isErrorPageURL(url) {
                 let decodedURL = ErrorPageHelper.originalURLFromQuery(url)
                 if !AboutUtils.isAboutURL(decodedURL) {
