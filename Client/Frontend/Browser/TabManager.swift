@@ -729,11 +729,13 @@ extension TabManager {
             
             // Cliqz: restore the url of the tab so that it could be listed in tabOverView
             if let urls = tab.sessionData?.urls, let currentPage = tab.sessionData?.currentPage where urls.count > 0 {
-                // Note that current index is reverted, 
-                // i.e. 0 = last item in the list, -(n-1) means first item in the list
+                // Note that current index is reverted, 0, -1, -2, .. - (n-1)
                 let index = (urls.count - 1) + currentPage
-                tab.url = urls[index]
-                tab.restoringUrl = urls[index]
+                if index < urls.count {
+                    let url = urls[index]
+                    tab.url = url
+                    tab.restoringUrl = url
+                }
             }
             
         }

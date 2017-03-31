@@ -83,3 +83,10 @@ func getHostComponents(forURL url: String) -> [String] {
 	}
 	return result
 }
+
+func isCliqzGoToURL(url: NSURL?) -> Bool {
+    if let url = url, absoluteString = url.absoluteString where url.isLocal {
+        return absoluteString.contains("cliqz/goto.html?")
+    }
+    return false
+}
