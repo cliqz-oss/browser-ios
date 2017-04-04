@@ -330,8 +330,18 @@ class CliqzWebView: UIWebView {
         }
         
     }
+    
+    override func goBack() {
+        super.goBack()
+        self.canGoForward = true
+    }
 
-
+    
+    override func goForward() {
+        super.goForward()
+        self.canGoBack = true
+    }
+    
 	// MARK:- Private methods
 
 	private class func isTopFrameRequest(request:NSURLRequest) -> Bool {
