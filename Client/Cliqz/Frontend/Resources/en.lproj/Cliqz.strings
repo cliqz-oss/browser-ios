@@ -175,6 +175,12 @@
 /* Antitracking UI title for tracked count column */
 "Trackers count title" = "Private data points";
 
+/* AdBlocking UI title for companies column */
+"Companies" = "Companies";
+
+/* AdBlocking UI title for tracked count column */
+"Ads" = "Ads";
+
 /* Antiphishing alert title */
 "Warning: deceptive website!" =  "Warning: deceptive website!";
 

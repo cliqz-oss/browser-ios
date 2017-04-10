@@ -16,6 +16,15 @@ class AdBlockerPanel: AntitrackingPanel {
         if let label = toTableViewButton.subviews.first as? UILabel {
             label.text = NSLocalizedString("AdBlocking Information", tableName: "Cliqz", comment: "AdBlocking Information text for landscape mode.")
         }
+        
+        if let companiesLabel = self.legendView.subviews[1] as? UILabel where companiesLabel.tag == 10 {
+            companiesLabel.text = NSLocalizedString("Companies", tableName: "Cliqz", comment: "AdBlocking UI title for companies column")
+        }
+        
+        if let countLabel = self.legendView.subviews[2] as? UILabel where countLabel.tag == 20 {
+            countLabel.text = NSLocalizedString("Ads", tableName: "Cliqz", comment: "AdBlocking UI title for tracked count column")
+        }
+        
     }
     
     //MARK: - Abstract methods implementation
