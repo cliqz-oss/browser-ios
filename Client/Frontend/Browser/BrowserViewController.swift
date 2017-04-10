@@ -2232,6 +2232,13 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 }
 
 extension BrowserViewController: TabDelegate {
+    
+    func urlChangedForTab(tab: Tab) {
+        if self.tabManager.selectedTab == tab  && tab.url?.baseDomain() != "localhost" {
+            //update the url in the urlbar
+            self.urlBar.currentURL = tab.url
+        }
+    }
 
 	// Cliqz:[UIWebView] Type change
 //    func tab(tab: Tab, didCreateWebView webView: WKWebView) {

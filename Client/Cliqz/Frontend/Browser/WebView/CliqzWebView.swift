@@ -77,10 +77,15 @@ struct CliqzWebViewConstants {
     static let kNotificationPageInteractive = "kNotificationPageInteractive"
 }
 
+protocol CliqzWebViewDelegate: class {
+    func didFinishLoadingRequest(request: NSURLRequest?)
+}
+
 class CliqzWebView: UIWebView {
 	
 	weak var navigationDelegate: WKNavigationDelegate?
 	weak var UIDelegate: WKUIDelegate?
+    weak var webViewDelegate: CliqzWebViewDelegate?
 
 	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
 	lazy var backForwardList: WebViewBackForwardList = { return WebViewBackForwardList(webView: self) } ()
@@ -512,6 +517,8 @@ extension CliqzWebView: UIWebViewDelegate {
         
         // prevent the default context menu on UIWebView
         stringByEvaluatingJavaScriptFromString("document.body.style.webkitTouchCallout='none';")
+        
+        self.webViewDelegate?.didFinishLoadingRequest(webView.request)
         
 		let pageInfoArray = pageInfo.componentsSeparatedByString("|")
 		
