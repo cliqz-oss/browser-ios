@@ -73,6 +73,8 @@
 	<string>Used if user wants to send video feedback or bug report</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Websites you visit may request your location.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CLIQZ will only use this when you choose to record videos inside the browser.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CLIQZ will only use this access to download videos to your device.</string>
 	<key>NSUserActivityTypes</key>
