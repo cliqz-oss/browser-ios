@@ -27,6 +27,7 @@ protocol TabDelegate {
 	optional func tab(tab: Tab, willDeleteWebView webView: CliqzWebView)
 //	optional func tab(tab: Tab, didCreateWebView webView: WKWebView)
 //	optional func tab(tab: Tab, willDeleteWebView webView: WKWebView)
+    optional func urlChangedForTab(tab:Tab)
 }
 
 struct TabState {
@@ -188,6 +189,7 @@ class Tab: NSObject {
             // which allows the content appear beneath the toolbars in the BrowserViewController
             webView.scrollView.layer.masksToBounds = false
             webView.navigationDelegate = navigationDelegate
+            webView.webViewDelegate = self
             helperManager = HelperManager(webView: webView)
 
             restore(webView)
@@ -590,6 +592,14 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
 
     func getHelper(name name: String) -> TabHelper? {
         return helpers[name]
+    }
+}
+
+extension Tab: CliqzWebViewDelegate{
+    func didFinishLoadingRequest(request: NSURLRequest?) {
+        //finished loading request
+        self.url = request?.URL
+        self.tabDelegate?.urlChangedForTab?(self)
     }
 }
 
