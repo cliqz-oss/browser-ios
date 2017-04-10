@@ -317,7 +317,7 @@
 "Ad-Blocking is turned off" = "Werbeblocker ist deaktiviert";
 
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert";
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert.";
 
 /* Anti-Phishing panel title in the control center if the current website is safe. */
 "You are safe" = "Du bist sicher";
