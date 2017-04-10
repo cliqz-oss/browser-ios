@@ -121,7 +121,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             }
         }
         
-        if let tab = self.tabManager.selectedTab, webView = tab.webView, url = webView.URL {
+        if let tab = self.tabManager.selectedTab, webView = tab.webView, url = self.urlBar.currentURL {
         
             let panelLayout = OrientationUtil.controlPanelLayout()
             
