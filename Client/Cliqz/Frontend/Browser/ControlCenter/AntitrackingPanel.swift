@@ -500,6 +500,7 @@ class AntitrackingPanel: ControlCenterPanel {
         nameTitle.font = UIFont.systemFontOfSize(12)
         nameTitle.textColor = self.textColor()
         nameTitle.textAlignment = .Left
+        nameTitle.tag = 10
         header.addSubview(nameTitle)
         
         let countTitle = UILabel()
@@ -507,6 +508,7 @@ class AntitrackingPanel: ControlCenterPanel {
         countTitle.font = UIFont.systemFontOfSize(12)
         countTitle.textColor = self.textColor()
         countTitle.textAlignment = .Right
+        countTitle.tag = 20
         header.addSubview(countTitle)
         
         nameTitle.snp_makeConstraints { (make) in
