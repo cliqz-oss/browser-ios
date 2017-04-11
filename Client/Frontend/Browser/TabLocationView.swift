@@ -31,9 +31,9 @@ struct TabLocationViewUX {
         var themes = [String: Theme]()
         var theme = Theme()
         // Cliqz: change the text colors for forget mode theme
-        theme.URLFontColor = BaseURLFontColor
-        theme.hostFontColor = HostFontColor
-        theme.backgroundColor = UIColor.whiteColor()
+        theme.URLFontColor = UIColor.whiteColor()
+        theme.hostFontColor = UIColor.whiteColor()
+        theme.backgroundColor = UIConstants.PrivateModeExpandBackgroundColor
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
