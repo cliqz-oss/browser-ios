@@ -38,7 +38,7 @@ struct URLBarViewUX {
         var theme = Theme()
         theme.borderColor = UIConstants.PrivateModeLocationBorderColor
         theme.activeBorderColor = UIConstants.PrivateModePurple
-        theme.tintColor = UIConstants.PrivateModePurple
+        theme.tintColor = UIColor.whiteColor()
         theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
@@ -167,7 +167,7 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         // Cliz: use regular button with icon for cancel button
         let cancelButton = InsetButton()
-        cancelButton.setImage(UIImage(named:"urlExpand"), forState: .Normal)
+        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         /*
         let cancelButton = InsetButton()
@@ -213,7 +213,7 @@ class URLBarView: UIView {
 
     lazy var actionButtons: [UIButton] = {
 		// Cliqz: Removed StopReloadButton
-        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
+        return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton, self.cancelButton]
     }()
 
     // Cliqz: Added to maintain tab count
@@ -644,8 +644,14 @@ class URLBarView: UIView {
         }
         
         
-        // Cliqz: set the background of the URLBar to white so that the search text appear as expanded (emphasis the search)
-        self.backgroundColor = UIColor.whiteColor()
+        // Cliqz: Modify the background of the URLBar so that the search text appear as expanded (emphasis the search) and adjusting the status bar
+        if currentTheme == Theme.NormalMode {
+            self.backgroundColor = UIColor.whiteColor()
+        } else {
+            self.backgroundColor = UIConstants.PrivateModeExpandBackgroundColor
+        }
+        self.applyThemeOnStatusBar(self.currentTheme)
+        
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
@@ -903,6 +909,16 @@ extension URLBarView {
         }
     }
 
+    private func applyThemeOnStatusBar(themeName: String) {
+        switch(themeName) {
+        case Theme.NormalMode:
+            AppDelegate.changeStatusBarStyle(.Default, backgroundColor: self.backgroundColor!)
+        case Theme.PrivateMode:
+            AppDelegate.changeStatusBarStyle(.LightContent, backgroundColor: self.backgroundColor!)
+        default:
+            break;
+        }
+    }
 }
 
 extension URLBarView: Themeable {
@@ -926,8 +942,12 @@ extension URLBarView: Themeable {
         backgroundColor = theme.backgroundColor
         // Cliqz: used regular button instead of TabsButton
         tabsButton.applyTheme(themeName)
+        // Cliqz: Adjust statusbar according to the current theme
+        self.applyThemeOnStatusBar(themeName)
+        
     }
 }
+
 // Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
 extension URLBarView {
     override func resignFirstResponder() -> Bool {
@@ -1042,12 +1062,12 @@ class ToolbarTextField: AutocompleteTextField {
         var themes = [String: Theme]()
         var theme = Theme()
         // Cliqz: Changed TextField colors for forget mode theme
-		theme.backgroundColor =  UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
-        theme.textColor = UIColor.blackColor()
+		theme.backgroundColor =  UIConstants.PrivateModeExpandBackgroundColor
+        theme.textColor = UIColor.whiteColor()
         // Cliqz: changed the highlight color of the text field
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor //UIConstants.PrivateModeTextHighlightColor
         // Cliqz: Added Button tint color to Gray
-        theme.buttonTintColor = UIColor.grayColor()
+        theme.buttonTintColor = UIColor.whiteColor()
 
         themes[Theme.PrivateMode] = theme
 
