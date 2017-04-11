@@ -16,6 +16,11 @@ class InterceptorURLProtocol: NSURLProtocol {
     
     //MARK: - NSURLProtocol handling
     override class func canInitWithRequest(request: NSURLRequest) -> Bool {
+
+        if request.URL?.absoluteString == "http:/" {
+            return false
+        }
+        
         guard (
             NSURLProtocol.propertyForKey(customURLProtocolHandledKey, inRequest: request) == nil
              && request.mainDocumentURL != nil) else {
