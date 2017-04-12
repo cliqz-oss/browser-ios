@@ -16,6 +16,7 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
     static let LocationLeftPadding: CGFloat = 10
     static let LocationHeight = 28
+    static let ButtonWidth = 42
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
@@ -454,7 +455,9 @@ class URLBarView: UIView {
         locationContainer.addSubview(locationTextField)
 
         locationTextField.snp_makeConstraints { make in
+            // Cliqz: make edges of the locationTextField to locationView as urlTextField is not take the whole super view any more to preving the flicking of the clear button icon
             make.edges.equalTo(self.locationView.urlTextField)
+            make.edges.equalTo(self.locationView)
         }
         
         locationTextField.applyTheme(currentTheme)
@@ -712,7 +715,7 @@ class URLBarView: UIView {
 
             // Make the editable text field span the entire URL bar, covering the lock and reader icons.
             self.locationTextField?.snp_remakeConstraints { make in
-                make.leading.equalTo(self.locationContainer).offset(URLBarViewUX.LocationContentOffset)
+                make.leading.equalTo(self.locationContainer)
                 make.top.bottom.trailing.equalTo(self.locationContainer)
             }
         } else {
