@@ -58,6 +58,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     var region = SettingsPrefs.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
+    
+    var startTime : Double = NSDate.getCurrentMillis()
+    var isLoadCompleted = false
 
 
 	init(profile: Profile) {
@@ -85,9 +88,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+        startTime = NSDate.getCurrentMillis()
+        isLoadCompleted = false
+        
         region = SettingsPrefs.getRegionPref()
 		updateView()
 	}
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        logHideSignal()
+    }
 
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
@@ -145,6 +156,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				self.topSites.removeAtIndex(index)
 			}
 			
+            logTopsiteEditModeSignal()
 			self.topSitesIndexesToRemove.removeAll()
 			self.topSitesCollection?.reloadData()
 			self.updateViewConstraints()
@@ -303,6 +315,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						{
 							self.news = articles
 							self.newsTableView?.reloadData()
+                            if !self.isLoadCompleted {
+                                self.isLoadCompleted = true
+                                self.logShowSignal()
+                            }
 						}
 				}
 			}
@@ -410,13 +426,18 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 
 	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		if indexPath.row < self.news.count {
-			let n = self.news[indexPath.row]
-			let urlString = n["url"] as? String
+			let selectedNews = self.news[indexPath.row]
+			let urlString = selectedNews["url"] as? String
 			if let url = NSURL(string: urlString!) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			} else if let url = NSURL(string: urlString!.escapeURL()) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
+            
+            if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? NewsViewCell, isBreakingNews = selectedNews["breaking"] as? Bool {
+                let target  = isBreakingNews ? "breakingnews" : "topnews"
+                logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
+            }
 		}
 	}
 
@@ -481,20 +502,25 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 				cell.logoHostLabel.text = hostComponents[0].capitalizedString
 			}
 		}
-		let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites))
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites(_:)))
 		cell.addGestureRecognizer(longPressGestureRecognizer)
+        cell.tag = indexPath.row
 		return cell
 	}
 
-	@objc private func deleteTopSites() {
+	@objc private func deleteTopSites(gestureReconizer: UILongPressGestureRecognizer)  {
 		let cells = self.topSitesCollection?.visibleCells()
 		for cell in cells as! [TopSiteViewCell] {
 			cell.isDeleteMode = true
 		}
+        
+        if let index = gestureReconizer.view?.tag {
+            logTopsiteSignal("longpress", index: index)
+        }
 	}
 
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row){
+		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row) {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
 				if let url = NSURL(string: urlString) {
@@ -502,6 +528,8 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 				} else if let url = NSURL(string: urlString.escapeURL()) {
 					delegate?.didSelectURL(url, searchQuery: nil)
 				}
+                
+                logTopsiteSignal("click", index: indexPath.row)
 			}
 		}
 	}
@@ -553,9 +581,70 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		}
         
         self.topSitesIndexesToRemove.append(index)
+        logDeleteTopsiteSignal(index)
         
         if self.topSites.count == self.topSitesIndexesToRemove.count {
             self.removeDeletedTopSites()
         }
 	}
+}
+
+// extension for telemetry signals
+extension FreshtabViewController {
+    private func logTopsiteSignal(action: String, index: Int) {
+     
+        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "index": index]
+        self.logFreshTabSignal(action, target: "topsite", customData: customData)
+    }
+    
+    private func logDeleteTopsiteSignal(index: Int) {
+        let customData: [String: AnyObject] = ["index": index]
+        self.logFreshTabSignal("click", target: "delete_topsite", customData: customData)
+    }
+    
+    private func logTopsiteEditModeSignal() {
+        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
+        self.logFreshTabSignal("click", target: nil, customData: customData)
+    }
+    
+    private func logNewsSignal(target: String, element: String, index: Int) {
+        
+        let customData: [String: AnyObject] = ["element": element, "index": index]
+        self.logFreshTabSignal("click", target: target, customData: customData)
+    }
+    
+    private func logShowSignal() {
+        let loadDuration = Int(NSDate.getCurrentMillis() - startTime)
+        var customData: [String: AnyObject] = ["topsite_count": topSites.count, "load_duration": loadDuration]
+        if isLoadCompleted {
+            customData["is_complete"] = true
+            let breakingNews = news.filter() {
+                if let breaking = ($0 as NSDictionary)["breaking"] as? Bool {
+                    return breaking
+                } else {
+                    return false
+                }
+            }
+            customData["topnews_count"] = news.count - breakingNews.count
+            customData["breakingnews_count"] = breakingNews.count
+        } else {
+            customData["is_complete"] = false
+            customData["topnews_count"] = 0
+            customData["breakingnews_count"] = 0
+        }
+        logFreshTabSignal("show", target: nil, customData: customData)
+
+    }
+    
+    private func logHideSignal() {
+        if !isLoadCompleted {
+            logShowSignal()
+        }
+        let showDuration = Int(NSDate.getCurrentMillis() - startTime)
+        logFreshTabSignal("hide", target: nil, customData: ["show_duration": showDuration])
+    }
+    private func logFreshTabSignal(action: String, target: String?, customData: [String: AnyObject]?) {
+        TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
+    }
+    
 }
