@@ -734,10 +734,11 @@ extension TabManager {
                 if index < urls.count {
                     let url = urls[index]
                     tab.url = url
-                    tab.restoringUrl = url
+                    if url.host != "localhost" {
+                        tab.restoringUrl = url
+                    }
                 }
             }
-            
         }
 
         if tabToSelect == nil {
