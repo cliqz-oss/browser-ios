@@ -16,7 +16,7 @@ class TabsManagerTest: KIFTestCase {
         openWebPage("http://cliqz.com/")
         tester.waitForTimeInterval(1)
         showToolBar()
-        resetApp(["http://cliqz.com/"])
+        resetApp(["https://cliqz.com/"])
     }
 
     func testBackButton() {

@@ -131,8 +131,9 @@ extension XCTestCase {
             }
             tester.waitForTimeInterval(3)
         }
+//        if tester.viewExistsWithLabel("")
         let searchUrl = tester.waitForViewWithAccessibilityIdentifier("url")
-        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url), "Search Engine name is  \(accessibilityValue) instead of \(url)")
+        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url), "Search Engine url is  \(accessibilityValue) instead of \(url)")
         XCTAssertTrue(searchUrl.accessibilityValue!.localizedCaseInsensitiveContainsString(query))
         if tester.viewExistsWithLabel("OK"){
             tester.tapViewWithAccessibilityLabel("OK")
