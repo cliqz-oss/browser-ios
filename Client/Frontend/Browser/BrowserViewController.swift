@@ -3863,9 +3863,8 @@ extension BrowserViewController: SessionRestoreHelperDelegate {
         if let tab = tabManager.selectedTab where tab.webView === tab.webView {
             updateUIForReaderHomeStateForTab(tab)
 
-            // Cliqz: switch to search mode if the restored tab was FreshTab
-            self.switchToSearchModeIfNeeded()
-            // Cliqz: set the currentURL of the urlBar to the restoring url of the restored tab
+            // Cliqz: restore the tab url and urlBar currentURL
+            tab.url = tab.restoringUrl
             urlBar.currentURL = tab.restoringUrl
         }
     }
@@ -4111,8 +4110,6 @@ extension BrowserViewController {
                 self.urlBar.leaveOverlayMode()
             }
         }
-        print("[switchToSearchModeIfNeeded]")
-        
     }
     
     // Cliqz: Logging the Navigation Telemetry signals
