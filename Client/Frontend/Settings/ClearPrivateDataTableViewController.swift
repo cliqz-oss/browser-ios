@@ -7,20 +7,17 @@ import Shared
 private let SectionToggles = 0
 private let SectionButton = 1
 private let NumberOfSections = 2
-private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
 private let TogglesPrefKey = "clearprivatedata.toggles"
 
 private let log = Logger.browserLogger
 
 private let HistoryClearableIndex = 0
 
-class ClearPrivateDataTableViewController: UITableViewController {
+class ClearPrivateDataTableViewController: SubSettingsTableViewController {
     private var clearButton: UITableViewCell?
 
     var profile: Profile!
     var tabManager: TabManager!
-    // Cliqz: added to calculate the duration spent on settings page
-    var settingsOpenTime : Double?
 
     private typealias DefaultCheckedState = Bool
 
@@ -57,33 +54,22 @@ class ClearPrivateDataTableViewController: UITableViewController {
             clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.DestructiveRed : UIColor.lightGrayColor()
         }
     }
+    override func getSectionFooter(section: Int) -> String {
+        if section == 1 {
+            return NSLocalizedString("Clear Private Data footer", tableName: "Cliqz", comment: "[Settings -> Clear Private Data] Clear Private Data footer ")
+        }
+        return super.getSectionFooter(section)
+    }
+    
+    override func getViewName() -> String {
+        return "private_data"
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Cliqz: record settingsOpenTime
-        settingsOpenTime = NSDate.getCurrentMillis()
 
         title = Strings.SettingsClearPrivateDataTitle
 
-        tableView.registerClass(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
-
-        tableView.separatorColor = UIConstants.TableViewSeparatorColor
-        tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
-        let footer = SettingsTableSectionHeaderFooterView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: UIConstants.TableViewHeaderFooterHeight))
-        footer.showBottomBorder = false
-        tableView.tableFooterView = footer
-    }
-    
-    // Cliqz: log telemetry signal
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        if let openTime = settingsOpenTime {
-            let duration = Int(NSDate.getCurrentMillis() - openTime)
-            let settingsBackSignal = TelemetryLogEventType.Settings("private_data", "click", "back", nil, duration)
-            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
-            settingsOpenTime = nil
-        }
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -102,8 +88,7 @@ class ClearPrivateDataTableViewController: UITableViewController {
         } else {
             assert(indexPath.section == SectionButton)
             cell.textLabel?.text = Strings.SettingsClearPrivateDataClearButton
-            cell.textLabel?.textAlignment = NSTextAlignment.Center
-            cell.textLabel?.textColor = UIConstants.DestructiveRed
+            cell.textLabel?.textColor = UIConstants.HighlightBlue
             cell.accessibilityTraits = UIAccessibilityTraitButton
             cell.accessibilityIdentifier = "ClearPrivateData"
             clearButton = cell
@@ -191,14 +176,6 @@ class ClearPrivateDataTableViewController: UITableViewController {
         }
 
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-    }
-
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderFooterIdentifier) as! SettingsTableSectionHeaderFooterView
-    }
-
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return UIConstants.TableViewHeaderFooterHeight
     }
 
     @objc func switchValueChanged(toggle: UISwitch) {

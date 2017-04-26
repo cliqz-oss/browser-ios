@@ -50,7 +50,6 @@
 		1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */; };
 		1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E07DF751DCB72B200CC6BF0 /* HistorySwiper.swift */; };
 		1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */; };
-		1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */; };
 		1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
 		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
@@ -59,6 +58,13 @@
 		1E2DEC991E818BD1003D76B7 /* SessionRestore.html in Resources */ = {isa = PBXBuildFile; fileRef = 1E2DEC981E818BD1003D76B7 /* SessionRestore.html */; };
 		1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */; };
 		1E2DECAC1E818C2D003D76B7 /* SessionRestoreHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */; };
+		1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */; };
+		1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */; };
+		1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */; };
+		1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706821EB0952000516BA5 /* HumanWebSettingsTableViewController.swift */; };
+		1E47068A1EB0952000516BA5 /* RegionalSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706831EB0952000516BA5 /* RegionalSettingsTableViewController.swift */; };
+		1E47068B1EB0952000516BA5 /* SettingsActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706841EB0952000516BA5 /* SettingsActivity.swift */; };
+		1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706851EB0952000516BA5 /* SubSettingsTableViewController.swift */; };
 		1E79DC951D4FB2B3006BEB4A /* Extension in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DC941D4FB2B3006BEB4A /* Extension */; };
 		1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */; };
 		1E79DD021D4FB2C5006BEB4A /* AtomicInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */; };
@@ -87,13 +93,10 @@
 		1E79DD1A1D4FB2C5006BEB4A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCBE1D4FB2C5006BEB4A /* Reachability.m */; };
 		1E79DD1B1D4FB2C5006BEB4A /* XMLHttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCBF1D4FB2C5006BEB4A /* XMLHttpRequest.swift */; };
 		1E79DD1C1D4FB2C5006BEB4A /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCC41D4FB2C5006BEB4A /* SessionState.swift */; };
-		1E79DD1D1D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */; };
 		1E79DD1E1D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */; };
-		1E79DD1F1D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCC91D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift */; };
 		1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */; };
 		1E79DD211D4FB2C5006BEB4A /* CliqzSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCB1D4FB2C5006BEB4A /* CliqzSearchViewController.swift */; };
 		1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCC1D4FB2C5006BEB4A /* FooterActivityItemProvider.swift */; };
-		1E79DD231D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCD1D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift */; };
 		1E79DD241D4FB2C5006BEB4A /* JavaScriptBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCE1D4FB2C5006BEB4A /* JavaScriptBridge.swift */; };
 		1E79DD251D4FB2C5006BEB4A /* LayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCCF1D4FB2C5006BEB4A /* LayerViewController.swift */; };
 		1E79DD261D4FB2C5006BEB4A /* NavigationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD01D4FB2C5006BEB4A /* NavigationExtension.swift */; };
@@ -246,7 +249,6 @@
 		1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33C1DA4EE5800CB8102 /* es6tests.json */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		1EDF92A41DD1C92800D11E55 /* CliqzIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */; };
-		1EDFA8501E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDFA84F1E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		280CB1371C20E0A3005AF147 /* BookmarksSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */; };
@@ -1441,7 +1443,6 @@
 		1E0926CC1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = fr; path = fr.lproj/FairBlocking.html; sourceTree = "<group>"; };
 		1E0926CD1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OnePasswordExtension.strings; sourceTree = "<group>"; };
 		1E0926CE1DFAB4320002BB13 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Cliqz.strings; sourceTree = "<group>"; };
-		1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
 		1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QuerySuggestions.swift; path = Client/Cliqz/Foundation/QuertSuggestion/QuerySuggestions.swift; sourceTree = SOURCE_ROOT; };
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
@@ -1451,6 +1452,13 @@
 		1E2DEC981E818BD1003D76B7 /* SessionRestore.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = SessionRestore.html; sourceTree = "<group>"; };
 		1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHandler.swift; sourceTree = "<group>"; };
 		1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHelper.swift; sourceTree = "<group>"; };
+		1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSettingsTableViewController.swift; sourceTree = "<group>"; };
+		1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerSettingsTableViewController.swift; sourceTree = "<group>"; };
+		1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzAppSettingsOptions.swift; sourceTree = "<group>"; };
+		1E4706821EB0952000516BA5 /* HumanWebSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanWebSettingsTableViewController.swift; sourceTree = "<group>"; };
+		1E4706831EB0952000516BA5 /* RegionalSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionalSettingsTableViewController.swift; sourceTree = "<group>"; };
+		1E4706841EB0952000516BA5 /* SettingsActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsActivity.swift; sourceTree = "<group>"; };
+		1E4706851EB0952000516BA5 /* SubSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
@@ -1482,13 +1490,10 @@
 		1E79DCC11D4FB2C5006BEB4A /* include.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = include.h; sourceTree = "<group>"; };
 		1E79DCC21D4FB2C5006BEB4A /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		1E79DCC41D4FB2C5006BEB4A /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
-		1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerExtension.swift; sourceTree = "<group>"; };
-		1E79DCC91D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzAppSettingsOptions.swift; sourceTree = "<group>"; };
 		1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
 		1E79DCCB1D4FB2C5006BEB4A /* CliqzSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearchViewController.swift; sourceTree = "<group>"; };
 		1E79DCCC1D4FB2C5006BEB4A /* FooterActivityItemProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterActivityItemProvider.swift; sourceTree = "<group>"; };
-		1E79DCCD1D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanWebSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E79DCCE1D4FB2C5006BEB4A /* JavaScriptBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaScriptBridge.swift; sourceTree = "<group>"; };
 		1E79DCCF1D4FB2C5006BEB4A /* LayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerViewController.swift; sourceTree = "<group>"; };
 		1E79DCD01D4FB2C5006BEB4A /* NavigationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationExtension.swift; sourceTree = "<group>"; };
@@ -1746,7 +1751,6 @@
 		1ECAE33C1DA4EE5800CB8102 /* es6tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = es6tests.json; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzIntroViewController.swift; sourceTree = "<group>"; };
-		1EDFA84F1E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionalSettingsTableViewController.swift; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
 		28126F6D1C2F94F9006466CC /* SQLiteBookmarksModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModel.swift; sourceTree = "<group>"; };
@@ -2647,6 +2651,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E47067E1EB0952000516BA5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */,
+				1E4706851EB0952000516BA5 /* SubSettingsTableViewController.swift */,
+				1E4706831EB0952000516BA5 /* RegionalSettingsTableViewController.swift */,
+				1E4706821EB0952000516BA5 /* HumanWebSettingsTableViewController.swift */,
+				1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */,
+				1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */,
+				1E4706841EB0952000516BA5 /* SettingsActivity.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		1E79DC961D4FB2C5006BEB4A /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
@@ -2811,21 +2829,19 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				1E47067E1EB0952000516BA5 /* Settings */,
 				AFA6F3DB1E67424700BA630B /* ControlCenter */,
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
 				4FA29B131D64BFE300C59F5E /* Dashboard */,
 				4FF239C71D52464A00EEDE89 /* WebView */,
 				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
 				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
-				1E79DCC71D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
 				1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */,
-				1E79DCC91D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift */,
 				1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */,
 				1E79DCCB1D4FB2C5006BEB4A /* CliqzSearchViewController.swift */,
 				1E79DCCC1D4FB2C5006BEB4A /* FooterActivityItemProvider.swift */,
-				1E79DCCD1D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift */,
 				1E79DCCE1D4FB2C5006BEB4A /* JavaScriptBridge.swift */,
 				1E79DCCF1D4FB2C5006BEB4A /* LayerViewController.swift */,
 				1E79DCD01D4FB2C5006BEB4A /* NavigationExtension.swift */,
@@ -2834,7 +2850,6 @@
 				1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */,
 				1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */,
 				1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */,
-				1E0E9DD91D75D4C300D01346 /* SettingsActivity.swift */,
 				4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */,
 				4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */,
 				1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */,
@@ -2842,7 +2857,6 @@
 				1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */,
 				1EDF92A31DD1C92800D11E55 /* CliqzIntroViewController.swift */,
 				4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */,
-				1EDFA84F1E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift */,
 				1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */,
 			);
 			path = Browser;
@@ -6428,7 +6442,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E68E39BE1C46F42000B85F42 /* AppSettingsTableViewController.swift in Sources */,
-				1E79DD1F1D4FB2C5006BEB4A /* CliqzAppSettingsOptions.swift in Sources */,
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
 				4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */,
 				1E79DE951D508368006BEB4A /* NSValueTransformer+AWSMTLPredefinedTransformerAdditions.m in Sources */,
@@ -6440,7 +6453,6 @@
 				E68E7ADC1CAC208200FDCA76 /* SetupPasscodeViewController.swift in Sources */,
 				7B3631EA1C244FEE00D12AF9 /* Theme.swift in Sources */,
 				7BC68D321CC153920043562A /* AppMenuItem.swift in Sources */,
-				1EDFA8501E40C5FA00F1BDD0 /* RegionalSettingsTableViewController.swift in Sources */,
 				7BC68CCD1CC152B70043562A /* MenuView.swift in Sources */,
 				1E79DD251D4FB2C5006BEB4A /* LayerViewController.swift in Sources */,
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
@@ -6480,7 +6492,6 @@
 				E65607611C08B4E200534B02 /* SearchInputView.swift in Sources */,
 				0B3E7DB81B27A7F600E2E84D /* AboutUtils.swift in Sources */,
 				AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */,
-				1E79DD231D4FB2C5006BEB4A /* HumanWebSettingsTableViewController.swift in Sources */,
 				7BC68CC71CC152B70043562A /* MenuItemImageView.swift in Sources */,
 				1E79DE7C1D508368006BEB4A /* AWSExecutor.m in Sources */,
 				D301AAEE1A3A55B70078DD1D /* TabTrayController.swift in Sources */,
@@ -6495,6 +6506,7 @@
 				1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */,
 				0B62EFD21AD63CD100ACB9CD /* Clearables.swift in Sources */,
 				1E79DD0B1D4FB2C5006BEB4A /* StringExtension.swift in Sources */,
+				1E47068B1EB0952000516BA5 /* SettingsActivity.swift in Sources */,
 				1E79DE781D508368006BEB4A /* AWSBolts.m in Sources */,
 				D3BE7B481B05596800641031 /* AuroraAppDelegate.swift in Sources */,
 				1E79DD131D4FB2C5006BEB4A /* AWSSNSManager.swift in Sources */,
@@ -6524,6 +6536,7 @@
 				0BB5B2881AC0A2B90052877D /* SnackBar.swift in Sources */,
 				1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */,
 				7BEFC6801BFF68C30059C952 /* QuickActions.swift in Sources */,
+				1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
 				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
 				1E79DEA51D508368006BEB4A /* AWSTMMemoryCache.m in Sources */,
@@ -6611,9 +6624,11 @@
 				4FA29B261D64C0B100C59F5E /* TabsViewController.swift in Sources */,
 				7BC68CC81CC152B70043562A /* MenuItemView.swift in Sources */,
 				1E79DD141D4FB2C5006BEB4A /* ConfigurationManager.swift in Sources */,
+				1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */,
 				E4252A0E1AF01AE40028C684 /* Swizzling.m in Sources */,
 				1E79DE861D508368006BEB4A /* AWSFMResultSet.m in Sources */,
 				D3972BF41C22412B00035B87 /* TitleActivityItemProvider.swift in Sources */,
+				1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */,
 				1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */,
 				1E79DEA71D508368006BEB4A /* AWSCategory.m in Sources */,
 				1E79DD2C1D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift in Sources */,
@@ -6649,6 +6664,7 @@
 				1E79DE881D508368006BEB4A /* AWSMTLJSONAdapter.m in Sources */,
 				E4B3348C1BC01D8F004E2BFF /* AdjustIntegration.swift in Sources */,
 				7FB63CC91C08B27E0047F9A4 /* DynamicFontHelper.swift in Sources */,
+				1E47068A1EB0952000516BA5 /* RegionalSettingsTableViewController.swift in Sources */,
 				1E79DD111D4FB2C5006BEB4A /* SearchBarTelemetryHelper.swift in Sources */,
 				7BC68D241CC153630043562A /* AppMenuToolbarItem.swift in Sources */,
 				D3C03E471C3C7C1500A07D5C /* MenuHelper.swift in Sources */,
@@ -6701,7 +6717,6 @@
 				E640E85E1C73A45A00C5F072 /* PasscodeEntryViewController.swift in Sources */,
 				1E79DE971D508368006BEB4A /* AWSURLSessionManager.m in Sources */,
 				1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */,
-				1E0E9DDA1D75D4C300D01346 /* SettingsActivity.swift in Sources */,
 				1E79DD501D4FB2F8006BEB4A /* AWSSNSService.m in Sources */,
 				1E79DE9E1D508368006BEB4A /* AWSClientContext.m in Sources */,
 				1E79DE871D508368006BEB4A /* AWSGZIP.m in Sources */,
@@ -6716,11 +6731,12 @@
 				1E79DD1A1D4FB2C5006BEB4A /* Reachability.m in Sources */,
 				1E79DE9C1D508368006BEB4A /* AWSURLResponseSerialization.m in Sources */,
 				1E79DE7F1D508368006BEB4A /* AWSCognitoIdentityModel.m in Sources */,
-				1E79DD1D1D4FB2C5006BEB4A /* AdBlockerSettingsTableViewController.swift in Sources */,
+				1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
 				1E79DD121D4FB2C5006BEB4A /* TelemetryLogger.swift in Sources */,
 				1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */,
+				1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */,
 				28FDFF0C1C1F725800840F86 /* SeparatorTableCell.swift in Sources */,
 				1E79DD4E1D4FB2F8006BEB4A /* AWSSNSModel.m in Sources */,
 				1E79DD191D4FB2C5006BEB4A /* NSData+GZIP.swift in Sources */,
