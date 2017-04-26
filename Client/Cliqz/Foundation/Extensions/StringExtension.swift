@@ -58,5 +58,16 @@ extension String {
 			nil,
 			String("!*'\"();:@&=+$,/?%#[]% ") as CFStringRef, CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) as String
 	}
+    
+    
+    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
+        
+        let size = CGSize(width: width, height: CGFloat.max)
+        let attrs = [NSFontAttributeName: font]
+        let boundingRect = NSString(string: self).boundingRectWithSize(size,
+                                                                       options: NSStringDrawingOptions.UsesLineFragmentOrigin,
+                                                                       attributes: attrs, context: nil)
+        return boundingRect.height
+    }
 
 }

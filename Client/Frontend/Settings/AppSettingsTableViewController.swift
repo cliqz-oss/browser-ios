@@ -24,202 +24,186 @@ class AppSettingsTableViewController: SettingsTableViewController {
         tableView.accessibilityIdentifier = "AppSettingsTableViewController.tableView"
     }
 
+    // Cliqz: Redesign Settings
+    override func generateSettings() -> [SettingSection] {
+        
+        let prefs = profile.prefs
+        
+        // Search settings Section
+        let regionalSetting                 = RegionalSetting(settings: self)
+        let querySuggestionSettings         = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(),
+                                                          titleText: NSLocalizedString("Search Query Suggestions", tableName: "Cliqz", comment: "[Settings] Search Query Suggestions"))
+        let blockExplicitContentSettings    = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(),
+                                                          titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "[Settings] Block explicit content"))
+        let humanWebSetting                 = HumanWebSetting(settings: self)
+        let cliqzSearchSetting              = CliqzSearchSetting(settings: self)
+        
+
+        var searchSection: [Setting]!
+        if QuerySuggestions.querySuggestionEnabledForCurrentRegion() {
+            searchSection = [regionalSetting, querySuggestionSettings, blockExplicitContentSettings, humanWebSetting, cliqzSearchSetting]
+        } else {
+            searchSection = [regionalSetting, blockExplicitContentSettings, humanWebSetting, cliqzSearchSetting]
+        }
+        
+        
+        // Browsing & History Section
+        let blockPopupsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", tableName: "Cliqz", comment: " [Settings] Block pop-up windows"))
+        let adBlockerSetting            = AdBlockerSetting(settings: self)
+        let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
+        let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
+        
+        var browsingAndHistorySection: [Setting] = [blockPopupsSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+
+#if BETA
+        browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]
+#endif
+        
+#if React_Debug
+        browsingAndHistorySection += [TestReact(settings: self)]
+#endif
+        // Cliqz: temporarly hide news notification settings
+//            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
+//				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications"))
+
+        
+        // Help Section
+        let supportSetting          = SupportSetting(delegate: settingsDelegate)
+        let tipsAndTricksSetting    = TipsAndTricksSetting()
+        let reportWebsiteSetting    = ReportWebsiteSetting()
+        
+        let helpSection: [Setting] = [supportSetting, tipsAndTricksSetting, reportWebsiteSetting]
+        
+        
+        // About Cliqz Section
+        let rateSetting     = RateUsSetting()
+        let aboutSetting    = AboutSetting()
+        
+        let AboutCliqzSection: [Setting] = [rateSetting, aboutSetting]
+        
+        // Combine All sections together
+        let settings = [
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Search", tableName: "Cliqz", comment: "[Settings] Search section title")), children: searchSection),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Browsing & History", tableName: "Cliqz", comment: "[Settings] Browsing & History section header")), children: browsingAndHistorySection),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Help", tableName: "Cliqz", comment: "[Settings] Help section header")), children: helpSection),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("About Cliqz", tableName: "Cliqz", comment: "[Settings] About Cliqz section header")), children: AboutCliqzSection)
+                        ]
+
+        return settings
+    
+    }
+    /*
     override func generateSettings() -> [SettingSection] {
         var settings = [SettingSection]()
-
+        
         let privacyTitle = NSLocalizedString("Privacy", comment: "Privacy section title")
         let accountDebugSettings: [Setting]
-        if AppConstants.BuildChannel != .Aurora {
+        if AppConstants.BuildChannel != .aurora {
             accountDebugSettings = [
                 // Debug settings:
                 RequirePasswordDebugSetting(settings: self),
                 RequireUpgradeDebugSetting(settings: self),
                 ForgetSyncAuthStateDebugSetting(settings: self),
+                StageSyncServiceDebugSetting(settings: self),
             ]
         } else {
             accountDebugSettings = []
         }
-
+        
         let prefs = profile.prefs
-
         var generalSettings: [Setting] = [
-            // Cliqz: added regional settings for cliqz search
-            RegionalSetting(settings: self)]
-            // Cliqz: add settings for query suggestion
-        if QuerySuggestions.querySuggestionEnabledForCurrentRegion() {
-            generalSettings += [
-                BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(), titleText: NSLocalizedString("Search Term Suggestions", tableName: "Cliqz", comment: "Query Suggestion setting"))]
-        }
-            // Cliqz: removed default search settings
-//            SearchSetting(settings: self),
-            // Cliqz: temporarly hide news notification settings
-//            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
-//				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications")),
-        //Cliqz: remove newTabPage settings and HomePage settings
-//        if AppConstants.MOZ_NEW_TAB_CHOICES {
-//            generalSettings += [NewTabPageSetting(settings: self)]
-//        }
-        generalSettings += [
-//            HomePageSetting(settings: self),
-            // Cliqz: Moved `blockPopups` to SettingsPrefs
-            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true,
+            SearchSetting(settings: self),
+            NewTabPageSetting(settings: self),
+            HomePageSetting(settings: self),
+            OpenWithSetting(settings: self),
+            BoolSetting(prefs: prefs, prefKey: "blockPopups", defaultValue: true,
                 titleText: NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")),
-            // Cliqz: removed save logins settings
-            /*
             BoolSetting(prefs: prefs, prefKey: "saveLogins", defaultValue: true,
                 titleText: NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")),
-             */
-            // Cliqz: Commented settings for enabling third party keyboards according to our policy.
-			/*
             BoolSetting(prefs: prefs, prefKey: AllowThirdPartyKeyboardsKey, defaultValue: false,
                 titleText: NSLocalizedString("Allow Third-Party Keyboards", comment: "Setting to enable third-party keyboards"), statusText: NSLocalizedString("Firefox needs to reopen for this change to take effect.", comment: "Setting value prop to enable third-party keyboards")),
-			*/
-            BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(), titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "Block explicit content setting")),
-            AdBlockerSetting(settings: self),
-            HumanWebSetting(settings: self),
-            //Cliqz: Added CliqzSearchSetting to override the behavior of selecting search engine
-            CliqzSearchSetting(settings: self)
-
-        ]
-        #if React_Debug
-            generalSettings.append(TestReact(settings: self))
-        #endif
+            ]
         
-        //Cliqz: removed unused sections from Settings table
-//        let accountChinaSyncSetting: [Setting]
-//        let locale = NSLocale.currentLocale()
-//        if locale.localeIdentifier != "zh_CN" {
-//            accountChinaSyncSetting = []
-//        } else {
-//            accountChinaSyncSetting = [
-//                // Show China sync service setting:
-//                ChinaSyncServiceSetting(settings: self)
-//            ]
-//        }
+        let accountChinaSyncSetting: [Setting]
+        if !profile.isChinaEdition {
+            accountChinaSyncSetting = []
+        } else {
+            accountChinaSyncSetting = [
+                // Show China sync service setting:
+                ChinaSyncServiceSetting(settings: self)
+            ]
+        }
         // There is nothing to show in the Customize section if we don't include the compact tab layout
         // setting on iPad. When more options are added that work on both device types, this logic can
         // be changed.
-#if !CLIQZ
-        // Cliqz: removed use compact tabs settings as we use our own tab manager
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+        if UIDevice.current.userInterfaceIdiom == .phone {
             generalSettings +=  [
                 BoolSetting(prefs: prefs, prefKey: "CompactTabLayout", defaultValue: true,
                     titleText: NSLocalizedString("Use Compact Tabs", comment: "Setting to enable compact tabs in the tab overview"))
             ]
         }
-#endif
-
-        //Cliqz: removed unused sections from Settings table
-//        settings += [
-//            SettingSection(title: nil, children: [
-//                // Without a Firefox Account:
-//                ConnectSetting(settings: self),
-//                // With a Firefox Account:
-//                AccountStatusSetting(settings: self),
-//                SyncNowSetting(settings: self)
-//            ] + accountChinaSyncSetting + accountDebugSettings)
-//        ]
-
-        //Cliqz: removed unused sections from Settings table
-//        if !profile.hasAccount() {
-//            settings += [SettingSection(title: NSAttributedString(string: NSLocalizedString("Sign in to get your tabs, bookmarks, and passwords from your other devices.", comment: "Clarify value prop under Sign In to Firefox in Settings.")), children: [])]
-//        }
-
+        
+        settings += [
+            SettingSection(title: nil, children: [
+                // Without a Firefox Account:
+                ConnectSetting(settings: self),
+                // With a Firefox Account:
+                AccountStatusSetting(settings: self),
+                SyncNowSetting(settings: self)
+                ] + accountChinaSyncSetting + accountDebugSettings)]
+        
+        if !profile.hasAccount() {
+            settings += [SettingSection(title: NSAttributedString(string: NSLocalizedString("Sign in to get your tabs, bookmarks, and passwords from your other devices.", comment: "Clarify value prop under Sign In to Firefox in Settings.")), children: [])]
+        }
+        
         settings += [ SettingSection(title: NSAttributedString(string: NSLocalizedString("General", comment: "General settings section title")), children: generalSettings)]
-
         
         var privacySettings = [Setting]()
-        // Cliqz: removed save logins settings
-//        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
-        //Cliqz: removed passcode settings as it is not working
-//        privacySettings.append(TouchIDPasscodeSetting(settings: self))
-
+        privacySettings.append(LoginsSetting(settings: self, delegate: settingsDelegate))
+        privacySettings.append(TouchIDPasscodeSetting(settings: self))
+        
         privacySettings.append(ClearPrivateDataSetting(settings: self))
-
-#if !CLIQZ
-        // Cliqz: remove close private tabs when leaving private browsing
-        if #available(iOS 9, *) {
-            privacySettings += [
-                BoolSetting(prefs: prefs,
-                    prefKey: "settings.closePrivateTabs",
-                    defaultValue: false,
-                    titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
-                    statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
-            ]
-        }
-#endif
-
+        
         privacySettings += [
-			ShowBlockedTopSitesSetting(settings: self),
+            BoolSetting(prefs: prefs,
+                prefKey: "settings.closePrivateTabs",
+                defaultValue: false,
+                titleText: NSLocalizedString("Close Private Tabs", tableName: "PrivateBrowsing", comment: "Setting for closing private tabs"),
+                statusText: NSLocalizedString("When Leaving Private Browsing", tableName: "PrivateBrowsing", comment: "Will be displayed in Settings under 'Close Private Tabs'"))
+        ]
+        
+        privacySettings += [
             PrivacyPolicySetting()
         ]
-
-		#if BETA
-			let supportChildren  = [
-				ShowIntroductionSetting(settings: self),
-                
-                // Cliqz: Added tips and tricks settings option
-                TipsAndTricksSetting(),
-                
-				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
-				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
-				
-				ExportLocalDatabaseSetting(settings: self),
-				
-				ReportFormSetting(),
-				
-				//Cliqz: removed unused sections from Settings table
-				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
-				//                OpenSupportPageSetting(delegate: settingsDelegate),
-			]
-            
-            settings += [
-                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
-                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
-                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                    VersionSetting(settings: self),
-                    ExtensionVersionSetting(settings: self),
-                    LicenseAndAcknowledgementsSetting(),
-                    ])]
-		#else
-			let supportChildren = [
-                // Cliqz: Added tips and tricks settings option
-                TipsAndTricksSetting(),
-                
-				//Cliqz: replaced feedback setting by Cliqz feedback setting to overrid the behavior of sending feedback
-				//                SendFeedbackSetting(),
-				SendCliqzFeedbackSetting.init(delegate: settingsDelegate),
-				
-				//Cliqz: removed unused sections from Settings table
-				//                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
-				//                OpenSupportPageSetting(delegate: settingsDelegate),
-			]
-            settings += [
-                SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
-                SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: supportChildren),
-                SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
-                    VersionSetting(settings: self),
-                    LicenseAndAcknowledgementsSetting(),
-                    //Cliqz: removed unused sections from Settings table
-//                    YourRightsSetting(),
-//                    ExportBrowserDataSetting(settings: self),
-//                    DeleteExportedDataSetting(settings: self),
-                    ])]
-		#endif
         
-        //Cliqz: removed unused sections from Settings table
-//            if (profile.hasAccount()) {
-//                settings += [
-//                    SettingSection(title: nil, children: [
-//                        DisconnectSetting(settings: self),
-//                        ])
-//                ]
-//            }
-
+        settings += [
+            SettingSection(title: NSAttributedString(string: privacyTitle), children: privacySettings),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Support", comment: "Support section title")), children: [
+                ShowIntroductionSetting(settings: self),
+                SendFeedbackSetting(),
+                SendAnonymousUsageDataSetting(prefs: prefs, delegate: settingsDelegate),
+                OpenSupportPageSetting(delegate: settingsDelegate),
+                ]),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("About", comment: "About settings section title")), children: [
+                VersionSetting(settings: self),
+                LicenseAndAcknowledgementsSetting(),
+                YourRightsSetting(),
+                ExportBrowserDataSetting(settings: self),
+                DeleteExportedDataSetting(settings: self),
+                EnableBookmarkMergingSetting(settings: self)
+                ])]
+        
+        if profile.hasAccount() {
+            settings += [
+                SettingSection(title: nil, children: [
+                    DisconnectSetting(settings: self),
+                    ])
+            ]
+        }
+        
         return settings
     }
-
+    */
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if !profile.hasAccount() {
             let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView

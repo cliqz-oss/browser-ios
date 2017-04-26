@@ -42,7 +42,7 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
         tester.tapViewWithAccessibilityLabel("Settings")
-        tester.tapViewWithAccessibilityLabel("Search, Google")
+        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), Google")
         checkSearchEngineChange("Amazon.com",query:"heli",url:"https://www.amazon.com/gp/aw/s?k=heli")
         checkSearchEngineChange("Bing",query: "heli", url: "https://www.bing.com/search?q=heli")
         checkSearchEngineChange("DuckDuckGo", query: "heli", url: "https://duckduckgo.com/?q=heli")
@@ -73,7 +73,7 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         XCTAssertTrue(tester.viewExistsWithLabel("Settings"), "Settings button should exist on this view")
         tester.tapViewWithAccessibilityLabel("Settings")
-        tester.tapViewWithAccessibilityLabel("Search, Google")
+        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), Google")
         XCTAssertTrue((tester.waitForViewWithAccessibilityLabel("Google", traits: UIAccessibilityTraitSelected)) != nil, "Default Search Engine is not google")
         let searchEngines = ["Amazon.com","Bing","DuckDuckGo","Ecosia","Google","Qwant","Twitter","Wikipedia","Yahoo"]
         for searchEngine in searchEngines {
