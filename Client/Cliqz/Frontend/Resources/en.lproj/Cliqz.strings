@@ -223,17 +223,23 @@
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "SEARCH ENGINE \n IN THE BROWSER";
 
-/* Anti-tracking hint title */
-"Anti-Tracking" = "Anti-Tracking";
+/* Control Center hint title */
+"Control Center" = "Control Center";
 
-/* Anti-tracking hint description */
-"Anti-Tracking description" = "You are in control: CLIQZ Anti-Tracking protects your privacy";
+/* Control Center hint description */
+"Customize the protection of your data to your needs." = "Customize the protection of your data to your needs.";
+
+/* Control Center Option 1*/
+"Protection enabled" = "Protection enabled";
+
+/* Control Center Option 2*/
+"Protection disabled" = "Protection disabled";
 
 /* Cliqz search hint title */
-"Fast-search" = "Fast-Search";
+"Result Cards" = "Result Cards";
 
 /* Cliqz search hint description */
-"Fast-search description" = "Everything now. No detours";
+"Relevant results are shown instantly during search." = "Relevant results are shown instantly during search.";
 
 /* Detailed description on Adblocking settings */
 "AdBlocking settings clarification" = "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.";

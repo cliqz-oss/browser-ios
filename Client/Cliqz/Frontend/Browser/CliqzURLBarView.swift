@@ -19,9 +19,9 @@ enum Whitelisted{
 
 class CliqzURLBarView: URLBarView {
 
-	private let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
-    private let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
-	private let antitrackingButtonSize = CGSizeMake(CGFloat(URLBarViewUX.ButtonWidth), CGFloat(URLBarViewUX.LocationHeight))
+	static let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
+    static let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
+	static let antitrackingButtonSize = CGSizeMake(CGFloat(URLBarViewUX.ButtonWidth), CGFloat(URLBarViewUX.LocationHeight))
 	private var trackersCount = 0
     
 	private lazy var antitrackingButton: UIButton = {
@@ -49,8 +49,8 @@ class CliqzURLBarView: URLBarView {
         return button
     }()
     
-    private let antitrackingGreenIcon = UIImage(named: "antitrackingGreen")
-    private let antitrackingOrangeIcon = UIImage(named: "antitrackingOrange")
+    static let antitrackingGreenIcon = UIImage(named: "antitrackingGreen")
+    static let antitrackingOrangeIcon = UIImage(named: "antitrackingOrange")
     
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -136,10 +136,10 @@ class CliqzURLBarView: URLBarView {
             theURL = url
         }
         else {
-            return antitrackingGreenIcon
+            return CliqzURLBarView.antitrackingGreenIcon
         }
         
-        guard let domain = theURL.host else {return antitrackingGreenIcon}
+        guard let domain = theURL.host else {return CliqzURLBarView.antitrackingGreenIcon}
         var isAntiTrackingEnabled = false
         
         //Doc: If the observer checks if the website is whitelisted, it might get the wrong value, since the correct value may not be set yet. 
@@ -153,10 +153,10 @@ class CliqzURLBarView: URLBarView {
         let isWebsiteOnPhisingList = AntiPhishingDetector.isDetectedPhishingURL(theURL)
         
         if isAntiTrackingEnabled && !isWebsiteOnPhisingList{
-            return antitrackingGreenIcon
+            return CliqzURLBarView.antitrackingGreenIcon
         }
         
-        return antitrackingOrangeIcon
+        return CliqzURLBarView.antitrackingOrangeIcon
     }
 
 	private func commonInit() {
@@ -167,7 +167,7 @@ class CliqzURLBarView: URLBarView {
 		antitrackingButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1 * URLBarViewUX.ButtonWidth)
-			make.size.equalTo(self.antitrackingButtonSize)
+			make.size.equalTo(CliqzURLBarView.antitrackingButtonSize)
 		}
         
         addSubview(newTabButton)
@@ -187,7 +187,7 @@ class CliqzURLBarView: URLBarView {
 	}
 	
 	@objc private func antitrackingButtonPressed(sender: UIButton) {
-        let status = antitrackingGreenBackgroundColor == sender.backgroundColor ? "green" : "Orange"
+        let status = CliqzURLBarView.antitrackingGreenBackgroundColor == sender.backgroundColor ? "green" : "Orange"
 		self.delegate?.urlBarDidClickAntitracking(self, trackersCount: trackersCount, status: status)
 	}
     
