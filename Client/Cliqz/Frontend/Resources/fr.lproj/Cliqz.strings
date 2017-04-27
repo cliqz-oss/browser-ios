@@ -224,17 +224,23 @@
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "LA RECHERCHE INTÉGRÉE \nAU NAVIGATEUR";
 
-/* Anti-tracking hint title */
-"Anti-Tracking" = "Anti-Tracking";
+/* Control Center hint title */
+"Control Center" = "Panneau de Contrôle";
 
-/* Anti-tracking hint description */
-"Anti-Tracking description" = "Tu es aux commandes : Anti-Tracking de Cliqz protège ta vie privée";
+/* Control Center hint description */
+"Customize the protection of your data to your needs." = "Personnalisez le type de protection de vos données.";
+
+/* Control Center Option 1*/
+"Protection enabled" = "Protection active";
+
+/* Control Center Option 2*/
+"Protection disabled" = "Protection inactive";
 
 /* Cliqz search hint title */
-"Fast-search" = "Recherche rapide";
+"Result Cards" = "Fiches des résultats";
 
 /* Cliqz search hint description */
-"Fast-search description" = "Tout maintenant. Sans détour";
+"Relevant results are shown instantly during search." = "Les résultats pertinents sont affichés pendant la recherche.";
 
 /* Detailed description on Adblocking settings */
 "AdBlocking settings clarification" = "À noter : le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le bloqueur de pubs. Pour cela, tu dois être connecté(e) au Wi-Fi.";

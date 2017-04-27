@@ -222,17 +222,23 @@
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "DIE SUCHMASCHINE \n IM BROWSER";
 
-/* Anti-tracking hint title */
-"Anti-Tracking" = "Anti-Tracking";
+/* Control Center hint title */
+"Control Center" = "Control Center";
 
-/* Anti-tracking hint description */
-"Anti-Tracking description" = "Du hast die Kontrolle: CLIQZ Anti-Tracking schützt deine Privatsphäre";
+/* Control Center hint description */
+"Customize the protection of your data to your needs." = "Passe den Schutz deiner Daten an  deine Bedürfnissen an.";
+
+/* Control Center Option 1*/
+"Protection enabled" = "Schutz aktiv";
+
+/* Control Center Option 2*/
+"Protection disabled" = "Schutz inaktiv";
 
 /* Cliqz search hint title */
-"Fast-search" = "Schnellsuche";
+"Result Cards" = "Ergebniskarten";
 
 /* Cliqz search hint description */
-"Fast-search description" = "Alles sofort im Blick: Die relevantesten Suchergebnisse werden dir auf den intelligenten CLIQZ Ergebniskarten direkt angezeigt";
+"Relevant results are shown instantly during search." = "Relevante Suchergebnisse werden bereits während der Sucheingabe angezeigt.";
 
 /* Detailed description on Adblocking settings */
 "AdBlocking settings clarification" = "Bitte beachte: Cliqz Browser muss größere Informationspakete laden bevor der Werbeblocker effizient funktioniert. Dazu muss die App mit einem WLAN verbunden sein.";
