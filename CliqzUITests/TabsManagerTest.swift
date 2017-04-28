@@ -11,7 +11,22 @@ import KIF
 
 
 class TabsManagerTest: KIFTestCase {
-
+    override func tearDown() {
+        if tester.viewExistsWithLabel("Back to safe site"){
+            tester.tapViewWithAccessibilityLabel("Back to safe site")
+        }
+        if tester.viewExistsWithLabel("Settings"){
+            tester.tapViewWithAccessibilityLabel("Settings")
+        }
+        if tester.viewExistsWithLabel("Done"){
+            tester.tapViewWithAccessibilityLabel("Done")
+        }
+        if tester.viewExistsWithLabel("cliqzBack"){
+            tester.tapViewWithAccessibilityLabel("closeTab")
+            tester.tapViewWithAccessibilityLabel("cliqzBack")
+        }
+        super.tearDown()
+    }
     func testTabRemoval() {
         openWebPage("http://cliqz.com/")
         tester.waitForTimeInterval(1)

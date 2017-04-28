@@ -61,6 +61,7 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         let Label = searchUrl.accessibilityValue!
         tester.swipeViewWithAccessibilityLabel("\(Label)", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
         
@@ -102,6 +103,7 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
     }
@@ -124,9 +126,12 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(tabsCounter.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("Settings")
         tester.swipeViewWithAccessibilityLabel("Block Pop-up Windows", value: "0", traits:UIAccessibilityTraitButton, inDirection: KIFSwipeDirection.Right)
+        tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
@@ -157,6 +162,7 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(popUpSlider.accessibilityValue == "1", "Block Pop-up Windows is  turned off, It should be on!")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(1)
     }

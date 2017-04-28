@@ -200,6 +200,8 @@ extension TabsViewController: UICollectionViewDataSource {
             cell.domainLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
             cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
         }
+        
+        cell.domainLabel.accessibilityLabel = cell.domainLabel.text
 
         if tab.isPrivate{
             cell.makeCellPrivate()

@@ -26,7 +26,7 @@ extension XCTestCase {
         tester.waitForSoftwareKeyboard()
         tester.tapViewWithAccessibilityLabel("Go")
 //        let checkOnboarding = try tester.tryFindingTappableViewWithAccessibilityLabel("OK")
-        if  tester.viewExistsWithLabel("Fast-Search") {
+        if  tester.viewExistsWithLabel("OK") {
             tester.tapViewWithAccessibilityLabel("OK")
             tester.tapViewWithAccessibilityLabel("Address and Search")
             tester.waitForSoftwareKeyboard()
@@ -60,7 +60,8 @@ extension XCTestCase {
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
         for accessibilityLabel in accessibilityLabels {
-            tester.swipeViewWithAccessibilityLabel(accessibilityLabel, inDirection: KIFSwipeDirection.Left)
+            tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
+            tester.tapViewWithAccessibilityLabel("closeTab")
             tester.waitForTimeInterval(1)
         }
         tester.tapViewWithAccessibilityLabel("cliqzBack")
