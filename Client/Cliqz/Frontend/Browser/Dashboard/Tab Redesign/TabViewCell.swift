@@ -59,6 +59,7 @@ class TabViewCell: UICollectionViewCell {
         delete_button.setImage(UIImage(named: "find_close")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
         displayView.addSubview(delete_button)
         deleteButton = delete_button
+        deleteButton.accessibilityLabel = "closeTab"
         
         //domainLabel
         let domain_label = UILabel()
@@ -75,6 +76,7 @@ class TabViewCell: UICollectionViewCell {
         description_label.numberOfLines = 0
         displayView.addSubview(description_label)
         descriptionLabel = description_label
+        //descriptionLabel.accessibilityLabel = "New Tab, Most visited sites and News"
         
         //bigLogoImage
         let big_logo_imageView = UIImageView()
@@ -89,6 +91,8 @@ class TabViewCell: UICollectionViewCell {
         smallCenterImageView = smaller_imageView
 
         super.init(frame: frame)
+        
+        self.displayView.accessibilityLabel = "New Tab, Most visited sites and News"
         
         self.deleteButton.addTarget(self, action: #selector(didPressDelete), forControlEvents: .TouchUpInside)
         
@@ -179,7 +183,7 @@ class TabViewCell: UICollectionViewCell {
                 make.height.equalTo(self.contentView.frame.width * Knobs.cellHeightMultiplier)
             }
             
-            self.logoImageView.snp_makeConstraints { (make) in
+            self.logoImageView.snp_remakeConstraints { (make) in
                 self.logoImageView.hidden = false
                 make.top.equalTo(self.displayView)
                 make.left.equalTo(self.displayView).inset(10)
@@ -268,12 +272,14 @@ class TabViewCell: UICollectionViewCell {
     }
     
     func makeCellPrivate() {
+        self.isPrivateTabCell = true
         self.displayView.backgroundColor = UIColor.darkGrayColor()
         self.deleteButton.imageView?.tintColor = UIColor.whiteColor()
         self.descriptionLabel.textColor = UIConstants.PrivateModeTextColor
     }
     
     func makeCellUnprivate() {
+        self.isPrivateTabCell = false
         self.displayView.backgroundColor = UIColor.whiteColor()
         self.deleteButton.imageView?.tintColor = UIColor.darkGrayColor()
         self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
