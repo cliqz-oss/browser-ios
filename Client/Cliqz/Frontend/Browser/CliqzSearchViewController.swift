@@ -345,7 +345,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	fileprivate func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
-		              "incognito" : self.privateMode, "backend_country" : self.getCountry()] as [String : Any]
+		              "incognito" : self.privateMode,
+                      "backend_country" : self.getCountry(),
+                      "suggestionsEnabled"  : QuerySuggestions.isEnabled()] as [String : Any]
+        
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
     fileprivate func getCountry() -> String {
