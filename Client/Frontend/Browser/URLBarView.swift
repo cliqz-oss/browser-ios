@@ -463,7 +463,7 @@ class URLBarView: UIView {
         }
         
         locationTextField.applyTheme(currentTheme)
-        let querySuggestionView = QuerySuggestionView()
+        let querySuggestionView = QuerySuggestionView.sharedInstance
         querySuggestionView.delegate = self
         locationTextField.inputAccessoryView = querySuggestionView
     }
@@ -874,9 +874,8 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 
     func autocompleteTextField(_ autocompleteTextField: AutocompleteTextField, didEnterText text: String) {
         delegate?.urlBar(self, didEnterText: text)
-        
-        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
-            view.didEnterText(text)
+        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView, text.isEmpty {
+            view.clearSuggestions()
         }
     }
 
@@ -888,7 +887,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
         
         if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
-            view.didEnterText("")
+            view.clearSuggestions()
         }
         return true
     }
