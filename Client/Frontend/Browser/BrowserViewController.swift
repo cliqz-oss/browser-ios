@@ -4234,10 +4234,10 @@ extension BrowserViewController {
     func getCurrentView() -> String? {
         var currentView: String?
         
-        if let searchQuery = self.searchController?.searchQuery where  searchQuery.characters.count > 0 {
-            currentView = "cards"
-        } else if let _ = self.urlBar.currentURL where self.searchController?.view.hidden == true {
+        if let _ = self.urlBar.currentURL where self.searchController?.view.hidden == true {
             currentView = "web"
+        } else if let searchQuery = self.searchController?.searchQuery where  searchQuery.characters.count > 0 {
+            currentView = "cards"
         } else {
             currentView = "home"
         }
