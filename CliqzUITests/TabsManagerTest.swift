@@ -28,10 +28,10 @@ class TabsManagerTest: KIFTestCase {
         super.tearDown()
     }
     func testTabRemoval() {
-        openWebPage("http://cliqz.com/")
+        openWebPage("https://cdn.cliqz.com/mobile/browser/tests/testpage.html")
         tester.waitForTimeInterval(1)
         showToolBar()
-        resetApp(["https://cliqz.com/"])
+        resetApp(["https://cdn.cliqz.com/mobile/browser/tests/testpage.html"])
     }
 
     func testBackButton() {
