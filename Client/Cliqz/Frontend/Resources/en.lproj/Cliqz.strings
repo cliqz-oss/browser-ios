@@ -352,7 +352,7 @@
 "Block Ads footer" = "Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.";
 
 /* [Settings -> Block Ads] Fair Blocking footer */
-"Fair Mode footer" = "A `fair` mode that shows ads in clearly defined cases only will be added soon.";
+"Fair Mode footer" = "A \"fair\" mode that shows ads in clearly defined cases only will be added soon.";
 
 /* [Settings -> Clear Private Data] Clear Private Data footer */
 "Clear Private Data footer" = "Only the selected data above will be cleared.";
