@@ -27,16 +27,77 @@ class TabViewCell: UICollectionViewCell {
     let displayView: UIView
     let gradientView: UIView
     weak var delegate: TabViewCellDelegate?
-    var logoImageView: UIImageView
+    private var logoImageView: UIImageView
+    private var fakeLogoView: UIView?
     var domainLabel: UILabel
     var descriptionLabel: UILabel
     private var bigLogoImageView: UIImageView
-    private var smallCenterImageView:UIImageView
+    private var smallCenterImageView: UIImageView
+    private var fakeSmallCenterView: UIView?
+    
     var deleteButton: UIButton
     var isPrivateTabCell: Bool = false
     var clickedElement: String?
     
     private var currentTransform: CATransform3D?
+    
+    func showShadow(visible:Bool) {
+        if visible{
+            layer.shadowColor = UIColor.blackColor().CGColor
+        }
+        else{
+            layer.shadowColor = UIColor.clearColor().CGColor
+        }
+    }
+    
+    func makeCellPrivate() {
+        self.isPrivateTabCell = true
+        self.displayView.backgroundColor = UIColor.darkGrayColor()
+        self.deleteButton.imageView?.tintColor = UIColor.whiteColor()
+        self.descriptionLabel.textColor = UIConstants.PrivateModeTextColor
+    }
+    
+    func makeCellUnprivate() {
+        self.isPrivateTabCell = false
+        self.displayView.backgroundColor = UIColor.whiteColor()
+        self.deleteButton.imageView?.tintColor = UIColor.darkGrayColor()
+        self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
+    }
+    
+    func setSmallUpperLogo(image:UIImage?) {
+        guard let image = image else { return }
+        self.logoImageView.image = image
+    }
+    
+    func setBigLogo(image:UIImage?) {
+        guard let image = image else { return }
+        self.smallCenterImageView.image = image
+        let bg_color = image.getPixelColor(CGPoint(x: 10,y: 10))
+        self.bigLogoImageView.backgroundColor = bg_color
+    }
+    
+    func setSmallUpperLogoView(view:UIView?) {
+        guard let view = view else { return }
+        self.fakeLogoView = view
+        self.displayView.addSubview(view)
+        self.displayView.bringSubviewToFront(view)
+        view.snp_makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self.logoImageView)
+        }
+    }
+    
+    func setBigLogoView(view:UIView?) {
+        guard let view = view else { return }
+        self.fakeSmallCenterView = view
+        self.displayView.addSubview(view)
+        self.displayView.bringSubviewToFront(view)
+        view.snp_remakeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self.smallCenterImageView)
+        }
+        let bg_color = view.backgroundColor
+        self.bigLogoImageView.backgroundColor = bg_color
+    }
+    
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -149,6 +210,11 @@ class TabViewCell: UICollectionViewCell {
         self.bigLogoImageView.image = nil
         self.bigLogoImageView.backgroundColor = UIColor(colorString:"E5E4E5")
         self.smallCenterImageView.image = nil
+        
+        self.fakeLogoView?.removeFromSuperview()
+        self.fakeSmallCenterView?.removeFromSuperview()
+        self.fakeLogoView = nil
+        self.fakeSmallCenterView = nil
     }
     
     override func layoutSubviews() {
@@ -262,34 +328,7 @@ class TabViewCell: UICollectionViewCell {
         
     }
     
-    func showShadow(visible:Bool) {
-        if visible{
-            layer.shadowColor = UIColor.blackColor().CGColor
-        }
-        else{
-            layer.shadowColor = UIColor.clearColor().CGColor
-        }
-    }
-    
-    func makeCellPrivate() {
-        self.isPrivateTabCell = true
-        self.displayView.backgroundColor = UIColor.darkGrayColor()
-        self.deleteButton.imageView?.tintColor = UIColor.whiteColor()
-        self.descriptionLabel.textColor = UIConstants.PrivateModeTextColor
-    }
-    
-    func makeCellUnprivate() {
-        self.isPrivateTabCell = false
-        self.displayView.backgroundColor = UIColor.whiteColor()
-        self.deleteButton.imageView?.tintColor = UIColor.darkGrayColor()
-        self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
-    }
-    
-    func setBigLogo(image:UIImage) {
-        self.smallCenterImageView.image = image
-        let bg_color = image.getPixelColor(CGPoint(x: 10,y: 10))
-        self.bigLogoImageView.backgroundColor = bg_color
-    }
+ 
     
     @objc
     func didPressDelete(sender:UIButton) {

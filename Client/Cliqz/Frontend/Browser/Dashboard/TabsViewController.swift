@@ -212,18 +212,19 @@ extension TabsViewController: UICollectionViewDataSource {
         
         //tab.displayFavicon?.url
         
-        cell.logoImageView.image = nil
-        
         
         if let url = tab.displayURL?.absoluteString {
             LogoLoader.loadLogo(url, completionBlock: { (image, error) in
-                if let img = image{
-                    if cell.tag == indexPath.row{
-                        if cell.logoImageView.image == nil {
-                            cell.logoImageView.image = img
-                        }
-                        cell.setBigLogo(img)
-                    }
+                guard cell.tag == indexPath.row else { return }
+                if image != nil{
+                    cell.setSmallUpperLogo(image)
+                    cell.setBigLogo(image)
+                }
+                else {
+                    let fakeLogo = LogoLoader.generateFakeLogo(url)
+                    cell.setBigLogoView(fakeLogo)
+                    let secondFakeLogo = LogoLoader.generateFakeLogo(url)
+                    cell.setSmallUpperLogoView(secondFakeLogo)
                 }
             })
         }
