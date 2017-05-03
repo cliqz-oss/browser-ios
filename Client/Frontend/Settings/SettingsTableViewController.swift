@@ -475,7 +475,12 @@ class SettingsTableViewController: UITableViewController {
             
         }
     }
-
+    // Cliqz: used to refresh the settings table after doing actions (like restore topsites)
+    func reloadSettings() {
+        settings = generateSettings()
+        tableView.reloadData()
+    }
+    
     // Override to provide settings in subclasses
     func generateSettings() -> [SettingSection] {
         return []
