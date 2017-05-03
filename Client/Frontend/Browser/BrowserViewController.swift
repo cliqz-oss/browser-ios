@@ -2181,6 +2181,7 @@ extension BrowserViewController: TabToolbarDelegate {
                 closeAllTabsHandler = { (action: UIAlertAction) in
                     self.tabManager.removeAll()
                     self.logWebMenuSignal("click", target: "close_all_tabs")
+                    self.switchToSearchModeIfNeeded()
                 }
             }
             
