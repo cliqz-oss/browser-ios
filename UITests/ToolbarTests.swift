@@ -61,6 +61,7 @@ class ToolbarTests: KIFTestCase, UITextFieldDelegate {
         tester().waitForTappableViewWithAccessibilityLabel("Menu")
         tester().tapViewWithAccessibilityLabel("Show Tabs")
         tester().swipeViewWithAccessibilityLabel("Page 1", inDirection: KIFSwipeDirection.Left)
+        tester.waitForAnimationsToFinish()
 
         // Go Back to other tab to see if all buttons are disabled.
         tester().tapViewWithAccessibilityLabel("home")
