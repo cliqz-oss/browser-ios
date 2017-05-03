@@ -351,7 +351,7 @@
 "Block Ads footer" = "Cliqz Browser muss zuerst Informationspakete herunterladen, damit der Werbeblocker effizient funktioniert. Dazu muss die App mit einem WLAN verbunden sein.";
 
 /* [Settings -> Block Ads] Fair Blocking footer */
-"Fair Mode footer" = "Ein `fairer` Modus, der Werbung nur nach bestimmten Kriterien zulässt, ist in Planung.";
+"Fair Mode footer" = "Ein \"fairer\" Modus, der Werbung nur nach bestimmten Kriterien zulässt, ist in Planung.";
 
 /* [Settings -> Clear Private Data] Clear Private Data footer */
 "Clear Private Data footer" = "Nur die ausgewählten Daten werden gelöscht.";
