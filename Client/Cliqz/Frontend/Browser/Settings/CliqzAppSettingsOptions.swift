@@ -243,13 +243,27 @@ class EnablePushNotifications: BoolSetting {
 class RestoreTopSitesSetting: Setting {
     
 	let profile: Profile
-	
+	weak var settingsViewController: SettingsTableViewController?
+    
 	init(settings: SettingsTableViewController) {
 		self.profile = settings.profile
-        super.init(title: NSAttributedString(string: NSLocalizedString("Restore Most Visited Websites", tableName: "Cliqz", comment: "[Settings] Restore Most Visited Websites"), attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
+        self.settingsViewController = settings
+        let hiddenTopsitesCount = self.profile.history.getHiddenTopSitesCount()
+        var attributes: [String : AnyObject]?
+        if hiddenTopsitesCount > 0 {
+            attributes = [NSForegroundColorAttributeName: UIConstants.HighlightBlue]
+        } else {
+            attributes = [NSForegroundColorAttributeName: UIColor.lightGrayColor()]
+        }
+        
+        super.init(title: NSAttributedString(string: NSLocalizedString("Restore Most Visited Websites", tableName: "Cliqz", comment: "[Settings] Restore Most Visited Websites"), attributes: attributes))
     }
     
     override func onClick(navigationController: UINavigationController?) {
+        guard self.profile.history.getHiddenTopSitesCount() > 0 else {
+            return
+        }
+        
         let alertController = UIAlertController(
             title: "",
             message: NSLocalizedString("All most visited websites will be shown again on the startpage.", tableName: "Cliqz", comment: "[Settings] Text of the 'Restore Most Visited Websites' alert"),
@@ -265,7 +279,9 @@ class RestoreTopSitesSetting: Setting {
             UIAlertAction(title: self.title?.string, style: .Destructive) { (action) in
                 // reset top-sites
 				self.profile.history.deleteAllHiddenTopSites()
-				
+                
+                self.settingsViewController?.reloadSettings()
+                
                 // log telemetry signal
                 let confirmSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "confirm", nil, nil)
                 TelemetryLogger.sharedInstance.logEvent(confirmSignal)

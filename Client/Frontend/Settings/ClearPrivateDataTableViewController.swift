@@ -51,7 +51,7 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
 
     private var clearButtonEnabled = true {
         didSet {
-            clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.DestructiveRed : UIColor.lightGrayColor()
+            clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.HighlightBlue : UIColor.lightGrayColor()
         }
     }
     override func getSectionFooter(section: Int) -> String {
