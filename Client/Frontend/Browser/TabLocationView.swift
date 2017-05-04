@@ -308,7 +308,7 @@ class TabLocationView: UIView {
         
         urlTextField.attributedText = attributedString
         urlTextField.textAlignment = .Center
-        urlTextFieldWidth = attributedString.size().width + 25
+        urlTextFieldWidth = attributedString.size().width + 30
         
         let maxUrlTextFieldWidth = getMaxUrlTextFieldWidth()
         if urlTextFieldWidth > maxUrlTextFieldWidth {

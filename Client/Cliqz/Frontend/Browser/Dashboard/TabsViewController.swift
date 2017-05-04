@@ -76,18 +76,26 @@ class TabsViewController: UIViewController {
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
 
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
-        
+     
 	}
-
+    
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		self.collectionView.reloadData()
+        
 	}
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.setupConstraints()
 	}
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let currentTabIndex = NSIndexPath(forRow: self.tabManager.selectedIndex, inSection: 0)
+        self.collectionView.scrollToItemAtIndexPath(currentTabIndex, atScrollPosition:.CenteredVertically, animated: false)
+    }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         
