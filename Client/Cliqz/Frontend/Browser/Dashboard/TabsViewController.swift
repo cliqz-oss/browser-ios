@@ -306,8 +306,12 @@ extension TabsViewController: TabViewCellDelegate {
         else if swipe == .Left {
             action = "swipe_left"
         }
-        
-        self.tabManager.removeTab(tab)
+        if self.tabManager.tabs.count == 1 {
+            self.tabManager.removeTab(tab)
+            self.navigationController?.popViewControllerAnimated(false)
+        } else {
+            self.tabManager.removeTab(tab)
+        }
         
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
     }
