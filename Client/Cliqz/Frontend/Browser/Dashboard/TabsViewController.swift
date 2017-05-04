@@ -17,7 +17,8 @@ class Knobs{
 
 class TabsViewController: UIViewController {
 	
-	//private var tabsView: UITableView!
+    private let emptyTabDefaultLogoUrl = "https://cliqz.com"
+    
     var collectionView: UICollectionView!
 	private var addTabButton: UIButton!
 
@@ -210,24 +211,21 @@ extension TabsViewController: UICollectionViewDataSource {
             cell.makeCellUnprivate()
         }
         
-        //tab.displayFavicon?.url
+        let url = tab.displayURL?.absoluteString ?? emptyTabDefaultLogoUrl
         
-        
-        if let url = tab.displayURL?.absoluteString {
-            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
-                guard cell.tag == indexPath.row else { return }
-                if image != nil{
-                    cell.setSmallUpperLogo(image)
-                    cell.setBigLogo(image)
-                }
-                else {
-                    let fakeLogo = LogoLoader.generateFakeLogo(url)
-                    cell.setBigLogoView(fakeLogo)
-                    let secondFakeLogo = LogoLoader.generateFakeLogo(url)
-                    cell.setSmallUpperLogoView(secondFakeLogo)
-                }
-            })
-        }
+        LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+            guard cell.tag == indexPath.row else { return }
+            if image != nil{
+                cell.setSmallUpperLogo(image)
+                cell.setBigLogo(image)
+            }
+            else {
+                let fakeLogo = LogoLoader.generateFakeLogo(url)
+                cell.setBigLogoView(fakeLogo)
+                let secondFakeLogo = LogoLoader.generateFakeLogo(url)
+                cell.setSmallUpperLogoView(secondFakeLogo)
+            }
+        })
         
         
         cell.accessibilityLabel = tab.displayURL?.absoluteString
