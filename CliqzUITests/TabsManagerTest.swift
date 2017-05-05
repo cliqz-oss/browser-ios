@@ -27,6 +27,7 @@ class TabsManagerTest: KIFTestCase {
         }
         super.tearDown()
     }
+    
     func testTabRemoval() {
         openWebPage("https://cdn.cliqz.com/mobile/browser/tests/testpage.html")
         tester.waitForTimeInterval(1)
@@ -40,7 +41,15 @@ class TabsManagerTest: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Back")
         XCTAssertTrue(tester.viewExistsWithLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html"), "The initial webpage that was opened is not displayed, It should be!")
         resetApp(["https://cdn.cliqz.com/mobile/browser/tests/forward_test.html"])
-        
     }
-
+    
+    func testTabsManager(){
+        tester.waitForAnimationsToFinish()
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        XCTAssertTrue(tester.viewExistsWithLabel("New Tab, Most visited sites and News"), "Tabs overview is not shown or New Tab is not shown. ")
+        tester.tapViewWithAccessibilityLabel("cliqzBack")
+        resetApp(["New Tab, Most visited sites and News"])
+    }
+    
 }
