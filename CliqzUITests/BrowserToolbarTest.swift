@@ -22,7 +22,6 @@ class BrowserToolbarTest: KIFTestCase {
         }
         if tester.viewExistsWithLabel("cliqzBack"){
             tester.tapViewWithAccessibilityLabel("closeTab")
-            tester.tapViewWithAccessibilityLabel("cliqzBack")
         }
         super.tearDown()
     }
@@ -81,15 +80,56 @@ class BrowserToolbarTest: KIFTestCase {
         resetApp(["New Tab, Most visited sites and News"])
     }
     
-    func testForgetMode(){
-//        TO DO Check the background color
+    func testForgetTab(){
         tester.waitForAnimationsToFinish()
         showToolBar()
         tester.longPressViewWithAccessibilityLabel("Show Tabs", duration: 1)
         tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
         tester.waitForViewWithAccessibilityLabel("Forget Tab")
-        XCTAssertTrue(tester.viewExistsWithLabel("Forget Tab"))
+        let darkview = tester.waitForViewWithAccessibilityLabel("Forget Mode Background")
+        XCTAssertEqual(darkview.backgroundColor, UIColor.grayColor(),"View is not expected color it is\(darkview.backgroundColor) ")
         resetApp(["New Tab, Most visited sites and News", "New Tab, Most visited sites and News"])
     }
     
+    func testForgetTabInTabsOVerview(){
+        tester.waitForAnimationsToFinish()
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.longPressViewWithAccessibilityLabel("+", duration: 1)
+        tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
+        tester.waitForViewWithAccessibilityLabel("Forget Tab")
+        let darkview = tester.waitForViewWithAccessibilityLabel("Forget Mode Background")
+        XCTAssertEqual(darkview.backgroundColor, UIColor.grayColor(),"View is not expected color it is\(darkview.backgroundColor) ")
+        resetApp(["New Tab, Most visited sites and News", "New Tab, Most visited sites and News"])
+    }
+    func testForgetTabDeletionSwipeLeft(){
+        tester.waitForAnimationsToFinish()
+        showToolBar()
+        tester.longPressViewWithAccessibilityLabel("Show Tabs", duration: 1)
+        tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
+        tester.waitForViewWithAccessibilityLabel("Forget Tab")
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Left)
+    }
+    
+    func testForgetTabDeletionSwipeRight(){
+        tester.waitForAnimationsToFinish()
+        showToolBar()
+        tester.longPressViewWithAccessibilityLabel("Show Tabs", duration: 1)
+        tester.tapViewWithAccessibilityLabel("Open New Forget Tab")
+        tester.waitForViewWithAccessibilityLabel("Forget Tab")
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.swipeViewWithAccessibilityLabel("New Tab, Most visited sites and News", inDirection: KIFSwipeDirection.Right)
+    }
+
+    
+    func testInitialTabCount(){
+        tester.waitForAnimationsToFinish()
+        showToolBar()
+        let showTabs = tester.waitForViewWithAccessibilityLabel("Show Tabs")as! UIButton
+        XCTAssertTrue(showTabs.accessibilityValue == "1", "Initial tab count is not one, it should be!")
+    }
+
 }

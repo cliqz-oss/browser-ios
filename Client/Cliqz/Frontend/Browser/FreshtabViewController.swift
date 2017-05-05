@@ -595,7 +595,7 @@ extension FreshtabViewController: TopSiteCellDelegate {
 extension FreshtabViewController {
     private func logTopsiteSignal(action: String, index: Int) {
      
-        let customData: [String: AnyObject] = ["topsite_count": getDisplayedTopsitesCount(), "index": index]
+        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "index": index]
         self.logFreshTabSignal(action, target: "topsite", customData: customData)
     }
     
@@ -605,7 +605,7 @@ extension FreshtabViewController {
     }
     
     private func logTopsiteEditModeSignal() {
-        let customData: [String: AnyObject] = ["topsite_count": getDisplayedTopsitesCount(), "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
+        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
         self.logFreshTabSignal("click", target: nil, customData: customData)
     }
     
@@ -617,7 +617,7 @@ extension FreshtabViewController {
     
     private func logShowSignal() {
         let loadDuration = Int(NSDate.getCurrentMillis() - startTime)
-        var customData: [String: AnyObject] = ["topsite_count": getDisplayedTopsitesCount(), "load_duration": loadDuration]
+        var customData: [String: AnyObject] = ["topsite_count": topSites.count, "load_duration": loadDuration]
         if isLoadCompleted {
             customData["is_complete"] = true
             let breakingNews = news.filter() {
@@ -648,11 +648,5 @@ extension FreshtabViewController {
     private func logFreshTabSignal(action: String, target: String?, customData: [String: AnyObject]?) {
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
     }
-    private func getDisplayedTopsitesCount() -> Int {
-        let topSitesCount = topSites.count
-        return (topSitesCount > 8) ? 8 : topSitesCount
-
-    }
-
     
 }

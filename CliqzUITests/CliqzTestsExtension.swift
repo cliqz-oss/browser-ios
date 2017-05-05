@@ -55,7 +55,6 @@ extension XCTestCase {
             tester.waitForAbsenceOfSoftwareKeyboard()
             tester.waitForViewWithAccessibilityLabel("Show Tabs")
         }
-        
     }
     
     func resetApp(accessibilityLabels: [String]){
@@ -67,8 +66,6 @@ extension XCTestCase {
             tester.tapViewWithAccessibilityLabel("closeTab")
             tester.waitForTimeInterval(1)
         }
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
         if tester.viewExistsWithLabel("Go"){
         }
         else{
@@ -84,7 +81,7 @@ extension XCTestCase {
     
     func changeAndCheckSearchEngineLabel(accessibilityLabel:String){
         tester.tapViewWithAccessibilityLabel(accessibilityLabel)
-        XCTAssertTrue((tester.waitForViewWithAccessibilityLabel(accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine Twitter was not selected after tapping it")
+        XCTAssertTrue((tester.waitForViewWithAccessibilityLabel(accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine \(accessibilityLabel) was not selected after tapping it")
         tester.tapViewWithAccessibilityLabel("Settings")
         XCTAssertTrue(tester.viewExistsWithLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)"), "Search Engine Label did not change to \(accessibilityLabel)")
         tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)")

@@ -25,7 +25,6 @@ class AntiPhishingTest: KIFTestCase{
         }
         if tester.viewExistsWithLabel("cliqzBack"){
             tester.tapViewWithAccessibilityLabel("closeTab")
-            tester.tapViewWithAccessibilityLabel("cliqzBack")
         }
         super.tearDown()
     }
@@ -43,7 +42,6 @@ class AntiPhishingTest: KIFTestCase{
         tester.tapViewWithAccessibilityLabel("Back to safe site")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("closeTab")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(2)
     }
     
