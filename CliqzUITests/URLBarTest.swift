@@ -43,9 +43,10 @@ class URLBarTest: KIFTestCase {
         tester.waitForViewWithAccessibilityLabel("Tabs")
         tester.waitForViewWithAccessibilityLabel("+")
         tester.tapViewWithAccessibilityLabel("+")
+        showToolBar()
         XCTAssertTrue(x.accessibilityValue == "2", "Less than two or more than two tabs are open, Two tabs should be opened!")
         
-        resetApp(["New Tab, Most visited sites and News"])
+        resetApp(["New Tab, Most visited sites and News","New Tab, Most visited sites and News"])
     }
     
 }

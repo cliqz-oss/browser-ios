@@ -398,6 +398,7 @@ class BrowserViewController: UIViewController {
         webViewContainerBackdrop = UIView()
         webViewContainerBackdrop.backgroundColor = UIColor.grayColor()
         webViewContainerBackdrop.alpha = 0
+        webViewContainerBackdrop.accessibilityLabel = "Forget Mode Background"
         view.addSubview(webViewContainerBackdrop)
 
         webViewContainer = UIView()

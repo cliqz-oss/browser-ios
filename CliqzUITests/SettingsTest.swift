@@ -21,7 +21,6 @@ class SettingsTests: KIFTestCase {
         }
         if tester.viewExistsWithLabel("cliqzBack"){
             tester.tapViewWithAccessibilityLabel("closeTab")
-            tester.tapViewWithAccessibilityLabel("cliqzBack")
         }
         super.tearDown()
     }
@@ -62,9 +61,6 @@ class SettingsTests: KIFTestCase {
         let Label = searchUrl.accessibilityValue!
         tester.swipeViewWithAccessibilityLabel("\(Label)", inDirection: KIFSwipeDirection.Left)
         tester.waitForAnimationsToFinish()
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-        
     }
 
     func testSearchEngineChangeCheckmark(){
@@ -82,8 +78,6 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Google")
         tester.tapViewWithAccessibilityLabel("Settings")
         tester.tapViewWithAccessibilityLabel("Done")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
     }
 
     func testBlockPopUpWindowsWhenEnabledByDefault() {
@@ -97,16 +91,13 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(popUpSlider.accessibilityValue == "1", "Block Pop-up Windows is not turned on, It should be on!")
         tester.tapViewWithAccessibilityLabel("Done")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
-        
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         openWebPage("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html")
         XCTAssertTrue(tabsCounter.accessibilityValue == "1", "More than one tab is opened, Only one tab should be opened")
         tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
         tester.waitForAnimationsToFinish()
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
-    }
+            }
 
     func testBlockPopUpWindowsWhenDisabled(){
         //        Tests if the popups are blocked when pop-up blocker is activated
@@ -129,6 +120,8 @@ class SettingsTests: KIFTestCase {
         tester.waitForAnimationsToFinish()
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", inDirection: KIFSwipeDirection.Left)
         tester.waitForAnimationsToFinish()
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
         tester.tapViewWithAccessibilityLabel("Settings")
         tester.swipeViewWithAccessibilityLabel("Block Pop-up Windows", value: "0", traits:UIAccessibilityTraitButton, inDirection: KIFSwipeDirection.Right)
         tester.waitForAnimationsToFinish()
@@ -163,9 +156,65 @@ class SettingsTests: KIFTestCase {
         tester.tapViewWithAccessibilityLabel("Done")
         tester.swipeViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/popup_test.html", inDirection: KIFSwipeDirection.Left)
         tester.waitForAnimationsToFinish()
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(1)
     }
-
+    
+    func testViewSearchResultsForSettings(){
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Search Results for, Germany")
+        XCTAssertTrue(tester.waitForViewWithAccessibilityLabel("Germany", traits: UIAccessibilityTraitSelected) != nil ,"Search results for Germany is not selected.")
+        tester.tapViewWithAccessibilityLabel("France")
+        XCTAssertTrue(tester.waitForViewWithAccessibilityLabel("France", traits: UIAccessibilityTraitSelected) != nil ,"Search results for  France is not selected.")
+        tester.tapViewWithAccessibilityLabel("United States")
+        XCTAssertTrue(tester.waitForViewWithAccessibilityLabel("United States", traits: UIAccessibilityTraitSelected) != nil ,"Search results for United States is not selected.")
+    }
+    
+    func testViewHumanWebSettings(){
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Human Web, On")
+        let humanWebSlider = tester.waitForViewWithAccessibilityLabel("Human Web", traits: UIAccessibilityTraitButton)
+        XCTAssertTrue(humanWebSlider.accessibilityValue == "1", "Human web is not activated by Default, it should be activated.")
+    }
+    
+    func testViewAdBlockSettings(){
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Ad-Blocking (Beta), Off")
+        let adBlockSlider = tester.waitForViewWithAccessibilityLabel("Ad-Blocking (Beta)", traits: UIAccessibilityTraitButton)
+        XCTAssertTrue(adBlockSlider.accessibilityValue == "0", "Ad-Blocking (Beta) is activated by Default, it shouldn't be activated.")
+    }
+    
+    func testViewClearPrivateDataSettings(){
+        showToolBar()
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("Clear Private Data")
+        let browsingHistorySlider = tester.waitForViewWithAccessibilityLabel("Browsing History", traits: UIAccessibilityTraitButton)
+        let favoritesSlider = tester.waitForViewWithAccessibilityLabel("Favorites", traits: UIAccessibilityTraitButton)
+        let cacheSlider = tester.waitForViewWithAccessibilityLabel("Cache", traits: UIAccessibilityTraitButton)
+        let cookiesSlider = tester.waitForViewWithAccessibilityLabel("Cookies", traits: UIAccessibilityTraitButton)
+        let offlineWebsiteDataSlider = tester.waitForViewWithAccessibilityLabel("Offline Website Data", traits: UIAccessibilityTraitButton)
+        XCTAssertTrue(browsingHistorySlider.accessibilityValue == "1", "Browsing History is  not activated by Default, it should be activated.")
+        XCTAssertTrue(favoritesSlider.accessibilityValue == "0", "Favorites is activated by Default, it shouldn't be activated.")
+        XCTAssertTrue(cacheSlider.accessibilityValue == "0", "Cache is activated by Default, it shouldn't be activated.")
+        XCTAssertTrue(cookiesSlider.accessibilityValue == "0", "Cookies is activated by Default, it shouldn't be activated.")
+        XCTAssertTrue(offlineWebsiteDataSlider.accessibilityValue == "0", "Offline Website Data is activated by Default, it shouldn't be activated.")
+    }
+    
+//    func testRestoreMostVisitedWebsites(){
+//        showToolBar()
+//        tester.tapViewWithAccessibilityLabel("Show Tabs")
+//        tester.tapViewWithAccessibilityLabel("Settings")
+//        tester.tapViewWithAccessibilityLabel("Restore Most Visited Websites")
+//        XCTAssertTrue(tester.viewExistsWithLabel("Restore Most Visited Websites"), "Restore Most Visited Websites pop up is not displayed")
+//        XCTAssertTrue(tester.viewExistsWithLabel("Cancel"), "Restore Most Visited Websites pop up is not displayed")
+//        tester.tapViewWithAccessibilityLabel("Cancel")
+//    }
+    
 }
+
 
