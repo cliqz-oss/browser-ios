@@ -14,13 +14,14 @@ protocol TopSiteCellDelegate: NSObjectProtocol {
 }
 
 class TopSiteViewCell: UICollectionViewCell {
-	
+
 	weak var delegate: TopSiteCellDelegate?
-	
+
 	lazy var logoContainerView = UIView()
 	lazy var logoImageView: UIImageView = UIImageView()
 	var fakeLogoView: UIView?
-	
+	lazy var logoHostLabel = UILabel()
+
 	lazy var deleteButton: UIButton = {
 		let b = UIButton(type: .Custom)
 		b.setImage(UIImage(named: "removeTopsite"), forState: .Normal)
@@ -52,13 +53,12 @@ class TopSiteViewCell: UICollectionViewCell {
 		super.init(frame: frame)
 		self.backgroundColor = UIColor.clearColor()
 		self.contentView.backgroundColor = UIColor.clearColor()
-        
+
 		self.contentView.addSubview(self.logoContainerView)
 		logoContainerView.snp_makeConstraints { make in
 			make.top.equalTo(self.contentView.frame.origin.y + 8)
-            make.bottom.equalTo(self.contentView.frame.origin.y - 8)
 			make.left.equalTo(self.contentView.frame.origin.x + 8)
-			make.right.equalTo(self.contentView.frame.origin.x - 8)
+			make.height.width.equalTo(60)
 		}
 
 		self.logoContainerView.addSubview(self.logoImageView) //isn't this a retain cycle?
@@ -71,7 +71,14 @@ class TopSiteViewCell: UICollectionViewCell {
         self.logoContainerView.layer.borderColor = UIColor.clearColor().CGColor//UIConstants.AppBackgroundColor.CGColor
         self.logoContainerView.layer.shouldRasterize = false
 		self.logoContainerView.clipsToBounds = true
-        
+		
+		self.contentView.addSubview(self.logoHostLabel);
+		self.logoHostLabel.snp_makeConstraints { (make) in
+			make.left.right.bottom.equalTo(self.contentView)
+			make.top.equalTo(self.logoContainerView.snp_bottom).offset(3)
+		}
+		self.logoHostLabel.textAlignment = .Center
+		self.logoHostLabel.font = UIFont.systemFontOfSize(10)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -84,6 +91,7 @@ class TopSiteViewCell: UICollectionViewCell {
 		self.fakeLogoView?.removeFromSuperview()
 		self.fakeLogoView = nil
 		self.deleteButton.removeFromSuperview()
+		self.logoHostLabel.text = ""
 	}
 	
 	private func startWobbling() {
@@ -110,6 +118,7 @@ class TopSiteViewCell: UICollectionViewCell {
         self.fakeLogoView?.removeFromSuperview()
         self.fakeLogoView = nil
         self.isDeleteMode = false
+		self.logoHostLabel.text = ""
 		self.delegate?.topSiteHided(self.tag)
 	}
 }

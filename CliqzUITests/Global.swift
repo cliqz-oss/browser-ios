@@ -1,4 +1,4 @@
-//
+                                                              //
 //  Global.swift
 //  Client
 //
@@ -28,6 +28,7 @@ extension XCTestCase {
 	private func system(file : String = #file, _ line : Int = #line) -> KIFSystemTestActor {
 		return KIFSystemTestActor(inFile: file, atLine: line, delegate: self)
 	}
+    
 }
 
 extension KIFUITestActor {
@@ -149,5 +150,16 @@ extension KIFUITestActor {
         
         return webView
     }
+    
 
 }
+//TO_DO Create a class that resets the browser to freshtab so that it is called before each test
+// check Client>UItests>Global.swift>resetToAboutHome(tester:)
+                                                              
+//class BrowserUtils{
+//    class func resetToFreshTab(tester: KIFTestActor){
+//        do{
+//        try tester.tryFindingTappableViewWithAccessibilityLabel}
+//    
+//    }
+//}

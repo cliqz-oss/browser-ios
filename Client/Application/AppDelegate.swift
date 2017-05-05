@@ -193,10 +193,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             sendCorePing()
         }
 
-
         sendCorePing()
-
-        
+		
         log.debug("Done with setting up the application.")
 
         return true
@@ -282,13 +280,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Cliqz: Added Lookback integration
 #if BETA
-		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
-		Lookback.sharedLookback().shakeToRecord = true
+//		Lookback.setupWithAppToken("HWiD4ErSbeNy9JcRg")
+//		Lookback.sharedLookback().shakeToRecord = true
 //		Lookback.sharedLookback() = false
 #endif
-        // Configure AntiTracking Module
+        // Configure AntiTracking/AdBlocking Module
         AntiTrackingModule.sharedInstance.initModule()
-
+        AdblockingModule.sharedInstance.initModule()
+        
         log.debug("Done with applicationDidFinishLaunching.")
 
         return shouldPerformAdditionalDelegateHandling

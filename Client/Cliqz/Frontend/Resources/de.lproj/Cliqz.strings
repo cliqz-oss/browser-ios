@@ -253,7 +253,7 @@
 "Forget Tab" = "Vergessen Tab";
 
 /* Description on Freshtab for forget mode */
-"Forget Tab Description" = "Websites werden nicht in deinem Verlauf gespeichert. Ebenso werden temporäre Dateien und Cookies nicht gespeichert. Downloads und Lesezeichen werden aber gespeichert.\n Dein Internetdienstanbieter oder Arbeitgeber können weiterhin nachvollziehen, welche Seiten du besucht hast.";
+"Forget Tab Description" = "Du surfst im Vergessen-Modus: Webseiten, die du in diesem Modus besuchst, werden nicht in deinem Verlauf auftauchen. Auch werden lokale Daten, Cookies mit eingeschlossen, nicht gespeichert.";
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
@@ -269,3 +269,79 @@
 
 /* Localized String for specific region */
 "region-FR" = "Frankreich";
+
+/* Query Suggestion setting */
+"Search Term Suggestions" = "Suchwort-Vorschläge";
+
+/* Anti-Trakcing panel name on control center. */
+"Anti-Tracking" = "Anti-Tracking";
+
+/* Ad-Blocking panel name on control center. */
+"Ad-Blocking" = "Werbeblocker";
+
+/* Anti-Phishing panel name on control center. */
+"Anti-Phishing" = "Anti-Phishing";
+
+/* Learn more label on control center panel. */
+"Learn more" = "Mehr erfahren";
+
+/* Activate button in control center panel. */
+"Activate" = "Aktivieren";
+
+/* Anti-tracking panel title in the control center when it is enabled. */
+"Your data is protected" = "Deine Daten sind geschützt";
+
+/* Anti-tracking panel title in the control center when it is disabled
+ Anti-Phishing panel title in the control center if the current website is a phishing one. */
+"Your data is not protected" = "Deine Daten sind nicht geschützt";
+
+/* Anti-tracking panel subtitle in the control center when it is enabled. */
+"Private data points have been removed" = "Persönliche Daten wurden entfernt";
+
+/* Anti-tracking panel subtitle in the control center when it is disabled */
+"Anti-Tracking is turned off for this website" = "Anti-Tracking ist deaktiviert für diese Webseite";
+
+/* AdBlocker panel title in the control center when it is enabled. */
+"You surf the web without ads" = "Du surfst werbefrei";
+
+/* AdBlocker panel title in the control center when it is disabled. */
+"You surf the web with ads" = "Du surfst mit Werbung";
+
+/* AdBlocker panel subtitle in the control center when it is enabled. */
+"Ads have been blocked" = "Werbungen wurden geblockt";
+
+/* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
+"Ad-Blocking is turned off for this website" = "Werbeblocker ist deaktivert für diese Webseite";
+
+/* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
+"Ad-Blocking is turned off" = "Werbeblocker ist deaktiviert";
+
+/*Anti-Phishing panel description */
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert";
+
+/* Anti-Phishing panel title in the control center if the current website is safe. */
+"You are safe" = "Du bist sicher";
+
+/* Anti-Phishing panel subtitle in the control center if the current website is safe. */
+"No suspicious activities detected" = "Keine verdächtigen Aktivitäten entdeckt";
+
+/* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
+"Suspicious activities were detected" = "Verdächtige Aktivitäten wurden bemerkt";
+
+/* AntiTracking Information text for landscape mode. */
+"AntiTracking Information" = "Anti-Tracking Informationen";
+
+/* AdBlocking Information text for landscape mode. */
+"AdBlocking Information" = "Ad-Blocking Informationen";
+
+/* Alert title for turning on location service when clicking share location on local card */
+"Turn on Location Services" = "Ortungsdienste aktivieren";
+
+/* Alert message for turning on location service when clicking share location on local card */
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen für die CLIQZ-App:\n1. Wähle Standort\n2. Aktiviere 'Beim Verwenden der App'";
+
+/* Alert message for turning on location service when clicking share location on local card */
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen deines Smartphones:\n1.Aktiviere Ortungsdienste\n2.Wähle die CLIQZ App\n3.Aktiviere 'Beim Verwenden der App'";
+
+/* Not now option for turning on location service */
+"Not Now" = "Nicht Jetzt";

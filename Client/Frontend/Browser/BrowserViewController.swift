@@ -17,6 +17,7 @@ import MobileCoreServices
 import WebImage
 import Crashlytics
 
+
 private let log = Logger.browserLogger
 
 private let KVOLoading = "loading"
@@ -39,6 +40,9 @@ class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
 //    var homePanelController: CliqzSearchViewController?
     var homePanelController: FreshtabViewController?
+    
+    var controlCenterController: ControlCenterViewController?
+    var controlCenterActiveInLandscape: Bool = false
 	
     var webViewContainer: UIView!
     var menuViewController: MenuViewController?
@@ -56,7 +60,7 @@ class BrowserViewController: UIViewController {
     private var searchLoader: SearchLoader!
     private let snackBars = UIView()
     private let webViewContainerToolbar = UIView()
-    private var findInPageBar: FindInPageBar?
+    var findInPageBar: FindInPageBar?
     private let findInPageContainer = UIView()
 
     lazy private var customSearchEngineButton: UIButton = {
@@ -188,6 +192,10 @@ class BrowserViewController: UIViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
 
 		displayedPopoverController?.dismissViewControllerAnimated(true) {
 			self.displayedPopoverController = nil
@@ -260,12 +268,11 @@ class BrowserViewController: UIViewController {
         }
 
         view.setNeedsUpdateConstraints()
-        if let home = homePanelController {
+//        if let home = homePanelController {
 //            home.view.setNeedsUpdateConstraints()
-        }
+//        }
 
-        if let tab = tabManager.selectedTab,
-               webView = tab.webView {
+        if let tab = tabManager.selectedTab, webView = tab.webView {
             updateURLBarDisplayURL(tab)
             navigationToolbar.updateBackStatus(webView.canGoBack)
             navigationToolbar.updateForwardStatus(webView.canGoForward)
@@ -276,6 +283,10 @@ class BrowserViewController: UIViewController {
     override func willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
 
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
         // During split screen launching on iPad, this callback gets fired before viewDidLoad gets a chance to
         // set things up. Make sure to only update the toolbar state if the view is ready for it.
         if isViewLoaded() {
@@ -346,10 +357,7 @@ class BrowserViewController: UIViewController {
             if self.initialURL != nil {
                 // Cliqz: Added call for initial URL if one exists
                 self.loadInitialURL()
-            } else if SessionState.isSessionExpired() {
-                // Cliqz: Added call for reset state in case of session timeout
-                self.resetState()
-            }
+            } 
             // Cliqz: ask for news notification permission according to our workflow
             self.askForNewsNotificationPermissionIfNeeded()
         })
@@ -465,13 +473,9 @@ class BrowserViewController: UIViewController {
         log.debug("BVC done.")
 
         // Cliqz: start listening for user location changes
-        if profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil {
-            LocationManager.sharedInstance.startUpdateingLocation()
-        }
+        LocationManager.sharedInstance.startUpdatingLocation()
 
-		// Cliqz: Invalidate cache for the next update to force load extension 
-		invalidateCache()
-		// Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
+        // Cliqz: added observer for NotificationBadRequestDetected notification for Antitracking
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BrowserViewController.SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
         
         #if CLIQZ
@@ -559,12 +563,15 @@ class BrowserViewController: UIViewController {
         super.viewWillAppear(animated)
         log.debug("BVC super.viewWillAppear done.")
 
+        // Cliqz: Remove onboarding screen
+        /*
         // On iPhone, if we are about to show the On-Boarding, blank out the tab so that it does
         // not flash before we present. This change of alpha also participates in the animation when
         // the intro view is dismissed.
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             self.view.alpha = (profile.prefs.intForKey(IntroViewControllerSeenProfileKey) != nil) ? 1.0 : 0.0
         }
+         */
 
 		// Cliqz: Disable FF crash reporting and restoring Tabs
 /*
@@ -637,13 +644,15 @@ class BrowserViewController: UIViewController {
 
     override func viewDidAppear(animated: Bool) {
         log.debug("BVC viewDidAppear.")
-        // Cliqz: Added if statement not to show overlay mode when Intro is presented. Otherwise it should be shown in Overlay mode.
+        
+        // Cliqz: Remove onboarding screen
 //        presentIntroViewController()
-        if (!presentIntroViewController()) {
-            switchToSearchModeIfNeeded()
-            // Cliqz: ask for news notification permission according to our workflow
-            askForNewsNotificationPermissionIfNeeded()
-		}
+        
+        // Cliqz: switch to search mode if needed
+        switchToSearchModeIfNeeded()
+        // Cliqz: ask for news notification permission according to our workflow
+        askForNewsNotificationPermissionIfNeeded()
+        
         log.debug("BVC intro presented.")
         self.webViewContainerToolbar.hidden = false
 
@@ -727,14 +736,31 @@ class BrowserViewController: UIViewController {
         }
 
         readerModeBar?.snp_remakeConstraints { make in
-            make.top.equalTo(self.header.snp_bottom).constraint
-            make.height.equalTo(UIConstants.ToolbarHeight)
-            make.leading.trailing.equalTo(self.view)
+            if controlCenterActiveInLandscape{
+                make.top.equalTo(self.header.snp_bottom).constraint
+                make.height.equalTo(UIConstants.ToolbarHeight)
+                //make.leading.equalTo(self.view)
+                //make.trailing.equalTo(self.controlCenterController?)
+                make.left.equalTo(self.view)
+                make.width.equalTo(self.view.frame.width/2)
+            }
+            else{
+                make.top.equalTo(self.header.snp_bottom).constraint
+                make.height.equalTo(UIConstants.ToolbarHeight)
+                make.leading.trailing.equalTo(self.view)
+            }
         }
 
         webViewContainer.snp_remakeConstraints { make in
-            make.left.right.equalTo(self.view)
-
+            
+            if controlCenterActiveInLandscape{
+                make.left.equalTo(self.view)
+                make.width.equalTo(self.view.frame.size.width/2)
+            }
+            else{
+                make.left.right.equalTo(self.view)
+            }
+            
             if let readerModeBarBottom = readerModeBar?.snp_bottom {
                 make.top.equalTo(readerModeBarBottom)
             } else {
@@ -801,6 +827,9 @@ class BrowserViewController: UIViewController {
     private func showHomePanelController(inline inline: Bool) {
         log.debug("BVC showHomePanelController.")
         homePanelIsInline = inline
+        
+        navigationToolbar.updateForwardStatus(false)
+        navigationToolbar.updateBackStatus(false)
         
         if homePanelController == nil {
 			
@@ -888,6 +917,9 @@ class BrowserViewController: UIViewController {
                     if let readerMode = self.tabManager.selectedTab?.getHelper(name: ReaderMode.name()) as? ReaderMode where readerMode.state == .Active {
                         self.showReaderModeBar(animated: false)
                     }
+                    
+                    self.navigationToolbar.updateBackStatus(self.tabManager.selectedTab?.webView?.canGoBack ?? false)
+                    
                 }
             })
         }
@@ -987,6 +1019,8 @@ class BrowserViewController: UIViewController {
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
+        
+        self.hideHomePanelController()
 
         guard let tab = tabManager.selectedTab else {
             return
@@ -1195,7 +1229,9 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     private func updateURLBarDisplayURL(tab: Tab) {
-        urlBar.currentURL = tab.displayURL
+        if (urlBar.currentURL != tab.displayURL){
+            urlBar.currentURL = tab.displayURL
+        }
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
         // Cliqz: update the toolbar only if the search controller is not visible
         if searchController?.view.hidden == true {
@@ -1720,15 +1756,16 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidPressReaderMode(urlBar: URLBarView) {
+        self.controlCenterController?.closeControlCenter()
         if let tab = tabManager.selectedTab {
             if let readerMode = tab.getHelper(name: "ReaderMode") as? ReaderMode {
                 switch readerMode.state {
                 case .Available:
                     enableReaderMode()
-                    logToolbarReaderModeSignal(0)
+                    logToolbarReaderModeSignal(false)
                 case .Active:
                     disableReaderMode()
-                    logToolbarReaderModeSignal(1)
+                    logToolbarReaderModeSignal(true)
                 case .Unavailable:
                     break
                 }
@@ -1737,6 +1774,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLongPressReaderMode(urlBar: URLBarView) -> Bool {
+        self.controlCenterController?.closeControlCenter()
         guard let tab = tabManager.selectedTab,
                url = tab.displayURL,
                result = profile.readingList?.createRecordWithURL(url.absoluteString!, title: tab.title ?? "", addedBy: UIDevice.currentDevice().name)
@@ -1886,6 +1924,7 @@ extension BrowserViewController: URLBarDelegate {
     }
     
     func urlBarDidEnterOverlayMode(urlBar: URLBarView) {
+        self.controlCenterController?.closeControlCenter()
         // Cliqz: telemetry logging for toolbar
         self.logToolbarFocusSignal()
         // Cliqz: hide AntiTracking button in overlay mode
@@ -2078,6 +2117,10 @@ extension BrowserViewController: TabToolbarDelegate {
     
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        // check if the dashboard is already pushed before
+        guard self.navigationController?.topViewController != dashboard else {
+            return
+        }
         // Cliqz: telemetry logging for toolbar
         self.logToolbarOverviewSignal()
         
@@ -2716,7 +2759,8 @@ extension BrowserViewController: WKNavigationDelegate {
                         self.urlBar.enterOverlayMode(query, pasted: true)
                     }
                 }
-                decisionHandler(WKNavigationActionPolicy.Cancel)
+                self.urlBar.currentURL = nil
+                decisionHandler(WKNavigationActionPolicy.Allow)
             } else if navigationAction.navigationType == .LinkActivated {
                 resetSpoofedUserAgentIfRequired(webView, newURL: url)
             } else if navigationAction.navigationType == .BackForward {
@@ -3995,28 +4039,6 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 // Cliqz: Extension for BrowserViewController to put addes methods
 extension BrowserViewController {
     
-    // reset App state when session expire
-    private func resetState() {
-        
-        // remove all tabs except the first tab
-        let lastIndex = tabManager.tabs.count-1
-        for index in lastIndex.stride(to: 0, by: -1) {
-            let tab = tabManager.tabs[index]
-            tabManager.removeTab(tab)
-        }
-        
-        if let selectedTab = tabManager.selectedTab,
-            let searchController = self.searchController {
-            
-            // added delay before calling resetState to ensure that it is called after calling search with empty string
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-            dispatch_after(time, dispatch_get_main_queue(), {
-                searchController.resetState()
-                
-            })
-        }
-    }
-
     // Cliqz: Added method to show search view if needed
     private func switchToSearchModeIfNeeded() {
         if let selectedTab = self.tabManager.selectedTab {

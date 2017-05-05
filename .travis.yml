@@ -14,6 +14,8 @@ before_install:
   - brew update
   - brew upgrade xctool || true
   - brew upgrade carthage || true
+  - gem install cocoapods
+  - pod --version
   - ./bootstrap.sh
 
-script: xcodebuild -project Client.xcodeproj -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6,OS=9.3" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -c
+script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6,OS=9.3" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -c

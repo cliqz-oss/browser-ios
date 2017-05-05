@@ -82,6 +82,7 @@ class ConnectionManager {
         }
         
     }
+
     
     // MARK: - Private methods
     
