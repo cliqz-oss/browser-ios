@@ -19,19 +19,26 @@ enum Whitelisted{
 
 class CliqzURLBarView: URLBarView {
 
-	private let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
-    private let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
-	private let antitrackingButtonSize = CGSizeMake(42, CGFloat(URLBarViewUX.LocationHeight))
+	static let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
+    static let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
+	static let antitrackingButtonSize = CGSizeMake(CGFloat(URLBarViewUX.ButtonWidth), CGFloat(URLBarViewUX.LocationHeight))
 	private var trackersCount = 0
     
 	private lazy var antitrackingButton: UIButton = {
 		let button = UIButton(type: .Custom)
 		button.setTitle("0", forState: .Normal)
+        button.backgroundColor = UIColor.clearColor()
 		button.titleLabel?.font = UIFont.systemFontOfSize(12)
-        button.backgroundColor = self.colorForAntiTrackingButtonBackground(Whitelisted.undefined, newURL: nil)
         button.accessibilityLabel = "AntiTrackingButton"
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
+        
+        let buttonImage = self.imageForAntiTrackingButton(Whitelisted.undefined)
+        button.setImage(buttonImage, forState: .Normal)
+        
+        button.titleEdgeInsets = UIEdgeInsets(top: 5, left: 2, bottom: 5, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 2, bottom: 4, right: 20)
+        button.addTarget(self, action: #selector(antitrackingButtonPressed), forControlEvents: .TouchUpInside)
+        button.hidden = true
+        
 		return button
 	}()
     private lazy var newTabButton: UIButton = {
@@ -41,6 +48,9 @@ class CliqzURLBarView: URLBarView {
         button.addTarget(self, action: #selector(CliqzURLBarView.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
         return button
     }()
+    
+    static let antitrackingGreenIcon = UIImage(named: "antitrackingGreen")
+    static let antitrackingOrangeIcon = UIImage(named: "antitrackingOrange")
     
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -55,34 +65,6 @@ class CliqzURLBarView: URLBarView {
     deinit{
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-
-	override func updateConstraints() {
-		super.updateConstraints()
-		if !antitrackingButton.hidden {
-            if self.toolbarIsShowing {
-                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.URLBarButtonOffset
-                locationContainer.snp_updateConstraints { make in
-                    make.trailing.equalTo(shareButton.snp_leading).offset(-trailingPadding)
-                }
-            } else {
-                let trailingPadding = antitrackingButtonSize.width + URLBarViewUX.LocationLeftPadding
-                locationContainer.snp_updateConstraints { make in
-                    make.trailing.equalTo(self).offset(-trailingPadding)
-                }
-            }
-			
-			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
-				make.size.equalTo(self.antitrackingButtonSize)
-			})
-			if self.antitrackingButton.bounds.size != CGSizeZero {
-                
-			}
-		} else {
-			self.antitrackingButton.snp_updateConstraints(closure: { (make) in
-				make.size.equalTo(CGSizeMake(0, 0))
-			})
-		}
-	}
     
     override func prepareOverlayAnimation() {
         super.prepareOverlayAnimation()
@@ -106,6 +88,7 @@ class CliqzURLBarView: URLBarView {
 
 	func showAntitrackingButton(hidden: Bool) {
 		self.antitrackingButton.hidden = !hidden
+        self.bringSubviewToFront(self.antitrackingButton)
 		self.setNeedsUpdateConstraints()
 	}
     
@@ -131,29 +114,32 @@ class CliqzURLBarView: URLBarView {
                 newURL = url
             }
             
-            self.antitrackingButton.backgroundColor = colorForAntiTrackingButtonBackground(whitelisted, newURL: newURL)
+            let antitrackingImag = self.imageForAntiTrackingButton(whitelisted, newURL: newURL)
+            self.antitrackingButton.setImage(antitrackingImag, forState: .Normal)
         }
         else {
-            self.antitrackingButton.backgroundColor = colorForAntiTrackingButtonBackground(Whitelisted.undefined, newURL: nil)
+            
+            let antitrackingImag = self.imageForAntiTrackingButton(Whitelisted.undefined)
+            self.antitrackingButton.setImage(antitrackingImag, forState: .Normal)
         }
 
     }
     
-    func colorForAntiTrackingButtonBackground(whitelisted: Whitelisted, newURL: NSURL?) -> UIColor{
+    func imageForAntiTrackingButton(whitelisted: Whitelisted, newURL: NSURL? = nil) -> UIImage? {
         
         var theURL : NSURL
         
         if let url = newURL {
             theURL = url
         }
-        else if let url = self.currentURL{
+        else if let url = self.currentURL {
             theURL = url
         }
-        else{
-            return antitrackingGreenBackgroundColor
+        else {
+            return CliqzURLBarView.antitrackingGreenIcon
         }
         
-        guard let domain = theURL.host else {return antitrackingGreenBackgroundColor}
+        guard let domain = theURL.host else {return CliqzURLBarView.antitrackingGreenIcon}
         var isAntiTrackingEnabled = false
         
         //Doc: If the observer checks if the website is whitelisted, it might get the wrong value, since the correct value may not be set yet. 
@@ -167,28 +153,21 @@ class CliqzURLBarView: URLBarView {
         let isWebsiteOnPhisingList = AntiPhishingDetector.isDetectedPhishingURL(theURL)
         
         if isAntiTrackingEnabled && !isWebsiteOnPhisingList{
-            return antitrackingGreenBackgroundColor
+            return CliqzURLBarView.antitrackingGreenIcon
         }
         
-        return antitrackingOrangeBackgroundColor
+        return CliqzURLBarView.antitrackingOrangeIcon
     }
 
 	private func commonInit() {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector:#selector(refreshAntiTrackingButton) , name: NotificationRefreshAntiTrackingButton, object: nil)
         
-		let img = UIImage(named: "shieldButton")
-		self.antitrackingButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-		self.antitrackingButton.setImage(img, forState: .Normal)
-		self.antitrackingButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 2, bottom: 5, right: 0)
-		self.antitrackingButton.imageEdgeInsets = UIEdgeInsets(top: 4, left: 5, bottom: 4, right: 20)
-		self.antitrackingButton.addTarget(self, action: #selector(antitrackingButtonPressed), forControlEvents: .TouchUpInside)
-		self.antitrackingButton.hidden = true
 		addSubview(self.antitrackingButton)
 		antitrackingButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.leading.equalTo(self.locationContainer.snp_trailing)
-			make.size.equalTo(self.antitrackingButtonSize)
+			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1 * URLBarViewUX.ButtonWidth)
+			make.size.equalTo(CliqzURLBarView.antitrackingButtonSize)
 		}
         
         addSubview(newTabButton)
@@ -208,7 +187,7 @@ class CliqzURLBarView: URLBarView {
 	}
 	
 	@objc private func antitrackingButtonPressed(sender: UIButton) {
-        let status = antitrackingGreenBackgroundColor == sender.backgroundColor ? "green" : "Orange"
+        let status = CliqzURLBarView.antitrackingGreenBackgroundColor == sender.backgroundColor ? "green" : "Orange"
 		self.delegate?.urlBarDidClickAntitracking(self, trackersCount: trackersCount, status: status)
 	}
     
@@ -216,5 +195,14 @@ class CliqzURLBarView: URLBarView {
     // Cliqz: Add actions for new tab button
     func SELdidClickNewTab() {
         delegate?.urlBarDidPressNewTab(self, button: newTabButton)
+    }
+    
+    override func applyTheme(themeName: String) {
+        super.applyTheme(themeName)
+        
+        if let theme = URLBarViewUX.Themes[themeName] {
+            self.antitrackingButton.setTitleColor(theme.textColor, forState: .Normal)
+        }
+        
     }
 }

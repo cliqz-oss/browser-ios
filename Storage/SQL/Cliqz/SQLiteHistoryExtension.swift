@@ -79,7 +79,20 @@ extension SQLiteHistory: ExtendedBrowserHistory {
 		return self.db.run([
 			"DELETE FROM \(TableHiddenTopSites)"])
 	}
-
+    
+    public func getHiddenTopSitesCount() -> Int {
+        var count = 0
+        let countSQL = "SELECT COUNT(\(TableHiddenTopSites).id) AS rowCount FROM \(TableHiddenTopSites) "
+        
+        let resultSet = db.runQuery(countSQL, args: nil, factory: SQLiteHistory.countFactory).value
+        if let data = resultSet.successValue {
+            if let d = data[0] {
+                count = d
+            }
+        }
+        return count
+    }
+    
     //MARK: - Factories
     private class func countFactory(row: SDRow) -> Int {
         let cout = row["rowCount"] as! Int

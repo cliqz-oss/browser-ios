@@ -23,16 +23,6 @@
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Impressum";
 
-/* Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback */
-"FAQs & Support" = "FAQs & Support";
-
-/* Menu item in settings used to redirect to Report Page where people can report pages */
-
-"Report Website" = "Webseite melden";
-
-/* Open search section of settings */
-"Search" = "Suche";
-
 /* Footnote message for feedback */
 "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback für CLIQZ Browser for iOS (Version %@), auf %@";
 
@@ -51,42 +41,11 @@
 /* Title for `Last site` home shortcut. */
 "Last site" =  "Letzte Seite öffnen";
 
-/* Block explicit content setting. */
-"Block Explicit Content" = "Nicht-jugendfreie Inhalte blockieren";
-
 /* Share footer */
 "Shared with CLIQZ for iOS" = "Geteilt mit CLIQZ für iOS";
 
-/* URL for detailed info for human web */
-"Human Web URL" = "https://cliqz.com/whycliqz/human-web";
-
-/* Title for Human Web deteiled info on settings */
-"What is Human Web?" = "Was ist Human Web?";
-
-/* Navigation title in settings */
-"Human Web" = "Human Web";
-
-/* Block Ads setting */
-"Block Ads" = "Werbung blockieren [Beta]";
-
-/* Fair Blocking toogle title in Block Ads settings
- Title of navigation controller of Fair Blocking */
-"Fair Blocking" = "Faires Blockieren";
-
-/* More details about Fair Blocking */
-"What is 'fair'?" = "Was bedeutet 'fair'?";
-
-/* Settings item for clearing private data on termination */
-"Clear Private data on termination" = "Private Daten beim Verlassen löschen";
-
 /* Enable News Push Notifications */
 "Enable News Push Notifications" = "Eilmeldungen";
-
-/* Show blocked top-sites from settings */
-"Show blocked topsites" = "Meist-besuchte Seiten wiederherstellen";
-
-/* Text of the 'Show blocked top-sites' alert */
-"All blocked topsites will be shown on the start page again." = "Startseite zeigt wieder deine meist-besuchten Seiten.";
 
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
@@ -174,6 +133,12 @@
 /* Antitracking UI title for tracked count column */
 "Trackers count title" = "Persönliche Daten";
 
+/* AdBlocking UI title for companies column */
+"Companies" = "Firmen";
+
+/* AdBlocking UI title for tracked count column */
+"Ads" = "Werbungen";
+
 /* Antiphishing alert title */
 "Warning: deceptive website!" =  "Warnung: betrügerische Website!";
 
@@ -216,23 +181,23 @@
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "DIE SUCHMASCHINE \n IM BROWSER";
 
-/* Anti-tracking hint title */
-"Anti-Tracking" = "Anti-Tracking";
+/* Control Center hint title */
+"Control Center" = "Control Center";
 
-/* Anti-tracking hint description */
-"Anti-Tracking description" = "Du hast die Kontrolle: CLIQZ Anti-Tracking schützt deine Privatsphäre";
+/* Control Center hint description */
+"Customize the protection of your data to your needs." = "Passe den Schutz deiner Daten an  deine Bedürfnissen an.";
+
+/* Control Center Option 1*/
+"Protection enabled" = "Schutz aktiv";
+
+/* Control Center Option 2*/
+"Protection disabled" = "Schutz inaktiv";
 
 /* Cliqz search hint title */
-"Fast-search" = "Schnellsuche";
+"Result Cards" = "Ergebniskarten";
 
 /* Cliqz search hint description */
-"Fast-search description" = "Alles sofort im Blick: Die relevantesten Suchergebnisse werden dir auf den intelligenten CLIQZ Ergebniskarten direkt angezeigt";
-
-/* Detailed description on Adblocking settings */
-"AdBlocking settings clarification" = "Bitte beachte: Cliqz Browser muss größere Informationspakete laden bevor der Werbeblocker effizient funktioniert. Dazu muss die App mit einem WLAN verbunden sein.";
-
-/* [Settings] Show tips and tricks page */
-"Get the best out of CLIQZ" = "Hol dir das Beste aus CLIQZ";
+"Relevant results are shown instantly during search." = "Relevante Suchergebnisse werden bereits während der Sucheingabe angezeigt.";
 
 /* Youtube downloader action sheet title */
 "Video quality" = "Videoqualität";
@@ -257,21 +222,6 @@
 
 /* Hint on Freshtab when there is no topsites */
 "Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
-
-/* Search Results from */
-"Search Results from" = "Suchergebnisse für";
-
-/* Localized String for specific region */
-"region-DE" = "Deutschland";
-
-/* Localized String for specific region */
-"region-US" = "USA";
-
-/* Localized String for specific region */
-"region-FR" = "Frankreich";
-
-/* Query Suggestion setting */
-"Search Term Suggestions" = "Suchwort-Vorschläge";
 
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
@@ -317,7 +267,7 @@
 "Ad-Blocking is turned off" = "Werbeblocker ist deaktiviert";
 
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert";
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "Betrügerische Webseiten, die es auf deine Passwörter und Kontodaten abgesehen haben, werden mit der Anti-Phishing Technologie vorzeitig erkannt und blockiert.";
 
 /* Anti-Phishing panel title in the control center if the current website is safe. */
 "You are safe" = "Du bist sicher";
@@ -338,10 +288,106 @@
 "Turn on Location Services" = "Ortungsdienste aktivieren";
 
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen für die CLIQZ-App:\n1. Wähle Standort\n2. Aktiviere 'Beim Verwenden der App'";
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen für die CLIQZ-App:\n\n1. Wähle Standort\n2. Aktiviere 'Beim Verwenden der App'";
 
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen deines Smartphones:\n1.Aktiviere Ortungsdienste\n2.Wähle die CLIQZ App\n3.Aktiviere 'Beim Verwenden der App'";
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Um deinen Standort zu teilen, gehe in die Einstellungen deines Smartphones:\n\n1. Aktiviere Ortungsdienste\n2. Wähle die CLIQZ App\n3. Aktiviere 'Beim Verwenden der App'";
 
 /* Not now option for turning on location service */
 "Not Now" = "Nicht Jetzt";
+
+/** Settings **/
+
+/* [Settings] Search section title */
+"Search" = "Suche";
+
+/* [Settings] Search Results for */
+"Search Results for" = "Suchergebnisse für";
+
+/* Localized String for specific region */
+"region-DE" = "Deutschland";
+
+/* Localized String for specific region */
+"region-US" = "USA";
+
+/* Localized String for specific region */
+"region-FR" = "Frankreich";
+
+/* [Settings] Search Query Suggestions */
+"Search Query Suggestions" = "Suchwort-Vorschläge";
+
+/* [Settings] Block explicit content */
+"Block Explicit Content" = "Nicht-jugendfreie Inhalte blockieren";
+
+/* [Settings] On status */
+"On" = "Ein";
+
+/* [Settings] Off status */
+"Off" = "Aus";
+
+/* [Settings] Human Web */
+"Human Web" = "Human Web";
+
+/* [Settings -> Human Web]Footer text for Fair Blocking section" */
+"Human Web footer" = "CLIQZ arbeitet mit anonymisierten Daten über Suchanfragen und Website-Besuchen, die von der Gemeinschaft der Nutzer geschaffen werden. Die Technologie, die diese Daten erhebt und daraus einen Web-Index aufbaut, nennen wir Human Web.";
+
+/* [Settings] Complementary Search */
+"Complementary Search" = "Ergänzende Suchmaschine";
+
+/* [Settings] Browsing & History section header */
+"Browsing & History" = "Browsing & Verlauf";
+
+/* [Settings] Block pop-up windows*/
+"Block Pop-up Windows" = "Popup-Fenster blockieren";
+
+/* [Setting] Block Ads
+ [Settings -> Block Ads] Block Ads */
+"Block Ads" = "Werbeblocker (BETA)";
+
+/* [Settings -> Block Ads] Fair Mode */
+"Fair Mode" = "Fairer Modus";
+
+/* [Settings -> Block Ads] Block Ads footer */
+"Block Ads footer" = "Cliqz Browser muss zuerst Informationspakete herunterladen, damit der Werbeblocker effizient funktioniert. Dazu muss die App mit einem WLAN verbunden sein.";
+
+/* [Settings -> Block Ads] Fair Blocking footer */
+"Fair Mode footer" = "Ein \"fairer\" Modus, der Werbung nur nach bestimmten Kriterien zulässt, ist in Planung.";
+
+/* [Settings -> Clear Private Data] Clear Private Data footer */
+"Clear Private Data footer" = "Nur die ausgewählten Daten werden gelöscht.";
+
+/* [Settings] Restore Most Visited Websites */
+"Restore Most Visited Websites" = "Meistbesuchte Seiten wiederherstellen";
+
+/* [Settings] Text of the 'Restore Most Visited Websites' alert */
+"All most visited websites will be shown again on the startpage." = "Alle meistbesuchten Seiten werden wieder auf der Startseite angezeigt.";
+
+/* [Settings] Help section header */
+"Help" = "Hilfe";
+
+/* [Settings] FAQs & Support */
+"FAQ & Support" = "FAQ & Support";
+
+/* [Settings] Get the best out of CLIQZ */
+"Get the best out of CLIQZ" = "Hol dir das Beste aus CLIQZ";
+
+/* [Settings] Report Website */
+"Report Website" = "Webseite melden";
+
+/* [Settings] About Cliqz section header */
+"About Cliqz" = "Über Cliqz";
+
+/* [Settings] Rate Us */
+"Rate Us" = "Bewerte uns";
+
+/* [Settings] About */
+"About" = "Über uns";
+
+/* [Settings -> About] Privacy Policy */
+"Privacy Policy" = "Datenschutzerklärung";
+
+/* [Settings -> About] Licenses */
+"Licenses" = "Lizenzen";
+
+
+

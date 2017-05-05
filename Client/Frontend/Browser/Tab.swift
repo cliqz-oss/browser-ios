@@ -27,6 +27,7 @@ protocol TabDelegate {
 	optional func tab(tab: Tab, willDeleteWebView webView: CliqzWebView)
 //	optional func tab(tab: Tab, didCreateWebView webView: WKWebView)
 //	optional func tab(tab: Tab, willDeleteWebView webView: WKWebView)
+    optional func urlChangedForTab(tab:Tab)
 }
 
 struct TabState {
@@ -69,8 +70,11 @@ class Tab: NSObject {
     var lastExecutedTime: Timestamp?
     var sessionData: SessionData?
     private var lastRequest: NSURLRequest? = nil
+    var restoring: Bool = false
     var pendingScreenshot = false
     var url: NSURL?
+    // Cliqz: save restoring url for the tab
+    var restoringUrl: NSURL?
     var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
@@ -105,7 +109,7 @@ class Tab: NSObject {
     // Cliqz: flag to know whether the current tab is in search mode or not
     var inSearchMode : Bool {
         get {
-            if !requestInProgress && (url == nil || AboutUtils.isAboutURL(url)) {
+            if !requestInProgress && !SessionRestoreHandler.isRestorePageURL(url) && (url == nil || AboutUtils.isAboutURL(url) || isCliqzGoToURL(url)) {
                 return true
             } else {
                 return false
@@ -185,6 +189,7 @@ class Tab: NSObject {
             // which allows the content appear beneath the toolbars in the BrowserViewController
             webView.scrollView.layer.masksToBounds = false
             webView.navigationDelegate = navigationDelegate
+            webView.webViewDelegate = self
             helperManager = HelperManager(webView: webView)
 
             restore(webView)
@@ -198,30 +203,33 @@ class Tab: NSObject {
 // Cliqz:[UIWebView] Changed type to CliqzWebView
 //    func restore(webView: WKWebView) {
 	func restore(webView: CliqzWebView) {
+        // Pulls restored session data from a previous SavedTab to load into the Tab. If it's nil, a session restore
+        // has already been triggered via custom URL, so we use the last request to trigger it again; otherwise,
+        // we extract the information needed to restore the tabs and create a NSURLRequest with the custom session restore URL
+        // to trigger the session restore via custom handlers
         if let sessionData = self.sessionData {
-            // If the tab has session data, load the last selected URL.
-            // We don't try to restore full session history due to bug 1238006.
-            let updatedURLs = sessionData.urls.flatMap { WebServer.sharedInstance.updateLocalURL($0) }
+            restoring = true
 
-            // currentPage is a number from -N+1 to 0, where N is the number of URLs.
-            // In other words, currentPage represents the offset from the last page
-            // in session history to the page that was selected.
-            var selectedIndex = updatedURLs.count + sessionData.currentPage - 1
+            var updatedURLs = [String]()
+            for url in sessionData.urls {
+                guard let updatedURL = WebServer.sharedInstance.updateLocalURL(url),
+                      let urlString = updatedURL.absoluteString else {
+                    assertionFailure("Invalid session URL: \(url)")
+                    continue
+                }
+                updatedURLs.append(urlString)
+            }
+
+            let currentPage = sessionData.currentPage
             self.sessionData = nil
-
-            guard !updatedURLs.isEmpty else {
-                log.warning("Restore data has no tabs!")
-                return
-            }
-
-            if !(0..<updatedURLs.count ~= selectedIndex) {
-                assertionFailure("Restore index outside of page count")
-                selectedIndex = updatedURLs.count - 1
-            }
-
-            webView.loadRequest(PrivilegedRequest(URL: updatedURLs[selectedIndex]))
+            var jsonDict = [String: AnyObject]()
+            jsonDict["history"] = updatedURLs
+            jsonDict["currentPage"] = currentPage
+            let escapedJSON = JSON.stringify(jsonDict, pretty: false).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+            let restoreURL = NSURL(string: "\(WebServer.sharedInstance.base)/about/sessionrestore?history=\(escapedJSON)")
+            lastRequest = PrivilegedRequest(URL: restoreURL!)
+            webView.loadRequest(lastRequest!)
         } else if let request = lastRequest {
-            // We're unzombifying a tab opened in the background, so load the pending request.
             webView.loadRequest(request)
         } else {
             log.error("creating webview with no lastRequest and no session data: \(self.url)")
@@ -242,21 +250,41 @@ class Tab: NSObject {
     var estimatedProgress: Double {
         return webView?.estimatedProgress ?? 0
     }
-
+    
+#if CLIQZ
+    var backList: [LegacyBackForwardListItem]? {
+        return webView?.backForwardList.backList
+    }
+    
+    var forwardList: [LegacyBackForwardListItem]? {
+        return webView?.backForwardList.forwardList
+    }
+    
+    var historyList: [NSURL] {
+        func listToUrl(item: LegacyBackForwardListItem) -> NSURL { return item.URL }
+        var tabs = self.backList?.map(listToUrl) ?? [NSURL]()
+        tabs.append(self.url!)
+        return tabs
+    }
+    
+#else
+    
     var backList: [WKBackForwardListItem]? {
         return webView?.backForwardList.backList
     }
-
+    
     var forwardList: [WKBackForwardListItem]? {
         return webView?.backForwardList.forwardList
     }
-
+    
     var historyList: [NSURL] {
         func listToUrl(item: WKBackForwardListItem) -> NSURL { return item.URL }
         var tabs = self.backList?.map(listToUrl) ?? [NSURL]()
         tabs.append(self.url!)
         return tabs
     }
+    
+#endif
 
     var title: String? {
         return webView?.title
@@ -300,7 +328,9 @@ class Tab: NSObject {
             if ReaderModeUtils.isReaderModeURL(url) {
                 return ReaderModeUtils.decodeURL(url)
             }
-
+            if isCliqzGoToURL(url) {
+                return nil
+            }
             if ErrorPageHelper.isErrorPageURL(url) {
                 let decodedURL = ErrorPageHelper.originalURLFromQuery(url)
                 if !AboutUtils.isAboutURL(decodedURL) {
@@ -339,10 +369,16 @@ class Tab: NSObject {
         webView?.goForward()
     }
 
+#if CLIQZ
+    func goToBackForwardListItem(item: LegacyBackForwardListItem) {
+        webView?.goToBackForwardListItem(item)
+    }
+#else
     func goToBackForwardListItem(item: WKBackForwardListItem) {
         webView?.goToBackForwardListItem(item)
     }
-
+#endif
+    
     func loadRequest(request: NSURLRequest) -> WKNavigation? {
         if let webView = webView {
             lastRequest = request
@@ -556,6 +592,14 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
 
     func getHelper(name name: String) -> TabHelper? {
         return helpers[name]
+    }
+}
+
+extension Tab: CliqzWebViewDelegate{
+    func didFinishLoadingRequest(request: NSURLRequest?) {
+        //finished loading request
+        self.url = request?.URL
+        self.tabDelegate?.urlChangedForTab?(self)
     }
 }
 

@@ -40,6 +40,9 @@ class Setting: NSObject {
     var textAlignment: NSTextAlignment { return .Natural }
 
     private(set) var enabled: Bool = true
+    
+    static let onStatus = NSLocalizedString("On", tableName: "Cliqz", comment: "[Settings] On status")
+    static let offStatus = NSLocalizedString("Off", tableName: "Cliqz", comment: "[Settings] Off status")
 
     // Called when the cell is setup. Call if you need the default behaviour.
     func onConfigureCell(cell: UITableViewCell) {
@@ -472,7 +475,12 @@ class SettingsTableViewController: UITableViewController {
             
         }
     }
-
+    // Cliqz: used to refresh the settings table after doing actions (like restore topsites)
+    func reloadSettings() {
+        settings = generateSettings()
+        tableView.reloadData()
+    }
+    
     // Override to provide settings in subclasses
     func generateSettings() -> [SettingSection] {
         return []

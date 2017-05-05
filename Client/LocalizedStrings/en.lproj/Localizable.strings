@@ -43,9 +43,6 @@
 /* Accessibility Label for the browser toolbar Back button */
 "Back" = "Back";
 
-/* Block pop-up windows setting */
-"Block Pop-up Windows" = "Block Pop-up Windows";
-
 /* Bookmark a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
 "Bookmark" = "Bookmark";
 
@@ -234,7 +231,7 @@
 "Logins" = "Logins";
 
 /* Restore Tabs Prompt Description */
-"Looks like Firefox crashed previously. Would you like to restore your tabs?" = "Looks like Firefox crashed previously. Would you like to restore your tabs?";
+"Looks like Cliqz crashed previously. Would you like to restore your tabs?" = "Looks like Cliqz crashed previously. Would you like to restore your tabs?";
 
 /* Name for Mark as read button in reader mode
    Title for the button that marks a reading list item as read */

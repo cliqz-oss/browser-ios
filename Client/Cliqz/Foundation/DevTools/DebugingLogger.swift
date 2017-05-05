@@ -20,7 +20,7 @@ class DebugingLogger {
                 stringRepresentation = value.description
             } else {
 				stringRepresentation = ""
-                fatalError("printLog only works for values that conform to CustomDebugStringConvertible or CustomStringConvertible")
+                fatalError("debugPrintLog only works for values that conform to CustomDebugStringConvertible or CustomStringConvertible")
             }
 			
 			NSLog("[DEBUG] \(stringRepresentation)")

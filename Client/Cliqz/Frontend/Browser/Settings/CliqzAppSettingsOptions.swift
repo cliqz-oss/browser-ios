@@ -18,6 +18,7 @@ class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
     //Cliqz: override onclick to directly go to default search engine selection
     override func onClick(navigationController: UINavigationController?) {
         let searchEnginePicker = SearchEnginePicker()
+        searchEnginePicker.title = self.title?.string
         // Order alphabetically, so that picker is always consistently ordered.
         // Every engine is a valid choice for the default engine, even the current default engine.
         searchEnginePicker.engines = profile.searchEngines.orderedEngines.sort { e, f in e.shortName < f.shortName }
@@ -59,25 +60,71 @@ class ImprintSetting: Setting {
 class HumanWebSetting: Setting {
     
     let profile: Profile
-    
+
+    override var style: UITableViewCellStyle { return .Value1 }
+
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
+    }
+
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let humanWebTitle = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Human Web settings")
-        super.init(title: NSAttributedString(string: humanWebTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let title = NSLocalizedString("Human Web", tableName: "Cliqz", comment: "[Settings] Human Web")
+        
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
     
     override func onClick(navigationController: UINavigationController?) {
         let viewController = HumanWebSettingsTableViewController()
-        viewController.profile = self.profile
+        viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
         // log Telemerty signal
         let humanWebSingal = TelemetryLogEventType.Settings("main", "click", "human_web", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
     }
 }
+
+class AboutSetting: Setting {
+    
+    override var style: UITableViewCellStyle { return .Value1 }
+
+    override var status: NSAttributedString { return NSAttributedString(string: "Version \(AppStatus.sharedInstance.distVersion)") }
+    
+    init() {
+        let title = NSLocalizedString("About", tableName: "Cliqz", comment: "[Settings] About")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+#if BETA
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = AboutSettingsTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+#endif
+}
+
+class RateUsSetting: Setting {
+    let AppId = "1065837334"
+    
+    init() {
+        super.init(title: NSAttributedString(string: NSLocalizedString("Rate Us", tableName: "Cliqz", comment: "[Settings] Rate Us"), attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        
+        if let url = NSURL(string: "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8") {
+            UIApplication.sharedApplication().openURL(url)
+        }
+    }
+}
+
 
 class TestReact: Setting {
     
@@ -95,8 +142,6 @@ class TestReact: Setting {
     override func onClick(navigationController: UINavigationController?) {
         let viewController = UIViewController()
         viewController.view = Engine.sharedInstance.rootView
-
-//        navigationController?.presentViewController(viewController, animated: true, completion: nil)
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
@@ -105,19 +150,25 @@ class TestReact: Setting {
 class AdBlockerSetting: Setting {
     
     let profile: Profile
+
+    override var style: UITableViewCellStyle { return .Value1 }
     
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
+    }
+
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
         
-        let blockAdsTitle = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "Label used as an item in Settings. When touched it will open a Block Ads settings")
-        super.init(title: NSAttributedString(string: blockAdsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let title = NSLocalizedString("Block Ads", tableName: "Cliqz", comment: "[Settings] Block Ads")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
     
     override func onClick(navigationController: UINavigationController?) {
         let viewController = AdBlockerSettingsTableViewController()
-        viewController.profile = self.profile
+        viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
         
         // log Telemerty signal
@@ -127,10 +178,10 @@ class AdBlockerSetting: Setting {
 }
 
 //Cliqz: Added Settings for redirecting to feedback page
-class SendCliqzFeedbackSetting: Setting {
-    
+class SupportSetting: Setting {
+        
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("FAQs & Support", tableName: "Cliqz", comment: "Menu item in settings used to open FAQs & Support cliqz url where people can submit feedback"),attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("FAQ & Support", tableName: "Cliqz", comment: "[Settings] FAQ & Support"),attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue])
     }
     
     override var url: NSURL? {
@@ -149,10 +200,12 @@ class SendCliqzFeedbackSetting: Setting {
 }
 
 //Cliqz: Added Setting for redirecting to report form
-class ReportFormSetting: Setting {
+class ReportWebsiteSetting: Setting {
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
     
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "Menu item in settings used to redirect to Report Page where people can report pages"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "[Settings] Report Website"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {
@@ -187,20 +240,35 @@ class EnablePushNotifications: BoolSetting {
 }
 
 // Cliqz: setting to reset top sites
-class ShowBlockedTopSitesSetting: Setting {
+class RestoreTopSitesSetting: Setting {
     
 	let profile: Profile
-	
+	weak var settingsViewController: SettingsTableViewController?
+    
 	init(settings: SettingsTableViewController) {
 		self.profile = settings.profile
-        super.init(title: NSAttributedString(string: NSLocalizedString("Show blocked topsites", tableName: "Cliqz", comment: "Show blocked top-sites from settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        self.settingsViewController = settings
+        let hiddenTopsitesCount = self.profile.history.getHiddenTopSitesCount()
+        var attributes: [String : AnyObject]?
+        if hiddenTopsitesCount > 0 {
+            attributes = [NSForegroundColorAttributeName: UIConstants.HighlightBlue]
+        } else {
+            attributes = [NSForegroundColorAttributeName: UIColor.lightGrayColor()]
+        }
+        
+        super.init(title: NSAttributedString(string: NSLocalizedString("Restore Most Visited Websites", tableName: "Cliqz", comment: "[Settings] Restore Most Visited Websites"), attributes: attributes))
     }
     
     override func onClick(navigationController: UINavigationController?) {
+        guard self.profile.history.getHiddenTopSitesCount() > 0 else {
+            return
+        }
+        
         let alertController = UIAlertController(
-            title: NSLocalizedString("Show blocked topsites", tableName: "Cliqz", comment: "Title of the 'Show blocked top-sites' alert"),
-            message: NSLocalizedString("All blocked topsites will be shown on the start page again.", tableName: "Cliqz", comment: "Text of the 'Show blocked top-sites' alert"),
-            preferredStyle: UIAlertControllerStyle.Alert)
+            title: "",
+            message: NSLocalizedString("All most visited websites will be shown again on the startpage.", tableName: "Cliqz", comment: "[Settings] Text of the 'Restore Most Visited Websites' alert"),
+            preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .Cancel) { (action) in
                 // log telemetry signal
@@ -208,10 +276,12 @@ class ShowBlockedTopSitesSetting: Setting {
                 TelemetryLogger.sharedInstance.logEvent(cancelSignal)
             })
         alertController.addAction(
-            UIAlertAction(title: NSLocalizedString("OK", tableName: "Cliqz", comment: "OK button in the 'Show blocked top-sites' alert"), style: .Default) { (action) in
+            UIAlertAction(title: self.title?.string, style: .Destructive) { (action) in
                 // reset top-sites
 				self.profile.history.deleteAllHiddenTopSites()
-				
+                
+                self.settingsViewController?.reloadSettings()
+                
                 // log telemetry signal
                 let confirmSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "confirm", nil, nil)
                 TelemetryLogger.sharedInstance.logEvent(confirmSignal)
@@ -224,17 +294,6 @@ class ShowBlockedTopSitesSetting: Setting {
         TelemetryLogger.sharedInstance.logEvent(restoreTopsitesSignal)
     }
 }
-
-// Cliqz: settings entry for showing Extension version
-class ExtensionVersionSetting : VersionSetting {
-    
-    override var title: NSAttributedString? {
-        let extensionVersion = "Extension: \(AppStatus.sharedInstance.extensionVersion)"
-        return NSAttributedString(string: extensionVersion, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
-    }
-    
-}
-
 
 // Opens the search settings pane
 class RegionalSetting: Setting {
@@ -255,20 +314,58 @@ class RegionalSetting: Setting {
         return NSAttributedString(string: localizedRegionName!)
     }
     
-    override var accessibilityIdentifier: String? { return "Search Results from" }
+    override var accessibilityIdentifier: String? { return "Search Results for" }
     
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
-        super.init(title: NSAttributedString(string: NSLocalizedString("Search Results from", tableName: "Cliqz" , comment: "Search Results from"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        let title = NSLocalizedString("Search Results for", tableName: "Cliqz" , comment: "[Settings] Search Results for")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
     override func onClick(navigationController: UINavigationController?) {
         let viewController = RegionalSettingsTableViewController()
+        viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
         
         // log Telemerty signal
         let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "search_results_from", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+    }
+}
+
+
+
+
+//Cliqz: Added new settings item sending local data
+class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
+    
+    let profile: Profile
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        super.init(title: NSAttributedString(string: "Export Local Database", attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
+    }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let localDataBaseFile = ((try! profile.files.getAndEnsureDirectory()) as NSString).stringByAppendingPathComponent("browser.db")
+        if let data = NSData(contentsOfFile: localDataBaseFile) where MFMailComposeViewController.canSendMail() {
+            let mailComposeViewController = configuredMailComposeViewController(data)
+            navigationController?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func configuredMailComposeViewController(data: NSData) -> MFMailComposeViewController {
+        let mailComposerVC = MFMailComposeViewController()
+        mailComposerVC.mailComposeDelegate = self
+        mailComposerVC.setSubject("CLIQZ Local Database")
+        mailComposerVC.addAttachmentData(data, mimeType: "application/sqlite", fileName: "browser.sqlite")
+        
+        return mailComposerVC
+    }
+    // MARK: MFMailComposeViewControllerDelegate Method
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 

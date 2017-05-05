@@ -162,7 +162,7 @@ class SettingsContentViewController: UIViewController, WKNavigationDelegate {
 
     func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
         // Cliqz: prevent showing error when support page is loaded twice due to language redirect for english version on the server side before the first request finish loading
-        if url.absoluteString == "https://cliqz.com/support" && error.code == -999 {
+        if error.code == -999 {
             return
         }
         SELdidTimeOut()

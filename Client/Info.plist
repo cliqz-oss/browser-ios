@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.0</string>
+	<string>1.3.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>5</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -73,6 +73,8 @@
 	<string>Used if user wants to send video feedback or bug report</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Websites you visit may request your location.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CLIQZ will only use this when you choose to record videos inside the browser.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CLIQZ will only use this access to download videos to your device.</string>
 	<key>NSUserActivityTypes</key>

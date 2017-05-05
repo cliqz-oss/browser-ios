@@ -43,8 +43,8 @@ public class WebRequest : RCTEventEmitter {
         }
         
         let response = Engine.sharedInstance.getBridge().callAction("webRequest", args: [requestInfo])
-        if let blockResponse = response["result"] as? NSDictionary where blockResponse.count > 0 {
-            print("xxxxx -> block \(request.URLString)")
+        if let blockResponse = response["result"] as? NSDictionary where blockResponse["cancel"] != nil {
+            debugPrint("xxxxx -> block \(request.URLString)")
             // update unsafe requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int, let webView = WebViewToUAMapper.idToWebView(tabId),
                 let _ = blockResponse["source"] {
@@ -125,10 +125,10 @@ public class WebRequest : RCTEventEmitter {
                 let jsonString = String(data:jsonData, encoding: NSUTF8StringEncoding)!
                 return jsonString
             } else {
-                print("[toJSONString] the following object is not valid JSON: \(anyObject)")
+                debugPrint("[toJSONString] the following object is not valid JSON: \(anyObject)")
             }
         } catch let error as NSError {
-            print("[toJSONString] JSON conversion of: \(anyObject) \n failed with error: \(error)")
+            debugPrint("[toJSONString] JSON conversion of: \(anyObject) \n failed with error: \(error)")
         }
         return nil
     }

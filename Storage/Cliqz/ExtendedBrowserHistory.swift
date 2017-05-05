@@ -27,4 +27,7 @@ public protocol ExtendedBrowserHistory {
 
 	// Cliqz: delete all hided TopSite
 	func deleteAllHiddenTopSites() -> Success
+    
+    // Cliqz: added to get hidden topsites count
+    func getHiddenTopSitesCount() -> Int
 }

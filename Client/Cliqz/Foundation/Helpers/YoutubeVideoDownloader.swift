@@ -57,7 +57,9 @@ class YoutubeVideoDownloader {
 	
     private class func saveVideoToPhotoLibrary(localPath: NSURL) {
         PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(localPath)}) { completed, error in
+                let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(localPath)
+                creationRequest?.creationDate = NSDate()
+            }) { completed, error in
                 if completed {
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "true"))
                     
@@ -84,7 +86,7 @@ class YoutubeVideoDownloader {
                 try fileManager.removeItemAtPath(path)
             }
         } catch let error as NSError {
-            print("[VedioDownloader] Could not delete local video at path \(localPath) because of the following error \(error)")
+            debugPrint("[VedioDownloader] Could not delete local video at path \(localPath) because of the following error \(error)")
         }
     }
 }

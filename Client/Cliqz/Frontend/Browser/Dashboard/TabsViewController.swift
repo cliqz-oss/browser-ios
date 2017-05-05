@@ -8,13 +8,18 @@
 
 import Foundation
 
-@objc protocol TabViewCellDelegate {
-    func closeTab(tab: Tab)
+class Knobs{
+    static let cellSpacing = 180
+    static let tiltAngle = M_PI / 6.0
+    static let cellHeightMultiplier = CGFloat(0.9)
+    static let landscapeSize = CGSize(width: 200, height: 130)
 }
 
 class TabsViewController: UIViewController {
 	
-	private var tabsView: UITableView!
+    private let emptyTabDefaultLogoUrl = "https://cliqz.com"
+    
+    var collectionView: UICollectionView!
 	private var addTabButton: UIButton!
 
 	let tabManager: TabManager!
@@ -22,6 +27,8 @@ class TabsViewController: UIViewController {
 	private let tabCellIdentifier = "TabCell"
 
 	static let bottomToolbarHeight = 45
+    
+    var backgroundColorCache: [String:UIColor] = Dictionary()
     
     init(tabManager: TabManager) {
 		self.tabManager = tabManager
@@ -39,14 +46,22 @@ class TabsViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		tabsView = UITableView()
-		tabsView.dataSource = self
-		tabsView.delegate = self
-		tabsView.registerClass(TabViewCell.self, forCellReuseIdentifier: self.tabCellIdentifier)
-		tabsView.separatorStyle = .None
-		tabsView.backgroundColor = UIConstants.AppBackgroundColor
-		tabsView.allowsSelection = true
-		view.addSubview(tabsView)
+        
+        collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: PortraitFlowLayout())
+        collectionView.registerClass(TabViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        self.view.addSubview(collectionView)
+        
+        if UIScreen.mainScreen().bounds.size.width > UIScreen.mainScreen().bounds.size.height {
+            self.collectionView.collectionViewLayout = LandscapeFlowLayout()
+        }
+        else{
+            self.collectionView.collectionViewLayout = PortraitFlowLayout()
+        }
 		
 		addTabButton = UIButton(type: .Custom)
 		addTabButton.setTitle("+", forState: .Normal)
@@ -61,18 +76,57 @@ class TabsViewController: UIViewController {
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
 
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
-        
+     
 	}
-
+    
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		self.tabsView.reloadData()
+		self.collectionView.reloadData()
+        
 	}
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.setupConstraints()
 	}
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let currentTabIndex = NSIndexPath(forRow: self.tabManager.selectedIndex, inSection: 0)
+        self.collectionView.scrollToItemAtIndexPath(currentTabIndex, atScrollPosition:.CenteredVertically, animated: false)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        
+        self.collectionView.alpha = 0.0
+        
+        coordinator.animateAlongsideTransition({ (coordinatorContext) in
+            
+            var layout: UICollectionViewFlowLayout
+            
+            if size.width > size.height{
+                layout = LandscapeFlowLayout()
+            }
+            else{
+                layout = PortraitFlowLayout()
+            }
+            
+            self.collectionView.performBatchUpdates({
+                self.collectionView.collectionViewLayout.invalidateLayout()
+                self.collectionView.reloadData()
+            }) { (finished) in
+                self.collectionView.setCollectionViewLayout(layout, animated: true)
+                self.collectionView.collectionViewLayout.invalidateLayout()
+            }
+            
+        }) { (coordinatorContext) in
+            UIView.animateWithDuration(0.3, animations: {
+                self.collectionView.alpha = 1.0
+            })
+        }
+        
+    }
 
 	@objc private func addNewTab(sender: UIButton) {
 		self.openNewTab()
@@ -82,39 +136,35 @@ class TabsViewController: UIViewController {
 	}
     
     @objc func SELdidLongPressAddTab(recognizer: UILongPressGestureRecognizer) {
-        if #available(iOS 9, *) {
-            let newTabHandler = { (action: UIAlertAction) in
-                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", nil))
-                self.openNewTab()
-                return
-            }
-            
-            let newForgetModeTabHandler = { (action: UIAlertAction) in
-                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_forget_tab", nil))
-                
-                self.openNewTab(true)
-                return
-            }
-            
-            let cancelHandler = { (action: UIAlertAction) in
-                // do no thing
-                TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
-            }
-            
-            let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
-            
-            self.presentViewController(actionSheetController, animated: true, completion: nil)
-            
-            let customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count]
-            TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
+        let newTabHandler = { (action: UIAlertAction) in
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", nil))
+            self.openNewTab()
+            return
         }
+        
+        let newForgetModeTabHandler = { (action: UIAlertAction) in
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_forget_tab", nil))
+            
+            self.openNewTab(true)
+            return
+        }
+        
+        let cancelHandler = { (action: UIAlertAction) in
+            // do no thing
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
+        }
+        
+        let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+        
+        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        
+        let customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count]
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
     }
 
 	private func openNewTab(isPrivate: Bool = false) {
 		if isPrivate {
-			if #available(iOS 9, *) {
-				self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
-			}
+            self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
 		} else {
 			self.tabManager.addTabAndSelect()
 		}
@@ -122,11 +172,11 @@ class TabsViewController: UIViewController {
 	}
 
 	private func setupConstraints() {
-		tabsView.snp_makeConstraints { make in
-			make.left.right.equalTo(self.view)
-			make.top.equalTo(self.view).offset(10)
-			make.bottom.equalTo(addTabButton.snp_top)
-		}
+        
+        collectionView.snp_makeConstraints { (make) in
+            make.top.left.right.equalTo(self.view)
+            make.bottom.equalTo(addTabButton.snp_top)
+        }
 		addTabButton.snp_makeConstraints { make in
 			make.centerX.equalTo(self.view)
 			make.bottom.equalTo(self.view)
@@ -136,70 +186,75 @@ class TabsViewController: UIViewController {
 	}
 }
 
-extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
-
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.tabManager.tabs.count
-	}
-	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = self.tabsView.dequeueReusableCellWithIdentifier(tabCellIdentifier, forIndexPath: indexPath) as! TabViewCell
-		let tab = self.tabManager.self.tabs[indexPath.row]
+extension TabsViewController: UICollectionViewDataSource {
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.tabManager.tabs.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! TabViewCell
+        
+        cell.tag = indexPath.row
+        
+        let tab = self.tabManager.tabs[indexPath.row]
         cell.delegate = self
-        cell.selectedTab = tab
         
         let freshtab = tab.displayURL?.absoluteString?.contains("cliqz/goto.html") ?? false
         
-		if tab.displayURL != nil && !freshtab{
-            cell.titleLabel.text = tab.title != nil && tab.title != "" ? tab.title : tab.displayURL?.absoluteString
-			cell.URLLabel.text = tab.displayURL?.absoluteString
-		} else {
-			cell.URLLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
-			cell.titleLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
-		}
-		cell.selectionStyle = .None
-		cell.isPrivateTabCell = tab.isPrivate
-		cell.animator.delegate = self
-        
-//		if let icon = tab.displayFavicon {
-//			cell.logoImageView.sd_setImageWithURL(NSURL(string: icon.url)!)
-//		} else {
-//			cell.logoImageView.image = nil
-//		}
-        
-        cell.logoImageView.image = nil
-        
-        cell.tag = indexPath.row
-        if let url = tab.displayURL?.absoluteString{
-            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
-                if let img = image{
-                    if cell.tag == indexPath.row{
-                        cell.logoImageView.image = img
-                    }
-                }
-            })
+        if tab.displayURL != nil && !freshtab{
+            cell.descriptionLabel.text = tab.displayTitle
+            cell.domainLabel.text = tab.displayURL?.absoluteString
+        } else {
+            cell.domainLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
+            cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
         }
+        
+        cell.domainLabel.accessibilityLabel = cell.domainLabel.text
+
+        if tab.isPrivate{
+            cell.makeCellPrivate()
+        }
+        else{
+            cell.makeCellUnprivate()
+        }
+        
+        let url = tab.displayURL?.absoluteString ?? emptyTabDefaultLogoUrl
+        
+        LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+            guard cell.tag == indexPath.row else { return }
+            if image != nil{
+                cell.setSmallUpperLogo(image)
+                cell.setBigLogo(image)
+            }
+            else {
+                let fakeLogo = LogoLoader.generateFakeLogo(url)
+                cell.setBigLogoView(fakeLogo)
+                let secondFakeLogo = LogoLoader.generateFakeLogo(url)
+                cell.setSmallUpperLogoView(secondFakeLogo)
+            }
+        })
         
         
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
-	}
-	
-	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		return 80
-	}
-	
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		let tab = self.tabManager.tabs[indexPath.row] //tabsToDisplay[index]
-		self.tabManager.selectTab(tab)
-		self.navigationController?.popViewControllerAnimated(false)
+
+    }
+}
+
+
+extension TabsViewController: UICollectionViewDelegate {
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let tab = self.tabManager.tabs[indexPath.row]
+        self.tabManager.selectTab(tab)
+        self.navigationController?.popViewControllerAnimated(false)
         
-        if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? TabViewCell {
+        if let currentCell = collectionView.cellForItemAtIndexPath(indexPath) as? TabViewCell {
             logTabClickSignal(currentCell, indexPath: indexPath, count: self.tabManager.tabs.count, isForget: tab.isPrivate)
         }
-        
-
-	}
+    }
+    
     func logTabClickSignal(currentCell : TabViewCell, indexPath: NSIndexPath, count: Int, isForget: Bool) {
         var customData: [String : AnyObject] = ["index" : indexPath.row, "count" : count , "is_forget" : isForget]
         
@@ -209,68 +264,89 @@ extension TabsViewController: UITableViewDataSource, UITableViewDelegate {
         
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
     }
+
 }
 
-extension TabsViewController: SwipeAnimatorDelegate {
-	func swipeAnimator(animator: SwipeAnimator, viewWillExitContainerBounds: UIView) {
-		let tabCell = animator.container as! TabViewCell
-		if let indexPath = self.tabsView.indexPathForCell(tabCell) {
-			let tab = self.tabManager.tabs[indexPath.row]
-			tabManager.removeTab(tab)
-            
-            logSwipeSignal(tab, indexPath: indexPath, viewWillExitContainerBounds: viewWillExitContainerBounds)
-            
-		}
-	}
-    func logSwipeSignal(tab: Tab, indexPath: NSIndexPath, viewWillExitContainerBounds: UIView) {
+extension TabsViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        var cellSize = UIScreen.mainScreen().bounds.size
         
-        var action = ""
-        if viewWillExitContainerBounds.frame.origin.x < 0 {
-            action = "swipe_left"
-        } else {
-            action = "swipe_right"
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            cellSize.width /= 1.22
+        }
+        else{
+            cellSize.width /= 1.6
         }
         
-        let customData: [String : AnyObject] = ["index" : indexPath.row, "count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate]
-        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
+        if ((collectionViewLayout as? LandscapeFlowLayout) != nil) {
+            return Knobs.landscapeSize
+        }
+        
+        if indexPath.item == collectionView.numberOfItemsInSection(0) - 1 {
+            return CGSize(width: cellSize.width, height: cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
+        }
+        
+        return CGSize(width: cellSize.width, height: CGFloat(Knobs.cellSpacing))
     }
 }
 
-extension TabsViewController: TabManagerDelegate {
-	func tabManager(tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?) {
-	}
-	
-	func tabManager(tabManager: TabManager, didCreateTab tab: Tab) {
-	}
-	
-	func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
-        guard let index = tabManager.tabs.indexOf(tab) else { return }
-        self.tabsView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
-	}
-    
-	func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
-        self.tabsView.deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
-	}
-
-	func tabManagerDidAddTabs(tabManager: TabManager) {
-	}
-
-	func tabManagerDidRestoreTabs(tabManager: TabManager) {
-	}
-
-	func tabManagerDidRemoveAllTabs(tabManager: TabManager, toast:ButtonToast?) {
-	}
-}
-
 extension TabsViewController: TabViewCellDelegate {
-    func closeTab(tab: Tab) {
+    func removeTab(cell: TabViewCell, swipe: SwipeType) {
+        
+        guard let indexPath = self.collectionView.indexPathForCell(cell) else {return}
+        
+        let tab = self.tabManager.tabs[indexPath.row]
+        
         var customData: [String : AnyObject] = ["count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
         if let tabIndex = self.tabManager.getIndex(tab) {
             customData["index"] = tabIndex
         }
         
-        self.tabManager.removeTab(tab)
+        var action = ""
         
-        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
+        if swipe == .None {
+            action = "click"
+        }
+        else if swipe == .Right {
+            action = "swipe_right"
+        }
+        else if swipe == .Left {
+            action = "swipe_left"
+        }
+        if self.tabManager.tabs.count == 1 {
+            self.tabManager.removeTab(tab)
+            self.navigationController?.popViewControllerAnimated(false)
+        } else {
+            self.tabManager.removeTab(tab)
+        }
+        
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
+    }
+}
+
+extension TabsViewController: TabManagerDelegate {
+    func tabManager(tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?) {
+    }
+    
+    func tabManager(tabManager: TabManager, didCreateTab tab: Tab) {
+    }
+    
+    func tabManager(tabManager: TabManager, didAddTab tab: Tab) {
+        guard let index = tabManager.tabs.indexOf(tab) else { return }
+        self.collectionView.insertItemsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)])//insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
+    }
+    
+    func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
+        self.collectionView.deleteItemsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)])//deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
+    }
+    
+    func tabManagerDidAddTabs(tabManager: TabManager) {
+    }
+    
+    func tabManagerDidRestoreTabs(tabManager: TabManager) {
+    }
+    
+    func tabManagerDidRemoveAllTabs(tabManager: TabManager, toast:ButtonToast?) {
     }
 }

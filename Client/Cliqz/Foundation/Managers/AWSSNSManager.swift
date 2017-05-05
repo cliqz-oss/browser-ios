@@ -38,7 +38,7 @@ class AWSSNSManager {
 		request.platformApplicationArn = SNSAplicationArn
 		sns.createPlatformEndpoint(request).continueWithExecutor(AWSExecutor.mainThreadExecutor(), withBlock: { (task: AWSTask!) -> AnyObject! in
 			if task.error != nil {
-				print("Error Creating Endpoint: \(task.error)")
+				debugPrint("Error Creating Endpoint: \(task.error)")
 				LocalDataStore.removeObjectForKey(tokenKey)
 			} else {
 				let createEndpointResponse = task.result as! AWSSNSCreateEndpointResponse
@@ -59,9 +59,9 @@ class AWSSNSManager {
 		input.protocols = "application"
 		sns.subscribe(input, completionHandler: { (response, error) -> Void in
 			if error != nil {
-				print("Error subscribing for a topic: \(error)")
+				debugPrint("Error subscribing for a topic: \(error)")
 			} else {
-				print("Subscribtion succeeded")
+				debugPrint("Subscribtion succeeded")
 			}
 		})
 	}

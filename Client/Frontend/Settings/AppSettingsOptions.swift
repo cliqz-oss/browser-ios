@@ -444,7 +444,7 @@ class VersionSetting : Setting {
 // Opens the the license page in a new tab
 class LicenseAndAcknowledgementsSetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Licenses", comment: "Settings item that opens a tab containing the licenses. See http://mzl.la/1NSAWCG"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Licenses", tableName: "Cliqz", comment: "[Settings -> About] Licenses"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {
@@ -482,7 +482,7 @@ class ShowIntroductionSetting: Setting {
 
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
-        super.init(title: NSAttributedString(string: NSLocalizedString("Show Tour", comment: "Show the on-boarding screen again from the settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        super.init(title: NSAttributedString(string: NSLocalizedString("Show Tour", comment: "Show the on-boarding screen again from the settings"), attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -559,7 +559,7 @@ class SearchSetting: Setting {
 
     init(settings: SettingsTableViewController) {
         self.profile = settings.profile
-        super.init(title: NSAttributedString(string: NSLocalizedString("Search", comment: "Open search section of settings"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+        super.init(title: NSAttributedString(string: NSLocalizedString("Complementary Search", tableName: "Cliqz", comment: "[Settings] Complementary Search"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
 
     override func onClick(navigationController: UINavigationController?) {
@@ -671,7 +671,7 @@ class ClearPrivateDataSetting: Setting {
 
 class PrivacyPolicySetting: Setting {
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Privacy Policy", comment: "Show Firefox Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Privacy Policy", tableName: "Cliqz", comment: "[Settings -> About] Privacy Policy"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
 
     override var url: NSURL? {
@@ -691,8 +691,11 @@ class PrivacyPolicySetting: Setting {
 
 
 class TipsAndTricksSetting: Setting {
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
     override var title: NSAttributedString? {
-        return NSAttributedString(string: NSLocalizedString("Get the best out of CLIQZ", tableName: "Cliqz", comment: "[Settings] Show tips and tricks page"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+        return NSAttributedString(string: NSLocalizedString("Get the best out of CLIQZ", tableName: "Cliqz", comment: "[Settings] Get the best out of CLIQZ"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
     override var url: NSURL? {

@@ -17,11 +17,6 @@ class SearchEnginePicker: UITableViewController {
         
         // Cliqz: record settingsOpenTime
         settingsOpenTime = NSDate.getCurrentMillis()
-
-        navigationItem.title = NSLocalizedString("Default Search Engine", comment: "Title for default search engine picker.")
-
-		// Cliqz: Removed LeftBarButton as we need just back button.
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel title from search engine picker"), style: .Plain, target: self, action: #selector(SearchEnginePicker.cancel))
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

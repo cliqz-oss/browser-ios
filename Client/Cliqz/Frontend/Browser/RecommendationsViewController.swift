@@ -122,7 +122,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		case 1:
 			loadFreshtab()
 		default:
-			print("Unhandled Button Click")
+			debugPrint("Unhandled Button Click")
 		}
 	}
 
@@ -155,7 +155,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 				let exec = "\(callback)(\(jsonStr))"
 				self.topSitesWebView.evaluateJavaScript(exec, completionHandler: nil)
 			} catch let error as NSError {
-				print("Json conversion is failed with error: \(error)")
+				debugPrint("Json conversion is failed with error: \(error)")
 			}
 			return succeed()
 		}

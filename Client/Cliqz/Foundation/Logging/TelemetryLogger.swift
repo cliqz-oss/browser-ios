@@ -32,6 +32,7 @@ public enum TelemetryLogEventType {
     case ContextMenu            (String, String)
     case QuerySuggestions        (String, [String: AnyObject]?)
     case ControlCenter         (String, String?, String?, [String: AnyObject]?)
+    case FreshTab           (String, String?, [String: AnyObject]?)
 }
 
 
@@ -165,7 +166,10 @@ class TelemetryLogger : EventsLogger {
                 event = self.createQuerySuggestionsEvent(action, customData: customData)
                 
             case .ControlCenter (let action, let view, let target, let customData):
-                event = self.ControlCenterEvent(action, view: view, target: target, customData: customData)
+                event = self.createControlCenterEvent(action, view: view, target: target, customData: customData)
+                
+            case .FreshTab(let action, let target, let customData):
+                event = self.createFreshTabEvent(action, target: target, customData: customData)
                 
             }
             
@@ -535,7 +539,7 @@ class TelemetryLogger : EventsLogger {
     }
     
     
-    private func ControlCenterEvent(action: String, view: String?, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    private func createControlCenterEvent(action: String, view: String?, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
         var event = createBasicEvent()
         
         event["type"] = "control_center"
@@ -556,6 +560,24 @@ class TelemetryLogger : EventsLogger {
             }
         }
         
+        return event
+    }
+    
+    private func createFreshTabEvent(action: String, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+        var event = createBasicEvent()
+        
+        event["type"] = "home"
+        event["action"] = action
+        
+        if let target = target {
+            event["target"] = target
+        }
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
         return event
     }
     

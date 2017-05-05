@@ -44,20 +44,20 @@ class StatisticsCollector {
     }
     
     //MARK: Print/Clear Statistics
-    func printStatistics() {
-        // print header
-        print("========== Statistics ========== ")
+    func debugPrintStatistics() {
+        // debugPrint header
+        debugPrint("========== Statistics ========== ")
         let paddedHeader = "Query".stringByPaddingToLength(padingLength, withString: " ", startingAtIndex: 0)
-        print("\(paddedHeader): latency")
+        debugPrint("\(paddedHeader): latency")
         
-        // print query/latency
+        // debugPrint query/latency
         for (eventName, latency) in eventStatistics {
             let paddedEventName = eventName.stringByPaddingToLength(padingLength, withString: " ", startingAtIndex: 0)
-            print("\(paddedEventName): \(latency)")
+            debugPrint("\(paddedEventName): \(latency)")
         }
         
-        //print extra information
-        print("Average latency time : \(self.averageLatencyTime)")
+        //debugPrint extra information
+        debugPrint("Average latency time : \(self.averageLatencyTime)")
     }
     
     func clearStatistics() {

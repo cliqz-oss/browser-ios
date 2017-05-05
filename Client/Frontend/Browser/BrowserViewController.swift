@@ -114,8 +114,6 @@ class BrowserViewController: UIViewController {
     var navigationToolbar: TabToolbarProtocol {
         return toolbar ?? urlBar
     }
-	
-    private var needsNewTab = true
     
     private var isAppResponsive = false
     
@@ -168,6 +166,9 @@ class BrowserViewController: UIViewController {
 
     // Cliqz: swipe back and forward
     var historySwiper = HistorySwiper()
+    
+    // Cliqz: added to mark if pervious run was crashed or not
+    var hasPendingCrashReport = false
     
     
     init(profile: Profile, tabManager: TabManager) {
@@ -573,22 +574,18 @@ class BrowserViewController: UIViewController {
         }
          */
 
-		// Cliqz: Disable FF crash reporting and restoring Tabs
-/*
+		// Cliqz: Disable FF crash reporting
+        /*
         if PLCrashReporter.sharedReporter().hasPendingCrashReport() {
             PLCrashReporter.sharedReporter().purgePendingCrashReport()
+        */
+        if hasPendingCrashReport {
             showRestoreTabsAlert()
         } else {
             log.debug("Restoring tabs.")
             tabManager.restoreTabs()
             log.debug("Done restoring tabs.")
         }
-*/
-		// Cliqz: create new tab at start
-		if (needsNewTab) {
-			self.tabManager.addTabAndSelect()
-			needsNewTab = false
-		}
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
@@ -618,7 +615,9 @@ class BrowserViewController: UIViewController {
             self.tabManager.addTabAndSelect()
             return
         }
-
+        // Cliqz: apply normal theme to the urlbar when showing the restore alert to avoid weird look
+        self.urlBar.applyTheme(Theme.NormalMode)
+        
         let alert = UIAlertController.restoreTabsAlert(
             okayCallback: { _ in
                 self.tabManager.restoreTabs()
@@ -828,7 +827,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC showHomePanelController.")
         homePanelIsInline = inline
         
-        navigationToolbar.updateForwardStatus(false)
+        //navigationToolbar.updateForwardStatus(false)
         navigationToolbar.updateBackStatus(false)
         
         if homePanelController == nil {
@@ -1170,7 +1169,8 @@ class BrowserViewController: UIViewController {
             // didCommitNavigation to confirm the page load.
             if tab.url?.origin == webView.URL?.origin {
                 tab.url = webView.URL
-                if tab === tabManager.selectedTab {
+
+                if tab === tabManager.selectedTab && !tab.restoring {
                     updateUIForReaderHomeStateForTab(tab)
                 }
             }
@@ -1481,8 +1481,12 @@ class BrowserViewController: UIViewController {
         }
     }
     func goForward(){
-        if(tabManager.selectedTab?.canGoForward == true && homePanelController == nil){
+        if(tabManager.selectedTab?.canGoForward == true) {
             tabManager.selectedTab?.goForward()
+            if (homePanelController != nil) {
+                urlBar.leaveOverlayMode()
+                self.hideHomePanelController()
+            }
         }
     }
 
@@ -1746,6 +1750,10 @@ extension BrowserViewController: URLBarDelegate {
             screenshotHelper.takeScreenshot(tab)
         }
         
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
 		// Cliqz: Replaced FF TabsController with our's which also contains history and favorites
         /*
         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
@@ -1960,7 +1968,12 @@ extension BrowserViewController: URLBarDelegate {
     
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton) {
-        if #available(iOS 9, *), let selectedTab = self.tabManager.selectedTab {
+        
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
+        }
+        
+        if let selectedTab = self.tabManager.selectedTab {
             tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: selectedTab.isPrivate)
         } else {
             tabManager.addTabAndSelect()
@@ -2102,6 +2115,8 @@ extension BrowserViewController: TabToolbarDelegate {
     }
     
     func showBackForwardList() {
+        // Cliqz: Discarded the code as it is not used in our flow instead of doing a ching of modification to fix the compilation errors
+#if !CLIQZ
         guard AppConstants.MOZ_BACK_FORWARD_LIST else {
             return
         }
@@ -2113,6 +2128,7 @@ extension BrowserViewController: TabToolbarDelegate {
             backForwardViewController.backForwardTransitionDelegate = BackForwardListAnimator()
             self.presentViewController(backForwardViewController, animated: true, completion: nil)
         }
+#endif
     }
     
     // Cliqz: Add delegate methods for tabs button
@@ -2129,6 +2145,10 @@ extension BrowserViewController: TabToolbarDelegate {
         
         if let tab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(tab)
+        }
+        
+        if let controlCenter = controlCenterController {
+            controlCenter.closeControlCenter()
         }
         
         // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
@@ -2161,6 +2181,7 @@ extension BrowserViewController: TabToolbarDelegate {
                 closeAllTabsHandler = { (action: UIAlertAction) in
                     self.tabManager.removeAll()
                     self.logWebMenuSignal("click", target: "close_all_tabs")
+                    self.switchToSearchModeIfNeeded()
                 }
             }
             
@@ -2212,6 +2233,13 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 }
 
 extension BrowserViewController: TabDelegate {
+    
+    func urlChangedForTab(tab: Tab) {
+        if self.tabManager.selectedTab == tab  && tab.url?.baseDomain() != "localhost" {
+            //update the url in the urlbar
+            self.urlBar.currentURL = tab.url
+        }
+    }
 
 	// Cliqz:[UIWebView] Type change
 //    func tab(tab: Tab, didCreateWebView webView: WKWebView) {
@@ -2256,6 +2284,10 @@ extension BrowserViewController: TabDelegate {
             windowCloseHelper.delegate = self
             tab.addHelper(windowCloseHelper, name: WindowCloseHelper.name())
         }
+
+        let sessionRestoreHelper = SessionRestoreHelper(tab: tab)
+        sessionRestoreHelper.delegate = self
+        tab.addHelper(sessionRestoreHelper, name: SessionRestoreHelper.name())
 
         let findInPageHelper = FindInPageHelper(tab: tab)
         findInPageHelper.delegate = self
@@ -2891,6 +2923,14 @@ extension BrowserViewController: WKNavigationDelegate {
         if #available(iOS 9.0, *) {
             tab.desktopSite = webView.customUserAgent?.isEmpty == false
         }
+        
+        //Cliqz: store changes of tabs 
+        if let url = tab.url {
+            if !ErrorPageHelper.isErrorPageURL(url) {
+                self.tabManager.storeChanges()
+            }
+        }
+
     }
 #if CLIQZ
     func webView(_webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
@@ -3068,6 +3108,14 @@ extension BrowserViewController: WKUIDelegate {
             // Cliqz: [UIWebView] use cliqz webview instead of the WKWebView for displaying the error page
 //            ErrorPageHelper().showPage(error, forUrl: url, inWebView: WebView)
             ErrorPageHelper().showPage(error, forUrl: url, inWebView: cliqzWebView)
+
+            // If the local web server isn't working for some reason (Firefox cellular data is
+            // disabled in settings, for example), we'll fail to load the session restore URL.
+            // We rely on loading that page to get the restore callback to reset the restoring
+            // flag, so if we fail to load that page, reset it here.
+            if AboutUtils.getAboutComponent(url) == "sessionrestore" {
+                tabManager.tabs.filter { $0.webView == webView }.first?.restoring = false
+            }
         }
     }
 
@@ -3809,6 +3857,20 @@ extension BrowserViewController: KeyboardHelperDelegate {
     }
 }
 
+extension BrowserViewController: SessionRestoreHelperDelegate {
+    func sessionRestoreHelper(helper: SessionRestoreHelper, didRestoreSessionForTab tab: Tab) {
+        tab.restoring = false
+
+        if let tab = tabManager.selectedTab where tab.webView === tab.webView {
+            updateUIForReaderHomeStateForTab(tab)
+
+            // Cliqz: restore the tab url and urlBar currentURL
+            tab.url = tab.restoringUrl
+            urlBar.currentURL = tab.restoringUrl
+        }
+    }
+}
+
 extension BrowserViewController: TabTrayDelegate {
     // This function animates and resets the tab chrome transforms when
     // the tab tray dismisses.
@@ -4049,8 +4111,6 @@ extension BrowserViewController {
                 self.urlBar.leaveOverlayMode()
             }
         }
-        print("[switchToSearchModeIfNeeded]")
-        
     }
     
     // Cliqz: Logging the Navigation Telemetry signals
@@ -4174,10 +4234,10 @@ extension BrowserViewController {
     func getCurrentView() -> String? {
         var currentView: String?
         
-        if let searchQuery = self.searchController?.searchQuery where  searchQuery.characters.count > 0 {
-            currentView = "cards"
-        } else if let _ = self.urlBar.currentURL where self.searchController?.view.hidden == true {
+        if let _ = self.urlBar.currentURL where self.searchController?.view.hidden == true {
             currentView = "web"
+        } else if let searchQuery = self.searchController?.searchQuery where  searchQuery.characters.count > 0 {
+            currentView = "cards"
         } else {
             currentView = "home"
         }
@@ -4186,3 +4246,14 @@ extension BrowserViewController {
     }
 }
 
+
+
+extension BrowserViewController: CrashlyticsDelegate {
+    func crashlyticsDidDetectReportForLastExecution(report: CLSReport, completionHandler: (Bool) -> Void) {
+        hasPendingCrashReport = true
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            completionHandler(true);
+        }
+    }
+    
+}

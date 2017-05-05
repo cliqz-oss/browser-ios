@@ -88,6 +88,9 @@ class TabManager : NSObject {
         return configuration
     }()
 
+    // Cliqz: dispatch queue used to presit tabs in background
+    private let preserveTabsQueue = dispatch_queue_create("com.cliqz.tabManager.preserveTabs", DISPATCH_QUEUE_SERIAL)
+    
     private let imageStore: DiskImageStore?
 
     private let prefs: Prefs
@@ -565,7 +568,8 @@ extension TabManager {
         }
 
         init?(tab: Tab, isSelected: Bool) {
-            assert(NSThread.isMainThread())
+            // Cliqz: preserve tabs is done now in background thread
+//            assert(NSThread.isMainThread())
 
             self.screenshotUUID = tab.screenshotUUID
             self.isSelected = isSelected
@@ -575,7 +579,9 @@ extension TabManager {
             super.init()
 
             if tab.sessionData == nil {
-                let currentItem: WKBackForwardListItem! = tab.webView?.backForwardList.currentItem
+                // Cliqz: changed type of currentItem from WKBackForwardListItem to LegacyBackForwardListItem
+//                let currentItem: WKBackForwardListItem! = tab.webView?.backForwardList.currentItem
+                let currentItem: LegacyBackForwardListItem! = tab.webView?.backForwardList.currentItem
 
                 // Freshly created web views won't have any history entries at all.
                 // If we have no history, abort.
@@ -636,28 +642,30 @@ extension TabManager {
     }
 
     private func preserveTabsInternal() {
-        assert(NSThread.isMainThread())
+        // Cliqz: preserve tabs is done now in background thread
+//        assert(NSThread.isMainThread())
 
         guard !isRestoring else { return }
 
         let path = TabManager.tabsStateArchivePath()
         var savedTabs = [SavedTab]()
+        // Cliqz: commented any code related to tab screenshot for performance as we don't use it
         var savedUUIDs = Set<String>()
         for (tabIndex, tab) in tabs.enumerate() {
             if let savedTab = SavedTab(tab: tab, isSelected: tabIndex == selectedIndex) {
                 savedTabs.append(savedTab)
-
-                if let screenshot = tab.screenshot,
-                   let screenshotUUID = tab.screenshotUUID
-                {
-                    savedUUIDs.insert(screenshotUUID.UUIDString)
-                    imageStore?.put(screenshotUUID.UUIDString, image: screenshot)
-                }
+                // Cliqz: commented any code related to tab screenshot for performance as we don't use it
+//                if let screenshot = tab.screenshot,
+//                   let screenshotUUID = tab.screenshotUUID
+//                {
+//                    savedUUIDs.insert(screenshotUUID.UUIDString)
+//                    imageStore?.put(screenshotUUID.UUIDString, image: screenshot)
+//                }
             }
         }
-
-        // Clean up any screenshots that are no longer associated with a tab.
-        imageStore?.clearExcluding(savedUUIDs)
+        // Cliqz: commented any code related to tab screenshot for performance as we don't use it
+//        // Clean up any screenshots that are no longer associated with a tab.
+//        imageStore?.clearExcluding(savedUUIDs)
 
         let tabStateData = NSMutableData()
         let archiver = NSKeyedArchiver(forWritingWithMutableData: tabStateData)
@@ -669,7 +677,10 @@ extension TabManager {
     func preserveTabs() {
         // This is wrapped in an Objective-C @try/@catch handler because NSKeyedArchiver may throw exceptions which Swift cannot handle
         _ = Try(withTry: { () -> Void in
-            self.preserveTabsInternal()
+                // Cliqz: call preserveTabsInternal in background thread
+                dispatch_async(self.preserveTabsQueue, {
+                    self.preserveTabsInternal()
+                })
             }) { (exception) -> Void in
             print("Failed to preserve tabs: \(exception)")
         }
@@ -715,6 +726,19 @@ extension TabManager {
 
             tab.sessionData = savedTab.sessionData
             tab.lastTitle = savedTab.title
+            
+            // Cliqz: restore the url of the tab so that it could be listed in tabOverView
+            if let urls = tab.sessionData?.urls, let currentPage = tab.sessionData?.currentPage where urls.count > 0 {
+                // Note that current index is reverted, 0, -1, -2, .. - (n-1)
+                let index = (urls.count - 1) + currentPage
+                if index < urls.count {
+                    let url = urls[index]
+                    tab.url = url
+                    if url.host != "localhost" {
+                        tab.restoringUrl = url
+                    }
+                }
+            }
         }
 
         if tabToSelect == nil {

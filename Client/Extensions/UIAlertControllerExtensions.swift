@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import UIKit
+import Shared
 
 typealias UIAlertActionCallback = (UIAlertAction) -> Void
 
@@ -66,7 +67,7 @@ extension UIAlertController {
     class func restoreTabsAlert(okayCallback okayCallback: UIAlertActionCallback, noCallback: UIAlertActionCallback) -> UIAlertController {
         let alert = UIAlertController(
             title: NSLocalizedString("Well, this is embarrassing.", comment: "Restore Tabs Prompt Title"),
-            message: NSLocalizedString("Looks like Cliqz crashed previously. Would you like to restore your state?", comment: "Restore Tabs Prompt Description"),
+            message: NSLocalizedString("Looks like Cliqz crashed previously. Would you like to restore your tabs?", comment: "Restore Tabs Prompt Description"),
             preferredStyle: UIAlertControllerStyle.Alert
         )
 
@@ -91,7 +92,7 @@ extension UIAlertController {
         let alert = UIAlertController(
             title: "",
             message: NSLocalizedString("This action will clear all of your private data. It cannot be undone.", tableName: "ClearPrivateDataConfirm", comment: "Description of the confirmation dialog shown when a user tries to clear their private data."),
-            preferredStyle: UIAlertControllerStyle.Alert
+            preferredStyle: UIAlertControllerStyle.ActionSheet
         )
 
         let noOption = UIAlertAction(
@@ -103,7 +104,7 @@ extension UIAlertController {
             }
 
         let okayOption = UIAlertAction(
-            title: NSLocalizedString("OK", tableName: "ClearPrivateDataConfirm", comment: "The button that clears private data."),
+            title: Strings.SettingsClearPrivateDataTitle,
             style: UIAlertActionStyle.Destructive,
             handler: okayCallback
         )

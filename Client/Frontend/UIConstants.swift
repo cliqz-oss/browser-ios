@@ -24,7 +24,8 @@ public struct UIConstants {
 	
 	// Cliqz: Added colors for our new UI
 	static let TextFieldBackgroundColor = UIColor.whiteColor()
-	static let PrivateModeBackgroundColor = UIColor(rgb: 0x4A4A4A)
+    static let PrivateModeBackgroundColor = UIColor(rgb: 0x333333)
+    static let PrivateModeExpandBackgroundColor = UIColor(rgb: 0x4a4a4a)
 
     static let ToolbarHeight: CGFloat = 44
     static let DefaultRowHeight: CGFloat = 58

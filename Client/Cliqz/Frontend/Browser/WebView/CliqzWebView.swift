@@ -77,13 +77,18 @@ struct CliqzWebViewConstants {
     static let kNotificationPageInteractive = "kNotificationPageInteractive"
 }
 
+protocol CliqzWebViewDelegate: class {
+    func didFinishLoadingRequest(request: NSURLRequest?)
+}
+
 class CliqzWebView: UIWebView {
 	
 	weak var navigationDelegate: WKNavigationDelegate?
 	weak var UIDelegate: WKUIDelegate?
+    weak var webViewDelegate: CliqzWebViewDelegate?
 
 	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
-	lazy var backForwardList: WKBackForwardList = { return globalContainerWebView.backForwardList } ()
+	lazy var backForwardList: WebViewBackForwardList = { return WebViewBackForwardList(webView: self) } ()
 	
 	var progress: WebViewProgress?
 	
@@ -151,13 +156,13 @@ class CliqzWebView: UIWebView {
     }
     
 	dynamic var estimatedProgress: Double = 0
-	var title: String = "" /* {
+	var title: String = "" {
 		didSet {
 			if let item = backForwardList.currentItem {
 				item.title = title
 			}
 		}
-	}*/
+	}
     
     var knownFrameContexts = Set<NSObject>()
 
@@ -204,11 +209,11 @@ class CliqzWebView: UIWebView {
         _ = Try(withTry: {
             self.removeProgressObserversOnDeinit?(self)
         }) { (exception) -> Void in
-            print("Failed remove: \(exception)")
+            debugPrint("Failed remove: \(exception)")
         }
     }
 	
-	func goToBackForwardListItem(item: WKBackForwardListItem) {
+	func goToBackForwardListItem(item: LegacyBackForwardListItem) {
 		if let index = backForwardList.backList.indexOf(item) {
 			let backCount = backForwardList.backList.count - index
 			for _ in 0..<backCount {
@@ -330,8 +335,18 @@ class CliqzWebView: UIWebView {
         }
         
     }
+    
+    override func goBack() {
+        super.goBack()
+        self.canGoForward = true
+    }
 
-
+    
+    override func goForward() {
+        super.goForward()
+        self.canGoBack = true
+    }
+    
 	// MARK:- Private methods
 
 	private class func isTopFrameRequest(request:NSURLRequest) -> Bool {
@@ -389,7 +404,7 @@ class CliqzWebView: UIWebView {
 				let json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [String:AnyObject]
 				return json
 			} catch {
-				print("Something went wrong")
+				debugPrint("Something went wrong")
 			}
 		}
 		return nil
@@ -484,6 +499,7 @@ extension CliqzWebView: UIWebViewDelegate {
 	}
 
 	func webViewDidStartLoad(webView: UIWebView) {
+        backForwardList.update()
 		progress?.webViewDidStartLoad()
 		if let nd = self.navigationDelegate {
 			globalContainerWebView.legacyWebView = self
@@ -497,17 +513,22 @@ extension CliqzWebView: UIWebViewDelegate {
 			return
 		}
         
+        backForwardList.update()
+        
         // prevent the default context menu on UIWebView
         stringByEvaluatingJavaScriptFromString("document.body.style.webkitTouchCallout='none';")
         
+        self.webViewDelegate?.didFinishLoadingRequest(webView.request)
+        
 		let pageInfoArray = pageInfo.componentsSeparatedByString("|")
 		
-		let readyState = pageInfoArray.first // ;print("readyState:\(readyState)")
+		let readyState = pageInfoArray.first // ;debugPrint("readyState:\(readyState)")
 		if let t = pageInfoArray.last where !t.isEmpty {
 			title = t
 		}
 		progress?.webViewDidFinishLoad(documentReadyState: readyState)
         updateObservableAttributes()
+        
 	}
 	
 	func webView(webView: UIWebView, didFailLoadWithError error: NSError) {

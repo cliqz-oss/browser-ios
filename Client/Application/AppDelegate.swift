@@ -38,10 +38,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateStore: AppStateStore!
 
     var systemBrightness: CGFloat = UIScreen.mainScreen().brightness
+    
+    //Cliqz: capacity limits for URLCache
+    let CacheMemoryCapacity = 8 * 1024 * 1024
+    let CacheDiskCapacity   = 50 * 1024 * 1024
+    
 
     func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         AppStatus.sharedInstance.appWillFinishLaunching()
+        
+        //Cliqz: Configure URL Cache; set memoryCapacity to 8MB, and diskCapacity to 50MB
+        let URLCache = NSURLCache(memoryCapacity: CacheMemoryCapacity, diskCapacity: CacheDiskCapacity, diskPath: nil)
+        NSURLCache.setSharedURLCache(URLCache)
+
         
         // Hold references to willFinishLaunching parameters for delayed app launch
         self.application = application
@@ -262,10 +272,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 
         // Cliqz: Start Crashlytics
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            Fabric.with([Crashlytics.self])
-        }
-
+        Crashlytics.sharedInstance().delegate = self.browserViewController
+        Fabric.with([Crashlytics.self])
+        
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
 //            // If a shortcut was launched, display its information and take the appropriate action
@@ -423,6 +432,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let elapsed = Int(NSDate().timeIntervalSince1970) - foregroundStartTime
         Telemetry.recordEvent(UsageTelemetry.makeEvent(elapsed))
         sendCorePing()
+        
+        // Cliqz: Clear cache whenever the app goes to background
+        var taskId: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+        taskId = application.beginBackgroundTaskWithExpirationHandler { _ in
+            application.endBackgroundTask(taskId)
+        }
+        self.clearCache()
+        application.endBackgroundTask(taskId)
+    }
+    
+    // Cliqz: clear cache if the cache size exceed predified limits
+    private func clearCache() {
+
+        let currentMemoryUsage = NSURLCache.sharedURLCache().currentMemoryUsage
+        let currentDiskUsage = NSURLCache.sharedURLCache().currentDiskUsage
+        
+        if currentMemoryUsage > CacheMemoryCapacity || currentDiskUsage > CacheDiskCapacity {
+            let cacheClearable = CacheClearable(tabManager: self.tabManager)
+            cacheClearable.clear()
+        }
     }
 
     private func syncOnDidEnterBackground(application application: UIApplication) {
@@ -509,6 +538,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ErrorPageHelper.register(server, certStore: profile.certStore)
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
+        SessionRestoreHandler.register(server)
 
         // Cliqz: Registered trampolineForward to be able to load it via URLRequest
         server.registerMainBundleResource("trampolineForward.html", module: "cliqz")

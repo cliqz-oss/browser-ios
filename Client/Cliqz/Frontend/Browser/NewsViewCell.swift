@@ -18,7 +18,8 @@ class NewsViewCell: UITableViewCell {
 	var fakeLogoView: UIView?
 
 	let cardView = UIView()
-
+    var clickedElement = ""
+    
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.contentView.backgroundColor = UIConstants.AppBackgroundColor
@@ -36,12 +37,30 @@ class NewsViewCell: UITableViewCell {
 		titleLabel.numberOfLines = 2
 		self.cardView.addSubview(self.logoContainerView)
 		logoContainerView.addSubview(logoImageView)
+        
+        // tab gesture recognizer
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(newsPressed(_:)))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.delegate = self
+        self.addGestureRecognizer(tapGestureRecognizer)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+    
+    func newsPressed(gestureRecognizer: UIGestureRecognizer) {
+        let touchLocation = gestureRecognizer.locationInView(self.cardView)
+        
+        if CGRectContainsPoint(titleLabel.frame, touchLocation) {
+            clickedElement = "title"
+        } else if CGRectContainsPoint(URLLabel.frame, touchLocation) {
+            clickedElement = "url"
+        } else if CGRectContainsPoint(logoContainerView.frame, touchLocation) {
+            clickedElement = "logo"
+        }
+    }
+    
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		let cardViewLeftOffset = 13
@@ -91,6 +110,7 @@ class NewsViewCell: UITableViewCell {
 		self.logoImageView.image = nil
 		self.fakeLogoView?.removeFromSuperview()
 		self.fakeLogoView = nil
+        clickedElement = ""
 	}
 	
 	private func textColor() -> UIColor {

@@ -5,3 +5,6 @@
 "ShortcutItemTitleNewTab" = "Neuer Tab";
 
 "NSPhotoLibraryUsageDescription" = "CLIQZ wird diesen Zugriff nur nutzen um Videos auf dein Gerät herunterzuladen.";
+
+"NSMicrophoneUsageDescription" = "CLIQZ greif nur auf dein Mikrofon zu, wenn du Videos innerhalb des Browsers aufnimmst.";
+

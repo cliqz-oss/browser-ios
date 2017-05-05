@@ -26,14 +26,16 @@ struct TabLocationViewUX {
     static let BaseURLPitch = 0.75
     static let HostPitch = 1.0
     static let LocationContentInset = 8
-
+    // Cliqz: added constant for buttons width
+    static let ButtonWidth = 25.0
+    
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
         var theme = Theme()
         // Cliqz: change the text colors for forget mode theme
-        theme.URLFontColor = BaseURLFontColor
-        theme.hostFontColor = HostFontColor
-        theme.backgroundColor = UIColor.whiteColor()
+        theme.URLFontColor = UIColor.whiteColor()
+        theme.hostFontColor = UIColor.whiteColor()
+        theme.backgroundColor = UIConstants.PrivateModeExpandBackgroundColor
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
@@ -106,11 +108,14 @@ class TabLocationView: UIView {
     lazy var urlTextField: UITextField = {
         let urlTextField = DisplayTextField()
 
+        // Cliqz: moved the guesture recognizers to the tabLocationView as the urlTextField does not take the whole view
+        /*
         self.longPressRecognizer.delegate = self
         urlTextField.addGestureRecognizer(self.longPressRecognizer)
         self.tapRecognizer.delegate = self
         urlTextField.addGestureRecognizer(self.tapRecognizer)
-
+        */
+ 
         // Prevent the field from compressing the toolbar buttons on the 4S in landscape.
         urlTextField.setContentCompressionResistancePriority(250, forAxis: UILayoutConstraintAxis.Horizontal)
 
@@ -119,14 +124,16 @@ class TabLocationView: UIView {
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultChromeFont
 
-        // Cliqz: Added left pading to the url text field
-        urlTextField.setLeftPading(5)
+        // Cliqz: Center allignment for the url TextField
+        urlTextField.textAlignment = .Center
         
         return urlTextField
     }()
+    
+    private var urlTextFieldWidth: CGFloat = 100.0
 
     private lazy var lockImageView: UIImageView = {
-        let lockImageView = UIImageView(image: UIImage(named: "lock_verified.png"))
+        let lockImageView = UIImageView(image: UIImage.templateImageNamed("lock_verified.png"))
         lockImageView.hidden = true
         lockImageView.isAccessibilityElement = true
         lockImageView.contentMode = UIViewContentMode.Center
@@ -134,6 +141,17 @@ class TabLocationView: UIView {
         return lockImageView
     }()
 
+    // Cliqz: added forget mode icon displayed on the far left side of the url bar in forget mode
+    private lazy var forgetModeImageView: UIImageView = {
+        let forgetModeImageView = UIImageView(image: UIImage(named: "forgetModeUrlBarIcon"))
+        forgetModeImageView.hidden = true
+        forgetModeImageView.isAccessibilityElement = true
+        forgetModeImageView.contentMode = UIViewContentMode.Center
+        forgetModeImageView.accessibilityLabel = NSLocalizedString("Forget Mode View", comment: "Accessibility label for the forget mode icon, which is only present if the current tab is in forget mode")
+        return forgetModeImageView
+    }()
+
+    
     private lazy var readerModeButton: ReaderModeButton = {
         let readerModeButton = ReaderModeButton(frame: CGRectZero)
         readerModeButton.hidden = true
@@ -152,23 +170,48 @@ class TabLocationView: UIView {
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(TabLocationView.SELtapLocation(_:)))
 
         addSubview(urlTextField)
+        addSubview(forgetModeImageView)
         addSubview(lockImageView)
         addSubview(readerModeButton)
-
-        lockImageView.snp_makeConstraints { make in
+        
+        // Cliqz: added constaints for forget mode icon
+        forgetModeImageView.snp_makeConstraints { make in
             make.leading.centerY.equalTo(self)
-            make.width.equalTo(self.lockImageView.intrinsicContentSize().width + CGFloat(TabLocationViewUX.LocationContentInset * 2))
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
-
+        
+        urlTextField.snp_makeConstraints { make in
+            make.top.bottom.equalTo(self)
+            // Cliqz: changd the constraints of the urlTextField to make it centered
+            make.centerX.equalTo(self)
+            make.width.equalTo(urlTextFieldWidth)
+        }
+        
+        lockImageView.snp_makeConstraints { make in
+            make.trailing.equalTo(urlTextField.snp_leading)
+            make.centerY.equalTo(self)
+            // Cliqz: changd the width constraint of the lockImageView
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
+        }
+        
         readerModeButton.snp_makeConstraints { make in
-            make.trailing.centerY.equalTo(self)
-            make.width.equalTo(self.readerModeButton.intrinsicContentSize().width + CGFloat(TabLocationViewUX.LocationContentInset * 2))
+            make.centerY.equalTo(self)
+            make.leading.equalTo(forgetModeImageView.snp_trailing)
+            // Cliqz: changd the width constraint of the readerModeButton
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
+        
+        // Cliqz: moved the guesture recognizers to the tabLocationView as the urlTextField does not take the whole view
+        self.longPressRecognizer.delegate = self
+        self.addGestureRecognizer(self.longPressRecognizer)
+        self.tapRecognizer.delegate = self
+        self.addGestureRecognizer(self.tapRecognizer)
+
     }
 
     override var accessibilityElements: [AnyObject]! {
         get {
-            return [lockImageView, urlTextField, readerModeButton].filter { !$0.hidden }
+            return [forgetModeImageView, lockImageView, urlTextField, readerModeButton].filter { !$0.hidden }
         }
         set {
             super.accessibilityElements = newValue
@@ -180,22 +223,23 @@ class TabLocationView: UIView {
     }
 
     override func updateConstraints() {
-        urlTextField.snp_remakeConstraints { make in
-            make.top.bottom.equalTo(self)
-
-            if lockImageView.hidden {
-                make.leading.equalTo(self).offset(TabLocationViewUX.LocationContentInset)
+        
+        // Cliqz: update the constrains of the urlTextField & readerModeButton
+        urlTextField.snp_updateConstraints { make in
+            make.width.equalTo(urlTextFieldWidth)
+        }
+        
+        readerModeButton.snp_remakeConstraints { make in
+            
+            make.centerY.equalTo(self)
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
+            
+            if forgetModeImageView.hidden {
+                make.leading.equalTo(self)
             } else {
-                make.leading.equalTo(self.lockImageView.snp_trailing)
-            }
-
-            if readerModeButton.hidden {
-                make.trailing.equalTo(self).offset(-TabLocationViewUX.LocationContentInset)
-            } else {
-                make.trailing.equalTo(self.readerModeButton.snp_leading)
+                make.leading.equalTo(forgetModeImageView.snp_trailing)
             }
         }
-
         super.updateConstraints()
     }
 
@@ -224,6 +268,8 @@ class TabLocationView: UIView {
     }
 
     private func updateTextWithURL() {
+        
+        /*
         if let httplessURL = url?.absoluteDisplayString(), let baseDomain = url?.baseDomain() {
             // Highlight the base domain of the current URL.
             let attributedString = NSMutableAttributedString(string: httplessURL)
@@ -234,10 +280,71 @@ class TabLocationView: UIView {
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: TabLocationViewUX.BaseURLPitch), range: nsRange)
             attributedString.pitchSubstring(baseDomain, withPitch: TabLocationViewUX.HostPitch)
             urlTextField.attributedText = attributedString
+ 
         } else {
             // If we're unable to highlight the domain, just use the URL as is.
             urlTextField.text = url?.absoluteString
         }
+        */
+        
+        // Cliqz: disply only the domain name in the url TextField if possible
+        let urlText = getDomainName(url)
+        
+        urlTextField.accessibilityLabel = url?.absoluteString
+        urlTextField.accessibilityValue = url?.absoluteString
+        
+        if urlText.isEmpty {
+            urlTextField.text = ""
+            urlTextField.textAlignment = .Left
+            urlTextFieldWidth = getMaxUrlTextFieldWidth()
+            return
+        }
+        
+        let attributedString = NSMutableAttributedString(string: urlText)
+        let nsRange = NSMakeRange(0, urlText.characters.count)
+        
+        attributedString.addAttribute(NSForegroundColorAttributeName, value: hostFontColor, range: nsRange)
+        attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: TabLocationViewUX.HostPitch), range: nsRange)
+        
+        urlTextField.attributedText = attributedString
+        urlTextField.textAlignment = .Center
+        urlTextFieldWidth = attributedString.size().width + 30
+        
+        let maxUrlTextFieldWidth = getMaxUrlTextFieldWidth()
+        if urlTextFieldWidth > maxUrlTextFieldWidth {
+            urlTextFieldWidth = maxUrlTextFieldWidth
+        }
+    }
+    
+    // Cliqz: get domain name of NSURL
+    private func getDomainName(url: NSURL?) -> String {
+        var domainName = ""
+        if let baseDomain = url?.baseDomain() {
+            domainName = baseDomain
+        } else if let absoluteString = url?.absoluteString {
+            domainName = absoluteString
+        }
+        return domainName
+    }
+    
+    // Cliqz: added method to calculate the maximum width that the urlTextField can take
+    private func getMaxUrlTextFieldWidth() -> CGFloat {
+        var maxWidth: CGFloat = self.frame.width - 5
+        
+        // subtract the anti-tracking button width
+        maxWidth -= CGFloat(URLBarViewUX.ButtonWidth)
+        
+        if !forgetModeImageView.hidden {
+            maxWidth -= forgetModeImageView.frame.width
+        }
+        if !lockImageView.hidden {
+            maxWidth -= lockImageView.frame.width
+        }
+        if !readerModeButton.hidden {
+            maxWidth -= readerModeButton.frame.width
+        }
+        
+        return maxWidth
     }
 }
 
@@ -270,6 +377,9 @@ extension TabLocationView: Themeable {
         baseURLFontColor = theme.URLFontColor!
         hostFontColor = theme.hostFontColor!
         backgroundColor = theme.backgroundColor
+        forgetModeImageView.hidden = (themeName == Theme.NormalMode)
+        lockImageView.tintColor = (themeName == Theme.NormalMode) ? UIConstants.NormalModeTextColor : UIConstants.PrivateModeTextColor
+        setNeedsUpdateConstraints()
     }
 }
 
