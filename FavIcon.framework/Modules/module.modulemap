@@ -1,0 +1,10 @@
+framework module FavIcon {
+  umbrella header "FavIcon.h"
+
+  export *
+  module * { export * }
+}
+
+module FavIcon.Swift {
+    header "FavIcon-Swift.h"
+}
