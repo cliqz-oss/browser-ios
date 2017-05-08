@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FavIcon
 
 class Knobs{
     static let cellSpacing = 180
@@ -210,21 +211,28 @@ extension TabsViewController: UICollectionViewDataSource {
             cell.makeCellUnprivate()
         }
         
-        //tab.displayFavicon?.url
-        
-        
         if let url = tab.displayURL?.absoluteString {
+            
+            _ = try? FavIcon.downloadPreferred(url) { result in
+                if case let .Success(image) = result {
+                    cell.setSmallUpperLogo(image)
+                }
+                else{
+                    let secondFakeLogo = LogoLoader.generateFakeLogo(url)
+                    cell.setSmallUpperLogoView(secondFakeLogo)
+                }
+            }
+
+            
+            
             LogoLoader.loadLogo(url, completionBlock: { (image, error) in
                 guard cell.tag == indexPath.row else { return }
                 if image != nil{
-                    cell.setSmallUpperLogo(image)
                     cell.setBigLogo(image)
                 }
                 else {
                     let fakeLogo = LogoLoader.generateFakeLogo(url)
                     cell.setBigLogoView(fakeLogo)
-                    let secondFakeLogo = LogoLoader.generateFakeLogo(url)
-                    cell.setSmallUpperLogoView(secondFakeLogo)
                 }
             })
         }
