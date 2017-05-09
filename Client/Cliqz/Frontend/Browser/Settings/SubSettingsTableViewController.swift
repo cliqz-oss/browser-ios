@@ -13,7 +13,7 @@ class SubSettingsTableViewController : UITableViewController {
     private let HeaderHeight: CGFloat = 40
     private let FooterMargin: CGFloat = 44
     private let SectionHeaderFooterIdentifier = "SectionHeaderFooterIdentifier"
-    let CellIdentifier = "CellIdentifier"
+    private static let DefaultCellIdentifier = "DefaultCellIdentifier"
     
     // added to calculate the duration spent on settings page
     var settingsOpenTime: Double?
@@ -30,7 +30,9 @@ class SubSettingsTableViewController : UITableViewController {
         super.viewDidLoad()
         
         tableView.register(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: CellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: SubSettingsTableViewController.DefaultCellIdentifier)
+        tableView.register(SettingsTableSectionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderFooterIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: SubSettingsTableViewController.DefaultCellIdentifier)
         tableView.separatorColor = UIConstants.TableViewSeparatorColor
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
     }
@@ -79,11 +81,11 @@ class SubSettingsTableViewController : UITableViewController {
         return footer
     }
     
-    func getUITableViewCell() -> UITableViewCell {
+    func getUITableViewCell(_ cellIdentifier: String? = SubSettingsTableViewController.DefaultCellIdentifier) -> UITableViewCell {
         var cell: UITableViewCell!
-        cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)
+        cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier!)
         if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: CellIdentifier)
+            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: cellIdentifier)
         }
         return cell
     }

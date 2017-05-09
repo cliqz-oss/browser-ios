@@ -374,13 +374,11 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
     }
 }
 
-
-
 class LimitMobileDataUsageSetting: Setting {
     
     let profile: Profile
     
-    override var style: UITableViewCellStyle { return .Value1 }
+    override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
         return NSAttributedString(string: SettingsPrefs.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
@@ -393,9 +391,9 @@ class LimitMobileDataUsageSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = LimitMobileDataUsageTableViewController()
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
@@ -403,6 +401,32 @@ class LimitMobileDataUsageSetting: Setting {
         //TODO: Connect Telemetry
         // log Telemerty signal
         let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "limit_mobile_data_usage", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+    }
+}
+
+class CliqzConnectSetting: Setting {
+    
+    let profile: Profile
+    
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Connect", tableName: "Cliqz", comment: "[Settings] Connect")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = ConnectTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        //TODO: Connect Telemetry
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
     }
 }

@@ -10,7 +10,8 @@
 
 @interface RCT_EXTERN_MODULE(JSBridge, NSObject)
 
-RCT_EXTERN_METHOD(replyToAction:(nonnull NSInteger *)actionId result:(NSDictionary)result)
+RCT_EXTERN_METHOD(replyToAction:(nonnull NSInteger *)actionId result:(NSDictionary *)result)
 RCT_EXTERN_METHOD(registerAction:)
+RCT_EXTERN_METHOD(pushEvent:(nonnull NSString *)eventId data:(NSDictionary *)data)
 
 @end

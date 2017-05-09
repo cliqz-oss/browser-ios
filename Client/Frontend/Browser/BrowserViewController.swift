@@ -377,6 +377,9 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
 		// Cliqz: removed observer of NotificationBadRequestDetected notification
 		NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
+        // Cliqz: removed observers for Connect features
+        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
     }
 
     override func viewDidLoad() {
@@ -387,6 +390,11 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidEnterBackgroundNotification), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        
+        // Cliqz: Add observers for Connection features
+        NotificationCenter.default.addObserver(self, selector: #selector(openTabViaConnect), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(downloadVideoViaConnect), name: DownloadVideoNotification, object: nil)
+
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         log.debug("BVC adding footer and header…")
@@ -1588,7 +1596,7 @@ class BrowserViewController: UIViewController {
         return .tab(tabState: tab.tabState)
     }
 
-    @objc fileprivate func openSettings() {
+    @objc internal func openSettings() {
         assert(Thread.isMainThread, "Opening settings requires being invoked on the main thread")
 
         let settingsTableViewController = AppSettingsTableViewController()

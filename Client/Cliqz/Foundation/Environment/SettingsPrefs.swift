@@ -140,8 +140,8 @@ class SettingsPrefs {
         return defaultValue
     }
     
-    class func updateLimitMobileDataUsagePref(newValue: Bool) {
-        SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue)
+    class func updateLimitMobileDataUsagePref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
     }
     
     // MARK: - Private helper metods

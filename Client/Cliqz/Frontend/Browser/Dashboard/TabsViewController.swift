@@ -91,6 +91,10 @@ class TabsViewController: UIViewController {
 
 	deinit {
 		self.tabManager.removeDelegate(self)
+        
+        // Removed observers for Connect features
+        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+        
 	}
 
 	override func viewDidLoad() {
@@ -118,9 +122,15 @@ class TabsViewController: UIViewController {
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
 
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
-     
-	}
+        // Add observers for Connection features
+        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
+        
+    }
     
+    // Called when send tab notification sent from Connect while dashboard is presented
+    func newTabOpened() {
+        self.navigationController?.popViewController(animated: true)
+    }
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         
