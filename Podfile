@@ -16,6 +16,7 @@ def project_pods
     ]
     pod 'Yoga', :path => yoga_path
     pod 'RNFS', :path => './JSEngine/node_modules/react-native-fs'
+    pod 'react-native-webrtc', :path => './JSEngine/node_modules/react-native-webrtc'
 end
 
 target 'Client' do

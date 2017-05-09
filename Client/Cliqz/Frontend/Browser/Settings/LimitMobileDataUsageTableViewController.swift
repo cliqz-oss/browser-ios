@@ -34,44 +34,44 @@ class LimitMobileDataUsageTableViewController: SubSettingsTableViewController {
         return "limit_mobile_data_usage"
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = getUITableViewCell()
         
         cell.textLabel?.text = toggleTitles[indexPath.row]
         let control = UISwitch()
         control.onTintColor = UIConstants.ControlTintColor
-        control.addTarget(self, action: #selector(LimitMobileDataUsageTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        control.on = toggles[indexPath.row]
+        control.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
+        control.isOn = toggles[indexPath.row]
         cell.accessoryView = control
-        cell.selectionStyle = .None
-        cell.userInteractionEnabled = true
-        cell.textLabel?.textColor = UIColor.blackColor()
-        control.enabled = true
+        cell.selectionStyle = .none
+        cell.isUserInteractionEnabled = true
+        cell.textLabel?.textColor = UIColor.black
+        control.isEnabled = true
         
         return cell
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return super.tableView(tableView, heightForHeaderInSection: section)
     }
     
-    @objc func switchValueChanged(toggle: UISwitch) {
+    @objc func switchValueChanged(_ toggle: UISwitch) {
         
-        self.toggles[toggle.tag] = toggle.on
+        self.toggles[toggle.tag] = toggle.isOn
         saveToggles()
         self.tableView.reloadData()
         
         // log telemetry signal
         let target = "limit_mobile_data_usage"
-        let state = toggle.on == true ? "off" : "on" // we log old value
+        let state = toggle.isOn == true ? "off" : "on" // we log old value
         let valueChangedSignal = TelemetryLogEventType.Settings("limit_mobile_data_usage", "click", target, state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
