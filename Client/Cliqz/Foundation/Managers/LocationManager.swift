@@ -46,6 +46,7 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .Denied {
             NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: CLLocationManager.locationServicesEnabled())
+            enableLocationInProgress = true
         } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
             self.startUpdatingLocation()
             
