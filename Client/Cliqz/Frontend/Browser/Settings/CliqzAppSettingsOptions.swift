@@ -375,3 +375,34 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
 }
 
 
+
+class LimitMobileDataUsageSetting: Setting {
+    
+    let profile: Profile
+    
+    override var style: UITableViewCellStyle { return .Value1 }
+    
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
+    }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Limit Mobile Data Usage", tableName: "Cliqz", comment: "[Settings] Limit Mobile Data Usage")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    
+    override func onClick(navigationController: UINavigationController?) {
+        let viewController = LimitMobileDataUsageTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        //TODO: Connect Telemetry
+        // log Telemerty signal
+        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "limit_mobile_data_usage", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+    }
+}

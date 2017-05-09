@@ -49,11 +49,12 @@ class AppSettingsTableViewController: SettingsTableViewController {
         
         // Browsing & History Section
         let blockPopupsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", tableName: "Cliqz", comment: " [Settings] Block pop-up windows"))
+        let limitMobileDataUsageSetting = LimitMobileDataUsageSetting(settings: self)
         let adBlockerSetting            = AdBlockerSetting(settings: self)
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
         
-        var browsingAndHistorySection: [Setting] = [blockPopupsSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        var browsingAndHistorySection: [Setting] = [blockPopupsSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]

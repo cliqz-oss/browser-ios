@@ -58,6 +58,7 @@
 		1E2DEC991E818BD1003D76B7 /* SessionRestore.html in Resources */ = {isa = PBXBuildFile; fileRef = 1E2DEC981E818BD1003D76B7 /* SessionRestore.html */; };
 		1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */; };
 		1E2DECAC1E818C2D003D76B7 /* SessionRestoreHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */; };
+		1E3F25041EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */; };
 		1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */; };
 		1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */; };
 		1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */; };
@@ -1426,6 +1427,7 @@
 		1E2DEC981E818BD1003D76B7 /* SessionRestore.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = SessionRestore.html; sourceTree = "<group>"; };
 		1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHandler.swift; sourceTree = "<group>"; };
 		1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHelper.swift; sourceTree = "<group>"; };
+		1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimitMobileDataUsageTableViewController.swift; sourceTree = "<group>"; };
 		1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzAppSettingsOptions.swift; sourceTree = "<group>"; };
@@ -2643,6 +2645,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E3F24DA1EC1AA1800D9DC0F /* Connect */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Connect;
+			sourceTree = "<group>";
+		};
 		1E47067E1EB0952000516BA5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -2652,6 +2661,7 @@
 				1E4706821EB0952000516BA5 /* HumanWebSettingsTableViewController.swift */,
 				1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */,
 				1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */,
+				1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */,
 				1E4706841EB0952000516BA5 /* SettingsActivity.swift */,
 			);
 			path = Settings;
@@ -2821,6 +2831,7 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				1E3F24DA1EC1AA1800D9DC0F /* Connect */,
 				1E47067E1EB0952000516BA5 /* Settings */,
 				AFA6F3DB1E67424700BA630B /* ControlCenter */,
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
@@ -6726,6 +6737,7 @@
 				59A681BDFC95A19F05E07223 /* SearchViewController.swift in Sources */,
 				E69E06D01C765BB900D0F926 /* NSAttributedStringExtensions.swift in Sources */,
 				7BEDD2B21CB7CC0B004B51F3 /* Animatable.swift in Sources */,
+				1E3F25041EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift in Sources */,
 				1E79DE821D508368006BEB4A /* AWSFMDatabase.m in Sources */,
 				D30B0F301AA7D66300C01CA3 /* ThumbnailCell.swift in Sources */,
 				E6CF28E71CB43B7900151AB3 /* SensitiveViewController.swift in Sources */,
