@@ -4,8 +4,8 @@
 
 import Foundation
 
-public class DefaultSuggestedSites {
-    public static let sites = [
+open class DefaultSuggestedSites {
+    open static let sites = [
         "default": [
             SuggestedSiteData(
                 url: "https://m.facebook.com/",

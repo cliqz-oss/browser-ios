@@ -99,9 +99,9 @@ class SearchTests: XCTestCase {
         // create URL
         let searchTerm = "Foo Bar"
         let encodedSeachTerm = searchTerm.stringByReplacingOccurrencesOfString(" ", withString: "+")
-        let googleSearchURL = NSURL(string: "https://www.google.com/search?q=\(encodedSeachTerm)&ie=utf-8&oe=utf-8&gws_rd=cr&ei=I0UyVp_qK4HtUoytjagM")
-        let duckDuckGoSearchURL = NSURL(string: "https://duckduckgo.com/?q=\(encodedSeachTerm)&ia=about")
-        let invalidSearchURL = NSURL(string: "https://www.google.co.uk")
+        let googleSearchURL = URL(string: "https://www.google.com/search?q=\(encodedSeachTerm)&ie=utf-8&oe=utf-8&gws_rd=cr&ei=I0UyVp_qK4HtUoytjagM")
+        let duckDuckGoSearchURL = URL(string: "https://duckduckgo.com/?q=\(encodedSeachTerm)&ia=about")
+        let invalidSearchURL = URL(string: "https://www.google.co.uk")
 
         // check it correctly matches google search term given google config
         XCTAssertEqual(searchTerm, googleEngine.queryForSearchURL(googleSearchURL))

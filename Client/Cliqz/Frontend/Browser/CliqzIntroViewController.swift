@@ -9,12 +9,12 @@
 import UIKit
 
 class CliqzIntroViewController: UIViewController {
-    private let cliqzNameView = UIImageView()
-    private let cliqzLogoView = UIImageView()
-    private let subtitleLabel = UILabel()
-    private let brandingLabel = UILabel()
-    private let startButton = UIButton()
-    private var durationStartTime = 0.0
+    fileprivate let cliqzNameView = UIImageView()
+    fileprivate let cliqzLogoView = UIImageView()
+    fileprivate let subtitleLabel = UILabel()
+    fileprivate let brandingLabel = UILabel()
+    fileprivate let startButton = UIButton()
+    fileprivate var durationStartTime = 0.0
     weak var delegate: IntroViewControllerDelegate?
 
     
@@ -22,7 +22,7 @@ class CliqzIntroViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.white
         
         // Images
         cliqzNameView.image = UIImage(named: "introCliqz")
@@ -35,26 +35,26 @@ class CliqzIntroViewController: UIViewController {
         subtitleLabel.text = NSLocalizedString("SEARCH ENGINE \n IN THE BROWSER", tableName: "Cliqz", comment: "subtitle label for onBorading")
         subtitleLabel.textColor = UIColor(colorString: "A8A8A8")
         subtitleLabel.numberOfLines = 2
-        subtitleLabel.textAlignment = .Right
+        subtitleLabel.textAlignment = .right
         subtitleLabel.font = UIFont(name: "Gotham-Book", size: 16.0)
         self.view.addSubview(subtitleLabel)
         
         brandingLabel.text = NSLocalizedString("Faster and safer", tableName: "Cliqz", comment: "Brading label for onBorading")
         brandingLabel.textColor = UIColor(colorString: "333333")
-        subtitleLabel.font = UIFont.systemFontOfSize(16.0)
+        subtitleLabel.font = UIFont.systemFont(ofSize: 16.0)
         self.view.addSubview(brandingLabel)
 
 
         // startButton
-        startButton.addTarget(self, action: #selector(startBrowsing), forControlEvents: .TouchUpInside)
+        startButton.addTarget(self, action: #selector(startBrowsing), for: .touchUpInside)
         let buttonTitle = NSLocalizedString("Let's start!", tableName: "Cliqz", comment: "Start buttun title for onBorading")
         let buttonColor = UIColor(colorString: "45C2CC")
-        startButton.setTitle(buttonTitle, forState: .Normal)
-        startButton.backgroundColor = UIColor.clearColor()
+        startButton.setTitle(buttonTitle, for: UIControlState())
+        startButton.backgroundColor = UIColor.clear
         startButton.layer.cornerRadius = 20.0
         startButton.layer.borderWidth = 1
-        startButton.layer.borderColor = buttonColor.CGColor
-        startButton.setTitleColor(buttonColor, forState: .Normal)
+        startButton.layer.borderColor = buttonColor.cgColor
+        startButton.setTitleColor(buttonColor, for: .normal)
         self.view.addSubview(startButton)
         
         // setup view constraints
@@ -62,23 +62,23 @@ class CliqzIntroViewController: UIViewController {
         
         // logging Onboarding event
         TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", 0, nil))
-        durationStartTime = NSDate.getCurrentMillis()
+        durationStartTime = Date.getCurrentMillis()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
     }
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
 
-    private func setupConstraints() {
+    fileprivate func setupConstraints() {
         cliqzLogoView.snp_makeConstraints { make in
             make.centerX.equalTo(self.view)
             make.centerY.equalTo(self.view).dividedBy(2.0)
@@ -107,12 +107,12 @@ class CliqzIntroViewController: UIViewController {
         
     }
     
-    @objc private func startBrowsing() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @objc fileprivate func startBrowsing() {
+        self.dismiss(animated: true, completion: nil)
         delegate?.introViewControllerDidFinish()
 
         // Cliqz: logged Onboarding event
-        let duration = Int(NSDate.getCurrentMillis() - durationStartTime)
+        let duration = Int(Date.getCurrentMillis() - durationStartTime)
         TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", 0, duration))
     }
 

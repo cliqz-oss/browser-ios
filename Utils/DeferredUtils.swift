@@ -5,67 +5,80 @@
 import Deferred
 // Haskell, baby.
 
-// Monadic bind/flatMap operator for Deferred.
-infix operator >>== { associativity left precedence 160 }
-public func >>== <T, U>(x: Deferred<Maybe<T>>, f: T -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
-    return chainDeferred(x, f: f)
-}
-
-// A termination case.
-public func >>== <T>(x: Deferred<Maybe<T>>, f: T -> ()) {
-    return x.upon { result in
-        if let v = result.successValue {
-            f(v)
-        }
-    }
+precedencegroup MonadicBindPrecedence {
+	associativity: left
+	higherThan: MonadicDoPrecedence
+	lowerThan: BitwiseShiftPrecedence
 }
 
 // Monadic `do` for Deferred.
-infix operator >>> { associativity left precedence 150 }
-public func >>> <T, U>(x: Deferred<Maybe<T>>, f: () -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
-    return x.bind { res in
-        if res.isSuccess {
-            return f();
-        }
-        return deferMaybe(res.failureValue!)
-    }
+
+precedencegroup MonadicDoPrecedence {
+	associativity: left
+	higherThan: MultiplicationPrecedence
+}
+
+infix operator >>== : MonadicBindPrecedence
+infix operator >>> : MonadicDoPrecedence
+
+@discardableResult public func >>== <T, U>(x: Deferred<Maybe<T>>, f: @escaping (T) -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
+	return chainDeferred(x, f: f)
+}
+
+// A termination case.
+@discardableResult public func >>== <T>(x: Deferred<Maybe<T>>, f: @escaping (T) -> Void) {
+	return x.upon { result in
+		if let v = result.successValue {
+			f(v)
+		}
+	}
+}
+
+// Monadic `do` for Deferred.
+@discardableResult public func >>> <T, U>(x: Deferred<Maybe<T>>, f: @escaping () -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
+	return x.bind { res in
+		if res.isSuccess {
+			return f()
+		}
+		return deferMaybe(res.failureValue!)
+	}
 }
 
 // Another termination case.
-public func >>> <T>(x: Deferred<Maybe<T>>, f: () -> ())  {
-    return x.upon { res in
-        if res.isSuccess {
-            f();
-        }
-    }
+@discardableResult public func >>> <T>(x: Deferred<Maybe<T>>, f: @escaping () -> Void) {
+	return x.upon { res in
+		if res.isSuccess {
+			f()
+		}
+	}
 }
 
 /**
 * Returns a thunk that return a Deferred that resolves to the provided value.
 */
-public func always<T>(t: T) -> () -> Deferred<Maybe<T>> {
+public func always<T>(_ t: T) -> () -> Deferred<Maybe<T>> {
     return { deferMaybe(t) }
 }
 
-public func deferMaybe<T>(s: T) -> Deferred<Maybe<T>> {
+public func deferMaybe<T>(_ s: T) -> Deferred<Maybe<T>> {
     return Deferred(value: Maybe(success: s))
 }
 
-public func deferMaybe<T>(e: MaybeErrorType) -> Deferred<Maybe<T>> {
+public func deferMaybe<T>(_ e: MaybeErrorType) -> Deferred<Maybe<T>> {
     return Deferred(value: Maybe(failure: e))
 }
 
-public typealias Success = Deferred<Maybe<()>>
+public typealias Success = Deferred<Maybe<Void>>
 
-public func succeed() -> Success {
-    return deferMaybe(())
+@discardableResult public func succeed() -> Success {
+	return deferMaybe(())
 }
 
 /**
  * Return a single Deferred that represents the sequential chaining
  * of f over the provided items.
  */
-public func walk<T>(items: [T], f: T -> Success) -> Success {
+public func walk<T>(_ items: [T], f: @escaping (T) -> Success) -> Success {
     return items.reduce(succeed()) { success, item -> Success in
         success >>> { f(item) }
     }
@@ -75,7 +88,7 @@ public func walk<T>(items: [T], f: T -> Success) -> Success {
  * Like `all`, but thanks to its taking thunks as input, each result is
  * generated in strict sequence. Fails immediately if any result is failure.
  */
-public func accumulate<T>(thunks: [() -> Deferred<Maybe<T>>]) -> Deferred<Maybe<[T]>> {
+public func accumulate<T>(_ thunks: [() -> Deferred<Maybe<T>>]) -> Deferred<Maybe<[T]>> {
     if thunks.isEmpty {
         return deferMaybe([])
     }
@@ -84,8 +97,8 @@ public func accumulate<T>(thunks: [() -> Deferred<Maybe<T>>]) -> Deferred<Maybe<
     var results: [T] = []
     results.reserveCapacity(thunks.count)
 
-    var onValue: (T -> ())!
-    var onResult: (Maybe<T> -> ())!
+    var onValue: ((T) -> ())!
+    var onResult: ((Maybe<T>) -> ())!
 
     onValue = { t in
         results.append(t)
@@ -113,7 +126,7 @@ public func accumulate<T>(thunks: [() -> Deferred<Maybe<T>>]) -> Deferred<Maybe<
  * Take a function and turn it into a side-effect that can appear
  * in a chain of async operations without producing its own value.
  */
-public func effect<T, U>(f: T -> U) -> T -> Deferred<Maybe<T>> {
+public func effect<T, U>(_ f: @escaping (T) -> U) -> (T) -> Deferred<Maybe<T>> {
     return { t in
         f(t)
         return deferMaybe(t)
@@ -124,13 +137,13 @@ public func effect<T, U>(f: T -> U) -> T -> Deferred<Maybe<T>> {
  * Return a single Deferred that represents the sequential chaining of
  * f over the provided items, with the return value chained through.
  */
-public func walk<T, U>(items: [T], start: Deferred<Maybe<U>>, f: (T, U) -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
+public func walk<T, U>(_ items: [T], start: Deferred<Maybe<U>>, f: @escaping (T, U) -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
     let fs = items.map { item in
         return { val in
             f(item, val)
         }
     }
-    return fs.reduce(start, combine: >>==)
+    return fs.reduce(start, >>==)
 }
 
 /**
@@ -148,7 +161,7 @@ extension Array where Element: Success {
     }
 }
 
-public func chainDeferred<T, U>(a: Deferred<Maybe<T>>, f: T -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
+public func chainDeferred<T, U>(_ a: Deferred<Maybe<T>>, f: @escaping (T) -> Deferred<Maybe<U>>) -> Deferred<Maybe<U>> {
     return a.bind { res in
         if let v = res.successValue {
             return f(v)
@@ -157,7 +170,7 @@ public func chainDeferred<T, U>(a: Deferred<Maybe<T>>, f: T -> Deferred<Maybe<U>
     }
 }
 
-public func chainResult<T, U>(a: Deferred<Maybe<T>>, f: T -> Maybe<U>) -> Deferred<Maybe<U>> {
+public func chainResult<T, U>(_ a: Deferred<Maybe<T>>, f: @escaping (T) -> Maybe<U>) -> Deferred<Maybe<U>> {
     return a.map { res in
         if let v = res.successValue {
             return f(v)
@@ -166,14 +179,14 @@ public func chainResult<T, U>(a: Deferred<Maybe<T>>, f: T -> Maybe<U>) -> Deferr
     }
 }
 
-public func chain<T, U>(a: Deferred<Maybe<T>>, f: T -> U) -> Deferred<Maybe<U>> {
+public func chain<T, U>(_ a: Deferred<Maybe<T>>, f: @escaping (T) -> U) -> Deferred<Maybe<U>> {
     return chainResult(a, f: { Maybe<U>(success: f($0)) })
 }
 
 /// Defer-ifies a block to an async dispatch queue.
-public func deferDispatchAsync<T>(queue: dispatch_queue_t, f: () -> Deferred<Maybe<T>>) -> Deferred<Maybe<T>> {
+public func deferDispatchAsync<T>(_ queue: DispatchQueue, f: @escaping () -> Deferred<Maybe<T>>) -> Deferred<Maybe<T>> {
     let deferred = Deferred<Maybe<T>>()
-    dispatch_async(queue, {
+    queue.async(execute: {
         f().upon { result in
             deferred.fill(result)
         }

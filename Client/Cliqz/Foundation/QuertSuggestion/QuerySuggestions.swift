@@ -10,8 +10,8 @@ import UIKit
 
 class QuerySuggestions: NSObject {
     //MARK:- Constants
-    private static let querySuggestionsApiUrl = "http://suggest.test.cliqz.com:7000/suggest"
-    private static let dispatchQueue = dispatch_queue_create("com.cliqz.QuerySuggestion", DISPATCH_QUEUE_SERIAL)
+    fileprivate static let querySuggestionsApiUrl = "http://suggest.test.cliqz.com:7000/suggest"
+    fileprivate static let dispatchQueue = DispatchQueue(label: "com.cliqz.QuerySuggestion", attributes: [])
 
     
     //MARK:- public APIs
@@ -38,12 +38,12 @@ class QuerySuggestions: NSObject {
         return querySuggestionEnabledByABTest && QuerySuggestions.querySuggestionEnabledForCurrentRegion() && SettingsPrefs.getQuerySuggestionPref()
     }
     
-    class func getSuggestions(query: String, completionHandler: AnyObject -> ()){
+    class func getSuggestions(_ query: String, completionHandler: @escaping (Any) -> ()){
         ConnectionManager.sharedInstance
-            .sendRequest(.POST,
+            .sendRequest(.post,
                          url: QuerySuggestions.querySuggestionsApiUrl,
                          parameters: ["query": query],
-                         responseType: .JSONResponse,
+                         responseType: .jsonResponse,
                          queue: QuerySuggestions.dispatchQueue,
                          onSuccess: completionHandler,
                          onFailure: {(data, error) in

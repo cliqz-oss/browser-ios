@@ -10,14 +10,14 @@ import XCGLogger
 private let log = Logger.browserLogger
 
 struct TabsButtonUX {
-    static let TitleColor: UIColor = UIColor.blackColor()
-    static let TitleBackgroundColor: UIColor = UIColor.whiteColor()
+    static let TitleColor: UIColor = UIColor.black
+    static let TitleBackgroundColor: UIColor = UIColor.white
     static let CornerRadius: CGFloat = 2
     // Cliqz: change the the title font of TabsButton
-    static let TitleFont: UIFont = UIFont.boldSystemFontOfSize(10) //UIFont.boldSystemFontOfSize
+    static let TitleFont: UIFont = UIFont.boldSystemFont(ofSize: 10) //UIFont.boldSystemFontOfSize
     static let BorderStrokeWidth: CGFloat = 1
 
-    static let BorderColor: UIColor = UIColor.clearColor()
+    static let BorderColor: UIColor = UIColor.clear
 	// Cliqz: Changed Insets to make Tabs button as big as UITextField
     static let TitleInsets = UIEdgeInsets(top: 11, left: 8, bottom: 5, right: 11)
     // UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
@@ -32,8 +32,8 @@ struct TabsButtonUX {
         // Cliqz: use title font same as one in normal mode
         theme.font = TitleFont//UIConstants.DefaultChromeBoldFont
 		// Cliqz: Changed background&text colors and insets of TabsButton in Private Mode according to requirements (Commented out original color)
-        theme.backgroundColor = UIColor.clearColor() // UIConstants.AppBackgroundColor
-        theme.textColor = UIColor.whiteColor() // UIConstants.PrivateModePurple
+        theme.backgroundColor = UIColor.clear // UIConstants.AppBackgroundColor
+        theme.textColor = UIColor.white // UIConstants.PrivateModePurple
 		theme.insets = TitleInsets // UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
         theme.highlightButtonColor = UIConstants.PrivateModePurple
@@ -46,8 +46,8 @@ struct TabsButtonUX {
         theme.borderWidth = BorderStrokeWidth
         theme.font = TitleFont
 		// Cliqz: Changed text colors and backgroundColor of TabsButton in Normal Mode according to requirements (Commented out original color)
-        theme.backgroundColor = UIColor.clearColor() //TitleBackgroundColor
-        theme.textColor = UIColor.blackColor() // TitleColor
+        theme.backgroundColor = UIColor.clear //TitleBackgroundColor
+        theme.textColor = UIColor.black // TitleColor
         theme.insets = TitleInsets
         theme.highlightButtonColor = TabsButtonUX.TitleColor
         theme.highlightTextColor = TabsButtonUX.TitleBackgroundColor
@@ -60,9 +60,9 @@ struct TabsButtonUX {
 //Cliqz: Change the super class of TabsButton to UIButton to be included into both TabToolBar and URLBar
 //class TabsButton: UIControl {
 class TabsButton: UIButton {
-    private var theme: Theme = TabsButtonUX.Themes[Theme.NormalMode]!
+    fileprivate var theme: Theme = TabsButtonUX.Themes[Theme.NormalMode]!
     
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         didSet {
             //Cliqz: disable highlighting effect for tabs button
 //            if highlighted {
@@ -82,34 +82,34 @@ class TabsButton: UIButton {
         let label = UILabel()
         label.font = TabsButtonUX.TitleFont
         label.layer.cornerRadius = TabsButtonUX.CornerRadius
-        label.textAlignment = NSTextAlignment.Center
-        label.userInteractionEnabled = false
+        label.textAlignment = NSTextAlignment.center
+        label.isUserInteractionEnabled = false
         return label
     }()
 
     lazy var insideButton: UIView = {
         let view = UIView()
         view.clipsToBounds = false
-        view.userInteractionEnabled = false
+        view.isUserInteractionEnabled = false
         return view
     }()
 
-    private lazy var labelBackground: UIView = {
+    fileprivate lazy var labelBackground: UIView = {
         let background = UIView()
         background.layer.cornerRadius = TabsButtonUX.CornerRadius
-        background.userInteractionEnabled = false
+        background.isUserInteractionEnabled = false
         return background
     }()
 
-    private lazy var borderView: InnerStrokedView = {
+    fileprivate lazy var borderView: InnerStrokedView = {
         let border = InnerStrokedView()
         border.strokeWidth = TabsButtonUX.BorderStrokeWidth
         border.cornerRadius = TabsButtonUX.CornerRadius
-        border.userInteractionEnabled = false
+        border.isUserInteractionEnabled = false
         return border
     }()
 
-    private var buttonInsets: UIEdgeInsets = TabsButtonUX.TitleInsets
+    fileprivate var buttonInsets: UIEdgeInsets = TabsButtonUX.TitleInsets
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -175,7 +175,7 @@ class TabsButton: UIButton {
 }
 
 extension TabsButton: Themeable {
-    func applyTheme(themeName: String) {
+    func applyTheme(_ themeName: String) {
 
         guard let theme = TabsButtonUX.Themes[themeName] else {
             log.error("Unable to apply unknown theme \(themeName)")

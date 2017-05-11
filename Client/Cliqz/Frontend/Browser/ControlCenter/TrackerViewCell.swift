@@ -26,18 +26,18 @@ class TrackerViewCell: UITableViewCell {
 
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-		self.contentView.backgroundColor = UIColor.clearColor()
-		iconImageView.backgroundColor = UIColor.clearColor()
+		self.contentView.backgroundColor = UIColor.clear
+		iconImageView.backgroundColor = UIColor.clear
 		let img = UIImage(named: "trackerInfo")
-		iconImageView.image = img?.imageWithRenderingMode(.AlwaysTemplate)
+		iconImageView.image = img?.withRenderingMode(.alwaysTemplate)
 		iconImageView.tintColor = self.textColor()
 		self.contentView.addSubview(iconImageView)
-		nameLabel.backgroundColor = UIColor.clearColor()
+		nameLabel.backgroundColor = UIColor.clear
 		nameLabel.textColor = self.textColor()
 		self.contentView.addSubview(nameLabel)
-		countLabel.backgroundColor = UIColor.clearColor()
+		countLabel.backgroundColor = UIColor.clear
 		countLabel.textColor = self.textColor()
-		countLabel.textAlignment = .Right
+		countLabel.textAlignment = .right
 		self.contentView.addSubview(countLabel)
 	}
 
@@ -50,7 +50,7 @@ class TrackerViewCell: UITableViewCell {
 		self.iconImageView.snp_makeConstraints { (make) in
 			make.left.equalTo(self.contentView)
 			make.top.equalTo(self.contentView).offset(3)
-			var sz: CGSize = CGSizeMake(0, 0)
+			var sz: CGSize = CGSize(width: 0, height: 0)
 			if let img = self.iconImageView.image {
 				sz = img.size
 			}
@@ -68,7 +68,7 @@ class TrackerViewCell: UITableViewCell {
 		}
 	}
 
-	private func textColor() -> UIColor {
+	fileprivate func textColor() -> UIColor {
 		if self.isPrivateMode == true {
 			return UIConstants.PrivateModeTextColor
 		}

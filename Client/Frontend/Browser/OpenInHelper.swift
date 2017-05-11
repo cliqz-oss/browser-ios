@@ -15,7 +15,7 @@ private let log = Logger.browserLogger
 
 struct OpenInViewUX {
     static let ViewHeight: CGFloat = 40.0
-    static let TextFont = UIFont.systemFontOfSize(16)
+    static let TextFont = UIFont.systemFont(ofSize: 16)
     static let TextColor = UIColor(red: 74.0/255.0, green: 144.0/255.0, blue: 226.0/255.0, alpha: 1.0)
     static let TextOffset = -15
     static let OpenInString = NSLocalizedString("Open in…", comment: "String indicating that the file can be opened in another application on the device")
@@ -27,7 +27,7 @@ enum MimeType: String {
 }
 
 protocol OpenInHelper {
-    init?(response: NSURLResponse)
+    init?(response: URLResponse)
     var openInView: OpenInView? { get }
     func open()
 }
@@ -35,7 +35,7 @@ protocol OpenInHelper {
 struct OpenIn {
     static let helpers: [OpenInHelper.Type] = [OpenPdfInHelper.self, OpenPassBookHelper.self, ShareFileHelper.self]
     
-    static func helperForResponse(response: NSURLResponse) -> OpenInHelper? {
+    static func helperForResponse(response: URLResponse) -> OpenInHelper? {
         return helpers.flatMap { $0.init(response: response) }.first
     }
 }
@@ -43,12 +43,12 @@ struct OpenIn {
 class ShareFileHelper: NSObject, OpenInHelper {
     let openInView: OpenInView? = nil
 
-    private var url: NSURL
+    private var url: URL
     var pathExtension: String?
 
-    required init?(response: NSURLResponse) {
-        guard let MIMEType = response.MIMEType where !(MIMEType == MimeType.PASS.rawValue || MIMEType == MimeType.PDF.rawValue),
-            let responseURL = response.URL else { return nil }
+    required init?(response: URLResponse) {
+        guard let MIMEType = response.mimeType, !(MIMEType == MimeType.PASS.rawValue || MIMEType == MimeType.PDF.rawValue),
+            let responseURL = response.url else { return nil }
         url = responseURL
         super.init()
     }
@@ -57,92 +57,92 @@ class ShareFileHelper: NSObject, OpenInHelper {
         let alertController = UIAlertController(
             title: Strings.OpenInDownloadHelperAlertTitle,
             message: Strings.OpenInDownloadHelperAlertMessage,
-            preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction( UIAlertAction(title: Strings.OpenInDownloadHelperAlertCancel, style: .Cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: Strings.OpenInDownloadHelperAlertConfirm, style: .Default){ (action) in
+            preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction( UIAlertAction(title: Strings.OpenInDownloadHelperAlertCancel, style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: Strings.OpenInDownloadHelperAlertConfirm, style: .default){ (action) in
             let objectsToShare = [self.url]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(activityVC, animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
         })
-        UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+        UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
     }
 }
 
 class OpenPassBookHelper: NSObject, OpenInHelper {
     let openInView: OpenInView? = nil
 
-    private var url: NSURL
+    private var url: URL
 
-    required init?(response: NSURLResponse) {
-        guard let MIMEType = response.MIMEType where MIMEType == MimeType.PASS.rawValue && PKAddPassesViewController.canAddPasses(),
-            let responseURL = response.URL else { return nil }
+    required init?(response: URLResponse) {
+        guard let MIMEType = response.mimeType, MIMEType == MimeType.PASS.rawValue && PKAddPassesViewController.canAddPasses(),
+            let responseURL = response.url else { return nil }
         url = responseURL
         super.init()
     }
 
     func open() {
-        guard let passData = NSData(contentsOfURL: url) else { return }
+        let passData = try? Data(contentsOf: url)
         var error: NSError? = nil
-        let pass = PKPass(data: passData, error: &error)
+        let pass = PKPass(data: passData!, error: &error)
         if let _ = error {
             // display an error
             let alertController = UIAlertController(
                 title: Strings.UnableToAddPassErrorTitle,
                 message: Strings.UnableToAddPassErrorMessage,
-                preferredStyle: UIAlertControllerStyle.Alert)
+                preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(
-                UIAlertAction(title: Strings.UnableToAddPassErrorDismiss, style: .Cancel) { (action) in
+                UIAlertAction(title: Strings.UnableToAddPassErrorDismiss, style: .cancel) { (action) in
                     // Do nothing.
                 })
-            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
             return
         }
         let passLibrary = PKPassLibrary()
         if passLibrary.containsPass(pass) {
-            UIApplication.sharedApplication().openURL(pass.passURL!)
+            UIApplication.shared.openURL(pass.passURL!)
         } else {
             let addController = PKAddPassesViewController(pass: pass)
-            UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(addController, animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(addController, animated: true, completion: nil)
         }
 
     }
 }
 
 class OpenPdfInHelper: NSObject, OpenInHelper, UIDocumentInteractionControllerDelegate {
-    private var url: NSURL
+    private var url: URL
     private var docController: UIDocumentInteractionController? = nil
-    private var openInURL: NSURL?
+    private var openInURL: URL?
 
     lazy var openInView: OpenInView? = getOpenInView(self)()
 
-    lazy var documentDirectory: NSURL = {
-        return NSURL(string: NSTemporaryDirectory())!.URLByAppendingPathComponent("pdfs")
-    }()!
+    lazy var documentDirectory: URL = {
+		return URL(string: NSTemporaryDirectory())!.appendingPathComponent("pdfs")
+    }()
 
-    private var filepath: NSURL?
+    private var filepath: URL?
 
-    required init?(response: NSURLResponse) {
-        guard let MIMEType = response.MIMEType where MIMEType == MimeType.PDF.rawValue && UIApplication.sharedApplication().canOpenURL(NSURL(string: "itms-books:")!),
-            let responseURL = response.URL else { return nil }
+    required init?(response: URLResponse) {
+        guard let MIMEType = response.mimeType, MIMEType == MimeType.PDF.rawValue && UIApplication.shared.canOpenURL(URL(string: "itms-books:")!),
+            let responseURL = response.url else { return nil }
         url = responseURL
         super.init()
         setFilePath(response.suggestedFilename ?? url.lastPathComponent ?? "file.pdf")
     }
 
-    private func setFilePath(suggestedFilename: String) {
+    private func setFilePath(_ suggestedFilename: String) {
         var filename = suggestedFilename
         let pathExtension = filename.asURL?.pathExtension
         if pathExtension == nil {
-            filename.appendContentsOf(".pdf")
+            filename.append(".pdf")
         }
-        filepath = documentDirectory.URLByAppendingPathComponent(filename)
+        filepath = documentDirectory.appendingPathComponent(filename)
     }
 
     deinit {
         guard let url = openInURL else { return }
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
         do {
-            try fileManager.removeItemAtURL(url)
+            try fileManager.removeItem(at: url)
         } catch {
             log.error("failed to delete file at \(url): \(error)")
         }
@@ -151,12 +151,12 @@ class OpenPdfInHelper: NSObject, OpenInHelper, UIDocumentInteractionControllerDe
     func getOpenInView() -> OpenInView {
         let overlayView = OpenInView()
 
-        overlayView.openInButton.addTarget(self, action: #selector(OpenPdfInHelper.open), forControlEvents: .TouchUpInside)
+        overlayView.openInButton.addTarget(self, action: #selector(OpenPdfInHelper.open), for: .touchUpInside)
         return overlayView
     }
 
-    func createDocumentControllerForURL(url: NSURL) {
-        docController = UIDocumentInteractionController(URL: url)
+    func createDocumentControllerForURL(_ url: URL) {
+		docController = UIDocumentInteractionController(url: url)
         docController?.delegate = self
         self.openInURL = url
     }
@@ -172,31 +172,31 @@ class OpenPdfInHelper: NSObject, OpenInHelper, UIDocumentInteractionControllerDe
                 createDocumentControllerForURL(url)
                 return
             }
-            let contentsOfFile = NSData(contentsOfURL: url)
-            let fileManager = NSFileManager.defaultManager()
+            let contentsOfFile = try? Data(contentsOf: url)
+            let fileManager = FileManager.default
             do {
-                try fileManager.createDirectoryAtPath(documentDirectory.absoluteString!, withIntermediateDirectories: true, attributes: nil)
-                if fileManager.createFileAtPath(filePath.absoluteString!, contents: contentsOfFile, attributes: nil) {
-                    let openInURL = NSURL(fileURLWithPath: filePath.absoluteString!)
+                try fileManager.createDirectory(atPath: documentDirectory.absoluteString, withIntermediateDirectories: true, attributes: nil)
+                if fileManager.createFile(atPath: filePath.absoluteString, contents: contentsOfFile, attributes: nil) {
+                    let openInURL = URL(fileURLWithPath: filePath.absoluteString)
                     createDocumentControllerForURL(openInURL)
                 } else {
                     log.error("Unable to create local version of PDF file at \(filePath)")
                 }
             } catch {
-                log.error("Error on creating directory at \(documentDirectory)")
+                log.error("Error on creating directory at \(self.documentDirectory)")
             }
         }
     }
 
     func open() {
         createLocalCopyOfPDF()
-        guard let _parentView = self.openInView!.superview, docController = self.docController else { log.error("view doesn't have a superview so can't open anything"); return }
+        guard let _parentView = self.openInView!.superview, let docController = self.docController else { log.error("view doesn't have a superview so can't open anything"); return }
         // iBooks should be installed by default on all devices we care about, so regardless of whether or not there are other pdf-capable
         // apps on this device, if we can open in iBooks we can open this PDF
         // simulators do not have iBooks so the open in view will not work on the simulator
-        if UIApplication.sharedApplication().canOpenURL(NSURL(string: "itms-books:")!) {
+        if UIApplication.shared.canOpenURL(URL(string: "itms-books:")!) {
             log.info("iBooks installed: attempting to open pdf")
-            docController.presentOpenInMenuFromRect(CGRectZero, inView: _parentView, animated: true)
+            docController.presentOpenInMenu(from: .zero, in: _parentView, animated: true)
         } else {
             log.info("iBooks is not installed")
         }
@@ -207,9 +207,9 @@ class OpenInView: UIView {
     let openInButton = UIButton()
 
     init() {
-        super.init(frame: CGRectZero)
-        openInButton.setTitleColor(OpenInViewUX.TextColor, forState: UIControlState.Normal)
-        openInButton.setTitle(OpenInViewUX.OpenInString, forState: UIControlState.Normal)
+        super.init(frame: .zero)
+        openInButton.setTitleColor(OpenInViewUX.TextColor, for: UIControlState.normal)
+        openInButton.setTitle(OpenInViewUX.OpenInString, for: UIControlState.normal)
         openInButton.titleLabel?.font = OpenInViewUX.TextFont
         openInButton.sizeToFit()
         self.addSubview(openInButton)
@@ -218,7 +218,7 @@ class OpenInView: UIView {
             make.height.equalTo(self)
             make.trailing.equalTo(self).offset(OpenInViewUX.TextOffset)
         }
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = UIColor.white
     }
 
     required init?(coder aDecoder: NSCoder) {

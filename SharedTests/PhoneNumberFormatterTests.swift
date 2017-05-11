@@ -5,7 +5,7 @@
 @testable import Shared
 import Foundation
 import XCTest
-import libPhoneNumber
+import libPhoneNumberiOS
 
 class PhoneNumberFormatterTests: XCTestCase {
 

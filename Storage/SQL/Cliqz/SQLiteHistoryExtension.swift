@@ -26,8 +26,8 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return count
     }
     
-    public func getOldestVisitDate() -> NSDate? {
-        var oldestVisitDate: NSDate?
+    public func getOldestVisitDate() -> Date? {
+        var oldestVisitDate: Date?
 
         let visitsSQL = "SELECT MIN(\(TableVisits).date) AS date FROM \(TableVisits) "
         
@@ -38,8 +38,8 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return oldestVisitDate
     }
     
-    public func removeHistory(ids: [Int]) -> Success {
-        let idsCommaSeparated = ids.map{String($0)}.joinWithSeparator(",")
+    public func removeHistory(_ ids: [Int]) -> Success {
+        let idsCommaSeparated = ids.map{String($0)}.joined(separator: ",")
 
         return self.db.run([
             ("DELETE FROM \(TableVisits) WHERE id in (\(idsCommaSeparated))", nil),
@@ -50,7 +50,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
     }
 	
 	// TODO: check if possible to use FF's version of getHistory
-    public func getHistoryVisits(offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
+    public func getHistoryVisits(_ offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
         args = []
 		
@@ -65,12 +65,12 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
     }
 
-	public func hideTopSite(url: String) -> Success {
+	public func hideTopSite(_ url: String) -> Success {
 		let insertSQL = "INSERT INTO \(TableHiddenTopSites) " +
 			"(url) " +
 			"VALUES (?)"
 		let args: Args = [
-			url
+			url as AnyObject?
 		]
 		return db.run(insertSQL, withArgs: args)
 	}
@@ -94,21 +94,21 @@ extension SQLiteHistory: ExtendedBrowserHistory {
     }
     
     //MARK: - Factories
-    private class func countFactory(row: SDRow) -> Int {
+    fileprivate class func countFactory(_ row: SDRow) -> Int {
         let cout = row["rowCount"] as! Int
         return cout
     }
     
-    private class func dateFactory(row: SDRow) -> NSDate {
+    fileprivate class func dateFactory(_ row: SDRow) -> Date {
 
         let timeInMicroSeconds = row.getTimestamp("date")
         let timeIntervalSince1970 = Double(timeInMicroSeconds! / 1000000)
         
-        let date = NSDate(timeIntervalSince1970:timeIntervalSince1970)
+        let date = Date(timeIntervalSince1970:timeIntervalSince1970)
         return date
     }
 	
-    internal class func historyVisitsFactory(row: SDRow) -> Site {
+    internal class func historyVisitsFactory(_ row: SDRow) -> Site {
         let id = row["id"] as! Int
         let url = row["url"] as! String
         let title = row["title"] as! String

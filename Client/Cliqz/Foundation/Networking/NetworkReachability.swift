@@ -10,24 +10,24 @@ import Foundation
 import CoreTelephony
 
 enum NetworkReachabilityStatus : CustomStringConvertible {
-    case NotReachable
-    case ReachableViaWiFi
-    case ReachableViaWWAN
+    case notReachable
+    case reachableViaWiFi
+    case reachableViaWWAN
     
     var description : String {
         switch self {
-            case .NotReachable: return "Disconnected";
-            case .ReachableViaWiFi: return "Wifi";
-            case .ReachableViaWWAN: return "WWAN";
+            case .notReachable: return "Disconnected";
+            case .reachableViaWiFi: return "Wifi";
+            case .reachableViaWWAN: return "WWAN";
         }
     }
 }
 
 class NetworkReachability : NSObject {
-    let internetReachability = Reachability.reachabilityForInternetConnection()
+    let internetReachability = Reachability.forInternetConnection()
     var isReachable: Bool?
     var networkReachabilityStatus: NetworkReachabilityStatus?
-    var lastRefreshDate: NSDate?
+    var lastRefreshDate: Date?
     
     //MARK: - Singltone
     static let sharedInstance = NetworkReachability()
@@ -38,12 +38,12 @@ class NetworkReachability : NSObject {
     }
     //MARK: - Reachability monitoring 
     func startMonitoring() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NetworkReachability.reachabilityChanged(_:)), name: kReachabilityChangedNotification, object: nil)
-        internetReachability.startNotifier()
+        NotificationCenter.default.addObserver(self, selector: #selector(NetworkReachability.reachabilityChanged(_:)), name: NSNotification.Name.reachabilityChanged, object: nil)
+        internetReachability?.startNotifier()
     }
-    func reachabilityChanged(notification: NSNotification) {
+    func reachabilityChanged(_ notification: Notification) {
         if let currentReachability = notification.object as? Reachability {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
                 self.logNetworkStatusEvent()
                 self.updateCurrentState(currentReachability)
             }
@@ -51,13 +51,13 @@ class NetworkReachability : NSObject {
     }
     
     func refreshStatus() {
-        updateCurrentState(internetReachability)
+        updateCurrentState(internetReachability!)
     }
     func logNetworkStatusEvent() {
         
         var duration: Int
         if let durationStart = lastRefreshDate {
-            duration = Int(NSDate().timeIntervalSinceDate(durationStart))
+            duration = Int(Date().timeIntervalSince(durationStart))
         } else {
             duration = 0
         }
@@ -67,7 +67,7 @@ class NetworkReachability : NSObject {
     func isReachableViaWiFi() -> Bool {
         if let isReachable = isReachable,
             let networkReachabilityStatus = networkReachabilityStatus {
-            return isReachable && networkReachabilityStatus == .ReachableViaWiFi
+            return isReachable && networkReachabilityStatus == .reachableViaWiFi
         } else {
             return false
         }
@@ -76,21 +76,21 @@ class NetworkReachability : NSObject {
     //MARK: - Private Helper methods
     
     //MARK: update current network status    
-    private func updateCurrentState(currentReachability: Reachability) {
-        lastRefreshDate = NSDate()
+    fileprivate func updateCurrentState(_ currentReachability: Reachability) {
+        lastRefreshDate = Date()
         let networkStatus = currentReachability.currentReachabilityStatus()
         if networkStatus == NotReachable {
             DebugingLogger.log("NotReachable")
             self.isReachable = false
-            self.networkReachabilityStatus = .NotReachable
+            self.networkReachabilityStatus = .notReachable
         } else if networkStatus == ReachableViaWiFi {
             DebugingLogger.log("ReachableViaWiFi")
             self.isReachable = true
-            self.networkReachabilityStatus = .ReachableViaWiFi
+            self.networkReachabilityStatus = .reachableViaWiFi
         } else if networkStatus == ReachableViaWWAN {
             DebugingLogger.log("ReachableViaWWAN")
             self.isReachable = true
-            self.networkReachabilityStatus = .ReachableViaWWAN
+            self.networkReachabilityStatus = .reachableViaWWAN
         }
     }
 

@@ -13,7 +13,7 @@ class AntiPhishingPanel: ControlCenterPanel {
     //MARK: - Instance variables
     
     //MARK: Views
-    private let descriptionLabel = UILabel()
+    fileprivate let descriptionLabel = UILabel()
  
     //MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -21,7 +21,7 @@ class AntiPhishingPanel: ControlCenterPanel {
         // panel title
         descriptionLabel.text = NSLocalizedString("Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.", tableName: "Cliqz", comment: "Anti-Phishing panel description")
         descriptionLabel.textColor = textColor()
-        descriptionLabel.font = UIFont.systemFontOfSize(15)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 15)
         descriptionLabel.numberOfLines = 0
         self.view.addSubview(descriptionLabel)
 
@@ -49,8 +49,8 @@ class AntiPhishingPanel: ControlCenterPanel {
     }
     
     
-    override func getLearnMoreURL() -> NSURL? {
-        return NSURL(string: "https://cliqz.com/whycliqz/anti-phishing")
+    override func getLearnMoreURL() -> URL? {
+        return URL(string: "https://cliqz.com/whycliqz/anti-phishing")
     }
     
     override func setupConstraints() {
@@ -58,26 +58,26 @@ class AntiPhishingPanel: ControlCenterPanel {
         
         let panelLayout = OrientationUtil.controlPanelLayout()
         
-        if panelLayout == .Portrait {
+        if panelLayout == .portrait {
+			panelIcon.snp_updateConstraints { (make) in
+				make.height.equalTo(70)
+				make.width.equalTo(70 * 0.72)
+			}
+			
+            subtitleLabel.snp.updateConstraints({ (make) in
+				make.top.equalTo(panelIcon.snp.bottom).offset(20)
+			})
             
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(panelIcon.snp_bottom).offset(20)
-            }
-            
-            panelIcon.snp_updateConstraints { (make) in
-                make.height.equalTo(70)
-                make.width.equalTo(70 * 0.72)
-            }
-            
+			
             descriptionLabel.snp_makeConstraints { make in
                 make.left.equalTo(self.view).offset(30)
                 make.right.equalTo(self.view).offset(-30)
                 make.top.equalTo(subtitleLabel.snp_bottom).offset(20)
             }
         }
-        else if panelLayout == .LandscapeCompactSize{
+        else if panelLayout == .landscapeCompactSize {
             
-            titleLabel.snp_makeConstraints(closure: { (make) in
+            titleLabel.snp_makeConstraints({ (make) in
                 make.top.equalTo(self.view).offset(40)
             })
             

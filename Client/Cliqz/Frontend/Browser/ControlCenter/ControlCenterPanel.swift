@@ -17,8 +17,8 @@ class ControlCenterPanel: UIViewController {
     //MARK: - Instance variables
     let trackedWebViewID: Int!
     let isPrivateMode: Bool!
-    let currentURL: NSURL!
-    var openTime = NSDate.getCurrentMillis()
+    let currentURL: URL!
+    var openTime = Date.getCurrentMillis()
     var isAdditionalInfoVisible = false
 
     weak var delegate: BrowserNavigationDelegate? = nil
@@ -29,12 +29,12 @@ class ControlCenterPanel: UIViewController {
     let titleLabel = UILabel()
     let panelIcon = UIImageView()
     let subtitleLabel = UILabel()
-    let learnMoreButton = UIButton(type: .Custom)
-    let okButton = UIButton(type: .Custom)
-    let activateButton = UIButton(type: .Custom)
+    let learnMoreButton = UIButton(type: .custom)
+    let okButton = UIButton(type: .custom)
+    let activateButton = UIButton(type: .custom)
     
     //MARK: - Init
-    init(webViewID: Int, url: NSURL, privateMode: Bool = false) {
+    init(webViewID: Int, url: URL, privateMode: Bool = false) {
         trackedWebViewID = webViewID
         isPrivateMode = privateMode
         currentURL = url
@@ -52,91 +52,91 @@ class ControlCenterPanel: UIViewController {
         let panelLayout = OrientationUtil.controlPanelLayout()
         
         // panel title
-        titleLabel.font = UIFont.systemFontOfSize(22)
+        titleLabel.font = UIFont.systemFont(ofSize: 22)
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.numberOfLines = 1
         titleLabel.minimumScaleFactor = 0.6
         
-        titleLabel.textAlignment = .Center
+        titleLabel.textAlignment = .center
         self.view.addSubview(titleLabel)
         
         // panel icon
         if let icon = getPanelIcon() {
-            panelIcon.image = icon.imageWithRenderingMode(.AlwaysTemplate)
+            panelIcon.image = icon.withRenderingMode(.alwaysTemplate)
         }
         self.view.addSubview(panelIcon)
         
         // panel subtitle
-        if panelLayout == .Portrait {
-            subtitleLabel.font = UIFont.boldSystemFontOfSize(16)
+        if panelLayout == .portrait {
+            subtitleLabel.font = UIFont.boldSystemFont(ofSize: 16)
         }
-        else if panelLayout == .LandscapeCompactSize{
-            subtitleLabel.font = UIFont.boldSystemFontOfSize(14)
+        else if panelLayout == .landscapeCompactSize{
+            subtitleLabel.font = UIFont.boldSystemFont(ofSize: 14)
         }
         else{
-            subtitleLabel.font = UIFont.systemFontOfSize(16)
+            subtitleLabel.font = UIFont.systemFont(ofSize: 16)
         }
         
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.numberOfLines = 1
         subtitleLabel.minimumScaleFactor = 0.6
         
-        subtitleLabel.textAlignment = .Center
+        subtitleLabel.textAlignment = .center
         self.view.addSubview(subtitleLabel)
         
         
         // learn more label
         let learnMoreTitle = NSLocalizedString("Learn more", tableName: "Cliqz", comment: "Learn more label on control center panel.")
-        var underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue])
+        var underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue])
         
-        if panelLayout != .LandscapeRegularSize {
-            if let privateMode = self.isPrivateMode where privateMode == true {
-                underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue, NSForegroundColorAttributeName: UIColor.whiteColor()])
+        if panelLayout != .landscapeRegularSize {
+            if let privateMode = self.isPrivateMode, privateMode == true {
+                underlineTitle = NSAttributedString(string: learnMoreTitle, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName: UIColor.white])
             }
-            learnMoreButton.setAttributedTitle(underlineTitle, forState: .Normal)
-            learnMoreButton.titleLabel?.font = UIFont.systemFontOfSize(12)
-            learnMoreButton.setTitleColor(textColor(), forState: .Normal)
+            learnMoreButton.setAttributedTitle(underlineTitle, for: UIControlState())
+            learnMoreButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+            learnMoreButton.setTitleColor(textColor(), for: UIControlState())
             
         }
         else
         {
-            learnMoreButton.setTitle(learnMoreTitle, forState: .Normal)
-            learnMoreButton.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
-            learnMoreButton.setTitleColor(UIConstants.CliqzThemeColor, forState: .Normal)
-            learnMoreButton.backgroundColor  = UIColor.clearColor()
+            learnMoreButton.setTitle(learnMoreTitle, for: UIControlState())
+            learnMoreButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            learnMoreButton.setTitleColor(UIConstants.CliqzThemeColor, for: .normal)
+            learnMoreButton.backgroundColor  = UIColor.clear
         }
         
-        learnMoreButton.addTarget(self, action: #selector(learnMorePressed), forControlEvents: .TouchUpInside)
+        learnMoreButton.addTarget(self, action: #selector(learnMorePressed), for: .touchUpInside)
         self.view.addSubview(learnMoreButton)
         
         // Ok button
         
         let okButtonTitle = NSLocalizedString("OK", tableName: "Cliqz", comment: "Ok button in Control Center panel.")
-        self.okButton.setTitle(okButtonTitle, forState: .Normal)
-        self.okButton.setTitleColor(UIConstants.CliqzThemeColor, forState: .Normal)
+        self.okButton.setTitle(okButtonTitle, for: UIControlState())
+        self.okButton.setTitleColor(UIConstants.CliqzThemeColor, for: .normal)
         
-        if panelLayout != .LandscapeRegularSize{
-            self.okButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
-            self.okButton.layer.borderColor = UIConstants.CliqzThemeColor.CGColor
+        if panelLayout != .landscapeRegularSize{
+            self.okButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            self.okButton.layer.borderColor = UIConstants.CliqzThemeColor.cgColor
             self.okButton.layer.borderWidth = 2.0
             self.okButton.layer.cornerRadius = 20
         }
         else{
-            self.okButton.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+            self.okButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         }
         
-        self.okButton.backgroundColor = UIColor.clearColor()
-        self.okButton.addTarget(self, action: #selector(dismissView), forControlEvents: .TouchUpInside)
+        self.okButton.backgroundColor = UIColor.clear
+        self.okButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         self.view.addSubview(self.okButton)
         
         
         let activateButtonTitle = NSLocalizedString("Activate", tableName: "Cliqz", comment: "Activate button in control center panel.")
-        self.activateButton.setTitle(activateButtonTitle, forState: .Normal)
-        self.activateButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        self.activateButton.titleLabel?.font = UIFont.boldSystemFontOfSize(14)
+        self.activateButton.setTitle(activateButtonTitle, for: UIControlState())
+        self.activateButton.setTitleColor(UIColor.white, for: UIControlState())
+        self.activateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         self.activateButton.backgroundColor = UIColor(rgb: 0x4CBB17)
         self.activateButton.layer.cornerRadius = 10
-        self.activateButton.addTarget(self, action: #selector(enableFeature), forControlEvents: .TouchUpInside)
+        self.activateButton.addTarget(self, action: #selector(enableFeature), for: .touchUpInside)
         self.activateButton.contentEdgeInsets = UIEdgeInsetsMake(6, 4, 6, 4)
         self.view.addSubview(self.activateButton)
         
@@ -149,22 +149,22 @@ class ControlCenterPanel: UIViewController {
         self.setupConstraints()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        openTime = NSDate.getCurrentMillis()
+        openTime = Date.getCurrentMillis()
         logTelemetrySignal("show", target: nil, customData: nil)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        let duration = Int(NSDate.getCurrentMillis() - openTime)
+        let duration = Int(Date.getCurrentMillis() - openTime)
         logTelemetrySignal("hide", target: nil, customData: ["show_duration": duration])
     }
     func setupConstraints() {
         
         let panelLayout = OrientationUtil.controlPanelLayout()
         
-        if panelLayout == .Portrait {
+        if panelLayout == .portrait {
             
             titleLabel.snp_makeConstraints { make in
                 make.left.right.equalTo(self.view)
@@ -174,22 +174,25 @@ class ControlCenterPanel: UIViewController {
             
             panelIcon.snp_makeConstraints { make in
                 make.centerX.equalTo(self.view)
+				make.height.equalTo(150)
+				make.width.equalTo(130)
                 make.top.equalTo(titleLabel.snp_bottom).offset(20)
             }
             
-            subtitleLabel.snp_makeConstraints { make in
-                make.left.equalTo(self.view).offset(20)
-                make.width.equalTo(self.view.frame.width - 40)
-                make.height.equalTo(20)
-            }
-            
+            subtitleLabel.snp.makeConstraints({ (make) in
+				make.top.equalTo(panelIcon.snp.bottom)
+				make.left.equalTo(self.view).offset(20)
+				make.width.equalTo(self.view.frame.width - 40)
+				make.height.equalTo(20)
+			})
+
             learnMoreButton.snp_makeConstraints { make in
                 make.right.bottom.equalTo(self.view).offset(-25)
                 make.height.equalTo(24)
             }
             
             okButton.snp_makeConstraints { (make) in
-                make.size.equalTo(CGSizeMake(80, 40))
+                make.size.equalTo(CGSize(width: 80, height: 40))
                 make.centerX.equalTo(self.view)
                 make.bottom.equalTo(self.view).offset(-20)
             }
@@ -200,7 +203,7 @@ class ControlCenterPanel: UIViewController {
             }
             
         }
-        else if panelLayout == .LandscapeCompactSize{
+        else if panelLayout == .landscapeCompactSize{
             
             titleLabel.snp_makeConstraints { make in
                 make.left.equalTo(self.view).offset(20)
@@ -214,12 +217,13 @@ class ControlCenterPanel: UIViewController {
                 make.top.equalTo(titleLabel.snp_bottom).offset(16)
             }
             
-            subtitleLabel.snp_makeConstraints { make in
+			subtitleLabel.snp.makeConstraints({ (make) in
+				make.top.equalTo(0)
                 make.left.equalTo(titleLabel)
                 make.width.equalTo(titleLabel)
                 make.height.equalTo(20)
                 
-            }
+            })
 
             learnMoreButton.snp_makeConstraints { make in
                 make.right.bottom.equalTo(self.view).offset(-16)
@@ -227,7 +231,7 @@ class ControlCenterPanel: UIViewController {
             }
             
             okButton.snp_makeConstraints { (make) in
-                make.size.equalTo(CGSizeMake(80, 40))
+                make.size.equalTo(CGSize(width: 80, height: 40))
                 //make.centerX.equalTo(self.view)
                 make.bottom.equalTo(self.view).offset(-12)
             }
@@ -252,6 +256,7 @@ class ControlCenterPanel: UIViewController {
             }
             
             subtitleLabel.snp_makeConstraints { make in
+				make.top.equalTo(0)
                 make.left.right.equalTo(self.view)
                 make.height.equalTo(24)
             }
@@ -289,7 +294,7 @@ class ControlCenterPanel: UIViewController {
         return nil
     }
     
-    func getLearnMoreURL() -> NSURL? {
+    func getLearnMoreURL() -> URL? {
         return nil
     }
     
@@ -315,11 +320,11 @@ class ControlCenterPanel: UIViewController {
         panelIcon.tintColor = getThemeColor()
         
         if isFeatureEnabled() {
-            okButton.hidden = false
-            activateButton.hidden = true
+            okButton.isHidden = false
+            activateButton.isHidden = true
         } else {
-            okButton.hidden = true
-            activateButton.hidden = false
+            okButton.isHidden = true
+            activateButton.isHidden = false
         }
         
     }
@@ -363,7 +368,7 @@ class ControlCenterPanel: UIViewController {
         return UIColor(rgb: 0xE8E8E8)
     }
     
-    @objc private func learnMorePressed() {
+    @objc fileprivate func learnMorePressed() {
         
         let url = getLearnMoreURL()
         if let u = url {
@@ -373,15 +378,15 @@ class ControlCenterPanel: UIViewController {
         }
     }
     
-    @objc private func dismissView() {
+    @objc fileprivate func dismissView() {
         closePanel()
         logTelemetrySignal("click", target: "ok", customData: nil)
     }
     func logDomainSwitchTelemetrySignal() {
         let state = isFeatureEnabledForCurrentWebsite() ? "on" : "off"
-        logTelemetrySignal("click", target: "domain_switch", customData: ["state": state])
+        logTelemetrySignal("click", target: "domain_switch", customData: ["state": state as AnyObject])
     }
-    func logTelemetrySignal(action: String, target: String?, customData: [String: AnyObject]?) {
+    func logTelemetrySignal(_ action: String, target: String?, customData: [String: Any]?) {
         var viewName = getViewName()
         if "info_company" == target && isAdditionalInfoVisible {
             viewName = getAdditionalInfoName()

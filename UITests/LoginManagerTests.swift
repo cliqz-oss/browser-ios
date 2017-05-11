@@ -36,7 +36,7 @@ class LoginManagerTests: KIFTestCase {
     }
 
     private func generateLogins() {
-        let profile = (UIApplication.sharedApplication().delegate as! AppDelegate).profile!
+        let profile = (UIApplication.shared.delegate as! AppDelegate).profile!
 
         let prefixes = "abcdefghijk"
         let numRange = (0..<20)
@@ -61,7 +61,7 @@ class LoginManagerTests: KIFTestCase {
     }
 
     private func clearLogins() {
-        let profile = (UIApplication.sharedApplication().delegate as! AppDelegate).profile!
+        let profile = (UIApplication.shared.delegate as! AppDelegate).profile!
         profile.logins.removeAll().value
     }
 
@@ -130,7 +130,7 @@ class LoginManagerTests: KIFTestCase {
         tester().waitForViewWithAccessibilityLabel("password")
 
         let list = tester().waitForViewWithAccessibilityIdentifier("Login Detail List") as! UITableView
-        var passwordCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
+        var passwordCell = list.cellForRowAtIndexPath(IndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
 
         // longPressViewWithAcessibilityLabel fails when called directly because the cell is not a descendant in the
         // responder chain since it's a cell so instead use the underlying longPressAtPoint method.
@@ -142,7 +142,7 @@ class LoginManagerTests: KIFTestCase {
         tester().waitForViewWithAccessibilityLabel("Reveal")
         tester().tapViewWithAccessibilityLabel("Reveal")
 
-        passwordCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
+        passwordCell = list.cellForRowAtIndexPath(IndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
         XCTAssertFalse(passwordCell.descriptionLabel.secureTextEntry)
 
         // Tap the 'Hide' menu option
@@ -150,7 +150,7 @@ class LoginManagerTests: KIFTestCase {
         tester().waitForViewWithAccessibilityLabel("Hide")
         tester().tapViewWithAccessibilityLabel("Hide")
 
-        passwordCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
+        passwordCell = list.cellForRowAtIndexPath(IndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
         XCTAssertTrue(passwordCell.descriptionLabel.secureTextEntry)
 
         // Tap the 'Copy' menu option
@@ -173,7 +173,7 @@ class LoginManagerTests: KIFTestCase {
         tester().waitForViewWithAccessibilityLabel("password")
 
         let list = tester().waitForViewWithAccessibilityIdentifier("Login Detail List") as! UITableView
-        let websiteCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) as! LoginTableViewCell
+        let websiteCell = list.cellForRowAtIndexPath(IndexPath(forRow: 3, inSection: 0)) as! LoginTableViewCell
 
         // longPressViewWithAcessibilityLabel fails when called directly because the cell is not a descendant in the
         // responder chain since it's a cell so instead use the underlying longPressAtPoint method.
@@ -495,7 +495,7 @@ class LoginManagerTests: KIFTestCase {
         tester().tapViewWithAccessibilityLabel("Edit")
 
         // Check that we've selected the username field
-        var firstResponder = UIApplication.sharedApplication().keyWindow?.firstResponder()
+        var firstResponder = UIApplication.shared.keyWindow?.firstResponder()
         let usernameCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! LoginTableViewCell
         let usernameField = usernameCell.descriptionLabel
 
@@ -503,7 +503,7 @@ class LoginManagerTests: KIFTestCase {
         tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("changedusername")
         tester().tapViewWithAccessibilityLabel("Next")
 
-        firstResponder = UIApplication.sharedApplication().keyWindow?.firstResponder()
+        firstResponder = UIApplication.shared.keyWindow?.firstResponder()
         let passwordCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
         let passwordField = passwordCell.descriptionLabel
 
@@ -538,7 +538,7 @@ class LoginManagerTests: KIFTestCase {
         tester().tapViewWithAccessibilityLabel("Edit")
 
         // Check that we've selected the username field
-        var firstResponder = UIApplication.sharedApplication().keyWindow?.firstResponder()
+        var firstResponder = UIApplication.shared.keyWindow?.firstResponder()
         let usernameCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! LoginTableViewCell
         let usernameField = usernameCell.descriptionLabel
 
@@ -546,7 +546,7 @@ class LoginManagerTests: KIFTestCase {
         tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("changedusername")
         tester().tapViewWithAccessibilityLabel("Next")
 
-        firstResponder = UIApplication.sharedApplication().keyWindow?.firstResponder()
+        firstResponder = UIApplication.shared.keyWindow?.firstResponder()
         var passwordCell = list.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! LoginTableViewCell
         let passwordField = passwordCell.descriptionLabel
 

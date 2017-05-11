@@ -16,26 +16,28 @@ import XCGLogger
 private let log = Logger.syncLogger
 
 extension SQLiteBookmarks: CliqzShareToDestination {
-	public func addToMobileBookmarks(url: NSURL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp) -> Success {
+	public func addToMobileBookmarks(_ url: URL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp) -> Success {
 		return self.insertBookmark(url, title: title, favicon: favicon, bookmarkedDate: bookmarkedDate,
 		                           intoFolder: BookmarkRoots.MobileFolderGUID,
 		                           withTitle: BookmarksFolderTitleMobile)
 	}
 	
-	public func shareItem(item: CliqzShareItem) {
+	public func shareItem(_ item: CliqzShareItem) {
 		// We parse here in anticipation of getting real URLs at some point.
 		if let url = item.url.asURL {
 			let title = item.title ?? url.absoluteString
-			self.addToMobileBookmarks(url, title: title!, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
+			self.addToMobileBookmarks(url, title: title, favicon: item.favicon, bookmarkedDate: item.bookmarkedDate)
 		}
 	}
 	
-	private func insertBookmarkInTransaction(deferred: Success, url: NSURL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp, intoFolder parent: GUID, withTitle parentTitle: String)(conn: SQLiteDBConnection, inout err: NSError?) -> Bool {
+	fileprivate func insertBookmarkInTransaction(_ deferred: Success, url: URL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp, intoFolder parent: GUID, withTitle parentTitle: String) -> (_ conn: SQLiteDBConnection, _ err: inout NSError?) -> Bool {
 		
-		log.debug("Inserting Cliqz bookmark in transaction on thread \(NSThread.currentThread())")
+		return { (conn: SQLiteDBConnection, err: inout NSError?) -> Bool in
+
+		log.debug("Inserting Cliqz bookmark in transaction on thread \(Thread.current)")
 		
 		// Keep going if this returns true.
-		func change(sql: String, args: Args?, desc: String) -> Bool {
+		func change(_ sql: String, args: Args?, desc: String) -> Bool {
 			err = conn.executeChange(sql, withArgs: args)
 			if let err = err {
 				log.error(desc)
@@ -50,15 +52,15 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 		
 		//// Insert the new bookmark and icon without touching structure.
 		var args: Args = [
-			newGUID,
-			BookmarkNodeType.Bookmark.rawValue,
-			urlString,
-			title,
-			parent,
-			parentTitle,
-			NSDate.nowNumber(),
-			SyncStatus.New.rawValue,
-			NSNumber(unsignedLongLong: bookmarkedDate)
+			newGUID as AnyObject?,
+			BookmarkNodeType.bookmark.rawValue as AnyObject?,
+			urlString as AnyObject?,
+			title as AnyObject?,
+			parent as AnyObject?,
+			parentTitle as AnyObject?,
+			Date.nowNumber(),
+			SyncStatus.new.rawValue as AnyObject?,
+			NSNumber(value: bookmarkedDate)
 			]
 		
 		let faviconID: Int?
@@ -77,10 +79,10 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 		let iconValue: String
 		if let faviconID = faviconID {
 			iconValue = "?"
-			args.append(faviconID)
+			args.append(faviconID as AnyObject?)
 		} else {
 			iconValue = "(SELECT iconID FROM \(ViewIconForURL) WHERE url = ?)"
-			args.append(urlString)
+			args.append(urlString as AnyObject?)
 		}
 		
 		let insertSQL = "INSERT INTO \(TableBookmarksLocal) " +
@@ -90,32 +92,33 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 			return false
 		}
 
-		log.debug("Cliqz: Returning true to commit transaction on thread \(NSThread.currentThread())")
+		log.debug("Cliqz: Returning true to commit transaction on thread \(Thread.current)")
 		
 		/// Fill the deferred and commit the transaction.
 		deferred.fill(Maybe(success: ()))
 		return true
+		}
 	}
 	
 	/**
 	* Assumption: the provided folder GUID exists in either the local table or the mirror table.
 	*/
-	func insertBookmark(url: NSURL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp, intoFolder parent: GUID, withTitle parentTitle: String) -> Success {
-		log.debug("Cliqz: Inserting bookmark task on thread \(NSThread.currentThread())")
+	func insertBookmark(_ url: URL, title: String, favicon: Favicon?, bookmarkedDate: Timestamp, intoFolder parent: GUID, withTitle parentTitle: String) -> Success {
+		log.debug("Cliqz: Inserting bookmark task on thread \(Thread.current)")
 		let deferred = Success()
 		
 		var error: NSError?
 		let inTransaction = self.insertBookmarkInTransaction(deferred, url: url, title: title, favicon: favicon, bookmarkedDate: bookmarkedDate, intoFolder: parent, withTitle: parentTitle)
 		error = self.db.transaction(synchronous: false, err: &error, callback: inTransaction)
 		
-		log.debug("Cliqz: Returning deferred on thread \(NSThread.currentThread())")
+		log.debug("Cliqz: Returning deferred on thread \(Thread.current)")
 		return deferred
 	}
 
 }
 
 extension MergedSQLiteBookmarks: CliqzShareToDestination {
-	public func shareItem(item: CliqzShareItem) {
+	public func shareItem(_ item: CliqzShareItem) {
 		self.local.shareItem(item)
 	}
 }

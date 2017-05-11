@@ -9,17 +9,17 @@
 import UIKit
 
 enum ScreenSizeClass{
-    case CompactWidthCompactHeight
-    case CompactWidthRegularHeight
-    case RegularWidthCompactHeight
-    case RegularWidthRegularHeight
-    case Unspecified
+    case compactWidthCompactHeight
+    case compactWidthRegularHeight
+    case regularWidthCompactHeight
+    case regularWidthRegularHeight
+    case unspecified
 }
 
 enum ControlPanelLayout{
-    case Portrait
-    case LandscapeRegularSize
-    case LandscapeCompactSize
+    case portrait
+    case landscapeRegularSize
+    case landscapeCompactSize
 }
 
 protocol ControlCenterPanelDelegate: class {
@@ -32,39 +32,39 @@ protocol ControlCenterPanelDelegate: class {
 class OrientationUtil: NSObject {
     
     class func isPortrait() -> Bool {
-        if  UIScreen.mainScreen().bounds.size.height > UIScreen.mainScreen().bounds.size.width {
+        if  UIScreen.main.bounds.size.height > UIScreen.main.bounds.size.width {
             return true
         }
         return false
     }
     
     class func screenHeight() -> CGFloat {
-        return UIScreen.mainScreen().bounds.size.height
+        return UIScreen.main.bounds.size.height
     }
     
     class func screenSizeClass() -> ScreenSizeClass {
-        let traitCollection = UIScreen.mainScreen().traitCollection
+        let traitCollection = UIScreen.main.traitCollection
         
-        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Compact){
-            if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Compact)
+        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.compact){
+            if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.compact)
             {
-                return .CompactWidthCompactHeight
+                return .compactWidthCompactHeight
             }
-            else if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular){
-                return .CompactWidthRegularHeight
+            else if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.regular){
+                return .compactWidthRegularHeight
             }
         }
-        else if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Regular){
-            if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Compact)
+        else if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.regular){
+            if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.compact)
             {
-                return .RegularWidthCompactHeight
+                return .regularWidthCompactHeight
             }
-            else if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular){
-                return .RegularWidthRegularHeight
+            else if (traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.regular){
+                return .regularWidthRegularHeight
             }
         }
         
-        return .Unspecified
+        return .unspecified
     }
     
     class func controlPanelLayout() -> ControlPanelLayout {
@@ -75,17 +75,17 @@ class OrientationUtil: NSObject {
         //let iPhone6_landscape_width  = CGFloat(667.0)
         
         if self.isPortrait(){
-            return .Portrait
+            return .portrait
         }
-        else if screenSizeClass != .Unspecified {
-            if screenSizeClass != .CompactWidthCompactHeight || screenHeight >= iPhone6_landscape_height{
-                return .LandscapeRegularSize
+        else if screenSizeClass != .unspecified {
+            if screenSizeClass != .compactWidthCompactHeight || screenHeight >= iPhone6_landscape_height{
+                return .landscapeRegularSize
             }
             else{
-                return .LandscapeCompactSize
+                return .landscapeCompactSize
             }
         }
         
-        return .LandscapeCompactSize
+        return .landscapeCompactSize
     }
 }

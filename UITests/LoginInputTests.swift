@@ -12,7 +12,7 @@ class LoginInputTests: KIFTestCase {
 
     override func setUp() {
         super.setUp()
-        profile = (UIApplication.sharedApplication().delegate as! AppDelegate).profile!
+        profile = (UIApplication.shared.delegate as! AppDelegate).profile!
         webRoot = SimplePageServer.start()
     }
 

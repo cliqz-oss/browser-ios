@@ -45,13 +45,13 @@ public class PushRegistration: NSObject, NSCoding {
     }
 
     public static func from(json: JSON) -> PushRegistration? {
-        guard let endpointString = json["endpoint"].stringValue(),
-              let endpoint = URL(string: endpointString),
-              let secret = json["secret"].stringValue(),
-              let uaid = json["uaid"].stringValue(),
-              let channelID = json["channelID"].stringValue() else {
-            return nil
-        }
+		guard let endpointString = json["endpoint"].stringValue(),
+			let endpoint = URL(string: endpointString),
+			let secret = json["secret"].stringValue(),
+			let uaid = json["uaid"].stringValue(),
+			let channelID = json["channelID"].stringValue() else {
+				return nil
+		}
         guard let defaultSubscription = try? PushSubscription(channelID: channelID, endpoint: endpoint) else {
             return nil
         }

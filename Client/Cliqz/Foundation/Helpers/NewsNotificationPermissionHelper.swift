@@ -11,17 +11,17 @@ import UIKit
 class NewsNotificationPermissionHelper: NSObject {
     
     //MARK: - Constants
-    private let minimumNumberOfOpenings = 4
-    private let minimumNumberOfDays     = 8
+    fileprivate let minimumNumberOfOpenings = 4
+    fileprivate let minimumNumberOfDays     = 8
     
-    private let askedBeforeKey          = "askedBefore"
-    private let lastAskDayKey           = "lastAskDay"
-    private let disableAskingKey        = "disableAsking"
-    private let newInstallKey           = "newInstall"
-    private let installDayKey           = "installDay"
-    private let numberOfOpeningsKey     = "numberOfOpenings"
+    fileprivate let askedBeforeKey          = "askedBefore"
+    fileprivate let lastAskDayKey           = "lastAskDay"
+    fileprivate let disableAskingKey        = "disableAsking"
+    fileprivate let newInstallKey           = "newInstall"
+    fileprivate let installDayKey           = "installDay"
+    fileprivate let numberOfOpeningsKey     = "numberOfOpenings"
     
-    private var askingDisabled: Bool?
+    fileprivate var askingDisabled: Bool?
     //MARK: - Singltone & init
     static let sharedInstance = NewsNotificationPermissionHelper()
     
@@ -41,7 +41,7 @@ class NewsNotificationPermissionHelper: NSObject {
     func onAskForPermission() {
         LocalDataStore.setObject(true, forKey: askedBeforeKey)
         LocalDataStore.setObject(0, forKey: numberOfOpeningsKey)
-        LocalDataStore.setObject(NSDate.getDay(), forKey: lastAskDayKey)
+        LocalDataStore.setObject(Date.getDay(), forKey: lastAskDayKey)
         
     }
     
@@ -88,19 +88,19 @@ class NewsNotificationPermissionHelper: NSObject {
     
     
     func enableNewsNotifications() {
-        let notificationSettings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert], categories: nil)
-        UIApplication.sharedApplication().registerForRemoteNotifications()
-        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+        let notificationSettings = UIUserNotificationSettings(types: [UIUserNotificationType.badge, UIUserNotificationType.sound, UIUserNotificationType.alert], categories: nil)
+        UIApplication.shared.registerForRemoteNotifications()
+        UIApplication.shared.registerUserNotificationSettings(notificationSettings)
         TelemetryLogger.sharedInstance.logEvent(.NewsNotification("enable"))
     }
     
     func disableNewsNotifications() {
-        UIApplication.sharedApplication().unregisterForRemoteNotifications()
+        UIApplication.shared.unregisterForRemoteNotifications()
         TelemetryLogger.sharedInstance.logEvent(.NewsNotification("disalbe"))
     }
     
     //MARK: - Private APIs
-    private func isNewInstall() -> Bool {
+    fileprivate func isNewInstall() -> Bool {
         var isNewInstall = false
         
         // check if it is calcualted before
@@ -109,8 +109,8 @@ class NewsNotificationPermissionHelper: NSObject {
         }
         
         // compare today's day with install day to determine whether it is update or new install
-        let todaysDay = NSDate.getDay()
-        if let installDay = TelemetryLogger.sharedInstance.getInstallDay() where todaysDay == installDay {
+        let todaysDay = Date.getDay()
+        if let installDay = TelemetryLogger.sharedInstance.getInstallDay(), todaysDay == installDay {
             isNewInstall = true
             LocalDataStore.setObject(todaysDay, forKey: installDayKey)
         }
@@ -120,7 +120,7 @@ class NewsNotificationPermissionHelper: NSObject {
         return isNewInstall
     }
     
-    private func getNumberOfDaysSinceLastAction() -> Int {
+    fileprivate func getNumberOfDaysSinceLastAction() -> Int {
         
         if isNewInstall() && !isAksedForPermissionBefore() {
             return getNumberOfDaysSinceInstall()
@@ -129,28 +129,28 @@ class NewsNotificationPermissionHelper: NSObject {
         }
     }
     
-    private func getNumberOfDaysSinceInstall() -> Int {
+    fileprivate func getNumberOfDaysSinceInstall() -> Int {
         
         guard let installDay = LocalDataStore.objectForKey(installDayKey) as? Int else {
             return 0
         }
         
-        let daysSinceInstal = NSDate.getDay() - installDay
+        let daysSinceInstal = Date.getDay() - installDay
         return daysSinceInstal
     }
     
     
-    private func getNumberOfDaysSinceLastAsk() -> Int {
+    fileprivate func getNumberOfDaysSinceLastAsk() -> Int {
         
         guard let lastAskDay = LocalDataStore.objectForKey(lastAskDayKey) as? Int else {
             return 0
         }
         
-        let daysSinceLastAsk = NSDate.getDay() - lastAskDay
+        let daysSinceLastAsk = Date.getDay() - lastAskDay
         return daysSinceLastAsk
     }
     
-    private func getNumerOfOpenings() -> Int {
+    fileprivate func getNumerOfOpenings() -> Int {
         guard let numberOfOpenings = LocalDataStore.objectForKey(numberOfOpeningsKey) as? Int else {
             return 0
         }

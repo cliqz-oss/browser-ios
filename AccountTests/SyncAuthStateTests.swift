@@ -13,9 +13,9 @@ import XCTest
 class SyncAuthStateTests: LiveAccountTest {
     func testLive() {
         let e = self.expectationWithDescription("Wait for token.")
-        syncAuthState(NSDate.now()).upon { result in
+        syncAuthState(Date()).upon { result in
             if let (token, forKey) = result.successValue {
-                let uidString = NSNumber(unsignedLongLong: token.uid).stringValue
+                let uidString = NSNumber(value: token.uid).stringValue
                 XCTAssertTrue(token.api_endpoint.endsWith(uidString))
                 XCTAssertNotNil(forKey)
             } else {

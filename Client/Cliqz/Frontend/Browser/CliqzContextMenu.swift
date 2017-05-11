@@ -4,17 +4,17 @@
 
 
 class CliqzContextMenu {
-    var tapLocation: CGPoint = CGPointZero
+    var tapLocation: CGPoint = CGPoint.zero
     var tappedElement: ContextMenuHelper.Elements?
     
-    var timer1_cancelDefaultMenu: NSTimer = NSTimer()
-    var timer2_showMenuIfStillPressed: NSTimer = NSTimer()
+    var timer1_cancelDefaultMenu: Timer = Timer()
+    var timer2_showMenuIfStillPressed: Timer = Timer()
     
     static let initialDelayToCancelBuiltinMenu = 0.20 // seconds, must be <0.3 or built-in menu can't be cancelled
     static let totalDelayToShowContextMenu = 0.65 - initialDelayToCancelBuiltinMenu // 850 is copied from Safari
     
-    private func resetTimer() {
-        if (!timer1_cancelDefaultMenu.valid && !timer2_showMenuIfStillPressed.valid) {
+    fileprivate func resetTimer() {
+        if (!timer1_cancelDefaultMenu.isValid && !timer2_showMenuIfStillPressed.isValid) {
             return
         }
         
@@ -26,7 +26,7 @@ class CliqzContextMenu {
         tappedElement = nil
     }
     
-    private func isBrowserTopmostAndNoPanelsOpen() ->  Bool {
+    fileprivate func isBrowserTopmostAndNoPanelsOpen() ->  Bool {
         let rootViewController = getApp().rootViewController
         var navigationController: UINavigationController?
         
@@ -44,7 +44,7 @@ class CliqzContextMenu {
         }
     }
     
-    func sendEvent(event: UIEvent, window: UIWindow) {
+    func sendEvent(_ event: UIEvent, window: UIWindow) {
         if !isBrowserTopmostAndNoPanelsOpen() {
             resetTimer()
             return
@@ -52,30 +52,30 @@ class CliqzContextMenu {
         
         guard let cliqzWebView = getCurrentWebView() else { return }
         
-        if let touches = event.touchesForWindow(window), let touch = touches.first where touches.count == 1 {
-            cliqzWebView.lastTappedTime = NSDate()
+        if let touches = event.touches(for: window), let touch = touches.first, touches.count == 1 {
+            cliqzWebView.lastTappedTime = Date()
             switch touch.phase {
-            case .Began:  // A finger touched the screen
-                guard let touchView = event.allTouches()?.first?.view where touchView.isDescendantOfView(cliqzWebView) else {
+            case .began:  // A finger touched the screen
+                guard let touchView = event.allTouches?.first?.view, touchView.isDescendant(of: cliqzWebView) else {
                     resetTimer()
                     return
                 }
                 
-                tapLocation = touch.locationInView(window)
+                tapLocation = touch.location(in: window)
                 resetTimer()
-                timer1_cancelDefaultMenu = NSTimer.scheduledTimerWithTimeInterval(CliqzContextMenu.initialDelayToCancelBuiltinMenu, target: self, selector: #selector(cancelDefaultMenuAndFindTappedItem), userInfo: nil, repeats: false)
+                timer1_cancelDefaultMenu = Timer.scheduledTimer(timeInterval: CliqzContextMenu.initialDelayToCancelBuiltinMenu, target: self, selector: #selector(cancelDefaultMenuAndFindTappedItem), userInfo: nil, repeats: false)
                 break
-            case .Moved, .Stationary:
-                let p1 = touch.locationInView(window)
-                let p2 = touch.previousLocationInView(window)
+            case .moved, .stationary:
+                let p1 = touch.location(in: window)
+                let p2 = touch.previousLocation(in: window)
                 let distance =  hypotf(Float(p1.x) - Float(p2.x), Float(p1.y) - Float(p2.y))
                 if distance > 10.0 { // my test for this: tap with edge of finger, then roll to opposite edge while holding finger down, is 5-10 px of movement; don't want this to be a move
                     resetTimer()
                 }
                 break
-            case .Ended, .Cancelled:
+            case .ended, .cancelled:
                 if let url = tappedElement?.link {
-                    getCurrentWebView()?.loadRequest(NSURLRequest(URL: url))
+                    getCurrentWebView()?.loadRequest(URLRequest(url: url as URL))
                 }
                 resetTimer()
                 break
@@ -86,7 +86,7 @@ class CliqzContextMenu {
     }
     
     @objc func showContextMenu() {
-        func showContextMenuForElement(tappedElement:  ContextMenuHelper.Elements) {
+        func showContextMenuForElement(_ tappedElement:  ContextMenuHelper.Elements) {
             guard let bvc = getApp().browserViewController else { return }
             if bvc.urlBar.inOverlayMode {
                 return
@@ -114,9 +114,9 @@ class CliqzContextMenu {
         
         let hit: (url: String?, image: String?, urlTarget: String?)?
         
-        if [".jpg", ".png", ".gif"].filter({ webView.URL?.absoluteString?.endsWith($0) ?? false }).count > 0 {
+        if [".jpg", ".png", ".gif"].filter({ webView.url?.absoluteString.endsWith($0) ?? false }).count > 0 {
             // web view is just showing an image
-            hit = (url:nil, image:webView.URL!.absoluteString, urlTarget:nil)
+            hit = (url:nil, image:webView.url!.absoluteString, urlTarget:nil)
         } else {
             hit = ElementAtPoint().getHit(tapLocation)
         }
@@ -126,17 +126,17 @@ class CliqzContextMenu {
             return
         }
         
-        tappedElement = ContextMenuHelper.Elements(link: hit!.url != nil ? NSURL(string: hit!.url!) : nil, image: hit!.image != nil ? NSURL(string: hit!.image!) : nil)
+        tappedElement = ContextMenuHelper.Elements(link: hit!.url != nil ? URL(string: hit!.url!) : nil, image: hit!.image != nil ? URL(string: hit!.image!) : nil)
         
-        func blockOtherGestures(views: [UIView]?) {
+        func blockOtherGestures(_ views: [UIView]?) {
             guard let views = views else { return }
             for view in views {
                 if let gestures = view.gestureRecognizers as [UIGestureRecognizer]! {
                     for gesture in gestures {
                         if gesture is UILongPressGestureRecognizer {
                             // toggling gets the gesture to ignore this long press
-                            gesture.enabled = false
-                            gesture.enabled = true
+                            gesture.isEnabled = false
+                            gesture.isEnabled = true
                         }
                     }
                 }
@@ -145,6 +145,6 @@ class CliqzContextMenu {
         
         blockOtherGestures(getCurrentWebView()?.scrollView.subviews)
         
-        timer2_showMenuIfStillPressed = NSTimer.scheduledTimerWithTimeInterval(CliqzContextMenu.totalDelayToShowContextMenu, target: self, selector: #selector(showContextMenu), userInfo: nil, repeats: false)
+        timer2_showMenuIfStillPressed = Timer.scheduledTimer(timeInterval: CliqzContextMenu.totalDelayToShowContextMenu, target: self, selector: #selector(showContextMenu), userInfo: nil, repeats: false)
     }
 }

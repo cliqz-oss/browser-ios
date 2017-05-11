@@ -11,8 +11,8 @@ import UIKit
 extension WebServer {
 
     /// Convenience method to register a folder in the main bundle.
-    func registerMainBundlePath(basePath: String, directoryPath: String) {
-        server.addGETHandlerForBasePath(basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:0, allowRangeRequests:true)
+    func registerMainBundlePath(_ basePath: String, directoryPath: String) {
+        server.addGETHandler(forBasePath: basePath, directoryPath: directoryPath, indexFilename:nil, cacheAge:0, allowRangeRequests:true)
     }
 }
 
@@ -54,8 +54,8 @@ class NavigationExtension: NSObject {
     }
 
     // using the same server that Firefox have to make the navigation extension works locally
-    private class func registerNavigationExtensionOnFireFoxServer() {
-        let bundlePath = NSBundle.mainBundle().bundlePath
+    fileprivate class func registerNavigationExtensionOnFireFoxServer() {
+        let bundlePath = Bundle.main.bundlePath
         let extensionPath = bundlePath + "/" + "Extension/build/mobile/search"
         
         let server = WebServer.sharedInstance

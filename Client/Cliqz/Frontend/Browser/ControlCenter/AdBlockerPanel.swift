@@ -17,11 +17,11 @@ class AdBlockerPanel: AntitrackingPanel {
             label.text = NSLocalizedString("AdBlocking Information", tableName: "Cliqz", comment: "AdBlocking Information text for landscape mode.")
         }
         
-        if let companiesLabel = self.legendView.subviews[1] as? UILabel where companiesLabel.tag == 10 {
+        if let companiesLabel = self.legendView.subviews[1] as? UILabel, companiesLabel.tag == 10 {
             companiesLabel.text = NSLocalizedString("Companies", tableName: "Cliqz", comment: "AdBlocking UI title for companies column")
         }
         
-        if let countLabel = self.legendView.subviews[2] as? UILabel where countLabel.tag == 20 {
+        if let countLabel = self.legendView.subviews[2] as? UILabel, countLabel.tag == 20 {
             countLabel.text = NSLocalizedString("Ads", tableName: "Cliqz", comment: "AdBlocking UI title for tracked count column")
         }
         
@@ -52,13 +52,18 @@ class AdBlockerPanel: AntitrackingPanel {
         return UIImage(named: "AdBlockerIcon")
     }
     
-    override func getLearnMoreURL() -> NSURL? {
-        return NSURL(string: "https://cliqz.com/whycliqz/adblocking")
+    override func getLearnMoreURL() -> URL? {
+        return URL(string: "https://cliqz.com/whycliqz/adblocking")
     }
     
     override func setupConstraints() {
         super.setupConstraints()
+		panelIcon.snp.updateConstraints { (make) in
+			make.height.equalTo(75)
+			make.width.equalTo(75)
+		}
     }
+
     override func getThemeColor() -> UIColor {
         if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite() {
             return enabledColor
@@ -81,10 +86,8 @@ class AdBlockerPanel: AntitrackingPanel {
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
         //INVESTIGATE
-        if let urlString = self.currentURL.absoluteString {
-            return isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
-        }
-        return true
+        let urlString = self.currentURL.absoluteString
+		return isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
     }
     
     override func toggleFeatureForCurrentWebsite() {

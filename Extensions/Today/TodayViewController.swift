@@ -11,7 +11,7 @@ private let log = Logger.browserLogger
 
 struct TodayUX {
     // Cliqz: changed privateBrowsingColor to white
-    static let privateBrowsingColor = UIColor.whiteColor() //UIColor(colorString: "CE6EFC")
+    static let privateBrowsingColor = UIColor.white //UIColor(colorString: "CE6EFC")
     static let backgroundHightlightColor = UIColor(white: 216.0/255.0, alpha: 44.0/255.0)
 
     static let linkTextSize: CGFloat = 10.0
@@ -30,81 +30,81 @@ struct TodayUX {
 @objc (TodayViewController)
 class TodayViewController: UIViewController, NCWidgetProviding {
 
-    private lazy var newTabButton: ImageButtonWithLabel = {
+    fileprivate lazy var newTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
-        imageButton.addTarget(self, action: #selector(onPressNewTab), forControlEvents: .TouchUpInside)
+        imageButton.addTarget(self, action: #selector(onPressNewTab), forControlEvents: .touchUpInside)
 		//Cliqz: Changed the localization string
         imageButton.labelText = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "Widget item for a new tab")
 
         let button = imageButton.button
-        button.setImage(UIImage(named: "new_tab_button_normal"), forState: .Normal)
+        button.setImage(UIImage(named: "new_tab_button_normal"), for: UIControlState())
 #if !CLIQZ
-        button.setImage(UIImage(named: "new_tab_button_highlight"), forState: .Highlighted)
+        button.setImage(UIImage(named: "new_tab_button_highlight"), for: .highlighted)
 #endif
         let label = imageButton.label
-        label.textColor = UIColor.whiteColor()
-        label.font = UIFont.systemFontOfSize(TodayUX.imageButtonTextSize)
+        label.textColor = UIColor.white
+        label.font = UIFont.systemFont(ofSize: TodayUX.imageButtonTextSize)
 
         imageButton.sizeToFit()
         return imageButton
     }()
 
-    private lazy var newPrivateTabButton: ImageButtonWithLabel = {
+    fileprivate lazy var newPrivateTabButton: ImageButtonWithLabel = {
         let imageButton = ImageButtonWithLabel()
-        imageButton.addTarget(self, action: #selector(onPressNewPrivateTab), forControlEvents: .TouchUpInside)
+        imageButton.addTarget(self, action: #selector(onPressNewPrivateTab), forControlEvents: .touchUpInside)
 		// Cliqz: Changed Button title to ours
 		imageButton.labelText = NSLocalizedString("New Private Tab", tableName: "Cliqz", comment: "New private tab title")
 
         let button = imageButton.button
-        button.setImage(UIImage(named: "new_private_tab_button_normal"), forState: .Normal)
+        button.setImage(UIImage(named: "new_private_tab_button_normal"), for: UIControlState())
 #if !CLIQZ
-        button.setImage(UIImage(named: "new_private_tab_button_highlight"), forState: .Highlighted)
+        button.setImage(UIImage(named: "new_private_tab_button_highlight"), for: .highlighted)
 #endif
         let label = imageButton.label
         label.textColor = TodayUX.privateBrowsingColor
-        label.font = UIFont.systemFontOfSize(TodayUX.imageButtonTextSize)
+        label.font = UIFont.systemFont(ofSize: TodayUX.imageButtonTextSize)
 
         return imageButton
     }()
 
-    private lazy var openCopiedLinkButton: ButtonWithSublabel = {
+    fileprivate lazy var openCopiedLinkButton: ButtonWithSublabel = {
         let button = ButtonWithSublabel()
-        button.setTitle(NSLocalizedString("TodayWidget.GoToCopiedLinkLabel", value: "Go to copied link", tableName: "Today", comment: "Go to link on clipboard"), forState: .Normal)
-        button.addTarget(self, action: #selector(onPressOpenClibpoard), forControlEvents: .TouchUpInside)
+        button.setTitle(NSLocalizedString("TodayWidget.GoToCopiedLinkLabel", tableName: "Today", value: "Go to copied link", comment: "Go to link on clipboard"), for: UIControlState())
+        button.addTarget(self, action: #selector(onPressOpenClibpoard), for: .touchUpInside)
 
         // We need to set the background image/color for .Normal, so the whole button is tappable.
-        button.setBackgroundColor(UIColor.clearColor(), forState: .Normal)
-        button.setBackgroundColor(TodayUX.backgroundHightlightColor, forState: .Highlighted)
-        button.setImage(UIImage(named: "copy_link_icon"), forState: .Normal)
+        button.setBackgroundColor(UIColor.clear, forState: UIControlState())
+        button.setBackgroundColor(TodayUX.backgroundHightlightColor, forState: .highlighted)
+        button.setImage(UIImage(named: "copy_link_icon"), for: UIControlState())
 
-        button.label.font = UIFont.systemFontOfSize(TodayUX.labelTextSize)
-        button.subtitleLabel.font = UIFont.systemFontOfSize(TodayUX.linkTextSize)
+        button.label.font = UIFont.systemFont(ofSize: TodayUX.labelTextSize)
+        button.subtitleLabel.font = UIFont.systemFont(ofSize: TodayUX.linkTextSize)
 
         return button
     }()
 
-    private lazy var buttonSpacer: UIView = UIView()
+    fileprivate lazy var buttonSpacer: UIView = UIView()
 
-    private var copiedURL: NSURL? {
-        if let string = UIPasteboard.generalPasteboard().string,
-            url = NSURL(string: string) where url.isWebPage() {
+    fileprivate var copiedURL: URL? {
+        if let string = UIPasteboard.general.string,
+            let url = URL(string: string), url.isWebPage() {
             return url
         } else {
             return nil
         }
     }
 
-    private var hasCopiedURL: Bool {
+    fileprivate var hasCopiedURL: Bool {
         return copiedURL != nil
     }
 
-    private var scheme: String {
+    fileprivate var scheme: String {
         
 #if CLIQZ
         // Cliqz: return correct scheme so that today's widget redirect to Cliqz app not firefox app
         return "cliqz"
 #else
-        guard let string = NSBundle.mainBundle().objectForInfoDictionaryKey("MozInternalURLScheme") as? String else {
+        guard let string = Bundle.main.object(forInfoDictionaryKey: "MozInternalURLScheme") as? String else {
             // Something went wrong/weird, but we should fallback to the public one.
             return "firefox"
         }
@@ -167,7 +167,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         #if CLIQZ
 			// Cliqz: Hide private tab option from today's widget
-			openCopiedLinkButton.hidden = true
+			openCopiedLinkButton.isHidden = true
         #endif
     }
 
@@ -179,55 +179,55 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
     func updateCopiedLink() {
         if let url = self.copiedURL {
-            self.openCopiedLinkButton.hidden = false
-            self.openCopiedLinkButton.subtitleLabel.hidden = SystemUtils.isDeviceLocked()
+            self.openCopiedLinkButton.isHidden = false
+            self.openCopiedLinkButton.subtitleLabel.isHidden = SystemUtils.isDeviceLocked()
             self.openCopiedLinkButton.subtitleLabel.text = url.absoluteString
             self.openCopiedLinkButton.remakeConstraints()
         } else {
-            self.openCopiedLinkButton.hidden = true
+            self.openCopiedLinkButton.isHidden = true
         }
 
         self.view.setNeedsLayout()
     }
 
-    func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
+    func widgetMarginInsets(forProposedMarginInsets defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
         TodayUX.defaultWidgetTextMargin = defaultMarginInsets.left
         return UIEdgeInsetsMake(0, 0, TodayUX.verticalWidgetMargin, 0)
     }
 
-    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
+    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             // updates need to be made on the main thread
 #if !CLIQZ
             self.updateCopiedLink()
 #endif
             // and we need to call the completion handler in every branch.
-            completionHandler(NCUpdateResult.NewData)
+            completionHandler(NCUpdateResult.newData)
         }
-        completionHandler(NCUpdateResult.NewData)
+        completionHandler(NCUpdateResult.newData)
     }
 
     // MARK: Button behaviour
 
-    @objc func onPressNewTab(view: UIView) {
+    @objc func onPressNewTab(_ view: UIView) {
         openContainingApp("")
     }
 
-    @objc func onPressNewPrivateTab(view: UIView) {
+    @objc func onPressNewPrivateTab(_ view: UIView) {
         openContainingApp("?private=true")
     }
 
-    private func openContainingApp(urlSuffix: String = "") {
+    fileprivate func openContainingApp(_ urlSuffix: String = "") {
         let urlString = "\(scheme)://\(urlSuffix)"
-        self.extensionContext?.openURL(NSURL(string: urlString)!) { success in
-            log.info("Extension opened containing app: \(success)")
+        self.extensionContext?.open(URL(string: urlString)!) { success in
+//            log.info("Extension opened containing app: \(success)")
         }
     }
 
-    @objc func onPressOpenClibpoard(view: UIView) {
-        if let urlString = UIPasteboard.generalPasteboard().string,
-            _ = NSURL(string: urlString) {
+    @objc func onPressOpenClibpoard(_ view: UIView) {
+        if let urlString = UIPasteboard.general.string,
+            let _ = URL(string: urlString) {
             let encodedString =
                 urlString.escape()
             openContainingApp("?url=\(encodedString)")
@@ -236,18 +236,18 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 }
 
 extension UIButton {
-    func setBackgroundColor(color: UIColor, forState state: UIControlState) {
-        let colorView = UIView(frame: CGRectMake(0, 0, 1, 1))
+    func setBackgroundColor(_ color: UIColor, forState state: UIControlState) {
+        let colorView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         colorView.backgroundColor = color
 
         UIGraphicsBeginImageContext(colorView.bounds.size)
         if let context = UIGraphicsGetCurrentContext() {
-            colorView.layer.renderInContext(context)
+            colorView.layer.render(in: context)
         }
         let colorImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        self.setBackgroundImage(colorImage, forState: state)
+        self.setBackgroundImage(colorImage, for: state)
     }
 }
 
@@ -272,7 +272,7 @@ class ImageButtonWithLabel: UIView {
     }
 
     init() {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         performLayout()
     }
 
@@ -292,8 +292,8 @@ class ImageButtonWithLabel: UIView {
         }
 
         label.numberOfLines = 0
-        label.lineBreakMode = .ByWordWrapping
-        label.textAlignment = .Center
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
 
         label.snp_makeConstraints { make in
             make.centerX.equalTo(button.snp_centerX)
@@ -301,8 +301,8 @@ class ImageButtonWithLabel: UIView {
         }
     }
 
-    func addTarget(target: AnyObject?, action: Selector, forControlEvents events: UIControlEvents) {
-        button.addTarget(target, action: action, forControlEvents: events)
+    func addTarget(_ target: AnyObject?, action: Selector, forControlEvents events: UIControlEvents) {
+        button.addTarget(target, action: action, for: events)
     }
 }
 
@@ -316,7 +316,7 @@ class ButtonWithSublabel: UIButton {
     }
 
     convenience init() {
-        self.init(frame: CGRectZero)
+        self.init(frame: CGRect.zero)
     }
 
     override init(frame: CGRect) {
@@ -324,11 +324,11 @@ class ButtonWithSublabel: UIButton {
         performLayout()
     }
 
-    private func performLayout() {
+    fileprivate func performLayout() {
         self.snp_removeConstraints()
 
         let titleLabel = self.label
-        titleLabel.textColor = UIColor.whiteColor()
+        titleLabel.textColor = UIColor.white
 
         self.titleLabel?.removeFromSuperview()
         addSubview(titleLabel)
@@ -336,7 +336,7 @@ class ButtonWithSublabel: UIButton {
         let imageView = self.imageView!
 
         let subtitleLabel = self.subtitleLabel
-        subtitleLabel.textColor = UIColor.whiteColor()
+        subtitleLabel.textColor = UIColor.white
         self.addSubview(subtitleLabel)
 
         imageView.snp_remakeConstraints { make in
@@ -344,7 +344,7 @@ class ButtonWithSublabel: UIButton {
             make.right.equalTo(titleLabel.snp_left).offset(-TodayUX.horizontalWidgetMargin)
         }
 
-        subtitleLabel.lineBreakMode = .ByTruncatingTail
+        subtitleLabel.lineBreakMode = .byTruncatingTail
         subtitleLabel.snp_makeConstraints { make in
             make.left.equalTo(titleLabel.snp_left)
             make.top.equalTo(titleLabel.snp_bottom).offset(TodayUX.verticalWidgetMargin / 2)
@@ -361,8 +361,8 @@ class ButtonWithSublabel: UIButton {
         }
     }
 
-    override func setTitle(text: String?, forState state: UIControlState) {
+    override func setTitle(_ text: String?, for state: UIControlState) {
         self.label.text = text
-        super.setTitle(text, forState: state)
+        super.setTitle(text, for: state)
     }
 }

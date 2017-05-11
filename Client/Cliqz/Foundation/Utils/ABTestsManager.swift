@@ -10,16 +10,16 @@ import UIKit
 
 class ABTestsManager: NSObject {
     //MARK:- Constants
-    private static let checkURL = "https://stats.cliqz.com/abtests/check"
-    private static let dispatchQueue = dispatch_queue_create("com.cliqz.abtests", DISPATCH_QUEUE_CONCURRENT)
-    private static let ABTestsKey = "ABTests"
+    fileprivate static let checkURL = "https://stats.cliqz.com/abtests/check"
+    fileprivate static let dispatchQueue = DispatchQueue(label: "com.cliqz.abtests", attributes: DispatchQueue.Attributes.concurrent)
+    fileprivate static let ABTestsKey = "ABTests"
     
     //MARK:- Public APIs
-    class func checkABTests(sessionId: String) {
-        ConnectionManager.sharedInstance.sendRequest(.GET,
+    class func checkABTests(_ sessionId: String) {
+        ConnectionManager.sharedInstance.sendRequest(.get,
                                                      url: checkURL,
                                                      parameters: ["session": sessionId],
-                                                     responseType: .JSONResponse,
+                                                     responseType: .jsonResponse,
                                                      queue: dispatchQueue,
                                                      onSuccess: { (response) in
                                                         if let tests = response as? [String: AnyObject] {
@@ -31,12 +31,12 @@ class ABTestsManager: NSObject {
     }
     
     
-    class func getABTests() -> AnyObject? {
+    class func getABTests() -> Any? {
         return LocalDataStore.objectForKey(ABTestsKey)
     }
     
     //MARK:- Private helper methods
-    private class func processABTests(tests: [String: AnyObject]) {
+    fileprivate class func processABTests(_ tests: [String: AnyObject]) {
         var oldTests = [String: AnyObject]()
         if let storedTests = getABTests() as? [String: AnyObject] {
             oldTests = storedTests
@@ -51,7 +51,7 @@ class ABTestsManager: NSObject {
             
             // remove the processed test from the old tests
             if let oldTest = getTest(oldTests, testId: testId) {
-                oldTests.removeValueForKey(oldTest)
+                oldTests.removeValue(forKey: oldTest)
             }
             
         }
@@ -66,14 +66,14 @@ class ABTestsManager: NSObject {
         }
         
         // save the new tests in settings
-        updateABTests(tests)
+        updateABTests(tests as AnyObject)
     }
     
-    private class func updateABTests(newValue: AnyObject) {
+    fileprivate class func updateABTests(_ newValue: AnyObject) {
         LocalDataStore.setObject(newValue, forKey: ABTestsKey)
     }
     
-    private class func enterABTest(test: String) {
+    fileprivate class func enterABTest(_ test: String) {
         switch test {
         case "1089_A":
             LocalDataStore.setObject(false, forKey: LocalDataStore.enableQuerySuggestionKey)
@@ -86,7 +86,7 @@ class ABTestsManager: NSObject {
         
     }
     
-    private class func leaveABTest(testId: String) {
+    fileprivate class func leaveABTest(_ testId: String) {
         switch testId {
         case "1089":
             LocalDataStore.removeObjectForKey(LocalDataStore.enableQuerySuggestionKey)
@@ -95,8 +95,8 @@ class ABTestsManager: NSObject {
         }
     }
     
-    private class func getTestId(test: String) -> String? {
-        let testComponents = test.componentsSeparatedByString("_")
+    fileprivate class func getTestId(_ test: String) -> String? {
+        let testComponents = test.components(separatedBy: "_")
         guard testComponents.count == 2  else {
             return nil
         }
@@ -104,7 +104,7 @@ class ABTestsManager: NSObject {
         return testComponents[0]
     }
     
-    private class func getTest(tests: [String: AnyObject], testId: String) -> String? {
+    fileprivate class func getTest(_ tests: [String: AnyObject], testId: String) -> String? {
         for (test, _) in tests {
             guard let currentTestId = getTestId(test) else {
                 continue

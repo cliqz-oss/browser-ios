@@ -12,13 +12,13 @@ class TabSwitcherLayoutAttributes: UICollectionViewLayoutAttributes {
     
     var displayTransform: CATransform3D = CATransform3DIdentity
     
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! TabSwitcherLayoutAttributes
-        copy.displayTransform = displayTransform
-        return copy
+	override func copy(with zone: NSZone? = nil) -> Any {
+		let _copy = super.copy(with: zone) as! TabSwitcherLayoutAttributes
+        _copy.displayTransform = displayTransform
+        return _copy
     }
     
-    override func isEqual(object: AnyObject?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
         guard let attr = object as? TabSwitcherLayoutAttributes else { return false }
         return super.isEqual(object) && CATransform3DEqualToTransform(displayTransform, attr.displayTransform)
     }
@@ -30,7 +30,7 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         super.init()
         self.minimumInteritemSpacing = 200.0
         self.minimumLineSpacing = 0.0
-        self.scrollDirection = .Vertical
+		self.scrollDirection = .vertical
         self.sectionInset = UIEdgeInsetsMake(30, 0, 0, 0)
     }
     
@@ -38,25 +38,25 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override class func layoutAttributesClass() -> AnyClass {
+	override class var layoutAttributesClass: AnyClass {
         return TabSwitcherLayoutAttributes.self
     }
     
-    override func initialLayoutAttributesForAppearingItemAtIndexPath(itemIndexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        let attr = super.initialLayoutAttributesForAppearingItemAtIndexPath(itemIndexPath)
-        attr?.zIndex = itemIndexPath.item
+	override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+		let attr = super.layoutAttributesForItem(at: indexPath)
+        attr?.zIndex = indexPath.item
         return attr
-    }
-    
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let attrs = super.layoutAttributesForElementsInRect(rect) else {return nil}
+	}
+
+	override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+		guard let attrs = super.layoutAttributesForElements(in: rect) else {return nil}
         
         return attrs.map({ attr in
             return pimpedAttribute(attr)
         })
     }
-    
-    func pimpedAttribute(attribute: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+
+    func pimpedAttribute(_ attribute: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         
         if let attr = attribute.copy() as? TabSwitcherLayoutAttributes {
             
@@ -64,8 +64,8 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
             
             var t: CATransform3D = CATransform3DIdentity
             
-            if let count = self.collectionView?.numberOfItemsInSection(0) where count > 1 {
-                
+			if let count = self.collectionView?.numberOfItems(inSection: 0), count > 1 {
+				
                 t.m34 = -1.0 / (CGFloat(1000))
                 t = CATransform3DRotate(t, -CGFloat(Knobs.tiltAngle), 1, 0, 0)
                 //attr.transform = CGAffineTransformIdentity

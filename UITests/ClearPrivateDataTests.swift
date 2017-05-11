@@ -7,6 +7,7 @@ import Shared
 import WebKit
 import UIKit
 import GCDWebServers
+import SwiftyJSON
 
 // Needs to be in sync with Client Clearables.
 private enum Clearable: String {
@@ -77,7 +78,7 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
             let url = "\(webRoot)/numberedPage.html?page=\(pageNo)"
             tester().clearTextFromAndThenEnterTextIntoCurrentFirstResponder("\(url)\n")
             tester().waitForWebViewElementWithAccessibilityLabel("Page \(pageNo)")
-            let tuple: (title: String, domain: String, url: String) = ("Page \(pageNo)", NSURL(string: url)!.normalizedHost()!, url)
+            let tuple: (title: String, domain: String, url: String) = ("Page \(pageNo)", URL(string: url)!.normalizedHost()!, url)
             urls.append(tuple)
         }
         BrowserUtils.resetToAboutHome(tester())
@@ -233,7 +234,7 @@ class ClearPrivateDataTests: KIFTestCase, UITextFieldDelegate {
         let expectation = expectationWithDescription("Got cookie")
         webView.evaluateJavaScript("JSON.stringify([document.cookie, localStorage.cookie, sessionStorage.cookie])") { result, _ in
             let cookies = JSON.parse(result as! String).asArray!
-            cookie = (cookies[0].asString!, cookies[1].asString, cookies[2].asString)
+            cookie = (cookies[0].string!, cookies[1].string, cookies[2].string)
             expectation.fulfill()
         }
         waitForExpectationsWithTimeout(10, handler: nil)

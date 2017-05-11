@@ -10,27 +10,27 @@ import Foundation
 
 class SettingsActivity : UIActivity {
     
-    private let callback: () -> ()
+    fileprivate let callback: () -> ()
     
-    init(callback: () -> ()) {
+    init(callback: @escaping () -> ()) {
         self.callback = callback
     }
     
-    override func activityTitle() -> String? {
+    override var activityTitle : String? {
         return NSLocalizedString("Settings", tableName: "Cliqz", comment: "Sharing activity for opening Settings")
         
     }
     
-    override func activityImage() -> UIImage? {
+    override var activityImage : UIImage? {
         return UIImage(named: "settings")
     }
     
-    override func performActivity() {
+    override func perform() {
         callback()
         activityDidFinish(true)
     }
     
-    override func canPerformWithActivityItems(activityItems: [AnyObject]) -> Bool {
+    override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
         return true
     }
 }

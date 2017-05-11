@@ -5,51 +5,52 @@
 import Foundation
 
 public extension String {
-    public func contains(other: String) -> Bool {
-        // rangeOfString returns nil if other is empty, destroying the analogy with (ordered) sets.
-        if other.isEmpty {
-            return true
-        }
-        return self.rangeOfString(other) != nil
-    }
+//
+//    public func contains(_ other: String) -> Bool {
+//        // rangeOfString returns nil if other is empty, destroying the analogy with (ordered) sets.
+//        if other.isEmpty {
+//            return true
+//        }
+//        return self.range(of: other) != nil
+//    }
 
-    public func startsWith(other: String) -> Bool {
+    public func startsWith(_ other: String) -> Bool {
         // rangeOfString returns nil if other is empty, destroying the analogy with (ordered) sets.
         if other.isEmpty {
             return true
         }
-        if let range = self.rangeOfString(other,
-                options: NSStringCompareOptions.AnchoredSearch) {
-            return range.startIndex == self.startIndex
+        if let range = self.range(of: other,
+                options: NSString.CompareOptions.anchored) {
+            return range.lowerBound == self.startIndex
         }
         return false
     }
 
-    public func endsWith(other: String) -> Bool {
+    public func endsWith(_ other: String) -> Bool {
         // rangeOfString returns nil if other is empty, destroying the analogy with (ordered) sets.
         if other.isEmpty {
             return true
         }
-        if let range = self.rangeOfString(other,
-                options: [NSStringCompareOptions.AnchoredSearch, NSStringCompareOptions.BackwardsSearch]) {
-            return range.endIndex == self.endIndex
+        if let range = self.range(of: other,
+                options: [NSString.CompareOptions.anchored, NSString.CompareOptions.backwards]) {
+            return range.upperBound == self.endIndex
         }
         return false
     }
 
     func escape() -> String {
-        let raw: NSString = self
+        let raw: NSString = self as NSString
         let str = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
             raw,
-            "[].",":/?&=;+!@#$()',*",
-            CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
-        return str as String
+            "[]." as CFString!,":/?&=;+!@#$()',*" as CFString!,
+            CFStringConvertNSStringEncodingToEncoding(String.Encoding.utf8.rawValue))
+        return str as! String
     }
 
     func unescape() -> String {
-        let raw: NSString = self
-        let str = CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault, raw, "[].")
-        return str as String
+        let raw: NSString = self as NSString
+        let str = CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault, raw, "[]." as CFString!)
+        return str as! String
     }
 
     /**
@@ -62,35 +63,35 @@ public extension String {
 
     :returns: A String with `maxLength` characters or less
     */
-    func ellipsize(let maxLength maxLength: Int) -> String {
+    func ellipsize(maxLength: Int) -> String {
         if (maxLength >= 2) && (self.characters.count > maxLength) {
-            let index1 = self.startIndex.advancedBy((maxLength + 1) / 2) // `+ 1` has the same effect as an int ceil
-            let index2 = self.endIndex.advancedBy(maxLength / -2)
+            let index1 = self.characters.index(self.startIndex, offsetBy: (maxLength + 1) / 2) // `+ 1` has the same effect as an int ceil
+            let index2 = self.characters.index(self.endIndex, offsetBy: maxLength / -2)
 
-            return self.substringToIndex(index1) + "…\u{2060}" + self.substringFromIndex(index2)
+            return self.substring(to: index1) + "…\u{2060}" + self.substring(from: index2)
         }
         return self
     }
 
-    private var stringWithAdditionalEscaping: String {
-        return self.stringByReplacingOccurrencesOfString("|", withString: "%7C", options: NSStringCompareOptions(), range: nil)
+    fileprivate var stringWithAdditionalEscaping: String {
+        return self.replacingOccurrences(of: "|", with: "%7C", options: NSString.CompareOptions(), range: nil)
     }
 
-    public var asURL: NSURL? {
+    public var asURL: URL? {
         // Firefox and NSURL disagree about the valid contents of a URL.
         // Let's escape | for them.
         // We'd love to use one of the more sophisticated CFURL* or NSString.* functions, but
         // none seem to be quite suitable.
-        return NSURL(string: self) ??
-               NSURL(string: self.stringWithAdditionalEscaping)
+        return URL(string: self) ??
+               URL(string: self.stringWithAdditionalEscaping)
     }
 
     /// Returns a new string made by removing the leading String characters contained
     /// in a given character set.
-    public func stringByTrimmingLeadingCharactersInSet(set: NSCharacterSet) -> String {
+    public func stringByTrimmingLeadingCharactersInSet(_ set: CharacterSet) -> String {
         var trimmed = self
-        while trimmed.rangeOfCharacterFromSet(set)?.startIndex == trimmed.startIndex {
-            trimmed.removeAtIndex(trimmed.startIndex)
+        while trimmed.rangeOfCharacter(from: set)?.lowerBound == trimmed.startIndex {
+            trimmed.remove(at: trimmed.startIndex)
         }
         return trimmed
     }

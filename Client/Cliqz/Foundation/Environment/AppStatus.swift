@@ -14,19 +14,19 @@ class AppStatus {
     //MARK constants
     let versionDescriptorKey = "VersionDescriptor"
     let buildNumberDescriptorKey = "BuildNumberDescriptor"
-    let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
+    let dispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.utility)
     
     
     //MARK Instance variables
     var versionDescriptor: (String, String)?
-    var lastOpenedDate: NSDate?
-    var lastEnvironmentEventDate: NSDate?
+    var lastOpenedDate: Date?
+    var lastEnvironmentEventDate: Date?
     
     lazy var extensionVersion: String = {
         
-        if let path = NSBundle.mainBundle().pathForResource("cliqz", ofType: "json", inDirectory: "Extension/build/mobile/search"),
-            let jsonData = try? NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe) as NSData,
-            let jsonResult: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+        if let path = Bundle.main.path(forResource: "cliqz", ofType: "json", inDirectory: "Extension/build/mobile/search"),
+            let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data,
+            let jsonResult: NSDictionary = try! JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
             
                 if let extensionVersion : String = jsonResult["EXTENSION_VERSION"] as? String {
                     return extensionVersion
@@ -42,7 +42,7 @@ class AppStatus {
     
     lazy var hostVersion: String = {
         // Firefox version
-        if let path = NSBundle.mainBundle().pathForResource("Info", ofType: "plist"),
+        if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
             let infoDict = NSDictionary(contentsOfFile: path),
             let hostVersion = infoDict["HostVersion"] as? String {
                 return hostVersion
@@ -62,32 +62,32 @@ class AppStatus {
         return _isDebugAssertConfiguration()
     }
     
-    func getAppVersion(versionDescriptor: (version: String, buildNumber: String)) -> String {
+    func getAppVersion(_ versionDescriptor: (version: String, buildNumber: String)) -> String {
             return "\(versionDescriptor.version.trim()) (\(versionDescriptor.buildNumber))"
     }
     
     func batteryLevel() -> Int {
-        return Int(UIDevice.currentDevice().batteryLevel * 100)
+        return Int(UIDevice.current.batteryLevel * 100)
     }
 
     //MARK: - Singltone
     static let sharedInstance = AppStatus()
 
-    private init() {
-        UIDevice.currentDevice().batteryMonitoringEnabled = true
+    fileprivate init() {
+        UIDevice.current.isBatteryMonitoringEnabled = true
     }
 
     //MARK:- pulbic interface
     internal func appWillFinishLaunching() {
         
-        lastOpenedDate = NSDate()
+        lastOpenedDate = Date()
         NetworkReachability.sharedInstance.startMonitoring()
         
     }
 
     internal func appDidFinishLaunching() {
         
-        dispatch_async(dispatchQueue) {
+        dispatchQueue.async {
             
             let (version, buildNumber) = self.getVersionDescriptor()
             if let (storedVersion, storedBuildNumber) = self.loadStoredVersionDescriptor() {
@@ -110,10 +110,10 @@ class AppStatus {
     internal func appWillEnterForeground() {
         
         SessionState.sessionResumed()
-        lastOpenedDate = NSDate()
+        lastOpenedDate = Date()
     }
     
-    internal func appDidBecomeActive(profile: Profile) {
+    internal func appDidBecomeActive(_ profile: Profile) {
         
         NetworkReachability.sharedInstance.refreshStatus()
         logApplicationUsageEvent("Active")
@@ -121,14 +121,14 @@ class AppStatus {
 
     }
     
-    internal func appDidBecomeResponsive(startupType: String) {
-        let startupTime = NSDate.milliSecondsSinceDate(lastOpenedDate)
+    internal func appDidBecomeResponsive(_ startupType: String) {
+        let startupTime = Date.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Responsive", startupType: startupType, startupTime: startupTime, openDuration: nil)
     }
     
     internal func appWillResignActive() {
         
-        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        let openDuration = Date.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Inactive", startupType:nil, startupTime: nil, openDuration: openDuration)
         NetworkReachability.sharedInstance.logNetworkStatusEvent()
         
@@ -139,7 +139,7 @@ class AppStatus {
     internal func appDidEnterBackground() {
         SessionState.sessionPaused()
         
-        let openDuration = NSDate.milliSecondsSinceDate(lastOpenedDate)
+        let openDuration = Date.milliSecondsSinceDate(lastOpenedDate)
         logApplicationUsageEvent("Background", startupType:nil, startupTime: nil, openDuration: openDuration)
 
         TelemetryLogger.sharedInstance.appDidEnterBackground()
@@ -156,22 +156,22 @@ class AppStatus {
     
     //MARK:- Private Helper Methods
     //MARK: VersionDescriptor
-    private func getVersionDescriptor() -> (version: String, buildNumber: String) {
+    fileprivate func getVersionDescriptor() -> (version: String, buildNumber: String) {
 
         var version = "0"
         var buildNumber = "0"
         
-        if let shortVersion = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String {
+        if let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             version = shortVersion
         }
-        if let bundleVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String {
+        if let bundleVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             buildNumber = bundleVersion
         }
         
         return (version, buildNumber)
     }
     
-    private func loadStoredVersionDescriptor() -> (version: String, buildNumber: String)? {
+    fileprivate func loadStoredVersionDescriptor() -> (version: String, buildNumber: String)? {
         
         if let storedVersion = LocalDataStore.objectForKey(self.versionDescriptorKey) as? String {
             if let storedBuildNumber = LocalDataStore.objectForKey(self.buildNumberDescriptorKey) as? String {
@@ -183,25 +183,25 @@ class AppStatus {
         return nil
     }
     
-    private func updateVersionDescriptor(versionDescriptor: (version: String, buildNumber: String)) {
+    fileprivate func updateVersionDescriptor(_ versionDescriptor: (version: String, buildNumber: String)) {
         self.versionDescriptor = versionDescriptor
         LocalDataStore.setObject(versionDescriptor.version, forKey: self.versionDescriptorKey)
         LocalDataStore.setObject(versionDescriptor.buildNumber, forKey: self.buildNumberDescriptorKey)
     }
     
     //MARK: application life cycle event
-    private func logLifeCycleEvent(action: String) {
+    fileprivate func logLifeCycleEvent(_ action: String) {
         TelemetryLogger.sharedInstance.logEvent(.LifeCycle(action, distVersion))
     }
     
     //MARK: application usage event
     
-    private func logApplicationUsageEvent(action: String) {
+    fileprivate func logApplicationUsageEvent(_ action: String) {
         logApplicationUsageEvent(action, startupType: nil, startupTime: nil, openDuration: nil)
     }
     
-    private func logApplicationUsageEvent(action: String, startupType: String?, startupTime: Double?, openDuration: Double?) {
-        dispatch_async(dispatchQueue) {
+    fileprivate func logApplicationUsageEvent(_ action: String, startupType: String?, startupTime: Double?, openDuration: Double?) {
+        dispatchQueue.async {
             let network = NetworkReachability.sharedInstance.networkReachabilityStatus?.description
             let battery = self.batteryLevel()
             let memory = self.getMemoryUsage()
@@ -210,23 +210,23 @@ class AppStatus {
         }
     }
     //MARK: application Environment event
-    private func logEnvironmentEventIfNecessary(profile: Profile) {
+    fileprivate func logEnvironmentEventIfNecessary(_ profile: Profile) {
         if let lastdate = lastEnvironmentEventDate {
-            let timeSinceLastEvent = NSDate().timeIntervalSinceDate(lastdate)
+            let timeSinceLastEvent = Date().timeIntervalSince(lastdate)
             if timeSinceLastEvent < 3600 {
                 //less than an hour since last sent event
                 return
             }
         }
         
-        dispatch_async(dispatchQueue) {
-            self.lastEnvironmentEventDate = NSDate()
-            let device: String = UIDevice.currentDevice().deviceType
+        dispatchQueue.async {
+            self.lastEnvironmentEventDate = Date()
+            let device: String = UIDevice.current.deviceType
             let language = self.getAppLanguage()
             let extensionVersion = self.extensionVersion
             let distVersion = self.distVersion
             let hostVersion = self.hostVersion
-            let osVersion = UIDevice.currentDevice().systemVersion
+            let osVersion = UIDevice.current.systemVersion
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
             let historyUrls = profile.history.count()
             let historyDays = self.getHistoryDays(profile)
@@ -237,50 +237,51 @@ class AppStatus {
 
         }
     }
-    private func getEnvironmentPrefs(profile: Profile) -> [String: AnyObject] {
+    fileprivate func getEnvironmentPrefs(_ profile: Profile) -> [String: AnyObject] {
         var prefs = [String: AnyObject]()
-        prefs["block_popups"] = SettingsPrefs.getBlockPopupsPref()
-        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref()
-        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref()
-        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref()
-        prefs["human_web"] = SettingsPrefs.getHumanWebPref()
-        prefs["country"]   = SettingsPrefs.getDefaultRegion()
-        if let abTests = ABTestsManager.getABTests() where NSJSONSerialization.isValidJSONObject(abTests) {
+        prefs["block_popups"] = SettingsPrefs.getBlockPopupsPref() as AnyObject?
+        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref() as AnyObject?
+        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref() as AnyObject?
+        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref() as AnyObject?
+        prefs["human_web"] = SettingsPrefs.getHumanWebPref() as AnyObject?
+        prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
+        if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
-                let data = try NSJSONSerialization.dataWithJSONObject(abTests, options: .PrettyPrinted)
-                let stringifiedAbTests = NSString(data: data, encoding: NSUTF8StringEncoding)
+                let data = try JSONSerialization.data(withJSONObject: abTests, options: .prettyPrinted)
+                let stringifiedAbTests = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                 prefs["ABTests"]   = stringifiedAbTests
             } catch let error as NSError {
-                Answers.logCustomEventWithName("stringifyABTests", customAttributes: ["error": error.localizedDescription])
+                Answers.logCustomEvent(withName: "stringifyABTests", customAttributes: ["error": error.localizedDescription])
             }
         }
         
         return prefs
     }
-    private func getAppLanguage() -> String {
-        let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode)
-        let countryCode = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode)
+    fileprivate func getAppLanguage() -> String {
+        let languageCode = (Locale.current as NSLocale).object(forKey: .countryCode)
+        let countryCode = (Locale.current as NSLocale).object(forKey: .countryCode)
         return "\(languageCode!)-\(countryCode!)"
     }
     
-    private func getHistoryDays(profile: Profile) -> Int {
+    fileprivate func getHistoryDays(_ profile: Profile) -> Int {
         var historyDays = 0
         if let oldestVisitDate = profile.history.getOldestVisitDate() {
-            historyDays = NSDate().daysSinceDate(oldestVisitDate)
+            historyDays = Date().daysSinceDate(oldestVisitDate)
         }
         return historyDays
     }
     
     func getMemoryUsage()-> Double {
         var info = task_basic_info()
-        var count = mach_msg_type_number_t(sizeofValue(info))/4
+        var count = mach_msg_type_number_t(MemoryLayout.size(ofValue: info))/4
         
-        let kerr: kern_return_t = withUnsafeMutablePointer(&info) {
-            
-            task_info(mach_task_self_,
-                task_flavor_t(TASK_BASIC_INFO),
-                task_info_t($0),
-                &count)
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &info) {
+			$0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+				task_info(mach_task_self_,
+					task_flavor_t(TASK_BASIC_INFO),
+					$0,
+					&count)
+			}
         }
         
         if kerr == KERN_SUCCESS {

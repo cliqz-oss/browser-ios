@@ -17,9 +17,9 @@ private enum DeviceType: String {
 }
 
 private enum PermissionState {
-    case FirstTimeAsking
-    case SubsequentAsking
-    case HowToEnable
+    case firstTimeAsking
+    case subsequentAsking
+    case howToEnable
 }
 
 struct NewsNotificationPermissionViewControllerUX {
@@ -34,33 +34,33 @@ struct NewsNotificationPermissionViewControllerUX {
 
 class NewsNotificationPermissionViewController: UIViewController {
 
-    private lazy var newsNotificationPermissionHelper = NewsNotificationPermissionHelper.sharedInstance
+    fileprivate lazy var newsNotificationPermissionHelper = NewsNotificationPermissionHelper.sharedInstance
     
-    private lazy var yesButton: UIButton = {
+    fileprivate lazy var yesButton: UIButton = {
         let title = NSLocalizedString("Yes please!", tableName: "Cliqz", comment: "Button label to `Yes please` in news notification permission screen")
-        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.blueColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickYes))
+        let button = self.createButton(title, titleColor: UIColor.white, backgroundColor: NewsNotificationPermissionViewControllerUX.blueColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickYes))
         return button
     }()
     
-    private lazy var laterButton: UIButton = {
+    fileprivate lazy var laterButton: UIButton = {
         let title = NSLocalizedString("Remind me later", tableName: "Cliqz", comment: "Button label to `Remind me later` in news notification permission screen")
-        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: #selector(NewsNotificationPermissionViewController.SELdidClickLater))
-        button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.CGColor
+        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.white, action: #selector(NewsNotificationPermissionViewController.SELdidClickLater))
+        button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.cgColor
         button.layer.borderWidth = 1
         return button
     }()
     
-    private lazy var noButton: UIButton = {
+    fileprivate lazy var noButton: UIButton = {
         let title = NSLocalizedString("No thanks", tableName: "Cliqz", comment: "Button label to `No thanks` in news notification permission screen")
-        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.whiteColor(), action: #selector(NewsNotificationPermissionViewController.SELdidClickNo))
-        button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.CGColor
+        let button = self.createButton(title, titleColor: NewsNotificationPermissionViewControllerUX.blueColor, backgroundColor: UIColor.white, action: #selector(NewsNotificationPermissionViewController.SELdidClickNo))
+        button.layer.borderColor = NewsNotificationPermissionViewControllerUX.blueColor.cgColor
         button.layer.borderWidth = 1
         return button
     }()
     
-    private lazy var okButton: UIButton = {
+    fileprivate lazy var okButton: UIButton = {
         let title = NSLocalizedString("OK", tableName: "Cliqz", comment: "Button label to `OK` in news notification permission screen")
-        let button = self.createButton(title, titleColor: UIColor.whiteColor(), backgroundColor: NewsNotificationPermissionViewControllerUX.greenColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickOk))
+        let button = self.createButton(title, titleColor: UIColor.white, backgroundColor: NewsNotificationPermissionViewControllerUX.greenColor, action: #selector(NewsNotificationPermissionViewController.SELdidClickOk))
         return button
     }()
     
@@ -69,22 +69,22 @@ class NewsNotificationPermissionViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.navigationController?.navigationBarHidden = true
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.navigationController?.isNavigationBarHidden = true
+        self.view.backgroundColor = UIColor.white
         
         if newsNotificationPermissionHelper.isAskingForPermissionDisabled() {
-            addBackgroundImage(.HowToEnable)
-            addActionButtons(.HowToEnable)
+            addBackgroundImage(.howToEnable)
+            addActionButtons(.howToEnable)
         } else if newsNotificationPermissionHelper.isAksedForPermissionBefore() {
-            addBackgroundImage(.SubsequentAsking)
-            addActionButtons(.SubsequentAsking)
+            addBackgroundImage(.subsequentAsking)
+            addActionButtons(.subsequentAsking)
         } else {
-            addBackgroundImage(.FirstTimeAsking)
-            addActionButtons(.FirstTimeAsking)
+            addBackgroundImage(.firstTimeAsking)
+            addActionButtons(.firstTimeAsking)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         newsNotificationPermissionHelper.onAskForPermission()
@@ -107,7 +107,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     */
     
     //MARK: - private helper methods
-    private func addBackgroundImage(permissionState: PermissionState) {
+    fileprivate func addBackgroundImage(_ permissionState: PermissionState) {
         let backgroundImageView = getBackgroundImageView(permissionState)
         self.view.addSubview(backgroundImageView)
         let height = (getDeviceType() == .iPhone6Plus) ? 1000 : backgroundImageView.frame.height
@@ -119,12 +119,12 @@ class NewsNotificationPermissionViewController: UIViewController {
         }
     }
     
-    private func getBackgroundImageView(permissionState: PermissionState) -> UIImageView {
+    fileprivate func getBackgroundImageView(_ permissionState: PermissionState) -> UIImageView {
         
         let deviceSuffix = getDeviceType().rawValue
         var backgroundImageName: String
 
-        if permissionState == .HowToEnable {
+        if permissionState == .howToEnable {
             backgroundImageName = "NewsPermissionSettings-\(deviceSuffix)"
         } else {
             backgroundImageName = "NewsPermissionAsking-\(deviceSuffix)"
@@ -135,7 +135,7 @@ class NewsNotificationPermissionViewController: UIViewController {
         return UIImageView(image: backgroundImage)
     }
     
-    private func getDeviceType() -> DeviceType {
+    fileprivate func getDeviceType() -> DeviceType {
         var deviceSuffix: DeviceType
         
         let screenHeight = Int(self.view.frame.size.height)
@@ -156,18 +156,18 @@ class NewsNotificationPermissionViewController: UIViewController {
         
     }
     
-    private func createButton(title: String, titleColor: UIColor, backgroundColor: UIColor, action: Selector) -> UIButton {
+    fileprivate func createButton(_ title: String, titleColor: UIColor, backgroundColor: UIColor, action: Selector) -> UIButton {
         let button = UIButton()
         button.backgroundColor = backgroundColor
-        button.setTitleColor(titleColor, forState: UIControlState.Normal)
-        button.setTitle(title, forState: UIControlState.Normal)
+        button.setTitleColor(titleColor, for: UIControlState())
+        button.setTitle(title, for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Lato-Medium", size: 14.0)
-        button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: action, for: UIControlEvents.touchUpInside)
         button.layer.cornerRadius = 5
         return button
     }
     
-    private func addActionButtons(permissionState: PermissionState) {
+    fileprivate func addActionButtons(_ permissionState: PermissionState) {
         var offsetFactor = 1.0
         if getDeviceType() == .iPhone4 {
             offsetFactor = 2.0
@@ -176,7 +176,7 @@ class NewsNotificationPermissionViewController: UIViewController {
         }
         
         switch permissionState {
-        case .FirstTimeAsking:
+        case .firstTimeAsking:
             self.view.addSubview(yesButton)
             self.view.addSubview(laterButton)
             
@@ -193,7 +193,7 @@ class NewsNotificationPermissionViewController: UIViewController {
                 make.bottom.equalTo(yesButton.snp_top).offset(-20/offsetFactor)
             }
             
-        case .SubsequentAsking:
+        case .subsequentAsking:
             self.view.addSubview(yesButton)
             self.view.addSubview(laterButton)
             self.view.addSubview(noButton)
@@ -217,7 +217,7 @@ class NewsNotificationPermissionViewController: UIViewController {
                 make.bottom.equalTo(laterButton.snp_top).offset(-15/offsetFactor)
             }
             
-        case .HowToEnable:
+        case .howToEnable:
             self.view.addSubview(okButton)
             okButton.snp_makeConstraints{ make in
                 make.centerX.equalTo(self.view)
@@ -231,11 +231,11 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     func SELdidClickYes() {
         newsNotificationPermissionHelper.enableNewsNotifications()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     func SELdidClickLater() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     func SELdidClickNo() {
@@ -245,7 +245,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     }
     
     func SELdidClickOk() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
 }

@@ -11,11 +11,11 @@ import JavaScriptCore
 import Alamofire
 
 enum ReadyState: Int {
-	case Unsent = 0		// open()has not been called yet.
-	case Opened			// send()has not been called yet.
-	case Headers		// RECEIVED	send() has been called, and headers and status are available.
-	case Loading		// Downloading; responseText holds partial data.
-	case Done			// The operation is complete.
+	case unsent = 0		// open()has not been called yet.
+	case opened			// send()has not been called yet.
+	case headers		// RECEIVED	send() has been called, and headers and status are available.
+	case loading		// Downloading; responseText holds partial data.
+	case done			// The operation is complete.
 }
 
 @objc protocol XMLHttpRequestProtocol: JSExport {
@@ -27,9 +27,9 @@ enum ReadyState: Int {
 	var status: NSNumber? { get set }
 	var readyState: NSNumber? { get set }
 
-	func open(method: NSString, _ url: NSString, _ async: Bool)
-	func send(data: AnyObject?)
-	func setRequestHeader(name: String, _ value: String)
+	func open(_ method: NSString, _ url: NSString, _ async: Bool)
+	func send(_ data: AnyObject?)
+	func setRequestHeader(_ name: String, _ value: String)
 
 }
 
@@ -43,46 +43,46 @@ enum ReadyState: Int {
 	dynamic var readyState: NSNumber?
 	
 	var httpMethod: String?
-	var url: NSURL?
+	var url: URL?
 	var async: Bool
 	var requestHeaders: [String: String]?
 	var responseHeaders: NSDictionary?
 	
 	override init() {
 		async = true
-		readyState = NSNumber(long: ReadyState.Unsent.rawValue)
+		readyState = NSNumber(value: ReadyState.unsent.rawValue as Int)
 		requestHeaders = [String: String]()
 		super.init()
 	}
 
-	func extendJSContext(jsContext: JSContext) {
+	func extendJSContext(_ jsContext: JSContext) {
 		let simplifyString: @convention(block) () -> XMLHttpRequest = { () in
 			return self
 		}
-		jsContext.setObject(unsafeBitCast(simplifyString, AnyObject.self), forKeyedSubscript: "XMLHttpRequest")
+		jsContext.setObject(unsafeBitCast(simplifyString, to: AnyObject.self), forKeyedSubscript: "XMLHttpRequest" as (NSCopying & NSObjectProtocol)!)
 	}
 
-	func open(method: NSString, _ url: NSString, _ async: Bool) {
+	func open(_ method: NSString, _ url: NSString, _ async: Bool) {
 		self.httpMethod = method as String
-		self.url = NSURL(string: url as String)!
+		self.url = URL(string: url as String)!
 		self.async = async
-		self.readyState = NSNumber(long: ReadyState.Opened.rawValue)
+		self.readyState = NSNumber(value: ReadyState.opened.rawValue as Int)
 	}
 
-	func send(data: AnyObject?) {
-		Alamofire.request(.GET, self.url!.absoluteString!, headers: self.requestHeaders)
+	func send(_ data: AnyObject?) {
+		Alamofire.request(self.url!.absoluteString, method: .get, headers: self.requestHeaders)
 		.validate(statusCode: 200..<300)
-		.response { [weak self] (responseRequest, responseResponse, responseData, responseError) in
-			self?.status = responseResponse?.statusCode
-			self?.readyState = NSNumber(long: ReadyState.Done.rawValue)
-			self?.responseText = NSString(data: responseData!, encoding: NSUTF8StringEncoding)
+		.response { [weak self] (response) in
+			self?.status = response.response?.statusCode as! NSNumber
+			self?.readyState = NSNumber(value: ReadyState.done.rawValue as Int)
+			self?.responseText = NSString(data: response.data!, encoding: String.Encoding.utf8.rawValue)
 			if (self?.onreadystatechange != nil) {
-				self?.onreadystatechange!.callWithArguments([])
+				self?.onreadystatechange!.call(withArguments: [])
 			}
 		}
 	}
 
-	func setRequestHeader(name: String, _ value: String) {
+	func setRequestHeader(_ name: String, _ value: String) {
 		requestHeaders![name] = value
 	}
 

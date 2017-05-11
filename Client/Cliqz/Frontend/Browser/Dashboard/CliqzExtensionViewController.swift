@@ -45,10 +45,10 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	}
 
     func loadExtensionWebView() {
-		loadExtensionStartTime = NSDate.getCurrentMillis()
-        if self.extensionWebView.URL == nil {
-            let url = NSURL(string:  self.mainRequestURL())
-            self.extensionWebView.loadRequest(NSURLRequest(URL: url!))
+		loadExtensionStartTime = Date.getCurrentMillis()
+        if self.extensionWebView.url == nil {
+            let url = URL(string:  self.mainRequestURL())
+            self.extensionWebView.load(URLRequest(url: url!))
         }
     }
 
@@ -65,12 +65,12 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 		self.setupConstraints()
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         self.loadExtensionWebView()
 	}
 
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
         self.javaScriptBridge.publishEvent("show")
 	}
@@ -80,14 +80,14 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 	}
 
 	// Mark: Configure Layout
-	private func setupConstraints() {
-		self.extensionWebView.snp_remakeConstraints { make in
-			make.top.equalTo(snp_topLayoutGuideBottom)
+	fileprivate func setupConstraints() {
+		self.extensionWebView.snp.remakeConstraints { make in
+			make.top.equalTo(topLayoutGuide.snp.bottom)
 			make.left.right.bottom.equalTo(self.view)
 		}
 	}
 
-	private func evaluateQueuedScripts() {
+	fileprivate func evaluateQueuedScripts() {
 		for script in queuedScripts {
 			self.evaluateJavaScript(script, completionHandler: nil)
 		}
@@ -99,40 +99,40 @@ class CliqzExtensionViewController: UIViewController,  UIAlertViewDelegate {
 extension CliqzExtensionViewController: WKNavigationDelegate, WKScriptMessageHandler {
 
 	// Mark: Navigation delegate
-	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 		
 	}
 
-	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+		ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
 	}
 
-	func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
-		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+		ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
 	}
 
 	// Mark: WKScriptMessageHandler
-	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+	func userContentController(_ userContentController:  WKUserContentController, didReceive message: WKScriptMessage) {
 		javaScriptBridge.handleJSMessage(message)
 	}
 }
 
 extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 
-	func didSelectUrl(url: NSURL) {
+	func didSelectUrl(_ url: URL) {
 	}
 	
-	func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
-        guard self.isViewLoaded() == true else {
+	func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        guard self.isViewLoaded == true else {
             queuedScripts.append(javaScriptString)
             return
         }
 
-		self.extensionWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
+		self.extensionWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler as! ((Any?, Error?) -> Void)?)
 	}
 
     func isReady() {
-        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "ExtensionIsReady", object: nil))
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "ExtensionIsReady"), object: nil))
         evaluateQueuedScripts()
         self.logShowViewSignal()
     }
@@ -144,9 +144,9 @@ extension CliqzExtensionViewController: JavaScriptBridgeDelegate {
 
 extension CliqzExtensionViewController {
     
-    private func logShowViewSignal() {
+    fileprivate func logShowViewSignal() {
         if let startTime  =  loadExtensionStartTime {
-            let duration = Int(NSDate.getCurrentMillis() - startTime)
+            let duration = Int(Date.getCurrentMillis() - startTime)
             let customData = ["load_duration" : duration]
             TelemetryLogger.sharedInstance.logEvent(.DashBoard(viewType, "show", nil, customData))
             loadExtensionStartTime = nil

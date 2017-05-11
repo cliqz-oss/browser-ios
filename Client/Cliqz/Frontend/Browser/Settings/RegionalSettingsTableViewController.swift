@@ -29,15 +29,15 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
 
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return regions.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let region = regions[indexPath.item]
         let cell = getUITableViewCell()
         
@@ -45,10 +45,10 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
         
         if region == selectedRegion {
             // Cliqz: Mark selected the row of default search engine
-            self.tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            cell.accessoryType = UITableViewCellAccessoryType.checkmark
         }
-        cell.selectionStyle = .None
+        cell.selectionStyle = .none
         return cell
     }
     
@@ -56,7 +56,7 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
         return telemetrySignalViewName
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let region = regions[indexPath.item]
         SettingsPrefs.updateRegionPref(region)
         
@@ -64,15 +64,15 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
         TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
         
         
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
         
     }
     
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
     }
     
-    static func getLocalizedRegionName(region: String) -> String {
+    static func getLocalizedRegionName(_ region: String) -> String {
         let key = "region-\(region)"
         
         return NSLocalizedString(key, tableName: "Cliqz", comment: "Localized String for specific region")

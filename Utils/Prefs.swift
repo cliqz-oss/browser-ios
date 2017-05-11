@@ -25,37 +25,37 @@ public struct PrefsDefaults {
 
 public protocol Prefs {
     func getBranchPrefix() -> String
-    func branch(branch: String) -> Prefs
-    func setTimestamp(value: Timestamp, forKey defaultName: String)
-    func setLong(value: UInt64, forKey defaultName: String)
-    func setLong(value: Int64, forKey defaultName: String)
-    func setInt(value: Int32, forKey defaultName: String)
-    func setString(value: String, forKey defaultName: String)
-    func setBool(value: Bool, forKey defaultName: String)
-    func setObject(value: AnyObject?, forKey defaultName: String)
-    func stringForKey(defaultName: String) -> String?
-    func objectForKey<T: AnyObject>(defaultName: String) -> T?
-    func boolForKey(defaultName: String) -> Bool?
-    func intForKey(defaultName: String) -> Int32?
-    func timestampForKey(defaultName: String) -> Timestamp?
-    func longForKey(defaultName: String) -> Int64?
-    func unsignedLongForKey(defaultName: String) -> UInt64?
-    func stringArrayForKey(defaultName: String) -> [String]?
-    func arrayForKey(defaultName: String) -> [AnyObject]?
-    func dictionaryForKey(defaultName: String) -> [String : AnyObject]?
-    func removeObjectForKey(defaultName: String)
+    func branch(_ branch: String) -> Prefs
+    func setTimestamp(_ value: Timestamp, forKey defaultName: String)
+    func setLong(_ value: UInt64, forKey defaultName: String)
+    func setLong(_ value: Int64, forKey defaultName: String)
+    func setInt(_ value: Int32, forKey defaultName: String)
+    func setString(_ value: String, forKey defaultName: String)
+    func setBool(_ value: Bool, forKey defaultName: String)
+    func setObject(_ value: Any?, forKey defaultName: String)
+    func stringForKey(_ defaultName: String) -> String?
+    func objectForKey<T: Any>(_ defaultName: String) -> T?
+    func boolForKey(_ defaultName: String) -> Bool?
+    func intForKey(_ defaultName: String) -> Int32?
+    func timestampForKey(_ defaultName: String) -> Timestamp?
+    func longForKey(_ defaultName: String) -> Int64?
+    func unsignedLongForKey(_ defaultName: String) -> UInt64?
+    func stringArrayForKey(_ defaultName: String) -> [String]?
+    func arrayForKey(_ defaultName: String) -> [Any]?
+    func dictionaryForKey(_ defaultName: String) -> [String : Any]?
+    func removeObjectForKey(_ defaultName: String)
     func clearAll()
 }
 
-public class MockProfilePrefs : Prefs {
+open class MockProfilePrefs : Prefs {
     let prefix: String
 
-    public func getBranchPrefix() -> String {
+    open func getBranchPrefix() -> String {
         return self.prefix
     }
 
     // Public for testing.
-    public var things: NSMutableDictionary = NSMutableDictionary()
+    open var things: NSMutableDictionary = NSMutableDictionary()
 
     public init(things: NSMutableDictionary, prefix: String) {
         self.things = things
@@ -66,83 +66,83 @@ public class MockProfilePrefs : Prefs {
         self.prefix = ""
     }
 
-    public func branch(branch: String) -> Prefs {
+    open func branch(_ branch: String) -> Prefs {
         return MockProfilePrefs(things: self.things, prefix: self.prefix + branch + ".")
     }
 
-    private func name(name: String) -> String {
+    fileprivate func name(_ name: String) -> String {
         return self.prefix + name
     }
 
-    public func setTimestamp(value: Timestamp, forKey defaultName: String) {
+    open func setTimestamp(_ value: Timestamp, forKey defaultName: String) {
         self.setLong(value, forKey: defaultName)
     }
 
-    public func setLong(value: UInt64, forKey defaultName: String) {
-        setObject(NSNumber(unsignedLongLong: value), forKey: defaultName)
+    open func setLong(_ value: UInt64, forKey defaultName: String) {
+        setObject(NSNumber(value: value as UInt64), forKey: defaultName)
     }
 
-    public func setLong(value: Int64, forKey defaultName: String) {
-        setObject(NSNumber(longLong: value), forKey: defaultName)
+    open func setLong(_ value: Int64, forKey defaultName: String) {
+        setObject(NSNumber(value: value as Int64), forKey: defaultName)
     }
 
-    public func setInt(value: Int32, forKey defaultName: String) {
-        things[name(defaultName)] = NSNumber(int: value)
+    open func setInt(_ value: Int32, forKey defaultName: String) {
+        things[name(defaultName)] = NSNumber(value: value as Int32)
     }
 
-    public func setString(value: String, forKey defaultName: String) {
+    open func setString(_ value: String, forKey defaultName: String) {
         things[name(defaultName)] = value
     }
 
-    public func setBool(value: Bool, forKey defaultName: String) {
+    open func setBool(_ value: Bool, forKey defaultName: String) {
         things[name(defaultName)] = value
     }
 
-    public func setObject(value: AnyObject?, forKey defaultName: String) {
+    open func setObject(_ value: Any?, forKey defaultName: String) {
         things[name(defaultName)] = value
     }
 
-    public func stringForKey(defaultName: String) -> String? {
+    open func stringForKey(_ defaultName: String) -> String? {
         return things[name(defaultName)] as? String
     }
 
-    public func boolForKey(defaultName: String) -> Bool? {
+    open func boolForKey(_ defaultName: String) -> Bool? {
         return things[name(defaultName)] as? Bool
     }
 
-    public func objectForKey<T: AnyObject>(defaultName: String) -> T? {
+    open func objectForKey<T: Any>(_ defaultName: String) -> T? {
         return things[name(defaultName)] as? T
     }
     
-    public func timestampForKey(defaultName: String) -> Timestamp? {
+    open func timestampForKey(_ defaultName: String) -> Timestamp? {
         return unsignedLongForKey(defaultName)
     }
 
-    public func unsignedLongForKey(defaultName: String) -> UInt64? {
+    open func unsignedLongForKey(_ defaultName: String) -> UInt64? {
         let num = things[name(defaultName)] as? NSNumber
         if let num = num {
-            return num.unsignedLongLongValue
+            return num.uint64Value
         }
         return nil
     }
 
-    public func longForKey(defaultName: String) -> Int64? {
+    open func longForKey(_ defaultName: String) -> Int64? {
         let num = things[name(defaultName)] as? NSNumber
         if let num = num {
-            return num.longLongValue
+            return num.int64Value
         }
         return nil
     }
 
-    public func intForKey(defaultName: String) -> Int32? {
+    open func intForKey(_ defaultName: String) -> Int32? {
         let num = things[name(defaultName)] as? NSNumber
         if let num = num {
-            return num.intValue
+            return num.int32Value
         }
         return nil
     }
 
-    public func stringArrayForKey(defaultName: String) -> [String]? {
+    open func stringArrayForKey(_ defaultName: String) -> [String]? {
         if let arr = self.arrayForKey(defaultName) {
             if let arr = arr as? [String] {
                 return arr
@@ -151,26 +151,26 @@ public class MockProfilePrefs : Prefs {
         return nil
     }
 
-    public func arrayForKey(defaultName: String) -> [AnyObject]? {
-        let r: AnyObject? = things.objectForKey(defaultName)
+    open func arrayForKey(_ defaultName: String) -> [Any]? {
+		let r: Any? = things.object(forKey: defaultName) as Any?
         if (r == nil) {
             return nil
         }
-        if let arr = r as? [AnyObject] {
+        if let arr = r as? [Any] {
             return arr
         }
         return nil
     }
 
-    public func dictionaryForKey(defaultName: String) -> [String : AnyObject]? {
-        return things.objectForKey(name(defaultName)) as? [String: AnyObject]
+    open func dictionaryForKey(_ defaultName: String) -> [String : Any]? {
+        return things.object(forKey: name(defaultName)) as? [String: Any]
     }
 
-    public func removeObjectForKey(defaultName: String) {
-        self.things.removeObjectForKey(name(defaultName))
+    open func removeObjectForKey(_ defaultName: String) {
+        self.things.removeObject(forKey: name(defaultName))
     }
 
-    public func clearAll() {
+    open func clearAll() {
         self.things.removeAllObjects()
     }
 }

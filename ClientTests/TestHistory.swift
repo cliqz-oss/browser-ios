@@ -207,7 +207,7 @@ class TestHistory : ProfileTest {
 
     // Helper for starting a new thread running NumCmds random methods on it. Calls cb when done.
     private func runRandom(inout history: BrowserHistory, queue: dispatch_queue_t, cb: () -> Void) {
-        dispatch_async(queue) {
+		queue.async {
             // Each thread creates its own history provider
             self.runMultiRandom(&history, val: 0, numCmds: self.NumCmds) { _ in
                 dispatch_async(dispatch_get_main_queue(), cb)

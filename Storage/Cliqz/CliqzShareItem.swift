@@ -24,5 +24,5 @@ public struct CliqzShareItem  {
 }
 
 public protocol CliqzShareToDestination {
-	func shareItem(item: CliqzShareItem)
+	func shareItem(_ item: CliqzShareItem)
 }

@@ -13,10 +13,10 @@ class CliqzTabsButton: TabsButton {
 
 	let BackgroundInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
-	private var _image: UIImage?
+	fileprivate var _image: UIImage?
 	var image: UIImage? {
 		set {
-			_image = newValue?.imageWithRenderingMode(.AlwaysTemplate)
+			_image = newValue?.withRenderingMode(.alwaysTemplate)
 			self.backgroundImage.image = _image
 		}
 		get {

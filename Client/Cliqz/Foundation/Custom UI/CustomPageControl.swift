@@ -24,8 +24,8 @@ class CustomPageControl: UIPageControl {
         self.activeImage = activeImage
         self.inactiveImage = inactiveImage
         
-        self.pageIndicatorTintColor = UIColor.clearColor()
-        self.currentPageIndicatorTintColor = UIColor.clearColor()
+        self.pageIndicatorTintColor = UIColor.clear
+        self.currentPageIndicatorTintColor = UIColor.clear
     }
     
     func updateDots() {
@@ -41,13 +41,13 @@ class CustomPageControl: UIPageControl {
     
     // MARK: - Private
     
-    func addImageViewOnDotView(view: UIView, imageSize: CGSize) {
+    func addImageViewOnDotView(_ view: UIView, imageSize: CGSize) {
         var frame = view.frame
-        frame.origin = CGPointZero
+        frame.origin = CGPoint.zero
         frame.size = imageSize
         
         let imageView = UIImageView(frame: frame)
-        imageView.contentMode = UIViewContentMode.Center
+        imageView.contentMode = UIViewContentMode.center
         view.addSubview(imageView)
     }
 }

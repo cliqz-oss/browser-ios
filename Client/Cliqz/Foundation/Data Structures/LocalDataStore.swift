@@ -10,28 +10,28 @@ import Foundation
 import Crashlytics
 
 class LocalDataStore {
-    static let defaults = NSUserDefaults.standardUserDefaults()
+    static let defaults = UserDefaults.standard
     
     // Constants
     static let enableQuerySuggestionKey = "enableQuerySuggestion"
     
     // wrtiting operation is done on Main thread because of a bug in FireFox that it is changing UI when any change is done to user defaults
-    static let dispatchQueue = dispatch_get_main_queue()
+    static let dispatchQueue = DispatchQueue.main
 
-    class func setObject(value: AnyObject?, forKey: String) {
-        dispatch_async(dispatchQueue) {
-            defaults.setObject(value, forKey: forKey)
+    class func setObject(_ value: Any?, forKey: String) {
+        dispatchQueue.async {
+            defaults.set(value, forKey: forKey)
             defaults.synchronize()
         }
     }
     
-    class func objectForKey(key: String) -> AnyObject? {
-        return defaults.objectForKey(key)
+    class func objectForKey(_ key: String) -> Any? {
+        return defaults.object(forKey: key) as Any?
     }
     
-    class func removeObjectForKey(key: String) {
-        dispatch_async(dispatchQueue) {
-            defaults.removeObjectForKey(key)
+    class func removeObjectForKey(_ key: String) {
+        dispatchQueue.async {
+            defaults.removeObject(forKey: key)
             defaults.synchronize()
         }
     }
