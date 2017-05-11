@@ -41,6 +41,9 @@ class BrowserViewController: UIViewController {
 //    var homePanelController: CliqzSearchViewController?
     var homePanelController: FreshtabViewController?
     
+    //Conversational Container
+    var conversationalContainer: ConversationalContainer
+    
     var controlCenterController: ControlCenterViewController?
     var controlCenterActiveInLandscape: Bool = false
 	
@@ -55,6 +58,7 @@ class BrowserViewController: UIViewController {
     private(set) var toolbar: TabToolbar?
     //Cliqz: use CliqzSearchViewController instead of FireFox one
     private var searchController: CliqzSearchViewController? //SearchViewController?
+    private var conversationalHistoryController: UINavigationController?
     private var screenshotHelper: ScreenshotHelper!
     private var homePanelIsInline = false
     private var searchLoader: SearchLoader!
@@ -175,6 +179,7 @@ class BrowserViewController: UIViewController {
         self.profile = profile
         self.tabManager = tabManager
         self.readerModeCache = DiskReaderModeCache.sharedInstance
+        self.conversationalContainer = ConversationalContainer()
         super.init(nibName: nil, bundle: nil)
         didInit()
     }
@@ -483,7 +488,33 @@ class BrowserViewController: UIViewController {
             // Cliqz:  setup back and forward swipe
             historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)            
         #endif
+        
+        self.setUpConversationalContainer()
 
+    }
+    
+    func setUpConversationalContainer() {
+        conversationalContainer.browsing_delegate = self
+        conversationalContainer.searching_delegate = self
+        conversationalContainer.profile = self.profile
+        conversationalContainer.search_loader = self.searchLoader
+        conversationalContainer.resetNavigationSteps = {
+            self.navigationStep = 0
+            self.backNavigationStep = 0
+        }
+        
+        self.view.addSubview(conversationalContainer.view)
+        addChildViewController(conversationalContainer)
+        
+        conversationalContainer.view.snp_makeConstraints { make in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.equalTo(self.view)
+            if let keyboardHeight = keyboardState?.intersectionHeightForView(self.view) where keyboardHeight > 0 {
+                make.bottom.equalTo(self.view).offset(-keyboardHeight)
+            } else {
+                make.bottom.equalTo(self.view)
+            }
+        }
     }
 
     private func setupConstraints() {
@@ -820,6 +851,16 @@ class BrowserViewController: UIViewController {
                 make.bottom.equalTo(self.view)
             }
         }
+        
+        self.conversationalContainer.view.snp_remakeConstraints(closure: { (make) in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.equalTo(self.view)
+            if let keyboardHeight = keyboardState?.intersectionHeightForView(self.view) where keyboardHeight > 0 {
+                make.bottom.equalTo(self.view).offset(-keyboardHeight)
+            } else {
+                make.bottom.equalTo(self.view)
+            }
+        })
     }
     
     // Cliqz: modifed showHomePanelController to show Cliqz index page (SearchViewController) instead of FireFox home page
@@ -941,37 +982,37 @@ class BrowserViewController: UIViewController {
         }
     }
     // Cliqz: separate the creating of searchcontroller into a new method
-    private func createSearchController() {
-        guard searchController == nil else {
-            return
-        }
-        
-        searchController = CliqzSearchViewController(profile: self.profile)
-        searchController!.delegate = self
-        searchLoader.addListener(searchController!)
-        view.addSubview(searchController!.view)
-        addChildViewController(searchController!)
-        searchController!.view.snp_makeConstraints { make in
-            make.top.equalTo(self.urlBar.snp_bottom)
-            make.left.right.bottom.equalTo(self.view)
-            return
-        }
-    }
+//    private func createSearchController() {
+//        guard searchController == nil else {
+//            return
+//        }
+//        
+//        searchController = CliqzSearchViewController(profile: self.profile)
+//        searchController!.delegate = self
+//        searchLoader.addListener(searchController!)
+//        view.addSubview(searchController!.view)
+//        addChildViewController(searchController!)
+//        searchController!.view.snp_makeConstraints { make in
+//            make.top.equalTo(self.urlBar.snp_bottom)
+//            make.left.right.bottom.equalTo(self.view)
+//            return
+//        }
+//    }
     // Cliqz: modified showSearchController to show SearchViewController insead of searchController
-    private func showSearchController() {
-        if let selectedTab = tabManager.selectedTab {
-            searchController?.updatePrivateMode(selectedTab.isPrivate)
-        }
-        
-        homePanelController?.view?.hidden = true
-        searchController!.view.hidden = false
-        searchController!.didMoveToParentViewController(self)
-        
-        // Cliqz: reset navigation steps
-        navigationStep = 0
-        backNavigationStep = 0
-        
-    }
+//    private func showSearchController() {
+//        if let selectedTab = tabManager.selectedTab {
+//            searchController?.updatePrivateMode(selectedTab.isPrivate)
+//        }
+//        
+//        homePanelController?.view?.hidden = true
+//        searchController!.view.hidden = false
+//        searchController!.didMoveToParentViewController(self)
+//        
+//        // Cliqz: reset navigation steps
+//        navigationStep = 0
+//        backNavigationStep = 0
+//        
+//    }
     /*
     private func showSearchController() {
         if searchController != nil {
@@ -999,20 +1040,30 @@ class BrowserViewController: UIViewController {
         searchController!.didMoveToParentViewController(self)
     }
     */
-    private func hideSearchController() {
-        if let searchController = searchController {
-            // Cliqz: Modify hiding the search view controller as our behaviour is different than regular search that was exist
-            searchController.view.hidden = true
-            homePanelController?.view?.hidden = false
-
-            /*
-            searchController.willMoveToParentViewController(nil)
-            searchController.view.removeFromSuperview()
-            searchController.removeFromParentViewController()
-            self.searchController = nil
-            homePanelController?.view?.hidden = false
-            */
+//    private func hideSearchController() {
+//        if let searchController = searchController {
+//            // Cliqz: Modify hiding the search view controller as our behaviour is different than regular search that was exist
+//            searchController.view.hidden = true
+//            homePanelController?.view?.hidden = false
+//
+//            /*
+//            searchController.willMoveToParentViewController(nil)
+//            searchController.view.removeFromSuperview()
+//            searchController.removeFromParentViewController()
+//            self.searchController = nil
+//            homePanelController?.view?.hidden = false
+//            */
+//        }
+//    }
+    
+    func changeState(to state: ConversationalState, text: String? = nil){
+        if state == .History || state == .Search {
+            homePanelController?.view?.hidden = true
         }
+        else{
+            homePanelController?.view?.hidden = false
+        }
+        conversationalContainer.changeState(to: state, text: text)
     }
 
     private func finishEditingAndSubmit(url: NSURL, visitType: VisitType) {
@@ -1869,25 +1920,13 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
-        // Cliqz: always show search controller even if query was empty
-        createSearchController()
         
-		if text != "" {
-			hideHomePanelController()
-			showSearchController()
-			searchController!.searchQuery = text
-		} else {
-			hideSearchController()
-			showHomePanelController(inline: true)
-		}
-        /*
-        if text.isEmpty {
-            hideSearchController()
+        if text != "" {
+            self.changeState(to: .Search, text: text)
         } else {
-            showSearchController()
-            searchController!.searchQuery = text
+            self.changeState(to: .History)
         }
-        */
+        
         // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
         self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         self.urlBar.showAntitrackingButton(false)
@@ -1953,7 +1992,8 @@ extension BrowserViewController: URLBarDelegate {
         // Cliqz: telemetry logging for toolbar
         self.logToolbarBlurSignal()
         
-        hideSearchController()
+        //hideSearchController()
+        self.changeState(to: .Browsing)
         // Cliqz: update URL bar and the tab toolbar when leaving overlay
         if let tab = tabManager.selectedTab {
             updateUIForReaderHomeStateForTab(tab)
@@ -2879,6 +2919,12 @@ extension BrowserViewController: WKNavigationDelegate {
 //            postLocationChangeNotificationForTab(tab, navigation: navigation)
             if currentResponseStatusCode < 400 {
                 postLocationChangeNotificationForTab(tab, navigation: navigation)
+                webView.evaluateJavaScript("sendMetaData();", completionHandler: { (obj, err) in
+                    if let data = obj as? [String: AnyObject] {
+                        ConversationalHistoryAPI.pushMetadata(data, url: url.absoluteString!)
+                        print("2222 ---- \(obj)")
+                    }
+                })
             }
 
             // Fire the readability check. This is here and not in the pageShow event handler in ReaderMode.js anymore

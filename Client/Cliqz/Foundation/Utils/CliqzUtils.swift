@@ -53,10 +53,14 @@ func getCurrentWebView() -> CliqzWebView? {
 }
 
 func getHostComponents(forURL url: String) -> [String] {
+    var local_url = url
 	var result = [String]()
 	var domainIndex = Int.max
 	let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
-	if let url = NSURL(string: url),
+    if local_url == "cliqz.com" {
+        local_url = "https://www.cliqz.com"
+    }
+	if let url = NSURL(string: local_url),
 		host = url.host {
 		let comps = host.componentsSeparatedByString(".")
 		domainIndex = comps.count - 1
