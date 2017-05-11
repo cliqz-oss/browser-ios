@@ -28,10 +28,10 @@ class TabSwitcherLayoutAttributes: UICollectionViewLayoutAttributes {
 class PortraitFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
-        self.minimumInteritemSpacing = 200.0
+        self.minimumInteritemSpacing = UIScreen.mainScreen().bounds.size.width
         self.minimumLineSpacing = 0.0
         self.scrollDirection = .Vertical
-        self.sectionInset = UIEdgeInsetsMake(30, 0, 0, 0)
+        self.sectionInset = UIEdgeInsetsMake(16, 0, 0, 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -64,10 +64,12 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
             
             var t: CATransform3D = CATransform3DIdentity
             
-            if let count = self.collectionView?.numberOfItemsInSection(0) where count > 1 {
+            if let count = self.collectionView?.numberOfItemsInSection(0) {//where count > 1 {
                 
                 t.m34 = -1.0 / (CGFloat(1000))
-                t = CATransform3DRotate(t, -CGFloat(Knobs.tiltAngle), 1, 0, 0)
+                
+                let tiltAngle = Knobs.maxTiltAngle - (1/pow(Double(count), 0.85)) * (Knobs.maxTiltAngle - Knobs.minTiltAngle)
+                t = CATransform3DRotate(t, -CGFloat(tiltAngle), 1, 0, 0)
                 //attr.transform = CGAffineTransformIdentity
             }
             
