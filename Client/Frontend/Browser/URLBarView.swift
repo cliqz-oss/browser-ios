@@ -302,7 +302,7 @@ class URLBarView: UIView {
 
 		cancelButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.trailing.equalTo(self)
+			make.leading.equalTo(self)
             // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
             make.size.equalTo(UIConstants.ToolbarHeight)
 		}
@@ -386,8 +386,8 @@ class URLBarView: UIView {
             self.locationContainer.snp_remakeConstraints { make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
                 
-                make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading)
+                make.trailing.equalTo(self).offset(-1 * URLBarViewUX.LocationLeftPadding)
+                make.leading.equalTo(self.cancelButton.snp_trailing).offset(-1 * URLBarViewUX.LocationLeftPadding)
 //                make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
