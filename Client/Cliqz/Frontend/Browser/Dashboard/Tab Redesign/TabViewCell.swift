@@ -64,6 +64,10 @@ class TabViewCell: UICollectionViewCell {
         self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
     }
     
+    func isSmallUpperLogoNil() -> Bool {
+        return self.logoImageView.image == nil
+    }
+    
     func setSmallUpperLogo(image:UIImage?) {
         guard let image = image else { return }
         self.logoImageView.image = image
@@ -111,13 +115,15 @@ class TabViewCell: UICollectionViewCell {
         //logoImageView
         let small_logo_imageview = UIImageView()
         small_logo_imageview.backgroundColor = UIColor(colorString:"E5E4E5")
+        small_logo_imageview.layer.masksToBounds = true
+        small_logo_imageview.layer.cornerRadius = 2
         displayView.addSubview(small_logo_imageview)
         logoImageView = small_logo_imageview
         
         //deleteButton
         
         let delete_button = UIButton(type:.Custom)
-        delete_button.setImage(UIImage(named: "find_close")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
+        delete_button.setImage(UIImage(named: "TabClose")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
         displayView.addSubview(delete_button)
         deleteButton = delete_button
         deleteButton.accessibilityLabel = "closeTab"
@@ -132,7 +138,7 @@ class TabViewCell: UICollectionViewCell {
         
         //descriptionLabel
         let description_label = UILabel()
-        description_label.font = UIFont.boldSystemFontOfSize(18)
+        description_label.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
         description_label.text = ""
         description_label.numberOfLines = 0
         displayView.addSubview(description_label)
@@ -142,8 +148,11 @@ class TabViewCell: UICollectionViewCell {
         //bigLogoImage
         let big_logo_imageView = UIImageView()
         big_logo_imageView.backgroundColor = UIColor(colorString:"E5E4E5")
+        big_logo_imageView.layer.masksToBounds = true
+        big_logo_imageView.layer.cornerRadius = 3
         displayView.addSubview(big_logo_imageView)
         bigLogoImageView = big_logo_imageView
+        
         
         //smaller image view in the center - this displays the actual logo
         let smaller_imageView = UIImageView()
@@ -246,14 +255,14 @@ class TabViewCell: UICollectionViewCell {
             self.displayView.snp_remakeConstraints { (make) in
                 self.showShadow(true)
                 make.left.right.top.equalTo(self.contentView)
-                make.height.equalTo(self.contentView.frame.width * Knobs.cellHeightMultiplier)
+                make.height.equalTo(Knobs.cellHeight) //* Knobs.cellHeightMultiplier)
             }
             
             self.logoImageView.snp_remakeConstraints { (make) in
                 self.logoImageView.hidden = false
-                make.top.equalTo(self.displayView)
+                make.centerY.equalTo(self.domainLabel)
                 make.left.equalTo(self.displayView).inset(10)
-                make.width.height.equalTo(44.0)
+                make.width.height.equalTo(30)
             }
             
             self.deleteButton.snp_remakeConstraints { (make) in
@@ -264,7 +273,7 @@ class TabViewCell: UICollectionViewCell {
             
             self.domainLabel.snp_remakeConstraints { (make) in
                 make.top.equalTo(self.displayView)
-                make.left.equalTo(self.logoImageView).offset(54.0)
+                make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
                 make.height.equalTo(44.0)
             }

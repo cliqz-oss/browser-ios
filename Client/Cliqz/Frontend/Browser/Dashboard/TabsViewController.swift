@@ -8,11 +8,15 @@
 
 import Foundation
 import FavIcon
+import WebImage
 
 class Knobs{
-    static let cellSpacing = 180
-    static let tiltAngle = M_PI / 6.0
-    static let cellHeightMultiplier = CGFloat(0.9)
+    
+    static let minCellSpacing = Double((UIScreen.mainScreen().bounds.size.height - 200) / 5.0)
+    static let maxCellSpacing = Double((UIScreen.mainScreen().bounds.size.height - 200) / 1.8)
+    static let maxTiltAngle = M_PI / 3.5
+    static let minTiltAngle = M_PI / 9.0
+    static let cellHeight = UIScreen.mainScreen().bounds.size.height - 200
     static let landscapeSize = CGSize(width: 200, height: 130)
 }
 
@@ -83,7 +87,7 @@ class TabsViewController: UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		self.collectionView.reloadData()
-        
+        self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
 	}
     
     override func viewDidAppear(animated: Bool) {
@@ -214,19 +218,37 @@ extension TabsViewController: UICollectionViewDataSource {
         
         if tab.displayURL != nil && !freshtab{
             cell.descriptionLabel.text = tab.displayTitle
-            cell.domainLabel.text = tab.displayURL?.absoluteString
+            cell.domainLabel.text = tab.displayURL?.baseDomain()
         } else {
             cell.domainLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
             cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
         }
         
         cell.domainLabel.accessibilityLabel = cell.domainLabel.text
+        
 
         if tab.isPrivate{
             cell.makeCellPrivate()
         }
         else{
             cell.makeCellUnprivate()
+        }
+        
+        
+        if let favIconString = tab.displayFavicon?.url, favIconUrl = NSURL(string:favIconString) {
+            
+            let options = [SDWebImageOptions.HighPriority]
+            
+            SDWebImageManager.sharedManager().downloadImageWithURL(favIconUrl, options: SDWebImageOptions(options), progress: nil, completed: { (image , error , cacheType, success , given_url) in
+                guard cell.tag == indexPath.row else { return }
+                if success {
+                    cell.setSmallUpperLogo(image)
+                } else {
+                    cell.setSmallUpperLogo(FaviconFetcher.defaultFavicon)
+                }
+            })
+        } else {
+            cell.setSmallUpperLogo(FaviconFetcher.defaultFavicon)
         }
         
 
@@ -237,24 +259,10 @@ extension TabsViewController: UICollectionViewDataSource {
                 
                 if image != nil {
                     cell.setBigLogo(image)
-                    cell.setSmallUpperLogo(image)
                 }
                 else {
                     let fakeLogo = LogoLoader.generateFakeLogo(url)
                     cell.setBigLogoView(fakeLogo)
-                    
-                    //generate FavIcon
-                    _ = try? FavIcon.downloadPreferred(url) { result in
-                        guard cell.tag == indexPath.row else { return }
-                        if case let .Success(image) = result {
-                            cell.setSmallUpperLogo(image)
-                        }
-                        else{
-                            let secondFakeLogo = LogoLoader.generateFakeLogo(url)
-                            cell.setSmallUpperLogoView(secondFakeLogo)
-                        }
-                    }
-                    
                 }
             })
         }
@@ -309,10 +317,13 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         if indexPath.item == collectionView.numberOfItemsInSection(0) - 1 {
-            return CGSize(width: cellSize.width, height: cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
+            return CGSize(width: cellSize.width, height: Knobs.cellHeight)//cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
         }
         
-        return CGSize(width: cellSize.width, height: CGFloat(Knobs.cellSpacing))
+        let count = collectionView.numberOfItemsInSection(0)
+        let interCellSpace = Knobs.minCellSpacing + (1/pow(Double(count - 1),1.2)) * (Knobs.maxCellSpacing - Knobs.minCellSpacing)
+        
+        return CGSize(width: cellSize.width, height: CGFloat(interCellSpace))
     }
 }
 
@@ -363,7 +374,12 @@ extension TabsViewController: TabManagerDelegate {
     }
     
     func tabManager(tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
-        self.collectionView.deleteItemsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)])//deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
+        if self.collectionView.numberOfItemsInSection(0) <= 2{
+            UIView.animateWithDuration(0.1, animations: {
+                self.collectionView.contentOffset = CGPoint(x: 0.0,y: 0.0)
+            })
+        }
+        self.collectionView.deleteItemsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)])
     }
     
     func tabManagerDidAddTabs(tabManager: TabManager) {
