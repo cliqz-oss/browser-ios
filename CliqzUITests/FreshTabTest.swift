@@ -22,7 +22,7 @@ class FreshTabTest: KIFTestCase {
     func testFreshTabOnOpeningEmptyTabFromTabsManager() {
         showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab")
+        tester.waitForViewWithAccessibilityLabel("New Tab, Most visited sites and News")
         tester.tapViewWithAccessibilityLabel("cliqzBack")
         tester.waitForTimeInterval(2)
         XCTAssertTrue(tester.viewExistsWithLabel("topSites"), "Top Sites are not shown on this view")
