@@ -34,6 +34,7 @@ class TabViewCell: UICollectionViewCell {
     private var bigLogoImageView: UIImageView
     private var smallCenterImageView: UIImageView
     private var fakeSmallCenterView: UIView?
+    private var cliqzLogoImageView: UIImageView
     
     var deleteButton: UIButton
     var isPrivateTabCell: Bool = false
@@ -73,8 +74,15 @@ class TabViewCell: UICollectionViewCell {
         self.logoImageView.image = image
     }
     
-    func setBigLogo(image:UIImage?) {
+    func setBigLogo(image:UIImage?, cliqzLogo: Bool) {
         guard let image = image else { return }
+        
+        if cliqzLogo {
+            self.bigLogoImageView.backgroundColor = UIConstants.CliqzThemeColor
+            self.cliqzLogoImageView.image = image
+            return
+        }
+        
         self.smallCenterImageView.image = image
         let bg_color = image.getPixelColor(CGPoint(x: 10,y: 10))
         self.bigLogoImageView.backgroundColor = bg_color
@@ -117,6 +125,7 @@ class TabViewCell: UICollectionViewCell {
         small_logo_imageview.backgroundColor = UIColor(colorString:"E5E4E5")
         small_logo_imageview.layer.masksToBounds = true
         small_logo_imageview.layer.cornerRadius = 2
+        small_logo_imageview.backgroundColor = UIColor.clearColor()
         displayView.addSubview(small_logo_imageview)
         logoImageView = small_logo_imageview
         
@@ -143,7 +152,6 @@ class TabViewCell: UICollectionViewCell {
         description_label.numberOfLines = 0
         displayView.addSubview(description_label)
         descriptionLabel = description_label
-        //descriptionLabel.accessibilityLabel = "New Tab, Most visited sites and News"
         
         //bigLogoImage
         let big_logo_imageView = UIImageView()
@@ -159,6 +167,14 @@ class TabViewCell: UICollectionViewCell {
         smaller_imageView.backgroundColor = UIColor.clearColor()
         bigLogoImageView.addSubview(smaller_imageView)
         smallCenterImageView = smaller_imageView
+        
+        //new tab cliqz logo image view
+        
+        let cliqz_imgView = UIImageView()
+        cliqz_imgView.backgroundColor = UIColor.clearColor()
+        cliqz_imgView.contentMode = .ScaleAspectFit
+        bigLogoImageView.addSubview(cliqz_imgView)
+        cliqzLogoImageView = cliqz_imgView
 
         super.init(frame: frame)
         
@@ -219,6 +235,7 @@ class TabViewCell: UICollectionViewCell {
         self.bigLogoImageView.image = nil
         self.bigLogoImageView.backgroundColor = UIColor(colorString:"E5E4E5")
         self.smallCenterImageView.image = nil
+        self.cliqzLogoImageView.image = nil
         
         self.fakeLogoView?.removeFromSuperview()
         self.fakeSmallCenterView?.removeFromSuperview()
@@ -294,6 +311,11 @@ class TabViewCell: UICollectionViewCell {
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(80.0)//80
             }
+            
+            self.cliqzLogoImageView.snp_remakeConstraints(closure: { (make) in
+                make.center.equalTo(self.bigLogoImageView)
+                make.left.right.equalTo(self.bigLogoImageView).inset(50)
+            })
         }
         
         else {
@@ -332,6 +354,10 @@ class TabViewCell: UICollectionViewCell {
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(40.0)//80
             }
+            self.cliqzLogoImageView.snp_remakeConstraints(closure: { (make) in
+                make.center.equalTo(self.bigLogoImageView)
+                make.left.right.equalTo(self.bigLogoImageView).inset(50)
+            })
         }
         
         

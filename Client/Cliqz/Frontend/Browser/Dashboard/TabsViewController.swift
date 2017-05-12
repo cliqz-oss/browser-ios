@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import FavIcon
 import WebImage
 
 class Knobs{
@@ -92,7 +91,7 @@ class TabsViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        scrollToCurrentTabCell()
+        //scrollToCurrentTabCell()
     }
     
 	override func viewWillLayoutSubviews() {
@@ -220,13 +219,21 @@ extension TabsViewController: UICollectionViewDataSource {
             cell.descriptionLabel.text = tab.displayTitle
             cell.domainLabel.text = tab.displayURL?.baseDomain()
         } else {
-            cell.domainLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
-            cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
+            
+            cell.domainLabel.text = NSLocalizedString("Cliqz Tab" , tableName: "Cliqz", comment: "New tab title")
+            
+            if tab.isPrivate {
+                cell.descriptionLabel.text = NSLocalizedString("You are browsing in Forget Mode", tableName: "Cliqz", comment: "Private Tab description")
+            }
+            else{
+                cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
+            }
+            
         }
         
         cell.domainLabel.accessibilityLabel = cell.domainLabel.text
         
-
+        
         if tab.isPrivate{
             cell.makeCellPrivate()
         }
@@ -237,18 +244,18 @@ extension TabsViewController: UICollectionViewDataSource {
         
         if let favIconString = tab.displayFavicon?.url, favIconUrl = NSURL(string:favIconString) {
             
-            let options = [SDWebImageOptions.HighPriority]
+            let options = [SDWebImageOptions.LowPriority]
             
             SDWebImageManager.sharedManager().downloadImageWithURL(favIconUrl, options: SDWebImageOptions(options), progress: nil, completed: { (image , error , cacheType, success , given_url) in
                 guard cell.tag == indexPath.row else { return }
                 if success {
                     cell.setSmallUpperLogo(image)
                 } else {
-                    cell.setSmallUpperLogo(FaviconFetcher.defaultFavicon)
+                    cell.setSmallUpperLogo(UIImage(named: "favIconDefault"))
                 }
             })
         } else {
-            cell.setSmallUpperLogo(FaviconFetcher.defaultFavicon)
+            cell.setSmallUpperLogo(UIImage(named: "favIconDefault"))
         }
         
 
@@ -258,7 +265,7 @@ extension TabsViewController: UICollectionViewDataSource {
                 guard cell.tag == indexPath.row else { return }
                 
                 if image != nil {
-                    cell.setBigLogo(image)
+                    cell.setBigLogo(image, cliqzLogo: false)
                 }
                 else {
                     let fakeLogo = LogoLoader.generateFakeLogo(url)
@@ -266,8 +273,9 @@ extension TabsViewController: UICollectionViewDataSource {
                 }
             })
         }
-
-        
+        else{
+            cell.setBigLogo(UIImage(named: "cliqzTabLogo"), cliqzLogo: true)
+        }
         
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
