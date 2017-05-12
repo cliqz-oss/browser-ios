@@ -89,10 +89,13 @@
 "Settings" = "Settings";
 
 /* "Widget item for a new tab" */
-"New Tab" = "New Tab";
+"Cliqz Tab" = "Cliqz Tab";
 
 /* New private tab title */
 "New Private Tab" = "New Forget Tab";
+
+/* Private Tab description */
+"You are browsing in Forget Mode" = "You are browsing in Forget Mode";
 
 /* Open new tab title */
 "Open New Tab" = "Open New Tab";
