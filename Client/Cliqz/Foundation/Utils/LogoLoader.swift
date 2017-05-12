@@ -27,7 +27,7 @@ class LogoLoader {
                 completed(image: img, fakeLogo: nil, error: error)
             }
             else{
-                completed(image: nil, fakeLogo: LogoLoader.generateFakeLogo(url), error: error)
+                completed(image: nil, fakeLogo: LogoLoader.generateFakeLogo(url, fontSize: 16), error: error)
             }
         }
     }
@@ -70,7 +70,7 @@ class LogoLoader {
                                                                completed: { (image , error , cacheType , finished, url) in  completed(image:image, error:error)})
     }
 
-	class func generateFakeLogo(url: String?) -> UIView? {
+    class func generateFakeLogo(url: String?, fontSize: Int) -> UIView? {
         guard (url != nil) else {return nil}
         let hostComps = getHostComponents(forURL: url!)
         guard hostComps.count > 0 else {return nil}
@@ -86,6 +86,7 @@ class LogoLoader {
 		} else {
 			l.text = "N/A"
 		}
+        l.font = UIFont.systemFontOfSize(CGFloat(fontSize))
 		v.addSubview(l)
 		l.snp_makeConstraints(closure: { (make) in
 			make.center.equalTo(v)

@@ -11,7 +11,7 @@ import WebImage
 
 class Knobs{
     
-    static let minCellSpacing = Double((UIScreen.mainScreen().bounds.size.height - 200) / 5.0)
+    static let minCellSpacing = Double((UIScreen.mainScreen().bounds.size.height - 200) / 4.0)
     static let maxCellSpacing = Double((UIScreen.mainScreen().bounds.size.height - 200) / 1.8)
     static let maxTiltAngle = M_PI / 3.5
     static let minTiltAngle = M_PI / 9.0
@@ -268,7 +268,7 @@ extension TabsViewController: UICollectionViewDataSource {
                     cell.setBigLogo(image, cliqzLogo: false)
                 }
                 else {
-                    let fakeLogo = LogoLoader.generateFakeLogo(url)
+                    let fakeLogo = LogoLoader.generateFakeLogo(url, fontSize: 44)
                     cell.setBigLogoView(fakeLogo)
                 }
             })

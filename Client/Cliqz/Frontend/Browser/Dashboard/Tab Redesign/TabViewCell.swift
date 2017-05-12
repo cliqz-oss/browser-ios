@@ -289,17 +289,17 @@ class TabViewCell: UICollectionViewCell {
             }
             
             self.domainLabel.snp_remakeConstraints { (make) in
-                make.top.equalTo(self.displayView)
+                make.top.equalTo(self.displayView).inset(14)
                 make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(44.0)
+                make.height.equalTo(30.0)
             }
             
             self.descriptionLabel.snp_remakeConstraints { (make) in
                 self.descriptionLabel.hidden = false
                 make.top.equalTo(self.domainLabel.snp_bottom)
                 make.left.right.equalTo(self.displayView).inset(10.0)
-                make.height.equalTo(54.0)//54
+                make.height.equalTo(50.0)//54
             }
             
             self.bigLogoImageView.snp_remakeConstraints { (make) in
