@@ -60,9 +60,11 @@
 /* Setting menu title */
 "Settings" = "Paramètres";
 /* "Widget item for a new tab" */
-"New Tab" = "Nouvel Onglet";
+"Cliqz Tab" = "Cliqz Tab";
 /* New private tab title */
 "New Private Tab" = "Nouvel Onglet en Mode Oubli";
+/* Private Tab description */
+"You are browsing in Forget Mode" = "Vous surfez en Mode Oubli";
 /* Open new tab title */
 "Open New Tab" = "Ouvrir Nouvel Onglet";
 /* Open new forget mode tab title */

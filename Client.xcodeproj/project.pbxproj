@@ -612,9 +612,6 @@
 		AFA6F3E71E67424700BA630B /* ControlCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */; };
 		AFA6F3E81E67424700BA630B /* OrientationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E11E67424700BA630B /* OrientationUtil.swift */; };
 		AFA6F3E91E67424700BA630B /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */; };
-		AFB6D6BF1EC07F730054C0D8 /* FavIcon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */; };
-		AFB6D6CF1EC083CF0054C0D8 /* FavIcon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */; };
-		AFB6D6D01EC083CF0054C0D8 /* FavIcon.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
@@ -1345,7 +1342,6 @@
 				E62CFB3D1C89EFF700C01324 /* FxA.framework in Copy Frameworks */,
 				E601386A1C89EB9800DF9756 /* SQLite.framework in Copy Frameworks */,
 				E60138691C89EB8E00DF9756 /* ReadingList.framework in Copy Frameworks */,
-				AFB6D6D01EC083CF0054C0D8 /* FavIcon.framework in Copy Frameworks */,
 				E60138681C89EB8800DF9756 /* Sync.framework in Copy Frameworks */,
 				E60138671C89EB8300DF9756 /* Account.framework in Copy Frameworks */,
 				E60138661C89EB7D00DF9756 /* Storage.framework in Copy Frameworks */,
@@ -2081,7 +2077,6 @@
 		AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterViewController.swift; sourceTree = "<group>"; };
 		AFA6F3E11E67424700BA630B /* OrientationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationUtil.swift; sourceTree = "<group>"; };
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
-		AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FavIcon.framework; sourceTree = "<group>"; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		B3068568766D906E43CCFA48 /* Pods-CliqzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -2448,7 +2443,6 @@
 				7B604F861C494983006EEEC3 /* Alamofire.framework in Frameworks */,
 				7B604F9B1C4950F2006EEEC3 /* WebImage.framework in Frameworks */,
 				7B604FB71C495782006EEEC3 /* SWXMLHash.framework in Frameworks */,
-				AFB6D6BF1EC07F730054C0D8 /* FavIcon.framework in Frameworks */,
 				7B604FA21C495268006EEEC3 /* SnapKit.framework in Frameworks */,
 				7BA4A9471C4CED900091D032 /* GCDWebServers.framework in Frameworks */,
 				7BA4A94A1C4CEFC70091D032 /* OnePasswordExtension.framework in Frameworks */,
@@ -2458,7 +2452,6 @@
 				E4B334881BBF23F3004E2BFF /* iAd.framework in Frameworks */,
 				E6231C051B90A472005ABB0D /* libxml2.2.tbd in Frameworks */,
 				E6231C031B90A466005ABB0D /* libstdc++.6.0.9.tbd in Frameworks */,
-				AFB6D6CF1EC083CF0054C0D8 /* FavIcon.framework in Frameworks */,
 				E6231C011B90A44F005ABB0D /* libz.tbd in Frameworks */,
 				288A2D9D1AB8B3260023ABC3 /* Shared.framework in Frameworks */,
 				2FCAE2311ABB51F800877008 /* Storage.framework in Frameworks */,
@@ -3886,7 +3879,6 @@
 		7B604FC11C496005006EEEC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */,
 				1EBC01431DD4786D000912B9 /* CRToast.framework */,
 				1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */,
 				1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */,
