@@ -11,18 +11,13 @@ import UIKit
 class CliqzHistoryDetailsDataSource: HistoryDetailsProtocol{
     
     var img: UIImage?
-    var visits:NSArray
-    var base_Url: String
+    var domainDetails: [DomainDetail]
     
-    init(image:UIImage?, visits: NSArray, baseUrl:String) {
+    init(image:UIImage?, domainDetails: [DomainDetail]) {
         self.img = image
-        self.visits = visits.sortedArrayUsingComparator({ (a,b) -> NSComparisonResult in
-            if let dict_a = a as? NSDictionary, dict_b = b as? NSDictionary, time_a = dict_a["lastVisitedAt"] as? NSNumber, time_b = dict_b["lastVisitedAt"] as? NSNumber{
-                return time_a.doubleValue > time_b.doubleValue ? .OrderedAscending : .OrderedDescending
-            }
-            return .OrderedSame
+        self.domainDetails = domainDetails.sort({ (a, b) -> Bool in
+            return a.date?.timeIntervalSince1970 > b.date?.timeIntervalSince1970
         })
-        self.base_Url = baseUrl
     }
     
     func image() -> UIImage? {
@@ -30,47 +25,38 @@ class CliqzHistoryDetailsDataSource: HistoryDetailsProtocol{
     }
     
     func urlLabelText(indexPath: NSIndexPath) -> String {
-        return visitValue(forKey: "url", at: indexPath) ?? ""
+        return detail(indexPath)?.url.absoluteString ?? ""
     }
     
     func titleLabelText(indexPath: NSIndexPath) -> String {
-        return visitValue(forKey: "title", at: indexPath) ?? ""
+        return detail(indexPath)?.title ?? ""
     }
     
     func timeLabelText(indexPath: NSIndexPath) -> String {
-        return visitValue(forKey: "lastVisitedAt", at: indexPath) ?? ""
+        return detail(indexPath)?.date?.toRelativeTimeString() ?? ""
     }
     
     func numberOfCells() -> Int {
-        return visits.count
+        return domainDetails.count
     }
     
     func baseUrl() -> String {
-        return self.base_Url
+        return domainDetails.first?.url.domainURL().absoluteString ?? ""
     }
     
     func isNews() -> Bool {
         return false
     }
     
-    func visitValue(forKey key: String, at indexPath:NSIndexPath) -> String? {
-        if indexWithinBounds(indexPath){
-            if let vis = visit(at: indexPath){
-                if let timeinterval = vis[key] as? NSNumber{
-                    return NSDate(timeIntervalSince1970: timeinterval.doubleValue / 1000).toRelativeTimeString()
-                }
-                return (vis[key] as? String) ?? ""
-            }
+    func detail(indexPath:NSIndexPath) -> DomainDetail? {
+        if indexWithinBounds(indexPath) {
+            return domainDetails[indexPath.row]
         }
-        return ""
-    }
-    
-    func visit(at indexPath:NSIndexPath) -> NSDictionary? {
-        return visits[indexPath.row] as? NSDictionary
+        return nil
     }
     
     func indexWithinBounds(indexPath:NSIndexPath) -> Bool {
-        if indexPath.row < visits.count{
+        if indexPath.row < self.domainDetails.count{
             return true
         }
         return false

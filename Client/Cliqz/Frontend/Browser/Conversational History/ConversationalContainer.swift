@@ -123,18 +123,16 @@ final class ConversationalContainer: UIViewController {
         searchController?.view.hidden = true
     }
     
-    private func domainDict(indexPath:NSIndexPath) -> NSDictionary {
-        let key = conversationalHistory.dataSource.domains[indexPath.row]
-        return conversationalHistory.dataSource.domainsInfo.valueForKey(key) as! NSDictionary
+    private func domainDetails(indexPath:NSIndexPath) -> [DomainDetail] {
+        return conversationalHistory.dataSource.domains[indexPath.row].domainDetails
     }
     
     private func detailsDataSource(indexPath:NSIndexPath, image:UIImage?) -> HistoryDetailsProtocol? {
         if indexPath.row == 0 && NewsDataSource.sharedInstance.ready{
             return CliqzNewsDetailsDataSource(image:image, articles: NewsDataSource.sharedInstance.articles)
         }
-        else if indexPath.row > 0{
-            let domain_dict = domainDict(indexPath)
-            return CliqzHistoryDetailsDataSource(image: image, visits: domain_dict.valueForKey("visits") as? NSArray ?? NSArray(), baseUrl: domain_dict.valueForKey("baseUrl") as? String ?? "")
+        else if indexPath.row > 0 {
+            return CliqzHistoryDetailsDataSource(image: image, domainDetails: domainDetails(indexPath))
         }
         return nil
     }

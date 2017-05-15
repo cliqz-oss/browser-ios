@@ -2921,7 +2921,7 @@ extension BrowserViewController: WKNavigationDelegate {
                 postLocationChangeNotificationForTab(tab, navigation: navigation)
                 webView.evaluateJavaScript("sendMetaData();", completionHandler: { (obj, err) in
                     if let data = obj as? [String: AnyObject] {
-                        ConversationalHistoryAPI.pushMetadata(data, url: url.absoluteString!)
+                        //ConversationalHistoryAPI.pushMetadata(data, url: url.absoluteString!)
                         print("2222 ---- \(obj)")
                     }
                 })

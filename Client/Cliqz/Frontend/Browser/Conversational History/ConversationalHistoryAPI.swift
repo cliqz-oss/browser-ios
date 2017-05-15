@@ -37,38 +37,38 @@ class ConversationalHistoryAPI {
 //		return "000"
 //	}()
 
-	class func pushHistoryItem(visit: SiteVisit) {
-        Engine.sharedInstance.getHistory().addHistoryItem(self.generateParamsForHistoryItem(visit.site.url, title: visit.site.title, visitedDate: visit.date))
-	}
-	
-	class func getHistory(callback: (NSDictionary) -> Void) {
-        Engine.sharedInstance.getHistory().getHistory { history in
-            dispatch_async(dispatch_get_main_queue()) {
-                callback(history)
-            }
-        }
-	}
-
-	class func pushAllHistory(history: Cursor<Site>?, completionHandler:(NSError?) -> Void) {
-		if let sites = history {
-			var historyResults = [[String: AnyObject]]()
-			for site in sites {
-				historyResults.append(self.generateParamsForHistoryItem((site?.url)!, title: (site?.title)!, visitedDate: (site?.latestVisit!.date)!))
-			}
-            Engine.sharedInstance.getHistory().bulkAddHistory(historyResults, completionHandler: completionHandler)
-		}
-	}
-
-	class func pushURLAndQuery(url: String, query: String) {
-	}
-
-	class func pushMetadata(metadata: [String: AnyObject], url: String) {
-	}
-
-	private class func generateParamsForHistoryItem(url: String, title: String, visitedDate: MicrosecondTimestamp) -> [String: AnyObject] {
-		return ["url": url,
-		        "title": title,
-			    "lastVisitDate": NSNumber(unsignedLongLong:visitedDate)]
-	}
+//	class func pushHistoryItem(visit: SiteVisit) {
+//        Engine.sharedInstance.getHistory().addHistoryItem(self.generateParamsForHistoryItem(visit.site.url, title: visit.site.title, visitedDate: visit.date))
+//	}
+//	
+//	class func getHistory(callback: (NSDictionary) -> Void) {
+//        Engine.sharedInstance.getHistory().getHistory { history in
+//            dispatch_async(dispatch_get_main_queue()) {
+//                callback(history)
+//            }
+//        }
+//	}
+//
+//	class func pushAllHistory(history: Cursor<Site>?, completionHandler:(NSError?) -> Void) {
+//		if let sites = history {
+//			var historyResults = [[String: AnyObject]]()
+//			for site in sites {
+//				historyResults.append(self.generateParamsForHistoryItem((site?.url)!, title: (site?.title)!, visitedDate: (site?.latestVisit!.date)!))
+//			}
+//            Engine.sharedInstance.getHistory().bulkAddHistory(historyResults, completionHandler: completionHandler)
+//		}
+//	}
+//
+//	class func pushURLAndQuery(url: String, query: String) {
+//	}
+//
+//	class func pushMetadata(metadata: [String: AnyObject], url: String) {
+//	}
+//
+//	private class func generateParamsForHistoryItem(url: String, title: String, visitedDate: MicrosecondTimestamp) -> [String: AnyObject] {
+//		return ["url": url,
+//		        "title": title,
+//			    "lastVisitDate": NSNumber(unsignedLongLong:visitedDate)]
+//	}
 
 }

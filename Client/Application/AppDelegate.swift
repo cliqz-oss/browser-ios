@@ -205,29 +205,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         sendCorePing()
         
-        self.syncHistory(profile)
+        //self.syncHistory(profile)
 		
         log.debug("Done with setting up the application.")
 
         return true
     }
     
-    func syncHistory(profile: Profile) {
-        let historySyncedKey = "newHistorySyncedLocal"
-        let isHistorySynced = LocalDataStore.objectForKey(historySyncedKey) as? NSNumber
-        if isHistorySynced == nil || !isHistorySynced!.boolValue {
-            profile.history.getHistoryVisits(0, limit: 100).uponQueue(dispatch_get_main_queue()) { result in
-                if let sites = result.successValue {
-                    ConversationalHistoryAPI.pushAllHistory(sites, completionHandler: {
-                        (error) in
-                        if error == nil {
-                            LocalDataStore.setObject(NSNumber(bool: true), forKey: historySyncedKey)
-                        }
-                    })
-                }
-            }
-        }
-    }
+//    func syncHistory(profile: Profile) {
+//        let historySyncedKey = "newHistorySyncedLocal"
+//        let isHistorySynced = LocalDataStore.objectForKey(historySyncedKey) as? NSNumber
+//        if isHistorySynced == nil || !isHistorySynced!.boolValue {
+//            profile.history.getHistoryVisits(0, limit: 100).uponQueue(dispatch_get_main_queue()) { result in
+//                if let sites = result.successValue {
+//                    ConversationalHistoryAPI.pushAllHistory(sites, completionHandler: {
+//                        (error) in
+//                        if error == nil {
+//                            LocalDataStore.setObject(NSNumber(bool: true), forKey: historySyncedKey)
+//                        }
+//                    })
+//                }
+//            }
+//        }
+//    }
 
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")

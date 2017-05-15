@@ -119,10 +119,9 @@ extension ConversationalHistory: HistoryActionDelegate {
             //pressed on the cliqz news logo
         }
         else{
-            let key = dataSource.domains[index]
-            if let value = dataSource.domainsInfo.valueForKey(key) as? NSDictionary,
-                baseURL = value.valueForKey("baseUrl") as? String,
-                url = NSURL(string: baseURL) {
+            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            let url = dataSource.baseUrl(indexPath)
+            if let url = NSURL(string: url){
                 self.delegate?.navigateToURL(url)
             }
         }

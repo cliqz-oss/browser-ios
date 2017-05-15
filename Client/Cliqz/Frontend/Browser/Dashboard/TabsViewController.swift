@@ -223,19 +223,6 @@ extension TabsViewController: UICollectionViewDataSource {
                 else {
                     let fakeLogo = LogoLoader.generateFakeLogo(url)
                     cell.setBigLogoView(fakeLogo)
-                    
-                    //generate FavIcon
-//                    _ = try? FavIcon.downloadPreferred(url) { result in
-//                        guard cell.tag == indexPath.row else { return }
-//                        if case let .Success(image) = result {
-//                            cell.setSmallUpperLogo(image)
-//                        }
-//                        else{
-//                            let secondFakeLogo = LogoLoader.generateFakeLogo(url)
-//                            cell.setSmallUpperLogoView(secondFakeLogo)
-//                        }
-//                    }
-                    
                 }
             })
         }
