@@ -8,19 +8,24 @@
 
 //Note: Certainly not production ready.
 
+//This is the DataSource for News. 
+
 import Alamofire
 
-final class NewsDataSource{
+final class NewsDataSource {
     
     //here is where I should take care of computing the number of new articles. 
     //should show notification if the number of new articles is greater than zero
     //when pressing the news cell, set the number of new articles to zero.
     
-    //how many news to fetch
+    //how many news to fetch...Does not seem to have any effec. I receive all anyway.
     let news_to_fetch = 5
     
     //user defaults key 
     let userDefaultsKey_ArticleLinks = "ID_LAST_ARTICLE_LINKS"
+    
+    //notification name
+    let notification_ready_name = "NotificationsNewsReady"
     
     static let sharedInstance = NewsDataSource()
     
@@ -50,6 +55,11 @@ final class NewsDataSource{
     
     func setNewArticlesAsSeen(){
         self.new_article_count = 0
+    }
+    
+    func save() {
+        NSUserDefaults.standardUserDefaults().setValue(Array(self.articleLinks), forKey: userDefaultsKey_ArticleLinks)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     private func getNews(count:Int) { // -> [String: String]{
@@ -85,9 +95,9 @@ final class NewsDataSource{
         self.new_article_count = newArticles(between: articleLinks, and: new_links)
         self.articleLinks = new_links
         
-        CINotificationManager.sharedInstance.newsVisisted = false
-        
         self.ready = true
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(notification_ready_name, object: nil)
     }
     
     private func newLinks(articles: [[String:AnyObject]]) -> Set<String> {
@@ -115,10 +125,5 @@ final class NewsDataSource{
             return countryCode
         }
         return "DE"
-    }
-    
-    func save() {
-        NSUserDefaults.standardUserDefaults().setValue(Array(self.articleLinks), forKey: userDefaultsKey_ArticleLinks)
-        NSUserDefaults.standardUserDefaults().synchronize()
     }
 }

@@ -595,6 +595,9 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
+		AF1962821ECB390D00DBBC17 /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1962811ECB390D00DBBC17 /* HistoryModule.swift */; };
+		AF1962931ECB399A00DBBC17 /* ReadNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1962921ECB399A00DBBC17 /* ReadNewsManager.swift */; };
+		AF1962981ECB4B8000DBBC17 /* HistoryModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1962971ECB4B8000DBBC17 /* HistoryModuleBridge.m */; };
 		AF4A652F1E681EC5000278CD /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */; };
 		AF4A65301E681EC5000278CD /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */; };
 		AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */; };
@@ -616,7 +619,6 @@
 		AFB6D6CF1EC083CF0054C0D8 /* FavIcon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */; };
 		AFB6D6D01EC083CF0054C0D8 /* FavIcon.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
-		AFDCE3171EC3396400AF6316 /* CINotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCE30E1EC3396400AF6316 /* CINotificationManager.swift */; };
 		AFDCE3181EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCE30F1EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift */; };
 		AFDCE3191EC3396400AF6316 /* CliqzNewsDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCE3101EC3396400AF6316 /* CliqzNewsDetailsDataSource.swift */; };
 		AFDCE31A1EC3396400AF6316 /* ConversationalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDCE3111EC3396400AF6316 /* ConversationalContainer.swift */; };
@@ -2075,6 +2077,9 @@
 		A91528D11D0E637600CD0425 /* NoImageModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NoImageModeHelper.js; sourceTree = "<group>"; };
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
+		AF1962811ECB390D00DBBC17 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
+		AF1962921ECB399A00DBBC17 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadNewsManager.swift; sourceTree = "<group>"; };
+		AF1962971ECB4B8000DBBC17 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryModuleBridge.m; sourceTree = "<group>"; };
 		AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedRequestsCache.swift; path = JSEngine/BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = JSEngine/ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterceptorURLProtocol.swift; path = JSEngine/InterceptorURLProtocol.swift; sourceTree = "<group>"; };
@@ -2094,7 +2099,6 @@
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
 		AFB6D6BE1EC07F730054C0D8 /* FavIcon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FavIcon.framework; sourceTree = "<group>"; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
-		AFDCE30E1EC3396400AF6316 /* CINotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CINotificationManager.swift; sourceTree = "<group>"; };
 		AFDCE30F1EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzHistoryDetailsDataSource.swift; sourceTree = "<group>"; };
 		AFDCE3101EC3396400AF6316 /* CliqzNewsDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzNewsDetailsDataSource.swift; sourceTree = "<group>"; };
 		AFDCE3111EC3396400AF6316 /* ConversationalContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalContainer.swift; sourceTree = "<group>"; };
@@ -4052,6 +4056,35 @@
 			path = Animators;
 			sourceTree = "<group>";
 		};
+		AF1962941ECB3DA200DBBC17 /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				AFDCE3111EC3396400AF6316 /* ConversationalContainer.swift */,
+				AFDCE3121EC3396400AF6316 /* ConversationalHistory.swift */,
+				AFDCE3141EC3396400AF6316 /* ConversationalHistoryDetails.swift */,
+			);
+			name = "User Interface";
+			sourceTree = "<group>";
+		};
+		AF1962951ECB3DD200DBBC17 /* Data Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AFDCE30F1EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift */,
+				AFDCE3101EC3396400AF6316 /* CliqzNewsDetailsDataSource.swift */,
+				AFDCE3151EC3396400AF6316 /* HistoryDataSource.swift */,
+				AFDCE3161EC3396400AF6316 /* NewsDataSource.swift */,
+			);
+			name = "Data Sources";
+			sourceTree = "<group>";
+		};
+		AF1962961ECB3DE600DBBC17 /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				AFDCE3131EC3396400AF6316 /* ConversationalHistoryAPI.swift */,
+			);
+			name = Deprecated;
+			sourceTree = "<group>";
+		};
 		AF82661C1EB09FBA0023C77C /* Tab Redesign */ = {
 			isa = PBXGroup;
 			children = (
@@ -4095,15 +4128,12 @@
 		AFDCE30D1EC3396400AF6316 /* Conversational History */ = {
 			isa = PBXGroup;
 			children = (
-				AFDCE30E1EC3396400AF6316 /* CINotificationManager.swift */,
-				AFDCE30F1EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift */,
-				AFDCE3101EC3396400AF6316 /* CliqzNewsDetailsDataSource.swift */,
-				AFDCE3111EC3396400AF6316 /* ConversationalContainer.swift */,
-				AFDCE3121EC3396400AF6316 /* ConversationalHistory.swift */,
-				AFDCE3131EC3396400AF6316 /* ConversationalHistoryAPI.swift */,
-				AFDCE3141EC3396400AF6316 /* ConversationalHistoryDetails.swift */,
-				AFDCE3151EC3396400AF6316 /* HistoryDataSource.swift */,
-				AFDCE3161EC3396400AF6316 /* NewsDataSource.swift */,
+				AF1962971ECB4B8000DBBC17 /* HistoryModuleBridge.m */,
+				AF1962811ECB390D00DBBC17 /* HistoryModule.swift */,
+				AF1962921ECB399A00DBBC17 /* ReadNewsManager.swift */,
+				AF1962951ECB3DD200DBBC17 /* Data Sources */,
+				AF1962941ECB3DA200DBBC17 /* User Interface */,
+				AF1962961ECB3DE600DBBC17 /* Deprecated */,
 			);
 			path = "Conversational History";
 			sourceTree = "<group>";
@@ -6494,6 +6524,7 @@
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
 				4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */,
 				1E79DE951D508368006BEB4A /* NSValueTransformer+AWSMTLPredefinedTransformerAdditions.m in Sources */,
+				AF1962931ECB399A00DBBC17 /* ReadNewsManager.swift in Sources */,
 				D39ABDFE1CC6F35F003A319E /* CorePing.swift in Sources */,
 				E640E86A1C73A47C00C5F072 /* PasscodeViews.swift in Sources */,
 				E692E3371C46E86A009D1240 /* AppSettingsOptions.swift in Sources */,
@@ -6591,7 +6622,6 @@
 				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
 				1E79DEA51D508368006BEB4A /* AWSTMMemoryCache.m in Sources */,
 				D31CF65C1CC1959A001D0BD0 /* PrivilegedRequest.swift in Sources */,
-				AFDCE3171EC3396400AF6316 /* CINotificationManager.swift in Sources */,
 				D3B6923D1B9F9444004B87A4 /* FindInPageBar.swift in Sources */,
 				AFDCE3181EC3396400AF6316 /* CliqzHistoryDetailsDataSource.swift in Sources */,
 				2F44FC721A9E840300FD20CC /* SettingsNavigationController.swift in Sources */,
@@ -6617,6 +6647,7 @@
 				1E79DE9B1D508368006BEB4A /* AWSURLRequestSerialization.m in Sources */,
 				AFA6F3E61E67424700BA630B /* ControlCenterPanel.swift in Sources */,
 				1E79DD0E1D4FB2C5006BEB4A /* NewsNotificationPermissionHelper.swift in Sources */,
+				AF1962981ECB4B8000DBBC17 /* HistoryModuleBridge.m in Sources */,
 				E47536ED1C85412C0022CC69 /* PrintHelper.swift in Sources */,
 				392ED7E61D0AEFEF009D9B62 /* HomePageAccessors.swift in Sources */,
 				7BA8D1C71BA037F500C8AE9E /* OpenInHelper.swift in Sources */,
@@ -6668,6 +6699,7 @@
 				C4F3B29A1CFCF93A00966259 /* ButtonToast.swift in Sources */,
 				E4A961341AC051360069AD6F /* ReadabilityTabHelper.swift in Sources */,
 				D31A0FC71A65D6D000DC8C7E /* SearchSuggestClient.swift in Sources */,
+				AF1962821ECB390D00DBBC17 /* HistoryModule.swift in Sources */,
 				1E79DD151D4FB2C5006BEB4A /* ErrorHandler.swift in Sources */,
 				0B7100481B4C72D60046AF87 /* FaviconFetcher.swift in Sources */,
 				1E79DE7D1D508368006BEB4A /* AWSTask.m in Sources */,

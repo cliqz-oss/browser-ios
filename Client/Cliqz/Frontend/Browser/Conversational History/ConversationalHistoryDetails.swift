@@ -21,6 +21,8 @@ protocol HistoryDetailsProtocol: class {
     func isNews() -> Bool
 }
 
+// This is the View Controller for the Domain Details View (What you see after you press on a certain domain)
+
 class ConversationalHistoryDetails: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	var historyTableView: UITableView!

@@ -47,7 +47,13 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
 		self.historyTableView.tableFooterView = UIView()
 		self.historyTableView.separatorStyle = .SingleLine
 		self.historyTableView.separatorColor = UIColor.lightGrayColor()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(newsReady), name: NewsDataSource.sharedInstance.notification_ready_name, object: nil)
 	}
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
 
 	override func viewWillDisappear(animated: Bool) {
         //dataSource.clean()
@@ -110,6 +116,12 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
         let image = cell.logoButton.imageView?.image
         didPressCell(indexPath: indexPath, image: image)
 	}
+    
+    @objc
+    func newsReady(sender:NSNotification) {
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        self.historyTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+    }
 	
 }
 

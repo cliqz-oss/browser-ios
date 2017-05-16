@@ -88,6 +88,7 @@ class InteractiveIntroViewController: UIViewController {
 	}
 
 	func showHint(type: HintType) {
+        return; //No need for this now.
 		self.currentHintType = type
 		switch type {
 		case .Antitracking:
