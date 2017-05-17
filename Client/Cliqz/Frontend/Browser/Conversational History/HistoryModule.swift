@@ -32,20 +32,20 @@ final class HistoryModule: NSObject {
     
     //getHistoryWithLimit:(nonnull NSInteger *)limit startFrame:(nonnull NSInteger *)startFrame endFrame:(nonnull NSInteger *)endFrame
     @objc(getHistoryWithLimit:startFrame:endFrame:domain:resolve:reject:)
-    func getHistoryWithLimit(limit: NSInteger, startFrame: NSInteger, endFrame:NSInteger, domain:NSString, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func getHistoryWithLimit(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, profile = appDelegate.profile {
-            profile.history.getHistoryVisits(String(domain), timeStampLowerLimit: startFrame , timeStampUpperLimit: endFrame, limit: limit).upon({ (result) in
+            profile.history.getHistoryVisits((domain as? String) ?? "", timeStampLowerLimit: startFrame?.integerValue ?? nil , timeStampUpperLimit: endFrame?.integerValue ?? nil, limit: limit?.integerValue ?? nil).upon({ (result) in
                 let processedResult = self.processRawDataResults(result, domain:domain)
                 resolve(processedResult)
             })
         }
     }
     
-    func processRawDataResults(result: Maybe<Cursor<Site>>, domain: NSString) -> NSDictionary {
+    func processRawDataResults(result: Maybe<Cursor<Site>>, domain: NSString?) -> NSDictionary {
         
         let v_key      = NSString(string: "visits")
         let dom_key    = NSString(string: "domain")
-        var returnDict: [NSString : AnyObject] = [dom_key : domain, v_key : NSArray()]
+        var returnDict: [NSString : AnyObject] = [dom_key : domain ?? "", v_key : NSArray()]
         
         if let sites = result.successValue {
             

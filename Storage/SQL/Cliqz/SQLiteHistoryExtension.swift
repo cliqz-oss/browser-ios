@@ -64,6 +64,62 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         // TODO countFactory
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
     }
+    
+    public func getHistoryVisits(domain:String, timeStampLowerLimit:Int?, timeStampUpperLimit:Int?, limit: Int?) -> Deferred<Maybe<Cursor<Site>>> {
+        
+        func removeOptionalFromString(str:String) -> String {
+            return "\(str)"
+        }
+        
+        let args: Args?
+        args = []
+        
+        let shouldAdd_WHERE = domain != "" || timeStampUpperLimit != nil || timeStampLowerLimit != nil
+        
+        var historySQL =
+            "SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
+                "FROM \(TableDomains) " +
+                "INNER JOIN \(TableHistory) ON \(TableDomains).id = \(TableHistory).domain_id " +
+                "INNER JOIN \(TableVisits) ON \(TableHistory).id = \(TableVisits).siteID "
+        
+        if shouldAdd_WHERE {
+        
+            historySQL += "WHERE "
+            
+            var at_least_one_cond = false
+            if domain != "" {
+                historySQL += "\(TableDomains).domain = \"\(domain)\" "
+                at_least_one_cond = true
+            }
+            if let min = timeStampLowerLimit {
+                if at_least_one_cond {
+                    historySQL += "AND \(TableVisits).date >= \(min) "
+                }
+                else {
+                    historySQL += "\(TableVisits).date >= \(min) "
+                    at_least_one_cond = true
+                }
+            }
+            if let max = timeStampUpperLimit {
+                if at_least_one_cond{
+                    historySQL += "AND \(TableVisits).date <= \(max) "
+                }
+                else {
+                    historySQL += "\(TableVisits).date <= \(max) "
+                    at_least_one_cond = true
+                }
+            }
+        }
+        
+        historySQL += "ORDER BY \(TableVisits).id DESC "
+        
+        if let l = limit {
+            historySQL += "LIMIT \(l) OFFSET \(0)"
+        }
+        
+        // TODO countFactory
+        return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
+    }
 
 	public func hideTopSite(url: String) -> Success {
 		let insertSQL = "INSERT INTO \(TableHiddenTopSites) " +
