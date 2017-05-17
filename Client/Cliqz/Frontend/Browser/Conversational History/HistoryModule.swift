@@ -35,9 +35,47 @@ final class HistoryModule: NSObject {
     func getHistoryWithLimit(limit: NSInteger, startFrame: NSInteger, endFrame:NSInteger, domain:NSString, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, profile = appDelegate.profile {
             profile.history.getHistoryVisits(String(domain), timeStampLowerLimit: startFrame , timeStampUpperLimit: endFrame, limit: limit).upon({ (result) in
-                resolve("response -- received")
+                let processedResult = self.processRawDataResults(result, domain:domain)
+                resolve(processedResult)
             })
         }
+    }
+    
+    func processRawDataResults(result: Maybe<Cursor<Site>>, domain: NSString) -> NSDictionary {
+        
+        let v_key      = NSString(string: "visits")
+        let dom_key    = NSString(string: "domain")
+        var returnDict: [NSString : AnyObject] = [dom_key : domain, v_key : NSArray()]
+        
+        if let sites = result.successValue {
+            
+            var historyResults: [NSDictionary] = []
+            
+            for site in sites {
+                if let domain = site {
+                    let title = NSString(string: domain.title)
+                    let date  = NSNumber(double: Double(domain.latestVisit?.date ?? 0))
+                    let url   = NSString(string: domain.url)
+                    
+                    let t_key = NSString(string: "title")
+                    let d_key = NSString(string: "date")
+                    let u_key = NSString(string: "url")
+                    
+                    var d: [NSString: AnyObject] = [t_key: title, u_key: url]
+                    if domain.latestVisit?.date != nil {
+                        d[d_key] = date
+                    }
+                    
+                    let dict = NSDictionary(dictionary: d)
+                    
+                    historyResults.append(dict)
+                }
+            }
+            
+            returnDict[v_key] = NSArray(array: historyResults)
+        }
+        
+        return NSDictionary(dictionary: returnDict)
     }
     
     class func getHistory(profile: Profile, completion:(result:[Domain]?, error:NSError?) -> Void) {
