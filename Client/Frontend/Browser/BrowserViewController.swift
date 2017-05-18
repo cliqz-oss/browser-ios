@@ -1989,6 +1989,8 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
+		self.navigationController?.popViewControllerAnimated(false)
+		return
         // Cliqz: telemetry logging for toolbar
         self.logToolbarBlurSignal()
         

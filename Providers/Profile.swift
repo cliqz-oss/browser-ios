@@ -320,6 +320,11 @@ public class BrowserProfile: Profile {
         }
     }
 
+	// for CI
+	private func pushNewHistory(visit: SiteVisit) {
+		ConversationalHistoryAPI.pushHistoryItem(visit)
+	}
+
     @objc
     func onLocationChange(notification: NSNotification) {
         if let v = notification.userInfo!["visitType"] as? Int,
@@ -331,6 +336,7 @@ public class BrowserProfile: Profile {
                 // We don't record a visit if no type was specified -- that means "ignore me".
                 let site = Site(url: url.absoluteString!, title: title as String)
                 let visit = SiteVisit(site: site, date: NSDate.nowMicroseconds(), type: visitType)
+				self.pushNewHistory(visit)
                 history.addLocalVisit(visit)
             }
 

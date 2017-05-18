@@ -1227,13 +1227,6 @@
 			remoteGlobalIDString = 28F951FA19D0F9FA00DCE892;
 			remoteInfo = FxA;
 		};
-		E4BA8A331B4B0A1700BC2E95 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4BA8A2A1B4B0A1600BC2E95;
-			remoteInfo = ViewLater;
-		};
 		E4D567241ADECE2700F1EFE7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
@@ -1296,20 +1289,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
-		};
-		F84B22511A0920C600AAB793 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F84B22481A0920C600AAB793;
-			remoteInfo = ShareToFirefox;
-		};
-		F84B22641A09210A00AAB793 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F84B225B1A09210A00AAB793;
-			remoteInfo = SendToDevice;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -5296,15 +5275,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				F84B22521A0920C600AAB793 /* PBXTargetDependency */,
-				F84B22651A09210A00AAB793 /* PBXTargetDependency */,
 				E4A888191A95679500CDC337 /* PBXTargetDependency */,
 				288A2D9C1AB8B3260023ABC3 /* PBXTargetDependency */,
 				2FCAE2301ABB51F800877008 /* PBXTargetDependency */,
 				2FA436111ABB83B4008031D1 /* PBXTargetDependency */,
 				282731741ABC9BE700AA1954 /* PBXTargetDependency */,
 				E4D5672E1ADECE2800F1EFE7 /* PBXTargetDependency */,
-				E4BA8A341B4B0A1700BC2E95 /* PBXTargetDependency */,
 				390527551C874D35007E0BB7 /* PBXTargetDependency */,
 			);
 			name = Client;
@@ -7058,11 +7034,6 @@
 			name = FxA;
 			targetProxy = E4A888181A95679500CDC337 /* PBXContainerItemProxy */;
 		};
-		E4BA8A341B4B0A1700BC2E95 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E4BA8A2A1B4B0A1600BC2E95 /* ViewLater */;
-			targetProxy = E4BA8A331B4B0A1700BC2E95 /* PBXContainerItemProxy */;
-		};
 		E4D567251ADECE2700F1EFE7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E4D567171ADECE2700F1EFE7 /* ReadingList */;
@@ -7107,16 +7078,6 @@
 			isa = PBXTargetDependency;
 			target = F84B21BD1A090F8100AAB793 /* Client */;
 			targetProxy = F84B21D41A090F8100AAB793 /* PBXContainerItemProxy */;
-		};
-		F84B22521A0920C600AAB793 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F84B22481A0920C600AAB793 /* ShareTo */;
-			targetProxy = F84B22511A0920C600AAB793 /* PBXContainerItemProxy */;
-		};
-		F84B22651A09210A00AAB793 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F84B225B1A09210A00AAB793 /* SendTo */;
-			targetProxy = F84B22641A09210A00AAB793 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

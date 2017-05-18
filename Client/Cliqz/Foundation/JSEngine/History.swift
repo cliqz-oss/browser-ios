@@ -38,10 +38,20 @@ public class HistoryBridge : NSObject {
         })
     }
     
-    public func addHistoryItem(history: [String: AnyObject]) {
-        Engine.sharedInstance.getBridge().publishEvent("history:add", args: [history])
+    public class func addHistoryItem(history: [String: AnyObject]) {
+		Engine.sharedInstance.getBridge().publishEvent("content:location-change", args: [history])
     }
-    
+
+	public class func readLater(url: [String: AnyObject]) {
+		//url , title, timestamp
+		Engine.sharedInstance.getBridge().publishEvent("browser:read-later", args: [url])
+	}
+
+	public class func keepOpen(url: [String: AnyObject]) {
+		// tabID
+		Engine.sharedInstance.getBridge().publishEvent("browser:keep-open", args: [])
+	}
+
     public func bulkAddHistory(history: [[String: AnyObject]], completionHandler:(NSError?) -> Void) {
         Engine.sharedInstance.getBridge().callAction("bulkAddHistory", args: [history], callback: { result in
             completionHandler(nil)

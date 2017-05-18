@@ -168,7 +168,8 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         // Cliz: use regular button with icon for cancel button
         let cancelButton = InsetButton()
-        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+//        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+		cancelButton.setImage(UIImage(named: "urlExpand"), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         /*
         let cancelButton = InsetButton()
