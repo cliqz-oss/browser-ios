@@ -7720,7 +7720,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Firefox;
@@ -7919,7 +7919,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7947,7 +7947,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8218,7 +8218,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -8497,7 +8497,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
