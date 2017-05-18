@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-JSENGINE_RELEASE=latest
+JSENGINE_RELEASE=ci
 
 # when jsengine is in navigation-extenion, we can pull tags from there. In the meantime we'll
 # put them on cdn.cliqz.com

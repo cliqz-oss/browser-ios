@@ -10,6 +10,6 @@
 
 @interface RCT_EXTERN_MODULE(HistoryModule, NSObject)
 
-RCT_EXTERN_METHOD(getHistoryWithLimit:(NSNumber *)limit startFrame:(NSNumber *)startFrame endFrame:(NSNumber *)endFrame domain:(NSString*)domain resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(query:(nonnull NSNumber *)limit startFrame:(nonnull NSNumber *)startFrame endFrame:(nonnull NSNumber *)endFrame domain:(NSString*)domain resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end

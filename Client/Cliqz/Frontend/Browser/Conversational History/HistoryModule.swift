@@ -31,8 +31,8 @@ final class HistoryModule: NSObject {
     
     
     //getHistoryWithLimit:(nonnull NSInteger *)limit startFrame:(nonnull NSInteger *)startFrame endFrame:(nonnull NSInteger *)endFrame
-    @objc(getHistoryWithLimit:startFrame:endFrame:domain:resolve:reject:)
-    func getHistoryWithLimit(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    @objc(query:startFrame:endFrame:domain:resolve:reject:)
+    func query(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, profile = appDelegate.profile {
             profile.history.getHistoryVisits((domain as? String) ?? "", timeStampLowerLimit: startFrame?.integerValue ?? nil , timeStampUpperLimit: endFrame?.integerValue ?? nil, limit: limit?.integerValue ?? nil).upon({ (result) in
                 let processedResult = self.processRawDataResults(result, domain:domain)
@@ -43,7 +43,7 @@ final class HistoryModule: NSObject {
     
     func processRawDataResults(result: Maybe<Cursor<Site>>, domain: NSString?) -> NSDictionary {
         
-        let v_key      = NSString(string: "visits")
+        let v_key      = NSString(string: "places")
         let dom_key    = NSString(string: "domain")
         var returnDict: [NSString : AnyObject] = [dom_key : domain ?? "", v_key : NSArray()]
         
@@ -58,7 +58,7 @@ final class HistoryModule: NSObject {
                     let url   = NSString(string: domain.url)
                     
                     let t_key = NSString(string: "title")
-                    let d_key = NSString(string: "date")
+                    let d_key = NSString(string: "visit_date")
                     let u_key = NSString(string: "url")
                     
                     var d: [NSString: AnyObject] = [t_key: title, u_key: url]
