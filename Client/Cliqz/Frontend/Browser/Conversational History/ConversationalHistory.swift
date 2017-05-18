@@ -119,8 +119,8 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
     
     @objc
     func newsReady(sender:NSNotification) {
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.historyTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+//        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+//        self.historyTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
     }
 	
 }

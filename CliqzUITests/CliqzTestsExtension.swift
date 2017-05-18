@@ -57,7 +57,7 @@ extension XCTestCase {
         }
         
     }
-    
+
     func resetApp(accessibilityLabels: [String]){
         showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
