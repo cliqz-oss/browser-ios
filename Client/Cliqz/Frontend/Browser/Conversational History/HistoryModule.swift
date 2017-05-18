@@ -34,7 +34,15 @@ final class HistoryModule: NSObject {
     @objc(query:startFrame:endFrame:domain:resolve:reject:)
     func query(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, profile = appDelegate.profile {
-            profile.history.getHistoryVisits((domain as? String) ?? "", timeStampLowerLimit: startFrame?.integerValue ?? nil , timeStampUpperLimit: endFrame?.integerValue ?? nil, limit: limit?.integerValue ?? nil).upon({ (result) in
+            
+            var start_local = startFrame
+            var end_local   = endFrame
+            
+            if startFrame?.integerValue == 0 && endFrame?.integerValue == 0 {
+                start_local = nil
+                end_local = nil
+            }
+            profile.history.getHistoryVisits((domain as? String) ?? "", timeStampLowerLimit: start_local?.integerValue ?? nil , timeStampUpperLimit: end_local?.integerValue ?? nil, limit: limit?.integerValue ?? nil).upon({ (result) in
                 let processedResult = self.processRawDataResults(result, domain:domain)
                 resolve(processedResult)
             })
