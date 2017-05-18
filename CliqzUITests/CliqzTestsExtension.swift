@@ -25,7 +25,7 @@ extension XCTestCase {
             }
         }
         tester.tapViewWithAccessibilityLabel("delete")
-        tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
+//        tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
         tester.waitForSoftwareKeyboard()
         tester.tapViewWithAccessibilityLabel("Go")
 //        let checkOnboarding = try tester.tryFindingTappableViewWithAccessibilityLabel("OK")
@@ -44,7 +44,7 @@ extension XCTestCase {
         tester.tapViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
         tester.tapViewWithAccessibilityLabel("delete")
         tester.tapViewWithAccessibilityLabel("Address and Search")
-        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", intoViewWithAccessibilityLabel: "Address and Search")
+//        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", intoViewWithAccessibilityLabel: "Address and Search")
         tester.tapViewWithAccessibilityLabel("Go")
         tester.waitForTimeInterval(1)
     }
@@ -57,7 +57,7 @@ extension XCTestCase {
         }
         
     }
-    
+
     func resetApp(accessibilityLabels: [String]){
         showToolBar()
         tester.tapViewWithAccessibilityLabel("Show Tabs")
@@ -119,7 +119,7 @@ extension XCTestCase {
         }
         else{
             tester.tapViewWithAccessibilityLabel("delete")
-            tester.setText(query, intoViewWithAccessibilityLabel: "Address and Search")
+//            tester.setText(query, intoViewWithAccessibilityLabel: "Address and Search")
             tester.waitForSoftwareKeyboard()
             tester.tapViewWithAccessibilityLabel("Go")
             if tester.viewExistsWithLabel("OK"){
