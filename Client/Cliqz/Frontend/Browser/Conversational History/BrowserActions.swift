@@ -22,5 +22,8 @@ public class BrowserActions: NSObject {
 	@objc(queryCliqz:)
 	public func queryCliqz(url: NSString) {
 		print("Hello React")
+        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+            appDelegate.searchInWebView((url as String) ?? "")
+        }
 	}
 }

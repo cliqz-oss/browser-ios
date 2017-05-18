@@ -224,12 +224,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		dispatch_async(dispatch_get_main_queue()) {
 			self.rootViewController.pushViewController(self.browserViewController, animated: false)
 			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-			                              Int64(0.12 * Double(NSEC_PER_SEC)))
+			                              Int64(0.3 * Double(NSEC_PER_SEC)))
 			dispatch_after(delayTime, dispatch_get_main_queue(), {
 				self.browserViewController.openURLInNewTab(url)
+                self.browserViewController.changeState(to: .Browsing)
 			})
 		}
 	}
+    
+    func searchInWebView(text:String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                                          Int64(0.15 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue(), {
+                self.browserViewController.changeState(to: .Search, text: text)
+            })
+        }
+    }
     
 //    func syncHistory(profile: Profile) {
 //        let historySyncedKey = "newHistorySyncedLocal"
@@ -252,6 +264,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func navigateToWebView(url: String) {
 		
 	}
+    
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
 		
@@ -340,7 +353,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AdblockingModule.sharedInstance.initModule()
         
         log.debug("Done with applicationDidFinishLaunching.")
-
+        
         return shouldPerformAdditionalDelegateHandling
     }
 
