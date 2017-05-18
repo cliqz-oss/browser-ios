@@ -13,6 +13,8 @@ import WebImage
 import SwiftKeychainWrapper
 import LocalAuthentication
 
+import React
+
 private let log = Logger.browserLogger
 
 let LatestAppVersionProfileKey = "latestAppVersion"
@@ -157,6 +159,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         self.window!.rootViewController = rootViewController
+		
+		
+		// REACT ----
+		let viewController = UIViewController()
+		viewController.view = Engine.sharedInstance.rootView
+
+		self.window!.rootViewController = viewController
 
         // Cliqz: disable crash reporting
 //        do {
