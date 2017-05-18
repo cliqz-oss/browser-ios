@@ -457,6 +457,8 @@
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4F9A7B611D6DDAC6005F02CB /* CliqzExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */; };
 		4F9A7B751D6F2BFA005F02CB /* CliqzURLBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */; };
+		4F9B1E941ECDA1E200DE88D5 /* BrowserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9B1E931ECDA1E200DE88D5 /* BrowserActions.swift */; };
+		4F9B1EA41ECDA26A00DE88D5 /* BrowserActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F9B1EA31ECDA26A00DE88D5 /* BrowserActions.m */; };
 		4FA29B251D64C0B100C59F5E /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */; };
 		4FA29B261D64C0B100C59F5E /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B221D64C0B100C59F5E /* TabsViewController.swift */; };
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
@@ -1944,6 +1946,8 @@
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzExtensionViewController.swift; sourceTree = "<group>"; };
 		4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzURLBarView.swift; sourceTree = "<group>"; };
+		4F9B1E931ECDA1E200DE88D5 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserActions.swift; path = "../Frontend/Browser/Conversational History/BrowserActions.swift"; sourceTree = "<group>"; };
+		4F9B1EA31ECDA26A00DE88D5 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrowserActions.m; path = "../Frontend/Browser/Conversational History/BrowserActions.m"; sourceTree = "<group>"; };
 		4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		4FA29B221D64C0B100C59F5E /* TabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
@@ -3808,6 +3812,13 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
+		4F9B1EA21ECDA23800DE88D5 /* React */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = React;
+			sourceTree = "<group>";
+		};
 		4FA29B131D64BFE300C59F5E /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -4039,6 +4050,7 @@
 		AF1962941ECB3DA200DBBC17 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				4F9B1EA21ECDA23800DE88D5 /* React */,
 				AFDCE3111EC3396400AF6316 /* ConversationalContainer.swift */,
 				AFDCE3121EC3396400AF6316 /* ConversationalHistory.swift */,
 				AFDCE3141EC3396400AF6316 /* ConversationalHistoryDetails.swift */,
@@ -4121,6 +4133,8 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
+				4F9B1E931ECDA1E200DE88D5 /* BrowserActions.swift */,
+				4F9B1EA31ECDA26A00DE88D5 /* BrowserActions.m */,
 				AFFB182C1EC3477100D90811 /* jsengine.bundle.js */,
 				AFDCE3441EC3398A00AF6316 /* History.swift */,
 				AFDCE3451EC3398A00AF6316 /* HistoryBridge.m */,
@@ -6581,6 +6595,7 @@
 				0BB5B2881AC0A2B90052877D /* SnackBar.swift in Sources */,
 				1E0844B31E48A3E6005B4DFF /* QuerySuggestionView.swift in Sources */,
 				7BEFC6801BFF68C30059C952 /* QuickActions.swift in Sources */,
+				4F9B1E941ECDA1E200DE88D5 /* BrowserActions.swift in Sources */,
 				1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
 				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
@@ -6634,6 +6649,7 @@
 				AFA6F3E31E67424700BA630B /* AdBlockerPanel.swift in Sources */,
 				39A359E41BFCCE94006B9E87 /* SpotlightHelper.swift in Sources */,
 				6BB2FD981B017DAB001A189B /* AuralProgressBar.swift in Sources */,
+				4F9B1EA41ECDA26A00DE88D5 /* BrowserActions.m in Sources */,
 				AFA6F3E41E67424700BA630B /* AntiPhishingPanel.swift in Sources */,
 				E698FFDA1B4AADF40001F623 /* TabScrollController.swift in Sources */,
 				1E79DD081D4FB2C5006BEB4A /* AppDelegateExtension.swift in Sources */,
@@ -7686,7 +7702,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;

@@ -165,6 +165,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		// REACT ----
 		let viewController = UIViewController()
+		
 		viewController.view = Engine.sharedInstance.rootView
 
 		self.window!.rootViewController = viewController
@@ -238,6 +239,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 //    }
 
+	
+	func navigateToWebView(url: String) {
+		
+	}
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
 		
