@@ -42,9 +42,9 @@ public class HistoryBridge : NSObject {
 		Engine.sharedInstance.getBridge().publishEvent("content:location-change", args: [history])
     }
 
-	public class func readLater(url: [String: AnyObject]) {
+	public class func readLater(urlInfo: [String: AnyObject]) {
 		//url , title, timestamp
-		Engine.sharedInstance.getBridge().publishEvent("browser:read-later", args: [url])
+		Engine.sharedInstance.getBridge().publishEvent("browser:read-later", args: [urlInfo])
 	}
 
 	public class func keepOpen(url: [String: AnyObject]) {
