@@ -2142,28 +2142,39 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        let date = NSDate(timeIntervalSinceNow: 360)
-        HistoryBridge.readLater(["url":"https://www.cliqz.com", "title":"Welcome to Cliqz", "timestamp": Int(date.timeIntervalSince1970 * 1000000)])
-        
+
         guard let tab = tabManager.selectedTab,
             let _ = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
                 return
         }
         
-        //showDatePicker()
+        showDatePicker()
 
         toggleBookmarkForTabState(tab.tabState)
     }
     
     func showDatePicker() {
         let datePicker = CIDatePickerViewController()
+        datePicker.delegate = self
         self.addChildViewController(datePicker)
         self.view.addSubview(datePicker.view)
         
         datePicker.view.snp_makeConstraints { (make) in
-            make.top.left.right.bottom.equalTo(self.view)
+            make.top.left.right.equalTo(self.view)
+            make.bottom.equalTo(self.view).inset(44)
         }
+    }
+    
+    func hideDatePicker(datePicker:CIDatePickerViewController) {
+        datePicker.view.removeFromSuperview()
+        datePicker.removeFromParentViewController()
+    }
+    
+    func sendBookmark(date: NSDate){
+        let url = self.urlBar.currentURL?.absoluteString ?? ""
+        let title = self.tabManager.selectedTab?.title ?? ""
+        HistoryBridge.readLater(["url":url, "title": title, "timestamp": Int(date.timeIntervalSince1970 * 1000000)])
     }
 
     func tabToolbarDidLongPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
@@ -2297,6 +2308,17 @@ extension BrowserViewController: MenuViewControllerDelegate {
         // we only want to dismiss when rotating on iPhone
         // if we're rotating from landscape to portrait then we are rotating from popover to modal
         return isiPhone && currentOrientation != newOrientation
+    }
+}
+
+extension BrowserViewController: CIDatePickerDelegate {
+    func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.hideDatePicker(datePicker)
+    }
+    
+    func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.sendBookmark(datePicker.datePicker.date)
+        self.hideDatePicker(datePicker)
     }
 }
 
