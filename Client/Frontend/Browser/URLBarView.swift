@@ -16,7 +16,7 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
     static let LocationLeftPadding: CGFloat = 10
     static let LocationHeight = 28
-    static let ButtonWidth = 42
+    static let ButtonWidth = 42.0
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
@@ -710,7 +710,7 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.CGColor
 
         if inOverlayMode {
-            self.cancelButton.transform = CGAffineTransformIdentity
+//            self.cancelButton.transform = CGAffineTransformIdentity
             // Cliqz: Commented out tabsButton transition as it will be always visible
 //            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
 //            self.tabsButton.transform = tabsButtonTransform
@@ -726,7 +726,8 @@ class URLBarView: UIView {
             self.tabsButton.transform = CGAffineTransformIdentity
             // Cliqz: deleted cloned tabs button due to removing tabs button animation
 //            self.clonedTabsButton?.transform = CGAffineTransformIdentity
-            self.cancelButton.transform = CGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+			self.bringSubviewToFront(self.cancelButton)
+//            self.cancelButton.transform = CGAffineTransformIdentityCGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
             self.rightBarConstraint?.updateOffset(defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
@@ -749,6 +750,8 @@ class URLBarView: UIView {
         self.stopReloadButton.hidden = !self.toolbarIsShowing || inOverlayMode
         // Cliqz: Add tabs and new tab buttons to URLBar
         self.tabsButton.hidden = !self.toolbarIsShowing || inOverlayMode
+		self.bringSubviewToFront(self.cancelButton)
+
     }
 
     func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {
