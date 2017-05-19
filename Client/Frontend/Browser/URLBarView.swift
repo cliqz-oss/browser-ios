@@ -187,7 +187,7 @@ class URLBarView: UIView {
         */
         
         cancelButton.accessibilityLabel = "urlExpand"
-        cancelButton.alpha = 0
+//        cancelButton.alpha = 0
         return cancelButton
     }()
 
@@ -676,7 +676,7 @@ class URLBarView: UIView {
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
         self.bringSubviewToFront(self.locationContainer)
-        self.cancelButton.hidden = false
+//        self.cancelButton.hidden = true
         self.progressBar.hidden = false
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing
@@ -692,7 +692,7 @@ class URLBarView: UIView {
     }
 
     func transitionToOverlay(didCancel: Bool = false) {
-        self.cancelButton.alpha = inOverlayMode ? 1 : 0
+//        self.cancelButton.alpha = inOverlayMode ? 0 : 1
         self.progressBar.alpha = inOverlayMode || didCancel ? 0 : 1
         self.shareButton.alpha = inOverlayMode ? 0 : 1
         if AppConstants.MOZ_MENU {
@@ -737,7 +737,7 @@ class URLBarView: UIView {
     }
 
     func updateViewsForOverlayModeAndToolbarChanges() {
-        self.cancelButton.hidden = !inOverlayMode
+//        self.cancelButton.hidden = inOverlayMode
         self.progressBar.hidden = inOverlayMode
         if AppConstants.MOZ_MENU {
             self.menuButton.hidden = !self.toolbarIsShowing || inOverlayMode
