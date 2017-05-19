@@ -2188,6 +2188,10 @@ extension BrowserViewController: TabToolbarDelegate {
     
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+		self.navigationController?.popViewControllerAnimated(false)
+		
+		// HackDay change of tabsButton behaviour
+		/*
         // check if the dashboard is already pushed before
         guard self.navigationController?.topViewController != dashboard else {
             return
@@ -2213,6 +2217,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.tabTrayController = tabTrayController
          */
         self.navigationController?.pushViewController(dashboard, animated: false)
+*/
     }
     
     // Cliqz: Add delegate methods for tabs button
@@ -2714,9 +2719,10 @@ extension BrowserViewController: TabManagerDelegate {
         if let selectedTab = tabManager.selectedTab {
 			// Cliqz: Changes Tabs count on the Tabs button according to our requirements. Now we show all tabs count, no seperation between private/not private
 //            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
-			let count = tabManager.tabs.count
-            urlBar.updateTabCount(max(count, 1), animated: animated)
-            toolbar?.updateTabCount(max(count, 1))
+			// ----HackDay ---
+//			let count = tabManager.tabs.count
+//            urlBar.updateTabCount(max(count, 1), animated: animated)
+//            toolbar?.updateTabCount(max(count, 1))
         }
     }
     
