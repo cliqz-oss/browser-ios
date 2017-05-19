@@ -35,7 +35,7 @@ public class BrowserActions: NSObject {
 				let tabData = NSMutableDictionary()
 				tabData["id"] = (tab.webView?.uniqueId)! as NSInteger
 				tabData["url"] = tab.url?.absoluteString as? NSString
-				tabData["title"] = tab.title as? NSString
+				tabData["title"] = tab.displayTitle as? NSString
 				openTabs.addObject(tabData)
 			}
 		}

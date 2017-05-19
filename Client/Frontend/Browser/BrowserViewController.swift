@@ -2171,7 +2171,7 @@ extension BrowserViewController: TabToolbarDelegate {
         datePicker.removeFromParentViewController()
     }
     
-    func sendBookmark(date: NSDate){
+    func sendBookmark(date: NSDate) {
         let url = self.urlBar.currentURL?.absoluteString ?? ""
         let title = self.tabManager.selectedTab?.title ?? ""
         HistoryBridge.readLater(["url":url, "title": title, "timestamp": Int(date.timeIntervalSince1970 * 1000000)])
@@ -2181,7 +2181,7 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressShare(tabToolbar: TabToolbarProtocol, button: UIButton) {
-        if let tab = tabManager.selectedTab, url = tab.displayURL {
+        if let tab = tabManager.selectedTab, let url = tab.displayURL {
             let sourceView = self.navigationToolbar.shareButton
             presentActivityViewController(url, tab: tab, sourceView: sourceView.superview, sourceRect: sourceView.frame, arrowDirection: .Up)
             

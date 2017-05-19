@@ -786,10 +786,12 @@ extension AppDelegate {
 	}
 
 	func openTab(tabID: Int) {
-		for tab in self.tabManager.tabs {
-			if tab.webView?.uniqueId == tabID {
-				self.tabManager.selectTab(tab)
-				self.rootViewController.pushViewController(self.browserViewController, animated: false)
+		dispatch_async(dispatch_get_main_queue()) {
+			for tab in self.tabManager.tabs {
+				if tab.webView?.uniqueId == tabID {
+					self.tabManager.selectTab(tab)
+					self.rootViewController.pushViewController(self.browserViewController, animated: false)
+				}
 			}
 		}
 	}
