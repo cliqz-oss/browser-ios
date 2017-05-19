@@ -132,7 +132,7 @@ public class TabToolbarHelper: NSObject {
         toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), forState: .Normal)
         toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
         let longPressGestureTabsButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressTabs(_:)))
-        toolbar.tabsButton.addGestureRecognizer(longPressGestureTabsButton)
+//        toolbar.tabsButton.addGestureRecognizer(longPressGestureTabsButton)
         toolbar.tabsButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickTabs), forControlEvents: UIControlEvents.TouchUpInside)
         
 
