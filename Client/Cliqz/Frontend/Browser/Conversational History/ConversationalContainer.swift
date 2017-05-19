@@ -31,8 +31,8 @@ final class ConversationalContainer: UIViewController {
         setUpNavigationController()
     }
     
-    func changeState(to state: ConversationalState, text: String?) {
-        
+//    func changeState(to state: ConversationalState, text: String?) {
+	
 //        if state == .History {
 //            self.hideSearchController()
 //            self.showConversationalHistory()
@@ -45,7 +45,7 @@ final class ConversationalContainer: UIViewController {
 //            self.hideConversationalHistory()
 //        }
         
-    }
+//    }
     
     private func setupConversationalHistory() {
         conversationalHistory.delegate = self.browsing_delegate

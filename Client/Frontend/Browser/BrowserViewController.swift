@@ -36,16 +36,11 @@ private struct BrowserViewControllerUX {
     private static let BookmarkStarAnimationOffset: CGFloat = 80
 }
 
-enum ConversationalState{
-    case Search
-    case Browsing
-}
-
 class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
 //    var homePanelController: CliqzSearchViewController?
-    //var homePanelController: FreshtabViewController?
-    
+    var homePanelController: FreshtabViewController?
+	
     //Conversational Container
     //var conversationalContainer: ConversationalContainer
     
@@ -504,7 +499,6 @@ class BrowserViewController: UIViewController {
             // Cliqz:  setup back and forward swipe
             historySwiper.setup(topLevelView: self.view, webViewContainer: self.webViewContainer)            
         #endif
-        
         //self.setUpConversationalContainer()
 
     }
@@ -846,15 +840,15 @@ class BrowserViewController: UIViewController {
 
         // Remake constraints even if we're already showing the home controller.
         // The home controller may change sizes if we tap the URL bar while on about:home.
-//        homePanelController?.view.snp_remakeConstraints { make in
-//            make.top.equalTo(self.urlBar.snp_bottom)
-//            make.left.right.equalTo(self.view)
-//            if self.homePanelIsInline {
-//                make.bottom.equalTo(self.toolbar?.snp_top ?? self.view.snp_bottom)
-//            } else {
-//                make.bottom.equalTo(self.view.snp_bottom)
-//            }
-//        }
+        homePanelController?.view.snp_remakeConstraints { make in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.equalTo(self.view)
+            if self.homePanelIsInline {
+                make.bottom.equalTo(self.toolbar?.snp_top ?? self.view.snp_bottom)
+            } else {
+                make.bottom.equalTo(self.view.snp_bottom)
+            }
+        }
 
         findInPageContainer.snp_remakeConstraints { make in
             make.left.right.equalTo(self.view)
@@ -998,37 +992,40 @@ class BrowserViewController: UIViewController {
         }
     }
     // Cliqz: separate the creating of searchcontroller into a new method
-//    private func createSearchController() {
-//        guard searchController == nil else {
-//            return
-//        }
-//        
-//        searchController = CliqzSearchViewController(profile: self.profile)
-//        searchController!.delegate = self
-//        searchLoader.addListener(searchController!)
-//        view.addSubview(searchController!.view)
-//        addChildViewController(searchController!)
-//        searchController!.view.snp_makeConstraints { make in
-//            make.top.equalTo(self.urlBar.snp_bottom)
-//            make.left.right.bottom.equalTo(self.view)
-//            return
-//        }
-//    }
+    private func createSearchController() {
+        guard searchController == nil else {
+            return
+        }
+        
+        searchController = CliqzSearchViewController(profile: self.profile)
+        searchController!.delegate = self
+        searchLoader.addListener(searchController!)
+        view.addSubview(searchController!.view)
+        addChildViewController(searchController!)
+        searchController!.view.snp_makeConstraints { make in
+            make.top.equalTo(self.urlBar.snp_bottom)
+            make.left.right.bottom.equalTo(self.view)
+            return
+        }
+    }
     // Cliqz: modified showSearchController to show SearchViewController insead of searchController
-//    private func showSearchController() {
-//        if let selectedTab = tabManager.selectedTab {
-//            searchController?.updatePrivateMode(selectedTab.isPrivate)
-//        }
-//        
-//        homePanelController?.view?.hidden = true
-//        searchController!.view.hidden = false
-//        searchController!.didMoveToParentViewController(self)
-//        
-//        // Cliqz: reset navigation steps
-//        navigationStep = 0
-//        backNavigationStep = 0
-//        
-//    }
+    private func showSearchController() {
+		if (self.searchController == nil) {
+			createSearchController()
+		}
+        if let selectedTab = tabManager.selectedTab {
+            searchController?.updatePrivateMode(selectedTab.isPrivate)
+        }
+        
+        homePanelController?.view?.hidden = true
+        searchController!.view.hidden = false
+        searchController!.didMoveToParentViewController(self)
+        
+        // Cliqz: reset navigation steps
+        navigationStep = 0
+        backNavigationStep = 0
+        
+    }
     /*
     private func showSearchController() {
         if searchController != nil {
@@ -1071,32 +1068,6 @@ class BrowserViewController: UIViewController {
 //            */
 //        }
 //    }
-    
-    func changeState(to state: ConversationalState, text: String? = nil){
-        //homePanelController?.view?.hidden = true
-        if state == .Search {
-            showSearchController(text)
-        }
-        else{
-            hideSearchController()
-        }
-        //conversationalContainer.changeState(to: state, text: text)
-    }
-    
-    private func showSearchController(text: String?) {
-        if searchController == nil{
-            setUpSearchController()
-        }
-        
-        searchController?.view.hidden = false
-        searchController?.didMoveToParentViewController(self)
-        
-        searchController?.searchQuery = text
-        //searchController?.sendUrlBarFocusEvent()
-        
-        self.navigationStep = 0
-        self.backNavigationStep = 0
-    }
     
     private func hideSearchController() {
         searchController?.view.hidden = true
@@ -1829,6 +1800,10 @@ extension BrowserViewController: URLBarDelegate {
         tabManager.selectedTab?.stop()
     }
 
+	func urlBarDidPressHome(urlBar: URLBarView) {
+		self.navigationController?.popViewControllerAnimated(false)
+	}
+
     func urlBarDidPressTabs(urlBar: URLBarView) {
         // Cliqz: telemetry logging for toolbar
         self.logToolbarOverviewSignal()
@@ -1959,13 +1934,14 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBar(urlBar: URLBarView, didEnterText text: String) {
         searchLoader.query = text
-        
-        if text != "" {
-            self.changeState(to: .Search, text: text)
-        } else {
-            self.changeState(to: .Browsing)
-        }
-        
+//		if text != "" {
+			hideHomePanelController()
+			showSearchController()
+			searchController!.searchQuery = text
+//		} else {
+//			hideSearchController()
+//			showHomePanelController(inline: true)
+//		}
         // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
         self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         self.urlBar.showAntitrackingButton(false)
@@ -2018,7 +1994,6 @@ extension BrowserViewController: URLBarDelegate {
         // Cliqz: send `urlbar-focus` to extension
         self.searchController?.sendUrlBarFocusEvent()
 		navigationToolbar.updatePageStatus(isWebPage: false)
-
         if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
         } else {
@@ -2028,13 +2003,12 @@ extension BrowserViewController: URLBarDelegate {
     }
 
     func urlBarDidLeaveOverlayMode(urlBar: URLBarView) {
-		self.navigationController?.popViewControllerAnimated(false)
-		return
-        // Cliqz: telemetry logging for toolbar
+		
+		// Cliqz: telemetry logging for toolbar
         self.logToolbarBlurSignal()
-        
-        //hideSearchController()
-        self.changeState(to: .Browsing)
+		
+		hideSearchController()
+
         // Cliqz: update URL bar and the tab toolbar when leaving overlay
         if let tab = tabManager.selectedTab {
             updateUIForReaderHomeStateForTab(tab)
@@ -2043,7 +2017,7 @@ extension BrowserViewController: URLBarDelegate {
             navigationToolbar.updatePageStatus(isWebPage: isPage)
         }
 		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
-        updateInContentHomePanel(urlBar.currentURL)
+//        updateInContentHomePanel(urlBar.currentURL)
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
     }
     

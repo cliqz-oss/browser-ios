@@ -220,25 +220,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 	
-	func openUrlInWebView(url:NSURL) {
+	func openUrlInWebView(url: NSURL) {
 		dispatch_async(dispatch_get_main_queue()) {
 			self.rootViewController.pushViewController(self.browserViewController, animated: false)
 			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
 			                              Int64(0.3 * Double(NSEC_PER_SEC)))
 			dispatch_after(delayTime, dispatch_get_main_queue(), {
-				self.browserViewController.openURLInNewTab(url)
-                self.browserViewController.changeState(to: .Browsing)
+				self.browserViewController.switchToTabForURLOrOpen(url)
 			})
 		}
 	}
     
-    func searchInWebView(text:String) {
+    func searchInWebView(text: String) {
         dispatch_async(dispatch_get_main_queue()) {
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW,
                                           Int64(0.15 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue(), {
-                self.browserViewController.changeState(to: .Search, text: text)
+				self.browserViewController.newTab()
+				self.browserViewController.searchForQuery(text)
             })
         }
     }
@@ -700,7 +700,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func viewURLInNewTab(notification: UILocalNotification) {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String {
             if let urlToOpen = NSURL(string: alertURL) {
-                browserViewController.openURLInNewTab(urlToOpen)
+                browserViewController.navigateToURLInNewTab(urlToOpen)
             }
         }
     }
