@@ -14,4 +14,8 @@ RCT_EXTERN_METHOD(queryCliqz:(NSString)url)
 
 RCT_EXTERN_METHOD(openLink:(NSString)url)
 
+RCT_EXTERN_METHOD(getOpenTabs:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(openTab:(NSString)tabID)
+
 @end

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import React
 
 @objc(BrowserActions)
 public class BrowserActions: NSObject {
@@ -21,9 +22,30 @@ public class BrowserActions: NSObject {
 	
 	@objc(queryCliqz:)
 	public func queryCliqz(url: NSString) {
-		print("Hello React")
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
             appDelegate.searchInWebView((url as String) ?? "")
         }
+	}
+
+	@objc(getOpenTabs:reject:)
+	public func getOpenTabs(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+		let openTabs = NSMutableArray()
+		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+			for tab in appDelegate.tabManager.tabs {
+				let tabData = NSMutableDictionary()
+				tabData["id"] = (tab.webView?.uniqueId)! as NSInteger
+				tabData["url"] = tab.url?.absoluteString as? NSString
+				tabData["title"] = tab.title as? NSString
+				openTabs.addObject(tabData)
+			}
+		}
+		resolve(openTabs)
+	}
+
+	@objc(openTab:)
+	public func openTab(tabID: NSInteger) {
+		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+			appDelegate.openTab(tabID as Int)
+		}
 	}
 }

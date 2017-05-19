@@ -219,29 +219,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-	
-	func openUrlInWebView(url: NSURL) {
-		dispatch_async(dispatch_get_main_queue()) {
-			self.rootViewController.pushViewController(self.browserViewController, animated: false)
-			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-			                              Int64(0.3 * Double(NSEC_PER_SEC)))
-			dispatch_after(delayTime, dispatch_get_main_queue(), {
-				self.browserViewController.switchToTabForURLOrOpen(url)
-			})
-		}
-	}
-    
-    func searchInWebView(text: String) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.rootViewController.pushViewController(self.browserViewController, animated: false)
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-                                          Int64(0.15 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue(), {
-				self.browserViewController.newTab()
-				self.browserViewController.searchForQuery(text)
-            })
-        }
-    }
     
 //    func syncHistory(profile: Profile) {
 //        let historySyncedKey = "newHistorySyncedLocal"
@@ -780,4 +757,41 @@ extension AppDelegate: MFMailComposeViewControllerDelegate {
 struct LaunchParams {
     let url: NSURL?
     let isPrivate: Bool?
+}
+
+//HackDay
+extension AppDelegate {
+
+	func openUrlInWebView(url: NSURL) {
+		dispatch_async(dispatch_get_main_queue()) {
+			self.rootViewController.pushViewController(self.browserViewController, animated: false)
+			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+										  Int64(0.3 * Double(NSEC_PER_SEC)))
+			dispatch_after(delayTime, dispatch_get_main_queue(), {
+				self.browserViewController.switchToTabForURLOrOpen(url)
+			})
+		}
+	}
+
+	func searchInWebView(text: String) {
+		dispatch_async(dispatch_get_main_queue()) {
+			self.rootViewController.pushViewController(self.browserViewController, animated: false)
+			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+										  Int64(0.15 * Double(NSEC_PER_SEC)))
+			dispatch_after(delayTime, dispatch_get_main_queue(), {
+				self.browserViewController.newTab()
+				self.browserViewController.searchForQuery(text)
+			})
+		}
+	}
+
+	func openTab(tabID: Int) {
+		for tab in self.tabManager.tabs {
+			if tab.webView?.uniqueId == tabID {
+				self.tabManager.selectTab(tab)
+				self.rootViewController.pushViewController(self.browserViewController, animated: false)
+			}
+		}
+	}
+
 }
