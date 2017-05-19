@@ -606,6 +606,7 @@
 		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
+		AF80F31C1ECEEB5900A468EA /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF80F31B1ECEEB5900A468EA /* CIDatePickerViewController.swift */; };
 		AF8266201EB09FBA0023C77C /* LandscapeFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */; };
 		AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */; };
 		AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661F1EB09FBA0023C77C /* TabViewCell.swift */; };
@@ -2051,6 +2052,7 @@
 		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		AF80F31B1ECEEB5900A468EA /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
 		AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandscapeFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661F1EB09FBA0023C77C /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
@@ -4105,6 +4107,7 @@
 				AF1962951ECB3DD200DBBC17 /* Data Sources */,
 				AF1962941ECB3DA200DBBC17 /* User Interface */,
 				AF1962961ECB3DE600DBBC17 /* Deprecated */,
+				AF80F31B1ECEEB5900A468EA /* CIDatePickerViewController.swift */,
 			);
 			path = "Conversational History";
 			sourceTree = "<group>";
@@ -6790,6 +6793,7 @@
 				C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */,
 				D3972BF31C22412B00035B87 /* ShareExtensionHelper.swift in Sources */,
 				1E79DD0D1D4FB2C5006BEB4A /* UITextFieldExtension.swift in Sources */,
+				AF80F31C1ECEEB5900A468EA /* CIDatePickerViewController.swift in Sources */,
 				59A68E0B4ABBF55E14819668 /* BookmarksPanel.swift in Sources */,
 				7B0B1B791C1B69C900DF4AB5 /* ClientPickerViewController.swift in Sources */,
 				1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */,

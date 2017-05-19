@@ -2142,13 +2142,28 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        let date = NSDate(timeIntervalSinceNow: 360)
+        HistoryBridge.readLater(["url":"https://www.cliqz.com", "title":"Welcome to Cliqz", "timestamp": Int(date.timeIntervalSince1970 * 1000000)])
+        
         guard let tab = tabManager.selectedTab,
             let _ = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
                 return
         }
+        
+        //showDatePicker()
 
         toggleBookmarkForTabState(tab.tabState)
+    }
+    
+    func showDatePicker() {
+        let datePicker = CIDatePickerViewController()
+        self.addChildViewController(datePicker)
+        self.view.addSubview(datePicker.view)
+        
+        datePicker.view.snp_makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self.view)
+        }
     }
 
     func tabToolbarDidLongPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
