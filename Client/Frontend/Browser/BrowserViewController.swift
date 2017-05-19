@@ -1373,7 +1373,7 @@ class BrowserViewController: UIViewController {
         if currentViewController != self {
             self.navigationController?.popViewControllerAnimated(false)
         } else if urlBar.inOverlayMode {
-            urlBar.SELdidClickCancel()
+//            urlBar.SELdidClickCancel()
         }
     }
 
@@ -2142,13 +2142,28 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
+        let date = NSDate(timeIntervalSinceNow: 360)
+        HistoryBridge.readLater(["url":"https://www.cliqz.com", "title":"Welcome to Cliqz", "timestamp": Int(date.timeIntervalSince1970 * 1000000)])
+        
         guard let tab = tabManager.selectedTab,
             let _ = tab.displayURL?.absoluteString else {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
                 return
         }
+        
+        //showDatePicker()
 
         toggleBookmarkForTabState(tab.tabState)
+    }
+    
+    func showDatePicker() {
+        let datePicker = CIDatePickerViewController()
+        self.addChildViewController(datePicker)
+        self.view.addSubview(datePicker.view)
+        
+        datePicker.view.snp_makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self.view)
+        }
     }
 
     func tabToolbarDidLongPressBookmark(tabToolbar: TabToolbarProtocol, button: UIButton) {
@@ -2188,6 +2203,10 @@ extension BrowserViewController: TabToolbarDelegate {
     
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
+		self.navigationController?.popViewControllerAnimated(false)
+		
+		// HackDay change of tabsButton behaviour
+		/*
         // check if the dashboard is already pushed before
         guard self.navigationController?.topViewController != dashboard else {
             return
@@ -2213,6 +2232,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.tabTrayController = tabTrayController
          */
         self.navigationController?.pushViewController(dashboard, animated: false)
+*/
     }
     
     // Cliqz: Add delegate methods for tabs button
@@ -2714,9 +2734,10 @@ extension BrowserViewController: TabManagerDelegate {
         if let selectedTab = tabManager.selectedTab {
 			// Cliqz: Changes Tabs count on the Tabs button according to our requirements. Now we show all tabs count, no seperation between private/not private
 //            let count = selectedTab.isPrivate ? tabManager.privateTabs.count : tabManager.normalTabs.count
-			let count = tabManager.tabs.count
-            urlBar.updateTabCount(max(count, 1), animated: animated)
-            toolbar?.updateTabCount(max(count, 1))
+			// ----HackDay ---
+//			let count = tabManager.tabs.count
+//            urlBar.updateTabCount(max(count, 1), animated: animated)
+//            toolbar?.updateTabCount(max(count, 1))
         }
     }
     
