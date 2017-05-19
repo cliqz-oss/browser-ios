@@ -16,7 +16,7 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
     static let LocationLeftPadding: CGFloat = 10
     static let LocationHeight = 28
-    static let ButtonWidth = 42
+    static let ButtonWidth = 42.0
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
     static let TextFieldCornerRadius: CGFloat = 3
@@ -678,9 +678,9 @@ class URLBarView: UIView {
 
     func prepareOverlayAnimation() {
         // Make sure everything is showing during the transition (we'll hide it afterwards).
-        self.bringSubviewToFront(self.locationContainer)
+        self.bringSubview(toFront: self.locationContainer)
 //        self.cancelButton.hidden = true
-        self.progressBar.hidden = false
+        self.progressBar.isHidden = false
         if AppConstants.MOZ_MENU {
             self.menuButton.isHidden = !self.toolbarIsShowing
         } else {
@@ -713,7 +713,7 @@ class URLBarView: UIView {
         locationContainer.layer.borderColor = borderColor.cgColor
 
         if inOverlayMode {
-            self.cancelButton.transform = CGAffineTransform.identity
+//            self.cancelButton.transform = CGAffineTransformIdentity
             // Cliqz: Commented out tabsButton transition as it will be always visible
 //            let tabsButtonTransform = CGAffineTransformMakeTranslation(self.tabsButton.frame.width + URLBarViewUX.URLBarCurveOffset, 0)
 //            self.tabsButton.transform = tabsButtonTransform
@@ -729,8 +729,10 @@ class URLBarView: UIView {
             self.tabsButton.transform = CGAffineTransform.identity
             // Cliqz: deleted cloned tabs button due to removing tabs button animation
 //            self.clonedTabsButton?.transform = CGAffineTransformIdentity
-            self.cancelButton.transform = CGAffineTransform(translationX: self.cancelButton.frame.width, y: 0)
-            self.rightBarConstraint?.update(offset: defaultRightOffset)
+
+			self.bringSubview(toFront: self.cancelButton)
+//            self.cancelButton.transform = CGAffineTransformIdentityCGAffineTransformMakeTranslation(self.cancelButton.frame.width, 0)
+            self.rightBarConstraint?.updateOffset(amount: defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
             self.locationTextField?.snp_remakeConstraints { make in
@@ -741,7 +743,7 @@ class URLBarView: UIView {
 
     func updateViewsForOverlayModeAndToolbarChanges() {
 //        self.cancelButton.hidden = inOverlayMode
-        self.progressBar.hidden = inOverlayMode
+        self.progressBar.isHidden = inOverlayMode
         if AppConstants.MOZ_MENU {
             self.menuButton.isHidden = !self.toolbarIsShowing || inOverlayMode
         } else {
@@ -751,7 +753,10 @@ class URLBarView: UIView {
         self.backButton.isHidden = !self.toolbarIsShowing || inOverlayMode
         self.stopReloadButton.isHidden = !self.toolbarIsShowing || inOverlayMode
         // Cliqz: Add tabs and new tab buttons to URLBar
+
         self.tabsButton.isHidden = !self.toolbarIsShowing || inOverlayMode
+		self.bringSubview(toFront: self.cancelButton)
+
     }
 
     func animateToOverlayState(overlayMode overlay: Bool, didCancel cancel: Bool = false) {
@@ -765,7 +770,7 @@ class URLBarView: UIView {
         }
 
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: [], animations: { _ in
-            self.transitionToOverlay(cancel)
+            self.transitionToOverlay(didCancel: cancel)
             self.setNeedsUpdateConstraints()
             self.layoutIfNeeded()
         }, completion: { _ in
@@ -779,7 +784,7 @@ class URLBarView: UIView {
 
     func SELdidClickCancel() {
         leaveOverlayMode(didCancel: true)
-        delegate?.urlBarDidPressHome(self)
+        delegate?.urlBarDidPressHome(urlBar: self)
     }
 
     func SELtappedScrollToTopArea() {

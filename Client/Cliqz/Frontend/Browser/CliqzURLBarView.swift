@@ -71,8 +71,8 @@ class CliqzURLBarView: URLBarView {
         self.newTabButton.isHidden = !self.toolbarIsShowing
     }
     
-    override func transitionToOverlay(_ didCancel: Bool = false) {
-        super.transitionToOverlay(didCancel)
+    override func transitionToOverlay(didCancel: Bool = false) {
+        super.transitionToOverlay(didCancel: didCancel)
         self.newTabButton.alpha = inOverlayMode ? 0 : 1
     }
     override func updateViewsForOverlayModeAndToolbarChanges() {
@@ -166,7 +166,7 @@ class CliqzURLBarView: URLBarView {
 		addSubview(self.antitrackingButton)
 		antitrackingButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1 * URLBarViewUX.ButtonWidth)
+			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1.5 * URLBarViewUX.ButtonWidth)
 			make.size.equalTo(CliqzURLBarView.antitrackingButtonSize)
 		}
         
