@@ -97,7 +97,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			
 			if let tabId = notification.object as? Int where self.tabManager.selectedTab?.webView?.uniqueId == tabId {
                 let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
-                self.urlBar.updateTrackersCount(newCount)
+                self.urlBar?.updateTrackersCount(newCount)
                 if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
                     self.showHint(.Antitracking)
                 }

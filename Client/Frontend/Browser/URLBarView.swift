@@ -80,10 +80,13 @@ protocol URLBarDelegate: class {
     func urlBarDidLongPressLocation(urlBar: URLBarView)
     func urlBarLocationAccessibilityActions(urlBar: URLBarView) -> [UIAccessibilityCustomAction]?
     func urlBarDidPressScrollToTop(urlBar: URLBarView)
+
     func urlBar(urlBar: URLBarView, didEnterText text: String)
     func urlBar(urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(url: NSURL?) -> String?
-    
+	
+	func urlBarDidPressHome(urlBar: URLBarView)
+
     
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(urlBar: URLBarView, button: UIButton)
@@ -168,7 +171,8 @@ class URLBarView: UIView {
     private lazy var cancelButton: UIButton = {
         // Cliz: use regular button with icon for cancel button
         let cancelButton = InsetButton()
-        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+//        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
+		cancelButton.setImage(UIImage(named: "urlExpand"), forState: .Normal)
         cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
         /*
         let cancelButton = InsetButton()
@@ -772,6 +776,7 @@ class URLBarView: UIView {
 
     func SELdidClickCancel() {
         leaveOverlayMode(didCancel: true)
+		delegate?.urlBarDidPressHome(self)
     }
 
     func SELtappedScrollToTopArea() {

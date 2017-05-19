@@ -24,7 +24,7 @@ private let InitialPingSentKey = "initialPingSent"
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var browserViewController: BrowserViewController!
-    var rootViewController: UIViewController!
+    var rootViewController: UINavigationController!
     weak var profile: BrowserProfile?
     var tabManager: TabManager!
     var adjustIntegration: AdjustIntegration?
@@ -150,26 +150,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
         browserViewController.restorationClass = AppDelegate.self
 
-        let navigationController = UINavigationController(rootViewController: browserViewController)
-        navigationController.delegate = self
-        navigationController.navigationBarHidden = true
-
-        if AppConstants.MOZ_STATUS_BAR_NOTIFICATION {
-            rootViewController = NotificationRootViewController(rootViewController: navigationController)
-        } else {
-            rootViewController = navigationController
-        }
-
-        self.window!.rootViewController = rootViewController
-		
-		
-		// REACT ----
+//		 REACT ----
 		let viewController = UIViewController()
 		
 		viewController.view = Engine.sharedInstance.rootView
 
-		self.window!.rootViewController = viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.delegate = self
+        navigationController.navigationBarHidden = true
 
+        //if AppConstants.MOZ_STATUS_BAR_NOTIFICATION {
+          //  rootViewController = NotificationRootViewController(rootViewController: navigationController)
+        //} else {
+            rootViewController = navigationController
+        //}
+
+        self.window!.rootViewController = rootViewController
+		
+		
         // Cliqz: disable crash reporting
 //        do {
 //            log.debug("Configuring Crash Reporting...")
@@ -221,6 +219,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
+	
+	func openUrlInWebView(url: NSURL) {
+		dispatch_async(dispatch_get_main_queue()) {
+			self.rootViewController.pushViewController(self.browserViewController, animated: false)
+			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+			                              Int64(0.3 * Double(NSEC_PER_SEC)))
+			dispatch_after(delayTime, dispatch_get_main_queue(), {
+				self.browserViewController.switchToTabForURLOrOpen(url)
+			})
+		}
+	}
+    
+    func searchInWebView(text: String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                                          Int64(0.15 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue(), {
+				self.browserViewController.newTab()
+				self.browserViewController.searchForQuery(text)
+            })
+        }
+    }
     
 //    func syncHistory(profile: Profile) {
 //        let historySyncedKey = "newHistorySyncedLocal"
@@ -243,6 +264,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func navigateToWebView(url: String) {
 		
 	}
+    
     func applicationWillTerminate(application: UIApplication) {
         log.debug("Application will terminate.")
 		
@@ -331,7 +353,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AdblockingModule.sharedInstance.initModule()
         
         log.debug("Done with applicationDidFinishLaunching.")
-
+        
         return shouldPerformAdditionalDelegateHandling
     }
 
@@ -678,7 +700,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func viewURLInNewTab(notification: UILocalNotification) {
         if let alertURL = notification.userInfo?[TabSendURLKey] as? String {
             if let urlToOpen = NSURL(string: alertURL) {
-                browserViewController.openURLInNewTab(urlToOpen)
+                browserViewController.navigateToURLInNewTab(urlToOpen)
             }
         }
     }

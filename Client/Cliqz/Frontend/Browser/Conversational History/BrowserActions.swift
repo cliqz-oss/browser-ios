@@ -14,10 +14,16 @@ public class BrowserActions: NSObject {
 	@objc(openLink:)
 	public func openLink(url: NSString) {
 		print("Hello React")
+		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, u = NSURL(string:url as String) {
+			appDelegate.openUrlInWebView(u)
+		}
 	}
 	
 	@objc(queryCliqz:)
 	public func queryCliqz(url: NSString) {
 		print("Hello React")
+        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+            appDelegate.searchInWebView((url as String) ?? "")
+        }
 	}
 }

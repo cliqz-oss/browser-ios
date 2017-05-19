@@ -12,7 +12,6 @@ import Storage
 import Shared
 import Alamofire
 
-
 // DEPRECATED: Now the history is handled natively.
 
 
@@ -41,7 +40,7 @@ class ConversationalHistoryAPI {
 //	}()
 
 	class func pushHistoryItem(visit: SiteVisit) {
-        Engine.sharedInstance.getHistory().addHistoryItem(self.generateParamsForHistoryItem(visit.site.url, title: visit.site.title, visitedDate: visit.date))
+        HistoryBridge.addHistoryItem(self.generateParamsForHistoryItem(visit.site.url, title: visit.site.title, visitedDate: visit.date))
 	}
 	
 	class func getHistory(callback: (NSDictionary) -> Void) {

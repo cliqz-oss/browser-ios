@@ -8,12 +8,6 @@
 
 import UIKit
 
-enum ConversationalState{
-    case History
-    case Search
-    case Browsing
-}
-
 // This manages the state of the User Interface for the Conversational Experiment components
 // Here you can find the definition for what should happen when a domain cell is pressed
 
@@ -37,21 +31,21 @@ final class ConversationalContainer: UIViewController {
         setUpNavigationController()
     }
     
-    func changeState(to state: ConversationalState, text: String?) {
+//    func changeState(to state: ConversationalState, text: String?) {
+	
+//        if state == .History {
+//            self.hideSearchController()
+//            self.showConversationalHistory()
+//        }
+//        else if state == .Search {
+//            self.showSearchController(text)
+//        }
+//        else if state == .Browsing {
+//            self.hideSearchController()
+//            self.hideConversationalHistory()
+//        }
         
-        if state == .History {
-            self.hideSearchController()
-            self.showConversationalHistory()
-        }
-        else if state == .Search {
-            self.showSearchController(text)
-        }
-        else if state == .Browsing {
-            self.hideSearchController()
-            self.hideConversationalHistory()
-        }
-        
-    }
+//    }
     
     private func setupConversationalHistory() {
         conversationalHistory.delegate = self.browsing_delegate
