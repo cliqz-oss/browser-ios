@@ -39,7 +39,7 @@ struct URLBarViewUX {
         var theme = Theme()
         theme.borderColor = UIConstants.PrivateModeLocationBorderColor
         theme.activeBorderColor = UIConstants.PrivateModePurple
-        theme.tintColor = UIColor.whiteColor()
+        theme.tintColor = UIColor.white
         theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
@@ -168,13 +168,8 @@ class URLBarView: UIView {
     fileprivate lazy var cancelButton: UIButton = {
         // Cliz: use regular button with icon for cancel button
         let cancelButton = InsetButton()
-<<<<<<< HEAD
-        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), forState: .Normal)
-        cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), forControlEvents: UIControlEvents.TouchUpInside)
-=======
-        cancelButton.setImage(UIImage(named:"urlExpand"), for: UIControlState())
+        cancelButton.setImage(UIImage.templateImageNamed("urlExpand"), for: .normal)
         cancelButton.addTarget(self, action: #selector(URLBarView.SELdidClickCancel), for: UIControlEvents.touchUpInside)
->>>>>>> Swift3 migration
         /*
         let cancelButton = InsetButton()
         cancelButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -217,19 +212,10 @@ class URLBarView: UIView {
     lazy var tabsButton: CliqzTabsButton = { return CliqzTabsButton() }()
 
 
-<<<<<<< HEAD
-    lazy var actionButtons: [UIButton] = {
+    lazy var actionButtons = [UIButton]() /*  = Swift3 migration {
 		// Cliqz: Removed StopReloadButton
         return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton, self.cancelButton]
-    }()
-=======
-    lazy var actionButtons = [UIButton]() //{ [weak self] in
-//		// Cliqz: Removed StopReloadButton
-////		return [UIButton]()
-//		return [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton]
-////		return AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
-//    }()
->>>>>>> Swift3 migration
+    }()*/
 
     // Cliqz: Added to maintain tab count
     fileprivate var tabCount = 1
@@ -267,7 +253,7 @@ class URLBarView: UIView {
     }
 
     fileprivate func commonInit() {
-		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
+		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton, self.cancelButton]
 
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
 		// Cliqz: Commented extra curveView accroding to requirements.
@@ -318,7 +304,7 @@ class URLBarView: UIView {
 
 		cancelButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.trailing.equalTo(self)
+			make.leading.equalTo(self)
             // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
             make.size.equalTo(UIConstants.ToolbarHeight)
 		}
@@ -400,12 +386,23 @@ class URLBarView: UIView {
             // In overlay mode, we always show the location view full width
 			self.locationContainer.snp.remakeConstraints({  make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
+<<<<<<< HEAD
 				make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
 				make.trailing.equalTo(self.cancelButton.snp.leading)
 				//                make.height.equalTo(URLBarViewUX.LocationHeight)
 				make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
 				make.centerY.equalTo(self)
 			})
+=======
+                
+                make.trailing.equalTo(self).offset(-1 * URLBarViewUX.LocationLeftPadding)
+                make.leading.equalTo(self.cancelButton.snp_trailing).offset(-1 * URLBarViewUX.LocationLeftPadding)
+//                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
+                make.centerY.equalTo(self)
+                
+            }
+>>>>>>> development
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
@@ -660,19 +657,14 @@ class URLBarView: UIView {
         }
         
         
-<<<<<<< HEAD
         // Cliqz: Modify the background of the URLBar so that the search text appear as expanded (emphasis the search) and adjusting the status bar
         if currentTheme == Theme.NormalMode {
-            self.backgroundColor = UIColor.whiteColor()
+            self.backgroundColor = UIColor.white
         } else {
             self.backgroundColor = UIConstants.PrivateModeExpandBackgroundColor
         }
         self.applyThemeOnStatusBar(self.currentTheme)
         
-=======
-        // Cliqz: set the background of the URLBar to white so that the search text appear as expanded (emphasis the search)
-        self.backgroundColor = UIColor.white
->>>>>>> Swift3 migration
     }
 
     func leaveOverlayMode(didCancel cancel: Bool = false) {
@@ -930,12 +922,12 @@ extension URLBarView {
         }
     }
 
-    private func applyThemeOnStatusBar(themeName: String) {
+    fileprivate func applyThemeOnStatusBar(_ themeName: String) {
         switch(themeName) {
         case Theme.NormalMode:
-            AppDelegate.changeStatusBarStyle(.Default, backgroundColor: self.backgroundColor!)
+            AppDelegate.changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!)
         case Theme.PrivateMode:
-            AppDelegate.changeStatusBarStyle(.LightContent, backgroundColor: self.backgroundColor!)
+            AppDelegate.changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!)
         default:
             break;
         }
@@ -1083,21 +1075,12 @@ class ToolbarTextField: AutocompleteTextField {
         var themes = [String: Theme]()
         var theme = Theme()
         // Cliqz: Changed TextField colors for forget mode theme
-<<<<<<< HEAD
 		theme.backgroundColor =  UIConstants.PrivateModeExpandBackgroundColor
-        theme.textColor = UIColor.whiteColor()
+        theme.textColor = UIColor.white
         // Cliqz: changed the highlight color of the text field
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor //UIConstants.PrivateModeTextHighlightColor
         // Cliqz: Added Button tint color to Gray
-        theme.buttonTintColor = UIColor.whiteColor()
-=======
-		theme.backgroundColor =  UIConstants.TextFieldBackgroundColor.withAlphaComponent(1)
-        theme.textColor = UIColor.black
-        // Cliqz: changed the highlight color of the text field
-        theme.highlightColor = AutocompleteTextFieldUX.HighlightColor //UIConstants.PrivateModeTextHighlightColor
-        // Cliqz: Added Button tint color to Gray
-        theme.buttonTintColor = UIColor.gray
->>>>>>> Swift3 migration
+        theme.buttonTintColor = UIColor.white
 
         themes[Theme.PrivateMode] = theme
 

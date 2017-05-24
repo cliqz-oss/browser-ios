@@ -595,7 +595,7 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
     }
 }
 
-extension Tab: CliqzWebViewDelegate{
+extension Tab: CliqzWebViewDelegate {
     func didFinishLoadingRequest(request: NSURLRequest?) {
         //finished loading request
         self.url = request?.url

@@ -584,6 +584,7 @@ class BrowserViewController: UIViewController {
             PLCrashReporter.sharedReporter().purgePendingCrashReport()
         */
         if hasPendingCrashReport {
+            hasPendingCrashReport = false
             showRestoreTabsAlert()
         } else {
             log.debug("Restoring tabs.")
@@ -2937,7 +2938,7 @@ extension BrowserViewController: WKNavigationDelegate {
 
     }
 #if CLIQZ
-    func webView(_webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: Error) {
+    func webView(_ _webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         
         guard let container = _webView as? ContainerWebView else { return }
         guard let webView = container.legacyWebView else { return }

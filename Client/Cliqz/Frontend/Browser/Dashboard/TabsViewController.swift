@@ -7,11 +7,15 @@
 //
 
 import Foundation
+import WebImage
 
 class Knobs{
-    static let cellSpacing = 180
-    static let tiltAngle = M_PI / 6.0
-    static let cellHeightMultiplier = CGFloat(0.9)
+    
+    static let minCellSpacing = Double((UIScreen.main.bounds.size.height - 200) / 4.0)
+    static let maxCellSpacing = Double((UIScreen.main.bounds.size.height - 200) / 1.8)
+    static let maxTiltAngle = M_PI / 3.5
+    static let minTiltAngle = M_PI / 9.0
+    static let cellHeight = UIScreen.main.bounds.size.height - 200
     static let landscapeSize = CGSize(width: 200, height: 130)
 }
 
@@ -82,12 +86,12 @@ class TabsViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.collectionView.reloadData()
-        
+        self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
 	}
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollToCurrentTabCell()
+        //scrollToCurrentTabCell()
     }
     
 	override func viewWillLayoutSubviews() {
@@ -211,43 +215,67 @@ extension TabsViewController: UICollectionViewDataSource {
         
         let freshtab = tab.displayURL?.absoluteString.contains("cliqz/goto.html") ?? false
         
-        if tab.displayURL != nil && !freshtab{
+        if tab.displayURL != nil && !freshtab {
             cell.descriptionLabel.text = tab.displayTitle
-            cell.domainLabel.text = tab.displayURL?.absoluteString
+            cell.domainLabel.text = tab.displayURL?.baseDomain()
         } else {
-            cell.domainLabel.text = NSLocalizedString("New Tab", tableName: "Cliqz", comment: "New tab title")
-            cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
-        }
-        
-        cell.domainLabel.accessibilityLabel = cell.domainLabel.text
-
-        if tab.isPrivate{
-            cell.makeCellPrivate()
-        }
-        else{
-            cell.makeCellUnprivate()
-        }
-        
-        let url = tab.displayURL?.absoluteString ?? emptyTabDefaultLogoUrl
-        
-        LogoLoader.loadLogo(url, completionBlock: { (image, error) in
-            guard cell.tag == indexPath.row else { return }
-            if image != nil{
-                cell.setSmallUpperLogo(image)
-                cell.setBigLogo(image)
+            
+            cell.domainLabel.text = NSLocalizedString("Cliqz Tab" , tableName: "Cliqz", comment: "New tab title")
+            
+            if tab.isPrivate {
+                cell.descriptionLabel.text = NSLocalizedString("You are browsing in Forget Mode", tableName: "Cliqz", comment: "Private Tab description")
             }
             else {
-                let fakeLogo = LogoLoader.generateFakeLogo(url)
-                cell.setBigLogoView(fakeLogo)
-                let secondFakeLogo = LogoLoader.generateFakeLogo(url)
-                cell.setSmallUpperLogoView(secondFakeLogo)
+                cell.descriptionLabel.text = NSLocalizedString("Topsites", tableName: "Cliqz", comment: "Title on the tab view, when no URL is open on the tab")
             }
-        })
-        
-        
+            
+        }
+
+        cell.domainLabel.accessibilityLabel = cell.domainLabel.text
+
+        if tab.isPrivate {
+            cell.makeCellPrivate()
+        }
+        else {
+            cell.makeCellUnprivate()
+        }
+
+        if let favIconString = tab.displayFavicon?.url, let favIconUrl = URL(string:favIconString) {
+
+            let options = [SDWebImageOptions.lowPriority]
+
+            SDWebImageManager.shared().downloadImage(with: favIconUrl, options: SDWebImageOptions(options), progress: nil, completed: { (image , error , cacheType, success , given_url) in
+                guard cell.tag == indexPath.row else { return }
+                if success {
+                    cell.setSmallUpperLogo(image)
+                } else {
+                    cell.setSmallUpperLogo(UIImage(named: "favIconDefault"))
+                }
+            })
+        } else {
+            cell.setSmallUpperLogo(UIImage(named: "favIconDefault"))
+        }
+
+        if let url = tab.displayURL?.absoluteString {
+            
+            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+                guard cell.tag == indexPath.row else { return }
+                
+                if image != nil {
+                    cell.setBigLogo(image: image, cliqzLogo: false)
+                }
+                else {
+                    let fakeLogo = LogoLoader.generateFakeLogo(url: url, fontSize: 44)
+                    cell.setBigLogoView(fakeLogo)
+                }
+            })
+        }
+        else{
+            cell.setBigLogo(image: UIImage(named: "cliqzTabLogo"), cliqzLogo: true)
+        }
+
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
-
     }
 }
 
@@ -280,7 +308,7 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var cellSize = UIScreen.main.bounds.size
-        
+
         if UIDevice.current.userInterfaceIdiom == .phone {
             cellSize.width /= 1.22
         }
@@ -293,10 +321,13 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         if indexPath.item == collectionView.numberOfItems(inSection: 0) - 1 {
-            return CGSize(width: cellSize.width, height: cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
+            return CGSize(width: cellSize.width, height: Knobs.cellHeight)//cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
         }
         
-        return CGSize(width: cellSize.width, height: CGFloat(Knobs.cellSpacing))
+        let count = collectionView.numberOfItems(inSection: 0)
+        let interCellSpace = Knobs.minCellSpacing + (1/pow(Double(count - 1),1.2)) * (Knobs.maxCellSpacing - Knobs.minCellSpacing)
+        
+        return CGSize(width: cellSize.width, height: CGFloat(interCellSpace))
     }
 }
 
@@ -347,7 +378,12 @@ extension TabsViewController: TabManagerDelegate {
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
-		self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])//deleteRowsAtIndexPaths([NSIndexPath(forRow: removeIndex, inSection: 0)], withRowAnimation: .Left)
+        if self.collectionView.numberOfItems(inSection: 0) <= 2{
+            UIView.animate(withDuration: 0.1, animations: {
+                self.collectionView.contentOffset = CGPoint(x: 0.0,y: 0.0)
+            })
+        }
+        self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
     }
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {

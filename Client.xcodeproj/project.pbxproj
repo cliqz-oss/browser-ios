@@ -7650,7 +7650,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Firefox;
@@ -7877,7 +7877,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "UniversalBeta App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -8156,7 +8156,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "UniversalBeta App Store";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};

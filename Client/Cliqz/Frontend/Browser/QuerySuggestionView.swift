@@ -39,9 +39,8 @@ class QuerySuggestionView: UIView {
         
         NotificationCenter.default.addObserver(self, selector:  #selector(QuerySuggestionView.viewRotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         
-        if !QuerySuggestions.isEnabled() {
-            self.isHidden = true
-        }
+        //initially hide the view until the user type query
+        self.isHidden = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,10 +57,11 @@ class QuerySuggestionView: UIView {
         
         guard !text.isEmpty else {
             clearSuggestions()
+            self.isHidden = true
             return
         }
-
-		QuerySuggestions.getSuggestions(text) { [weak self] (responseData) in
+        self.isHidden = false
+        QuerySuggestions.getSuggestions(text) { [weak self] responseData in
             self?.processSuggestionsResponse(text, responseData: responseData)
         }
         

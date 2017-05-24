@@ -1,390 +1,265 @@
 /* The text shown in the search field */
 "Search" = "Rechercher";
-
 /* Error message title */
 "Sorry" = "Désolé";
-
 /* Error message when JS scripts for search can't be loaded */
 "Something went wrong, the script wasn't loaded." = "Quelque chose s'est mal passé, le script n'a pas pu être chargé.";
-
 /* Button label to cancel entering a URL or search query
  Cancel */
 "Cancel" = "Annuler";
-
 /* Button label on Alert view */
 "Retry" = "Réessayer";
-
 /* Search Recommendations and top visited sites title */
 "Search recommendations" = "Recommandations";
-
 /* Search history title */
 "Search history" = "Historique";
-
 /* Show Cliqz legal page. See https://cliqz.com/legal" */
 "Imprint" = "Légal";
-
 /* Footnote message for feedback */
 "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback pour le navigateur Cliqz (Version %@) pour iOS (Version %@) de %@";
-
 /* Title for No Email account pop-up */
 "No Email account title" = "Aucune adresse email";
-
 /* Text for the missing email account for sending feedback pop-up */
-"No Email account message" = "Veuille entrer une adresse email afin d'envoyer un feedback.";
-
+"No Email account message" = "Veuillez entrer une adresse email afin d'envoyer un feedback.";
 /* Error title */
 "The Internet connection appears to be offline." = "La connexion internet semble interrompue.";
-
 /* Title for `Top news` home shortcut. */
 "Top news" = "Top news";
-
 /* Title for `Last site` home shortcut. */
-"Last site" =  "Récemment visités";
-
+"Last site" = "Récemment visités";
 /* Share footer */
 "Shared with CLIQZ for iOS" = "Partagé avec CLIQZ pour iOS";
-
 /* Enable News Push Notifications */
 "Enable News Push Notifications" = "Notifications pour l'actualité";
-
 /* OK button in the 'Show blocked top-sites' alert */
 /* Button label to `OK` in news notification permission screen */
 "OK" = "OK";
-
 /* Cancel button in the 'Show blocked top-sites' alert */
 "Cancel" = "Annuler";
-
 /* Button label to `Yes please!` in news notification permission screen */
 "Yes please!" = "Oui SVP !";
-
 /* Button label to `Later` in news notification permission screen */
 "Remind me later" = "Me le rappeler plus tard";
-
 /* Button label to `No` in news notification permission screen */
 "No thanks" = "Non merci";
-
 /* Description text displayed when there are no open tabs while in Forget mode */
-"Forget Mode" = "Mode oubli";
-
+"Forget Mode" = "Mode Oubli";
 /* Description text displayed when there are no open tabs while in Forget mode */
 "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "L'historique de navigation ainsi que les cookies seront supprimés. Toutefois, les téléchargements et le marque-pages seront sauvegardés.";
-
 /* Context/Sharing menu item for downloading youtube videos */
 "Download youtube video" = "Regarder la vidéo en mode hors-connexion";
-
 /* Tabs title on dashboard */
 "Tabs" = "Onglets";
-
 /* History title on dashboard */
 "History" = "Historique";
-
 /* Favorites title on dashboard
    Settings item for clearing favorite history */
 "Favorites" = "Favoris";
-
 /* Add Favorites */
 "Add Favorite" = "Ajouter aux favoris";
-
 /* Setting menu title */
 "Settings" = "Paramètres";
-
 /* "Widget item for a new tab" */
-"New Tab" = "Nouvel onglet";
-
+"Cliqz Tab" = "Cliqz Tab";
 /* New private tab title */
-"New Private Tab" = "Nouvel onglet en mode oubli";
-
+"New Private Tab" = "Nouvel Onglet en Mode Oubli";
+/* Private Tab description */
+"You are browsing in Forget Mode" = "Vous surfez en Mode Oubli";
 /* Open new tab title */
-"Open New Tab" = "Ouvrir nouvel onglet";
-
+"Open New Tab" = "Ouvrir Nouvel Onglet";
 /* Open new forget mode tab title */
-"Open New Forget Tab" = "Ouvrir nouvel onglet en mode oubli";
-
+"Open New Forget Tab" = "Ouvrir Nouvel Onglet en Mode Oubli";
 /* Show images title */
 "Show Images" = "Montrer les images";
-
 /* Hide images title */
 "Hide Images" = "Masquer les images";
-
 /* Night mode title */
 "Night Mode" = "Night Mode";
-
 /* Turn off Night mode title */
 "Night Mode off" = "Night Mode Off";
-
 /* Remove favorites title */
 "Remove Favorites" = "Enlever des Favoris";
-
 /* Dashboard navigation bar title */
 "Overview" = "Aperçu";
-
 /* Title on the tab view, when no URL is open on the tab */
 "Topsites" = "Sites les plus visités et actualité";
-
 /* Antitracking UI top title */
-"Data is protected" = "Tes données sont protégées";
-
+"Data is protected" = "Vos données sont protégées";
 /* Antitracking UI subtitle */
 "Private data points" = "Données personnelles sécurisées";
-
 /* Antitracking UI title for companies column */
 "Companies title" = "Entreprises traqueuses";
-
 /* Antitracking UI title for tracked count column */
 "Trackers count title" = "Données personnelles";
-
 /* AdBlocking UI title for companies column */
 "Companies" = "Compagnies";
-
 /* AdBlocking UI title for tracked count column */
 "Ads" = "Pubs";
-
 /* Antiphishing alert title */
-"Warning: deceptive website!" =  "Attention : site malveillant !";
-
+"Warning: deceptive website!" = "Attention : site malveillant !";
 /* Antiphishing alert message */
-"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser tes identifiants, tes mots de passe ou toutes autres données sensibles.";
-
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser vos identifiants, vos mots de passe ou toutes autres données sensibles.";
 /* Back to safe site buttun title in antiphishing alert title */
 "Back to safe site" = "Retourner à la page sûre";
-
 /* Continue despite warning buttun title in antiphishing alert title */
 "Continue despite warning" = "Continuer malgré l'avertissement";
-
 /* Context menu option for opening a link in a new private tab */
-"Open In New Forget Tab" = "Ouvrir dans un onglet en mode oubli";
-
+"Open In New Forget Tab" = "Ouvrir dans un Onglet en Mode Oubli";
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
-
 /* Second card text in onBorading */
 "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
-
 /* Thrid card text in onBorading */
 "When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
-
 /* Start buttun title for onBorading */
 "Let's start!" = "Commencer";
-
 /* Toast message shown when youtube video download started */
 "The video is being downloaded." = "La vidéo a été téléchargée.";
-
 /* Toast message shown when youtube video download faild */
 "The download failed." = "Échec lors du téléchargement.";
-
 /* Toast message shown when youtube video is Successfully downloaded */
 "The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Vidéo » afin de visionner la vidéo.";
-
 /* Brading label for onBorading */
 "Faster and safer" = "Instantanée et sans intermédiaire";
-
 /* subtitle label for onBorading */
 "SEARCH ENGINE \n IN THE BROWSER" = "LA RECHERCHE INTÉGRÉE \nAU NAVIGATEUR";
-
 /* Control Center hint title */
 "Control Center" = "Panneau de Contrôle";
-
 /* Control Center hint description */
 "Customize the protection of your data to your needs." = "Personnalisez le type de protection de vos données.";
-
 /* Control Center Option 1*/
 "Protection enabled" = "Protection active";
-
 /* Control Center Option 2*/
 "Protection disabled" = "Protection inactive";
-
 /* Cliqz search hint title */
 "Result Cards" = "Fiches des résultats";
-
 /* Cliqz search hint description */
 "Relevant results are shown instantly during search." = "Les résultats pertinents sont affichés pendant la recherche.";
-
 /* Youtube downloader action sheet title */
-"Video quality" = "Qualité vidéo";
-
+"Video quality" = "Qualité de la vidéo";
 /* Youtube downloader action sheet message */
-"Please select video quality" = "Veuille selectionner la qualité de la vidéo";
-
+"Please select video quality" = "Veuillez selectionner la qualité de la vidéo";
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
-
 /* Title to expand news stream */
 "MoreNews" = "Plus d'actualités";
-
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
-
 /* Title on Freshtab for forget mode */
-"Forget Tab" = "Mode oubli";
-
+"Forget Tab" = "Mode Oubli";
 /* Description on Freshtab for forget mode */
-"Forget Tab Description" = "Tu surfes en Mode Oubli : les sites web que tu visites dans ce mode ne seront pas sauvegardés dans ton historique et les données locales, cookies inclus, ne seront pas conservées.";
-
+"Forget Tab Description" = "Vous surfez en Mode Oubli : les sites web que vous visitez dans ce mode ne seront pas sauvegardés dans votre historique et les données locales, cookies inclus, ne seront pas conservées.";
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "Tu accéderas à tes sites les plus visités ici";
-
+"Empty TopSites hint" = "Vous accéderez à vos sites les plus visités ici";
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
-
 /* Ad-Blocking panel name on control center. */
 "Ad-Blocking" = "Bloqueur de Pubs";
-
 /* Anti-Phishing panel name on control center. */
 "Anti-Phishing" = "Anti-Phishing";
-
 /* Learn more label on control center panel. */
 "Learn more" = "En savoir plus";
-
 /* Activate button in control center panel. */
 "Activate" = "Activer";
-
 /* Anti-tracking panel title in the control center when it is enabled. */
-"Your data is protected" = "Tes données personnelles sont protégées";
-
+"Your data is protected" = "Vos données personnelles sont protégées";
 /* Anti-tracking panel title in the control center when it is disabled
  Anti-Phishing panel title in the control center if the current website is a phishing one. */
-"Your data is not protected" = "Tes données personnelles ne sont pas protegées";
-
+"Your data is not protected" = "Vos données personnelles ne sont pas protegées";
 /* Anti-tracking panel subtitle in the control center when it is enabled. */
 "Private data points have been removed" = "données personnelles sécurisées";
-
 /* Anti-tracking panel subtitle in the control center when it is disabled */
 "Anti-Tracking is turned off for this website" = "Anti-Tracking est désactivé pour ce site";
-
 /* AdBlocker panel title in the control center when it is enabled. */
-"You surf the web without ads" = "Tu surferas sans pubs";
-
+"You surf the web without ads" = "Vous surferez sans pubs";
 /* AdBlocker panel title in the control center when it is disabled. */
-"You surf the web with ads" = "Tu verras des pubs";
-
+"You surf the web with ads" = "Vous verrez des pubs";
 /* AdBlocker panel subtitle in the control center when it is enabled. */
 "Ads have been blocked" = "pubs ont été bloquées";
-
 /* AdBlocker panel subtitle in the control center when it is disabled for the current website. */
 "Ad-Blocking is turned off for this website" = "Bloqueur de Pubs est désactivé pour ce site";
-
 /* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
 "Ad-Blocking is turned off" = "Bloqueur de Pubs est désactivé";
-
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "La technologie Anti-Phishing détecte et bloque les sites Web frauduleux qui tentent d'obtenir tes mots de passe ou tes données personnelles avant de visiter le site.";
-
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "La technologie Anti-Phishing détecte et bloque les sites Web frauduleux qui tentent d'obtenir vos mots de passe ou vos données personnelles avant de visiter le site.";
 /* Anti-Phishing panel title in the control center if the current website is safe. */
-"You are safe" = "Tu es en sûreté";
-
+"You are safe" = "Vous êtes en sûreté";
 /* Anti-Phishing panel subtitle in the control center if the current website is safe. */
 "No suspicious activities detected" = "Aucune activité suspicieuse détectée";
-
 /* Anti-Phishing panel subtitle in the control center if the current website is a phishing one. */
 "Suspicious activities were detected" = "Des activités suspectes ont été détectées";
-
 /* AntiTracking Information text for landscape mode. */
-"AntiTracking Information" = "Liste détaillée";//"Informations sur le tracking";
-
+"AntiTracking Information" = "Liste détaillée\";//\"Informations sur le tracking";
 /* AdBlocking Information text for landscape mode. */
-"AdBlocking Information" = "Liste détaillée";//"Informations sur le bloquage Bloqueur de Pubs";
-
+"AdBlocking Information" = "Liste détaillée\";//\"Informations sur le bloquage Bloqueur de Pubs";
 /* Alert title for turning on location service when clicking share location on local card */
 "Turn on Location Services" = "Activer le service de localisation";
-
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les Réglages de l'application CLIQZ :\n\n1. Clique sur 'Service de localisation'\n2. Saisis 'Lorsque l'app est active'";
-
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les Réglages de l'application CLIQZ :\n\n1. Cliquez sur 'Service de localisation'\n2. Saisissez 'Lorsque l'app est active'";
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Pour partager ta position, rends-toi dans les réglages du téléphone:\n\n1. Active le service de localisation\n2. Sélectionne CLIQZ\n3. Sélectionne \"Lorsque l'app est active\"";
-
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les réglages du téléphone:\n\n1. Activez le service de localisation\n2. Sélectionnez CLIQZ\n3. Sélectionnez \"Lorsque l'app est active\"";
 /* Not now option for turning on location service */
 "Not Now" = "Pas maintenant";
-
 /** Settings **/
 
 /* [Settings] Search section title */
 "Search" = "Recherche";
-
 /* [Settings] Search Results for */
 "Search Results for" = "Résultats pour";
-
 /* Localized String for specific region */
 "region-DE" = "Allemagne";
-
 /* Localized String for specific region */
 "region-US" = "États-Unis";
-
 /* Localized String for specific region */
 "region-FR" = "France";
-
 /* [Settings] Search Query Suggestions */
 "Search Query Suggestions" = "Suggestions de recherche";
-
 /* [Settings] Block explicit content */
 "Block Explicit Content" = "Bloquer le contenu explicit";
-
 /* [Settings] On status */
 "On" = "Activé";
-
 /* [Settings] Off status */
 "Off" = "Désactivé";
-
 /* [Settings] Human Web */
 "Human Web" = "Human Web";
-
 /* [Settings -> Human Web]Footer text for Fair Blocking section" */
-"Human Web footer" = "CLIQZ travaille avec des données anonymisées sur les recherches et les visites aux sites web. Nous appelons la technologie qui collecte ces données pour construire l'index \"Human Web\".";
-
+"Human Web footer" = "CLIQZ travaille avec des données anonymisées sur les recherches et les visites aux sites web. Nous appelons la technologie qui collecte ces données pour construire l'index `Human Web`.";
 /* [Settings] Complementary Search */
-"Complementary Search" = "Recherche Complémentaire";
-
+"Complementary Search" = "Recherche complémentaire";
 /* [Settings] Browsing & History section header */
 "Browsing & History" = "Navigation & Historique";
-
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Bloquer les pop-ups";
-
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Bloqueur de Pubs (Bêta)";
-
 /* [Settings -> Block Ads] Fair Mode */
 "Fair Mode" = "Équitable";
-
 /* [Settings -> Block Ads] Block Ads footer */
 "Block Ads footer" = "Le navigateur Cliqz doit d'abord télécharger certains composants afin de mettre en marche le Bloqueur de Pubs. Pour cela, vous devez être connecté·e· au Wi-Fi.";
-
 /* [Settings -> Block Ads] Fair Blocking footer */
 "Fair Mode footer" = "Un bloquage \"équitable\" qui affiche des pubs seulement dans certains cas sera ajouté bientôt.";
-
 /* [Settings -> Clear Private Data] Clear Private Data footer */
 "Clear Private Data footer" = "Seulement les données ci-selectionnées seront effacées.";
-
 /* [Settings] Restore Most Visited Websites */
 "Restore Most Visited Websites" = "Restaurer les sites les plus visités";
-
 /* [Settings] Text of the 'Restore Most Visited Websites' alert */
 "All most visited websites will be shown again on the startpage." = "Tous les sites les plus visités seront affichés sur la page d'accueil.";
-
 /* [Settings] Help section header */
 "Help" = "Aide";
-
 /* [Settings] FAQs & Support */
 "FAQ & Support" = "FAQ & Support";
-
 /* [Settings] Get the best out of CLIQZ */
 "Get the best out of CLIQZ" = "Obtenir le meilleur de CLIQZ";
-
 /* [Settings] Report Website */
 "Report Website" = "Signaler le site web";
-
 /* [Settings] About Cliqz section header */
 "About Cliqz" = "À propos de Cliqz";
-
 /* [Settings] Rate Us */
 "Rate Us" = "Noter Cliqz";
-
 /* [Settings] About */
 "About" = "À propos de nous";
-
 /* [Settings -> About] Privacy Policy */
 "Privacy Policy" = "Politique de confidentialité";
-
 /* [Settings -> About] Licenses */
 "Licenses" = "Licenses";

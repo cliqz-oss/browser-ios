@@ -34,6 +34,7 @@ class TabViewCell: UICollectionViewCell {
     private var bigLogoImageView: UIImageView
     private var smallCenterImageView: UIImageView
     private var fakeSmallCenterView: UIView?
+    private var cliqzLogoImageView: UIImageView
     
     var deleteButton: UIButton
     var isPrivateTabCell: Bool = false
@@ -41,7 +42,7 @@ class TabViewCell: UICollectionViewCell {
     
     private var currentTransform: CATransform3D?
     
-    func showShadow(visible:Bool) {
+    func showShadow(_ visible: Bool) {
         if visible{
             layer.shadowColor = UIColor.black.cgColor
         }
@@ -64,13 +65,24 @@ class TabViewCell: UICollectionViewCell {
         self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
     }
     
-    func setSmallUpperLogo(_ image:UIImage?) {
+    func isSmallUpperLogoNil() -> Bool {
+        return self.logoImageView.image == nil
+    }
+    
+    func setSmallUpperLogo(_ image: UIImage?) {
         guard let image = image else { return }
         self.logoImageView.image = image
     }
     
-    func setBigLogo(_ image:UIImage?) {
+    func setBigLogo(image:UIImage?, cliqzLogo: Bool) {
         guard let image = image else { return }
+        
+        if cliqzLogo {
+            self.bigLogoImageView.backgroundColor = UIConstants.CliqzThemeColor
+            self.cliqzLogoImageView.image = image
+            return
+        }
+        
         self.smallCenterImageView.image = image
         let bg_color = image.getPixelColor(pos: CGPoint(x: 10,y: 10))
         self.bigLogoImageView.backgroundColor = bg_color
@@ -86,7 +98,7 @@ class TabViewCell: UICollectionViewCell {
         }
     }
     
-    func setBigLogoView(_ view:UIView?) {
+    func setBigLogoView(_ view: UIView?) {
         guard let view = view else { return }
         self.fakeSmallCenterView = view
         self.displayView.addSubview(view)
@@ -111,13 +123,16 @@ class TabViewCell: UICollectionViewCell {
         //logoImageView
         let small_logo_imageview = UIImageView()
         small_logo_imageview.backgroundColor = UIColor(colorString:"E5E4E5")
+        small_logo_imageview.layer.masksToBounds = true
+        small_logo_imageview.layer.cornerRadius = 2
+        small_logo_imageview.backgroundColor = UIColor.clear
         displayView.addSubview(small_logo_imageview)
         logoImageView = small_logo_imageview
         
         //deleteButton
         
-        let delete_button = UIButton(type: .custom)
-		delete_button.setImage(UIImage(named: "find_close")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
+        let delete_button = UIButton(type:.custom)
+        delete_button.setImage(UIImage(named: "TabClose")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
         displayView.addSubview(delete_button)
         deleteButton = delete_button
         deleteButton.accessibilityLabel = "closeTab"
@@ -132,24 +147,34 @@ class TabViewCell: UICollectionViewCell {
         
         //descriptionLabel
         let description_label = UILabel()
-        description_label.font = UIFont.boldSystemFont(ofSize: 18)
+        description_label.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
         description_label.text = ""
         description_label.numberOfLines = 0
         displayView.addSubview(description_label)
         descriptionLabel = description_label
-        //descriptionLabel.accessibilityLabel = "New Tab, Most visited sites and News"
         
         //bigLogoImage
         let big_logo_imageView = UIImageView()
         big_logo_imageView.backgroundColor = UIColor(colorString:"E5E4E5")
+        big_logo_imageView.layer.masksToBounds = true
+        big_logo_imageView.layer.cornerRadius = 3
         displayView.addSubview(big_logo_imageView)
         bigLogoImageView = big_logo_imageView
+        
         
         //smaller image view in the center - this displays the actual logo
         let smaller_imageView = UIImageView()
         smaller_imageView.backgroundColor = UIColor.clear
         bigLogoImageView.addSubview(smaller_imageView)
         smallCenterImageView = smaller_imageView
+        
+        //new tab cliqz logo image view
+        
+        let cliqz_imgView = UIImageView()
+        cliqz_imgView.backgroundColor = UIColor.clear
+        cliqz_imgView.contentMode = .scaleAspectFit
+        bigLogoImageView.addSubview(cliqz_imgView)
+        cliqzLogoImageView = cliqz_imgView
 
         super.init(frame: frame)
         
@@ -210,6 +235,7 @@ class TabViewCell: UICollectionViewCell {
         self.bigLogoImageView.image = nil
         self.bigLogoImageView.backgroundColor = UIColor(colorString:"E5E4E5")
         self.smallCenterImageView.image = nil
+        self.cliqzLogoImageView.image = nil
         
         self.fakeLogoView?.removeFromSuperview()
         self.fakeSmallCenterView?.removeFromSuperview()
@@ -244,17 +270,17 @@ class TabViewCell: UICollectionViewCell {
         
         if isPortrait {
 			self.displayView.snp.remakeConstraints { (make) in
-                self.showShadow(visible: true)
+                self.showShadow(true)
                 make.left.right.top.equalTo(self.contentView)
-                make.height.equalTo(self.contentView.frame.width * Knobs.cellHeightMultiplier)
+                make.height.equalTo(Knobs.cellHeight) //* Knobs.cellHeightMultiplier)
             }
             
-			self.logoImageView.snp.makeConstraints({ (make) in
+            self.logoImageView.snp_remakeConstraints { (make) in
                 self.logoImageView.isHidden = false
-                make.top.equalTo(self.displayView)
+                make.centerY.equalTo(self.domainLabel)
                 make.left.equalTo(self.displayView).inset(10)
-                make.width.height.equalTo(44.0)
-            })
+                make.width.height.equalTo(30)
+            }
             
 			self.deleteButton.snp.remakeConstraints({ (make) in
                 make.top.equalTo(self.displayView)
@@ -262,18 +288,18 @@ class TabViewCell: UICollectionViewCell {
                 make.width.height.equalTo(44.0)
             })
             
-			self.domainLabel.snp.remakeConstraints({ (make) in
-                make.top.equalTo(self.displayView)
-                make.left.equalTo(self.logoImageView).offset(54.0)
+            self.domainLabel.snp_remakeConstraints { (make) in
+                make.top.equalTo(self.displayView).inset(14)
+                make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(44.0)
-            })
+                make.height.equalTo(30.0)
+            }
             
 			self.descriptionLabel.snp.remakeConstraints { (make) in
                 self.descriptionLabel.isHidden = false
                 make.top.equalTo(self.domainLabel.snp.bottom)
                 make.left.right.equalTo(self.displayView).inset(10.0)
-                make.height.equalTo(54.0)//54
+                make.height.equalTo(50.0)//54
             }
             
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
@@ -285,10 +311,17 @@ class TabViewCell: UICollectionViewCell {
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(80.0)//80
             }
-        } else {
-			self.displayView.snp.remakeConstraints { (make) in
-                self.showShadow(visible: false)
-				make.left.right.top.bottom.equalTo(self.contentView)
+            
+            self.cliqzLogoImageView.snp_remakeConstraints({ (make) in
+                make.center.equalTo(self.bigLogoImageView)
+                make.left.right.equalTo(self.bigLogoImageView).inset(50)
+            })
+        }
+        
+        else {
+            self.displayView.snp_remakeConstraints { (make) in
+                self.showShadow(false)
+                make.left.right.top.bottom.equalTo(self.contentView)
             }
             
 			self.logoImageView.snp.remakeConstraints({ (make) in
@@ -321,6 +354,10 @@ class TabViewCell: UICollectionViewCell {
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(40.0)//80
             }
+            self.cliqzLogoImageView.snp_remakeConstraints({ (make) in
+                make.center.equalTo(self.bigLogoImageView)
+                make.left.right.equalTo(self.bigLogoImageView).inset(50)
+            })
         }
         
         

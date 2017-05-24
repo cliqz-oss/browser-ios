@@ -522,7 +522,7 @@ extension CliqzWebView: UIWebViewDelegate {
 		return result
 	}
 
-	func webViewDidStartLoad(webView: UIWebView) {
+	func webViewDidStartLoad(_ webView: UIWebView) {
         backForwardList.update()
 		progress?.webViewDidStartLoad()
 		if let nd = self.navigationDelegate {
@@ -553,12 +553,12 @@ extension CliqzWebView: UIWebViewDelegate {
         
 	}
 	
-	func webView(_ webView: UIWebView, didFailLoadWithError error: NSError) {
+	func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
 		// The error may not be the main document that failed to load. Check if the failing URL matches the URL being loaded
 		
-		if let errorUrl = error.userInfo[NSURLErrorFailingURLErrorKey] as? Foundation.URL {
+		if let errorUrl = (error as NSError).userInfo[NSURLErrorFailingURLErrorKey] as? Foundation.URL {
 			var handled = false
-			if error.code == -1009 /*kCFURLErrorNotConnectedToInternet*/ {
+			if (error as NSError).code == -1009 /*kCFURLErrorNotConnectedToInternet*/ {
 				let cache = URLCache.shared.cachedResponse(for: URLRequest(url: errorUrl))
 				if let html = cache?.data.utf8EncodedString, html.characters.count > 100 {
 					loadHTMLString(html, baseURL: errorUrl)
@@ -569,7 +569,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			if !handled && url?.absoluteString == errorUrl.absoluteString {
 				if let nd = navigationDelegate {
 					globalContainerWebView.legacyWebView = self
-					nd.webView?(globalContainerWebView, didFail: nullWKNavigation, withError: error ?? NSError.init(domain: "", code: 0, userInfo: nil))
+					nd.webView?(globalContainerWebView, didFail: nullWKNavigation, withError: error)
 				}
 			}
 		}

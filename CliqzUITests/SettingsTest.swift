@@ -10,7 +10,6 @@ import XCTest
 import KIF
 
 class SettingsTests: KIFTestCase {
-    
 
     override func tearDown() {
         if tester.viewExistsWithLabel("Settings"){
@@ -168,6 +167,10 @@ class SettingsTests: KIFTestCase {
         XCTAssertTrue(tester.waitForView(withAccessibilityLabel: "France", traits: UIAccessibilityTraitSelected) != nil ,"Search results for  France is not selected.")
         tester.tapView(withAccessibilityLabel: "United States")
         XCTAssertTrue(tester.waitForView(withAccessibilityLabel: "United States", traits: UIAccessibilityTraitSelected) != nil ,"Search results for United States is not selected.")
+        tester.tapView(withAccessibilityLabel: "Germany")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
     }
     
     func testViewHumanWebSettings(){
@@ -177,6 +180,9 @@ class SettingsTests: KIFTestCase {
         tester.tapView(withAccessibilityLabel: "Human Web, On")
         let humanWebSlider = tester.waitForView(withAccessibilityLabel: "Human Web", traits: UIAccessibilityTraitButton)
         XCTAssertTrue(humanWebSlider?.accessibilityValue == "1", "Human web is not activated by Default, it should be activated.")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
     }
     
     func testViewAdBlockSettings(){
@@ -186,6 +192,9 @@ class SettingsTests: KIFTestCase {
         tester.tapView(withAccessibilityLabel: "Ad-Blocking (Beta), Off")
         let adBlockSlider = tester.waitForView(withAccessibilityLabel: "Ad-Blocking (Beta)", traits: UIAccessibilityTraitButton)
         XCTAssertTrue(adBlockSlider?.accessibilityValue == "0", "Ad-Blocking (Beta) is activated by Default, it shouldn't be activated.")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
     }
     
     func testViewClearPrivateDataSettings(){
@@ -198,11 +207,14 @@ class SettingsTests: KIFTestCase {
         let cacheSlider = tester.waitForView(withAccessibilityLabel: "Cache", traits: UIAccessibilityTraitButton)
         let cookiesSlider = tester.waitForView(withAccessibilityLabel: "Cookies", traits: UIAccessibilityTraitButton)
         let offlineWebsiteDataSlider = tester.waitForView(withAccessibilityLabel: "Offline Website Data", traits: UIAccessibilityTraitButton)
-        XCTAssertTrue(browsingHistorySlider?.accessibilityValue == "1", "Browsing History is  not activated by Default, it should be activated.")
+        XCTAssertTrue(browsingHistorySlider?.accessibilityValue == "1", "Browsing History is  not activated by Default, it should be activated \(browsingHistorySlider?.accessibilityValue).")
         XCTAssertTrue(favoritesSlider?.accessibilityValue == "0", "Favorites is activated by Default, it shouldn't be activated.")
         XCTAssertTrue(cacheSlider?.accessibilityValue == "0", "Cache is activated by Default, it shouldn't be activated.")
         XCTAssertTrue(cookiesSlider?.accessibilityValue == "0", "Cookies is activated by Default, it shouldn't be activated.")
         XCTAssertTrue(offlineWebsiteDataSlider?.accessibilityValue == "0", "Offline Website Data is activated by Default, it shouldn't be activated.")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
     }
     
 //    func testRestoreMostVisitedWebsites(){
@@ -214,6 +226,18 @@ class SettingsTests: KIFTestCase {
 //        XCTAssertTrue(tester.viewExistsWithLabel("Cancel"), "Restore Most Visited Websites pop up is not displayed")
 //        tester.tapViewWithAccessibilityLabel("Cancel")
 //    }
+    
+    func testviewFAQAndSupportSettings(){
+        showToolBar()
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "FAQ & Support")
+        tester.waitForAnimationsToFinish()
+        tester.waitForView(withAccessibilityLabel: "https://cliqz.com/en/support")
+        XCTAssertTrue(tester.viewExistsWithLabel("https://cliqz.com/en/support"), "Expected url https://cliqz.com/en/support, found something else")
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.swipeView(withAccessibilityLabel: "https://cliqz.com/en/support", in: KIFSwipeDirection.left)
+    }
     
 }
 
