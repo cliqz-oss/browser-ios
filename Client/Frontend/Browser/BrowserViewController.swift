@@ -1740,10 +1740,6 @@ extension BrowserViewController {
 }
 
 extension BrowserViewController: URLBarDelegate {
-    
-    func urlBarDidPressHome(urlBar: URLBarView) {
-        self.navigationController?.popViewController(animated: false)
-    }
 
     func urlBarDidPressReload(_ urlBar: URLBarView) {
         tabManager.selectedTab?.reload()
@@ -1753,7 +1749,13 @@ extension BrowserViewController: URLBarDelegate {
         tabManager.selectedTab?.stop()
     }
 
+	func urlBarDidPressHome(urlBar: URLBarView) {
+		self.navigationController?.popViewController(animated: false)
+        ConversationalHistoryAPI.homePressed()
+	}
+
     func urlBarDidPressTabs(_ urlBar: URLBarView) {
+
         // Cliqz: telemetry logging for toolbar
         self.logToolbarOverviewSignal()
         
