@@ -29,6 +29,7 @@ protocol TabToolbarProtocol {
     func updateBookmarkStatus(isBookmarked: Bool)
     func updateReloadStatus(isLoading: Bool)
     func updatePageStatus(isWebPage isWebPage: Bool)
+	func updateTabStatus(keepOpen: Bool)
 }
 
 @objc
@@ -129,7 +130,8 @@ public class TabToolbarHelper: NSObject {
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), forControlEvents: UIControlEvents.TouchUpInside)
         
         // Cliqz: Add tabs button
-        toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), forState: .Normal)
+		toolbar.tabsButton.setImage(UIImage(named: "tabs"), forState: .Normal)
+		toolbar.tabsButton.setImage(UIImage(named: "tabs_selected"), forState: .Selected)
         toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
         let longPressGestureTabsButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressTabs(_:)))
 //        toolbar.tabsButton.addGestureRecognizer(longPressGestureTabsButton)
@@ -145,8 +147,8 @@ public class TabToolbarHelper: NSObject {
 
         } else {
             toolbar.bookmarkButton.contentMode = UIViewContentMode.Center
-            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmark"), forState: .Normal)
-            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmarked"), forState: UIControlState.Selected)
+			toolbar.bookmarkButton.setImage(UIImage(named: "bookmark"), forState: .Normal)
+			toolbar.bookmarkButton.setImage(UIImage(named: "bookmarked"), forState: UIControlState.Selected)
             // Cliqz: Removed highlighted state - discussed with Sven
 //            toolbar.bookmarkButton.setImage(UIImage(named: "bookmarkHighlighted"), forState: UIControlState.Highlighted)
             toolbar.bookmarkButton.accessibilityLabel = NSLocalizedString("Bookmark", comment: "Accessibility Label for the tab toolbar Bookmark button")
@@ -324,6 +326,10 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     func updateReloadStatus(isLoading: Bool) {
         helper?.updateReloadStatus(isLoading)
     }
+
+	func updateTabStatus(keepOpen: Bool) {
+		tabsButton.selected = keepOpen
+	}
 
     func updatePageStatus(isWebPage isWebPage: Bool) {
         if !AppConstants.MOZ_MENU {

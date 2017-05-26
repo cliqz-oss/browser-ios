@@ -130,6 +130,9 @@ class BrowserViewController: UIViewController {
     var navigationStep          : Int = 0
     var backNavigationStep      : Int = 0
     var navigationEndTime       : Double = NSDate.getCurrentMillis()
+	
+	internal var needsNewTab = true
+	
     // Cliqz: Custom dashboard
     private lazy var dashboard : DashboardViewController =  {
         let dashboard = DashboardViewController(profile: self.profile, tabManager: self.tabManager)
@@ -620,13 +623,17 @@ class BrowserViewController: UIViewController {
         if PLCrashReporter.sharedReporter().hasPendingCrashReport() {
             PLCrashReporter.sharedReporter().purgePendingCrashReport()
         */
-        if hasPendingCrashReport {
-            showRestoreTabsAlert()
-        } else {
-            log.debug("Restoring tabs.")
-            //tabManager.restoreTabs()
-            log.debug("Done restoring tabs.")
-        }
+//        if hasPendingCrashReport {
+//            showRestoreTabsAlert()
+//        } else {
+//            log.debug("Restoring tabs.")
+//            //tabManager.restoreTabs()
+//            log.debug("Done restoring tabs.")
+//        }
+		if (needsNewTab) {
+			self.tabManager.addTabAndSelect()
+			needsNewTab = false
+		}
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
@@ -689,7 +696,7 @@ class BrowserViewController: UIViewController {
 //        presentIntroViewController()
         
         // Cliqz: switch to search mode if needed
-        switchToSearchModeIfNeeded()
+//        switchToSearchModeIfNeeded()
         // Cliqz: ask for news notification permission according to our workflow
         askForNewsNotificationPermissionIfNeeded()
         
@@ -1313,6 +1320,7 @@ class BrowserViewController: UIViewController {
                 }
             }
         }
+		self.toolbar?.updateTabStatus(tab.keepOpen)
     }
     // Mark: Opening New Tabs
 
@@ -1801,8 +1809,7 @@ extension BrowserViewController: URLBarDelegate {
     }
 
 	func urlBarDidPressHome(urlBar: URLBarView) {
-		self.navigationController?.popViewControllerAnimated(false)
-        ConversationalHistoryAPI.homePressed()
+		self.navigateToHome()
 	}
 
     func urlBarDidPressTabs(urlBar: URLBarView) {
@@ -2212,10 +2219,28 @@ extension BrowserViewController: TabToolbarDelegate {
         }
 #endif
     }
-    
+	
+	func navigateToHome() {
+		for tab in self.tabManager.tabs {
+			if !tab.keepOpen {
+				self.tabManager.removeTab(tab)
+			}
+		}
+		self.needsNewTab = true
+		self.navigationController?.popViewControllerAnimated(false)
+        ConversationalHistoryAPI.homePressed()
+	}
+
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(tabToolbar: TabToolbarProtocol, button: UIButton) {
-		self.navigationController?.popViewControllerAnimated(false)
+		if let tab = self.tabManager.selectedTab {
+			tab.keepOpen = !tab.keepOpen
+			self.toolbar?.updateTabStatus(tab.keepOpen)
+			self.urlBar.updateTabStatus(tab.keepOpen)
+		}
+
+//		self.navigationController?.popViewControllerAnimated(false)
+//		self.navigateToHome()
 		
 		// HackDay change of tabsButton behaviour
 		/*
@@ -2314,10 +2339,12 @@ extension BrowserViewController: MenuViewControllerDelegate {
 
 extension BrowserViewController: CIDatePickerDelegate {
     func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+		self.toolbar?.updateBookmarkStatus(false)
         self.hideDatePicker(datePicker)
     }
     
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+		self.toolbar?.updateBookmarkStatus(true)
         self.sendBookmark(datePicker.datePicker.date)
         self.hideDatePicker(datePicker)
     }
@@ -4200,6 +4227,16 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
         urlBar.leaveOverlayMode()
     }
 
+	func navigateToTab(tabID: Int) {
+		for tab in self.tabManager.tabs {
+			if tab.webView?.uniqueId == tabID {
+				self.tabManager.selectTab(tab)
+				if tab.keepOpen {
+					self.toolbar?.tabsButton.selected = true
+				}
+			}
+		}
+	}
 }
 
 // Cliqz: Extension for BrowserViewController to put addes methods

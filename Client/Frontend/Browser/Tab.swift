@@ -105,7 +105,10 @@ class Tab: NSObject {
     /// Any time a tab tries to make requests to display a Javascript Alert and we are not the active
     /// tab instance, queue it for later until we become foregrounded.
     private var alertQueue = [JSAlertInfo]()
-    
+	
+	
+	internal var keepOpen = false
+
     // Cliqz: flag to know whether the current tab is in search mode or not
     var inSearchMode : Bool {
         get {
