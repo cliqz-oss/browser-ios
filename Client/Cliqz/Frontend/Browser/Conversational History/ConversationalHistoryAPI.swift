@@ -66,6 +66,10 @@ class ConversationalHistoryAPI {
 
 	class func pushMetadata(metadata: [String: AnyObject], url: String) {
 	}
+    
+    class func homePressed() {
+        Engine.sharedInstance.getBridge().publishEvent("browser:home-pressed", args: [])
+    }
 
 	private class func generateParamsForHistoryItem(url: String, title: String, visitedDate: MicrosecondTimestamp) -> [String: AnyObject] {
 		return ["url": url,

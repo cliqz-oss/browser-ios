@@ -1802,6 +1802,7 @@ extension BrowserViewController: URLBarDelegate {
 
 	func urlBarDidPressHome(urlBar: URLBarView) {
 		self.navigationController?.popViewControllerAnimated(false)
+        ConversationalHistoryAPI.homePressed()
 	}
 
     func urlBarDidPressTabs(urlBar: URLBarView) {
