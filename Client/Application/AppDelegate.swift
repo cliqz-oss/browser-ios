@@ -768,7 +768,7 @@ extension AppDelegate {
 			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
 										  Int64(0.3 * Double(NSEC_PER_SEC)))
 			dispatch_after(delayTime, dispatch_get_main_queue(), {
-				self.browserViewController.switchToTabForURLOrOpen(url)
+				self.browserViewController.navigateToURL(url)
 			})
 		}
 	}
@@ -779,7 +779,6 @@ extension AppDelegate {
 			let delayTime = dispatch_time(DISPATCH_TIME_NOW,
 										  Int64(0.15 * Double(NSEC_PER_SEC)))
 			dispatch_after(delayTime, dispatch_get_main_queue(), {
-				self.browserViewController.newTab()
 				self.browserViewController.searchForQuery(text)
 			})
 		}
@@ -787,12 +786,9 @@ extension AppDelegate {
 
 	func openTab(tabID: Int) {
 		dispatch_async(dispatch_get_main_queue()) {
-			for tab in self.tabManager.tabs {
-				if tab.webView?.uniqueId == tabID {
-					self.tabManager.selectTab(tab)
-					self.rootViewController.pushViewController(self.browserViewController, animated: false)
-				}
-			}
+			self.browserViewController.needsNewTab = false
+			self.rootViewController.pushViewController(self.browserViewController, animated: false)
+			self.browserViewController.navigateToTab(tabID)
 		}
 	}
 

@@ -812,6 +812,10 @@ extension URLBarView: TabToolbarProtocol {
         }
     }
 
+	func updateTabStatus(keepOpen: Bool) {
+		tabsButton.selected = keepOpen
+	}
+
     func updatePageStatus(isWebPage isWebPage: Bool) {
         if !AppConstants.MOZ_MENU {
             bookmarkButton.enabled = isWebPage
