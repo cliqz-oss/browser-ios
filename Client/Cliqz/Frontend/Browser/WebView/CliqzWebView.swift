@@ -513,7 +513,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			})
 		}
 
-		let locationChanged = CliqzWebView.isTopFrameRequest(request) && url.absoluteString != url.absoluteString
+		let locationChanged = CliqzWebView.isTopFrameRequest(request) && url.absoluteString != self.url?.absoluteString
 		if locationChanged {
 			setUrl(url, reliableSource: true)
 		}
