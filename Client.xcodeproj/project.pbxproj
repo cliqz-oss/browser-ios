@@ -2048,6 +2048,15 @@
 		7C44750E1E07FA6A008E34E6 /* CliqzTestsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTestsExtension.swift; sourceTree = "<group>"; };
 		7C4475101E097001008E34E6 /* FreshTabTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshTabTest.swift; sourceTree = "<group>"; };
 		7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicFontHelper.swift; sourceTree = "<group>"; };
+		876422CE1EDC4D05008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/3DTouchActions.strings; sourceTree = "<group>"; };
+		876422CF1EDC4D05008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ClearHistoryConfirm.strings; sourceTree = "<group>"; };
+		876422D01EDC4D05008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ClearPrivateData.strings; sourceTree = "<group>"; };
+		876422D11EDC4D05008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ClearPrivateDataConfirm.strings; sourceTree = "<group>"; };
+		876422D21EDC4D06008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/FindInPage.strings; sourceTree = "<group>"; };
+		876422D31EDC4D06008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		876422D41EDC4D06008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		876422D51EDC4D06008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		876422D61EDC4D06008623DD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		9124B38EC6C7D20DBADF1A74 /* Pods-Client.firefox.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Client.firefox.xcconfig"; path = "Pods/Target Support Files/Pods-Client/Pods-Client.firefox.xcconfig"; sourceTree = "<group>"; };
 		A826F0D11CBEB8160084CF9A /* PhoneNumberFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberFormatterTests.swift; sourceTree = "<group>"; };
 		A83E5AB61C1D993D0026D912 /* UIPasteboardExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIPasteboardExtensions.swift; path = Extensions/UIPasteboardExtensions.swift; sourceTree = "<group>"; };
@@ -5442,6 +5451,7 @@
 				Base,
 				de,
 				fr,
+				it,
 			);
 			mainGroup = F84B21B51A090F8100AAB793;
 			productRefGroup = F84B21BF1A090F8100AAB793 /* Products */;
@@ -5925,7 +5935,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		1E79DD561D4FB3E3006BEB4A /* Fabric Run script */ = {
@@ -6026,7 +6036,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */ = {
@@ -7127,6 +7137,7 @@
 				1E79DCF31D4FB2C5006BEB4A /* de */,
 				1E79DCF81D4FB2C5006BEB4A /* en */,
 				1E0926CB1DFAB4320002BB13 /* fr */,
+				876422D51EDC4D06008623DD /* it */,
 			);
 			name = Cliqz.strings;
 			sourceTree = "<group>";
@@ -7156,6 +7167,7 @@
 				1E79DD841D507D26006BEB4A /* de */,
 				1E79DDAF1D507D26006BEB4A /* en */,
 				1E0926B81DFAB42E0002BB13 /* fr */,
+				876422CE1EDC4D05008623DD /* it */,
 			);
 			name = 3DTouchActions.strings;
 			sourceTree = "<group>";
@@ -7196,6 +7208,7 @@
 				1E79DD8C1D507D26006BEB4A /* de */,
 				1E79DDB31D507D26006BEB4A /* en */,
 				1E0926BC1DFAB42F0002BB13 /* fr */,
+				876422CF1EDC4D05008623DD /* it */,
 			);
 			name = ClearHistoryConfirm.strings;
 			sourceTree = "<group>";
@@ -7206,6 +7219,7 @@
 				1E79DD8E1D507D26006BEB4A /* de */,
 				1E79DDB41D507D26006BEB4A /* en */,
 				1E0926BD1DFAB42F0002BB13 /* fr */,
+				876422D01EDC4D05008623DD /* it */,
 			);
 			name = ClearPrivateData.strings;
 			sourceTree = "<group>";
@@ -7216,6 +7230,7 @@
 				1E79DD901D507D26006BEB4A /* de */,
 				1E79DDB51D507D26006BEB4A /* en */,
 				1E0926BE1DFAB42F0002BB13 /* fr */,
+				876422D11EDC4D05008623DD /* it */,
 			);
 			name = ClearPrivateDataConfirm.strings;
 			sourceTree = "<group>";
@@ -7236,6 +7251,7 @@
 				1E79DD941D507D26006BEB4A /* de */,
 				1E79DDB71D507D26006BEB4A /* en */,
 				1E0926C01DFAB4300002BB13 /* fr */,
+				876422D21EDC4D06008623DD /* it */,
 			);
 			name = FindInPage.strings;
 			sourceTree = "<group>";
@@ -7256,6 +7272,7 @@
 				1E79DD981D507D26006BEB4A /* de */,
 				1E79DDB91D507D26006BEB4A /* en */,
 				1E0926C21DFAB4300002BB13 /* fr */,
+				876422D31EDC4D06008623DD /* it */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -7284,6 +7301,7 @@
 				1E79DD9E1D507D26006BEB4A /* de */,
 				1E79DDBC1D507D26006BEB4A /* en */,
 				1E0926C31DFAB4300002BB13 /* fr */,
+				876422D41EDC4D06008623DD /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -7373,6 +7391,7 @@
 				4F0DFC131DF033D200B1C9F0 /* en */,
 				4F0DFC151DF033D500B1C9F0 /* de */,
 				1E0926CE1DFAB4320002BB13 /* fr */,
+				876422D61EDC4D06008623DD /* it */,
 			);
 			name = Cliqz.strings;
 			sourceTree = "<group>";
