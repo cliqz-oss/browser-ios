@@ -13,8 +13,8 @@ def project_pods
     'RCTWebSocket',
     'RCTLinkingIOS',
     'RCTAnimation',
-	'RCTImage'
-	# needed for debugging
+    'RCTImage'
+    # needed for debugging
     # Add any other subspecs you want to use in your project
     ]
     pod 'Yoga', :path => yoga_path
