@@ -610,6 +610,7 @@
 		AF8266201EB09FBA0023C77C /* LandscapeFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */; };
 		AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */; };
 		AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661F1EB09FBA0023C77C /* TabViewCell.swift */; };
+		AFA170FD1ED875E000C95E31 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AFA170FC1ED875E000C95E31 /* assets */; };
 		AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */; };
 		AFA6F3E31E67424700BA630B /* AdBlockerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */; };
 		AFA6F3E41E67424700BA630B /* AntiPhishingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */; };
@@ -2056,6 +2057,7 @@
 		AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandscapeFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661F1EB09FBA0023C77C /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
+		AFA170FC1ED875E000C95E31 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = JSEngine/assets; sourceTree = SOURCE_ROOT; };
 		AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
 		AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingPanel.swift; sourceTree = "<group>"; };
@@ -4115,6 +4117,7 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
+				AFA170FC1ED875E000C95E31 /* assets */,
 				4F9B1E931ECDA1E200DE88D5 /* BrowserActions.swift */,
 				4F9B1EA31ECDA26A00DE88D5 /* BrowserActions.m */,
 				AFFB182C1EC3477100D90811 /* jsengine.bundle.js */,
@@ -5872,6 +5875,7 @@
 				1E79DDD81D507D26006BEB4A /* SendTo.strings in Resources */,
 				1E79DDCC1D507D26006BEB4A /* ErrorPages.strings in Resources */,
 				1E79DDCD1D507D26006BEB4A /* FindInPage.strings in Resources */,
+				AFA170FD1ED875E000C95E31 /* assets in Resources */,
 				1E79DDD01D507D26006BEB4A /* Intro.strings in Resources */,
 				A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
