@@ -174,8 +174,8 @@ class ControlCenterPanel: UIViewController {
             
             panelIcon.snp_makeConstraints { make in
                 make.centerX.equalTo(self.view)
-				make.height.equalTo(150)
-				make.width.equalTo(130)
+				make.height.equalTo(75)
+				make.width.equalTo(65)
                 make.top.equalTo(titleLabel.snp_bottom).offset(20)
             }
             
