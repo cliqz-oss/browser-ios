@@ -32,11 +32,13 @@ public class BrowserActions: NSObject {
 		let openTabs = NSMutableArray()
 		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
 			for tab in appDelegate.tabManager.tabs {
-				let tabData = NSMutableDictionary()
-				tabData["id"] = (tab.webView?.uniqueId)! as NSInteger
-				tabData["url"] = tab.url?.absoluteString as? NSString
-				tabData["title"] = tab.displayTitle as? NSString
-				openTabs.addObject(tabData)
+                if let id = tab.webView?.uniqueId, url = tab.url?.absoluteString {
+                    let tabData = NSMutableDictionary()
+                    tabData["id"] = NSInteger(id)
+                    tabData["url"] = NSString(string: url)
+                    tabData["title"] = NSString(string: tab.displayTitle)
+                    openTabs.addObject(tabData)
+                }
 			}
 		}
 		resolve(openTabs)
