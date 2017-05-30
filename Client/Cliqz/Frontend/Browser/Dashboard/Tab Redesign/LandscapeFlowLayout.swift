@@ -22,7 +22,7 @@ class LandscapeFlowLayout: UICollectionViewFlowLayout {
     func computeOptimalPadding() -> UIEdgeInsets {
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
-        let cellSize = Knobs.landscapeSize
+        let cellSize = Knobs.landscapeSize()
         
         let items_per_row = floor(screenWidth / cellSize.width)
         let spaces_between_items = items_per_row + 1
