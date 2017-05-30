@@ -31,7 +31,7 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
         return 2
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
         if indexPath.section == 0 {
             cell = getUITableViewCell()
@@ -50,7 +50,7 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 0 else {
             return
         }
