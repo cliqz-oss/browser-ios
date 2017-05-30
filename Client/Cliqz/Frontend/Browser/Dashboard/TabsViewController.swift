@@ -10,13 +10,24 @@ import Foundation
 import WebImage
 
 class Knobs{
-    
-    static let minCellSpacing = Double((UIScreen.main.bounds.size.height - 200) / 4.0)
-    static let maxCellSpacing = Double((UIScreen.main.bounds.size.height - 200) / 1.8)
-    static let maxTiltAngle = M_PI / 3.5
-    static let minTiltAngle = M_PI / 9.0
-    static let cellHeight = UIScreen.main.bounds.size.height - 200
-    static let landscapeSize = CGSize(width: 200, height: 130)
+    class func minCellSpacing() -> Double {
+        return Double((UIScreen.main.bounds.size.height - 200) / 4.0)
+    }
+    class func maxCellSpacing() -> Double {
+        return Double((UIScreen.main.bounds.size.height - 200) / 1.8)
+    }
+    class func maxTiltAngle() -> Double {
+        return Double.pi / 3.5
+    }
+    class func minTiltAngle() -> Double {
+        return Double.pi / 9.0
+    }
+    class func cellHeight() -> CGFloat {
+        return UIScreen.main.bounds.size.height - 200
+    }
+    class func landscapeSize() -> CGSize {
+        return CGSize(width: 200, height: 130)
+    }
 }
 
 class TabsViewController: UIViewController {
@@ -59,13 +70,6 @@ class TabsViewController: UIViewController {
         collectionView.dataSource = self
         
         self.view.addSubview(collectionView)
-        
-        if UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height {
-            self.collectionView.collectionViewLayout = LandscapeFlowLayout()
-        }
-        else{
-            self.collectionView.collectionViewLayout = PortraitFlowLayout()
-        }
 		
 		addTabButton = UIButton(type: .custom)
 		addTabButton.setTitle("+", for: UIControlState())
@@ -85,6 +89,14 @@ class TabsViewController: UIViewController {
     
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+        
+        if UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height {
+            self.collectionView.collectionViewLayout = LandscapeFlowLayout()
+        }
+        else{
+            self.collectionView.collectionViewLayout = PortraitFlowLayout()
+        }
+        
 		self.collectionView.reloadData()
         self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
 	}
@@ -317,15 +329,15 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         if ((collectionViewLayout as? LandscapeFlowLayout) != nil) {
-            return Knobs.landscapeSize
+            return Knobs.landscapeSize()
         }
         
         if indexPath.item == collectionView.numberOfItems(inSection: 0) - 1 {
-            return CGSize(width: cellSize.width, height: Knobs.cellHeight)//cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
+            return CGSize(width: cellSize.width, height: Knobs.cellHeight())//cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
         }
         
         let count = collectionView.numberOfItems(inSection: 0)
-        let interCellSpace = Knobs.minCellSpacing + (1/pow(Double(count - 1),1.2)) * (Knobs.maxCellSpacing - Knobs.minCellSpacing)
+        let interCellSpace = Knobs.minCellSpacing() + (1/pow(Double(count - 1),1.2)) * (Knobs.maxCellSpacing() - Knobs.minCellSpacing())
         
         return CGSize(width: cellSize.width, height: CGFloat(interCellSpace))
     }

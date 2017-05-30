@@ -68,7 +68,10 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
                 
                 t.m34 = -1.0 / (CGFloat(1000))
                 
-                let tiltAngle = Knobs.maxTiltAngle - (1/pow(Double(count), 0.85)) * (Knobs.maxTiltAngle - Knobs.minTiltAngle)
+                let maxTilt = Knobs.maxTiltAngle()
+                let minTilt = Knobs.minTiltAngle()
+                
+                let tiltAngle = maxTilt - (1/pow(Double(count), 0.85)) * (maxTilt - minTilt)
                 t = CATransform3DRotate(t, -CGFloat(tiltAngle), 1, 0, 0)
                 //attr.transform = CGAffineTransformIdentity
             }

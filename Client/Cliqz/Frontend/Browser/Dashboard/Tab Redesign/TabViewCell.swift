@@ -272,7 +272,7 @@ class TabViewCell: UICollectionViewCell {
 			self.displayView.snp.remakeConstraints { (make) in
                 self.showShadow(true)
                 make.left.right.top.equalTo(self.contentView)
-                make.height.equalTo(Knobs.cellHeight) //* Knobs.cellHeightMultiplier)
+                make.height.equalTo(Knobs.cellHeight()) //* Knobs.cellHeightMultiplier)
             }
             
             self.logoImageView.snp_remakeConstraints { (make) in
