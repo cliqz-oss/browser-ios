@@ -49,7 +49,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 						debugPrint("Not a bookmark item")
 					}
 				}
-				self.javaScriptBridge.callJSMethod(callback!, parameter: favorites.reversed(), completionHandler: nil)
+				self.javaScriptBridge.callJSMethod(callback!, parameter: Array(favorites.reversed()), completionHandler: nil)
 			}
 		}
 	}

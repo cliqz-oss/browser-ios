@@ -59,9 +59,11 @@ class JavaScriptBridge {
                     let json = try JSONSerialization.data(withJSONObject: parameter, options: JSONSerialization.WritingOptions(rawValue: 0))
                     parameterString = String(data:json, encoding: String.Encoding.utf8)!
                 } else {
+					parameterString = "[]"
                     debugPrint("couldn't convert object \(parameter) to JSON because it is not valid JSON")
                 }
             } catch let error as NSError {
+				parameterString = "[]"
                 debugPrint("Json conversion is failed with error: \(error)")
             }
         }
