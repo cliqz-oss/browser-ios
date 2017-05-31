@@ -42,11 +42,6 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         return TabSwitcherLayoutAttributes.self
     }
     
-	override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-		let attr = super.layoutAttributesForItem(at: indexPath)
-        attr?.zIndex = indexPath.item
-        return attr
-	}
 
 	override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
 		guard let attrs = super.layoutAttributesForElements(in: rect) else {return nil}
@@ -64,19 +59,19 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
             
             var t: CATransform3D = CATransform3DIdentity
             
-            if let count = self.collectionView?.numberOfItems(inSection: 0) {//where count > 1 {
-                
+            if let count = self.collectionView?.numberOfItems(inSection: 0) {
+
                 t.m34 = -1.0 / (CGFloat(1000))
+                t = CATransform3DRotate(t, -CGFloat(Knobs.tiltAngle(count: count)), 1, 0, 0)
                 
-                let maxTilt = Knobs.maxTiltAngle()
-                let minTilt = Knobs.minTiltAngle()
+                //calculate how much down t will take the layer and then compensate for that.
+                //this view must have the dimensions of the view this attr is going to be applied to. 
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width / 1.26, height: Knobs.cellHeight()))
+                view.layer.transform = t
                 
-                let tiltAngle = maxTilt - (1/pow(Double(count), 0.85)) * (maxTilt - minTilt)
-                t = CATransform3DRotate(t, -CGFloat(tiltAngle), 1, 0, 0)
-                //attr.transform = CGAffineTransformIdentity
+                t = CATransform3DTranslate(t, 0, -view.layer.frame.origin.y, 0)
             }
             
-            //t = CATransform3DScale(t, 0.95, 0.95, 1)
             attr.displayTransform = t
             
             return attr
@@ -84,4 +79,5 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         return attribute
         
     }
+
 }
