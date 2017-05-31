@@ -618,7 +618,7 @@ private class TabWebView: CliqzWebView, MenuHelperInterface {
         return super.canPerformAction(action, withSender: sender)
     }
 
-    @objc func menuHelperFindInPage(_ sender: Notification) {
+    @objc func menuHelperFindInPage() {
         evaluateJavaScript("getSelection().toString()") { result, _ in
             let selection = result as? String ?? ""
 			// Cliqz renamed delegate
