@@ -9,7 +9,7 @@
 import Foundation
 import WebImage
 
-class Knobs{
+class Knobs {
     class func minCellSpacing() -> Double {
         return Double((UIScreen.main.bounds.size.height - 200) / 4.0)
     }
@@ -17,16 +17,46 @@ class Knobs{
         return Double((UIScreen.main.bounds.size.height - 200) / 1.8)
     }
     class func maxTiltAngle() -> Double {
-        return Double.pi / 3.5
+        return Double.pi / 4.0
     }
     class func minTiltAngle() -> Double {
         return Double.pi / 9.0
+    }
+    class func minOffset() -> Double {
+        return -4.0
+    }
+    class func maxOffset() -> Double {
+        return 57.0
+    }
+    class func minScale() -> Double {
+        return 0.9
+    }
+    class func maxScale() -> Double {
+        return 1.0
     }
     class func cellHeight() -> CGFloat {
         return UIScreen.main.bounds.size.height - 200
     }
     class func landscapeSize() -> CGSize {
         return CGSize(width: 200, height: 130)
+    }
+    class func tiltAngle(count: Int) -> Double {
+        return increasing(max: Knobs.maxTiltAngle(), min: Knobs.minTiltAngle(), factor: 0.85)(count)
+    }
+    class func interCellSpace(count: Int) -> CGFloat {
+        return CGFloat(decreasing(max: Knobs.maxCellSpacing(), min: Knobs.minCellSpacing(), factor: 0.85)(count))
+    }
+    class func increasing(max: Double, min: Double, factor: Double) -> (Int) -> Double {
+        return { count in
+            if count < 1 {return min}
+            return max - (1/pow(Double(count), factor)) * (max - min)
+        }
+    }
+    class func decreasing(max: Double, min: Double, factor: Double) -> (Int) -> Double {
+        return { count in
+            if count < 1 {return max}
+            return min + 1/pow(Double(count), factor) * (max - min)
+        }
     }
 }
 
@@ -189,20 +219,20 @@ class TabsViewController: UIViewController {
 
 	private func openNewTab(isPrivate: Bool = false) {
 		if isPrivate {
-            self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
+            _ = self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
 		} else {
-			self.tabManager.addTabAndSelect()
+			_ = self.tabManager.addTabAndSelect()
 		}
 		self.navigationController?.popViewController(animated: false)
 	}
 
 	fileprivate func setupConstraints() {
-		collectionView.snp_makeConstraints { make in
+		collectionView.snp.makeConstraints { make in
 			make.left.right.equalTo(self.view)
-			make.top.equalTo(self.view).offset(10)
-			make.bottom.equalTo(addTabButton.snp_top)
+			make.top.equalTo(self.view)
+			make.bottom.equalTo(addTabButton.snp.top)
 		}
-		addTabButton.snp_makeConstraints { make in
+		addTabButton.snp.makeConstraints { make in
 			make.centerX.equalTo(self.view)
 			make.bottom.equalTo(self.view)
 			make.left.right.equalTo(self.view)
@@ -322,7 +352,7 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
         var cellSize = UIScreen.main.bounds.size
 
         if UIDevice.current.userInterfaceIdiom == .phone {
-            cellSize.width /= 1.22
+            cellSize.width /= 1.26
         }
         else{
             cellSize.width /= 1.6
@@ -332,14 +362,13 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
             return Knobs.landscapeSize()
         }
         
+        let count = collectionView.numberOfItems(inSection: 0)
+        
         if indexPath.item == collectionView.numberOfItems(inSection: 0) - 1 {
-            return CGSize(width: cellSize.width, height: Knobs.cellHeight())//cellSize.width * CGFloat(Knobs.cellHeightMultiplier))
+            return CGSize(width: cellSize.width, height: Knobs.cellHeight())
         }
         
-        let count = collectionView.numberOfItems(inSection: 0)
-        let interCellSpace = Knobs.minCellSpacing() + (1/pow(Double(count - 1),1.2)) * (Knobs.maxCellSpacing() - Knobs.minCellSpacing())
-        
-        return CGSize(width: cellSize.width, height: CGFloat(interCellSpace))
+        return CGSize(width: cellSize.width, height: Knobs.interCellSpace(count: count))
     }
 }
 

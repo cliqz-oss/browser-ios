@@ -22,7 +22,7 @@ enum SwipeType {
 }
 
 class TabViewCell: UICollectionViewCell {
-
+    
     let velocityTreshold = CGFloat(100.0)//to be adjusted on real device
     let displayView: UIView
     let gradientView: UIView
@@ -103,7 +103,7 @@ class TabViewCell: UICollectionViewCell {
         self.fakeSmallCenterView = view
         self.displayView.addSubview(view)
         self.displayView.bringSubview(toFront: view)
-        view.snp_remakeConstraints { (make) in
+        view.snp.remakeConstraints { (make) in
             make.top.left.right.bottom.equalTo(self.smallCenterImageView)
         }
         let bg_color = view.backgroundColor
@@ -205,10 +205,10 @@ class TabViewCell: UICollectionViewCell {
             type: .tiltAlongVerticalAxis)
         
         var tranformMinRelative = CATransform3DIdentity
-        tranformMinRelative = CATransform3DRotate(tranformMinRelative, CGFloat(M_PI / 10), 1, 0, 0);
+        tranformMinRelative = CATransform3DRotate(tranformMinRelative, CGFloat(Double.pi / 10), 1, 0, 0);
         
         var tranformMaxRelative = CATransform3DIdentity
-		tranformMaxRelative = CATransform3DRotate(tranformMaxRelative, CGFloat(-M_PI / 10), 1, 0, 0);
+		tranformMaxRelative = CATransform3DRotate(tranformMaxRelative, CGFloat(-Double.pi / 10), 1, 0, 0);
 		
 		verticalMotionEffect.minimumRelativeValue = NSValue(caTransform3D: tranformMinRelative)
 		verticalMotionEffect.maximumRelativeValue = NSValue(caTransform3D: tranformMaxRelative)
@@ -241,6 +241,7 @@ class TabViewCell: UICollectionViewCell {
         self.fakeSmallCenterView?.removeFromSuperview()
         self.fakeLogoView = nil
         self.fakeSmallCenterView = nil
+        
     }
     
     override func layoutSubviews() {
@@ -250,16 +251,19 @@ class TabViewCell: UICollectionViewCell {
     
 	override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
 		super.apply(layoutAttributes)
-		
+
         if let attr = layoutAttributes as? TabSwitcherLayoutAttributes {
             displayView.layer.transform = attr.displayTransform
             currentTransform = attr.displayTransform
         }
+        
     }
 
-    
 	override func willTransition(from oldLayout: UICollectionViewLayout, to newLayout: UICollectionViewLayout) {
 		super.willTransition(from: oldLayout, to: newLayout)
+        
+        displayView.layer.transform = CATransform3DIdentity
+        currentTransform = CATransform3DIdentity
         self.contentView.setNeedsLayout()
     }
 
@@ -275,7 +279,7 @@ class TabViewCell: UICollectionViewCell {
                 make.height.equalTo(Knobs.cellHeight()) //* Knobs.cellHeightMultiplier)
             }
             
-            self.logoImageView.snp_remakeConstraints { (make) in
+            self.logoImageView.snp.remakeConstraints { (make) in
                 self.logoImageView.isHidden = false
                 make.centerY.equalTo(self.domainLabel)
                 make.left.equalTo(self.displayView).inset(10)
@@ -288,7 +292,7 @@ class TabViewCell: UICollectionViewCell {
                 make.width.height.equalTo(44.0)
             })
             
-            self.domainLabel.snp_remakeConstraints { (make) in
+            self.domainLabel.snp.remakeConstraints { (make) in
                 make.top.equalTo(self.displayView).inset(14)
                 make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
@@ -312,14 +316,14 @@ class TabViewCell: UICollectionViewCell {
                 make.height.width.equalTo(80.0)//80
             }
             
-            self.cliqzLogoImageView.snp_remakeConstraints({ (make) in
+            self.cliqzLogoImageView.snp.remakeConstraints({ (make) in
                 make.center.equalTo(self.bigLogoImageView)
                 make.left.right.equalTo(self.bigLogoImageView).inset(50)
             })
         }
         
         else {
-            self.displayView.snp_remakeConstraints { (make) in
+            self.displayView.snp.remakeConstraints { (make) in
                 self.showShadow(false)
                 make.left.right.top.bottom.equalTo(self.contentView)
             }
@@ -354,7 +358,7 @@ class TabViewCell: UICollectionViewCell {
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(40.0)//80
             }
-            self.cliqzLogoImageView.snp_remakeConstraints({ (make) in
+            self.cliqzLogoImageView.snp.remakeConstraints({ (make) in
                 make.center.equalTo(self.bigLogoImageView)
                 make.left.right.equalTo(self.bigLogoImageView).inset(50)
             })
