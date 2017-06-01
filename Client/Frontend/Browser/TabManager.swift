@@ -635,6 +635,7 @@ extension TabManager {
     static func tabsToRestore() -> [SavedTab]? {
         if let tabData = tabArchiveData() {
             let unarchiver = NSKeyedUnarchiver(forReadingWith: tabData)
+            unarchiver.setClass(SavedTab.self, forClassName: "tabs")
             return unarchiver.decodeObject(forKey: "tabs") as? [SavedTab]
         } else {
             return nil
@@ -669,6 +670,7 @@ extension TabManager {
 
         let tabStateData = NSMutableData()
         let archiver = NSKeyedArchiver(forWritingWith: tabStateData)
+        archiver.setClassName("tabs", for: SavedTab.self)
         archiver.encode(savedTabs, forKey: "tabs")
         archiver.finishEncoding()
         tabStateData.write(toFile: path, atomically: true)
