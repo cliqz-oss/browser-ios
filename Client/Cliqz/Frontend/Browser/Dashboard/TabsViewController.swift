@@ -420,6 +420,7 @@ extension TabsViewController: TabManagerDelegate {
             })
         }
         self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
+        self.collectionView.collectionViewLayout.invalidateLayout()
     }
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
