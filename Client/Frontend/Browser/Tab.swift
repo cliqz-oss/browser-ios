@@ -225,17 +225,25 @@ class Tab: NSObject {
             var jsonDict = [String: Any]()
             jsonDict["history"] = updatedURLs
             jsonDict["currentPage"] = currentPage
-			let escapedJSON = JSON(jsonDict).stringValue.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-            let restoreURL = URL(string: "\(WebServer.sharedInstance.base)/about/sessionrestore?history=\(escapedJSON)")
-            lastRequest = PrivilegedRequest(url: restoreURL!) as URLRequest
-            webView.loadRequest(lastRequest!)
+            if let escapedJSON = getEscapedJSON(jsonDict), let restoreURL = URL(string: "\(WebServer.sharedInstance.base)/about/sessionrestore?history=\(escapedJSON)") {
+                lastRequest = PrivilegedRequest(url: restoreURL) as URLRequest
+                webView.loadRequest(lastRequest!)
+            }
         } else if let request = lastRequest {
             webView.loadRequest(request)
         } else {
             log.error("creating webview with no lastRequest and no session data: \(self.url)")
         }
     }
-
+    private func getEscapedJSON(_ jsonDict: [String: Any]) -> String?{
+        var jsonString = JSON(jsonDict).rawString()
+        jsonString = jsonString?.replace("\n", replacement: "")
+        jsonString = jsonString?.replace(" ", replacement: "")
+        jsonString = jsonString?.replace("\\", replacement: "")
+        
+        let escapedJSON = jsonString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        return escapedJSON
+    }
     deinit {
         if let webView = webView {
             tabDelegate?.tab?(self, willDeleteWebView: webView)
