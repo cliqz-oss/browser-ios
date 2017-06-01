@@ -261,10 +261,9 @@ class TabViewCell: UICollectionViewCell {
 
 	override func willTransition(from oldLayout: UICollectionViewLayout, to newLayout: UICollectionViewLayout) {
 		super.willTransition(from: oldLayout, to: newLayout)
-        
+        self.contentView.setNeedsLayout()
         displayView.layer.transform = CATransform3DIdentity
         currentTransform = CATransform3DIdentity
-        self.contentView.setNeedsLayout()
     }
 
     func setConstraints() {

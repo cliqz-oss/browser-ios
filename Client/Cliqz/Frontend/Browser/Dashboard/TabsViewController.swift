@@ -161,13 +161,8 @@ class TabsViewController: UIViewController {
                 layout = PortraitFlowLayout()
             }
             
-            self.collectionView.performBatchUpdates({
-                self.collectionView.collectionViewLayout.invalidateLayout()
-                self.collectionView.reloadData()
-            }) { (finished) in
-                self.collectionView.setCollectionViewLayout(layout, animated: true)
-                self.collectionView.collectionViewLayout.invalidateLayout()
-            }
+            self.collectionView.collectionViewLayout.invalidateLayout()
+            self.collectionView.setCollectionViewLayout(layout, animated: true)
             
         }) { (coordinatorContext) in
             UIView.animate(withDuration: 0.3, animations: {
