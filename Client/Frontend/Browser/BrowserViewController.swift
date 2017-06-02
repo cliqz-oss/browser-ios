@@ -4253,7 +4253,7 @@ extension BrowserViewController {
 
 
 extension BrowserViewController: CrashlyticsDelegate {
-    func crashlyticsDidDetectReportForLastExecution(report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
+    func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
         hasPendingCrashReport = true
 		DispatchQueue.global(qos: .default).async {
 			completionHandler(true)
