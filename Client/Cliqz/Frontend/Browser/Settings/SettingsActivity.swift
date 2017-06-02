@@ -25,6 +25,10 @@ class SettingsActivity : UIActivity {
         return UIImage(named: "settings")
     }
     
+    override var activityType: UIActivityType? {
+        return UIActivityType("com.cliqz.settings")
+    }
+    
     override func perform() {
         callback()
         activityDidFinish(true)

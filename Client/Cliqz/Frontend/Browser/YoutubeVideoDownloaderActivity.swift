@@ -20,6 +20,10 @@ class YoutubeVideoDownloaderActivity: UIActivity {
 		return NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
 
 	}
+    
+    override var activityType: UIActivityType? {
+        return UIActivityType("com.cliqz.youtubedownloader")
+    }
 	
 	override var activityImage : UIImage? {
 		return UIImage(named: "download")
