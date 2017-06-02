@@ -18,7 +18,11 @@ class FindInPageActivity: UIActivity {
     override var activityImage : UIImage? {
         return UIImage(named: "shareFindInPage")
     }
-
+    
+    override var activityType: UIActivityType? {
+        return UIActivityType("com.cliqz.findinpage")
+    }
+    
     override func perform() {
         callback()
         activityDidFinish(true)
