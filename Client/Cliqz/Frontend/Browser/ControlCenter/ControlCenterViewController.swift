@@ -135,31 +135,31 @@ class ControlCenterViewController: UIViewController {
         let panelLayout = OrientationUtil.controlPanelLayout()
         
         if panelLayout != .landscapeRegularSize {
-            blurryBackgroundView.snp_makeConstraints { (make) in
+            blurryBackgroundView.snp.makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
                 make.top.equalTo(self.view)
             }
-            backgroundView.snp_makeConstraints { (make) in
+            backgroundView.snp.makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
                 make.top.equalTo(self.view)
             }
             
-            panelSegmentedContainerView.snp_makeConstraints { make in
+            panelSegmentedContainerView.snp.makeConstraints { make in
                 make.left.right.equalTo(self.view)
                 make.top.equalTo(self.view)
                 make.height.equalTo(45)
             }
-            panelSegmentedControl.snp_makeConstraints { make in
+            panelSegmentedControl.snp.makeConstraints { make in
                 make.centerY.equalTo(panelSegmentedContainerView)
                 make.left.equalTo(panelSegmentedContainerView).offset(10)
                 make.right.equalTo(panelSegmentedContainerView).offset(-10)
                 make.height.equalTo(30)
             }
-            panelContainerView.snp_makeConstraints { make in
-                make.top.equalTo(self.panelSegmentedContainerView.snp_bottom).offset(10)
+            panelContainerView.snp.makeConstraints { make in
+                make.top.equalTo(self.panelSegmentedContainerView.snp.bottom).offset(10)
                 make.left.right.bottom.equalTo(self.view)
             }
-            panelSegmentedSeparator.snp_makeConstraints { make in
+            panelSegmentedSeparator.snp.makeConstraints { make in
                 make.left.equalTo(panelSegmentedContainerView)
                 make.width.equalTo(panelSegmentedContainerView)
                 make.bottom.equalTo(panelSegmentedContainerView)
@@ -168,27 +168,27 @@ class ControlCenterViewController: UIViewController {
         }
         else
         {
-            backgroundView.snp_makeConstraints { (make) in
+            backgroundView.snp.makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
                 make.top.equalTo(self.view)
             }
             
-            panelSegmentedContainerView.snp_makeConstraints { make in
+            panelSegmentedContainerView.snp.makeConstraints { make in
                 make.left.right.equalTo(self.view)
                 make.top.equalTo(self.view)
                 make.height.equalTo(45)
             }
-            panelSegmentedControl.snp_makeConstraints { make in
+            panelSegmentedControl.snp.makeConstraints { make in
                 make.centerY.equalTo(panelSegmentedContainerView)
                 make.left.equalTo(panelSegmentedContainerView).offset(10)
                 make.right.equalTo(panelSegmentedContainerView).offset(-10)
                 make.height.equalTo(30)
             }
-            panelContainerView.snp_makeConstraints { make in
-                make.top.equalTo(self.panelSegmentedContainerView.snp_bottom).offset(10)
+            panelContainerView.snp.makeConstraints { make in
+                make.top.equalTo(self.panelSegmentedContainerView.snp.bottom).offset(10)
                 make.left.right.bottom.equalTo(self.view)
             }
-            panelSegmentedSeparator.snp_makeConstraints { make in
+            panelSegmentedSeparator.snp.makeConstraints { make in
                 make.left.equalTo(panelSegmentedContainerView)
                 make.width.equalTo(panelSegmentedContainerView)
                 make.bottom.equalTo(panelSegmentedContainerView)
@@ -229,7 +229,7 @@ class ControlCenterViewController: UIViewController {
     fileprivate func showPanelViewController(_ viewController: UIViewController) {
         addChildViewController(viewController)
         self.panelContainerView.addSubview(viewController.view)
-        viewController.view.snp_makeConstraints { make in
+        viewController.view.snp.makeConstraints { make in
             make.top.left.right.bottom.equalTo(self.panelContainerView)
         }
         viewController.didMove(toParentViewController: self)

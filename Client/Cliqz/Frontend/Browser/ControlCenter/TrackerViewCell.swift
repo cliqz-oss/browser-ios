@@ -47,7 +47,7 @@ class TrackerViewCell: UITableViewCell {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		self.iconImageView.snp_makeConstraints { (make) in
+		self.iconImageView.snp.makeConstraints { (make) in
 			make.left.equalTo(self.contentView)
 			make.top.equalTo(self.contentView).offset(3)
 			var sz: CGSize = CGSize(width: 0, height: 0)
@@ -56,13 +56,13 @@ class TrackerViewCell: UITableViewCell {
 			}
 			make.size.equalTo(sz)
 		}
-		self.nameLabel.snp_makeConstraints { (make) in
-			make.left.equalTo(self.iconImageView.snp_right).offset(10)
+		self.nameLabel.snp.makeConstraints { (make) in
+			make.left.equalTo(self.iconImageView.snp.right).offset(10)
 			make.top.equalTo(self.contentView)
-			make.right.equalTo(self.countLabel.snp_left)
+			make.right.equalTo(self.countLabel.snp.left)
 		}
-		self.countLabel.snp_makeConstraints { (make) in
-			make.left.equalTo(self.nameLabel.snp_right)
+		self.countLabel.snp.makeConstraints { (make) in
+			make.left.equalTo(self.nameLabel.snp.right)
 			make.width.equalTo(20)
 			make.right.equalTo(self.contentView).offset(-10)
 		}
