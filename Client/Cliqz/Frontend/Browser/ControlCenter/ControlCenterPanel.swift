@@ -166,38 +166,38 @@ class ControlCenterPanel: UIViewController {
         
         if panelLayout == .portrait {
             
-            titleLabel.snp_makeConstraints { make in
+            titleLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
                 make.top.equalTo(self.view).offset(15)
                 make.height.equalTo(24)
             }
             
-            panelIcon.snp_makeConstraints { make in
+            panelIcon.snp.remakeConstraints { make in
                 make.centerX.equalTo(self.view)
 				make.height.equalTo(75)
 				make.width.equalTo(65)
-                make.top.equalTo(titleLabel.snp_bottom).offset(20)
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
             }
             
-            subtitleLabel.snp.makeConstraints({ (make) in
+            subtitleLabel.snp.remakeConstraints({ (make) in
 				make.top.equalTo(panelIcon.snp.bottom)
 				make.left.equalTo(self.view).offset(20)
 				make.width.equalTo(self.view.frame.width - 40)
 				make.height.equalTo(20)
 			})
 
-            learnMoreButton.snp_makeConstraints { make in
+            learnMoreButton.snp.remakeConstraints { make in
                 make.right.bottom.equalTo(self.view).offset(-25)
                 make.height.equalTo(24)
             }
             
-            okButton.snp_makeConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
                 make.size.equalTo(CGSize(width: 80, height: 40))
                 make.centerX.equalTo(self.view)
                 make.bottom.equalTo(self.view).offset(-20)
             }
             
-            activateButton.snp_makeConstraints { (make) in
+            activateButton.snp.remakeConstraints { (make) in
                 make.size.equalTo(okButton)
                 make.centerX.bottom.equalTo(okButton)
             }
@@ -205,19 +205,19 @@ class ControlCenterPanel: UIViewController {
         }
         else if panelLayout == .landscapeCompactSize{
             
-            titleLabel.snp_makeConstraints { make in
+            titleLabel.snp.remakeConstraints { make in
                 make.left.equalTo(self.view).offset(20)
                 make.width.equalTo(self.view.bounds.width/2 - 40)
                 make.top.equalTo(self.view).offset(4)
                 make.height.equalTo(24)
             }
             
-            panelIcon.snp_makeConstraints { make in
+            panelIcon.snp.remakeConstraints { make in
                 make.centerX.equalTo(titleLabel)
-                make.top.equalTo(titleLabel.snp_bottom).offset(16)
+                make.top.equalTo(titleLabel.snp.bottom).offset(16)
             }
             
-			subtitleLabel.snp.makeConstraints({ (make) in
+			subtitleLabel.snp.remakeConstraints({ (make) in
 				make.top.equalTo(0)
                 make.left.equalTo(titleLabel)
                 make.width.equalTo(titleLabel)
@@ -225,54 +225,52 @@ class ControlCenterPanel: UIViewController {
                 
             })
 
-            learnMoreButton.snp_makeConstraints { make in
+            learnMoreButton.snp.remakeConstraints { make in
                 make.right.bottom.equalTo(self.view).offset(-16)
                 make.height.equalTo(24)
             }
             
-            okButton.snp_makeConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
                 make.size.equalTo(CGSize(width: 80, height: 40))
-                //make.centerX.equalTo(self.view)
                 make.bottom.equalTo(self.view).offset(-12)
             }
             
-            activateButton.snp_makeConstraints { (make) in
+            activateButton.snp.remakeConstraints { (make) in
                 make.size.equalTo(okButton)
                 make.centerX.bottom.equalTo(okButton)
             }
         }
         else{
             
-            titleLabel.snp_makeConstraints { make in
+            titleLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
                 make.top.equalTo(self.view).offset(0)
                 make.height.equalTo(24)
             }
             
-            panelIcon.snp_makeConstraints { make in
+            panelIcon.snp.remakeConstraints { make in
                 make.width.height.equalTo(44)
                 make.centerX.equalTo(self.view)
-                make.top.equalTo(titleLabel.snp_bottom).offset(12)
+                make.top.equalTo(titleLabel.snp.bottom).offset(12)
             }
             
-            subtitleLabel.snp_makeConstraints { make in
+            subtitleLabel.snp.remakeConstraints { make in
 				make.top.equalTo(0)
                 make.left.right.equalTo(self.view)
                 make.height.equalTo(24)
             }
             
-            learnMoreButton.snp_makeConstraints { make in
+            learnMoreButton.snp.remakeConstraints { make in
                 make.left.equalTo(self.view).offset(12)
                 make.bottom.equalTo(self.view).offset(-2)
             }
             
-            okButton.snp_makeConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
                 make.right.equalTo(self.view)
                 make.bottom.equalTo(self.view).offset(-2)
             }
             
-            activateButton.snp_makeConstraints { (make) in
-                //make.height.equalTo(30)
+            activateButton.snp.remakeConstraints { (make) in
                 make.bottom.equalTo(self.view).inset(6)
                 make.right.equalTo(self.view).inset(4)
             }

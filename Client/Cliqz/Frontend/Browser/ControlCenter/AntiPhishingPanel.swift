@@ -59,7 +59,7 @@ class AntiPhishingPanel: ControlCenterPanel {
         let panelLayout = OrientationUtil.controlPanelLayout()
         
         if panelLayout == .portrait {
-			panelIcon.snp_updateConstraints { (make) in
+			panelIcon.snp.updateConstraints { (make) in
 				make.height.equalTo(70)
 				make.width.equalTo(70 * 0.72)
 			}
@@ -69,54 +69,56 @@ class AntiPhishingPanel: ControlCenterPanel {
 			})
             
 			
-            descriptionLabel.snp_makeConstraints { make in
+            descriptionLabel.snp.remakeConstraints { make in
                 make.left.equalTo(self.view).offset(30)
                 make.right.equalTo(self.view).offset(-30)
-                make.top.equalTo(subtitleLabel.snp_bottom).offset(20)
+                make.top.equalTo(subtitleLabel.snp.bottom).offset(20)
             }
         }
         else if panelLayout == .landscapeCompactSize {
-            
-            titleLabel.snp_makeConstraints({ (make) in
-                make.top.equalTo(self.view).offset(40)
-            })
-            
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(panelIcon.snp_bottom).offset(20)
+                       
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(panelIcon.snp.bottom).offset(20)
                 make.left.equalTo(self.view.bounds.width/2).offset(20)
             }
             
-            panelIcon.snp_updateConstraints { (make) in
-                make.top.equalTo(titleLabel.snp_bottom).offset(20)
+            panelIcon.snp.remakeConstraints { (make) in
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
+                make.centerX.equalTo(titleLabel)
                 make.height.equalTo(70)
                 make.width.equalTo(70 * 0.72)
             }
             
-            descriptionLabel.snp_makeConstraints { make in
+            descriptionLabel.snp.remakeConstraints { make in
                 make.left.equalTo(self.view.bounds.width/2 + 20)
                 make.width.equalTo(self.view.bounds.width/2 - 40)
                 make.top.equalTo(self.view).offset(25)
             }
             
-            okButton.snp_updateConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
+                make.size.equalTo(CGSize(width: 80, height: 40))
+                make.bottom.equalTo(self.view).offset(-12)
                 make.centerX.equalTo(descriptionLabel)
             }
             
         }
         else{
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(panelIcon.snp_bottom).offset(25)
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(panelIcon.snp.bottom).offset(25)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.frame.width - 40)
+                make.height.equalTo(20)
             }
             
-            panelIcon.snp_updateConstraints { (make) in
+            panelIcon.snp.updateConstraints { (make) in
                 make.height.equalTo(44)
                 make.width.equalTo(44 * 0.72)
             }
             
-            descriptionLabel.snp_makeConstraints { make in
+            descriptionLabel.snp.remakeConstraints { make in
                 make.left.equalTo(self.view).offset(30)
                 make.right.equalTo(self.view).offset(-30)
-                make.top.equalTo(subtitleLabel.snp_bottom).offset(15)
+                make.top.equalTo(subtitleLabel.snp.bottom).offset(15)
             }
         }
 

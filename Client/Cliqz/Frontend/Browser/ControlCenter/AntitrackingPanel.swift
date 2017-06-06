@@ -131,7 +131,7 @@ class AntitrackingPanel: ControlCenterPanel {
         let panelLayout = OrientationUtil.controlPanelLayout()
         
         if panelLayout == .portrait {
-            trackersCountLabel.snp.makeConstraints { make in
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
                 make.top.equalTo(panelIcon.snp.bottom).offset(15)
                 make.height.equalTo(30)
@@ -143,141 +143,149 @@ class AntitrackingPanel: ControlCenterPanel {
 				make.height.equalTo(20)
 			})
             
-            configContainerView.snp_makeConstraints { make in
+            configContainerView.snp.remakeConstraints { make in
                 make.left.right.equalTo(trackersTableView)
-                make.top.equalTo(subtitleLabel.snp_bottom).offset(20)
+                make.top.equalTo(subtitleLabel.snp.bottom).offset(20)
                 make.height.equalTo(40)
             }
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView)
             }
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
             
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.right.equalTo(trackersTableView)
-                make.top.equalTo(configContainerView.snp_bottom).offset(10)
+                make.top.equalTo(configContainerView.snp.bottom).offset(10)
                 make.height.equalTo(25)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view).offset(25)
                 make.right.equalTo(self.view).offset(-25)
-                make.top.equalTo(legendView.snp_bottom)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-15)
+                make.top.equalTo(legendView.snp.bottom)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-15)
             }
         }
         else if panelLayout == .landscapeCompactSize{
             
-            trackersCountLabel.snp_makeConstraints { make in
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.equalTo(titleLabel)
                 make.width.equalTo(titleLabel)
-                make.top.equalTo(panelIcon.snp_bottom).offset(15)
+                make.top.equalTo(panelIcon.snp.bottom).offset(15)
                 make.height.equalTo(30)
             }
             
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(trackersCountLabel.snp_bottom).offset(16)
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(trackersCountLabel.snp.bottom).offset(16)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.bounds.width/2 - 40)
+                make.height.equalTo(20)
             }
             
-            configContainerView.snp_makeConstraints { make in
+            configContainerView.snp.remakeConstraints { make in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2)
                 make.top.equalTo(self.view).offset(0)
                 make.height.equalTo(40)
             }
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView).inset(20)
             }
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
 
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2 - 20)
-                make.top.equalTo(configContainerView.snp_bottom).offset(10)
+                make.top.equalTo(configContainerView.snp.bottom).offset(10)
                 make.height.equalTo(25)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2 - 20)
-                make.top.equalTo(legendView.snp_bottom)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-10)
+                make.top.equalTo(legendView.snp.bottom)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-10)
             }
             
-            okButton.snp_updateConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
+                make.size.equalTo(CGSize(width: 80, height: 40))
+                make.bottom.equalTo(self.view).offset(-12)
                 make.centerX.equalTo(configContainerView)
             }
         }
         else
         {
-            secondViewTitleLabel.snp_makeConstraints({ (make) in
+            secondViewTitleLabel.snp.remakeConstraints({ (make) in
                 make.top.equalTo(self.view)
                 make.right.left.equalTo(self.view)
                 make.height.equalTo(34)
             })
             
-            secondViewBackButton.snp_makeConstraints {make in
+            secondViewBackButton.snp.remakeConstraints {make in
                 make.top.equalTo(self.view)
                 make.left.equalTo(20)
                 make.height.width.equalTo(34)
             }
             
-            trackersCountLabel.snp_makeConstraints { make in
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
-                make.top.equalTo(panelIcon.snp_bottom).offset(10)
+                make.top.equalTo(panelIcon.snp.bottom).offset(10)
                 make.height.equalTo(24)
             }
             
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(trackersCountLabel.snp_bottom).offset(10)
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(trackersCountLabel.snp.bottom).offset(10)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.frame.width - 40)
+                make.height.equalTo(20)
             }
             
-            configContainerView.snp_makeConstraints { make in
-                make.bottom.equalTo(toTableViewButton.snp_top)
+            configContainerView.snp.remakeConstraints { make in
+                make.bottom.equalTo(toTableViewButton.snp.top)
                 make.height.equalTo(40)
                 make.left.equalTo(self.view).offset(20)
                 make.right.equalTo(self.view).inset(20)
             }
             
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView)
             }
             
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
             
-            toTableViewButton.snp_makeConstraints { (make) in
+            toTableViewButton.snp.remakeConstraints { (make) in
                 make.width.equalTo(self.view)
                 make.height.equalTo(48)
                 make.left.equalTo(self.view)
-                make.bottom.equalTo(okButton.snp_top)
+                make.bottom.equalTo(okButton.snp.top)
             }
             
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.trackersTableView)
-                make.top.equalTo(self.secondViewTitleLabel.snp_bottom).offset(8)
+                make.top.equalTo(self.secondViewTitleLabel.snp.bottom).offset(8)
                 make.height.equalTo(30)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view.frame.width)
                 make.width.equalTo(self.view.frame.width - 40)
-                make.top.equalTo(self.legendView.snp_bottom).offset(4)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-15)
+                make.top.equalTo(self.legendView.snp.bottom).offset(4)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-15)
             }
 
             
@@ -514,17 +522,17 @@ nameTitle.tag = 10
         countTitle.tag = 20
         header.addSubview(countTitle)
         
-        nameTitle.snp_makeConstraints { (make) in
+        nameTitle.snp.makeConstraints { (make) in
             make.left.top.equalTo(header)
             make.height.equalTo(20)
-            make.right.equalTo(countTitle.snp_left)
+            make.right.equalTo(countTitle.snp.left)
         }
-        underline.snp_makeConstraints { (make) in
+        underline.snp.makeConstraints { (make) in
             make.left.right.equalTo(header)
             make.height.equalTo(1)
-            make.top.equalTo(nameTitle.snp_bottom)
+            make.top.equalTo(nameTitle.snp.bottom)
         }
-        countTitle.snp_makeConstraints { (make) in
+        countTitle.snp.makeConstraints { (make) in
             make.right.top.equalTo(header)
             make.height.equalTo(20)
             make.width.equalTo(header).multipliedBy(0.5)
@@ -572,30 +580,30 @@ nameTitle.tag = 10
             changeTintColor(infoImageView, color: UIColor.white)
         }
         
-        label.snp_makeConstraints { (make) in
+        label.snp.makeConstraints { (make) in
             make.centerY.equalTo(button)
             make.left.equalTo(50)
         }
         
-        infoImageView.snp_makeConstraints { (make) in
-            make.centerY.equalTo(button.center.y)
+        infoImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(button)
             make.left.equalTo(8)
             make.height.width.equalTo(30)
         }
         
-        arrowImageView.snp_makeConstraints{ make in
-            make.centerY.equalTo(button.center.y)
+        arrowImageView.snp.makeConstraints{ make in
+            make.centerY.equalTo(button)
             make.right.equalTo(button).inset(14)
             make.width.height.equalTo(30)
         }
         
-        separatorView1.snp_makeConstraints{make in
+        separatorView1.snp.makeConstraints{make in
             make.width.equalTo(button)
             make.height.equalTo(1)
             make.top.left.equalTo(button)
         }
         
-        separatorView2.snp_makeConstraints{make in
+        separatorView2.snp.makeConstraints{make in
             make.width.equalTo(button)
             make.height.equalTo(1)
             make.bottom.left.equalTo(button)
@@ -645,7 +653,7 @@ extension AntitrackingPanel: UITableViewDataSource, UITableViewDelegate {
 		let underline = UIView()
 		underline.backgroundColor = self.textColor()
 		footer.addSubview(underline)
-		underline.snp_makeConstraints { (make) in
+		underline.snp.makeConstraints { (make) in
 			make.left.right.bottom.equalTo(footer)
 			make.height.equalTo(1)
 		}

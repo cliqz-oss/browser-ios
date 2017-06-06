@@ -58,10 +58,34 @@ class AdBlockerPanel: AntitrackingPanel {
     
     override func setupConstraints() {
         super.setupConstraints()
-		panelIcon.snp.updateConstraints { (make) in
-			make.height.equalTo(75)
-			make.width.equalTo(75)
-		}
+        
+        let panelLayout = OrientationUtil.controlPanelLayout()
+        
+        if panelLayout == .portrait {
+            panelIcon.snp.remakeConstraints { (make) in
+                make.centerX.equalTo(self.view)
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
+                make.height.equalTo(75)
+                make.width.equalTo(75)
+            }
+        }
+        else if panelLayout == .landscapeCompactSize {
+            panelIcon.snp.remakeConstraints { (make) in
+                make.centerX.equalTo(titleLabel)
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
+                make.height.equalTo(75)
+                make.width.equalTo(75)
+            }
+        }
+        else {
+            panelIcon.snp.remakeConstraints { (make) in
+                make.centerX.equalTo(self.view)
+                make.top.equalTo(titleLabel.snp.bottom).offset(20)
+                make.height.equalTo(75)
+                make.width.equalTo(75)
+            }
+        }
+		
     }
 
     override func getThemeColor() -> UIColor {

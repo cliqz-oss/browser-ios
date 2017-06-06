@@ -410,7 +410,7 @@ extension TabsViewController: TabManagerDelegate {
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {
         guard let index = tabManager.tabs.index(of: tab) else { return }
-        self.collectionView.insertItems(at: [IndexPath(row: index, section: 0)])//insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
+        self.collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
