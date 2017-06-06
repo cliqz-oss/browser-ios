@@ -71,9 +71,7 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 		} else {
 			faviconID = nil
 		}
-		
-		log.debug("Cliqz: Inserting bookmark with GUID \(newGUID) and specified icon \(faviconID).")
-		
+				
 		// If the caller didn't provide an icon (and they usually don't!),
 		// do a reverse lookup in history. We use a view to make this simple.
 		let iconValue: String
@@ -91,8 +89,6 @@ extension SQLiteBookmarks: CliqzShareToDestination {
 		if !change(insertSQL, args: args, desc: "Error inserting \(newGUID).") {
 			return false
 		}
-
-		log.debug("Cliqz: Returning true to commit transaction on thread \(Thread.current)")
 		
 		/// Fill the deferred and commit the transaction.
 		deferred.fill(Maybe(success: ()))
