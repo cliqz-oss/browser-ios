@@ -17,10 +17,10 @@ class Knobs {
         return Double((UIScreen.main.bounds.size.height - 200) / 1.8)
     }
     class func maxTiltAngle() -> Double {
-        return Double.pi / 4.0
+        return UIDevice.current.userInterfaceIdiom == .phone ? Double.pi / 5.0 : Double.pi / 6.0
     }
     class func minTiltAngle() -> Double {
-        return Double.pi / 9.0
+        return UIDevice.current.userInterfaceIdiom == .phone ? Double.pi / 10.0 : Double.pi / 20.0
     }
     class func minOffset() -> Double {
         return -4.0
@@ -38,7 +38,7 @@ class Knobs {
         return UIScreen.main.bounds.size.height - 200
     }
     class func cellWidth() -> CGFloat {
-        let ratio = UIDevice.current.userInterfaceIdiom == .phone ? 1.26 : 1.6
+        let ratio = UIDevice.current.userInterfaceIdiom == .phone ? 1.26 : 1.4
         return UIScreen.main.bounds.size.width / CGFloat(ratio)
     }
     class func landscapeSize() -> CGSize {
