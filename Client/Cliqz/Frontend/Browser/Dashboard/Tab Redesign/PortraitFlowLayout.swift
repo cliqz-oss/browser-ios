@@ -85,7 +85,7 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         
         //calculate how much down t will take the layer and then compensate for that.
         //this view must have the dimensions of the view this attr is going to be applied to.
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width / 1.26, height: Knobs.cellHeight()))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: Knobs.cellWidth(), height: Knobs.cellHeight()))
         view.layer.transform = t
         
         t = CATransform3DTranslate(t, 0, -view.layer.frame.origin.y, 0)
