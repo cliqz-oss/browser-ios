@@ -18,17 +18,7 @@ extension BrowserDB {
 
 	func extendTables() {
 		createHiddenTopSitesTable()
-		let columnName = "bookmarked_date"
-		if !isColumnExist(TableBookmarksLocal, columnName: columnName) {
-			let r = alterTableWithExtraColumn(TableBookmarksLocal, columnName: columnName)
-			switch  (r.value) {
-			case .failure:
-				let notificationCenter = NotificationCenter.default
-				notificationCenter.addObserver(self, selector: #selector(BrowserDB.onDatabaseCreation(_:)), name: NSNotification.Name(rawValue: NotificationDatabaseWasCreated), object: nil)
-			default:
-				migrateOldBookmarks()
-			}
-		}
+		extendBookmarksTable()
 	}
 	
 	fileprivate func createHiddenTopSitesTable() {
@@ -39,7 +29,17 @@ extension BrowserDB {
 		")"
 		self.run([hiddenTopSitesTableCreate])
 	}
-
+    
+    fileprivate func extendBookmarksTable() {
+        
+        let columnName = "bookmarked_date"
+        guard !isColumnExist(TableBookmarksLocal, columnName: columnName) else {
+            return
+        }
+        self.alterTableWithExtraColumn(TableBookmarksLocal, columnName: columnName)
+        self.migrateOldBookmarks()
+    }
+    
 	fileprivate func alterTableWithExtraColumn(_ tableName: String, columnName: String) -> Success {
 		return self.run([
 				("ALTER TABLE \(tableName) ADD COLUMN \(columnName) INTEGER NOT NULL DEFAULT 0", nil)
@@ -64,18 +64,7 @@ extension BrowserDB {
 		let columnName = row["name"] as! String
 		return columnName
 	}
-
-	@objc func onDatabaseCreation(_ notification: Notification) {
-		DispatchQueue.main.async {
-			self.extendBookmarksTable()
-			NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationDatabaseWasCreated), object: nil)
-		}
-	}
 	
-	fileprivate func extendBookmarksTable() {
-		self.alterTableWithExtraColumn(TableBookmarksLocal, columnName: "bookmarked_date")
-		self.migrateOldBookmarks()
-	}
 
 	fileprivate func migrateOldBookmarks() {
 		if isColumnExist(TableVisits, columnName: "favorite") {

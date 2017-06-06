@@ -268,6 +268,8 @@ open class BrowserTable: Table {
         ", bmkUri TEXT, tags TEXT, keyword TEXT" +     // BOOKMARKS, QUERIES
         ", folderName TEXT, queryId TEXT" +            // QUERIES
         withAdditionalColumns +
+        // Cliqz: Added `bookmarked_date` column
+        ", bookmarked_date INTEGER NOT NULL DEFAULT 0" +
         ", CONSTRAINT parentidOrDeleted CHECK (parentid IS NOT NULL OR is_deleted = 1)" +
         ", CONSTRAINT parentNameOrDeleted CHECK (parentName IS NOT NULL OR is_deleted = 1)" +
         ")"

@@ -100,9 +100,11 @@ open class BrowserDB {
         case .success:
             log.debug("db: \(file) with secret = \(secretKey) has been created")
         }
-
-		// Cliqz: new method call to extend tables if needed
-		self.extendTables()
+        
+        if filename == "browser.db" {
+            // Cliqz: new method call to extend tables if needed
+            self.extendTables()
+        }
     }
 
     // Creates a table and writes its table info into the table-table database.
