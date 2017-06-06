@@ -236,11 +236,7 @@ class Tab: NSObject {
         }
     }
     private func getEscapedJSON(_ jsonDict: [String: Any]) -> String?{
-        var jsonString = JSON(jsonDict).rawString()
-        jsonString = jsonString?.replace("\n", replacement: "")
-        jsonString = jsonString?.replace(" ", replacement: "")
-        jsonString = jsonString?.replace("\\", replacement: "")
-        
+        let jsonString = JSON(jsonDict).rawString(String.Encoding.utf8, options: [])
         let escapedJSON = jsonString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         return escapedJSON
     }
