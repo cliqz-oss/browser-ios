@@ -274,7 +274,8 @@ class TabViewCell: UICollectionViewCell {
         if isPortrait {
 			self.displayView.snp.remakeConstraints { (make) in
                 self.showShadow(true)
-                make.left.right.top.equalTo(self.contentView)
+                make.centerX.top.equalTo(self.contentView)
+                make.width.equalTo(Knobs.cellWidth())
                 make.height.equalTo(Knobs.cellHeight()) //* Knobs.cellHeightMultiplier)
             }
             

@@ -37,6 +37,10 @@ class Knobs {
     class func cellHeight() -> CGFloat {
         return UIScreen.main.bounds.size.height - 200
     }
+    class func cellWidth() -> CGFloat {
+        let ratio = UIDevice.current.userInterfaceIdiom == .phone ? 1.26 : 1.6
+        return UIScreen.main.bounds.size.width / CGFloat(ratio)
+    }
     class func landscapeSize() -> CGSize {
         return CGSize(width: 200, height: 130)
     }
@@ -344,14 +348,7 @@ extension TabsViewController: UICollectionViewDelegate {
 extension TabsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var cellSize = UIScreen.main.bounds.size
-
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            cellSize.width /= 1.26
-        }
-        else{
-            cellSize.width /= 1.6
-        }
+        let cellSize = UIScreen.main.bounds.size
         
         if ((collectionViewLayout as? LandscapeFlowLayout) != nil) {
             return Knobs.landscapeSize()
