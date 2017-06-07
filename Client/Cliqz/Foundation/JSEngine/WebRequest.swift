@@ -20,7 +20,7 @@ open class WebRequest : RCTEventEmitter {
     
     public override init() {
         super.init()
-        URLProtocol.registerClass(InterceptorURLProtocol)
+        URLProtocol.registerClass(InterceptorURLProtocol.self)
     }
     
     open override static func moduleName() -> String! {
