@@ -57,9 +57,9 @@ class YoutubeVideoDownloader {
 	
     fileprivate class func saveVideoToPhotoLibrary(_ localPath: URL) {
         PHPhotoLibrary.shared().performChanges({
-	let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: localPath)
-                creationRequest?.creationDate = Date()
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: localPath)}) { completed, error in
+            let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: localPath)
+            creationRequest?.creationDate = Date()
+        }) { completed, error in
                 if completed {
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "true"))
                     
