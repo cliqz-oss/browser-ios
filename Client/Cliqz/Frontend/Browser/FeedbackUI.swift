@@ -17,14 +17,14 @@ public enum ToastMessageType {
 }
 class FeedbackUI: NSObject {
     static var defaultOptions : [AnyHashable: Any] = [
-        kCRToastTextAlignmentKey : NSTextAlignment.left.rawValue,
-        kCRToastNotificationTypeKey: CRToastType.navigationBar.rawValue,
-        kCRToastNotificationPresentationTypeKey: CRToastPresentationType.cover.rawValue,
-        kCRToastAnimationInTypeKey : CRToastAnimationType.linear.rawValue,
-        kCRToastAnimationOutTypeKey : CRToastAnimationType.linear.rawValue,
-        kCRToastAnimationInDirectionKey : CRToastAnimationDirection.top.rawValue,
-        kCRToastAnimationOutDirectionKey : CRToastAnimationDirection.top.rawValue,
-        kCRToastImageAlignmentKey: CRToastAccessoryViewAlignment.left.rawValue
+        kCRToastTextAlignmentKey : NSNumber(value: NSTextAlignment.left.rawValue),
+        kCRToastNotificationTypeKey: NSNumber(value: CRToastType.navigationBar.rawValue),
+        kCRToastNotificationPresentationTypeKey: NSNumber(value: CRToastPresentationType.cover.rawValue),
+        kCRToastAnimationInTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+        kCRToastAnimationOutTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+        kCRToastAnimationInDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+        kCRToastAnimationOutDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+        kCRToastImageAlignmentKey: NSNumber(value: CRToastAccessoryViewAlignment.left.rawValue)
         
     ]
     
