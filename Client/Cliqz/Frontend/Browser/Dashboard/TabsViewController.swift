@@ -137,7 +137,8 @@ class TabsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //scrollToCurrentTabCell()
+        self.collectionView.reloadData()
+        scrollToCurrentTabCell()
     }
     
 	override func viewWillLayoutSubviews() {
@@ -147,7 +148,6 @@ class TabsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToCurrentTabCell()
     }
 	
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
