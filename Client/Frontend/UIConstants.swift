@@ -10,8 +10,8 @@ public struct UIConstants {
     static let AboutHomePage = URL(string: "\(WebServer.sharedInstance.base)/about/home/")!
 
     // Cliqz: Changed Appbackground color, PrivateModePurple, PrivateModeLocationBackgroundColor, PrivateModeLocationBorderColor, PrivateModeActionButtonTintColor, PrivateModeTextHighlightColor, PrivateModeTextHighlightColor according to the requirements
-	static let CliqzThemeColor = UIColor(rgb: 0x45C2CC)
-    static let TextHighlightColor = UIColor(colorString: "8BE0E7")
+    static let CliqzThemeColor = UIColor(colorString: "00AEF0")
+    static let TextHighlightColor = CliqzThemeColor //UIColor(colorString: "00AEF0")//UIColor(colorString: "8BE0E7")
 	static let AppBackgroundColor = UIColor(rgb: 0xE8E8E8) //UIColor.blackColor()
     static let SystemBlueColor = UIColor(red: 0 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)
     static let PrivateModePurple = UIColor.clear // UIColor(red: 207 / 255, green: 104 / 255, blue: 255 / 255, alpha: 1)
@@ -21,6 +21,11 @@ public struct UIConstants {
 	static let PrivateModeTextHighlightColor = CliqzThemeColor // UIColor(red: 120 / 255, green: 120 / 255, blue: 165 / 255, alpha: 1)
     static let PrivateModeReaderModeBackgroundColor = UIColor(red: 89 / 255, green: 89 / 255, blue: 89 / 255, alpha: 1)
     static let PrivateModeToolbarTintColor = UIColor(red: 74 / 255, green: 74 / 255, blue: 74 / 255, alpha: 1)
+    
+    //
+    static var OrangeColor: UIColor { return UIColor(red: 246.0/255.0, green: 90.0/255.0, blue: 42.0/255.0, alpha: 1) }
+    static let PrivateModeTextColor: UIColor = UIColor.white
+    static let NormalModeTextColor: UIColor = UIColor.black
 	
 	// Cliqz: Added colors for our new UI
 	static let TextFieldBackgroundColor = UIColor.white

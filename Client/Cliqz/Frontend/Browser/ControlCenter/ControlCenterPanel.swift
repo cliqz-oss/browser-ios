@@ -114,18 +114,21 @@ class ControlCenterPanel: UIViewController {
         let okButtonTitle = NSLocalizedString("OK", tableName: "Cliqz", comment: "Ok button in Control Center panel.")
         self.okButton.setTitle(okButtonTitle, for: UIControlState())
         self.okButton.setTitleColor(UIConstants.CliqzThemeColor, for: .normal)
+        self.okButton.backgroundColor = UIColor.clear
         
         if panelLayout != .landscapeRegularSize{
             self.okButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            self.okButton.setTitleColor(UIColor.white, for: .normal)
             self.okButton.layer.borderColor = UIConstants.CliqzThemeColor.cgColor
             self.okButton.layer.borderWidth = 2.0
             self.okButton.layer.cornerRadius = 20
+            self.okButton.clipsToBounds = true
+            self.okButton.backgroundColor = UIConstants.CliqzThemeColor
         }
         else{
             self.okButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         }
         
-        self.okButton.backgroundColor = UIColor.clear
         self.okButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         self.view.addSubview(self.okButton)
         

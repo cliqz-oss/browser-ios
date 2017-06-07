@@ -103,7 +103,6 @@
 		1E79DD271D4FB2C5006BEB4A /* NewsNotificationPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD11D4FB2C5006BEB4A /* NewsNotificationPermissionViewController.swift */; };
 		1E79DD281D4FB2C5006BEB4A /* RecommendationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD21D4FB2C5006BEB4A /* RecommendationsViewController.swift */; };
 		1E79DD2A1D4FB2C5006BEB4A /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */; };
-		1E79DD2B1D4FB2C5006BEB4A /* UIConstantsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */; };
 		1E79DD2C1D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */; };
 		1E79DD2E1D4FB2C5006BEB4A /* NewsPermissionAsking-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCDA1D4FB2C5006BEB4A /* NewsPermissionAsking-4.png */; };
 		1E79DD2F1D4FB2C5006BEB4A /* NewsPermissionAsking-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCDC1D4FB2C5006BEB4A /* NewsPermissionAsking-5.png */; };
@@ -1476,7 +1475,6 @@
 		1E79DCD11D4FB2C5006BEB4A /* NewsNotificationPermissionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsNotificationPermissionViewController.swift; sourceTree = "<group>"; };
 		1E79DCD21D4FB2C5006BEB4A /* RecommendationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsViewController.swift; sourceTree = "<group>"; };
 		1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
-		1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstantsExtension.swift; sourceTree = "<group>"; };
 		1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeVideoDownloaderActivity.swift; sourceTree = "<group>"; };
 		1E79DCDB1D4FB2C5006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-4.png"; sourceTree = "<group>"; };
 		1E79DCDD1D4FB2C5006BEB4A /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/NewsPermissionAsking-5.png"; sourceTree = "<group>"; };
@@ -2835,7 +2833,6 @@
 				1E79DCD11D4FB2C5006BEB4A /* NewsNotificationPermissionViewController.swift */,
 				1E79DCD21D4FB2C5006BEB4A /* RecommendationsViewController.swift */,
 				1E79DCD41D4FB2C5006BEB4A /* TransitionAnimator.swift */,
-				1E79DCD51D4FB2C5006BEB4A /* UIConstantsExtension.swift */,
 				1E79DCD61D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift */,
 				4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */,
 				4F88A6F21D7714D30039775D /* BrowserNavigationDelegate.swift */,
@@ -6492,7 +6489,6 @@
 				AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */,
 				1E79DD281D4FB2C5006BEB4A /* RecommendationsViewController.swift in Sources */,
 				D308E4E41A5306F500842685 /* SearchEngines.swift in Sources */,
-				1E79DD2B1D4FB2C5006BEB4A /* UIConstantsExtension.swift in Sources */,
 				AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */,
 				7B59FC411C68E9B600F58EF5 /* SWLongPressGestureRecognizer.m in Sources */,
 				3BCE6D3C1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift in Sources */,
