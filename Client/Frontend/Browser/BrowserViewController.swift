@@ -491,25 +491,25 @@ class BrowserViewController: UIViewController {
     }
 
     fileprivate func setupConstraints() {
-        urlBar.snp_makeConstraints { make in
+        urlBar.snp.makeConstraints { make in
             make.edges.equalTo(self.header)
         }
 
-        header.snp_makeConstraints { make in
+        header.snp.makeConstraints { make in
             scrollController.headerTopConstraint = make.top.equalTo(topLayoutGuide.snp.bottom).constraint
             make.height.equalTo(UIConstants.ToolbarHeight)
             make.left.right.equalTo(self.view)
         }
 
-        headerBackdrop.snp_makeConstraints { make in
+        headerBackdrop.snp.makeConstraints { make in
             make.edges.equalTo(self.header)
         }
 
-        webViewContainerBackdrop.snp_makeConstraints { make in
+        webViewContainerBackdrop.snp.makeConstraints { make in
             make.edges.equalTo(webViewContainer)
         }
 
-        webViewContainerToolbar.snp_makeConstraints { make in
+        webViewContainerToolbar.snp.makeConstraints { make in
             make.left.right.top.equalTo(webViewContainer)
             make.height.equalTo(0)
         }
@@ -518,7 +518,7 @@ class BrowserViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         log.debug("BVC viewDidLayoutSubviews…")
         super.viewDidLayoutSubviews()
-        statusBarOverlay.snp_remakeConstraints { make in
+        statusBarOverlay.snp.remakeConstraints { make in
             make.top.left.right.equalTo(self.view)
             make.height.equalTo(self.topLayoutGuide.length)
         }
@@ -734,14 +734,14 @@ class BrowserViewController: UIViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
 
-        topTouchArea.snp_remakeConstraints { make in
+        topTouchArea.snp.remakeConstraints { make in
             make.top.left.right.equalTo(self.view)
             make.height.equalTo(BrowserViewControllerUX.ShowHeaderTapAreaHeight)
         }
 
-        readerModeBar?.snp_remakeConstraints { make in
+        readerModeBar?.snp.remakeConstraints { make in
             if controlCenterActiveInLandscape{
-                make.top.equalTo(self.header.snp_bottom).constraint
+                make.top.equalTo(self.header.snp.bottom)
                 make.height.equalTo(UIConstants.ToolbarHeight)
                 //make.leading.equalTo(self.view)
                 //make.trailing.equalTo(self.controlCenterController?)
@@ -749,13 +749,13 @@ class BrowserViewController: UIViewController {
                 make.width.equalTo(self.view.frame.width/2)
             }
             else{
-                make.top.equalTo(self.header.snp_bottom).constraint
+                make.top.equalTo(self.header.snp.bottom)
                 make.height.equalTo(UIConstants.ToolbarHeight)
                 make.leading.trailing.equalTo(self.view)
             }
         }
 
-        webViewContainer.snp_remakeConstraints { make in
+        webViewContainer.snp.remakeConstraints { make in
             
             if controlCenterActiveInLandscape{
                 make.left.equalTo(self.view)
@@ -765,38 +765,38 @@ class BrowserViewController: UIViewController {
                 make.left.right.equalTo(self.view)
             }
             
-            if let readerModeBarBottom = readerModeBar?.snp_bottom {
+            if let readerModeBarBottom = readerModeBar?.snp.bottom {
                 make.top.equalTo(readerModeBarBottom)
             } else {
-                make.top.equalTo(self.header.snp_bottom)
+                make.top.equalTo(self.header.snp.bottom)
             }
 
             let findInPageHeight = (findInPageBar == nil) ? 0 : UIConstants.ToolbarHeight
             if let toolbar = self.toolbar {
-                make.bottom.equalTo(toolbar.snp_top).offset(-findInPageHeight)
+                make.bottom.equalTo(toolbar.snp.top).offset(-findInPageHeight)
             } else {
                 make.bottom.equalTo(self.view).offset(-findInPageHeight)
             }
         }
 
         // Setup the bottom toolbar
-        toolbar?.snp_remakeConstraints { make in
+        toolbar?.snp.remakeConstraints { make in
             make.edges.equalTo(self.footerBackground!)
             make.height.equalTo(UIConstants.ToolbarHeight)
         }
 
-        footer.snp_remakeConstraints { make in
-            scrollController.footerBottomConstraint = make.bottom.equalTo(self.view.snp_bottom).constraint
-            make.top.equalTo(self.snackBars.snp_top)
+        footer.snp.remakeConstraints { make in
+            scrollController.footerBottomConstraint = make.bottom.equalTo(self.view.snp.bottom).constraint
+            make.top.equalTo(self.snackBars.snp.top)
             make.leading.trailing.equalTo(self.view)
         }
 
-        footerBackdrop.snp_remakeConstraints { make in
+        footerBackdrop.snp.remakeConstraints { make in
             make.edges.equalTo(self.footer)
         }
 
         updateSnackBarConstraints()
-        footerBackground?.snp_remakeConstraints { make in
+        footerBackground?.snp.remakeConstraints { make in
             make.bottom.left.right.equalTo(self.footer)
             make.height.equalTo(UIConstants.ToolbarHeight)
         }
@@ -804,23 +804,23 @@ class BrowserViewController: UIViewController {
 
         // Remake constraints even if we're already showing the home controller.
         // The home controller may change sizes if we tap the URL bar while on about:home.
-        homePanelController?.view.snp_remakeConstraints { make in
-            make.top.equalTo(self.urlBar.snp_bottom)
+        homePanelController?.view.snp.remakeConstraints { make in
+            make.top.equalTo(self.urlBar.snp.bottom)
             make.left.right.equalTo(self.view)
             if self.homePanelIsInline {
-                make.bottom.equalTo(self.toolbar?.snp_top ?? self.view.snp_bottom)
+                make.bottom.equalTo(self.toolbar?.snp.top ?? self.view.snp.bottom)
             } else {
-                make.bottom.equalTo(self.view.snp_bottom)
+                make.bottom.equalTo(self.view.snp.bottom)
             }
         }
 
-        findInPageContainer.snp_remakeConstraints { make in
+        findInPageContainer.snp.remakeConstraints { make in
             make.left.right.equalTo(self.view)
 
             if let keyboardHeight = keyboardState?.intersectionHeightForView(self.view), keyboardHeight > 0 {
                 make.bottom.equalTo(self.view).offset(-keyboardHeight)
             } else if let toolbar = self.toolbar {
-                make.bottom.equalTo(toolbar.snp_top)
+                make.bottom.equalTo(toolbar.snp.top)
             } else {
                 make.bottom.equalTo(self.view)
             }
@@ -2531,8 +2531,8 @@ extension BrowserViewController: TabManagerDelegate {
 
             scrollController.tab = selected
             webViewContainer.addSubview(webView)
-            webView.snp_makeConstraints { make in
-                make.top.equalTo(webViewContainerToolbar.snp_bottom)
+            webView.snp.makeConstraints { make in
+                make.top.equalTo(webViewContainerToolbar.snp.bottom)
                 make.left.right.bottom.equalTo(self.webViewContainer)
             }
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
@@ -2555,7 +2555,7 @@ extension BrowserViewController: TabManagerDelegate {
                         $0.isBookmarked(url)
                             .uponQueue(DispatchQueue.main) {
                             guard let isBookmarked = $0.successValue else {
-                                log.error("Error getting bookmark status: \($0.failureValue).")
+                                log.error("Error getting bookmark status: \(String(describing: $0.failureValue)).")
                                 return
                             }
 
@@ -2652,7 +2652,7 @@ extension BrowserViewController: TabManagerDelegate {
             let time = DispatchTime(uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds + UInt64(ButtonToastUX.ToastDelay * Double(NSEC_PER_SEC)))
             DispatchQueue.main.asyncAfter(deadline: time) {
                 self.view.addSubview(undoToast)
-                undoToast.snp_makeConstraints { make in
+                undoToast.snp.makeConstraints { make in
                     make.left.right.equalTo(self.view)
                     make.bottom.equalTo(self.webViewContainer)
                 }
@@ -2971,7 +2971,7 @@ extension BrowserViewController: WKNavigationDelegate {
         webViewContainerToolbar.snp_updateConstraints { make in
             make.height.equalTo(OpenInViewUX.ViewHeight)
         }
-        view.snp_makeConstraints { make in
+        view.snp.makeConstraints { make in
             make.edges.equalTo(webViewContainerToolbar)
         }
 
