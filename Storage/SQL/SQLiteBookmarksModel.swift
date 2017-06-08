@@ -909,13 +909,10 @@ extension MergedSQLiteBookmarks: CliqzSQLiteBookmarks {
 	}
     
     public func clearBookmarks() -> Success {
-		return succeed()
-
-//        log.warning("CALLING clearBookmarks -- this should only be used from tests.")
-//        return self.local.db.run([
-//            ("DELETE FROM \(TableBookmarksLocal) WHERE parentid IS NOT ?", [BookmarkRoots.RootGUID as AnyObject?] as Args),
-//            self.local.favicons.getCleanupCommands()
-//            ])
+        return self.local.db.run([
+            ("DELETE FROM \(TableBookmarksLocal) WHERE parentid IS NOT ?", [BookmarkRoots.RootGUID as AnyObject?] as Args),
+            self.local.favicons.getCleanupCommands()
+            ])
     }
 }
 
