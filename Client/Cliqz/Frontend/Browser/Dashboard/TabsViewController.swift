@@ -132,13 +132,13 @@ class TabsViewController: UIViewController {
         }
         
 		self.collectionView.reloadData()
-        self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
+        if self.collectionView.contentSize.height > self.collectionView.frame.size.height{
+            self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
+        }
 	}
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.collectionView.reloadData()
-        scrollToCurrentTabCell()
     }
     
 	override func viewWillLayoutSubviews() {
@@ -174,12 +174,6 @@ class TabsViewController: UIViewController {
             })
         }
         
-    }
-    
-    private func scrollToCurrentTabCell() {
-        // Scroll the collectionView to the current tab
-        let currentTabIndex = IndexPath(row: self.tabManager.selectedIndex, section: 0)
-        self.collectionView.scrollToItem(at: currentTabIndex, at:.centeredVertically, animated: false)
     }
 
 	@objc private func addNewTab(sender: UIButton) {
