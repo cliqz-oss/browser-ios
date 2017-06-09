@@ -291,7 +291,15 @@ extension BrowserViewController: ControlCenterViewDelegate {
         }
     }
 
+
     func showHint(_ type: HintType) {
+        func isLandscape() -> Bool {
+            let screenSize = UIScreen.main.bounds.size
+            return screenSize.width > screenSize.height
+        }
+        
+        if isLandscape() {return}
+        
         let intro = InteractiveIntroViewController()
 		intro.modalPresentationStyle = .overFullScreen
         intro.showHint(type)
