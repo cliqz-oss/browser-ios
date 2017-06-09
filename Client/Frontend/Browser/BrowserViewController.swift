@@ -1894,7 +1894,7 @@ extension BrowserViewController: URLBarDelegate {
         }
         */
         // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
-        self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
+//        self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
         self.urlBar.showAntitrackingButton(false)
     }
 
