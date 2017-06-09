@@ -97,6 +97,10 @@ class TabLocationView: UIView {
             }
         }
     }
+    
+    func hideReaderModeButton(hidden: Bool) {
+        self.readerModeButton.isHidden = hidden
+    }
 
     lazy var placeholder: NSAttributedString = {
 		// Cliqz: Changed Placeholder text and color according to requirements

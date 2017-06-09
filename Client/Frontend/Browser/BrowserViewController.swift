@@ -1894,7 +1894,8 @@ extension BrowserViewController: URLBarDelegate {
         }
         */
         // Cliqz: hide AntiTracking button and reader mode button when switching to search mode
-//        self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
+        //self.urlBar.updateReaderModeState(ReaderModeState.Unavailable)
+        self.urlBar.hideReaderModeButton(hidden: true)
         self.urlBar.showAntitrackingButton(false)
     }
 
@@ -1969,6 +1970,7 @@ extension BrowserViewController: URLBarDelegate {
 		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
         updateInContentHomePanel(urlBar.currentURL as URL?)
 //		updateInContentHomePanel(tabManager.selectedTab?.url)
+        self.urlBar.hideReaderModeButton(hidden: false)
     }
     
     // Cliqz: Add delegate methods for new tab button
