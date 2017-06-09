@@ -3449,36 +3449,16 @@ extension BrowserViewController: ReaderModeBarViewDelegate {
 extension BrowserViewController: IntroViewControllerDelegate {
     func presentIntroViewController(_ force: Bool = false) -> Bool{
         if force || profile.prefs.intForKey(IntroViewControllerSeenProfileKey) == nil {
-            // Cliqz: replace regular introViewController with CliqzIntroViewController
-            let introViewController = CliqzIntroViewController()
+            let introViewController = IntroViewController()
             introViewController.delegate = self
             // On iPad we present it modally in a controller
             if UIDevice.current.userInterfaceIdiom == .pad {
                 introViewController.preferredContentSize = CGSize(width: IntroViewControllerUX.Width, height: IntroViewControllerUX.Height)
                 introViewController.modalPresentationStyle = UIModalPresentationStyle.formSheet
             }
-            // Cliqz: if there is a ViewController already presented, dismiss it first before presenting the IntroView
-            if let presentedViewController = self.presentedViewController {
-				presentedViewController.dismiss(animated: false, completion: {
-                    self.present(introViewController, animated: true) {
-                        self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
-                    }
-                })
-            } else {
-                present(introViewController, animated: true) {
-                    self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
-                }
-            }
-            /*
-            presentViewController(introViewController, animated: true) {
+            present(introViewController, animated: true) {
                 self.profile.prefs.setInt(1, forKey: IntroViewControllerSeenProfileKey)
-                // On first run (and forced) open up the homepage in the background.
-                let state = self.getCurrentAppState()
-                if let homePageURL = HomePageAccessors.getHomePage(state), tab = self.tabManager.selectedTab where DeviceInfo.hasConnectivity() {
-                    tab.loadRequest(NSURLRequest(URL: homePageURL))
-                }
             }
-            */
 
             return true
         }
