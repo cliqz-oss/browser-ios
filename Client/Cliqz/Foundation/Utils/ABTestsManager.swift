@@ -75,11 +75,6 @@ class ABTestsManager: NSObject {
     
     fileprivate class func enterABTest(_ test: String) {
         switch test {
-        case "1089_A":
-            LocalDataStore.setObject(false, forKey: LocalDataStore.enableQuerySuggestionKey)
-        case "1089_B":
-            LocalDataStore.setObject(true, forKey: LocalDataStore.enableQuerySuggestionKey)
-            
         default:
             return
         }
@@ -88,8 +83,6 @@ class ABTestsManager: NSObject {
     
     fileprivate class func leaveABTest(_ testId: String) {
         switch testId {
-        case "1089":
-            LocalDataStore.removeObjectForKey(LocalDataStore.enableQuerySuggestionKey)
         default:
             return
         }
