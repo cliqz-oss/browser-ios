@@ -28,7 +28,7 @@
 /* Title for `Last site` home shortcut. */
 "Last site" = "Récemment visités";
 /* Share footer */
-"Shared with CLIQZ for iOS" = "Partagé avec CLIQZ pour iOS";
+"Shared with CLIQZ for iOS" = "Partagé avec Cliqz pour iOS";
 /* Enable News Push Notifications */
 "Enable News Push Notifications" = "Notifications pour l'actualité";
 /* OK button in the 'Show blocked top-sites' alert */
@@ -98,7 +98,7 @@
 /* Antiphishing alert title */
 "Warning: deceptive website!" = "Attention : site malveillant !";
 /* Antiphishing alert message */
-"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "CLIQZ a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser vos identifiants, vos mots de passe ou toutes autres données sensibles.";
+"CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information" = "Cliqz a bloqué l'accès à %1$ car il a été reporté comme un site malveillant. \nLes pages malveillantes se déguisent des pages sûres afin de subtiliser vos identifiants, vos mots de passe ou toutes autres données sensibles.";
 /* Back to safe site buttun title in antiphishing alert title */
 "Back to safe site" = "Retourner à la page sûre";
 /* Continue despite warning buttun title in antiphishing alert title */
@@ -195,9 +195,9 @@
 /* Alert title for turning on location service when clicking share location on local card */
 "Turn on Location Services" = "Activer le service de localisation";
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les Réglages de l'application CLIQZ :\n\n1. Cliquez sur 'Service de localisation'\n2. Saisissez 'Lorsque l'app est active'";
+"To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les Réglages de l'application Cliqz :\n\n1. Cliquez sur 'Service de localisation'\n2. Saisissez 'Lorsque l'app est active'";
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les réglages du téléphone:\n\n1. Activez le service de localisation\n2. Sélectionnez CLIQZ\n3. Sélectionnez \"Lorsque l'app est active\"";
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Pour partager votre position, rendez-vous dans les réglages du téléphone:\n\n1. Activez le service de localisation\n2. Sélectionnez Cliqz\n3. Sélectionnez \"Lorsque l'app est active\"";
 /* Not now option for turning on location service */
 "Not Now" = "Pas maintenant";
 /** Settings **/
@@ -223,7 +223,7 @@
 /* [Settings] Human Web */
 "Human Web" = "Human Web";
 /* [Settings -> Human Web]Footer text for Fair Blocking section" */
-"Human Web footer" = "CLIQZ travaille avec des données anonymisées sur les recherches et les visites aux sites web. Nous appelons la technologie qui collecte ces données pour construire l'index `Human Web`.";
+"Human Web footer" = "Cliqz travaille avec des données anonymisées sur les recherches et les visites aux sites web. Nous appelons la technologie qui collecte ces données pour construire l'index `Human Web`.";
 /* [Settings] Complementary Search */
 "Complementary Search" = "Recherche complémentaire";
 /* [Settings] Browsing & History section header */
@@ -250,7 +250,7 @@
 /* [Settings] FAQs & Support */
 "FAQ & Support" = "FAQ & Support";
 /* [Settings] Get the best out of CLIQZ */
-"Get the best out of CLIQZ" = "Obtenir le meilleur de CLIQZ";
+"Get the best out of CLIQZ" = "Obtenir le meilleur de Cliqz";
 /* [Settings] Report Website */
 "Report Website" = "Signaler le site web";
 /* [Settings] About Cliqz section header */
