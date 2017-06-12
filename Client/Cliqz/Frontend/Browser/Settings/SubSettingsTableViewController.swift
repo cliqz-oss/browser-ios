@@ -35,6 +35,10 @@ class SubSettingsTableViewController : UITableViewController {
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.settingsOpenTime = Date.getCurrentMillis()
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
