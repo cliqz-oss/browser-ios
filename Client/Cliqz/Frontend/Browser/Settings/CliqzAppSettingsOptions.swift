@@ -398,10 +398,9 @@ class LimitMobileDataUsageSetting: Setting {
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
         
-        //TODO: Connect Telemetry
         // log Telemerty signal
-        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "limit_mobile_data_usage", nil, nil)
-        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+        let limitMobileDataUsageSingal = TelemetryLogEventType.Settings("main", "click", viewController.getViewName(), nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(limitMobileDataUsageSingal)
     }
 }
 
@@ -424,9 +423,8 @@ class CliqzConnectSetting: Setting {
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
         
-        //TODO: Connect Telemetry
         // log Telemerty signal
-        let blcokAdsSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
-        TelemetryLogger.sharedInstance.logEvent(blcokAdsSingal)
+        let connectSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(connectSingal)
     }
 }

@@ -64,9 +64,9 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	
 	func downloadVideoOfSelectedFormat(_ urls: [AnyObject], sourceRect: CGRect) {
 		if urls.count > 0 {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": true]))
 		} else {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "false"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": false]))
 		}
         FeedbackUI.dismissHUD()
         let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
@@ -76,12 +76,12 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			if let f = url["label"] as? String, let u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .default, handler: { _ in
 					YoutubeVideoDownloader.downloadFromURL(u)
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", f.replace(" ", replacement: "_")))
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": f.replace(" ", replacement: "_")]))
 				}))
 			}
 		}
         actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .cancel, handler: { _ in
-            TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
+            TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": "cancel"]))
         }))
         
         if let popoverPresentationController = actionSheet.popoverPresentationController {
@@ -314,6 +314,9 @@ extension BrowserViewController: ControlCenterViewDelegate {
             self.urlBar.leaveOverlayMode()
             self.homePanelController?.view.isHidden = true
         }
+        
+        // Telemetry
+        TelemetryLogger.sharedInstance.logEvent(.Connect("open_tab", nil))
     }
     
     func downloadVideoViaConnect(notification: NSNotification) {
@@ -325,9 +328,10 @@ extension BrowserViewController: ControlCenterViewDelegate {
         
         if let networkReachabilityStatus = NetworkReachability.sharedInstance.networkReachabilityStatus, limitMobileDataUsage == true && networkReachabilityStatus != .reachableViaWiFi {
             showNoWifiConnectionAlert()
+            return
         }
         
-        YoutubeVideoDownloader.downloadFromURL(urlString)
+        YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
     }
     
     func showNoWifiConnectionAlert() {

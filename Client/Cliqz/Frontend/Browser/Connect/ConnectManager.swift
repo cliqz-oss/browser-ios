@@ -12,6 +12,8 @@ let SendTabNotification = NSNotification.Name(rawValue: "mobile-pairing:openTab"
 let DownloadVideoNotification = NSNotification.Name(rawValue: "mobile-pairing:downloadVideo")
 let PushPairingDataNotification = NSNotification.Name(rawValue: "mobile-pairing:pushPairingData")
 let NotifyPairingErrorNotification = NSNotification.Name(rawValue: "mobile-pairing:notifyPairingError")
+//TODO: Make sure that Alex include this notification for iOS same as Android
+let NotifyPairingSuccessNotification = NSNotification.Name(rawValue: "mobile-pairing:notifyPairingSuccess")
 let RefreshConnectionsNotification = NSNotification.Name(rawValue: "RefreshConnections")
 
 enum ConnectionStatus {

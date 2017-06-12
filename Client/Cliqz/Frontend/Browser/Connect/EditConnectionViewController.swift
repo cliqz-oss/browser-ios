@@ -34,8 +34,7 @@ class EditConnectionViewController: SubSettingsTableViewController {
     }
     
     override func getViewName() -> String {
-        //TODO: Connect Telemetry
-        return "edit_connection"
+        return "connection_detail"
     }
     
     //MARK: - TableVew related methods
@@ -70,6 +69,7 @@ class EditConnectionViewController: SubSettingsTableViewController {
     func removeConnection() {
         ConnectManager.sharedInstance.removeConnection(connection)
         self.navigationController?.popViewController(animated: true)
+        logAlterConnectionTelemetrySingal("remove")
     }
     
     func renameConnection() {
@@ -98,7 +98,37 @@ class EditConnectionViewController: SubSettingsTableViewController {
         alertController.addAction(cancelAction)
         
         self.present(alertController, animated: true, completion: nil)
+        logAlterConnectionTelemetrySingal("rename")
+    }
+    
+    // MARK: - Telemetry
+    override func logHideTelemetrySignal() {
+        guard let openTime = settingsOpenTime else {
+            return
+        }
         
+        let customData: [String : Any] = ["view" : getViewName(),
+                                          "target" : "back",
+                                          "show_duration": Int(Date.getCurrentMillis() - openTime)]
+        
+        let signal = TelemetryLogEventType.Connect("click", customData)
+        TelemetryLogger.sharedInstance.logEvent(signal)
+        
+        settingsOpenTime = nil
+    }
+    
+    private func logShowTelemetrySingal() {
+        
+        let signal = TelemetryLogEventType.Connect("show", ["view" : getViewName()])
+        TelemetryLogger.sharedInstance.logEvent(signal)
         
     }
+    
+    private func logAlterConnectionTelemetrySingal(_ target: String) {
+        
+        let signal = TelemetryLogEventType.Connect("click", ["view" : getViewName(), "target" : target])
+        TelemetryLogger.sharedInstance.logEvent(signal)
+        
+    }
+    
 }

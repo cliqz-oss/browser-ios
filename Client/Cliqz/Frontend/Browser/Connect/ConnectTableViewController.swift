@@ -24,16 +24,19 @@ class ConnectTableViewController: SubSettingsTableViewController {
         ""
     ]
     private var timer: Timer?
+    private var navigateToDetailView = false
     
     //MARK: - View LifeCycle
     deinit {
         NotificationCenter.default.removeObserver(self, name: NotifyPairingErrorNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NotifyPairingSuccessNotification, object: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(displayConnectionFailedAlert), name: NotifyPairingErrorNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(connectionFailed), name: NotifyPairingErrorNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(connectionSucceeded), name: NotifyPairingSuccessNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +44,7 @@ class ConnectTableViewController: SubSettingsTableViewController {
         reloadConnections()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadConnections), name: RefreshConnectionsNotification, object: nil)
         timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(requestPairingData), userInfo: nil, repeats: true)
+        logShowTelemetrySingal()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,8 +62,7 @@ class ConnectTableViewController: SubSettingsTableViewController {
     }
     
     override func getViewName() -> String {
-        //TODO: Connect Telemetry
-        return "connect"
+        return "start"
     }
     
     //MARK: - TableVew related methods
@@ -111,11 +114,14 @@ class ConnectTableViewController: SubSettingsTableViewController {
         if currentItem as? String == addConnectionIdentifier {
             let addConnectionViewController = AddConnectionViewController()
             self.navigationController?.pushViewController(addConnectionViewController, animated: true)
+            logAddConnectionTelemetrySignal()
         } else if let connection = currentItem as? Connection  {
             let editConnectionViewController = EditConnectionViewController()
             editConnectionViewController.connection = connection
             self.navigationController?.pushViewController(editConnectionViewController, animated: true)
+            logSelectConnectionTelemetrySignal(indexPath.row)
         }
+        navigateToDetailView = true
         tableView.deselectRow(at: indexPath, animated: false)
     }
     
@@ -139,7 +145,7 @@ class ConnectTableViewController: SubSettingsTableViewController {
         ConnectManager.sharedInstance.requestPairingData()
     }
     
-    @objc private func displayConnectionFailedAlert() {
+    @objc private func connectionFailed() {
         let alertTitle = NSLocalizedString("Connection Failed", tableName: "Cliqz", comment: "[Connect] Connection Failed alert title")
         let alertMessage = NSLocalizedString("Sorry but devices could not be connected. Please try again.", tableName: "Cliqz", comment: "[Connect] Connection Failed alert message")
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
@@ -150,5 +156,77 @@ class ConnectTableViewController: SubSettingsTableViewController {
         }))
         
         self.present(alertController, animated: true, completion: nil)
+        
+        logConnectionStatusTelemetrySingal(false)
+    }
+    
+    @objc private func connectionSucceeded() {
+        logConnectionStatusTelemetrySingal(true)
+    }
+    
+    // MARK: - Telemetry
+    override func logHideTelemetrySignal() {
+        guard let openTime = settingsOpenTime else {
+            return
+        }
+        var customData: [String : Any] = ["view" : getViewName(),
+                                          "show_duration": Int(Date.getCurrentMillis() - openTime)]
+        
+        var action = "hide"
+        if !navigateToDetailView {
+            action = "click"
+            customData["target"] = "back"
+        }
+        
+        
+        let hideSignal = TelemetryLogEventType.Connect(action, customData)
+        TelemetryLogger.sharedInstance.logEvent(hideSignal)
+        
+        
+        settingsOpenTime = nil
+        navigateToDetailView = false
+    }
+    
+    private func logShowTelemetrySingal() {
+        let customData: [String : Any] = ["view" : getViewName(),
+                                          "device_count" : connections.count,
+                                          "connection_count" : sections[0].count]
+        
+        
+        let signal = TelemetryLogEventType.Connect("show", customData)
+        TelemetryLogger.sharedInstance.logEvent(signal)
+        
+    }
+    
+    private func logAddConnectionTelemetrySignal() {
+        let customData: [String : Any] = ["view" : getViewName(),
+                                          "target" : "add"]
+        
+        
+        let signal = TelemetryLogEventType.Connect("click", customData)
+        TelemetryLogger.sharedInstance.logEvent(signal)
+        
+    }
+    
+    private func logSelectConnectionTelemetrySignal(_ index: Int) {
+        let customData: [String : Any] = ["view" : getViewName(),
+                                          "target" : "connection",
+                                          "index" : index]
+        
+        
+        let signal = TelemetryLogEventType.Connect("click", customData)
+        TelemetryLogger.sharedInstance.logEvent(signal)
+        
+    }
+    
+    private func logConnectionStatusTelemetrySingal(_ isSuccess: Bool) {
+        
+        if let openTime = settingsOpenTime {
+            let customData: [String : Any] = ["view" : getViewName(),
+                                              "connect_duration" : Int(Date.getCurrentMillis() - openTime),
+                                              "is_success" : isSuccess]
+            let signal = TelemetryLogEventType.Connect("connect", customData)
+            TelemetryLogger.sharedInstance.logEvent(signal)
+        }
     }
 }
