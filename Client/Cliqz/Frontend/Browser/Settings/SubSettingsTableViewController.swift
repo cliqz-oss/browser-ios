@@ -37,21 +37,14 @@ class SubSettingsTableViewController : UITableViewController {
         tableView.backgroundColor = UIConstants.TableViewHeaderBackgroundColor
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.settingsOpenTime = Date.getCurrentMillis()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        // log telemetry signal
-        if let openTime = settingsOpenTime {
-            let duration = Int(Date.getCurrentMillis() - openTime)
-            let settingsBackSignal = TelemetryLogEventType.Settings(getViewName(), "click", "back", nil, duration)
-            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
-            settingsOpenTime = nil
-        }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        logHideTelemetrySignal()
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -88,5 +81,15 @@ class SubSettingsTableViewController : UITableViewController {
             cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: cellIdentifier)
         }
         return cell
+    }
+    
+    func logHideTelemetrySignal() {
+        // Hide here mean that the user clicked back button to go to settings
+        if let openTime = settingsOpenTime {
+            let duration = Int(Date.getCurrentMillis() - openTime)
+            let settingsBackSignal = TelemetryLogEventType.Settings(getViewName(), "click", "back", nil, duration)
+            TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
+            settingsOpenTime = nil
+        }
     }
 }

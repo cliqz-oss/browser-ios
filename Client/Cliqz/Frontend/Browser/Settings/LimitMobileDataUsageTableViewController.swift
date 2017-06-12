@@ -30,7 +30,6 @@ class LimitMobileDataUsageTableViewController: SubSettingsTableViewController {
     }
     
     override func getViewName() -> String {
-        //TODO: Connect Telemetry
         return "limit_mobile_data_usage"
     }
     
@@ -70,9 +69,8 @@ class LimitMobileDataUsageTableViewController: SubSettingsTableViewController {
         self.tableView.reloadData()
         
         // log telemetry signal
-        let target = "limit_mobile_data_usage"
         let state = toggle.isOn == true ? "off" : "on" // we log old value
-        let valueChangedSignal = TelemetryLogEventType.Settings("limit_mobile_data_usage", "click", target, state, nil)
+        let valueChangedSignal = TelemetryLogEventType.Settings(getViewName(), "click", "enable", state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
     

@@ -16,9 +16,11 @@ class AddConnectionViewController: UIViewController, AVCaptureMetadataOutputObje
     private var qrCodeFrameView:UIView?
     private let instructionsLabel = UILabel()
     private var qrCodeScannerReady = false
+    private var qrCodeScanned = false
     
     private let supportedBarCodes = [AVMetadataObjectTypeQRCode]
-    
+    var viewOpenTime: Double?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("Scan QR-Code", tableName: "Cliqz", comment: "[Settings -> Connect] Scan QR-Code")
@@ -32,6 +34,18 @@ class AddConnectionViewController: UIViewController, AVCaptureMetadataOutputObje
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.viewOpenTime = Date.getCurrentMillis()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let openTime = viewOpenTime, !qrCodeScanned {
+            let duration = Int(Date.getCurrentMillis() - openTime)
+            self.logTelemetrySignal("click", customData: ["target": "back", "view": "scan_intro", "show_duration": duration])
+        }
+    }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         adjustVideoPreviewLayerFrame()
@@ -133,8 +147,10 @@ class AddConnectionViewController: UIViewController, AVCaptureMetadataOutputObje
         let alertMessage = NSLocalizedString("Please open Cliqz Browser on your computer (or get it from cliqz.com).", tableName: "Cliqz", comment: "[Connect] Scan QR-Code alert message")
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Ok", tableName: "Cliqz", comment: "Ok"), style: .default, handler: { (_) in
-            self.qrCodeScannerReady = true
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Ok", tableName: "Cliqz", comment: "Ok"), style: .default, handler: {[weak self] (_) in
+            self?.qrCodeScannerReady = true
+            self?.logTelemetrySignal("click", customData: ["target": "confirm", "view": "scan_intro"])
+            
         }))
         self.present(alertController, animated: true, completion: nil)
     }
@@ -163,17 +179,31 @@ class AddConnectionViewController: UIViewController, AVCaptureMetadataOutputObje
             
             if let qrCode = metadataObj.stringValue {
                 qrCodeScannerReady = false
-                // give user some time to notice the action, as scanning is done very quickly
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
-                    self?.processScannedCode(qrCode)
-                })
+                self.processScannedCode(qrCode)
             }
         }
     }
     
     private func processScannedCode(_ qrCode: String) {
         ConnectManager.sharedInstance.qrcodeScanned(qrCode)
-        self.navigationController?.popViewController(animated: true)
+        qrCodeScanned = true
         
+        // telemetry
+        if let openTime = viewOpenTime {
+            let duration = Int(Date.getCurrentMillis() - openTime)
+            self.logTelemetrySignal("scan", customData: ["view": "scan_intro", "scan_duration": duration])
+        }
+        
+        
+        // give user some time to notice the action, as scanning is done very quickly
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        })
+    }
+    
+    // MARK: - Telemetry
+    private func logTelemetrySignal(_ action: String, customData: [String: Any]) {
+        let signal = TelemetryLogEventType.Connect(action, customData)
+        TelemetryLogger.sharedInstance.logEvent(signal)
     }
 }
