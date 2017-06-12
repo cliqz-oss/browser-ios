@@ -106,7 +106,7 @@
 /* Context menu option for opening a link in a new private tab */
 "Open In New Forget Tab" = "Ouvrir dans un Onglet en Mode Oubli";
 /* First card text in onBorading */
-"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "The first browser with a built-in quick-search\n\nno detours, directly to the right destination.";
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "Le premier navigateur avec recherche intégrée\n\nno detours, directly to the right destination.";
 /* Second card text in onBorading */
 "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
 /* Thrid card text in onBorading */
