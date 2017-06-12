@@ -14,7 +14,7 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: Any])
-    case Onboarding         (String, Int, Int?)
+    case Onboarding         (String, [String: Any]?)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptSignal   ([String: Any])
@@ -111,8 +111,8 @@ class TelemetryLogger : EventsLogger {
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
-            case .Onboarding(let action, let index, let duration):
-                event = self.createOnboardingEvent(action, index: index, duration: duration)
+            case .Onboarding(let action, let customData):
+                event = self.createOnboardingEvent(action, customData: customData)
                
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
@@ -294,21 +294,17 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    fileprivate func createOnboardingEvent(_ action: String, index: Int, duration: Int?) -> [String: Any] {
+    fileprivate func createOnboardingEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "onboarding"
         event["action"] = action
-		event["version"] = "1.0"
-        event["index"] = index
         
-        if action == "click" {
-           event["target"] = "next"
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
         }
-        
-        if let showduration = duration {
-            event["show_duration"] = showduration
-		}
         return event
     }
     

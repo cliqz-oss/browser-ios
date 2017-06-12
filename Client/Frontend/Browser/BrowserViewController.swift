@@ -1904,7 +1904,7 @@ extension BrowserViewController: URLBarDelegate {
 		
 		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint {
 			urlBar.locationTextField?.enforceResignFirstResponder()
-			self.showHint(.cliqzSearch)
+            self.showHint(.cliqzSearch(text.characters.count))
 		} else {
 
 			var url = URIFixup.getURL(text)
