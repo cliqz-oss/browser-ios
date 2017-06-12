@@ -59,6 +59,13 @@ class QuerySuggestionView: UIView {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func updateCurrentQuery(_ query: String) {
+        currentQuery = query
+        if query.isEmpty {
+            clearSuggestions()
+        }
+    }
+    
     func showSuggestions(notification: NSNotification) {
         
         if let suggestionsData = notification.object as? [String: AnyObject],
@@ -70,17 +77,19 @@ class QuerySuggestionView: UIView {
         }
     }
     
-    func clearSuggestions() {
+    //MARK:- Helper methods
+    fileprivate func clearSuggestions() {
+        
         let subViews = scrollView.subviews
         for subView in subViews {
             subView.removeFromSuperview()
         }
     }
     
-    //MARK:- Helper methods
-    
     fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
-        currentQuery = query
+        guard currentQuery == query else {
+            return
+        }
         currentSuggestions = suggestions
         
         var index = 0
