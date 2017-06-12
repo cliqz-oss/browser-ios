@@ -88,12 +88,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var forwardButton: UIButton!
     var signInButton: UIButton!
     
-    // Cliqz: added attribute to calculate the duration user take on each page
-    var durationStartTime : Double?
-    // Cliqz: added keep track of current page index to detect whether user swipe left or right
-    var currentPageIndex = 0
-    
-    
     // Cliqz: custom getting started button
     lazy var gettingStartedButton: UIButton = self.createGettingStartedButton()
     
@@ -306,12 +300,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     func SELstartBrowsing() {
         self.dismiss(animated: true, completion: nil)
         delegate?.introViewControllerDidFinish()
-        // Cliqz: logged Onboarding event
-        if let startTime = durationStartTime {
-            let duration = Int(Date.getCurrentMillis() - startTime)
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
-            durationStartTime = nil
-        }
     }
 
     func SELback() {
@@ -367,8 +355,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
-        // Cliqz: log swipe telemetry singal for onboarding
-        logSwipeTelemetrySingal(currentPageIndex, newPageIndex: page)
         setActiveIntroView(introViews[page], forPage: page)
     }
 
@@ -406,8 +392,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     fileprivate func setActiveIntroView(_ newIntroView: UIView, forPage page: Int) {
         if introView != newIntroView {
-            // Cliqz: set the current page index
-            currentPageIndex = page
             // Cliqz: removed the fade animation when switching between cards
             self.introView?.alpha = 0
             self.introView = newIntroView
@@ -430,9 +414,6 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //                    self.scrollView.signinButton = nil
 //                }
 //            })
-            // Cliqz: logged Onboarding event
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page, nil))
-            durationStartTime = Date.getCurrentMillis()
         }
 		if page == pageControl.numberOfPages - 1 {
 			LocationManager.sharedInstance.askForLocationAccess()
@@ -571,24 +552,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
             label.font = UIFont.systemFont(ofSize: DynamicFontHelper.defaultHelper.IntroStandardFontSize)
         }
     }
-    
-    // Cliqz: added method to log swipe telemetry signals
-    func logSwipeTelemetrySingal(_ currentPageIndex: Int, newPageIndex: Int) {
-        guard currentPageIndex != newPageIndex else {
-            return
-        }
-        if let startTime = durationStartTime {
-            let duration = Int(Date.getCurrentMillis() - startTime)
-            var action: String = ""
-            if newPageIndex > currentPageIndex {
-                action = "swipe_left"
-            } else {
-                action = "swipe_right"
-            }
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
-            durationStartTime = nil
-        }
-    }
+
 }
 
 fileprivate class IntroOverlayScrollView: UIScrollView {

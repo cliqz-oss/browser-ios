@@ -12,8 +12,8 @@ import SnapKit
 // TODO: Quick implementation should be redesigned and refactored
 
 enum HintType {
-	case antitracking
-	case cliqzSearch
+	case antitracking(Int)
+	case cliqzSearch(Int)
 	case unknown
 }
 
@@ -55,7 +55,12 @@ class InteractiveIntro {
 }
 
 class InteractiveIntroViewController: UIViewController {
+    private let version = "1.2"
+    private let cardsShowCountKey = "OnBoardingCardsShowCount"
+    private let attrackShowCountKey = "OnBoardingAttrackShowCount"
+    private var introOpenTime: Double?
 
+    
 	fileprivate var contentView: UIView? = nil
 	fileprivate var currentHintType: HintType = .unknown
 
@@ -87,19 +92,21 @@ class InteractiveIntroViewController: UIViewController {
 		}
 	}
 
-	func showHint(_ type: HintType) {
+    func showHint(_ type: HintType) {
 		self.currentHintType = type
+        self.introOpenTime = Date.getCurrentMillis()
 		switch type {
-		case .antitracking:
-			showAntitrackingHint()
-		case .cliqzSearch:
-			showCliqzSearchHint()
+		case .antitracking(let trackerCount):
+			showAntitrackingHint(trackerCount)
+		case .cliqzSearch(let queryLength):
+			showCliqzSearchHint(queryLength)
 		default:
 			debugPrint("Wrong type")
 		}
+        
 	}
 
-	fileprivate func showCliqzSearchHint() {
+    fileprivate func showCliqzSearchHint(_ queryLength: Int) {
 		contentView = UIView()
 		self.contentView!.backgroundColor = UIColor.clear
 		self.view.addSubview(self.contentView!)
@@ -159,9 +166,18 @@ class InteractiveIntroViewController: UIViewController {
 			make.width.equalTo(80)
 			make.height.equalTo(40)
 		}
+        
+        
+        let showCount: Int = LocalDataStore.objectForKey(cardsShowCountKey) as? Int ?? 1
+        let customData: [String : Any] = ["view" : "cards",
+                                          "show_count" : showCount,
+                                          "query_length" : queryLength,
+                                          "version" : version]
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+        LocalDataStore.setObject(showCount+1, forKey: cardsShowCountKey)
 	}
 	
-	fileprivate func showAntitrackingHint() {
+    fileprivate func showAntitrackingHint(_ trackerCount: Int) {
 		contentView = UIView()
 		self.contentView!.backgroundColor = UIColor.clear
 		self.view.addSubview(self.contentView!)
@@ -317,6 +333,15 @@ class InteractiveIntroViewController: UIViewController {
 			make.width.equalTo(80)
 			make.height.equalTo(40)
 		}
+        
+        let showCount: Int = LocalDataStore.objectForKey(attrackShowCountKey) as? Int ?? 1
+        let customData: [String : Any] = ["view" : "attrack",
+                                          "show_count" : showCount,
+                                          "tracker_count" : trackerCount,
+                                          "version" : version]
+        
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+        LocalDataStore.setObject(showCount+1, forKey: attrackShowCountKey)
 	}
     
 
@@ -354,5 +379,31 @@ class InteractiveIntroViewController: UIViewController {
 		self.contentView?.removeFromSuperview()
 		self.contentView = nil
 		self.dismiss(animated: true, completion: nil)
+        
+        logClickTelemetrySignal()
+    }
+    
+    private func logClickTelemetrySignal() {
+    
+        // log telemetry signal
+        guard let openTime = introOpenTime else {
+            return
+        }
+        
+        var customData: [String : Any] = ["target" : "confirm",
+                                          "version" : version,
+                                          "show_duration" : Int(Date.getCurrentMillis() - openTime)]
+        
+        switch self.currentHintType {
+        case .antitracking( _):
+            customData["view"] = "attrack"
+        case .cliqzSearch( _):
+            customData["view"] = "cards"
+        default:
+            customData["view"] = "unknown"
+        }
+
+        
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", customData))
 	}
 }

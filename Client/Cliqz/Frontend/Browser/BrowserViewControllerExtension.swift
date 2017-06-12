@@ -99,8 +99,8 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			if let tabId = notification.object as? Int, self.tabManager.selectedTab?.webView?.uniqueId == tabId {
                 let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
                 self.urlBar.updateTrackersCount(newCount)
-                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
-                    self.showHint(.antitracking)
+                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint && !self.urlBar.isAntiTrackingButtonHidden() {
+                    self.showHint(.antitracking(newCount))
                 }
 			}
 			
@@ -291,13 +291,10 @@ extension BrowserViewController: ControlCenterViewDelegate {
         }
     }
 
-	func showHint(_ type: HintType) {
-        if type == HintType.antitracking && self.urlBar.isAntiTrackingButtonHidden(){
-            return
-        }
-		let intro = InteractiveIntroViewController()
+    func showHint(_ type: HintType) {
+        let intro = InteractiveIntroViewController()
 		intro.modalPresentationStyle = .overFullScreen
-		intro.showHint(type)
+        intro.showHint(type)
 		self.present(intro, animated: true) { 
 			InteractiveIntro.sharedInstance.updateHintPref(type, value: false)
 		}
