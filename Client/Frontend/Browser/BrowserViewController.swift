@@ -1903,7 +1903,7 @@ extension BrowserViewController: URLBarDelegate {
         // If we can't make a valid URL, do a search query.
         // If we still don't have a valid URL, something is broken. Give up.
 		
-		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint {
+		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint() {
 			urlBar.locationTextField?.enforceResignFirstResponder()
             self.showHint(.cliqzSearch(text.characters.count))
 		} else {

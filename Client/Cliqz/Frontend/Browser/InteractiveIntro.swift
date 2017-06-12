@@ -19,23 +19,27 @@ enum HintType {
 
 class InteractiveIntro {
 
-	var shouldShowAntitrackingHint = true {
-		didSet {
-			SettingsPrefs.updateShowAntitrackingHintPref(shouldShowAntitrackingHint)
-		}
+	func shouldShowAntitrackingHint() -> Bool {
+		return SettingsPrefs.getShowAntitrackingHintPref() && OrientationUtil.isPortrait()
 	}
-	var shouldShowCliqzSearchHint = true {
-		didSet {
-			SettingsPrefs.updateShowCliqzSearchHintPref(shouldShowCliqzSearchHint)
-		}
+	func shouldShowCliqzSearchHint() -> Bool {
+        return SettingsPrefs.getShowCliqzSearchHintPref() && OrientationUtil.isPortrait()
 	}
+    
+    func setShouldShowCliqzSearchHint(value: Bool) {
+        SettingsPrefs.updateShowCliqzSearchHintPref(value)
+    }
+    
+    func setShouldShowAntitrackingHint(value: Bool) {
+        SettingsPrefs.updateShowAntitrackingHintPref(value)
+    }
 
 	func updateHintPref(_ type: HintType, value: Bool) {
 		switch type {
 		case .antitracking:
-			shouldShowAntitrackingHint = value
+			setShouldShowAntitrackingHint(value: value)
 		case .cliqzSearch:
-			shouldShowCliqzSearchHint = value
+			setShouldShowCliqzSearchHint(value: value)
 		default:
 			debugPrint("Wront Hint Type")
 		}
@@ -44,13 +48,12 @@ class InteractiveIntro {
 	static let sharedInstance = InteractiveIntro()
 	
 	init() {
-		shouldShowAntitrackingHint = SettingsPrefs.getShowAntitrackingHintPref()
-		shouldShowCliqzSearchHint = SettingsPrefs.getShowCliqzSearchHintPref()
+
 	}
 	
 	func reset() {
-		self.shouldShowAntitrackingHint = true
-		self.shouldShowCliqzSearchHint = true
+        setShouldShowCliqzSearchHint(value: true)
+        setShouldShowAntitrackingHint(value: true)
 	}
 }
 

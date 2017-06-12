@@ -99,7 +99,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			if let tabId = notification.object as? Int, self.tabManager.selectedTab?.webView?.uniqueId == tabId {
                 let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
                 self.urlBar.updateTrackersCount(newCount)
-                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint && !self.urlBar.isAntiTrackingButtonHidden() {
+                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint() && !self.urlBar.isAntiTrackingButtonHidden() {
                     self.showHint(.antitracking(newCount))
                 }
 			}
@@ -293,12 +293,6 @@ extension BrowserViewController: ControlCenterViewDelegate {
 
 
     func showHint(_ type: HintType) {
-        func isLandscape() -> Bool {
-            let screenSize = UIScreen.main.bounds.size
-            return screenSize.width > screenSize.height
-        }
-        
-        if isLandscape() {return}
         
         let intro = InteractiveIntroViewController()
 		intro.modalPresentationStyle = .overFullScreen
