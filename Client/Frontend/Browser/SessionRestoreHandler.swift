@@ -11,13 +11,13 @@ struct SessionRestoreHandler {
     
     private static let SessionRestorePath = "/about/sessionrestore"
     
-    static func register(webServer: WebServer) {
+    static func register(_ webServer: WebServer) {
         // Register the handler that accepts /about/sessionrestore?history=...&currentpage=... requests.
         webServer.registerHandlerForMethod("GET", module: "about", resource: "sessionrestore") { _ in
-            if let sessionRestorePath = NSBundle.mainBundle().pathForResource("SessionRestore", ofType: "html") {
+			if let sessionRestorePath = Bundle.main.path(forResource: "SessionRestore", ofType: "html") {
                 do {
                     let sessionRestoreString = try String(contentsOfFile: sessionRestorePath)
-                    return GCDWebServerDataResponse(HTML: sessionRestoreString)
+                    return GCDWebServerDataResponse(html: sessionRestoreString)
                 } catch _ {}
             }
 
@@ -25,8 +25,8 @@ struct SessionRestoreHandler {
         }
     }
     
-    static func isRestorePageURL(url: NSURL?) -> Bool {
-        if let scheme = url?.scheme, host = url?.host, path = url?.path {
+    static func isRestorePageURL(url: URL?) -> Bool {
+        if let scheme = url?.scheme, let host = url?.host, let path = url?.path {
             if scheme == "http" && host == "localhost" && path.startsWith(SessionRestorePath) {
                 return true
             }

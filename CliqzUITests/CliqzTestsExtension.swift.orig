@@ -1,0 +1,189 @@
+//
+//  CliqzTestsExtension.swift
+//  Client
+//
+//  Created by Kiiza Joseph Bazaare on 12/19/16.
+//  Copyright © 2016 Mozilla. All rights reserved.
+//
+
+extension XCTestCase {
+<<<<<<< HEAD
+    func getComplementarySearchIdentifier() -> String {
+        return "Complementary Search"
+    }
+    
+    func openWebPage(url:String){
+=======
+
+    func openWebPage(_ url:String){
+>>>>>>> Swift3 migration
+        // TO DO cater for navigating to a web page when not at the inital state
+//        tester.acknowledgeSystemAlert()
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            if tester.viewExistsWithLabel("Address and Search"){
+                tester.tapView(withAccessibilityLabel: "Address and Search")
+            }
+            else{
+                tester.tapView(withAccessibilityIdentifier: "url")
+            }
+        }
+        tester.tapView(withAccessibilityLabel: "delete")
+        tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
+        tester.waitForSoftwareKeyboard()
+        tester.tapView(withAccessibilityLabel: "Go")
+//        let checkOnboarding = try tester.tryFindingTappableViewWithAccessibilityLabel("OK")
+<<<<<<< HEAD
+        if  tester.viewExistsWithLabel("OK") {
+            tester.tapViewWithAccessibilityLabel("OK")
+            tester.tapViewWithAccessibilityLabel("Address and Search")
+=======
+        if  tester.viewExistsWithLabel("Fast-Search") {
+            tester.tapView(withAccessibilityLabel: "OK")
+            tester.tapView(withAccessibilityLabel: "Address and Search")
+>>>>>>> Swift3 migration
+            tester.waitForSoftwareKeyboard()
+            tester.tapView(withAccessibilityLabel: "Go")
+            tester.wait(forTimeInterval: 1)
+        }
+        tester.wait(forTimeInterval: 1)
+    }
+
+    func goToLinkInWebPage(){
+        tester.waitForView(withAccessibilityLabel: "https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
+        tester.tapView(withAccessibilityLabel: "https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
+        tester.tapView(withAccessibilityLabel: "delete")
+        tester.tapView(withAccessibilityLabel: "Address and Search")
+        tester.setText("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", intoViewWithAccessibilityLabel: "Address and Search")
+        tester.tapView(withAccessibilityLabel: "Go")
+        tester.wait(forTimeInterval: 1)
+    }
+
+    func showToolBar(){
+        if tester.viewExistsWithLabel("urlExpand"){
+            tester.tapView(withAccessibilityLabel: "urlExpand")
+            tester.waitForAbsenceOfSoftwareKeyboard()
+            tester.waitForView(withAccessibilityLabel: "Show Tabs")
+        }
+    }
+    
+    func resetApp(_ accessibilityLabels: [String]){
+        showToolBar()
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.waitForView(withAccessibilityLabel: accessibilityLabel)
+        for accessibilityLabel in accessibilityLabels {
+<<<<<<< HEAD
+            tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
+            tester.tapViewWithAccessibilityLabel("closeTab")
+            tester.waitForTimeInterval(1)
+        }
+=======
+            tester.swipeView(withAccessibilityLabel: accessibilityLabel, in: KIFSwipeDirection.left)
+            tester.wait(forTimeInterval: 1)
+        }
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
+        tester.wait(forTimeInterval: 1)
+>>>>>>> Swift3 migration
+        if tester.viewExistsWithLabel("Go"){
+        }
+        else{
+            if tester.viewExistsWithLabel("Address and Search"){
+                tester.tapView(withAccessibilityLabel: "")
+                tester.tapView(withAccessibilityLabel: "Search")
+            }
+            else{
+                tester.tapView(withAccessibilityIdentifier: "url")
+            }
+        }
+    }
+    
+<<<<<<< HEAD
+    func changeAndCheckSearchEngineLabel(accessibilityLabel:String){
+        tester.tapViewWithAccessibilityLabel(accessibilityLabel)
+        XCTAssertTrue((tester.waitForViewWithAccessibilityLabel(accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine \(accessibilityLabel) was not selected after tapping it")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        XCTAssertTrue(tester.viewExistsWithLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)"), "Search Engine Label did not change to \(accessibilityLabel)")
+        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
+=======
+    func changeAndCheckSearchEngineLabel(_ accessibilityLabel:String){
+        tester.tapView(withAccessibilityLabel: accessibilityLabel)
+        XCTAssertTrue((tester.waitForView(withAccessibilityLabel: accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine Twitter was not selected after tapping it")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        XCTAssertTrue(tester.viewExistsWithLabel("Search, \(accessibilityLabel)"), "Search Engine Label did not change to \(accessibilityLabel)")
+        tester.tapView(withAccessibilityLabel: "Search, \(accessibilityLabel)")
+>>>>>>> Swift3 migration
+    }
+    
+    func checkSearchEngineChange(_ accessibilityLabel:String, query:String, url:String){
+        tester.tapView(withAccessibilityLabel: "\(accessibilityLabel)")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
+        if tester.viewExistsWithLabel("Address and Search"){
+        tester.tapView(withAccessibilityLabel: "Address and Search")
+        }
+        else{
+        tester.tapView(withAccessibilityIdentifier: "url")
+        }
+        let urlBar = tester.waitForView(withAccessibilityLabel: "Address and Search")
+        if urlBar?.accessibilityValue == query{
+            tester.tapView(withAccessibilityLabel: "Go")
+            if tester.viewExistsWithLabel("OK"){
+                tester.tapView(withAccessibilityLabel: "OK")
+                if tester.viewExistsWithLabel("Address and Search"){
+                    tester.tapView(withAccessibilityLabel: "Address and Search")
+                }
+                else{
+                    tester.tapView(withAccessibilityIdentifier: "url")
+                }
+                tester.waitForSoftwareKeyboard()
+                tester.tapView(withAccessibilityLabel: "Go")
+            }
+            tester.wait(forTimeInterval: 3)
+        }
+        else{
+            tester.tapView(withAccessibilityLabel: "delete")
+            tester.setText(query, intoViewWithAccessibilityLabel: "Address and Search")
+            tester.waitForSoftwareKeyboard()
+            tester.tapView(withAccessibilityLabel: "Go")
+            if tester.viewExistsWithLabel("OK"){
+                tester.tapView(withAccessibilityLabel: "OK")
+                if tester.viewExistsWithLabel("Address and Search"){
+                    tester.tapView(withAccessibilityLabel: "Address and Search")
+                }
+                else{
+                    tester.tapView(withAccessibilityIdentifier: "url")
+                }
+                tester.waitForSoftwareKeyboard()
+                tester.tapView(withAccessibilityLabel: "Go")
+            }
+            tester.wait(forTimeInterval: 3)
+        }
+<<<<<<< HEAD
+//        if tester.viewExistsWithLabel("")
+        let searchUrl = tester.waitForViewWithAccessibilityIdentifier("url")
+        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url), "Search Engine url is  \(accessibilityValue) instead of \(url)")
+        XCTAssertTrue(searchUrl.accessibilityValue!.localizedCaseInsensitiveContainsString(query))
+=======
+        let searchUrl = tester.waitForView(withAccessibilityIdentifier: "url")
+        XCTAssertTrue((searchUrl?.accessibilityValue!.startsWith(url))!, "Search Engine name is  \(accessibilityValue) instead of \(url)")
+		// TODO: Swift3 fix, might be wrong
+		let range = searchUrl?.accessibilityValue!.range(of: query, options: .caseInsensitive, range: nil, locale: nil)
+        XCTAssertTrue(range != nil)
+>>>>>>> Swift3 migration
+        if tester.viewExistsWithLabel("OK"){
+            tester.tapView(withAccessibilityLabel: "OK")
+        }
+<<<<<<< HEAD
+        tester.tapViewWithAccessibilityLabel("Show Tabs")
+        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
+=======
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Search, \(accessibilityLabel)")
+>>>>>>> Swift3 migration
+    }
+    
+}

@@ -36,13 +36,13 @@ class SettingsPrefs {
 		return defaultValue
 	}
 	
-	class func updateAdBlockerPref(newValue: Bool) {
-		SettingsPrefs.updatePref(AdBlockerPrefKey, value: newValue)
+	class func updateAdBlockerPref(_ newValue: Bool) {
+		SettingsPrefs.updatePref(AdBlockerPrefKey, value: newValue as AnyObject)
         AdblockingModule.sharedInstance.setAdblockEnabled(newValue)
 	}
 
-	class func updateFairBlockingPref(newValue: Bool) {
-		SettingsPrefs.updatePref(FairBlockingPrefKey, value: newValue)
+	class func updateFairBlockingPref(_ newValue: Bool) {
+		SettingsPrefs.updatePref(FairBlockingPrefKey, value: newValue as AnyObject)
 	}
 
     class func getBlockExplicitContentPref() -> Bool {
@@ -61,16 +61,16 @@ class SettingsPrefs {
         return defaultValue
     }
     
-    class func updateHumanWebPref(newValue: Bool) {
-        SettingsPrefs.updatePref(HumanWebPrefKey, value: newValue)
+    class func updateHumanWebPref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(HumanWebPrefKey, value: newValue as AnyObject)
     }
     
-	class func updateShowAntitrackingHintPref(newValue: Bool) {
-		SettingsPrefs.updatePref(ShowAntitrackingHintKey, value: newValue)
+	class func updateShowAntitrackingHintPref(_ newValue: Bool) {
+		SettingsPrefs.updatePref(ShowAntitrackingHintKey, value: newValue as AnyObject)
 	}
 
-	class func updateShowCliqzSearchHintPref(newValue: Bool) {
-		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue)
+	class func updateShowCliqzSearchHintPref(_ newValue: Bool) {
+		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue as AnyObject)
 	}
 
 	class func getShowCliqzSearchHintPref() -> Bool {
@@ -98,8 +98,8 @@ class SettingsPrefs {
         return defaultValue
     }
     
-    class func updateBlockPopupsPref(newValue: Bool) {
-        SettingsPrefs.updatePref(blockPopupsPrefKey, value: newValue)
+    class func updateBlockPopupsPref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(blockPopupsPrefKey, value: newValue as AnyObject)
     }
     
     class func getRegionPref() -> String? {
@@ -108,19 +108,19 @@ class SettingsPrefs {
     
     class func getDefaultRegion() -> String {
         let availableCountries = ["DE", "US", "UK", "FR"]
-        let currentLocale = NSLocale.currentLocale()
-        if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String where availableCountries.contains(countryCode) {
+        let currentLocale = Locale.current
+        if let countryCode = currentLocale.regionCode, availableCountries.contains(countryCode) {
             return countryCode
         }
         return "DE"
     }
     
-    class func updateRegionPref(newValue: String) {
-        SettingsPrefs.updatePref(countryPrefKey, value: newValue)
+    class func updateRegionPref(_ newValue: String) {
+        SettingsPrefs.updatePref(countryPrefKey, value: newValue as AnyObject)
     }
     
-    class func updateQuerySuggestionPref(newValue: Bool) {
-        SettingsPrefs.updatePref(querySuggestionPrefKey, value: newValue)
+    class func updateQuerySuggestionPref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(querySuggestionPrefKey, value: newValue as AnyObject)
     }
     
     class func getQuerySuggestionPref() -> Bool {
@@ -132,23 +132,23 @@ class SettingsPrefs {
     }
     
     // MARK: - Private helper metods
-	class private func getBoolPref(forKey: String) -> Bool? {
-		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+	class fileprivate func getBoolPref(_ forKey: String) -> Bool? {
+		let appDelegate = UIApplication.shared.delegate as! AppDelegate
 		if let profile = appDelegate.profile {
 			return profile.prefs.boolForKey(forKey)
 		}
 		return nil
 	}
 	
-	class private func updatePref(forKey: String, value: AnyObject) {
-		let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+	class fileprivate func updatePref(_ forKey: String, value: AnyObject) {
+		let appDelegate = UIApplication.shared.delegate as! AppDelegate
 		if let profile = appDelegate.profile {
 			profile.prefs.setObject(value, forKey: forKey)
 		}
 	}
     
-    class private func getStringPref(forKey: String) -> String? {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    class fileprivate func getStringPref(_ forKey: String) -> String? {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if let profile = appDelegate.profile {
             return profile.prefs.stringForKey(forKey)
         }

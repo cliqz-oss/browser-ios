@@ -15,16 +15,22 @@ class LandscapeFlowLayout: UICollectionViewFlowLayout {
         self.sectionInset = self.computeOptimalPadding()
         self.minimumInteritemSpacing = 2.0
         self.minimumLineSpacing = 20.0
-        self.scrollDirection = .Vertical
-        
+		self.scrollDirection = .vertical
+		
+    }
+    
+    func minItemPadding() -> CGFloat {
+        //the algorithm for computing the optimal padding will always return a padding greater than the minItemPadding
+        return UIDevice.current.userInterfaceIdiom == .phone ? CGFloat(10) : CGFloat(20)
     }
     
     func computeOptimalPadding() -> UIEdgeInsets {
-        let screenSize = UIScreen.mainScreen().bounds
+        let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
-        let cellSize = Knobs.landscapeSize
+        let cellSize = Knobs.landscapeSize()
         
-        let items_per_row = floor(screenWidth / cellSize.width)
+        
+        let items_per_row = floor((screenWidth - minItemPadding()) / (cellSize.width + minItemPadding()))
         let spaces_between_items = items_per_row + 1
         let availableSpace = screenWidth - (cellSize.width * items_per_row)
         let padding = floor(availableSpace / spaces_between_items)

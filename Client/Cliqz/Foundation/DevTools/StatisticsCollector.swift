@@ -12,15 +12,15 @@ class StatisticsCollector {
 
     //MARK: - Singltone
     static let sharedInstance = StatisticsCollector()
-    private init() {
+    fileprivate init() {
         
     }
 
     //MARK: - Private Variables
-    private let padingLength = 25
-    private var eventStatistics = [(String, Int)]()
-    private var eventStartTimes = [String :Double]()
-    private var sumLatency = 0
+    fileprivate let padingLength = 25
+    fileprivate var eventStatistics = [(String, Int)]()
+    fileprivate var eventStartTimes = [String :Double]()
+    fileprivate var sumLatency = 0
 
     //MARK: - Public Variables
     var averageLatencyTime : Int {
@@ -31,12 +31,12 @@ class StatisticsCollector {
     
     //MARK: - Public Methods
     //MARK: Start/End Events
-    func startEvent(eventName: String) {
-        eventStartTimes[eventName] = NSDate.getCurrentMillis()
+    func startEvent(_ eventName: String) {
+        eventStartTimes[eventName] = Date.getCurrentMillis()
     }
     
-    func endEvent(eventName: String) {
-        let endTime = NSDate.getCurrentMillis()
+    func endEvent(_ eventName: String) {
+        let endTime = Date.getCurrentMillis()
         let startTime = eventStartTimes[eventName]!
         let latency = Int(endTime - startTime)
         sumLatency += latency
@@ -44,15 +44,15 @@ class StatisticsCollector {
     }
     
     //MARK: Print/Clear Statistics
-    func debugPrintStatistics() {
-        // debugPrint header
+    func printStatistics() {
+        // print header
         debugPrint("========== Statistics ========== ")
-        let paddedHeader = "Query".stringByPaddingToLength(padingLength, withString: " ", startingAtIndex: 0)
+        let paddedHeader = "Query".padding(toLength: padingLength, withPad: " ", startingAt: 0)
         debugPrint("\(paddedHeader): latency")
         
         // debugPrint query/latency
         for (eventName, latency) in eventStatistics {
-            let paddedEventName = eventName.stringByPaddingToLength(padingLength, withString: " ", startingAtIndex: 0)
+            let paddedEventName = eventName.padding(toLength: padingLength, withPad: " ", startingAt: 0)
             debugPrint("\(paddedEventName): \(latency)")
         }
         

@@ -14,9 +14,9 @@ class ReadingListStorageTestCase: XCTestCase {
 
     override func setUp() {
         let path = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first!
-        if NSFileManager.defaultManager().fileExistsAtPath("\(path)/ReadingList.db") {
+        if FileManager.default.fileExistsAtPath("\(path)/ReadingList.db") {
             do {
-                try NSFileManager.defaultManager().removeItemAtPath("\(path)/ReadingList.db")
+                try FileManager.default.removeItemAtPath("\(path)/ReadingList.db")
             } catch _ {
                 XCTFail("Cannot remove old \(path)/ReadingList.db")
             }

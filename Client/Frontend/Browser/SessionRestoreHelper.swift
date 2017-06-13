@@ -6,7 +6,7 @@ import Foundation
 import WebKit
 
 protocol SessionRestoreHelperDelegate: class {
-    func sessionRestoreHelper(helper: SessionRestoreHelper, didRestoreSessionForTab tab: Tab)
+    func sessionRestoreHelper(_ helper: SessionRestoreHelper, didRestoreSessionForTab tab: Tab)
 }
 
 class SessionRestoreHelper: TabHelper {
@@ -21,12 +21,12 @@ class SessionRestoreHelper: TabHelper {
         return "sessionRestoreHelper"
     }
 
-    func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-        if let tab = tab, params = message.body as? [String: AnyObject] {
+    func userContentController(_ userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+        if let tab = tab, let params = message.body as? [String: AnyObject] {
             if params["name"] as! String == "didRestoreSession" {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.delegate?.sessionRestoreHelper(self, didRestoreSessionForTab: tab)
-                }
+				DispatchQueue.main.async {
+					self.delegate?.sessionRestoreHelper(self, didRestoreSessionForTab: tab)
+				}
             }
         }
     }

@@ -9,61 +9,61 @@
 import Foundation
 import React
 
-public class Engine {
+open class Engine {
     
     //MARK: - Singleton
     static let sharedInstance = Engine()
     
     let bridge : RCTBridge
-    public let rootView : RCTRootView
+    open let rootView : RCTRootView
     
     //MARK: - Init
     public init() {
         #if React_Debug
-            let jsCodeLocation = NSURL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
+            let jsCodeLocation = URL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
         #else
-            let jsCodeLocation = NSBundle.mainBundle().URLForResource("jsengine.bundle", withExtension: "js")
+            let jsCodeLocation = Bundle.main.url(forResource: "jsengine.bundle", withExtension: "js")
         #endif
         
         rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ExtensionApp", initialProperties: nil, launchOptions: nil )
         bridge = rootView.bridge
     }
     
-    public func getBridge() -> JSBridge {
-        return bridge.moduleForClass(JSBridge) as! JSBridge
+    open func getBridge() -> JSBridge {
+        return bridge.module(for: JSBridge.self) as! JSBridge
     }
     
-    public func getWebRequest() -> WebRequest {
-        return bridge.moduleForClass(WebRequest) as! WebRequest
+    open func getWebRequest() -> WebRequest {
+        return bridge.module(for: WebRequest.self) as! WebRequest
     }
     
     //MARK: - Public APIs
-    public func isRunning() -> Bool {
+    open func isRunning() -> Bool {
         return true
     }
     
-    public func startup(defaultPrefs: [String: AnyObject]? = [String: AnyObject]()) {
+    open func startup(_ defaultPrefs: [String: AnyObject]? = [String: AnyObject]()) {
         
     }
     
-    public func shutdown(strict: Bool? = false) throws {
+    open func shutdown(_ strict: Bool? = false) throws {
         
     }
     
-    func setPref(prefName: String, prefValue: Any) {
+    func setPref(_ prefName: String, prefValue: Any) {
         self.getBridge().callAction("core:setPref", args: [prefName, prefValue as! NSObject])
     }
     
-    func getPref(prefName: String) -> Any {
+    func getPref(_ prefName: String) -> Any {
         let result = self.getBridge().callAction("core:getPref", args: [prefName])
         return result["result"]
     }
     
-    public func parseJSON(dictionary: [String: AnyObject]) -> String {
-        if NSJSONSerialization.isValidJSONObject(dictionary) {
+    open func parseJSON(_ dictionary: [String: AnyObject]) -> String {
+        if JSONSerialization.isValidJSONObject(dictionary) {
             do {
-                let data = try NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
-                let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+                let data = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+                let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
                 return jsonString
             } catch let error as NSError {
                 DebugingLogger.log("<< Error while parsing the dictionary into JSON: \(error)")

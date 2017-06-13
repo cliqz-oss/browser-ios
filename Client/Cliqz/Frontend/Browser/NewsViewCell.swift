@@ -23,17 +23,17 @@ class NewsViewCell: UITableViewCell {
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		self.contentView.backgroundColor = UIConstants.AppBackgroundColor
-		cardView.backgroundColor = UIColor.whiteColor()
+		cardView.backgroundColor = UIColor.white
 		cardView.layer.cornerRadius = 4
 		contentView.addSubview(cardView)
 		cardView.addSubview(titleLabel)
-		titleLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
+		titleLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
 		titleLabel.textColor = self.textColor()
-		titleLabel.backgroundColor = UIColor.clearColor()
+		titleLabel.backgroundColor = UIColor.clear
 		cardView.addSubview(URLLabel)
-		URLLabel.font = UIFont.systemFontOfSize(12, weight: UIFontWeightMedium)
+		URLLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
 		URLLabel.textColor = UIColor(rgb: 0x77ABE6)
-		URLLabel.backgroundColor = UIColor.clearColor()
+		URLLabel.backgroundColor = UIColor.clear
 		titleLabel.numberOfLines = 2
 		self.cardView.addSubview(self.logoContainerView)
 		logoContainerView.addSubview(logoImageView)
@@ -49,14 +49,14 @@ class NewsViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
     
-    func newsPressed(gestureRecognizer: UIGestureRecognizer) {
-        let touchLocation = gestureRecognizer.locationInView(self.cardView)
+    func newsPressed(_ gestureRecognizer: UIGestureRecognizer) {
+        let touchLocation = gestureRecognizer.location(in: self.cardView)
         
-        if CGRectContainsPoint(titleLabel.frame, touchLocation) {
+        if titleLabel.frame.contains(touchLocation) {
             clickedElement = "title"
-        } else if CGRectContainsPoint(URLLabel.frame, touchLocation) {
+        } else if URLLabel.frame.contains(touchLocation) {
             clickedElement = "url"
-        } else if CGRectContainsPoint(logoContainerView.frame, touchLocation) {
+        } else if logoContainerView.frame.contains(touchLocation) {
             clickedElement = "logo"
         }
     }
@@ -75,7 +75,7 @@ class NewsViewCell: UITableViewCell {
 		}
 		
 		let contentOffset = 15
-		let logoSize = CGSizeMake(28, 28)
+		let logoSize = CGSize(width: 28, height: 28)
 		logoContainerView.snp_makeConstraints { make in
 			make.top.equalTo(self.cardView)
 			make.left.equalTo(self.cardView).offset(contentOffset)
@@ -105,7 +105,7 @@ class NewsViewCell: UITableViewCell {
 	}
 	
 	override func prepareForReuse() {
-		self.cardView.transform = CGAffineTransformIdentity
+		self.cardView.transform = CGAffineTransform.identity
 		self.cardView.alpha = 1
 		self.logoImageView.image = nil
 		self.fakeLogoView?.removeFromSuperview()
@@ -113,7 +113,7 @@ class NewsViewCell: UITableViewCell {
         clickedElement = ""
 	}
 	
-	private func textColor() -> UIColor {
+	fileprivate func textColor() -> UIColor {
 		return UIConstants.NormalModeTextColor
 	}
 	

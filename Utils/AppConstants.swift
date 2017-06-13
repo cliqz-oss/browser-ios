@@ -16,7 +16,7 @@ public struct AppConstants {
     public static let IsRunningTest = NSClassFromString("XCTestCase") != nil
 
     // True if this process is executed as part of a Fastlane Snapshot test
-    public static let IsRunningFastlaneSnapshot = NSProcessInfo.processInfo().arguments.contains("FASTLANE_SNAPSHOT")
+    public static let IsRunningFastlaneSnapshot = ProcessInfo.processInfo.arguments.contains("FASTLANE_SNAPSHOT")
 
     /// Build Channel.
     public static let BuildChannel: AppBuildChannel = {
@@ -182,4 +182,8 @@ public struct AppConstants {
             return true
         #endif
     }()
+
+	public static let MOZ_FXA_PUSH: Bool = {
+		return false
+	}()
 }

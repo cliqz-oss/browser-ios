@@ -232,7 +232,7 @@ class BrowserUtils {
             } catch _ {}
 
             while tabsView.numberOfItemsInSection(0) > 0 {
-                let cell = tabsView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+                let cell = tabsView.cellForItemAtIndexPath(IndexPath(forItem: 0, inSection: 0))!
                 tester.swipeViewWithAccessibilityLabel(cell.accessibilityLabel, inDirection: KIFSwipeDirection.Left)
                 tester.waitForAbsenceOfViewWithAccessibilityLabel(cell.accessibilityLabel)
             }
@@ -240,22 +240,22 @@ class BrowserUtils {
         }
 
         while tabsView.numberOfItemsInSection(0) > 1 {
-            let cell = tabsView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+            let cell = tabsView.cellForItemAtIndexPath(IndexPath(forItem: 0, inSection: 0))!
             tester.swipeViewWithAccessibilityLabel(cell.accessibilityLabel, inDirection: KIFSwipeDirection.Left)
             tester.waitForAbsenceOfViewWithAccessibilityLabel(cell.accessibilityLabel)
         }
 
         // When the last tab is closed, the tabs tray will automatically be closed
         // since a new about:home tab will be selected.
-        if let cell = tabsView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) {
+        if let cell = tabsView.cellForItemAtIndexPath(IndexPath(forItem: 0, inSection: 0)) {
             tester.swipeViewWithAccessibilityLabel(cell.accessibilityLabel, inDirection: KIFSwipeDirection.Left)
             tester.waitForTappableViewWithAccessibilityLabel("Show Tabs")
         }
     }
 
     /// Injects a URL and title into the browser's history database.
-    class func addHistoryEntry(title: String, url: NSURL) {
-        let notificationCenter = NSNotificationCenter.defaultCenter()
+    class func addHistoryEntry(title: String, url: URL) {
+        let notificationCenter = NotificationCenter.default
         var info = [NSObject: AnyObject]()
         info["url"] = url
         info["title"] = title
@@ -263,7 +263,7 @@ class BrowserUtils {
         notificationCenter.postNotificationName("OnLocationChange", object: self, userInfo: info)
     }
 
-    private class func clearHistoryItemAtIndex(index: NSIndexPath, tester: KIFUITestActor) {
+    private class func clearHistoryItemAtIndex(index: IndexPath, tester: KIFUITestActor) {
         if let row = tester.waitForCellAtIndexPath(index, inTableViewWithAccessibilityIdentifier: "History List") {
             tester.swipeViewWithAccessibilityLabel(row.accessibilityLabel, value: row.accessibilityValue, inDirection: KIFSwipeDirection.Left)
             tester.tapViewWithAccessibilityLabel("Remove")
@@ -278,7 +278,7 @@ class BrowserUtils {
         var index = 0
         for _ in 0 ..< historyTable.numberOfSections {
             for _ in 0 ..< historyTable.numberOfRowsInSection(0) {
-                clearHistoryItemAtIndex(NSIndexPath(forRow: 0, inSection: 0), tester: tester)
+                clearHistoryItemAtIndex(IndexPath(forRow: 0, inSection: 0), tester: tester)
                 if numberOfTests > -1 {
                     index += 1
                     if index == numberOfTests {
@@ -448,7 +448,7 @@ class SearchUtils {
 
     static func mockSearchEngine(name: String, template: String, icon: String) -> OpenSearchEngine? {
         guard let imagePath = NSBundle(forClass: self).pathForResource(icon, ofType: "ico"),
-              let imageData = NSData(contentsOfFile: imagePath),
+			let imageData = Data(contentsOf: imagePath),
               let image = UIImage(data: imageData) else
         {
             XCTFail("Unable to load search engine image named \(icon).ico")

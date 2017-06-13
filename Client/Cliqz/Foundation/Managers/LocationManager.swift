@@ -9,45 +9,44 @@
 import Foundation
 import CoreLocation
 
-public class LocationManager: NSObject, CLLocationManagerDelegate {
+open class LocationManager: NSObject, CLLocationManagerDelegate {
     static let NotificationUserLocationAvailable = "NotificationUserLocationAvailable"
     static let NotificationShowOpenLocationSettingsAlert = "NotificationShowOpenLocationSettingsAlert"
     private var enableLocationInProgress = false
 
-	private let manager = CLLocationManager()
-    private var location: CLLocation? {
+	fileprivate let manager = CLLocationManager()
+    fileprivate var location: CLLocation? {
         didSet {
             if location != nil && enableLocationInProgress {
-                NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationUserLocationAvailable, object: nil)
-                enableLocationInProgress = false
+                NotificationCenter.default.post(name: Notification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
             }
         }
     }
-    private let locationStatusKey = "currentLocationStatus"
+    fileprivate let locationStatusKey = "currentLocationStatus"
 
-	public static let sharedInstance: LocationManager = {
+	open static let sharedInstance: LocationManager = {
 		let m = LocationManager()
 		m.manager.delegate = m
 		m.manager.desiredAccuracy = 300
 		return m
 	}()
 
-    public func getUserLocation() -> CLLocation? {
+    open func getUserLocation() -> CLLocation? {
         return self.location
     }
     
-    public func askForLocationAccess () {
+    open func askForLocationAccess () {
         TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
         self.manager.requestWhenInUseAuthorization()
         enableLocationInProgress = true
     }
     
-	public func shareLocation() {
+	open func shareLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == .Denied {
-            NSNotificationCenter.defaultCenter().postNotificationName(LocationManager.NotificationShowOpenLocationSettingsAlert, object: CLLocationManager.locationServicesEnabled())
-            enableLocationInProgress = true
-        } else if authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse {
+        if authorizationStatus == .denied {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: CLLocationManager.locationServicesEnabled())
+	enableLocationInProgress = true
+        } else if authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse {
             self.startUpdatingLocation()
             
         } else if CLLocationManager.locationServicesEnabled() {
@@ -57,22 +56,22 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 	}
     
     
-    public func startUpdatingLocation() {
+    open func startUpdatingLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        guard authorizationStatus == .AuthorizedAlways || authorizationStatus == .AuthorizedWhenInUse else {
+        guard authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse else {
             return
         }
         
         self.manager.startUpdatingLocation()
     }
     
-	public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.location = locations.last
 	}
     
-    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    open func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
-        case .Denied, .NotDetermined, .Restricted:
+        case .denied, .notDetermined, .restricted:
             self.location = nil
         default:
 			if let l = self.manager.location {
@@ -92,11 +91,11 @@ public class LocationManager: NSObject, CLLocationManagerDelegate {
 
 extension CLAuthorizationStatus {
 	func stringValue() -> String {
-		let statuses: [Int: String] = [Int(CLAuthorizationStatus.NotDetermined.rawValue) : "NotDetermined",
-			Int(CLAuthorizationStatus.Restricted.rawValue) : "Restricted",
-			Int(CLAuthorizationStatus.Denied.rawValue) : "Denied",
-			Int(CLAuthorizationStatus.AuthorizedAlways.rawValue) : "AuthorizedAlways",
-			Int(CLAuthorizationStatus.AuthorizedWhenInUse.rawValue) : "AuthorizedWhenInUse"]
+		let statuses: [Int: String] = [Int(CLAuthorizationStatus.notDetermined.rawValue) : "NotDetermined",
+			Int(CLAuthorizationStatus.restricted.rawValue) : "Restricted",
+			Int(CLAuthorizationStatus.denied.rawValue) : "Denied",
+			Int(CLAuthorizationStatus.authorizedAlways.rawValue) : "AuthorizedAlways",
+			Int(CLAuthorizationStatus.authorizedWhenInUse.rawValue) : "AuthorizedWhenInUse"]
 		if let s = statuses[Int(rawValue)] {
 			return s
 		}

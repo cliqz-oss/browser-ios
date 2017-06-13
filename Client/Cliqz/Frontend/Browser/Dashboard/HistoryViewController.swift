@@ -11,8 +11,8 @@ import Shared
 
 protocol HistoryDelegate: class {
     
-    func didSelectURL(url: NSURL)
-    func didSelectQuery(query: String)
+    func didSelectURL(_ url: URL)
+    func didSelectQuery(_ query: String)
 }
 
 class HistoryViewController: CliqzExtensionViewController {
@@ -22,7 +22,7 @@ class HistoryViewController: CliqzExtensionViewController {
 	override init(profile: Profile) {
 		super.init(profile: profile, viewType: "history")
 
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(clearQueries as (NSNotification) -> Void), name: NotificationPrivateDataClearQueries, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(clearQueries as (Notification) -> Void), name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -30,7 +30,7 @@ class HistoryViewController: CliqzExtensionViewController {
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationPrivateDataClearQueries, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
     }
 	
 	override func mainRequestURL() -> String {
@@ -41,21 +41,21 @@ class HistoryViewController: CliqzExtensionViewController {
 
 extension HistoryViewController {
     
-    override func didSelectUrl(url: NSURL) {
+    override func didSelectUrl(_ url: URL) {
 		self.delegate?.didSelectURL(url)
     }
 
-    func searchForQuery(query: String) {
+    func searchForQuery(_ query: String) {
 		self.delegate?.didSelectQuery(query)
     }
 
-    func getSearchHistory(offset:Int,limit:Int,callback: String?) {
+    func getSearchHistory(_ offset:Int,limit:Int,callback: String?) {
 		if let c = callback {
-            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(dispatch_get_main_queue()) { result in
+            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
 				if let sites = result.successValue {
-					var historyResults = [[String: AnyObject]]()
+					var historyResults = [[String: Any]]()
 					for site in sites {
-						var d = [String: AnyObject]()
+						var d = [String: Any]()
 						d["id"] = site!.id
 						d["url"] = site!.url
 						d["title"] = site!.title
@@ -73,12 +73,12 @@ extension HistoryViewController {
     }
 
     // MARK: - Clear History
-	@objc func clearQueries(notification: NSNotification) {
+	@objc func clearQueries(notification notification: Notification) {
         let includeFavorites: Bool = (notification.object as? Bool) ?? false
-		self.clearQueries(favorites: includeFavorites)
+		self.clearQueries(includeFavorites)
 	}
 
-	func clearQueries(favorites favorites: Bool) {
+	@objc func clearQueries(_ favorites: Bool) {
         //Cliqz: [IB-946][WORKAROUND] call `jsAPI` directly instead of publishing events because the event is executed when the history is opened next time not immediately
         //TODO: Queries will be stored in native side not in JavaScript
         if favorites == true {

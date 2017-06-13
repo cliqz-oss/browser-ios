@@ -14,16 +14,16 @@ public protocol ExtendedBrowserHistory {
     
     // Cliqz: added for telemetry signals
     func count() -> Int
-    func getOldestVisitDate() -> NSDate? 
+    func getOldestVisitDate() -> Date? 
 
     // Cliqz: remove history
-    func removeHistory(ids: [Int]) -> Success
+    func removeHistory(_ ids: [Int]) -> Success
 
     // Cliqz: getting History
-    func getHistoryVisits(offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>>
+    func getHistoryVisits(_ offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>>
 
 	// Cliqz: hide TopSite
-	func hideTopSite(url: String) -> Success
+	func hideTopSite(_ url: String) -> Success
 
 	// Cliqz: delete all hided TopSite
 	func deleteAllHiddenTopSites() -> Success

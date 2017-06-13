@@ -9,7 +9,7 @@
 import Foundation
 
 class DebugingLogger {
-    class func log<T>(@autoclosure object: () -> T) {
+    class func log<T>(_ object: @autoclosure () -> T) {
         #if DEBUG
             let value = object()
             let stringRepresentation: String

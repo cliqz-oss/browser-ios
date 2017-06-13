@@ -9,7 +9,7 @@ import Account
 
 /// App Settings Screen (triggered by tapping the 'Gear' in the Tab Tray Controller)
 class AppSettingsTableViewController: SettingsTableViewController {
-    private let SectionHeaderIdentifier = "SectionHeaderIdentifier"
+    fileprivate let SectionHeaderIdentifier = "SectionHeaderIdentifier"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         navigationItem.title = NSLocalizedString("Settings", comment: "Settings")
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar"),
-            style: UIBarButtonItemStyle.Done,
+            style: UIBarButtonItemStyle.done,
             target: navigationController, action: Selector("SELdone"))
         navigationItem.leftBarButtonItem?.accessibilityIdentifier = "AppSettingsTableViewController.navigationItem.leftBarButtonItem"
 
@@ -204,9 +204,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
         return settings
     }
     */
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if !profile.hasAccount() {
-            let headerView = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
             let sectionSetting = settings[section]
             headerView.titleLabel.text = sectionSetting.title?.string
             
@@ -247,7 +247,7 @@ extension AppSettingsTableViewController {
 
 extension AppSettingsTableViewController: PasscodeEntryDelegate {
     @objc func passcodeValidationDidSucceed() {
-        navigationController?.dismissViewControllerAnimated(true) {
+        navigationController?.dismiss(animated: true) {
             self.navigateToLoginsList()
         }
     }

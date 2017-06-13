@@ -12,7 +12,7 @@ extension UIConstants {
 	
 	static var OrangeColor: UIColor { return UIColor(red: 246.0/255.0, green: 90.0/255.0, blue: 42.0/255.0, alpha: 1) }
 	
-	static let PrivateModeTextColor: UIColor = UIColor.whiteColor()
-	static let NormalModeTextColor: UIColor = UIColor.blackColor()
+	static let PrivateModeTextColor: UIColor = UIColor.white
+	static let NormalModeTextColor: UIColor = UIColor.black
 
 }

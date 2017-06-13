@@ -205,7 +205,7 @@ class SearchTests: KIFTestCase {
     }
 
     private func resetSuggestionsPrompt() {
-        NSNotificationCenter.defaultCenter().postNotificationName("SearchEnginesPromptReset", object: nil)
+        NotificationCenter.default.post(name: "SearchEnginesPromptReset", object: nil)
     }
 
     private func getFirstSuggestionButton(tester: KIFUITestActor) -> UIButton? {

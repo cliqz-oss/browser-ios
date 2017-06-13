@@ -24,7 +24,7 @@ class TokenServerClientTests: LiveAccountTest {
 
     func testAudienceForEndpoint() {
         func audienceFor(endpoint: String) -> String {
-            return TokenServerClient.getAudienceForURL(NSURL(string: endpoint)!)
+            return TokenServerClient.getAudienceForURL(URL(string: endpoint)!)
         }
 
         // Sub-domains and path components.

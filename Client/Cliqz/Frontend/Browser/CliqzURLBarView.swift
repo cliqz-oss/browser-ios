@@ -11,7 +11,7 @@ import SnapKit
 import Shared
 import QuartzCore
 
-enum Whitelisted{
+enum Whitelisted {
     case yes
     case no
     case undefined
@@ -21,31 +21,31 @@ class CliqzURLBarView: URLBarView {
 
 	static let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
     static let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
-	static let antitrackingButtonSize = CGSizeMake(CGFloat(URLBarViewUX.ButtonWidth), CGFloat(URLBarViewUX.LocationHeight))
+	static let antitrackingButtonSize = CGSize(width: 42, height: CGFloat(URLBarViewUX.LocationHeight))
 	private var trackersCount = 0
     
-	private lazy var antitrackingButton: UIButton = {
-		let button = UIButton(type: .Custom)
-		button.setTitle("0", forState: .Normal)
-        button.backgroundColor = UIColor.clearColor()
-		button.titleLabel?.font = UIFont.systemFontOfSize(12)
+	fileprivate lazy var antitrackingButton: UIButton = {
+		let button = UIButton(type: .custom)
+		button.setTitle("0", for: .normal)
+		button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.backgroundColor = UIColor.clear
         button.accessibilityLabel = "AntiTrackingButton"
         
         let buttonImage = self.imageForAntiTrackingButton(Whitelisted.undefined)
-        button.setImage(buttonImage, forState: .Normal)
+        button.setImage(buttonImage, for: .normal)
         
         button.titleEdgeInsets = UIEdgeInsets(top: 5, left: 2, bottom: 5, right: 0)
         button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 2, bottom: 4, right: 20)
-        button.addTarget(self, action: #selector(antitrackingButtonPressed), forControlEvents: .TouchUpInside)
-        button.hidden = true
+        button.addTarget(self, action: #selector(antitrackingButtonPressed), for: .touchUpInside)
+        button.isHidden = true
         
 		return button
 	}()
-    private lazy var newTabButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), forState: .Normal)
+    fileprivate lazy var newTabButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.templateImageNamed("bottomNav-NewTab"), for: .normal)
         button.accessibilityLabel = NSLocalizedString("New tab", comment: "Accessibility label for the New tab button in the tab toolbar.")
-        button.addTarget(self, action: #selector(CliqzURLBarView.SELdidClickNewTab), forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(CliqzURLBarView.SELdidClickNewTab), for: UIControlEvents.touchUpInside)
         return button
     }()
     
@@ -63,44 +63,44 @@ class CliqzURLBarView: URLBarView {
 	}
     
     deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func prepareOverlayAnimation() {
         super.prepareOverlayAnimation()
-        self.newTabButton.hidden = !self.toolbarIsShowing
+        self.newTabButton.isHidden = !self.toolbarIsShowing
     }
     
-    override func transitionToOverlay(didCancel: Bool = false) {
+    override func transitionToOverlay(_ didCancel: Bool = false) {
         super.transitionToOverlay(didCancel)
         self.newTabButton.alpha = inOverlayMode ? 0 : 1
     }
     override func updateViewsForOverlayModeAndToolbarChanges() {
         super.updateViewsForOverlayModeAndToolbarChanges()
-        self.newTabButton.hidden = !self.toolbarIsShowing || inOverlayMode
+        self.newTabButton.isHidden = !self.toolbarIsShowing || inOverlayMode
     }
     
-	func updateTrackersCount(count: Int) {
+	func updateTrackersCount(_ count: Int) {
         trackersCount = count
-		self.antitrackingButton.setTitle("\(count)", forState: .Normal)
+		self.antitrackingButton.setTitle("\(count)", for: UIControlState())
 		self.setNeedsDisplay()
 	}
 
-	func showAntitrackingButton(hidden: Bool) {
-		self.antitrackingButton.hidden = !hidden
-        self.bringSubviewToFront(self.antitrackingButton)
+	func showAntitrackingButton(_ hidden: Bool) {
+		self.antitrackingButton.isHidden = !hidden
+		self.bringSubview(toFront: self.antitrackingButton)
 		self.setNeedsUpdateConstraints()
 	}
     
     func isAntiTrackingButtonHidden() -> Bool {
-        return antitrackingButton.hidden
+        return antitrackingButton.isHidden
     }
 
-	func enableAntitrackingButton(enable: Bool) {
-		self.antitrackingButton.enabled = enable
+	func enableAntitrackingButton(_ enable: Bool) {
+		self.antitrackingButton.isEnabled = enable
 	}
     
-    func refreshAntiTrackingButton(notification: NSNotification){
+    func refreshAntiTrackingButton(_ notification: Notification){
         
         if let userInfo = notification.userInfo{
             
@@ -109,25 +109,25 @@ class CliqzURLBarView: URLBarView {
                 whitelisted = onWhiteList ? Whitelisted.yes : Whitelisted.no
             }
             
-            var newURL : NSURL? = nil
-            if let url = userInfo["newURL"] as? NSURL{
+            var newURL : URL? = nil
+            if let url = userInfo["newURL"] as? URL{
                 newURL = url
             }
             
             let antitrackingImag = self.imageForAntiTrackingButton(whitelisted, newURL: newURL)
-            self.antitrackingButton.setImage(antitrackingImag, forState: .Normal)
+            self.antitrackingButton.setImage(antitrackingImag, for: .normal)
         }
         else {
             
             let antitrackingImag = self.imageForAntiTrackingButton(Whitelisted.undefined)
-            self.antitrackingButton.setImage(antitrackingImag, forState: .Normal)
+            self.antitrackingButton.setImage(antitrackingImag, for: .normal)
         }
 
     }
     
-    func imageForAntiTrackingButton(whitelisted: Whitelisted, newURL: NSURL? = nil) -> UIImage? {
+    func imageForAntiTrackingButton(_ whitelisted: Whitelisted, newURL: URL? = nil) -> UIImage? {
         
-        var theURL : NSURL
+        var theURL : URL
         
         if let url = newURL {
             theURL = url
@@ -159,9 +159,9 @@ class CliqzURLBarView: URLBarView {
         return CliqzURLBarView.antitrackingOrangeIcon
     }
 
-	private func commonInit() {
+	fileprivate func commonInit() {
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:#selector(refreshAntiTrackingButton) , name: NotificationRefreshAntiTrackingButton, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(refreshAntiTrackingButton) , name: NSNotification.Name(rawValue: NotificationRefreshAntiTrackingButton), object: nil)
         
 		addSubview(self.antitrackingButton)
 		antitrackingButton.snp_makeConstraints { make in
@@ -172,17 +172,19 @@ class CliqzURLBarView: URLBarView {
         
         addSubview(newTabButton)
         // Cliqz: Changed new tab position, now it should be befores tabs button
-        newTabButton.snp_makeConstraints { make in
+        newTabButton.snp.makeConstraints { make in
             make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
         
         // Cliqz: Changed share position, now it should be before new tab button
-        shareButton.snp_updateConstraints { make in
-            make.right.equalTo(self.newTabButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
-        }
-        
+		shareButton.snp.remakeConstraints { (make) in
+			make.right.equalTo(self.newTabButton.snp.left).offset(-URLBarViewUX.URLBarButtonOffset)
+			make.centerY.equalTo(self)
+			make.size.equalTo(backButton)
+		}
+		
         self.actionButtons.append(newTabButton)
 	}
 	
@@ -197,11 +199,11 @@ class CliqzURLBarView: URLBarView {
         delegate?.urlBarDidPressNewTab(self, button: newTabButton)
     }
     
-    override func applyTheme(themeName: String) {
+    override func applyTheme(_ themeName: String) {
         super.applyTheme(themeName)
         
         if let theme = URLBarViewUX.Themes[themeName] {
-            self.antitrackingButton.setTitleColor(theme.textColor, forState: .Normal)
+            self.antitrackingButton.setTitleColor(theme.textColor, for: .normal)
         }
         
     }

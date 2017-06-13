@@ -90,7 +90,7 @@ public class BookmarksMirrorer {
             // We might also choose to perform certain simple recovery actions here: for example,
             // bookmarks with null URIs are clearly invalid, and could be treated as if they
             // weren't present on the server, or transparently deleted.
-            log.warning("Invalid records: \(invalid.map { $0.id }.joinWithSeparator(", ")).")
+			log.warning("Invalid records: \(invalid.map { $0.id }.joined(separator: ", ")).")
         }
 
         let mirrorItems = retrieved.flatMap { record -> BookmarkMirrorItem? in
@@ -110,10 +110,10 @@ public class BookmarksMirrorer {
         return self.storage.applyRecords(mirrorItems)
     }
 
-    public func go(info: InfoCollections, greenLight: () -> Bool) -> SyncResult {
+    public func go(info: InfoCollections, greenLight: @escaping () -> Bool) -> SyncResult {
         if !greenLight() {
             log.info("Green light turned red. Stopping mirror operation.")
-            return deferMaybe(SyncStatus.NotStarted(.RedLight))
+            return deferMaybe(SyncStatus.notStarted(.redLight))
         }
 
         log.debug("Downloading up to \(self.batchSize) records.")
@@ -129,20 +129,20 @@ public class BookmarksMirrorer {
                 return self.applyRecordsFromBatcher()
                    >>> effect(self.downloader.advance)
                    >>> self.storage.doneApplyingRecordsAfterDownload
-                   >>> always(SyncStatus.Completed)
+                   >>> always(SyncStatus.completed)
             case .Incomplete:
                 log.debug("Running another batch.")
                 // This recursion is fine because Deferred always pushes callbacks onto a queue.
                 return self.applyRecordsFromBatcher()
                    >>> effect(self.downloader.advance)
-                   >>> { self.go(info, greenLight: greenLight) }
+                   >>> { self.go(info: info, greenLight: greenLight) }
             case .Interrupted:
                 log.info("Interrupted. Aborting batching this time.")
-                return deferMaybe(SyncStatus.Partial)
+                return deferMaybe(SyncStatus.partial)
             case .NoNewData:
                 log.info("No new data. No need to continue batching.")
                 self.downloader.advance()
-                return deferMaybe(SyncStatus.Completed)
+                return deferMaybe(SyncStatus.completed)
             }
         }
     }

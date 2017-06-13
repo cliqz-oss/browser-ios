@@ -10,7 +10,7 @@ import Foundation
 import React
 
 @objc(JSBridge)
-public class JSBridge : RCTEventEmitter {
+open class JSBridge : RCTEventEmitter {
 
     public typealias Callback = (NSDictionary) -> Void
     
@@ -19,18 +19,18 @@ public class JSBridge : RCTEventEmitter {
     // cache for responses from js
     var replyCache = [NSInteger: NSDictionary]()
     // semaphores waiting for replies from js
-    var eventSemaphores = [NSInteger: dispatch_semaphore_t]()
+    var eventSemaphores = [NSInteger: DispatchSemaphore]()
     // callbacks waiting for replies from js
     var eventCallbacks = [NSInteger: Callback]()
     // Dictionary of actions waiting for a function to be registered before executing
     var awaitingRegistration = [String: Array<(Array<AnyObject>, Callback)>]()
     
     // serial queue for access to eventSemaphores and eventCallbacks
-    private let semaphoresDispatchQueue = dispatch_queue_create("com.cliqz.jsbridge.sync", DISPATCH_QUEUE_SERIAL)
+    fileprivate let semaphoresDispatchQueue = DispatchQueue(label: "com.cliqz.jsbridge.sync", attributes: [])
     // serial queue for access to actionCounter
-    private let lockDispatchQueue = dispatch_queue_create("com.cliqz.jsbridge.lock", DISPATCH_QUEUE_SERIAL)
+    fileprivate let lockDispatchQueue = DispatchQueue(label: "com.cliqz.jsbridge.lock", attributes: [])
     // dispatch queue for executing action callbacks
-    private let callbackDispatchQueue = dispatch_queue_create("com.cliqz.jsbridge.callback", DISPATCH_QUEUE_CONCURRENT)
+    fileprivate let callbackDispatchQueue = DispatchQueue(label: "com.cliqz.jsbridge.callback", attributes: DispatchQueue.Attributes.concurrent)
     
     let ACTION_TIMEOUT : Int64 = 200000000 // 200ms
     
@@ -38,17 +38,17 @@ public class JSBridge : RCTEventEmitter {
         super.init()
     }
     
-    public override static func moduleName() -> String! {
+    open override static func moduleName() -> String! {
         return "JSBridge"
     }
     
-    override public func supportedEvents() -> [String]! {
+    override open func supportedEvents() -> [String]! {
         return ["callAction", "publishEvent"]
     }
     
-    private func nextActionId() -> NSInteger {
+    fileprivate func nextActionId() -> NSInteger {
         var nextId : NSInteger = 0
-        dispatch_sync(lockDispatchQueue) {
+        lockDispatchQueue.sync {
             self.actionCounter += 1
             nextId = self.actionCounter
         }
@@ -67,7 +67,7 @@ public class JSBridge : RCTEventEmitter {
     ///  * "timeout": timeout occured waiting for the reply
     ///  * "exception when running action": javascript exception when running this action (see JS logs for details)
     ///  * "invalid action": action was not known on the Javascript side
-    public func callAction(functionName: String, args: Array<AnyObject>) -> NSDictionary {
+    open func callAction(_ functionName: String, args: Array<Any>) -> NSDictionary {
         // check listener is registered on other end
         guard self.registeredActions.contains(functionName) else {
             debugPrint("ERROR: callAction - function not registered")
@@ -78,22 +78,22 @@ public class JSBridge : RCTEventEmitter {
         let actionId = nextActionId()
         
         // create a semaphore for this action
-        let sem = dispatch_semaphore_create(0)
-        dispatch_sync(semaphoresDispatchQueue) {
+        let sem = DispatchSemaphore(value: 0)
+        semaphoresDispatchQueue.sync {
             self.eventSemaphores[actionId] = sem
         }
         
         // dispatch event
-        self.sendEventWithName("callAction", body: ["id": actionId, "action": functionName, "args": args])
+        self.sendEvent(withName: "callAction", body: ["id": actionId, "action": functionName, "args": args])
         
         // wait for the semaphore
-        let timeout = dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, self.ACTION_TIMEOUT))
+        let timeout = sem.wait(timeout: DispatchTime.now() + Double(self.ACTION_TIMEOUT) / Double(NSEC_PER_SEC))
 
         var reply = NSDictionary()
         // after signal the reply should be ready in the cache
-        dispatch_sync(semaphoresDispatchQueue) {
-            if timeout != 0 {
-                debugPrint("action timeout \(actionId), \(functionName)")
+        semaphoresDispatchQueue.sync {
+            if timeout == .timedOut {
+                print("action timeout \(actionId), \(functionName)")
                 self.replyCache[actionId] = ["error": "timeout"]
             }
             reply = self.replyCache[actionId]!
@@ -114,9 +114,9 @@ public class JSBridge : RCTEventEmitter {
     /// - parameter functionName: String name of the function to call
     /// - parameter args:         arguments to pass to the function
     /// - parameter callback:     Callback to invoke with the result
-    public func callAction(functionName: String, args: Array<AnyObject>, callback: Callback) {
+    open func callAction(_ functionName: String, args: Array<AnyObject>, callback: @escaping Callback) {
         guard self.registeredActions.contains(functionName) else {
-            dispatch_sync(lockDispatchQueue) {
+            lockDispatchQueue.sync {
                 if self.awaitingRegistration[functionName] == nil {
                     self.awaitingRegistration[functionName] = []
                 }
@@ -127,11 +127,11 @@ public class JSBridge : RCTEventEmitter {
         
         let actionId = nextActionId()
         
-        dispatch_sync(semaphoresDispatchQueue) {
+        semaphoresDispatchQueue.sync {
             self.eventCallbacks[actionId] = callback
         }
         // only send event - callback is handled in action reply
-        self.sendEventWithName("callAction", body: ["id": actionId, "action": functionName, "args": args])
+        self.sendEvent(withName: "callAction", body: ["id": actionId, "action": functionName, "args": args])
         
     }
     
@@ -139,20 +139,20 @@ public class JSBridge : RCTEventEmitter {
     ///
     /// - parameter eventName: String name of event
     /// - parameter args:      Array args to pass with the event
-    public func publishEvent(eventName: String, args: Array<AnyObject>) {
-        self.sendEventWithName("publishEvent", body: ["event": eventName, "args": args])
+    open func publishEvent(_ eventName: String, args: Array<Any>) {
+        self.sendEvent(withName: "publishEvent", body: ["event": eventName, "args": args])
     }
     
     @objc(replyToAction:result:)
-    func replyToAction(actionId: NSInteger, result: NSDictionary) {
-        dispatch_async(semaphoresDispatchQueue) {
+    func replyToAction(_ actionId: NSInteger, result: NSDictionary) {
+        semaphoresDispatchQueue.async {
             // we should find either a semaphore or a callback for this action
             if let sem = self.eventSemaphores[actionId] {
                 // place response in cache and signal on this semaphore
                 self.replyCache[actionId] = result
-                dispatch_semaphore_signal(sem)
+                sem.signal()
             } else if let callback = self.eventCallbacks[actionId] {
-                dispatch_async(self.callbackDispatchQueue) {
+                self.callbackDispatchQueue.async {
                     callback(result)
                 }
                 self.eventCallbacks[actionId] = nil
@@ -161,15 +161,15 @@ public class JSBridge : RCTEventEmitter {
     }
     
     @objc(registerAction:)
-    func registerAction(actionName: String) {
+    func registerAction(_ actionName: String) {
         self.registeredActions.insert(actionName)
         
         // check for actions waiting to be executed
-        dispatch_async(lockDispatchQueue) {
+        lockDispatchQueue.async {
             if let queued = self.awaitingRegistration[actionName] {
                 // trigger each waiting action
                 queued.forEach { (args, callback) in
-                    dispatch_async(self.callbackDispatchQueue, {
+                    self.callbackDispatchQueue.async(execute: {
                         self.callAction(actionName, args: args, callback: callback)
                     })
                 }

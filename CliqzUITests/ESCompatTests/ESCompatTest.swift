@@ -55,7 +55,7 @@ class ESCompatTest: XCTestCase {
         if let filePath = bundle.resourceURL?.URLByAppendingPathComponent(fileName) {
             
             do {
-                if let jsonData = NSData(contentsOfURL: filePath),
+                if let jsonData = Data(contentsOf: filePath),
                     let categories = try NSJSONSerialization.JSONObjectWithData(jsonData, options: []) as? [[String: AnyObject]] {
                     
                     loadTestCategories(categories, testSuite: testSuite)
@@ -168,7 +168,7 @@ class ESCompatTest: XCTestCase {
             let intervalInSeconds = interval / 1000
             let timeInterval = NSTimeInterval(intervalInSeconds)
             
-            dispatch_async(dispatch_get_main_queue()) {
+			DispatchQueue.main.async {
                 let timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval,
                                                                    target: self,
                                                                    selector: #selector(ESCompatTest.excuteJavaScriptFunction(_:)),
@@ -183,7 +183,7 @@ class ESCompatTest: XCTestCase {
     }
     
     @objc private func excuteJavaScriptFunction(timer: NSTimer) -> () {
-        dispatch_async(dispatchQueue) {
+		dispatchQueue.async {
             if let function = timer.userInfo as? JSValue {
                 function.callWithArguments(nil)
             }

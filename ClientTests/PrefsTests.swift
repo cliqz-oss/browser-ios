@@ -67,14 +67,14 @@ class PrefsTests: XCTestCase {
 
     func testMockProfilePrefsRoundtripsTimestamps() {
         let prefs = MockProfilePrefs().branch("baz")
-        let val: Timestamp = NSDate.now()
+        let val: Timestamp = Date()
         prefs.setLong(val, forKey: "foobar")
         XCTAssertEqual(val, prefs.unsignedLongForKey("foobar")!)
     }
 
     func testMockProfilePrefsKeys() {
         let prefs = MockProfilePrefs().branch("baz") as! MockProfilePrefs
-        let val: Timestamp = NSDate.now()
+        let val: Timestamp = Date()
         prefs.setLong(val, forKey: "foobar")
         XCTAssertEqual(val, (prefs.things["baz.foobar"] as! NSNumber).unsignedLongLongValue)
     }
