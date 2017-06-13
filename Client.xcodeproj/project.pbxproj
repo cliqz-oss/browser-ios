@@ -620,6 +620,8 @@
 		AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */; };
 		AF2C3DFF1EEFDEF1005DD628 /* NewsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */; };
 		AF2C3E001EEFDEF1005DD628 /* ReadNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */; };
+		AF2C3E151EEFED79005DD628 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3E141EEFED79005DD628 /* History.swift */; };
+		AF2C3E251EEFEDB2005DD628 /* HistoryBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */; };
 		AF4A652F1E681EC5000278CD /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */; };
 		AF4A65301E681EC5000278CD /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */; };
 		AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */; };
@@ -2073,6 +2075,8 @@
 		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryModuleBridge.m; sourceTree = "<group>"; };
 		AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadNewsManager.swift; sourceTree = "<group>"; };
+		AF2C3E141EEFED79005DD628 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = JSEngine/History.swift; sourceTree = "<group>"; };
+		AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryBridge.m; path = JSEngine/HistoryBridge.m; sourceTree = "<group>"; };
 		AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedRequestsCache.swift; path = JSEngine/BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = JSEngine/ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterceptorURLProtocol.swift; path = JSEngine/InterceptorURLProtocol.swift; sourceTree = "<group>"; };
@@ -4131,6 +4135,8 @@
 				AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */,
 				B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */,
 				B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */,
+				AF2C3E141EEFED79005DD628 /* History.swift */,
+				AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */,
 			);
 			name = JSEngine;
 			sourceTree = "<group>";
@@ -6740,6 +6746,7 @@
 				D3C03E471C3C7C1500A07D5C /* MenuHelper.swift in Sources */,
 				D3FEC38D1AC4B42F00494F45 /* AutocompleteTextField.swift in Sources */,
 				1E79DEA31D508368006BEB4A /* AWSTMCache.m in Sources */,
+				AF2C3E251EEFEDB2005DD628 /* HistoryBridge.m in Sources */,
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
@@ -6809,6 +6816,7 @@
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
 				1E79DD121D4FB2C5006BEB4A /* TelemetryLogger.swift in Sources */,
+				AF2C3E151EEFED79005DD628 /* History.swift in Sources */,
 				1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */,
 				1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */,
 				28FDFF0C1C1F725800840F86 /* SeparatorTableCell.swift in Sources */,
@@ -8493,7 +8501,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
