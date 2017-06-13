@@ -605,6 +605,21 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
+		AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */; };
+		AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */; };
+		AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */; };
+		AF2C3DF51EEFDEF1005DD628 /* CINotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */; };
+		AF2C3DF61EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */; };
+		AF2C3DF71EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */; };
+		AF2C3DF81EEFDEF1005DD628 /* ConversationalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */; };
+		AF2C3DF91EEFDEF1005DD628 /* ConversationalHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEA1EEFDEF1005DD628 /* ConversationalHistory.swift */; };
+		AF2C3DFA1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */; };
+		AF2C3DFB1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEC1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift */; };
+		AF2C3DFC1EEFDEF1005DD628 /* HistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */; };
+		AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */; };
+		AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */; };
+		AF2C3DFF1EEFDEF1005DD628 /* NewsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */; };
+		AF2C3E001EEFDEF1005DD628 /* ReadNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */; };
 		AF4A652F1E681EC5000278CD /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */; };
 		AF4A65301E681EC5000278CD /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */; };
 		AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */; };
@@ -2043,6 +2058,21 @@
 		A91528D11D0E637600CD0425 /* NoImageModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NoImageModeHelper.js; sourceTree = "<group>"; };
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
+		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserActions.m; sourceTree = "<group>"; };
+		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserActions.swift; sourceTree = "<group>"; };
+		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
+		AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CINotificationManager.swift; sourceTree = "<group>"; };
+		AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzHistoryDetailsDataSource.swift; sourceTree = "<group>"; };
+		AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzNewsDetailsDataSource.swift; sourceTree = "<group>"; };
+		AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalContainer.swift; sourceTree = "<group>"; };
+		AF2C3DEA1EEFDEF1005DD628 /* ConversationalHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalHistory.swift; sourceTree = "<group>"; };
+		AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalHistoryAPI.swift; sourceTree = "<group>"; };
+		AF2C3DEC1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalHistoryDetails.swift; sourceTree = "<group>"; };
+		AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDataSource.swift; sourceTree = "<group>"; };
+		AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
+		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryModuleBridge.m; sourceTree = "<group>"; };
+		AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDataSource.swift; sourceTree = "<group>"; };
+		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadNewsManager.swift; sourceTree = "<group>"; };
 		AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedRequestsCache.swift; path = JSEngine/BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = JSEngine/ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterceptorURLProtocol.swift; path = JSEngine/InterceptorURLProtocol.swift; sourceTree = "<group>"; };
@@ -2812,6 +2842,7 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				AF2C3DE21EEFDEF1005DD628 /* Conversational History */,
 				1E47067E1EB0952000516BA5 /* Settings */,
 				AFA6F3DB1E67424700BA630B /* ControlCenter */,
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
@@ -4024,6 +4055,28 @@
 				7BEDD2B11CB7CC0B004B51F3 /* Animatable.swift */,
 			);
 			path = Animators;
+			sourceTree = "<group>";
+		};
+		AF2C3DE21EEFDEF1005DD628 /* Conversational History */ = {
+			isa = PBXGroup;
+			children = (
+				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
+				AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */,
+				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
+				AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */,
+				AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */,
+				AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */,
+				AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */,
+				AF2C3DEA1EEFDEF1005DD628 /* ConversationalHistory.swift */,
+				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
+				AF2C3DEC1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift */,
+				AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */,
+				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
+				AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */,
+				AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */,
+				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
+			);
+			path = "Conversational History";
 			sourceTree = "<group>";
 		};
 		AF82661C1EB09FBA0023C77C /* Tab Redesign */ = {
@@ -6454,6 +6507,7 @@
 				1E79DEA91D508368006BEB4A /* AWSModel.m in Sources */,
 				4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */,
 				1E79DE951D508368006BEB4A /* NSValueTransformer+AWSMTLPredefinedTransformerAdditions.m in Sources */,
+				AF2C3E001EEFDEF1005DD628 /* ReadNewsManager.swift in Sources */,
 				D39ABDFE1CC6F35F003A319E /* CorePing.swift in Sources */,
 				E640E86A1C73A47C00C5F072 /* PasscodeViews.swift in Sources */,
 				E692E3371C46E86A009D1240 /* AppSettingsOptions.swift in Sources */,
@@ -6462,6 +6516,7 @@
 				E68E7ADC1CAC208200FDCA76 /* SetupPasscodeViewController.swift in Sources */,
 				7B3631EA1C244FEE00D12AF9 /* Theme.swift in Sources */,
 				7BC68D321CC153920043562A /* AppMenuItem.swift in Sources */,
+				AF2C3DF71EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift in Sources */,
 				7BC68CCD1CC152B70043562A /* MenuView.swift in Sources */,
 				1E79DD251D4FB2C5006BEB4A /* LayerViewController.swift in Sources */,
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
@@ -6473,6 +6528,7 @@
 				745DAB3F1CDAB09E00D44181 /* HistoryBackButton.swift in Sources */,
 				D3B6923F1B9F9A58004B87A4 /* FindInPageHelper.swift in Sources */,
 				4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */,
+				AF2C3DFC1EEFDEF1005DD628 /* HistoryDataSource.swift in Sources */,
 				1E79DD221D4FB2C5006BEB4A /* FooterActivityItemProvider.swift in Sources */,
 				D3C3696E1CC6B78800348A61 /* LocalRequestHelper.swift in Sources */,
 				E4B423DD1ABA0318007E66C8 /* ReaderModeHandlers.swift in Sources */,
@@ -6554,15 +6610,20 @@
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
+				AF2C3DF51EEFDEF1005DD628 /* CINotificationManager.swift in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
 				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
+				AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */,
 				E660BE061BB0666D009AC090 /* InnerStrokedView.swift in Sources */,
 				0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */,
 				1E79DD211D4FB2C5006BEB4A /* CliqzSearchViewController.swift in Sources */,
+				AF2C3DFA1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift in Sources */,
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
+				AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */,
+				AF2C3DFF1EEFDEF1005DD628 /* NewsDataSource.swift in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
 				B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */,
 				1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */,
@@ -6611,6 +6672,7 @@
 				7BC68CCB1CC152B70043562A /* MenuDataSource.swift in Sources */,
 				E65072A31B2737DA001A0AC6 /* GeometryExtensions.swift in Sources */,
 				E653422D1C5944F90039DD9E /* BrowserPrompts.swift in Sources */,
+				AF2C3DF61EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift in Sources */,
 				D3921DBE1CEFD33600679798 /* ClientTelemetry.swift in Sources */,
 				1E79DD061D4FB2C5006BEB4A /* StatisticsCollector.swift in Sources */,
 				1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */,
@@ -6654,6 +6716,7 @@
 				0B5142CC1AE1BAF50014D0B3 /* UIViewExtensions.swift in Sources */,
 				E47616C71AB74CA600E7DD25 /* ReaderModeBarView.swift in Sources */,
 				2F44FCC51A9E85E900FD20CC /* SettingsTableViewController.swift in Sources */,
+				AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */,
 				1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */,
 				AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */,
 				A9072B801D07B34100459960 /* NoImageModeHelper.swift in Sources */,
@@ -6685,6 +6748,8 @@
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
 				28EADE5D1AFC3A78007FB2FB /* UIImageViewExtensions.swift in Sources */,
 				1E79DD271D4FB2C5006BEB4A /* NewsNotificationPermissionViewController.swift in Sources */,
+				AF2C3DF81EEFDEF1005DD628 /* ConversationalContainer.swift in Sources */,
+				AF2C3DFB1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				1E79DD071D4FB2C5006BEB4A /* AppStatus.swift in Sources */,
@@ -6725,6 +6790,7 @@
 				1E79DE971D508368006BEB4A /* AWSURLSessionManager.m in Sources */,
 				1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */,
 				1E79DD501D4FB2F8006BEB4A /* AWSSNSService.m in Sources */,
+				AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */,
 				1E79DE9E1D508368006BEB4A /* AWSClientContext.m in Sources */,
 				1E79DE871D508368006BEB4A /* AWSGZIP.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,
@@ -6738,6 +6804,7 @@
 				1E79DD1A1D4FB2C5006BEB4A /* Reachability.m in Sources */,
 				1E79DE9C1D508368006BEB4A /* AWSURLResponseSerialization.m in Sources */,
 				1E79DE7F1D508368006BEB4A /* AWSCognitoIdentityModel.m in Sources */,
+				AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */,
 				1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
@@ -6753,6 +6820,7 @@
 				59A68E0B4ABBF55E14819668 /* BookmarksPanel.swift in Sources */,
 				7B0B1B791C1B69C900DF4AB5 /* ClientPickerViewController.swift in Sources */,
 				1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */,
+				AF2C3DF91EEFDEF1005DD628 /* ConversationalHistory.swift in Sources */,
 				1E79DE991D508368006BEB4A /* AWSSerialization.m in Sources */,
 				7B844E3D1BBDDB9D00E733A2 /* ChevronView.swift in Sources */,
 				1E79DE8F1D508368006BEB4A /* AWSEXTScope.m in Sources */,
