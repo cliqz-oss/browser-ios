@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-JSENGINE_RELEASE=1.7.0
+JSENGINE_RELEASE=ci
 PLATFORM=ios
 
 # when jsengine is in navigation-extenion, we can pull tags from there. In the meantime we'll
