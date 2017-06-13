@@ -10,9 +10,9 @@ import UIKit
 
 //This has no use currently. It might in future iterations, when we add push notifications.
 
-class CINotificationManager: NSObject {
-    
-    static let sharedInstance = CINotificationManager()
-    var newsVisisted = false
-    
-}
+//class CINotificationManager: NSObject {
+//    
+//    static let sharedInstance = CINotificationManager()
+//    var newsVisisted = false
+//    
+//}

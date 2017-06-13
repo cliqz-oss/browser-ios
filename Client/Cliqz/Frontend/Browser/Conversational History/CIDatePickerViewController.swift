@@ -22,48 +22,48 @@ class CIDatePickerViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.2)
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         
-        let cancelButton: UIButton = UIButton(type: .Custom)
-        let customButton: UIButton = UIButton(type: .Custom)
+        let cancelButton: UIButton = UIButton(type: .custom)
+        let customButton: UIButton = UIButton(type: .custom)
         
-        datePicker.date = NSDate(timeIntervalSinceNow: 0)
-        datePicker.backgroundColor = UIColor.whiteColor()
+        datePicker.date = Date(timeIntervalSinceNow: 0)
+        datePicker.backgroundColor = UIColor.white
         datePicker.layer.cornerRadius = 10
         datePicker.clipsToBounds = true
         
-        cancelButton.setTitle("Cancel", forState: .Normal)
-        cancelButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        cancelButton.backgroundColor = UIColor.whiteColor()
+        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitleColor(UIColor.red, for: .normal)
+        cancelButton.backgroundColor = UIColor.white
         cancelButton.layer.cornerRadius = 10
         cancelButton.clipsToBounds = true
         
-        customButton.setTitle("Set Reminder", forState: .Normal)
-        customButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-        customButton.backgroundColor = UIColor.whiteColor()
+        customButton.setTitle("Set Reminder", for: .normal)
+        customButton.setTitleColor(UIColor.blue, for: .normal)
+        customButton.backgroundColor = UIColor.white
         customButton.layer.cornerRadius = 10
         customButton.clipsToBounds = true
         
-        cancelButton.addTarget(self, action: #selector(cancelPressed), forControlEvents: .TouchUpInside)
-        customButton.addTarget(self, action: #selector(customPressed), forControlEvents: .TouchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelPressed), for: .touchUpInside)
+        customButton.addTarget(self, action: #selector(customPressed), for: .touchUpInside)
         
         self.view.addSubview(cancelButton)
         self.view.addSubview(customButton)
         self.view.addSubview(datePicker)
         
-        cancelButton.snp_makeConstraints { (make) in
+        cancelButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(self.view).inset(10)
             make.left.right.equalTo(self.view).inset(20)
             make.height.equalTo(80)
         }
         
-        customButton.snp_makeConstraints { (make) in
+        customButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(self.view).inset(100)
             make.left.right.bottom.equalTo(self.view).inset(20)
             make.height.equalTo(80)
         }
         
-        datePicker.snp_makeConstraints { (make) in
+        datePicker.snp.makeConstraints { (make) in
             make.bottom.equalTo(self.view).inset(200)
             make.left.right.equalTo(self.view).inset(20)
         }
@@ -73,13 +73,13 @@ class CIDatePickerViewController: UIViewController {
     @objc
     func cancelPressed(sender: UIButton) {
         debugPrint("cancel pressed")
-        delegate?.cancelPressed(sender, datePicker: self)
+        delegate?.cancelPressed(sender: sender, datePicker: self)
     }
 
     @objc
     func customPressed(sender: UIButton) {
         debugPrint("custom pressed", self)
-        delegate?.customPressed(sender, datePicker: self)
+        delegate?.customPressed(sender: sender, datePicker: self)
     }
     
     override func didReceiveMemoryWarning() {

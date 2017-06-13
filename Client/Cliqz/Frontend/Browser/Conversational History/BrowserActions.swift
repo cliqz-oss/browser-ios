@@ -15,29 +15,29 @@ public class BrowserActions: NSObject {
 	@objc(openLink:)
 	public func openLink(url: NSString) {
 		print("Hello React")
-		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, u = NSURL(string:url as String) {
-			appDelegate.openUrlInWebView(u)
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let u = URL(string:url as String) {
+			appDelegate.openUrlInWebView(url: u)
 		}
 	}
 	
 	@objc(queryCliqz:)
 	public func queryCliqz(url: NSString) {
-        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-            appDelegate.searchInWebView((url as String) ?? "")
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.searchInWebView(text: (url as String))
         }
 	}
 
 	@objc(getOpenTabs:reject:)
 	public func getOpenTabs(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
 		let openTabs = NSMutableArray()
-		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
 			for tab in appDelegate.tabManager.tabs {
-                if let id = tab.webView?.uniqueId, url = tab.url?.absoluteString {
+                if let id = tab.webView?.uniqueId, let url = tab.url?.absoluteString {
                     let tabData = NSMutableDictionary()
                     tabData["id"] = NSInteger(id)
                     tabData["url"] = NSString(string: url)
                     tabData["title"] = NSString(string: tab.displayTitle)
-                    openTabs.addObject(tabData)
+                    openTabs.add(tabData)
                 }
 			}
 		}
@@ -46,8 +46,8 @@ public class BrowserActions: NSObject {
 
 	@objc(openTab:)
 	public func openTab(tabID: NSInteger) {
-		if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-			appDelegate.openTab(tabID as Int)
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+			appDelegate.openTab(tabID: tabID as Int)
 		}
 	}
 }

@@ -17,13 +17,13 @@ import React
 struct Domain {
     let domainName: String
     let domainDetails: [DomainDetail]
-    let date: NSDate? //this should be the date of the most recently accessed DomainDetail.
+    let date: Date? //this should be the date of the most recently accessed DomainDetail.
 }
 
 struct DomainDetail {
     var title: String
     let url: NSURL
-    let date: NSDate?
+    let date: Date?
 }
 
 @objc(HistoryModule)
@@ -32,18 +32,19 @@ final class HistoryModule: NSObject {
     
     //getHistoryWithLimit:(nonnull NSInteger *)limit startFrame:(nonnull NSInteger *)startFrame endFrame:(nonnull NSInteger *)endFrame
     @objc(query:startFrame:endFrame:domain:resolve:reject:)
-    func query(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate, profile = appDelegate.profile {
+    func query(limit: NSNumber?, startFrame: NSNumber?, endFrame:NSNumber?, domain:NSString?, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let profile = appDelegate.profile {
             
             var start_local = startFrame
             var end_local   = endFrame
             
-            if startFrame?.integerValue == 0 && endFrame?.integerValue == 0 {
+            if startFrame?.intValue == 0 && endFrame?.intValue == 0 {
                 start_local = nil
                 end_local = nil
             }
-            profile.history.getHistoryVisits((domain as? String) ?? "", timeStampLowerLimit: start_local?.integerValue ?? nil , timeStampUpperLimit: end_local?.integerValue ?? nil, limit: limit?.integerValue ?? nil).upon({ (result) in
-                let processedResult = self.processRawDataResults(result, domain:domain)
+            
+            profile.history.getHistoryVisits(domain: (domain as String?) ?? "", timeStampLowerLimit: start_local?.intValue ?? nil , timeStampUpperLimit: end_local?.intValue ?? nil, limit: limit?.intValue ?? nil).upon({ (result) in
+                let processedResult = self.processRawDataResults(result: result, domain:domain)
                 resolve(processedResult)
             })
         }
@@ -62,7 +63,7 @@ final class HistoryModule: NSObject {
             for site in sites {
                 if let domain = site {
                     let title = NSString(string: domain.title)
-                    let date  = NSNumber(double: Double(domain.latestVisit?.date ?? 0))
+                    let date  = NSNumber(value: Double(domain.latestVisit?.date ?? 0))
                     let url   = NSString(string: domain.url)
                     
                     let t_key = NSString(string: "title")
@@ -86,15 +87,15 @@ final class HistoryModule: NSObject {
         return NSDictionary(dictionary: returnDict)
     }
     
-    class func getHistory(profile: Profile, completion:(result:[Domain]?, error:NSError?) -> Void) {
+    class func getHistory(profile: Profile, completion:@escaping (_ result:[Domain]?, _ error:NSError?) -> Void) {
         //limit is static for now.
         //later there will be a mechanism in place to handle a variable limit and offset.
         //It will keep a window of results that updates as the user scrolls.
-        let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+        let backgroundQueue = DispatchQueue.global()
         profile.history.getHistoryVisits(0, limit: 1000).uponQueue(backgroundQueue) { (result) in
-            let rawDomainDetails = processRawDataResults(result)
-            let domainList       = processDomainDetails(rawDomainDetails)
-            completion(result: domainList, error: nil) //TODO: there should be a better error handling mechanism here
+            let rawDomainDetails = processRawDataResults(result: result)
+            let domainList       = processDomainDetails(details: rawDomainDetails)
+            completion(domainList, nil) //TODO: there should be a better error handling mechanism here
         }
         
         //getHistoryWithLimit(100, startFrame: 1494928155776220, endFrame: 1494928369784560, domain: NSString(string: "reuters.com"), resolve: { _ in}, reject: { _ in})
@@ -106,11 +107,11 @@ final class HistoryModule: NSObject {
         
         if let sites = result.successValue {
             for site in sites {
-                if let domain = site, url = NSURL(string: domain.url) {
+                if let domain = site, let url = NSURL(string: domain.url) {
                     let title = domain.title
-                    var date:NSDate?  = nil
+                    var date:Date?  = nil
                     if let latestDate = domain.latestVisit?.date {
-                        date = NSDate(timeIntervalSince1970: Double(latestDate) / 1000000.0) // second = microsecond * 10^-6
+                        date = Date(timeIntervalSince1970: Double(latestDate) / 1000000.0) // second = microsecond * 10^-6
                     }
                     let d = DomainDetail(title: title, url: url, date: date)
                     historyResults.append(d)
@@ -125,7 +126,7 @@ final class HistoryModule: NSObject {
         
         //group domain details by domain.
         var domainName_to_details: [String: [String: DomainDetail]] = Dictionary()
-        var domainName_to_date   : [String: NSDate] = Dictionary()
+        var domainName_to_date   : [String: Date] = Dictionary()
         
         //warning: Non-elegant code.
         //TODO: refactor
@@ -135,13 +136,13 @@ final class HistoryModule: NSObject {
         //Third...some recent DomainDetail(s) miss the title sometimes, so I just take it from another DomainDetail with matching url.
         
         for detail in details {
-            if let domainName = urlToDomain(detail.url), url_abs_string = detail.url.absoluteString {
+            if let domainName = urlToDomain(url: detail.url), let url_abs_string = detail.url.absoluteString {
                 //add the details
                 if var nested_dict = domainName_to_details[domainName] {
                     //nested dictionary
                     //inside dict is a mapping from detail.url -> DomainDetail with the most recent date
                     if let inside_domainDetail = nested_dict[url_abs_string] {
-                        if inside_domainDetail.date?.timeIntervalSince1970 < detail.date?.timeIntervalSince1970 {
+                        if inside_domainDetail.date! < detail.date! {
                             
                             var final_detail = detail
                             
@@ -161,7 +162,7 @@ final class HistoryModule: NSObject {
                 
                 //check if the date can be replaced by a more recent one
                 if domainName_to_date[domainName] != nil {
-                    if domainName_to_date[domainName]?.timeIntervalSince1970 < detail.date?.timeIntervalSince1970 {
+                    if  domainName_to_date[domainName]! <  detail.date! {//domainName_to_date[domainName]?.timeIntervalSince1970 < detail.date?.timeIntervalSince1970 {
                         domainName_to_date[domainName] = detail.date
                     }
                 }
@@ -189,7 +190,20 @@ final class HistoryModule: NSObject {
     }
     
     class func urlToDomain(url:NSURL) -> String? {
-        return url.baseDomain()
+        return url.baseURL?.baseDomain()
     }
     
+}
+
+
+
+
+extension Date {
+    static public func ==(lhs: Date, rhs: Date) -> Bool {
+        return lhs.compare(rhs) == .orderedSame
+    }
+    
+    static public func <(lhs: Date, rhs: Date) -> Bool {
+        return lhs.compare(rhs) == .orderedAscending
+    }
 }
