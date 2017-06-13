@@ -24,7 +24,7 @@ private let InitialPingSentKey = "initialPingSent"
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var browserViewController: BrowserViewController!
-    var rootViewController: UIViewController!
+    var rootViewController: UINavigationController!
     weak var profile: BrowserProfile?
     var tabManager: TabManager!
     var adjustIntegration: AdjustIntegration?
@@ -143,29 +143,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Add restoration class, the factory that will return the ViewController we
         // will restore with.
         log.debug("Initing BVC…")
+        
+        
+        //		 REACT ----
+        let viewController = UIViewController()
+        viewController.view = Engine.sharedInstance.rootView
 
         browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)
         browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
         browserViewController.restorationClass = AppDelegate.self as? UIViewControllerRestoration.Type
 
-        let navigationController = UINavigationController(rootViewController: browserViewController)
+        let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.delegate = self
         navigationController.isNavigationBarHidden = true
 
-        if AppConstants.MOZ_STATUS_BAR_NOTIFICATION {
-            rootViewController = NotificationRootViewController(rootViewController: navigationController)
-        } else {
-            rootViewController = navigationController
-        }
+//        if AppConstants.MOZ_STATUS_BAR_NOTIFICATION {
+//            rootViewController = NotificationRootViewController(rootViewController: navigationController)
+//        } else {
+        rootViewController = navigationController
+//        }
 
-        self.window!.rootViewController = rootViewController
-		
-		
-		// REACT ----
-		let viewController = UIViewController()
-		viewController.view = Engine.sharedInstance.rootView
-
-		self.window!.rootViewController = viewController
+//        self.window!.rootViewController = rootViewController
+        self.window!.rootViewController = navigationController
 
         // Cliqz: disable crash reporting
 //        do {
