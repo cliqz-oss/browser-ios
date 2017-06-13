@@ -11,6 +11,9 @@ def project_pods
     'RCTText',
     'RCTNetwork',
     'RCTWebSocket',
+    'RCTLinkingIOS',
+    'RCTAnimation',
+    'RCTImage'
     # needed for debugging
     # Add any other subspecs you want to use in your project
     ]
