@@ -732,3 +732,36 @@ struct LaunchParams {
     let url: URL?
     let isPrivate: Bool?
 }
+
+//HackDay
+extension AppDelegate {
+    
+    func openUrlInWebView(url: URL) {
+        DispatchQueue.main.async() {
+            self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            let delayTime = DispatchTime.now() + 0.3 * Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
+                self.browserViewController.navigateToURL(url)
+            })
+        }
+    }
+    
+    func searchInWebView(text: String) {
+        DispatchQueue.main.async() {
+            self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            let delayTime = DispatchTime.now() + 0.3 * Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
+                self.browserViewController.searchForQuery(text)
+            })
+        }
+    }
+    
+    func openTab(tabID: Int) {
+        DispatchQueue.main.async() {
+            self.browserViewController.needsNewTab = false
+            self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            self.browserViewController.navigateToTab(tabID: tabID)
+        }
+    }
+    
+}

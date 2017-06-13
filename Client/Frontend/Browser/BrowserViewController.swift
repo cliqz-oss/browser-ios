@@ -116,7 +116,7 @@ class BrowserViewController: UIViewController {
         return toolbar ?? urlBar
     }
 	
-    fileprivate var needsNewTab = true
+    var needsNewTab = true
     
     fileprivate var isAppResponsive = false
     
@@ -595,6 +595,11 @@ class BrowserViewController: UIViewController {
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
         log.debug("BVC done.")
+        
+        if (needsNewTab) {
+            self.tabManager.addTabAndSelect()
+            needsNewTab = false
+        }
 
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.openSettings),
@@ -4243,3 +4248,31 @@ extension BrowserViewController: CrashlyticsDelegate {
     }
     
 }
+
+
+//Conv Interface
+extension BrowserViewController {
+    
+    func navigateToHome() {
+        for tab in self.tabManager.tabs {
+            if !tab.keepOpen {
+                self.tabManager.removeTab(tab)
+            }
+        }
+        self.needsNewTab = true
+        self.navigationController?.popViewController(animated: false)
+        ConversationalHistoryAPI.homePressed()
+    }
+    
+    func navigateToTab(tabID: Int) {
+        for tab in self.tabManager.tabs {
+            if tab.webView?.uniqueId == tabID {
+                self.tabManager.selectTab(tab)
+                if tab.keepOpen {
+                    self.toolbar?.tabsButton.isSelected = true
+                }
+            }
+        }
+    }
+}
+

@@ -37,6 +37,10 @@ open class Engine {
         return bridge.module(for: WebRequest.self) as! WebRequest
     }
     
+    public func getHistory() -> HistoryBridge {
+        return bridge.module(for: HistoryBridge.self) as! HistoryBridge
+    }
+    
     //MARK: - Public APIs
     open func isRunning() -> Bool {
         return true

@@ -78,6 +78,8 @@ class Tab: NSObject {
     var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
+    // CI
+    var keepOpen = false
 
     /// Whether or not the desktop site was requested with the last request, reload or navigation. Note that this property needs to
     /// be managed by the web view's navigation delegate.
