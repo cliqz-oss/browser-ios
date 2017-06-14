@@ -8,14 +8,14 @@ import Shared
 
 private let log = Logger.syncLogger
 
-public class SQLiteBookmarks: BookmarksModelFactorySource {
+open class SQLiteBookmarks: BookmarksModelFactorySource {
     let db: BrowserDB
     let favicons: FaviconsTable<Favicon>
 
     static let defaultFolderTitle = NSLocalizedString("Untitled", tableName: "Storage", comment: "The default name for bookmark folders without titles.")
     static let defaultItemTitle = NSLocalizedString("Untitled", tableName: "Storage", comment: "The default name for bookmark nodes without titles.")
 
-    public lazy var modelFactory: Deferred<Maybe<BookmarksModelFactory>> =
+    open lazy var modelFactory: Deferred<Maybe<BookmarksModelFactory>> =
         deferMaybe(SQLiteBookmarksModelFactory(bookmarks: self, direction: .Local))
 
     public init(db: BrowserDB) {

@@ -9,7 +9,7 @@ import UIKit
  * Data for identifying and constructing a HomePanel.
  */
 struct HomePanelDescriptor {
-    let makeViewController: (profile: Profile) -> UIViewController
+    let makeViewController: (_ profile: Profile) -> UIViewController
     let imageName: String
     let accessibilityLabel: String
     let accessibilityIdentifier: String

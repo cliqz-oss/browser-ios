@@ -19,7 +19,7 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override func numberOfSections(in tableView: UITableView) -> Int {
 #if BETA
         return 2
 #else
@@ -27,21 +27,21 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
 #endif
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
         if indexPath.section == 0 {
             cell = getUITableViewCell()
             let setting = settings[indexPath.row]
             cell.textLabel?.attributedText = setting.title
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         } else {
-            cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: nil)
-            cell.accessoryType = .None
-            cell.selectionStyle = .None
+            cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: nil)
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
             let infoTuple = info[indexPath.row]
             cell.textLabel?.text = infoTuple.0
             cell.detailTextLabel?.text = infoTuple.1
@@ -50,7 +50,7 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 0 else {
             return
         }
@@ -58,6 +58,5 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
         let setting = settings[indexPath.row]
         setting.onClick(self.navigationController)
     }
-    
-    
+
 }

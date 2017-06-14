@@ -37,7 +37,7 @@ class LiveStorageClientTests : LiveAccountTest {
         let endpoint = token.api_endpoint
         XCTAssertTrue(endpoint.rangeOfString("services.mozilla.com") != nil, "We got a Sync server.")
 
-        let cryptoURI = NSURL(string: endpoint)
+        let cryptoURI = URL(string: endpoint)
         let authorizer: Authorizer = {
             (r: NSMutableURLRequest) -> NSMutableURLRequest in
             let helper = HawkHelper(id: token.id, key: token.key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
@@ -50,7 +50,7 @@ class LiveStorageClientTests : LiveAccountTest {
         let encrypter = Keys(defaultBundle: keyBundle).encrypter("crypto", encoder: encoder)
 
         let workQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-        let resultQueue = dispatch_get_main_queue()
+        let resultQueue = DispatchQueue.main
         let backoff = MockBackoffStorage()
 
         let storageClient = Sync15StorageClient(serverURI: cryptoURI!, authorizer: authorizer, workQueue: workQueue, resultQueue: resultQueue, backoff: backoff)
@@ -72,7 +72,7 @@ class LiveStorageClientTests : LiveAccountTest {
     }
 
     func getTokenAndDefaultKeys() -> Deferred<Maybe<(TokenServerToken, KeyBundle)>> {
-        let authState = self.syncAuthState(NSDate.now())
+        let authState = self.syncAuthState(Date())
 
         let keysPayload: Deferred<Maybe<Record<KeysPayload>>> = authState.bind {
             tokenResult in
@@ -125,7 +125,7 @@ class LiveStorageClientTests : LiveAccountTest {
 
     func testStateMachine() {
         let expectation = expectationWithDescription("Waiting on value.")
-        let authState = self.getAuthState(NSDate.now())
+        let authState = self.getAuthState(Date())
 
         let d = chainDeferred(authState, f: { SyncStateMachine(prefs: MockProfilePrefs()).toReady($0) })
 

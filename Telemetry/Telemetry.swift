@@ -6,19 +6,20 @@ import Alamofire
 import Foundation
 import GCDWebServers
 import XCGLogger
+import SwiftyJSON
 
 private let log = Logger.browserLogger
 private let ServerURL = "https://incoming.telemetry.mozilla.org".asURL!
 private let AppName = "Fennec"
 
 public protocol TelemetryEvent {
-    func record(prefs: Prefs)
+    func record(_ prefs: Prefs)
 }
 
-public class Telemetry {
-    private static var prefs: Prefs?
+open class Telemetry {
+    fileprivate static var prefs: Prefs?
     
-    public class func initWithPrefs(prefs: Prefs) {
+    open class func initWithPrefs(_ prefs: Prefs) {
         // Cliqz: disable sending any telemetry data to Firefox
         /*
         assert(self.prefs == nil, "Prefs already initialized")
@@ -26,7 +27,7 @@ public class Telemetry {
         */
     }
     
-    public class func recordEvent(event: TelemetryEvent) {
+    open class func recordEvent(_ event: TelemetryEvent) {
         // Cliqz: disable sending any telemetry data to Firefox
         /*
         guard let prefs = prefs else {
@@ -38,7 +39,7 @@ public class Telemetry {
          */
     }
     
-    public class func sendPing(ping: TelemetryPing) {
+    open class func sendPing(_ ping: TelemetryPing) {
         // Cliqz: disable sending any telemetry data to Firefox
         /*
         let payload = ping.payload.toString()

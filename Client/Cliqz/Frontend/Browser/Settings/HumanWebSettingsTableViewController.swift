@@ -21,34 +21,34 @@ class HumanWebSettingsTableViewController: SubSettingsTableViewController {
     }
 
     
-	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = getUITableViewCell()
         cell.textLabel?.text = self.title
         let control = UISwitch()
         control.onTintColor = UIConstants.ControlTintColor
-        control.addTarget(self, action: #selector(HumanWebSettingsTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        control.on = toggle
+        control.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
+        control.isOn = toggle
         cell.accessoryView = control
-        cell.selectionStyle = .None
+        cell.selectionStyle = .none
         control.tag = indexPath.item
         
 		return cell
 	}
 	
-	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(tableView_ : UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 	
-	@objc func switchValueChanged(toggle: UISwitch) {
-		self.toggle = toggle.on
+	@objc func switchValueChanged(_ toggle: UISwitch) {
+		self.toggle = toggle.isOn
         SettingsPrefs.updateHumanWebPref(self.toggle)
         
         // log telemetry signal
-        let state = toggle.on == true ? "off" : "on" // we log old value
+        let state = toggle.isOn == true ? "off" : "on" // we log old value
         let valueChangedSignal = TelemetryLogEventType.Settings("human_web", "click", "enable", state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
 	}

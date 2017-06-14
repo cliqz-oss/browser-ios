@@ -11,21 +11,21 @@ import Foundation
 class BlockedRequestsCache: NSObject {
     
     static let sharedInstance = BlockedRequestsCache()
-    private var blockedURLs = Set<NSURL>()
+    fileprivate var blockedURLs = Set<URL>()
 
-    private let dispatchQueue = dispatch_queue_create("com.cliqz.antitracking.cache", DISPATCH_QUEUE_SERIAL);
+    fileprivate let dispatchQueue = DispatchQueue(label: "com.cliqz.antitracking.cache", attributes: []);
     
-    func addBlockedRequest(request: NSURLRequest) {
-        guard let url = request.URL else {
+    func addBlockedRequest(_ request: URLRequest) {
+        guard let url = request.url else {
             return
         }
-        dispatch_sync(dispatchQueue) {
+        dispatchQueue.sync {
             self.blockedURLs.insert(url)
         }
     }
     
-    func hasRequest(request: NSURLRequest) -> Bool {
-        guard let url = request.URL else {
+    func hasRequest(_ request: URLRequest) -> Bool {
+        guard let url = request.url else {
             return false
         }
         
@@ -35,12 +35,12 @@ class BlockedRequestsCache: NSObject {
         return false
     }
     
-    func removeBlockedRequest(request: NSURLRequest) {
-        guard let url = request.URL else {
+    func removeBlockedRequest(_ request: URLRequest) {
+        guard let url = request.url else {
             return
         }
         
-        dispatch_sync(dispatchQueue) {
+        dispatchQueue.sync {
             self.blockedURLs.remove(url)
         }
     }

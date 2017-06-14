@@ -5,6 +5,7 @@
 import Foundation
 import XCGLogger
 import SwiftKeychainWrapper
+import SwiftyJSON
 
 private let log = Logger.keychainLogger
 
@@ -12,11 +13,11 @@ public protocol JSONLiteralConvertible {
     func asJSON() -> JSON
 }
 
-public class KeychainCache<T: JSONLiteralConvertible> {
-    public let branch: String
-    public let label: String
+open class KeychainCache<T: JSONLiteralConvertible> {
+    open let branch: String
+    open let label: String
 
-    public var value: T? {
+    open var value: T? {
         didSet {
             checkpoint()
         }
@@ -28,9 +29,9 @@ public class KeychainCache<T: JSONLiteralConvertible> {
         self.value = value
     }
 
-    public class func fromBranch(branch: String, withLabel label: String?, withDefault defaultValue: T? = nil, factory: JSON -> T?) -> KeychainCache<T> {
+    open class func fromBranch(_ branch: String, withLabel label: String?, withDefault defaultValue: T? = nil, factory: (JSON) -> T?) -> KeychainCache<T> {
         if let l = label {
-            if let s = KeychainWrapper.stringForKey("\(branch).\(l)") {
+			if let s = KeychainWrapper.standard.string(forKey: "\(branch).\(l)") {
                 if let t = factory(JSON.parse(s)) {
                     log.info("Read \(branch) from Keychain with label \(branch).\(l).")
                     return KeychainCache(branch: branch, label: l, value: t)
@@ -49,14 +50,14 @@ public class KeychainCache<T: JSONLiteralConvertible> {
         return KeychainCache(branch: branch, label: label, value: defaultValue)
     }
 
-    public func checkpoint() {
+    open func checkpoint() {
         log.info("Storing \(self.branch) in Keychain with label \(self.branch).\(self.label).")
         // TODO: PII logging.
-        if let value = value {
-            let jsonString = value.asJSON().toString(false)
-            KeychainWrapper.setString(jsonString, forKey: "\(branch).\(label)")
-        } else {
-            KeychainWrapper.removeObjectForKey("\(branch).\(label)")
-        }
+		if let value = value,
+			let jsonString = value.asJSON().stringValue() {
+			KeychainWrapper.sharedAppContainerKeychain.set(jsonString, forKey: "\(branch).\(label)")
+		} else {
+			KeychainWrapper.sharedAppContainerKeychain.removeObject(forKey: "\(branch).\(label)")
+		}
     }
 }

@@ -90,7 +90,7 @@ class BookmarkingTests: KIFTestCase, UITextFieldDelegate {
         tester().tapViewWithAccessibilityIdentifier("url")
         tester().tapViewWithAccessibilityLabel("Bookmarks")
 
-        let cell = tester().waitForCellAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), inTableViewWithAccessibilityIdentifier: "SiteTable")
+        let cell = tester().waitForCellAtIndexPath(IndexPath(forRow: 0, inSection: 0), inTableViewWithAccessibilityIdentifier: "SiteTable")
 
         let size = cell.textLabel?.font.pointSize
 
@@ -120,7 +120,7 @@ class BookmarkingTests: KIFTestCase, UITextFieldDelegate {
         tester().tapViewWithAccessibilityLabel("Bookmarks")
         tester().waitForAbsenceOfViewWithAccessibilityLabel("Page 1")
         // XXX: Searching for the table cell directly here can result in finding the wrong view.
-        let cell = tester().waitForCellAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), inTableViewWithAccessibilityIdentifier: "SiteTable")
+        let cell = tester().waitForCellAtIndexPath(IndexPath(forRow: 0, inSection: 0), inTableViewWithAccessibilityIdentifier: "SiteTable")
         XCTAssertEqual(cell.textLabel!.text!, url1, "Cell shows url")
 
         tester().tapViewWithAccessibilityLabel("Cancel")

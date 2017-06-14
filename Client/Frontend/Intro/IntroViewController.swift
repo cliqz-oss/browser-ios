@@ -68,7 +68,7 @@ let IntroViewControllerSeenProfileKey = "IntroViewControllerSeen"
 
 protocol IntroViewControllerDelegate: class {
     func introViewControllerDidFinish()
-    func introViewControllerDidRequestToLogin(introViewController: IntroViewController)
+    func introViewControllerDidRequestToLogin(_ introViewController: IntroViewController)
 }
 
 class IntroViewController: UIViewController, UIScrollViewDelegate {
@@ -88,23 +88,17 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     var forwardButton: UIButton!
     var signInButton: UIButton!
     
-    // Cliqz: added attribute to calculate the duration user take on each page
-    var durationStartTime : Double?
-    // Cliqz: added keep track of current page index to detect whether user swipe left or right
-    var currentPageIndex = 0
-    
-    
     // Cliqz: custom getting started button
     lazy var gettingStartedButton: UIButton = self.createGettingStartedButton()
     
-    private func createGettingStartedButton() -> UIButton {
+    fileprivate func createGettingStartedButton() -> UIButton {
         let button = UIButton()
         let buttonTitle = NSLocalizedString("Let's start!", tableName: "Cliqz", comment: "Start buttun title for onBorading")
-        button.setTitle(buttonTitle, forState: UIControlState.Normal)
-        button.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightBold)
-        button.setBackgroundImage(UIImage(named: "getting-started"), forState: UIControlState.Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), forControlEvents: UIControlEvents.TouchUpInside)
+        button.setTitle(buttonTitle, for: UIControlState())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightBold)
+        button.setBackgroundImage(UIImage(named: "getting-started"), for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), for: UIControlEvents.touchUpInside)
         button.snp_makeConstraints { (make) -> Void in
             make.width.equalTo(200.0)
             make.height.equalTo(40.0)
@@ -113,12 +107,12 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         return button
     }
 
-    private var scrollView: IntroOverlayScrollView!
+    fileprivate var scrollView: IntroOverlayScrollView!
 
     var slideVerticalScaleFactor: CGFloat = 1.0
 
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
 
         // scale the slides down for iPhone 4S
         if view.frame.height <=  480 {
@@ -146,11 +140,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
      */
 
         scrollView = IntroOverlayScrollView()
-        scrollView.backgroundColor = UIColor.clearColor()
+        scrollView.backgroundColor = UIColor.clear
         scrollView.accessibilityLabel = NSLocalizedString("Intro Tour Carousel", comment: "Accessibility label for the introduction tour carousel")
         scrollView.delegate = self
         scrollView.bounces = false
-        scrollView.pagingEnabled = true
+        scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentSize = CGSize(width: scaledWidthOfSlide * CGFloat(IntroViewControllerUX.NumberOfCards), height: scaledHeightOfSlide)
         view.addSubview(scrollView)
@@ -179,7 +173,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //        pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
         pageControl.numberOfPages = IntroViewControllerUX.NumberOfCards
         pageControl.accessibilityIdentifier = "pageControl"
-        pageControl.addTarget(self, action: #selector(IntroViewController.changePage), forControlEvents: UIControlEvents.ValueChanged)
+        pageControl.addTarget(self, action: #selector(IntroViewController.changePage), for: UIControlEvents.valueChanged)
 
         view.addSubview(pageControl)
         pageControl.snp_makeConstraints { (make) -> Void in
@@ -190,7 +184,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
 
 
-        func addCard(text: String, title: String) {
+        func addCard(_ text: String, title: String) {
             let introView = UIView()
             self.introViews.append(introView)
             self.addLabelsToIntroView(introView, text: text, title: title)
@@ -244,8 +238,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
 
         // Make whole screen scrollable by bringing the scrollview to the top
-        view.bringSubviewToFront(scrollView)
-        view.bringSubviewToFront(pageControl)
+        view.bringSubview(toFront: scrollView)
+        view.bringSubview(toFront: pageControl)
 
 
         // Activate the first card
@@ -254,17 +248,17 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         setupDynamicFonts()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IntroViewController.SELDynamicFontChanged(_:)), name: NotificationDynamicFontChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IntroViewController.SELDynamicFontChanged(_:)), name: NotificationDynamicFontChanged, object: nil)
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
     }
 
-    func SELDynamicFontChanged(notification: NSNotification) {
+    func SELDynamicFontChanged(_ notification: Notification) {
         guard notification.name == NotificationDynamicFontChanged else { return }
         setupDynamicFonts()
     }
@@ -282,36 +276,30 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         for i in 0..<IntroViewControllerUX.NumberOfCards {
             if let imageView = slideContainer.subviews[i] as? UIImageView {
                 imageView.frame = CGRect(x: CGFloat(i)*scaledWidthOfSlide, y: 0, width: scaledWidthOfSlide, height: scaledHeightOfSlide)
-                imageView.contentMode = UIViewContentMode.ScaleAspectFit
+                imageView.contentMode = UIViewContentMode.scaleAspectFit
             }
         }
         slideContainer.frame = CGRect(x: 0, y: 0, width: scaledWidthOfSlide * CGFloat(IntroViewControllerUX.NumberOfCards), height: scaledHeightOfSlide)
         scrollView.contentSize = CGSize(width: slideContainer.frame.width, height: slideContainer.frame.height)
     }
 
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
 
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
         // This actually does the right thing on iPad where the modally
         // presented version happily rotates with the iPad orientation.
-        return UIInterfaceOrientationMask.Portrait
+        return UIInterfaceOrientationMask.portrait
     }
 
     func SELstartBrowsing() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         delegate?.introViewControllerDidFinish()
-        // Cliqz: logged Onboarding event
-        if let startTime = durationStartTime {
-            let duration = Int(NSDate.getCurrentMillis() - startTime)
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", pageControl.currentPage, duration))
-            durationStartTime = nil
-        }
     }
 
     func SELback() {
@@ -342,16 +330,16 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 		delegate?.introViewControllerDidRequestToLogin(self)
     }
 
-    private var accessibilityScrollStatus: String {
-        return String(format: NSLocalizedString("Introductory slide %@ of %@", tableName: "Intro", comment: "String spoken by assistive technology (like VoiceOver) stating on which page of the intro wizard we currently are. E.g. Introductory slide 1 of 3"), NSNumberFormatter.localizedStringFromNumber(pageControl.currentPage+1, numberStyle: .DecimalStyle), NSNumberFormatter.localizedStringFromNumber(IntroViewControllerUX.NumberOfCards, numberStyle: .DecimalStyle))
+    fileprivate var accessibilityScrollStatus: String {
+		return String(format: NSLocalizedString("Introductory slide %@ of %@", tableName: "Intro", comment: "String spoken by assistive technology (like VoiceOver) stating on which page of the intro wizard we currently are. E.g. Introductory slide 1 of 3"), NumberFormatter.localizedString(from: NSNumber(value: pageControl.currentPage+1), number: .decimal), NumberFormatter.localizedString(from: NSNumber(value: IntroViewControllerUX.NumberOfCards), number: .decimal))
     }
 
     func changePage() {
         let swipeCoordinate = CGFloat(pageControl.currentPage) * scrollView.frame.size.width
-        scrollView.setContentOffset(CGPointMake(swipeCoordinate, 0), animated: true)
+        scrollView.setContentOffset(CGPoint(x: swipeCoordinate, y: 0), animated: true)
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         // Need to add this method so that when forcibly dragging, instead of letting deceleration happen, should also calculate what card it's on.
         // This especially affects sliding to the last or first slides.
         if !decelerate {
@@ -359,21 +347,19 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         // Need to add this method so that tapping the pageControl will also change the card texts.
         // scrollViewDidEndDecelerating waits until the end of the animation to calculate what card it's on.
         scrollViewDidEndDecelerating(scrollView)
     }
 
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
-        // Cliqz: log swipe telemetry singal for onboarding
-        logSwipeTelemetrySingal(currentPageIndex, newPageIndex: page)
         setActiveIntroView(introViews[page], forPage: page)
     }
 
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        let maximumHorizontalOffset = scrollView.contentSize.width - CGRectGetWidth(scrollView.frame)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let maximumHorizontalOffset = scrollView.contentSize.width - scrollView.frame.width
         let currentHorizontalOffset = scrollView.contentOffset.x
 
         var percentage = currentHorizontalOffset / maximumHorizontalOffset
@@ -395,7 +381,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //        slideContainer.backgroundColor = colorForPercentage(percentage, start: startColor, end: endColor)
     }
 
-    private func colorForPercentage(percentage: CGFloat, start: UIColor, end: UIColor) -> UIColor {
+    fileprivate func colorForPercentage(_ percentage: CGFloat, start: UIColor, end: UIColor) -> UIColor {
         let s = start.components
         let e = end.components
         let newRed   = (1.0 - percentage) * s.red   + percentage * e.red
@@ -404,10 +390,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         return UIColor(red: newRed, green: newGreen, blue: newBlue, alpha: 1.0)
     }
 
-    private func setActiveIntroView(newIntroView: UIView, forPage page: Int) {
+    fileprivate func setActiveIntroView(_ newIntroView: UIView, forPage page: Int) {
         if introView != newIntroView {
-            // Cliqz: set the current page index
-            currentPageIndex = page
             // Cliqz: removed the fade animation when switching between cards
             self.introView?.alpha = 0
             self.introView = newIntroView
@@ -430,29 +414,26 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //                    self.scrollView.signinButton = nil
 //                }
 //            })
-            // Cliqz: logged Onboarding event
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", page, nil))
-            durationStartTime = NSDate.getCurrentMillis()
         }
 		if page == pageControl.numberOfPages - 1 {
 			LocationManager.sharedInstance.askForLocationAccess()
 		}
     }
 
-    private var scaledWidthOfSlide: CGFloat {
+    fileprivate var scaledWidthOfSlide: CGFloat {
         return view.frame.width
     }
 
-    private var scaledHeightOfSlide: CGFloat {
+    fileprivate var scaledHeightOfSlide: CGFloat {
         return (view.frame.width / slides[0].size.width) * slides[0].size.height / slideVerticalScaleFactor
     }
 
-    private func attributedStringForLabel(text: String) -> NSMutableAttributedString {
+    fileprivate func attributedStringForLabel(_ text: String) -> NSMutableAttributedString {
         // Cliqz: modified the styling for the text label
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(5)
         let textAttributes = [
-            NSForegroundColorAttributeName  : UIColor.whiteColor(),
+            NSForegroundColorAttributeName  : UIColor.white,
             NSParagraphStyleAttributeName   : paragraphStyle]
         let string = NSMutableAttributedString(string: text, attributes: textAttributes)
 
@@ -466,7 +447,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         return string
     }
 
-    private func addLabelsToIntroView(introView: UIView, text: String, title: String = "") {
+    fileprivate func addLabelsToIntroView(_ introView: UIView, text: String, title: String = "") {
         let label = UILabel()
 
         label.numberOfLines = 0
@@ -476,7 +457,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         addViewsToIntroView(introView, view: label, title: title)
     }
 
-    private func addViewsToIntroView(introView: UIView, view: UIView, title: String = "") {
+    fileprivate func addViewsToIntroView(_ introView: UIView, view: UIView, title: String = "") {
         introView.addSubview(view)
         view.snp_makeConstraints { (make) -> Void in
             make.center.equalTo(introView)
@@ -486,7 +467,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         if !title.isEmpty {
             let titleLabel = UILabel()
             titleLabel.numberOfLines = 0
-            titleLabel.textAlignment = NSTextAlignment.Center
+            titleLabel.textAlignment = NSTextAlignment.center
             // Cliqz: modified the styling for the title label
             titleLabel.attributedText = attributedStringForTitle(title)
 //            titleLabel.text = title
@@ -503,7 +484,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // Cliqz: Added method to modify the styling for the text label
-    private func attributedStringForTitle(text: String) -> NSMutableAttributedString {
+    fileprivate func attributedStringForTitle(_ text: String) -> NSMutableAttributedString {
         let string = NSMutableAttributedString(string: text)
         var fontAdjustment = 0
         if (self.view.frame.width > 320) {
@@ -511,7 +492,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
         
         // Add first lines styling
-        let firstLineLength = text.componentsSeparatedByString("\n")[0].characters.count
+        let firstLineLength = text.components(separatedBy: "\n")[0].characters.count
         string.addAttributes([NSFontAttributeName: UIFont(name: "Lato-Medium", size: CGFloat(14+fontAdjustment))!], range: NSMakeRange(0, firstLineLength))
         
         // Add second lines styling
@@ -522,13 +503,13 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // Cliqz: Added method to create custom page with text and an optional view
-    func addTextCard(text: String, additionalView: UIView? = nil) {
+    func addTextCard(_ text: String, additionalView: UIView? = nil) {
         let introView =  UIView()
         addViewsToIntroView(introView, text: text, additionalView: additionalView)
         introViews.append(introView)
     }
     
-    private func addViewsToIntroView(introView: UIView, text: String, additionalView: UIView?) {
+    fileprivate func addViewsToIntroView(_ introView: UIView, text: String, additionalView: UIView?) {
         introView.backgroundColor = UIColor(rgb: 0x262626)
         
         let textLabel = UILabel()
@@ -557,52 +538,35 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
         
     }
-    private func setupDynamicFonts() {
+    fileprivate func setupDynamicFonts() {
         // Cliqz: Commented start browsing button font setting
 //        startBrowsingButton.titleLabel?.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroBigFontSize)
         // Cliqz: Commented sing in button font setting
 //        signInButton.titleLabel?.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroStandardFontSize, weight: UIFontWeightMedium)
         
         for titleLabel in titleLabels {
-            titleLabel.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroBigFontSize, weight: UIFontWeightBold)
+            titleLabel.font = UIFont.systemFont(ofSize: DynamicFontHelper.defaultHelper.IntroBigFontSize, weight: UIFontWeightBold)
         }
         
         for label in textLabels {
-            label.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.IntroStandardFontSize)
+            label.font = UIFont.systemFont(ofSize: DynamicFontHelper.defaultHelper.IntroStandardFontSize)
         }
     }
-    
-    // Cliqz: added method to log swipe telemetry signals
-    func logSwipeTelemetrySingal(currentPageIndex: Int, newPageIndex: Int) {
-        guard currentPageIndex != newPageIndex else {
-            return
-        }
-        if let startTime = durationStartTime {
-            let duration = Int(NSDate.getCurrentMillis() - startTime)
-            var action: String = ""
-            if newPageIndex > currentPageIndex {
-                action = "swipe_left"
-            } else {
-                action = "swipe_right"
-            }
-            TelemetryLogger.sharedInstance.logEvent(.Onboarding(action, newPageIndex, duration))
-            durationStartTime = nil
-        }
-    }
+
 }
 
-private class IntroOverlayScrollView: UIScrollView {
+fileprivate class IntroOverlayScrollView: UIScrollView {
     weak var signinButton: UIButton?
 
-    private override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+    fileprivate override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         if let signinFrame = signinButton?.frame {
-            let convertedFrame = convertRect(signinFrame, fromView: signinButton?.superview)
-            if CGRectContainsPoint(convertedFrame, point) {
+            let convertedFrame = convert(signinFrame, from: signinButton?.superview)
+            if convertedFrame.contains(point) {
                 return false
             }
         }
 
-        return CGRectContainsPoint(CGRect(origin: self.frame.origin, size: CGSize(width: self.contentSize.width, height: self.frame.size.height)), point)
+        return CGRect(origin: self.frame.origin, size: CGSize(width: self.contentSize.width, height: self.frame.size.height)).contains(point)
     }
 }
 

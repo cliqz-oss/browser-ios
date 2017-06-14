@@ -16,51 +16,51 @@ class SearchEnginePicker: UITableViewController {
         super.viewDidLoad()
         
         // Cliqz: record settingsOpenTime
-        settingsOpenTime = NSDate.getCurrentMillis()
+        settingsOpenTime = Date.getCurrentMillis()
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return engines.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let engine = engines[indexPath.item]
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
+        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
         cell.textLabel?.text = engine.shortName
         cell.imageView?.image = engine.image.createScaled(CGSize(width: OpenSearchEngine.PreferredIconSize, height: OpenSearchEngine.PreferredIconSize))
         if engine.shortName == selectedSearchEngineName {
 			// Cliqz: Mark selected the row of default search engine
-			self.tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+			self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            cell.accessoryType = UITableViewCellAccessoryType.checkmark
         }
-		cell.selectionStyle = .None
+		cell.selectionStyle = .none
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let engine = engines[indexPath.item]
         delegate?.searchEnginePicker(self, didSelectSearchEngine: engine)
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
         
         // Cliqz: log telementry signal for changing default search engine
         let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", engine.shortName, nil, nil)
         TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
     }
 
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.none
 	}
 
     func cancel() {
         delegate?.searchEnginePicker(self, didSelectSearchEngine: nil)
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         // Cliqz: log back telemetry singal for search settings view
         if let openTime = settingsOpenTime {
-            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let duration = Int(Date.getCurrentMillis() - openTime)
             let settingsBackSignal = TelemetryLogEventType.Settings("select_se", "click", "back", nil, duration)
             TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)
             settingsOpenTime = nil

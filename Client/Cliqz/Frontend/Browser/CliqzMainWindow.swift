@@ -11,7 +11,7 @@ import UIKit
 class CliqzMainWindow: UIWindow {
     let contextMenuHandler = CliqzContextMenu()
 
-    override func sendEvent(event: UIEvent) {
+    override func sendEvent(_ event: UIEvent) {
         contextMenuHandler.sendEvent(event, window: self)
 
         super.sendEvent(event)

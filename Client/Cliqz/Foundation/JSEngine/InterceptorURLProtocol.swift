@@ -9,24 +9,22 @@
 import UIKit
 
 
-class InterceptorURLProtocol: NSURLProtocol {
+class InterceptorURLProtocol: URLProtocol {
     
     static let customURLProtocolHandledKey = "customURLProtocolHandledKey"
     static let excludeUrlPrefixes = ["https://lookback.io/api", "http://localhost"]
     
     //MARK: - NSURLProtocol handling
-    override class func canInitWithRequest(request: NSURLRequest) -> Bool {
-
-        if request.URL?.absoluteString == "http:/" {
+    override class func canInit(with request: URLRequest) -> Bool {
+	if request.url?.absoluteString == "http:/" {
             return false
         }
-        
         guard (
-            NSURLProtocol.propertyForKey(customURLProtocolHandledKey, inRequest: request) == nil
+            URLProtocol.property(forKey: customURLProtocolHandledKey, in: request) == nil
              && request.mainDocumentURL != nil) else {
             return false
         }
-        guard isExcludedUrl(request.URL) == false else {
+        guard isExcludedUrl(request.url) == false else {
             return false
         }
         guard BlockedRequestsCache.sharedInstance.hasRequest(request) == false else {
@@ -43,12 +41,12 @@ class InterceptorURLProtocol: NSURLProtocol {
         return false
     }
     
-    override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
     
-    override class func requestIsCacheEquivalent(a: NSURLRequest, toRequest b: NSURLRequest) -> Bool {
-        return super.requestIsCacheEquivalent(a, toRequest: b)
+    override class func requestIsCacheEquivalent(_ a: URLRequest, to b: URLRequest) -> Bool {
+        return super.requestIsCacheEquivalent(a, to: b)
     }
     
     override func startLoading() {
@@ -61,8 +59,8 @@ class InterceptorURLProtocol: NSURLProtocol {
     
     
     //MARK: - private helper methods
-    class func isExcludedUrl(url: NSURL?) -> Bool {
-        if let scheme = url?.scheme where !scheme.startsWith("http") {
+    class func isExcludedUrl(_ url: URL?) -> Bool {
+        if let scheme = url?.scheme, !scheme.startsWith("http") {
             return true
         }
 
@@ -77,16 +75,16 @@ class InterceptorURLProtocol: NSURLProtocol {
         return false
     }
     // MARK: Private helper methods
-    private func returnEmptyResponse() {
+    fileprivate func returnEmptyResponse() {
         // To block the load nicely, return an empty result to the client.
         // Nice => UIWebView's isLoading property gets set to false
         // Not nice => isLoading stays true while page waits for blocked items that never arrive
         
-        guard let url = request.URL else { return }
-        let response = NSURLResponse(URL: url, MIMEType: "text/html", expectedContentLength: 1, textEncodingName: "utf-8")
-        client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .NotAllowed)
-        client?.URLProtocol(self, didLoadData: NSData())
-        client?.URLProtocolDidFinishLoading(self)
+        guard let url = request.url else { return }
+        let response = URLResponse(url: url, mimeType: "text/html", expectedContentLength: 1, textEncodingName: "utf-8")
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Data())
+        client?.urlProtocolDidFinishLoading(self)
     }
     
     

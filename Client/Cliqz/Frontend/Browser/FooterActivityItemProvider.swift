@@ -13,19 +13,19 @@ import Foundation
 ///
 
 class FooterActivityItemProvider: UIActivityItemProvider {
-    static let activityTypesToIgnore = [UIActivityTypeCopyToPasteboard, UIActivityTypeMessage, UIActivityTypePostToTwitter]
+    static let activityTypesToIgnore = [UIActivityType.copyToPasteboard, UIActivityType.message, UIActivityType.postToTwitter]
     
     init(footer: String) {
         super.init(placeholderItem: footer)
     }
     
-    override func item() -> AnyObject {
+    override var item : Any {
         if let activityType = activityType {
             if FooterActivityItemProvider.activityTypesToIgnore.contains(activityType) {
                 return NSNull()
             }
         }
-        return placeholderItem!
+        return placeholderItem! as AnyObject
     }
 }
 

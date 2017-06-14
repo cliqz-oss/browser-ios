@@ -161,7 +161,7 @@ public class MockProfile: Profile {
     }
 
     func hasSyncableAccount() -> Bool {
-        return account?.actionNeeded == FxAActionNeeded.None
+        return account?.actionNeeded == FxAActionNeeded.none
     }
 
     func getAccount() -> FirefoxAccount? {

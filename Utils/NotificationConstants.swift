@@ -2,21 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-public let NotificationDataLoginDidChange = "Data:Login:DidChange"
+public let NotificationDataLoginDidChange = Notification.Name("Data:Login:DidChange")
 
 // add a property to allow the observation of firefox accounts
-public let NotificationFirefoxAccountChanged = "FirefoxAccountChangedNotification"
+public let NotificationFirefoxAccountChanged = Notification.Name("FirefoxAccountChangedNotification")
 
-public let NotificationPrivateDataClearedHistory = "PrivateDataClearedHistoryNotification"
+public let NotificationPrivateDataClearedHistory = Notification.Name("PrivateDataClearedHistoryNotification")
 
 // Fired when the user finishes navigating to a page and the location has changed
-public let NotificationOnLocationChange = "OnLocationChange"
+public let NotificationOnLocationChange = Notification.Name("OnLocationChange")
 
 // Fired when the login synchronizer has finished applying remote changes
-public let NotificationDataRemoteLoginChangesWereApplied = "NotificationDataRemoteLoginChangesWereApplied"
+public let NotificationDataRemoteLoginChangesWereApplied = Notification.Name("NotificationDataRemoteLoginChangesWereApplied")
 
 // MARK: Notification UserInfo Keys
-public let NotificationUserInfoKeyHasSyncableAccount = "NotificationUserInfoKeyHasSyncableAccount"
+public let NotificationUserInfoKeyHasSyncableAccount = Notification.Name("NotificationUserInfoKeyHasSyncableAccount")
 
 // Cliqz: Fired when trying to clear local history
 public let NotificationPrivateDataClearQueries = "PrivateDataClearQueriesNotification"
@@ -29,3 +29,5 @@ public let NotificationBadRequestDetected = "NotificationBadRequestDetected"
 
 // Cliqz: Fired when the background color of the AntiTracking Button needs to be changed
 public let NotificationRefreshAntiTrackingButton = "NotificationRefreshAntiTrackingButton"
+
+public let NotificationFirefoxAccountDeviceRegistrationUpdated = Notification.Name("FirefoxAccountDeviceRegistrationUpdated")

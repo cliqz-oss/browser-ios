@@ -12,11 +12,11 @@ private let TogglesPrefKey = "clearprivatedata.toggles"
 
 extension Profile {
 	
-	private var toggles: [Bool] {
+	fileprivate var toggles: [Bool] {
 		get {
 			if var savedToggles = self.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
 				if savedToggles.count == 4 {
-					savedToggles.insert(true, atIndex:1)
+					savedToggles.insert(true, at:1)
 				}
 				return savedToggles
 			}
@@ -24,7 +24,7 @@ extension Profile {
 		}
 	}
 
-	func clearPrivateData(tabManager: TabManager) {
+	func clearPrivateData(_ tabManager: TabManager) {
 
         let clearables: [Clearable] = [
 			HistoryClearable(profile: self),
@@ -34,7 +34,7 @@ extension Profile {
 			SiteDataClearable(tabManager: tabManager),
 		]
 		
-		for (i, c) in clearables.enumerate() {
+		for (i, c) in clearables.enumerated() {
 			guard self.toggles[i] else {
 				continue
 			}

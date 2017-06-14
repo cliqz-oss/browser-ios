@@ -4,6 +4,7 @@
 
 import Foundation
 import Shared
+import SwiftyJSON
 
 // These are taken from the Places docs
 // http://mxr.mozilla.org/mozilla-central/source/toolkit/components/places/nsINavHistoryService.idl#1187
@@ -54,11 +55,11 @@ WKNavigationTypeOther = -1,
  * to reach the UI: we care about "last visited", "visit count", or just
  * "places ordered by frecency" — we don't care about lists of visits.)
  */
-public class Visit: Hashable {
-    public let date: MicrosecondTimestamp
-    public let type: VisitType
+open class Visit: Hashable {
+    open let date: MicrosecondTimestamp
+    open let type: VisitType
 
-    public var hashValue: Int {
+    open var hashValue: Int {
         return date.hashValue ^ type.hashValue
     }
 
@@ -67,20 +68,20 @@ public class Visit: Hashable {
         self.type = type
     }
 
-    public class func fromJSON(json: JSON) -> Visit? {
-        if let type = json["type"].asInt,
-               typeEnum = VisitType(rawValue: type),
-               date = json["date"].asInt64 where date >= 0 {
+    open class func fromJSON(_ json: [String: Any]) -> Visit? {
+        if let type = json["type"] as? Int,
+               let typeEnum = VisitType(rawValue: type),
+               let date = json["date"] as? Int64, date >= 0 {
                 return Visit(date: MicrosecondTimestamp(date), type: typeEnum)
         }
         return nil
     }
 
-    public func toJSON() -> JSON {
-        let d = NSNumber(unsignedLongLong: self.date)
-        let o: [String: AnyObject] = ["type": self.type.rawValue, "date": d]
-        return JSON(o)
-    }
+	open func toJSON() -> [String: Any] {
+		let d = NSNumber(value: self.date)
+		let o: [String: Any] = ["type": self.type.rawValue, "date": d]
+		return o
+	}
 }
 
 public func ==(lhs: Visit, rhs: Visit) -> Bool {
@@ -88,11 +89,11 @@ public func ==(lhs: Visit, rhs: Visit) -> Bool {
            lhs.type == rhs.type
 }
 
-public class SiteVisit: Visit {
+open class SiteVisit: Visit {
     var id: Int? = nil
-    public let site: Site
+    open let site: Site
 
-    public override var hashValue: Int {
+    open override var hashValue: Int {
         return date.hashValue ^ type.hashValue ^ (id?.hashValue ?? 0) ^ (site.id ?? 0)
     }
 
@@ -103,7 +104,7 @@ public class SiteVisit: Visit {
 }
 
 public func ==(lhs: SiteVisit, rhs: SiteVisit) -> Bool {
-    if let lhsID = lhs.id, rhsID = rhs.id {
+    if let lhsID = lhs.id, let rhsID = rhs.id {
         if lhsID != rhsID {
             return false
         }

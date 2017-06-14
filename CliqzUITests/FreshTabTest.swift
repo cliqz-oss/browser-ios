@@ -13,7 +13,7 @@ import KIF
 class FreshTabTest: KIFTestCase {
 
     func testFreshTabInitialState() {
-        tester.waitForTimeInterval(2)
+        tester.wait(forTimeInterval: 2)
     
         XCTAssertTrue(tester.viewExistsWithLabel("topSites"), "Top Sites are not shown on this view")
         XCTAssertTrue(tester.viewExistsWithLabel("topNews"), "Top New is not displayed on this view")
@@ -21,10 +21,10 @@ class FreshTabTest: KIFTestCase {
 
     func testFreshTabOnOpeningEmptyTabFromTabsManager() {
         showToolBar()
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel("New Tab, Most visited sites and News")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
-        tester.waitForTimeInterval(2)
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.waitForView(withAccessibilityLabel: "New Tab, Most visited sites and News")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
+        tester.wait(forTimeInterval: 2)
         XCTAssertTrue(tester.viewExistsWithLabel("topSites"), "Top Sites are not shown on this view")
         XCTAssertTrue(tester.viewExistsWithLabel("topNews"), "Top New is not displayed on this view")
     }

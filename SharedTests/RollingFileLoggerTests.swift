@@ -11,7 +11,7 @@ class RollingFileLoggerTests: XCTestCase {
     var logDir: String!
     var sizeLimit: Int = 5000
 
-    private lazy var formatter: NSDateFormatter = {
+    private lazy var formatter: DateFormatter = {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "yyyyMMdd'T'HHmmssZ"
         return formatter
@@ -21,7 +21,7 @@ class RollingFileLoggerTests: XCTestCase {
         super.setUp()
         logDir = (NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first!) + "/Logs"
         do {
-            try NSFileManager.defaultManager().createDirectoryAtPath(logDir, withIntermediateDirectories: false, attributes: nil)
+            try FileManager.defaultManager().createDirectoryAtPath(logDir, withIntermediateDirectories: false, attributes: nil)
         } catch _ {
         }
         logger = RollingFileLogger(filenameRoot: "test", logDirectoryPath: logDir, sizeLimit: Int64(sizeLimit))
@@ -32,7 +32,7 @@ class RollingFileLoggerTests: XCTestCase {
         let expected = "test.\(formatter.stringFromDate(date)).log"
         let expectedPath = "\(logDir)/\(expected)"
         logger.newLogWithDate(date)
-        XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(expectedPath), "Log file should exist")
+        XCTAssertTrue(FileManager.defaultManager().fileExistsAtPath(expectedPath), "Log file should exist")
 
         let testMessage = "Logging some text"
         logger.info(testMessage)
@@ -43,8 +43,8 @@ class RollingFileLoggerTests: XCTestCase {
     }
 
     func testNewLogDeletesPreviousLogIfItsTooLarge() {
-        let manager = NSFileManager.defaultManager()
-        let dirURL = NSURL(fileURLWithPath: logDir)
+        let manager = FileManager.defaultManager()
+        let dirURL = URL(fileURLWithPath: logDir)
         let prefix = "test"
         let expectedPath = createNewLogFileWithSize(sizeLimit + 1)
 
@@ -70,8 +70,8 @@ class RollingFileLoggerTests: XCTestCase {
     }
 
     func testNewLogDeletesOldestLogFileToMakeRoomForNewFile() {
-        let manager = NSFileManager.defaultManager()
-        let dirURL = NSURL(fileURLWithPath: logDir)
+        let manager = FileManager.defaultManager()
+        let dirURL = URL(fileURLWithPath: logDir)
         let prefix = "test"
 
         // Create 5 log files with spread out over 5 hours and reorder paths so oldest is first
@@ -105,7 +105,7 @@ class RollingFileLoggerTests: XCTestCase {
         let expected = "test.\(formatter.stringFromDate(date)).log"
         let expectedPath = "\(logDir)/\(expected)"
         logger.newLogWithDate(date)
-        XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(expectedPath), "Log file should exist")
+        XCTAssertTrue(FileManager.defaultManager().fileExistsAtPath(expectedPath), "Log file should exist")
 
         let logFileHandle = NSFileHandle(forWritingAtPath: expectedPath)
         XCTAssertNotNil(logFileHandle, "File should exist")

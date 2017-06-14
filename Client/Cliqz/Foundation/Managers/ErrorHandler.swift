@@ -11,14 +11,14 @@ import Crashlytics
 
 
 enum CliqzErrorCode {
-	case CliqzErrorCodeScriptsLoadingFailed
+	case cliqzErrorCodeScriptsLoadingFailed
 }
 
 class ErrorHandler {
 
-	internal class func handleError(errorCode: CliqzErrorCode, delegate: UIAlertViewDelegate, error: NSError) {
+	internal class func handleError(_ errorCode: CliqzErrorCode, delegate: UIAlertViewDelegate, error: Error) {
 		switch (errorCode) {
-		case .CliqzErrorCodeScriptsLoadingFailed:
+		case .cliqzErrorCodeScriptsLoadingFailed:
             // disable showing load error message
             /*
 			let title = NSLocalizedString("Sorry", tableName: "Cliqz", comment: "Error message title")
@@ -29,12 +29,12 @@ class ErrorHandler {
 			showErrorMessage(title, message: message, cancelButtonTitle: cancel, otherButtonTitle: retry, delegate: delegate)
             */
             
-            let attirbutes = ["errorDescription": error.description]
-            Answers.logCustomEventWithName("JavaScriptLoadError", customAttributes: attirbutes)
+            let attirbutes = ["errorDescription": error.localizedDescription]
+            Answers.logCustomEvent(withName: "JavaScriptLoadError", customAttributes: attirbutes)
 		}
 	}
 	
-	private class func showErrorMessage(title: String, message: String, cancelButtonTitle: String, otherButtonTitle: String, delegate: UIAlertViewDelegate) {
+	fileprivate class func showErrorMessage(_ title: String, message: String, cancelButtonTitle: String, otherButtonTitle: String, delegate: UIAlertViewDelegate) {
 		let alert = UIAlertView(title: title, message: message, delegate: delegate, cancelButtonTitle: cancelButtonTitle, otherButtonTitles: otherButtonTitle)
 		alert.show()
 	}
