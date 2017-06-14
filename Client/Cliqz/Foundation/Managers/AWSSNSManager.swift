@@ -14,8 +14,9 @@ class AWSSNSManager {
 	
 	static let cognitoIdentityPoolID = "us-east-1:81faca92-4d48-437c-ad68-e28ca03411fe"
 //	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS_SANDBOX/Cliqz_Beta_for_iOS"
+//	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS/Cliqz_Beta_Production_for_iOS"
 	static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS/CLIQZ_Browser_for_iOS"
-	static let cognitoRegionID = AWSRegionType.USEast1
+	static let cognitoRegionID = AWSRegionType.usEast1
 	
 	class func configureCongnitoPool() {
 		let credentialsProvider = AWSCognitoCredentialsProvider(
@@ -24,19 +25,19 @@ class AWSSNSManager {
 		let defaultServiceConfiguration = AWSServiceConfiguration(
 			region: cognitoRegionID,
 			credentialsProvider: credentialsProvider)
-		AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = defaultServiceConfiguration
+		AWSServiceManager.default().defaultServiceConfiguration = defaultServiceConfiguration
 	}
 	
-	class func createPlatformEndpoint(deviceToken: String) {
-		if let oldToken = (LocalDataStore.objectForKey(tokenKey) as? String) where oldToken == deviceToken {
+	class func createPlatformEndpoint(_ deviceToken: String) {
+		if let oldToken = (LocalDataStore.objectForKey(tokenKey) as? String), oldToken == deviceToken {
 			return
 		}
 
-		let sns = AWSSNS.defaultSNS()
+		let sns = AWSSNS.default()
 		let request = AWSSNSCreatePlatformEndpointInput()
-		request.token = deviceToken
-		request.platformApplicationArn = SNSAplicationArn
-		sns.createPlatformEndpoint(request).continueWithExecutor(AWSExecutor.mainThreadExecutor(), withBlock: { (task: AWSTask!) -> AnyObject! in
+		request?.token = deviceToken
+		request?.platformApplicationArn = SNSAplicationArn
+		sns.createPlatformEndpoint(request!).continue(with: AWSExecutor.mainThread(), with: { (task: AWSTask!) -> AnyObject! in
 			if task.error != nil {
 				debugPrint("Error Creating Endpoint: \(task.error)")
 				LocalDataStore.removeObjectForKey(tokenKey)
@@ -51,13 +52,13 @@ class AWSSNSManager {
 		})
 	}
 	
-	class func subscriptForTopic(endpointArn: String) {
-		let sns = AWSSNS.defaultSNS()
+	class func subscriptForTopic(_ endpointArn: String) {
+		let sns = AWSSNS.default()
 		let input = AWSSNSSubscribeInput()
-		input.topicArn = "arn:aws:sns:us-east-1:141047255820:mobile_news"
-		input.endpoint = endpointArn
-		input.protocols = "application"
-		sns.subscribe(input, completionHandler: { (response, error) -> Void in
+		input?.topicArn = "arn:aws:sns:us-east-1:141047255820:mobile_news"
+		input?.endpoint = endpointArn
+		input?.protocols = "application"
+		sns.subscribe(input!, completionHandler: { (response, error) -> Void in
 			if error != nil {
 				debugPrint("Error subscribing for a topic: \(error)")
 			} else {

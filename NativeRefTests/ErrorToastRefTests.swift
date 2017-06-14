@@ -14,7 +14,7 @@ class ErrorToastRefTests: FXSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        toast = ErrorToast(frame: CGRectZero)
+        toast = ErrorToast(frame: .CGPointZero)
     }
 
     func testDefaultCellLayout() {

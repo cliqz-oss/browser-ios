@@ -15,12 +15,12 @@ class ConfigurationManager: NSObject {
     static let sharedInstance = ConfigurationManager()
     
     //MARK: - WKWebView Configuration
-    private lazy var sharedConfig = WKWebViewConfiguration()
+    fileprivate lazy var sharedConfig = WKWebViewConfiguration()
     
-    func getSharedConfiguration(scriptMessageHandler: WKScriptMessageHandler) -> WKWebViewConfiguration {
+    func getSharedConfiguration(_ scriptMessageHandler: WKScriptMessageHandler) -> WKWebViewConfiguration {
         
         let controller = WKUserContentController()
-        controller.addScriptMessageHandler(LeakAvoider(delegate:scriptMessageHandler), name: "jsBridge")
+        controller.add(LeakAvoider(delegate:scriptMessageHandler), name: "jsBridge")
 
         sharedConfig.userContentController = controller
         return sharedConfig

@@ -16,12 +16,12 @@ import React
 class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
     
     //Cliqz: override onclick to directly go to default search engine selection
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let searchEnginePicker = SearchEnginePicker()
         searchEnginePicker.title = self.title?.string
         // Order alphabetically, so that picker is always consistently ordered.
         // Every engine is a valid choice for the default engine, even the current default engine.
-        searchEnginePicker.engines = profile.searchEngines.orderedEngines.sort { e, f in e.shortName < f.shortName }
+        searchEnginePicker.engines = profile.searchEngines.orderedEngines.sorted { e, f in e.shortName < f.shortName }
         searchEnginePicker.delegate = self
         searchEnginePicker.selectedSearchEngineName = profile.searchEngines.defaultEngine.shortName
         navigationController?.pushViewController(searchEnginePicker, animated: true)
@@ -30,7 +30,7 @@ class CliqzSearchSetting: SearchSetting, SearchEnginePickerDelegate {
         TelemetryLogger.sharedInstance.logEvent(searchEngineSingal)
     }
     
-    func searchEnginePicker(searchEnginePicker: SearchEnginePicker?, didSelectSearchEngine engine: OpenSearchEngine?) -> Void {
+    func searchEnginePicker(_ searchEnginePicker: SearchEnginePicker?, didSelectSearchEngine engine: OpenSearchEngine?) -> Void {
         if let searchEngine = engine {
             profile.searchEngines.defaultEngine = searchEngine
         }
@@ -44,11 +44,11 @@ class ImprintSetting: Setting {
         return NSAttributedString(string: NSLocalizedString("Imprint", tableName: "Cliqz", comment: "Show Cliqz legal page. See https://cliqz.com/legal"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
-    override var url: NSURL? {
-        return NSURL(string: "https://cliqz.com/legal")
+    override var url: URL? {
+        return URL(string: "https://cliqz.com/legal")
     }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
         // log Telemerty signal
         let imprintSingal = TelemetryLogEventType.Settings("main", "click", "imprint", nil, nil)
@@ -61,7 +61,7 @@ class HumanWebSetting: Setting {
     
     let profile: Profile
 
-    override var style: UITableViewCellStyle { return .Value1 }
+    override var style: UITableViewCellStyle { return .value1 }
 
     override var status: NSAttributedString {
         return NSAttributedString(string: SettingsPrefs.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
@@ -75,9 +75,9 @@ class HumanWebSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = HumanWebSettingsTableViewController()
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
@@ -89,7 +89,7 @@ class HumanWebSetting: Setting {
 
 class AboutSetting: Setting {
     
-    override var style: UITableViewCellStyle { return .Value1 }
+    override var style: UITableViewCellStyle { return .value1 }
 
     override var status: NSAttributedString { return NSAttributedString(string: "Version \(AppStatus.sharedInstance.distVersion)") }
     
@@ -99,10 +99,10 @@ class AboutSetting: Setting {
     }
     
 #if BETA
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
 
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = AboutSettingsTableViewController()
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
@@ -117,10 +117,10 @@ class RateUsSetting: Setting {
         super.init(title: NSAttributedString(string: NSLocalizedString("Rate Us", tableName: "Cliqz", comment: "[Settings] Rate Us"), attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
     }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         
-        if let url = NSURL(string: "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8") {
-            UIApplication.sharedApplication().openURL(url)
+        if let url = URL(string: "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8") {
+            UIApplication.shared.openURL(url)
         }
     }
 }
@@ -137,9 +137,9 @@ class TestReact: Setting {
         super.init(title: NSAttributedString(string: reactTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = UIViewController()
         viewController.view = Engine.sharedInstance.rootView
         navigationController?.pushViewController(viewController, animated: true)
@@ -151,7 +151,7 @@ class AdBlockerSetting: Setting {
     
     let profile: Profile
 
-    override var style: UITableViewCellStyle { return .Value1 }
+    override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
         return NSAttributedString(string: SettingsPrefs.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
@@ -164,9 +164,9 @@ class AdBlockerSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = AdBlockerSettingsTableViewController()
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
@@ -184,12 +184,12 @@ class SupportSetting: Setting {
         return NSAttributedString(string: NSLocalizedString("FAQ & Support", tableName: "Cliqz", comment: "[Settings] FAQ & Support"),attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue])
     }
     
-    override var url: NSURL? {
-        return NSURL(string: "https://cliqz.com/support")
+    override var url: URL? {
+        return URL(string: "https://cliqz.com/support")
     }
     
-    override func onClick(navigationController: UINavigationController?) {
-        navigationController?.dismissViewControllerAnimated(true, completion: {})
+    override func onClick(_ navigationController: UINavigationController?) {
+        navigationController?.dismiss(animated: true, completion: {})
         self.delegate?.settingsOpenURLInNewTab(self.url!)
         
         // Cliqz: log telemetry signal
@@ -202,20 +202,20 @@ class SupportSetting: Setting {
 //Cliqz: Added Setting for redirecting to report form
 class ReportWebsiteSetting: Setting {
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
     override var title: NSAttributedString? {
         return NSAttributedString(string: NSLocalizedString("Report Website", tableName: "Cliqz", comment: "[Settings] Report Website"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
     }
     
-    override var url: NSURL? {
-        if let languageCode = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) where languageCode as! String == "de"{
-            return NSURL(string: "https://cliqz.com/report-url")
+    override var url: URL? {
+        if let languageCode = Locale.current.regionCode, languageCode == "de"{
+            return URL(string: "https://cliqz.com/report-url")
         }
-        return NSURL(string: "https://cliqz.com/en/report-url")
+        return URL(string: "https://cliqz.com/en/report-url")
     }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         setUpAndPushSettingsContentViewController(navigationController)
         
         // Cliqz: log telemetry signal
@@ -228,9 +228,9 @@ class ReportWebsiteSetting: Setting {
 // Cliqz: Custom Bool settings for News Push Notifications
 class EnablePushNotifications: BoolSetting {
 	
-	@objc override func switchValueChanged(control: UISwitch) {
+	@objc override func switchValueChanged(_ control: UISwitch) {
 		super.switchValueChanged(control)
-		if control.on {
+		if control.isOn {
 			NewsNotificationPermissionHelper.sharedInstance.enableNewsNotifications()
         } else {
 			NewsNotificationPermissionHelper.sharedInstance.disableNewsNotifications()
@@ -253,13 +253,13 @@ class RestoreTopSitesSetting: Setting {
         if hiddenTopsitesCount > 0 {
             attributes = [NSForegroundColorAttributeName: UIConstants.HighlightBlue]
         } else {
-            attributes = [NSForegroundColorAttributeName: UIColor.lightGrayColor()]
+            attributes = [NSForegroundColorAttributeName: UIColor.lightGray]
         }
         
         super.init(title: NSAttributedString(string: NSLocalizedString("Restore Most Visited Websites", tableName: "Cliqz", comment: "[Settings] Restore Most Visited Websites"), attributes: attributes))
     }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         guard self.profile.history.getHiddenTopSitesCount() > 0 else {
             return
         }
@@ -267,16 +267,16 @@ class RestoreTopSitesSetting: Setting {
         let alertController = UIAlertController(
             title: "",
             message: NSLocalizedString("All most visited websites will be shown again on the startpage.", tableName: "Cliqz", comment: "[Settings] Text of the 'Restore Most Visited Websites' alert"),
-            preferredStyle: UIAlertControllerStyle.ActionSheet)
+            preferredStyle: UIAlertControllerStyle.actionSheet)
         
         alertController.addAction(
-            UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .Cancel) { (action) in
+            UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Show blocked top-sites' alert"), style: .cancel) { (action) in
                 // log telemetry signal
                 let cancelSignal = TelemetryLogEventType.Settings("restore_topsites", "click", "cancel", nil, nil)
                 TelemetryLogger.sharedInstance.logEvent(cancelSignal)
             })
         alertController.addAction(
-            UIAlertAction(title: self.title?.string, style: .Destructive) { (action) in
+            UIAlertAction(title: self.title?.string, style: .destructive) { (action) in
                 // reset top-sites
 				self.profile.history.deleteAllHiddenTopSites()
                 
@@ -287,7 +287,7 @@ class RestoreTopSitesSetting: Setting {
                 TelemetryLogger.sharedInstance.logEvent(confirmSignal)
 
             })
-        navigationController?.presentViewController(alertController, animated: true, completion: nil)
+        navigationController?.present(alertController, animated: true, completion: nil)
         
         // log telemetry signal
         let restoreTopsitesSignal = TelemetryLogEventType.Settings("main", "click", "restore_topsites", nil, nil)
@@ -299,9 +299,9 @@ class RestoreTopSitesSetting: Setting {
 class RegionalSetting: Setting {
     let profile: Profile
     
-    override var accessoryType: UITableViewCellAccessoryType { return .DisclosureIndicator }
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
     
-    override var style: UITableViewCellStyle { return .Value1 }
+    override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
         var localizedRegionName: String?
@@ -322,7 +322,7 @@ class RegionalSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-    override func onClick(navigationController: UINavigationController?) {
+    override func onClick(_ navigationController: UINavigationController?) {
         let viewController = RegionalSettingsTableViewController()
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
@@ -347,15 +347,20 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
         super.init(title: NSAttributedString(string: "Export Local Database", attributes: [NSForegroundColorAttributeName: UIConstants.HighlightBlue]))
     }
     
-    override func onClick(navigationController: UINavigationController?) {
-        let localDataBaseFile = ((try! profile.files.getAndEnsureDirectory()) as NSString).stringByAppendingPathComponent("browser.db")
-        if let data = NSData(contentsOfFile: localDataBaseFile) where MFMailComposeViewController.canSendMail() {
-            let mailComposeViewController = configuredMailComposeViewController(data)
-            navigationController?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+    override func onClick(_ navigationController: UINavigationController?) {
+        let localDataBaseFile = try! profile.files.getAndEnsureDirectory()
+		
+//			).appendingPathComponent("browser.db")
+		if let path = URL(string: localDataBaseFile),
+			let data = try? Data(contentsOf: path.appendingPathComponent("browser.db"), options: []) {
+			if MFMailComposeViewController.canSendMail() {
+				let mailComposeViewController = configuredMailComposeViewController(data: data)
+				navigationController?.present(mailComposeViewController, animated: true, completion: nil)
+			}
         }
     }
     
-    func configuredMailComposeViewController(data: NSData) -> MFMailComposeViewController {
+    func configuredMailComposeViewController(data: Data) -> MFMailComposeViewController {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
         mailComposerVC.setSubject("CLIQZ Local Database")
@@ -365,7 +370,7 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
     }
     // MARK: MFMailComposeViewControllerDelegate Method
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+        controller.dismiss(animated: true, completion: nil)
     }
 }
 

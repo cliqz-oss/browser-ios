@@ -4,11 +4,11 @@
 
 import Foundation
 
-extension NSString {
-    public class func contentsOfFileWithResourceName(name: String, ofType type: String, fromBundle bundle: NSBundle, encoding: NSStringEncoding, error: NSErrorPointer) -> NSString? {
-        if let path = bundle.pathForResource(name, ofType: type) {
+extension String {
+    public static func contentsOfFileWithResourceName1(_ name: String, ofType type: String, fromBundle bundle: Bundle, encoding: String.Encoding, error: NSErrorPointer) -> String? {
+        if let path = bundle.path(forResource: name, ofType: type) {
             do {
-                return try NSString(contentsOfFile: path, encoding: encoding)
+                return try String(contentsOfFile: path, encoding: encoding)
             } catch {
                 return nil
             }
@@ -17,5 +17,3 @@ extension NSString {
         }
     }
 }
-
-

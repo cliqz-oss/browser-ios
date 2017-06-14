@@ -75,7 +75,7 @@ class TestBrowserDB: XCTestCase {
         XCTAssertFalse(files.exists("foo.db.bak.1-shm"))
         XCTAssertFalse(files.exists("foo.db.bak.1-wal"))
 
-        let center = NSNotificationCenter.defaultCenter()
+        let center = NotificationCenter.default
         let listener = MockListener()
         center.addObserver(listener, selector: #selector(MockListener.onDatabaseWasRecreated(_:)), name: NotificationDatabaseWasRecreated, object: nil)
         defer { center.removeObserver(listener) }

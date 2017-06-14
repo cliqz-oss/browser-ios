@@ -17,27 +17,27 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
     var viewOpenTime : Double?
     var panelOpenTime : Double?
 
-	private var panelSwitchControl: UISegmentedControl!
-	private var panelSwitchContainerView: UIView!
-	private var panelContainerView: UIView!
+	fileprivate var panelSwitchControl: UISegmentedControl!
+	fileprivate var panelSwitchContainerView: UIView!
+	fileprivate var panelContainerView: UIView!
 
-	private let dashboardThemeColor = UIConstants.CliqzThemeColor
+	fileprivate let dashboardThemeColor = UIConstants.CliqzThemeColor
 
 	weak var delegate: BrowserNavigationDelegate!
 
-	private lazy var historyViewController: HistoryViewController = {
+	fileprivate lazy var historyViewController: HistoryViewController = {
 		let historyViewController = HistoryViewController(profile: self.profile)
 		historyViewController.delegate = self
 		return historyViewController
 	}()
 
-	private lazy var favoritesViewController: FavoritesViewController = {
+	fileprivate lazy var favoritesViewController: FavoritesViewController = {
 		let favoritesViewController = FavoritesViewController(profile: self.profile)
 		favoritesViewController.delegate = self
 		return favoritesViewController
 	}()
 
-	private lazy var tabsViewController: TabsViewController = {
+	fileprivate lazy var tabsViewController: TabsViewController = {
 		let tabsViewController = TabsViewController(tabManager: self.tabManager)
 		return tabsViewController
 	}()
@@ -60,7 +60,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		super.viewDidLoad()
 		
 		panelSwitchContainerView = UIView()
-		panelSwitchContainerView.backgroundColor = UIColor.whiteColor()
+		panelSwitchContainerView.backgroundColor = UIColor.white
 		view.addSubview(panelSwitchContainerView)
 		
         let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
@@ -69,35 +69,35 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
         
 		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
-		panelSwitchControl.addTarget(self, action: #selector(switchPanel), forControlEvents: .ValueChanged)
+		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
 		self.panelSwitchControl.selectedSegmentIndex = 0
 
 		panelContainerView = UIView()
 		view.addSubview(panelContainerView)
 
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "cliqzBack"), style: .Plain, target: self, action: #selector(goBack))
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "cliqzBack"), style: .plain, target: self, action: #selector(goBack))
 		self.navigationItem.title = NSLocalizedString("Overview", tableName: "Cliqz", comment: "Dashboard navigation bar title")
-		self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:  NSLocalizedString("Settings", tableName: "Cliqz", comment: "Setting menu title"), style: .Plain, target: self, action: #selector(openSettings))
-		self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : UIFont.boldSystemFontOfSize(17)], forState: .Normal)
+		self.navigationController?.navigationBar.tintColor = UIColor.black
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:  NSLocalizedString("Settings", tableName: "Cliqz", comment: "Setting menu title"), style: .plain, target: self, action: #selector(openSettings))
+		self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : UIFont.boldSystemFont(ofSize: 17)], for: UIControlState())
 		self.navigationItem.rightBarButtonItem?.tintColor = self.dashboardThemeColor
-		view.backgroundColor = UIColor.whiteColor()
+		view.backgroundColor = UIColor.white
         
-        viewOpenTime = NSDate.getCurrentMillis()
+        viewOpenTime = Date.getCurrentMillis()
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-        AppDelegate.changeStatusBarStyle(.Default, backgroundColor: self.view.backgroundColor!)
-		self.navigationController?.navigationBarHidden = false
+        AppDelegate.changeStatusBarStyle(.default, backgroundColor: self.view.backgroundColor!)
+		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
-		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics:  .Default)
+		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
 		self.switchPanel(self.panelSwitchControl)
 	}
 
-	override func viewWillDisappear(animated: Bool) {
-		self.navigationController?.navigationBarHidden = true
+	override func viewWillDisappear(_ animated: Bool) {
+		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
 	}
 
@@ -106,26 +106,26 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.setupConstraints()
 	}
 
-    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         // setting the navigation bar origin to (0,0) to prevent shifting it when rotating from landscape to portrait orientation
-        self.navigationController?.navigationBar.frame.origin = CGPointMake(0, 0)
+        self.navigationController?.navigationBar.frame.origin = CGPoint(x: 0, y: 0)
     }
     
-	func didSelectURL(url: NSURL) {
-		self.navigationController?.popViewControllerAnimated(false)
+	func didSelectURL(_ url: URL) {
+		self.navigationController?.popViewController(animated: false)
 		self.delegate?.navigateToURL(url)
 	}
 
-	func didSelectQuery(query: String) {
+	func didSelectQuery(_ query: String) {
 		CATransaction.begin()
 		CATransaction.setCompletionBlock({
 			self.delegate?.navigateToQuery(query)
 		})
-		self.navigationController?.popViewControllerAnimated(false)
+		self.navigationController?.popViewController(animated: false)
 		CATransaction.commit()
 	}
 
-	func switchPanel(sender: UISegmentedControl) {
+	func switchPanel(_ sender: UISegmentedControl) {
 		self.hideCurrentPanelViewController()
         var target = "UNDEFINED"
 		switch sender.selectedSegmentIndex {
@@ -144,14 +144,14 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
         logToolbarSignal("click", target: target, customData: nil)
 	}
 
-	private func setupConstraints() {
+	fileprivate func setupConstraints() {
 		let switchControlHeight = 30
 		let switchControlLeftOffset = 10
 		let switchControlRightOffset = -10
 		
 		panelSwitchContainerView.snp_makeConstraints { make in
 			make.left.right.equalTo(self.view)
-			make.top.equalTo(snp_topLayoutGuideBottom)
+			make.top.equalTo(topLayoutGuide.snp.bottom)
 			make.height.equalTo(65)
 		}
 		panelSwitchControl.snp_makeConstraints { make in
@@ -166,37 +166,37 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		}
 	}
 
-	private func showPanelViewController(viewController: UIViewController) {
+	fileprivate func showPanelViewController(_ viewController: UIViewController) {
 		addChildViewController(viewController)
 		self.panelContainerView.addSubview(viewController.view)
 		viewController.view.snp_makeConstraints { make in
 			make.top.left.right.bottom.equalTo(self.panelContainerView)
 		}
-		viewController.didMoveToParentViewController(self)
+		viewController.didMove(toParentViewController: self)
         
-        panelOpenTime = NSDate.getCurrentMillis()
+        panelOpenTime = Date.getCurrentMillis()
         
 	}
 
-	private func hideCurrentPanelViewController() {
+	fileprivate func hideCurrentPanelViewController() {
 		if let panel = childViewControllers.first {
-			panel.willMoveToParentViewController(nil)
+			panel.willMove(toParentViewController: nil)
 			panel.view.removeFromSuperview()
 			panel.removeFromParentViewController()
             logHidePanelSignal(panel)
 		}
 	}
 
-	@objc private func goBack() {
-		self.navigationController?.popViewControllerAnimated(false)
+	@objc fileprivate func goBack() {
+		self.navigationController?.popViewController(animated: false)
         if let openTime = viewOpenTime {
-            let duration = Int(NSDate.getCurrentMillis() - openTime)
+            let duration = Int(Date.getCurrentMillis() - openTime)
             logToolbarSignal("click", target: "back", customData: ["show_duration" :duration])
             viewOpenTime = nil
         }
 	}
 
-	@objc private func openSettings() {
+	@objc fileprivate func openSettings() {
 		let settingsTableViewController = AppSettingsTableViewController()
 		settingsTableViewController.profile = profile
 		settingsTableViewController.tabManager = tabManager
@@ -204,8 +204,8 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		
 		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
 		controller.popoverDelegate = self
-		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-		presentViewController(controller, animated: true, completion: nil)
+		controller.modalPresentationStyle = UIModalPresentationStyle.formSheet
+		present(controller, animated: true, completion: nil)
         
         logToolbarSignal("click", target: "settings", customData: nil)
 	}
@@ -213,17 +213,17 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 extension DashboardViewController: SettingsDelegate {
 
-	func settingsOpenURLInNewTab(url: NSURL) {
-		let tab = self.tabManager.addTab(NSURLRequest(URL: url))
+	func settingsOpenURLInNewTab(_ url: URL) {
+		let tab = self.tabManager.addTab(URLRequest(url: url))
 		self.tabManager.selectTab(tab)
-		self.navigationController?.popViewControllerAnimated(false)
+		self.navigationController?.popViewController(animated: false)
 	}
 }
 
 extension DashboardViewController:PresentingModalViewControllerDelegate {
 
-	func dismissPresentedModalViewController(modalViewController: UIViewController, animated: Bool) {
-		self.dismissViewControllerAnimated(animated, completion: nil)
+	func dismissPresentedModalViewController(_ modalViewController: UIViewController, animated: Bool) {
+		self.dismiss(animated: animated, completion: nil)
 	}
 
 }
@@ -232,15 +232,15 @@ extension DashboardViewController:PresentingModalViewControllerDelegate {
 
 extension DashboardViewController {
     
-    private func logToolbarSignal(action: String, target: String, customData: [String: AnyObject]?) {
+    fileprivate func logToolbarSignal(_ action: String, target: String, customData: [String: Any]?) {
         TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, "overview", nil, customData))
     }
     
-    private func logHidePanelSignal(panel: UIViewController) {
+    fileprivate func logHidePanelSignal(_ panel: UIViewController) {
         guard  let openTime = panelOpenTime else {
             return
         }
-        let duration = Int(NSDate.getCurrentMillis() - openTime)
+        let duration = Int(Date.getCurrentMillis() - openTime)
         var type = ""
         switch panel {
         case tabsViewController:

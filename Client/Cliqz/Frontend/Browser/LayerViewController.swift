@@ -26,11 +26,11 @@ class LayerViewController: UIViewController {
         // should be overriden by the drived class
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return UIInterfaceOrientationMask.AllButUpsideDown
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIInterfaceOrientationMask.allButUpsideDown
         } else {
-            return UIInterfaceOrientationMask.All
+            return UIInterfaceOrientationMask.all
         }
     }
     
@@ -38,8 +38,8 @@ class LayerViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
     
     deinit {
@@ -49,7 +49,7 @@ class LayerViewController: UIViewController {
     //MARK: - View lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.edgesForExtendedLayout = .None
+        self.edgesForExtendedLayout = UIRectEdge()
         prepareView()
         setupConstraints()
     }
@@ -63,19 +63,19 @@ class LayerViewController: UIViewController {
         // should be overriden by the drived class
     }
     
-    func createUIBarButton(imageName: String, action: Selector) -> UIBarButtonItem {
+    func createUIBarButton(_ imageName: String, action: Selector) -> UIBarButtonItem {
 
-        let button: UIButton = UIButton(type: UIButtonType.Custom)
-        button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
-        button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
-        button.frame = CGRectMake(0, 0, 20, 20)
+        let button: UIButton = UIButton(type: UIButtonType.custom)
+        button.setImage(UIImage(named: imageName), for: UIControlState())
+        button.addTarget(self, action: action, for: UIControlEvents.touchUpInside)
+        button.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         
         let barButton = UIBarButtonItem(customView: button)
         return barButton
     }
     //MARK: - Actions
     func dismiss() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     

@@ -12,20 +12,20 @@ import Crashlytics
 class EventsLogger: NSObject {
     
     //MARK: - Constants
-    private let batchSize = 25
-    private let loggerEndPoint: String
-    private let sessionIdKey = "SessionId"
-    private let telemetryeventsKey = "TelemetryEvents"
-    let serialDispatchQueue = dispatch_queue_create("com.cliqz.EventsLogger", DISPATCH_QUEUE_SERIAL);
+    fileprivate let batchSize = 25
+    fileprivate let loggerEndPoint: String
+    fileprivate let sessionIdKey = "SessionId"
+    fileprivate let telemetryeventsKey = "TelemetryEvents"
+    let serialDispatchQueue = DispatchQueue(label: "com.cliqz.EventsLogger", attributes: []);
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     //MARK: - Instant Variables
-    private var events = SynchronousArray()
+    fileprivate var events = SynchronousArray()
     lazy var sessionId: String = self.getSessoinId()
     
     
     //MARK: - Dealing with SessionId
-    private var source: String {
+    fileprivate var source: String {
         get {
             if AppStatus.sharedInstance.isDebug() {
                 return "MI02" // Debug
@@ -37,7 +37,7 @@ class EventsLogger: NSObject {
         }
     }
     
-    private func getSessoinId() -> String {
+    fileprivate func getSessoinId() -> String {
         if let storedSessionId = LocalDataStore.objectForKey(sessionIdKey) as? String {
             return storedSessionId
         } else {
@@ -46,15 +46,15 @@ class EventsLogger: NSObject {
         }
     }
     
-    private func generateNewSessionId () -> String {
+    fileprivate func generateNewSessionId () -> String {
         let randomString = String.generateRandomString(18)
         let randomNumbersString = String.generateRandomString(6, alphabet: "1234567890")
         
-        let sessionId = "\(randomString + randomNumbersString)|\(NSDate.getDay())|\(source)"
+        let sessionId = "\(randomString + randomNumbersString)|\(Date.getDay())|\(source)"
         return sessionId
     }
     
-    private func storeSessoinId(newSessoinId: String) {
+    fileprivate func storeSessoinId(_ newSessoinId: String) {
         sessionId = newSessoinId
         LocalDataStore.setObject(sessionId, forKey: self.sessionIdKey)
     }
@@ -63,7 +63,7 @@ class EventsLogger: NSObject {
         guard sessionId.contains("|") else {
             return nil
         }
-        let installDay = sessionId.componentsSeparatedByString("|")[1]
+        let installDay = sessionId.components(separatedBy: "|")[1]
         return Int(installDay)
     }
     
@@ -76,7 +76,7 @@ class EventsLogger: NSObject {
     }
     
     //MARK: - Storing events
-    internal func storeEvent(event: [String: AnyObject]){
+    internal func storeEvent(_ event: [String: Any]){
         events.append(event)
         if events.count % 10 == 0 {
             // periodically persist events to avoid loosing a lot of events in case of app crash
@@ -90,14 +90,14 @@ class EventsLogger: NSObject {
     internal func persistEvents() {
         do {
             let eventsContents = events.getContents()
-            if NSJSONSerialization.isValidJSONObject(eventsContents) {
-                let eventsData = try NSJSONSerialization.dataWithJSONObject(eventsContents, options: [])
+            if JSONSerialization.isValidJSONObject(eventsContents) {
+                let eventsData = try JSONSerialization.data(withJSONObject: eventsContents, options: [])
                 LocalDataStore.setObject(eventsData, forKey: self.telemetryeventsKey)
             } else {
-                Answers.logCustomEventWithName("SerializeInvalidTelemetrySignal", customAttributes: nil)
+                Answers.logCustomEvent(withName: "SerializeInvalidTelemetrySignal", customAttributes: nil)
             }
         } catch let error as NSError {
-            Answers.logCustomEventWithName("SerializeTelemetryError", customAttributes: ["error": error.localizedDescription])
+            Answers.logCustomEvent(withName: "SerializeTelemetryError", customAttributes: ["error": error.localizedDescription])
         }
         
     }
@@ -108,12 +108,12 @@ class EventsLogger: NSObject {
     
     internal func loadPersistedEvents() {
         do {
-            if let eventsData = LocalDataStore.objectForKey(self.telemetryeventsKey) as? NSData {
-                let events = try NSJSONSerialization.JSONObjectWithData(eventsData, options: []) as! [AnyObject]
+            if let eventsData = LocalDataStore.objectForKey(self.telemetryeventsKey) as? Data {
+                let events = try JSONSerialization.jsonObject(with: eventsData, options: []) as! [AnyObject]
                 self.events.appendContentsOf(events)
             }
         } catch let error as NSError {
-            Answers.logCustomEventWithName("DeserializeTelemetryError", customAttributes: ["error": error.localizedDescription])
+            Answers.logCustomEvent(withName: "DeserializeTelemetryError", customAttributes: ["error": error.localizedDescription])
         }
     }
     
@@ -123,10 +123,13 @@ class EventsLogger: NSObject {
             return nil
         }
         
-        let lastEvent = events.getContents()[events.count-1]
-        let lastStoredSeq = lastEvent["seq"] as? Int
-        return lastStoredSeq
+		if let lastEvent = events.getContents()[events.count-1] as? [String: Any] {
+			let lastStoredSeq = lastEvent["seq"] as? Int
+			return lastStoredSeq
+		}
+		return nil
     }
+
     //MARK: - background tasks
     internal func appDidEnterBackground() {
         registerBackgroundTask()
@@ -134,7 +137,7 @@ class EventsLogger: NSObject {
         TelemetryLogger.sharedInstance.persistState()
         
         if NetworkReachability.sharedInstance.isReachableViaWiFi() {
-            dispatch_async(serialDispatchQueue) {
+            serialDispatchQueue.async {
                 self.publishCurrentEvents()
             }
         } else {
@@ -142,24 +145,24 @@ class EventsLogger: NSObject {
         }
     }
     func registerBackgroundTask() {
-        backgroundTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler {
+        backgroundTask = UIApplication.shared.beginBackgroundTask (expirationHandler: {
             [unowned self] in
             self.endBackgroundTask()
-        }
+        })
         assert(backgroundTask != UIBackgroundTaskInvalid)
     }
     
     func endBackgroundTask() {
         if backgroundTask != UIBackgroundTaskInvalid {
-            UIApplication.sharedApplication().endBackgroundTask(backgroundTask)
+            UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = UIBackgroundTaskInvalid
         }
     }
     
     //MARK: - Sending events to server
-    internal func sendEvent(event: [String: AnyObject]){
+    internal func sendEvent(_ event: [String: Any]){
         // dispatch_async in a serial thread so as not to send same events twice
-        dispatch_async(serialDispatchQueue) {
+        serialDispatchQueue.async {
             if self.shoudPublishEvents() {
                 self.publishCurrentEvents()
             }
@@ -167,7 +170,7 @@ class EventsLogger: NSObject {
     }
     
     //MARK: - Private methods
-    private func shoudPublishEvents() -> Bool {
+    fileprivate func shoudPublishEvents() -> Bool {
         if let isReachable = NetworkReachability.sharedInstance.isReachable {
             if isReachable && self.events.count >= self.batchSize {
                 return true
@@ -177,18 +180,18 @@ class EventsLogger: NSObject {
         return false;
     }
 
-    private func publishCurrentEvents() {
+    fileprivate func publishCurrentEvents() {
         let publishedEvents = self.events.getContents()
         self.events.removeAll()
         self.publishEvents(publishedEvents)
         self.clearPersistedEvents()
     }
     
-    private func publishEvents(publishedEvents: [AnyObject]){
+    fileprivate func publishEvents(_ publishedEvents: [Any]){
 
-		ConnectionManager.sharedInstance.sendPostRequestWithBody(loggerEndPoint, body: publishedEvents, responseType: .JSONResponse, enableCompression: true, queue: self.serialDispatchQueue,
+		ConnectionManager.sharedInstance.sendPostRequestWithBody(loggerEndPoint, body: publishedEvents, responseType: .jsonResponse, enableCompression: true, queue: self.serialDispatchQueue,
             onSuccess: { json in
-                let jsonDict = json as! [String : AnyObject]
+                let jsonDict = json as! [String : Any]
                 if let newSessionId = jsonDict["new_session"] as? String {
                     self.storeSessoinId(newSessionId)
                 }

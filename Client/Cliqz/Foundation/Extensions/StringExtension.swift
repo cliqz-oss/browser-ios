@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Shared
 
 extension String {
     
@@ -16,25 +17,25 @@ extension String {
     
     
     func trim() -> String {
-        let newString = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let newString = self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         return newString
     }
     
-    static func generateRandomString(length: Int, alphabet: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") -> String {
+    static func generateRandomString(_ length: Int, alphabet: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") -> String {
         var randomString = ""
         
         let rangeLength = UInt32 (alphabet.characters.count)
         
         for _ in 0 ..< length {
             let randomIndex = Int(arc4random_uniform(rangeLength))
-            randomString.append(alphabet[alphabet.startIndex.advancedBy(randomIndex)])
+            randomString.append(alphabet[alphabet.characters.index(alphabet.startIndex, offsetBy: randomIndex)])
         }
         
         return String(randomString)
     }
     
-    func replace(string:String, replacement:String) -> String {
-        return self.stringByReplacingOccurrencesOfString(string, withString: replacement, options: NSStringCompareOptions.LiteralSearch, range: nil)
+    func replace(_ string:String, replacement:String) -> String {
+        return self.replacingOccurrences(of: string, with: replacement, options: NSString.CompareOptions.literal, range: nil)
     }
     
     func removeWhitespaces() -> String {
@@ -46,26 +47,26 @@ extension String {
             return self
         } else {
             let allowedCharacterSet = NSMutableCharacterSet()
-            allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())            
-            return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet)!
+            allowedCharacterSet.formUnion(with: CharacterSet.urlQueryAllowed)            
+            return self.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet as CharacterSet)!
         }
     }
 	
 	// Cliqz added extra URL encoding methods because stringByAddingPercentEncodingWithAllowedCharacters doesn't encodes &
 	func encodeURL() -> String {
 		return CFURLCreateStringByAddingPercentEscapes(nil,
-			self as CFStringRef,
+			self as CFString,
 			nil,
-			String("!*'\"();:@&=+$,/?%#[]% ") as CFStringRef, CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) as String
+			String("!*'\"();:@&=+$,/?%#[]% ") as CFString, CFStringConvertNSStringEncodingToEncoding(String.Encoding.utf8.rawValue)) as String
 	}
     
     
     func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
         
-        let size = CGSize(width: width, height: CGFloat.max)
+        let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         let attrs = [NSFontAttributeName: font]
-        let boundingRect = NSString(string: self).boundingRectWithSize(size,
-                                                                       options: NSStringDrawingOptions.UsesLineFragmentOrigin,
+        let boundingRect = NSString(string: self).boundingRect(with: size,
+                                                                       options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                                        attributes: attrs, context: nil)
         return boundingRect.height
     }

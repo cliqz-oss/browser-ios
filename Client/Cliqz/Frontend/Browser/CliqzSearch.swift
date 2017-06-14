@@ -9,12 +9,12 @@
 import UIKit
 
 class CliqzSearch: NSObject {
-	private lazy var cachedData = Dictionary<String, [String : AnyObject]>()
-	private var statisticsCollector = StatisticsCollector.sharedInstance
+	fileprivate lazy var cachedData = Dictionary<String, [String : Any]>()
+	fileprivate var statisticsCollector = StatisticsCollector.sharedInstance
     
-    private let searchURL = "http://newbeta.cliqz.com/api/v1/results"
+    fileprivate let searchURL = "http://newbeta.cliqz.com/api/v1/results"
     
-	internal func startSearch(query: String, callback: ((query: String, data: NSDictionary)) -> Void) {
+	internal func startSearch(_ query: String, callback: @escaping ((query: String, data: [String: Any])) -> Void) {
 		
 		if let data = cachedData[query] {
 //			let html = self.parseResponse(data, history: history)
@@ -23,11 +23,11 @@ class CliqzSearch: NSObject {
             statisticsCollector.startEvent(query)
             DebugingLogger.log(">> Intiating the call the the Mixer with query: \(query)")
 
-            ConnectionManager.sharedInstance.sendRequest(.GET, url: searchURL, parameters: ["q" : query], responseType: .JSONResponse, queue: dispatch_get_main_queue(),
+            ConnectionManager.sharedInstance.sendRequest(.get, url: searchURL, parameters: ["q" : query], responseType: .jsonResponse, queue: DispatchQueue.main,
                 onSuccess: { json in
                     self.statisticsCollector.endEvent(query)
                     DebugingLogger.log("<< Received response for query: \(query)")
-                    let jsonDict = json as! [String : AnyObject]
+                    let jsonDict = json as! [String : Any]
                     self.cachedData[query] = jsonDict
 //                    let html = self.parseResponse(jsonDict, history: history)
                     callback((query, jsonDict))
@@ -37,7 +37,7 @@ class CliqzSearch: NSObject {
                     self.statisticsCollector.endEvent(query)
                     DebugingLogger.log("Request failed with error: \(error)")
                     if let data = data {
-                        DebugingLogger.log("Response data: \(NSString(data: data, encoding: NSUTF8StringEncoding)!)")
+                        DebugingLogger.log("Response data: \(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)")
                     }
             })
 		}
@@ -47,7 +47,7 @@ class CliqzSearch: NSObject {
 		self.cachedData.removeAll()
 	}
 
-	private func parseResponse (json: NSDictionary, history: Array<Dictionary<String, String>>) -> String {
+	fileprivate func parseResponse (_ json: NSDictionary, history: Array<Dictionary<String, String>>) -> String {
 	
         var html = "<html><head></head><body><font size='20'>"
 		

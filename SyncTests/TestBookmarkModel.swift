@@ -192,7 +192,7 @@ private extension MergedSQLiteBookmarks {
             "('\(BookmarkRoots.RootGUID)', '\(BookmarkRoots.ToolbarFolderGUID)', 1),",
             "('\(BookmarkRoots.RootGUID)', '\(BookmarkRoots.UnfiledFolderGUID)', 2),",
             "('\(BookmarkRoots.RootGUID)', '\(BookmarkRoots.MobileFolderGUID)', 3)",
-        ].joinWithSeparator(" ")).succeeded()
+        ].joined(" ")).succeeded()
 
         // Move it all to the mirror.
         self.local.db.moveBufferToMirrorForTesting()

@@ -29,7 +29,7 @@ class HawkHelperTests: XCTestCase {
         let timestamp = Int64(1353832234)
         let nonce = "j4h3g2"
         let extra = "some-app-ext-data"
-        let req = Alamofire.request(.GET, NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!)
+		let req = Alamofire.request(NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!, method: .get)
         let expected = "hawk.1.header\n" +
             "1353832234\n" +
             "j4h3g2\n" +
@@ -46,7 +46,7 @@ class HawkHelperTests: XCTestCase {
     func testSpecWithoutPayloadExample() {
         let helper = HawkHelper(id: "dh37fgj492je",
             key: "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn".utf8EncodedData!)
-        let req = Alamofire.request(.GET, NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!)
+		let req = Alamofire.request(NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!, method: .get)
         let timestamp = Int64(1353832234)
         let nonce = "j4h3g2"
         let extra = "some-app-ext-data"
@@ -59,7 +59,7 @@ class HawkHelperTests: XCTestCase {
         let helper = HawkHelper(id: "dh37fgj492je",
             key: "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn".utf8EncodedData!)
         let body = "Thank you for flying Hawk"
-        let req = Alamofire.request(.POST, NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!,
+		let req = Alamofire.request(NSURL(string: "http://example.com:8000/resource/1?b=1&a=2")!, method: .post,
             parameters: [:], encoding: .Custom({ convertible, params in
                 // This just makes a POST with a body string.
                 let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest

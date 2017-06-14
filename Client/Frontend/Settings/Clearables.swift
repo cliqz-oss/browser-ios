@@ -20,7 +20,7 @@ protocol Clearable {
 }
 
 class ClearableError: MaybeErrorType {
-    private let msg: String
+    fileprivate let msg: String
     init(msg: String) {
         self.msg = msg
     }
@@ -41,13 +41,13 @@ class HistoryClearable: Clearable {
 
     func clear() -> Success {
         // Cliqz: clear unfavorite history itmes
-		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 0)
+		NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: 0)
 
         return profile.history.clearHistory().bind { success in
-            SDImageCache.sharedImageCache().clearDisk()
-            SDImageCache.sharedImageCache().clearMemory()
+            SDImageCache.shared().clearDisk()
+            SDImageCache.shared().clearMemory()
             self.profile.recentlyClosedTabs.clearTabs()
-            NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
+            NotificationCenter.default.post(name: NotificationPrivateDataClearedHistory, object: nil)
             log.debug("HistoryClearable succeeded: \(success).")
             return Deferred(value: success)
         }
@@ -67,11 +67,11 @@ class BookmarksClearable: Clearable {
     
     func clear() -> Success {
         // clear bookmarked itmes
-		NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: 1)
+		NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: 1)
         return profile.bookmarks.clearBookmarks().bind { success in
-            SDImageCache.sharedImageCache().clearDisk()
-            SDImageCache.sharedImageCache().clearMemory()
-            NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearedHistory, object: nil)
+            SDImageCache.shared().clearDisk()
+            SDImageCache.shared().clearMemory()
+            NotificationCenter.default.post(name: NotificationPrivateDataClearedHistory, object: nil)
             log.debug("BookmarksClearable succeeded: \(success).")
             return Deferred(value: success)
         }
@@ -79,9 +79,9 @@ class BookmarksClearable: Clearable {
 }
 
 struct ClearableErrorType: MaybeErrorType {
-    let err: ErrorType
+    let err: Error
 
-    init(err: ErrorType) {
+    init(err: Error) {
         self.err = err
     }
 
@@ -105,7 +105,7 @@ class CacheClearable: Clearable {
     func clear() -> Success {
         if #available(iOS 9.0, *) {
             let dataTypes = Set([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
-            WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
+            WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: Date.distantPast, completionHandler: {})
         }
         // Cliqz: clear the cache in the tranditional way to support UIWebView as well
         // else {
@@ -116,7 +116,7 @@ class CacheClearable: Clearable {
             tabManager.resetProcessPool()
 
             // Remove the basic cache.
-            NSURLCache.sharedURLCache().removeAllCachedResponses()
+            URLCache.shared.removeAllCachedResponses()
 
             // Now let's finish up by destroying our Cache directory.
             do {
@@ -131,14 +131,14 @@ class CacheClearable: Clearable {
     }
 }
 
-private func deleteLibraryFolderContents(folder: String) throws {
-    let manager = NSFileManager.defaultManager()
-    let library = manager.URLsForDirectory(NSSearchPathDirectory.LibraryDirectory, inDomains: .UserDomainMask)[0]
-    let dir = library.URLByAppendingPathComponent(folder)
-    let contents = try manager.contentsOfDirectoryAtPath(dir!.path!)
+private func deleteLibraryFolderContents(_ folder: String) throws {
+    let manager = FileManager.default
+    let library = manager.urls(for: FileManager.SearchPathDirectory.libraryDirectory, in: .userDomainMask)[0]
+    let dir = library.appendingPathComponent(folder)
+    let contents = try manager.contentsOfDirectory(atPath: dir.path)
     for content in contents {
         do {
-            try manager.removeItemAtURL(dir!.URLByAppendingPathComponent(content)!)
+            try manager.removeItem(at: dir.appendingPathComponent(content))
         // Cliqz: catch any error instead of only `EPERM` so to prevent app from crashing when it couldn't delete the file for any reason
         } catch { // where ((error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError)?.code == Int(EPERM) {
             // "Not permitted". We ignore this.
@@ -147,11 +147,11 @@ private func deleteLibraryFolderContents(folder: String) throws {
     }
 }
 
-private func deleteLibraryFolder(folder: String) throws {
-    let manager = NSFileManager.defaultManager()
-    let library = manager.URLsForDirectory(NSSearchPathDirectory.LibraryDirectory, inDomains: .UserDomainMask)[0]
-    let dir = library.URLByAppendingPathComponent(folder)
-    try manager.removeItemAtURL(dir!)
+private func deleteLibraryFolder(_ folder: String) throws {
+    let manager = FileManager.default
+    let library = manager.urls(for: FileManager.SearchPathDirectory.libraryDirectory, in: .userDomainMask)[0]
+    let dir = library.appendingPathComponent(folder)
+    try manager.removeItem(at: dir)
 }
 
 // Removes all app cache storage.
@@ -168,7 +168,7 @@ class SiteDataClearable: Clearable {
     func clear() -> Success {
         if #available(iOS 9.0, *) {
             let dataTypes = Set([WKWebsiteDataTypeOfflineWebApplicationCache])
-            WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
+            WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: Date.distantPast, completionHandler: {})
         } else {
             // First, close all tabs to make sure they don't hold anything in memory.
 //            tabManager.removeAll()
@@ -202,7 +202,7 @@ class CookiesClearable: Clearable {
             // Cliqz: Disable clearing the locale storage when clearing cookies as it clears Cliqz data like saved search queries
 //            let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
             let dataTypes = Set([WKWebsiteDataTypeCookies, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeWebSQLDatabases, WKWebsiteDataTypeIndexedDBDatabases])
-            WKWebsiteDataStore.defaultDataStore().removeDataOfTypes(dataTypes, modifiedSince: NSDate.distantPast(), completionHandler: {})
+            WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: Date.distantPast, completionHandler: {})
         }
         // Cliqz: clear the cookies in the tranditional way to support UIWebView as well
         // else {
@@ -210,7 +210,7 @@ class CookiesClearable: Clearable {
 //        tabManager.removeAll()
         
         // Now we wipe the system cookie store (for our app).
-        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let storage = HTTPCookieStorage.shared
         if let cookies = storage.cookies {
             for cookie in cookies {
                 storage.deleteCookie(cookie)

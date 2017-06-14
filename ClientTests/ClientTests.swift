@@ -75,7 +75,7 @@ class ClientTests: XCTestCase {
     }
 
     private func hostIsValid(host: String) -> Bool {
-        let request = NSURLRequest(URL: NSURL(string: "http://\(host):6571/about/license")!)
+        let request = NSURLRequest(URL: URL(string: "http://\(host):6571/about/license")!)
         var response: NSURLResponse?
         try! NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
         return (response as! NSHTTPURLResponse).statusCode == 200

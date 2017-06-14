@@ -56,7 +56,7 @@ class MetaGlobalTests: XCTestCase {
             "id": "global",
             "collection": "meta",
             "payload": metaGlobal.asPayload().toString(),
-            "modified": Double(NSDate.now())/1000]))
+            "modified": Double(Date())/1000]))
         server.storeRecords([envelope], inCollection: "meta")
     }
 
@@ -119,7 +119,7 @@ class MetaGlobalTests: XCTestCase {
         // To recover from a meta/global version "in the past", fresh start.
         storeMetaGlobal(MetaGlobal(syncID: "id", storageVersion: 4, engines: [String: EngineMeta](), declined: []))
 
-        let afterStores = NSDate.now()
+        let afterStores = Date()
         let expectation = expectationWithDescription("Waiting on value.")
         stateMachine.toReady(authState).upon { result in
             XCTAssertEqual(self.stateMachine.stateLabelSequence.map { $0.rawValue }, ["initialWithLiveToken", "initialWithLiveTokenAndInfo", "resolveMetaGlobalVersion", "remoteUpgradeRequired",
@@ -137,8 +137,8 @@ class MetaGlobalTests: XCTestCase {
 
     func testMetaGlobalMissing() {
         // To recover from a missing meta/global, fresh start.
-        let afterStores = NSDate.now()
-        let expectation = expectationWithDescription("Waiting on value.")
+        let afterStores = Date()
+		let expectation = expectationWithDescription("Waiting on value.")
         stateMachine.toReady(authState).upon { result in
             XCTAssertEqual(self.stateMachine.stateLabelSequence.map { $0.rawValue }, ["initialWithLiveToken", "initialWithLiveTokenAndInfo", "missingMetaGlobal",
                 "freshStartRequired", "serverConfigurationRequired", "initialWithLiveToken", "initialWithLiveTokenAndInfo", "resolveMetaGlobalVersion", "resolveMetaGlobalContent", "hasMetaGlobal", "needsFreshCryptoKeys", "hasFreshCryptoKeys", "ready"])

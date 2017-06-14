@@ -18,20 +18,10 @@ extension BrowserDB {
 
 	func extendTables() {
 		createHiddenTopSitesTable()
-		let columnName = "bookmarked_date"
-		if !isColumnExist(TableBookmarksLocal, columnName: columnName) {
-			let r = alterTableWithExtraColumn(TableBookmarksLocal, columnName: columnName)
-			switch  (r.value) {
-			case .Failure:
-				let notificationCenter = NSNotificationCenter.defaultCenter()
-				notificationCenter.addObserver(self, selector: #selector(BrowserDB.onDatabaseCreation(_:)), name: NotificationDatabaseWasCreated, object: nil)
-			default:
-				migrateOldBookmarks()
-			}
-		}
+		extendBookmarksTable()
 	}
 	
-	private func createHiddenTopSitesTable() {
+	fileprivate func createHiddenTopSitesTable() {
 		let hiddenTopSitesTableCreate =
 			"CREATE TABLE IF NOT EXISTS \(TableHiddenTopSites) (" +
 				"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -39,14 +29,24 @@ extension BrowserDB {
 		")"
 		self.run([hiddenTopSitesTableCreate])
 	}
-
-	private func alterTableWithExtraColumn(tableName: String, columnName: String) -> Success {
+    
+    fileprivate func extendBookmarksTable() {
+        
+        let columnName = "bookmarked_date"
+        guard !isColumnExist(TableBookmarksLocal, columnName: columnName) else {
+            return
+        }
+        self.alterTableWithExtraColumn(TableBookmarksLocal, columnName: columnName)
+        self.migrateOldBookmarks()
+    }
+    
+	fileprivate func alterTableWithExtraColumn(_ tableName: String, columnName: String) -> Success {
 		return self.run([
 				("ALTER TABLE \(tableName) ADD COLUMN \(columnName) INTEGER NOT NULL DEFAULT 0", nil)
 				])
 	}
 
-	private func isColumnExist(tableName: String, columnName: String) -> Bool {
+	fileprivate func isColumnExist(_ tableName: String, columnName: String) -> Bool {
 		let tableInfoSQL = "PRAGMA table_info(\(tableName))"
 
 		let result = self.runQuery(tableInfoSQL, args: nil, factory: BrowserDB.columnNameFactory).value
@@ -60,24 +60,13 @@ extension BrowserDB {
 		return false
 	}
 	
-	private class func columnNameFactory(row: SDRow) -> String {
+	fileprivate class func columnNameFactory(_ row: SDRow) -> String {
 		let columnName = row["name"] as! String
 		return columnName
 	}
-
-	@objc func onDatabaseCreation(notification: NSNotification) {
-		dispatch_async(dispatch_get_main_queue()) {
-			self.extendBookmarksTable()
-			NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationDatabaseWasCreated, object: nil)
-		}
-	}
 	
-	private func extendBookmarksTable() {
-		self.alterTableWithExtraColumn(TableBookmarksLocal, columnName: "bookmarked_date")
-		self.migrateOldBookmarks()
-	}
 
-	private func migrateOldBookmarks() {
+	fileprivate func migrateOldBookmarks() {
 		if isColumnExist(TableVisits, columnName: "favorite") {
 			let fetchFavoritesSQL = "SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
 				"FROM \(TableHistory) " +
@@ -89,16 +78,16 @@ extension BrowserDB {
 					if !isURLBookmarked(f?.url) {
 						let newGUID = Bytes.generateGUID()
 						let args: Args = [
-							newGUID,
-							BookmarkNodeType.Bookmark.rawValue,
-							f?.url,
-							f?.title,
-							BookmarkRoots.MobileFolderGUID,
-							BookmarksFolderTitleMobile,
-							NSNumber(unsignedLongLong: (f?.latestVisit?.date)! / 1000),
-							SyncStatus.New.rawValue,
-							NSNumber(unsignedLongLong: (f?.latestVisit?.date)! / 1000),
-							f?.url
+							newGUID as AnyObject?,
+							BookmarkNodeType.bookmark.rawValue as AnyObject?,
+							f?.url as AnyObject?,
+							f?.title as AnyObject?,
+							BookmarkRoots.MobileFolderGUID as AnyObject?,
+							BookmarksFolderTitleMobile as AnyObject?,
+							NSNumber(value: (f?.latestVisit?.date)! / 1000),
+							SyncStatus.new.rawValue as AnyObject?,
+							NSNumber(value: (f?.latestVisit?.date)! / 1000),
+							f?.url as AnyObject?
 						]
 						let insertSQL = "INSERT INTO \(TableBookmarksLocal) " +
 							"(guid, type, bmkUri, title, parentid, parentName, local_modified, sync_status, bookmarked_date, faviconID) " +
@@ -110,19 +99,19 @@ extension BrowserDB {
 		}
 	}
 	
-	private func idFactory(row: SDRow) -> Int {
+	fileprivate func idFactory(_ row: SDRow) -> Int {
 		return row[0] as! Int
 	}
 
-	private func isURLBookmarked(url: String?) -> Bool {
+	fileprivate func isURLBookmarked(_ url: String?) -> Bool {
 		guard let u = url else {
 			return false
 		}
 		let urlArgs: Args = [
-			u
+			u as Optional<AnyObject>
 		]
 		let isBookmarkedURLSQL = "SELECT id FROM \(TableBookmarksLocal) WHERE bmkUri = ?"
-		guard let v = self.runQuery(isBookmarkedURLSQL, args: urlArgs, factory: idFactory).value.successValue where
+		guard let v = self.runQuery(isBookmarkedURLSQL, args: urlArgs, factory: idFactory).value.successValue,
 			v.asArray().count > 0  else {
 				return false
 		}

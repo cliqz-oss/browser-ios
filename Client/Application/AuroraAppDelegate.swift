@@ -14,11 +14,11 @@ private let AppUpdateCancel = NSLocalizedString("Not Now", comment: "Label for b
 private let AppUpdateOK = NSLocalizedString("OK", comment: "Label for OK button in the application update prompt")
 
 class AuroraAppDelegate: AppDelegate {
-    private var naggedAboutAuroraUpdate = false
-    private let feedbackDelegate = FeedbackSnapshotDelegate()
+    fileprivate var naggedAboutAuroraUpdate = false
+    fileprivate let feedbackDelegate = FeedbackSnapshotDelegate()
 
-    override func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        super.application(application, willFinishLaunchingWithOptions: launchOptions)
+	override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+		super.application(application, willFinishLaunchingWithOptions: launchOptions)
 
         checkForAuroraUpdate()
         registerFeedbackNotification()
@@ -26,30 +26,30 @@ class AuroraAppDelegate: AppDelegate {
         return true
     }
 
-    override func applicationDidBecomeActive(application: UIApplication) {
+    override func applicationDidBecomeActive(_ application: UIApplication) {
         if !naggedAboutAuroraUpdate {
             checkForAuroraUpdate()
         }
         super.applicationDidBecomeActive(application)
     }
 
-    func application(application: UIApplication, applicationWillTerminate app: UIApplication) {
+    func application(_ application: UIApplication, applicationWillTerminate app: UIApplication) {
         unregisterFeedbackNotification()
     }
 
-    override func applicationWillResignActive(application: UIApplication) {
+    override func applicationWillResignActive(_ application: UIApplication) {
         super.applicationWillResignActive(application)
         unregisterFeedbackNotification()
     }
 
-    private func registerFeedbackNotification() {
-        NSNotificationCenter.defaultCenter().addObserverForName(
-            UIApplicationUserDidTakeScreenshotNotification,
+    fileprivate func registerFeedbackNotification() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UIApplicationUserDidTakeScreenshot,
             object: nil,
-            queue: NSOperationQueue.mainQueue()) { (notification) -> Void in
+            queue: OperationQueue.main) { (notification) -> Void in
                 if let window = self.window {
                     UIGraphicsBeginImageContext(window.bounds.size)
-                    window.drawViewHierarchyInRect(window.bounds, afterScreenUpdates: true)
+                    window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
                     let image = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
                     self.sendFeedbackMailWithImage(image!)
@@ -57,18 +57,18 @@ class AuroraAppDelegate: AppDelegate {
         }
     }
 
-    private func unregisterFeedbackNotification() {
-        NSNotificationCenter.defaultCenter().removeObserver(self,
-            name: UIApplicationUserDidTakeScreenshotNotification, object: nil)
+    fileprivate func unregisterFeedbackNotification() {
+        NotificationCenter.default.removeObserver(self,
+            name: NSNotification.Name.UIApplicationUserDidTakeScreenshot, object: nil)
     }
 }
 
 extension AuroraAppDelegate: UIAlertViewDelegate {
-    private func checkForAuroraUpdate() {
+    fileprivate func checkForAuroraUpdate() {
         if let localVersion = localVersion() {
             fetchLatestAuroraVersion() { version in
                 if let remoteVersion = version {
-                    if localVersion.compare(remoteVersion as String, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending {
+                    if localVersion.compare(remoteVersion as String, options: NSString.CompareOptions.numeric) == ComparisonResult.orderedAscending {
                         self.naggedAboutAuroraUpdate = true
 
                         let alert = UIAlertView(title: AppUpdateTitle, message: AppUpdateMessage, delegate: self, cancelButtonTitle: AppUpdateCancel, otherButtonTitles: AppUpdateOK)
@@ -79,17 +79,17 @@ extension AuroraAppDelegate: UIAlertViewDelegate {
         }
     }
 
-    private func localVersion() -> NSString? {
-        return NSBundle.mainBundle().objectForInfoDictionaryKey(String(kCFBundleVersionKey)) as? NSString
+    fileprivate func localVersion() -> NSString? {
+        return Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? NSString
     }
 
-    private func fetchLatestAuroraVersion(completionHandler: NSString? -> Void) {
-        Alamofire.request(.GET, AuroraPropertyListURL).responsePropertyList(options: NSPropertyListReadOptions(), completionHandler: { response -> Void in
+    fileprivate func fetchLatestAuroraVersion(_ completionHandler: @escaping (NSString?) -> Void) {
+		Alamofire.request(AuroraPropertyListURL, method: .get).responsePropertyList(options: PropertyListSerialization.ReadOptions(), completionHandler: { response -> Void in
             if let plist = response.result.value as? NSDictionary,
                 let items = plist["items"] as? NSArray,
                 let item = items[0] as? NSDictionary,
                 let metadata = item["metadata"] as? NSDictionary,
-                let remoteVersion = metadata["bundle-version"] as? String {
+                let remoteVersion = metadata["bundle-version"] as? NSString {
                 completionHandler(remoteVersion)
                 return
             }
@@ -97,17 +97,17 @@ extension AuroraAppDelegate: UIAlertViewDelegate {
         })
     }
 
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+    func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
         if buttonIndex == 1 {
-            UIApplication.sharedApplication().openURL(NSURL(string: AuroraDownloadPageURL)!)
+            UIApplication.shared.openURL(URL(string: AuroraDownloadPageURL)!)
         }
     }
 }
 
 extension AuroraAppDelegate {
-    func sendFeedbackMailWithImage(image: UIImage) {
+    func sendFeedbackMailWithImage(_ image: UIImage) {
         if (MFMailComposeViewController.canSendMail()) {
-            if let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey(String(kCFBundleVersionKey)) as? NSString {
+            if let buildNumber = Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? NSString {
                 let mailComposeViewController = MFMailComposeViewController()
                 mailComposeViewController.mailComposeDelegate = self.feedbackDelegate
                 mailComposeViewController.setSubject("Feedback on iOS client version v\(appVersion) (\(buildNumber))")
@@ -115,15 +115,15 @@ extension AuroraAppDelegate {
 
                 if let imageData = UIImagePNGRepresentation(image) {
                     mailComposeViewController.addAttachmentData(imageData, mimeType: "image/png", fileName: "feedback.png")
-                    window?.rootViewController?.presentViewController(mailComposeViewController, animated: true, completion: nil)
+                    window?.rootViewController?.present(mailComposeViewController, animated: true, completion: nil)
                 }
             }
         }
     }
 }
 
-private class FeedbackSnapshotDelegate: NSObject, MFMailComposeViewControllerDelegate {
-    @objc func mailComposeController(mailComposeViewController: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        mailComposeViewController.dismissViewControllerAnimated(true, completion: nil)
+fileprivate class FeedbackSnapshotDelegate: NSObject, MFMailComposeViewControllerDelegate {
+    @objc func mailComposeController(_ mailComposeViewController: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        mailComposeViewController.dismiss(animated: true, completion: nil)
     }
 }

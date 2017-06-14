@@ -11,38 +11,38 @@ import CRToast
 import SVProgressHUD
 
 public enum ToastMessageType {
-    case Info
-    case Error
-    case Done
+    case info
+    case error
+    case done
 }
 class FeedbackUI: NSObject {
-    static var defaultOptions : [NSObject : AnyObject] = [
-        kCRToastTextAlignmentKey : NSTextAlignment.Left.rawValue,
-        kCRToastNotificationTypeKey: CRToastType.NavigationBar.rawValue,
-        kCRToastNotificationPresentationTypeKey: CRToastPresentationType.Cover.rawValue,
-        kCRToastAnimationInTypeKey : CRToastAnimationType.Linear.rawValue,
-        kCRToastAnimationOutTypeKey : CRToastAnimationType.Linear.rawValue,
-        kCRToastAnimationInDirectionKey : CRToastAnimationDirection.Top.rawValue,
-        kCRToastAnimationOutDirectionKey : CRToastAnimationDirection.Top.rawValue,
-        kCRToastImageAlignmentKey: CRToastAccessoryViewAlignment.Left.rawValue
+    static var defaultOptions : [AnyHashable: Any] = [
+        kCRToastTextAlignmentKey : NSNumber(value: NSTextAlignment.left.rawValue),
+        kCRToastNotificationTypeKey: NSNumber(value: CRToastType.navigationBar.rawValue),
+        kCRToastNotificationPresentationTypeKey: NSNumber(value: CRToastPresentationType.cover.rawValue),
+        kCRToastAnimationInTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+        kCRToastAnimationOutTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+        kCRToastAnimationInDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+        kCRToastAnimationOutDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+        kCRToastImageAlignmentKey: NSNumber(value: CRToastAccessoryViewAlignment.left.rawValue)
         
     ]
     
     //MARK:- Toast
-    class func showToastMessage(message: String, messageType: ToastMessageType) {
-        var options : [NSObject : AnyObject] = [kCRToastTextKey: message]
+    class func showToastMessage(_ message: String, messageType: ToastMessageType) {
+        var options : [AnyHashable: Any] = [kCRToastTextKey: message]
         
         switch messageType {
-        case .Info:
+        case .info:
             options[kCRToastBackgroundColorKey] = UIColor(colorString: "E8E8E8")
             options[kCRToastImageKey] = UIImage(named:"toastInfo")!
-            options[kCRToastTextColorKey] = UIColor.blackColor()
+            options[kCRToastTextColorKey] = UIColor.black
             
-        case .Error:
+        case .error:
             options[kCRToastBackgroundColorKey] = UIColor(colorString: "E64C66")
             options[kCRToastImageKey] = UIImage(named:"toastError")!
         
-        case .Done:
+        case .done:
             options[kCRToastBackgroundColorKey] = UIColor(colorString: "2CBA84")
             options[kCRToastImageKey] = UIImage(named:"toastCheckmark")!
             
@@ -52,20 +52,20 @@ class FeedbackUI: NSObject {
         // copy default options to the current options dictionary
         defaultOptions.forEach { options[$0] = $1 }
         
-        dispatch_async(dispatch_get_main_queue()) {
-            CRToastManager.showNotificationWithOptions(options, completionBlock: nil)
+        DispatchQueue.main.async {
+            CRToastManager.showNotification(options: options, completionBlock: nil)
         }
     }
     
     //MARK:- HUD
-    class func showLoadingHUD(message: String) {
-        dispatch_async(dispatch_get_main_queue()) {
-            SVProgressHUD.showWithStatus(message)
+    class func showLoadingHUD(_ message: String) {
+        DispatchQueue.main.async {
+            SVProgressHUD.show(withStatus: message)
         }
     }
 
     class func dismissHUD() {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             SVProgressHUD.dismiss()
         }
     }

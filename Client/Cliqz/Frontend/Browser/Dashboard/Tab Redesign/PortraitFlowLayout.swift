@@ -12,13 +12,13 @@ class TabSwitcherLayoutAttributes: UICollectionViewLayoutAttributes {
     
     var displayTransform: CATransform3D = CATransform3DIdentity
     
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! TabSwitcherLayoutAttributes
-        copy.displayTransform = displayTransform
-        return copy
+	override func copy(with zone: NSZone? = nil) -> Any {
+		let _copy = super.copy(with: zone) as! TabSwitcherLayoutAttributes
+        _copy.displayTransform = displayTransform
+        return _copy
     }
     
-    override func isEqual(object: AnyObject?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
         guard let attr = object as? TabSwitcherLayoutAttributes else { return false }
         return super.isEqual(object) && CATransform3DEqualToTransform(displayTransform, attr.displayTransform)
     }
@@ -26,11 +26,15 @@ class TabSwitcherLayoutAttributes: UICollectionViewLayoutAttributes {
 }
 
 class PortraitFlowLayout: UICollectionViewFlowLayout {
+    
+    var currentCount: Int = 0
+    var currentTransform: CATransform3D = CATransform3DIdentity
+    
     override init() {
         super.init()
-        self.minimumInteritemSpacing = UIScreen.mainScreen().bounds.size.width
+        self.minimumInteritemSpacing = UIScreen.main.bounds.size.width
         self.minimumLineSpacing = 0.0
-        self.scrollDirection = .Vertical
+        self.scrollDirection = .vertical
         self.sectionInset = UIEdgeInsetsMake(16, 0, 0, 0)
     }
     
@@ -38,47 +42,55 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override class func layoutAttributesClass() -> AnyClass {
+	override class var layoutAttributesClass: AnyClass {
         return TabSwitcherLayoutAttributes.self
     }
     
-    override func initialLayoutAttributesForAppearingItemAtIndexPath(itemIndexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        let attr = super.initialLayoutAttributesForAppearingItemAtIndexPath(itemIndexPath)
-        attr?.zIndex = itemIndexPath.item
-        return attr
+    override func prepare() {
+        if let count = self.collectionView?.numberOfItems(inSection: 0) {
+            if count != currentCount {
+                currentTransform = computeTransform(count: count)
+                currentCount = count
+            }
+        }
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let attrs = super.layoutAttributesForElementsInRect(rect) else {return nil}
+	override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+		guard let attrs = super.layoutAttributesForElements(in: rect) else {return nil}
         
         return attrs.map({ attr in
             return pimpedAttribute(attr)
         })
     }
-    
-    func pimpedAttribute(attribute: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+
+    func pimpedAttribute(_ attribute: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         
         if let attr = attribute.copy() as? TabSwitcherLayoutAttributes {
             
             attr.zIndex = attr.indexPath.item
-            
-            var t: CATransform3D = CATransform3DIdentity
-            
-            if let count = self.collectionView?.numberOfItemsInSection(0) {//where count > 1 {
-                
-                t.m34 = -1.0 / (CGFloat(1000))
-                
-                let tiltAngle = Knobs.maxTiltAngle - (1/pow(Double(count), 0.85)) * (Knobs.maxTiltAngle - Knobs.minTiltAngle)
-                t = CATransform3DRotate(t, -CGFloat(tiltAngle), 1, 0, 0)
-                //attr.transform = CGAffineTransformIdentity
-            }
-            
-            //t = CATransform3DScale(t, 0.95, 0.95, 1)
-            attr.displayTransform = t
+            attr.displayTransform = currentTransform
             
             return attr
         }
-        return attribute
         
+        return attribute
     }
+    
+    func computeTransform(count:Int) -> CATransform3D {
+        
+        var t: CATransform3D = CATransform3DIdentity
+        
+        t.m34 = -1.0 / (CGFloat(1000))
+        t = CATransform3DRotate(t, -CGFloat(Knobs.tiltAngle(count: count)), 1, 0, 0)
+        
+        //calculate how much down t will take the layer and then compensate for that.
+        //this view must have the dimensions of the view this attr is going to be applied to.
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: Knobs.cellWidth(), height: Knobs.cellHeight()))
+        view.layer.transform = t
+        
+        t = CATransform3DTranslate(t, 0, -view.layer.frame.origin.y, 0)
+        
+        return t
+    }
+
 }

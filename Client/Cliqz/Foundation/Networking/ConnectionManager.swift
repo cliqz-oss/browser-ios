@@ -11,31 +11,31 @@ import Alamofire
 import Crashlytics
 
 enum ResponseType {
-    case JSONResponse
-    case StringResponse
+    case jsonResponse
+    case stringResponse
 }
 
 class ConnectionManager {
     
     //MARK: - Singltone
     static let sharedInstance = ConnectionManager()
-    private init() {
+    fileprivate init() {
         
     }
     
     //MARK: - Sending Requests
-	internal func sendRequest(method: Alamofire.Method, url: String, parameters: [String: AnyObject]?, responseType: ResponseType, queue: dispatch_queue_t, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+	internal func sendRequest(_ method: Alamofire.HTTPMethod, url: String, parameters: [String: Any]?, responseType: ResponseType, queue: DispatchQueue, onSuccess: @escaping (Any) -> (), onFailure:@escaping (Data?, Error) -> ()) {
 
         switch responseType {
             
-        case .JSONResponse:
-            Alamofire.request(method, url, parameters: parameters)
+        case .jsonResponse:
+			Alamofire.request(url, method: method, parameters: parameters)
                 .responseJSON(queue: queue) {
                     response in
                     self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
             }
-        case .StringResponse:
-            Alamofire.request(method, url, parameters: parameters)
+        case .stringResponse:
+            Alamofire.request(url, method: method, parameters: parameters)
 				.responseString(queue: queue) {
                     response in
                     self.handelStringResponse(response, onSuccess: onSuccess, onFailure: onFailure)
@@ -43,31 +43,31 @@ class ConnectionManager {
         }
     }
     
-	internal func sendPostRequestWithBody(url: String, body: AnyObject, responseType: ResponseType, enableCompression: Bool, queue: dispatch_queue_t, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+	internal func sendPostRequestWithBody(_ url: String, body: Any, responseType: ResponseType, enableCompression: Bool, queue: DispatchQueue, onSuccess: @escaping (Any) -> (), onFailure:@escaping (Data?, Error) -> ()) {
         
-        if NSJSONSerialization.isValidJSONObject(body) {
+        if JSONSerialization.isValidJSONObject(body) {
             do {
-                let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-                request.HTTPMethod = "POST"
+                var request = URLRequest(url: URL(string: url)!)
+                request.httpMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let data = try NSJSONSerialization.dataWithJSONObject(body, options: [])
+                let data = try JSONSerialization.data(withJSONObject: body, options: [])
 
                 if (enableCompression) {
                     request.setValue("gzip", forHTTPHeaderField: "Content-Encoding")
-                    let compressedData : NSData = try data.gzippedData()
-                    request.HTTPBody = compressedData
+                    let compressedData : Data = try data.gzipped()
+                    request.httpBody = compressedData
                 } else {
-                    request.HTTPBody = data
+                    request.httpBody = data
                 }
                 
                 switch responseType {
-                case .JSONResponse:
+                case .jsonResponse:
                     Alamofire.request(request)
                         .responseJSON(queue: queue) {
                             response in
                             self.handelJSONResponse(response, onSuccess: onSuccess, onFailure: onFailure)
                     }
-                case .StringResponse:
+                case .stringResponse:
                     Alamofire.request(request)
                         .responseString(queue: queue) {
                             response in
@@ -75,10 +75,10 @@ class ConnectionManager {
                     }
                 }
             } catch let error as NSError {
-                Answers.logCustomEventWithName("sendPostRequestError", customAttributes: ["error": error.localizedDescription])
+                Answers.logCustomEvent(withName: "sendPostRequestError", customAttributes: ["error": error.localizedDescription])
             }
         } else {
-            Answers.logCustomEventWithName("sendPostRequestError", customAttributes: nil)
+            Answers.logCustomEvent(withName: "sendPostRequestError", customAttributes: nil)
         }
         
     }
@@ -86,26 +86,26 @@ class ConnectionManager {
     
     // MARK: - Private methods
     
-    private func handelStringResponse(response: Alamofire.Response<String, NSError>, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    fileprivate func handelStringResponse(_ response: DataResponse<String>, onSuccess: (Any) -> (), onFailure:(Data?, Error) -> ()) {
         
         switch response.result {
             
-        case .Success(let string):
+        case .success(let string):
             onSuccess(string)
             
-        case .Failure(let error):
+        case .failure(let error):
             onFailure(response.data, error)
         }
     }
     
-    private func handelJSONResponse(response: Alamofire.Response<AnyObject, NSError>, onSuccess: AnyObject -> (), onFailure:(NSData?, ErrorType) -> ()) {
+    fileprivate func handelJSONResponse(_ response: Alamofire.DataResponse<Any>, onSuccess: (Any) -> (), onFailure:(Data?, Error) -> ()) {
         
         switch response.result {
             
-        case .Success(let json):
+        case .success(let json):
             onSuccess(json)
             
-        case .Failure(let error):
+        case .failure(let error):
             onFailure(response.data, error)
         }
     }

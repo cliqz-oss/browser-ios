@@ -9,8 +9,8 @@
 import Foundation
 
 class AtomicInt {
-    private var currentValue: Int
-    let dispatchQueue = dispatch_queue_create("com.cliqz.atomic.int", DISPATCH_QUEUE_SERIAL);
+    fileprivate var currentValue: Int
+    let dispatchQueue = DispatchQueue(label: "com.cliqz.atomic.int", attributes: []);
     
     init(initialValue: Int) {
         currentValue = initialValue
@@ -21,7 +21,7 @@ class AtomicInt {
     }
     
     internal func incrementAndGet()-> Int {
-        dispatch_sync(dispatchQueue) {
+        dispatchQueue.sync {
             if self.currentValue < Int.max {
                 self.currentValue += 1
             } else {
@@ -33,7 +33,7 @@ class AtomicInt {
     
     
     internal func decrementAndGet()-> Int {
-        dispatch_sync(dispatchQueue) {
+        dispatchQueue.sync {
             if self.currentValue > 0 {
                 self.currentValue -= 1
             } else {

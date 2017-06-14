@@ -13,7 +13,7 @@ import Storage
 
 protocol FavoritesDelegate: class {
 
-	func didSelectURL(url: NSURL)
+	func didSelectURL(_ url: URL)
 
 }
 
@@ -33,14 +33,14 @@ class FavoritesViewController: CliqzExtensionViewController {
 		return NavigationExtension.favoritesURL
 	}
 
-	func getFavorites(callback: String?) {
-		self.profile.bookmarks.getBookmarks().uponQueue(dispatch_get_main_queue()) { result in
+	func getFavorites(_ callback: String?) {
+		self.profile.bookmarks.getBookmarks().uponQueue(DispatchQueue.main) { result in
 			if let bookmarks = result.successValue {
-				var favorites = [[String: AnyObject]]()
+				var favorites = [[String: Any]]()
 				for i in bookmarks {
 					switch (i) {
 					case let item as CliqzBookmarkItem:
-						var bm = [String: AnyObject]()
+						var bm = [String: Any]()
 						bm["title"] = item.title
 						bm["url"] = item.url
 						bm["timestamp"] = Double(item.bookmarkedDate)
@@ -49,7 +49,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 						debugPrint("Not a bookmark item")
 					}
 				}
-				self.javaScriptBridge.callJSMethod(callback!, parameter: favorites.reverse(), completionHandler: nil)
+				self.javaScriptBridge.callJSMethod(callback!, parameter: Array(favorites.reversed()), completionHandler: nil)
 			}
 		}
 	}
@@ -58,7 +58,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 
 extension FavoritesViewController {
 
-	override func didSelectUrl(url: NSURL) {
+	override func didSelectUrl(_ url: URL) {
 		self.delegate?.didSelectURL(url)
 	}
 

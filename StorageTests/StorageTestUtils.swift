@@ -50,7 +50,7 @@ extension BrowserDB {
             "feedUri, siteUri, pos, description, tags, keyword, folderName, queryId,",
             "0 AS is_overridden, \(NSDate.now()) AS server_modified, faviconID",
             "FROM \(TableBookmarksLocal)",
-        ].joinWithSeparator(" ")
+        ].joined(" ")
 
         // Copy its mirror structure.
         let structureSQL = "INSERT INTO \(TableBookmarksMirrorStructure) SELECT * FROM \(TableBookmarksLocalStructure)"
@@ -76,7 +76,7 @@ extension BrowserDB {
             "guid, type, bmkUri, title, parentid, parentName, feedUri, siteUri, pos,",
             "description, tags, keyword, folderName, queryId, server_modified",
             "FROM \(TableBookmarksBuffer)",
-        ].joinWithSeparator(" ")
+        ].joined(" ")
 
         let structureSQL = "INSERT INTO \(TableBookmarksMirrorStructure) SELECT * FROM \(TableBookmarksBufferStructure)"
         let deleteBufferStructureSQL = "DELETE FROM \(TableBookmarksBufferStructure)"

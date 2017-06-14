@@ -13,7 +13,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
-		   let url = NSURL(string: urlString) {
+		   let url = URL(string: urlString) {
 			self.navigateToURL(url)
             if let tab = tabManager.selectedTab {
                 tab.url = url
@@ -25,43 +25,44 @@ extension BrowserViewController: ControlCenterViewDelegate {
     func askForNewsNotificationPermissionIfNeeded () {
         if (NewsNotificationPermissionHelper.sharedInstance.shouldAskForPermission() ){
             let controller = UINavigationController(rootViewController: NewsNotificationPermissionViewController())
-            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            if UIDevice.current.userInterfaceIdiom == .pad {
                 controller.preferredContentSize = CGSize(width: NewsNotificationPermissionViewControllerUX.Width, height: NewsNotificationPermissionViewControllerUX.Height)
-                controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+                controller.modalPresentationStyle = UIModalPresentationStyle.formSheet
             }
             
-            self.presentViewController(controller, animated: true, completion: {
+            self.present(controller, animated: true, completion: {
                 self.urlBar.leaveOverlayMode()
             })
         }
     }
 
-	func downloadVideoFromURL(url: String, sourceRect: CGRect) {
-		if let filepath = NSBundle.mainBundle().pathForResource("main", ofType: "js") {
+	func downloadVideoFromURL(_ url: String, sourceRect: CGRect) {
+		if let filepath = Bundle.main.path(forResource: "main", ofType: "js") {
 			do {
                 let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
                 FeedbackUI.showLoadingHUD(hudMessage)
-				let jsString = try NSString(contentsOfFile:filepath, encoding: NSUTF8StringEncoding)
-				let context = JSContext()
-				let httpRequest = XMLHttpRequest()
-				httpRequest.extendJSContext(context)
-				context.exceptionHandler = { context, exception in
-					debugPrint("JS Error: \(exception)")
+				let jsString = try NSString(contentsOfFile:filepath, encoding: String.Encoding.utf8.rawValue)
+				if let context = JSContext() {
+					let httpRequest = XMLHttpRequest()
+					httpRequest.extendJSContext(context)
+					context.exceptionHandler = { context, exception in
+						print("JS Error: \(exception)")
+					}
+					context.evaluateScript(jsString as String)
+					let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
+						self?.downloadVideoOfSelectedFormat(urls, sourceRect: sourceRect)
+					}
+					let callbackName = "URLReceived"
+					context.setObject(unsafeBitCast(callback, to: AnyObject.self), forKeyedSubscript: callbackName as (NSCopying & NSObjectProtocol)!)
+					context.evaluateScript("window.ytdownloader.getUrls('\(url)', \(callbackName))")
 				}
-				context.evaluateScript(jsString as String)
-				let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
-                    self?.downloadVideoOfSelectedFormat(urls, sourceRect: sourceRect)
-				}
-				let callbackName = "URLReceived"
-				context.setObject(unsafeBitCast(callback, AnyObject.self), forKeyedSubscript: callbackName)
-				context.evaluateScript("window.ytdownloader.getUrls('\(url)', \(callbackName))")
 			} catch {
 				debugPrint("Couldn't load file")
 			}
 		}
 	}
 	
-	func downloadVideoOfSelectedFormat(urls: [AnyObject], sourceRect: CGRect) {
+	func downloadVideoOfSelectedFormat(_ urls: [AnyObject], sourceRect: CGRect) {
 		if urls.count > 0 {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
 		} else {
@@ -70,43 +71,43 @@ extension BrowserViewController: ControlCenterViewDelegate {
         FeedbackUI.dismissHUD()
         let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
         let message = NSLocalizedString("Please select video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet message")
- 		let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+ 		let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
 		for url in urls {
-			if let f = url["label"] as? String, u = url["url"] as? String {
-				actionSheet.addAction(UIAlertAction(title: f, style: .Default, handler: { _ in
+			if let f = url["label"] as? String, let u = url["url"] as? String {
+				actionSheet.addAction(UIAlertAction(title: f, style: .default, handler: { _ in
 					YoutubeVideoDownloader.downloadFromURL(u)
                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", f.replace(" ", replacement: "_")))
 				}))
 			}
 		}
-        actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .Cancel, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .cancel, handler: { _ in
             TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
         }))
         
         if let popoverPresentationController = actionSheet.popoverPresentationController {
             popoverPresentationController.sourceView = view
             let center = self.view.center
-            popoverPresentationController.sourceRect = CGRectMake(center.x, center.y, 1, 1)
+            popoverPresentationController.sourceRect = CGRect(x: center.x, y: center.y, width: 1, height: 1)
             popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.init(rawValue: 0)
         }
-		self.presentViewController(actionSheet, animated: true, completion: nil)
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
-	func SELBadRequestDetected(notification: NSNotification) {
-		dispatch_async(dispatch_get_main_queue()) {
+	func SELBadRequestDetected(_ notification: Notification) {
+		DispatchQueue.main.async {
 			
-			if let tabId = notification.object as? Int where self.tabManager.selectedTab?.webView?.uniqueId == tabId {
+			if let tabId = notification.object as? Int, self.tabManager.selectedTab?.webView?.uniqueId == tabId {
                 let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
                 self.urlBar.updateTrackersCount(newCount)
-                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint {
-                    self.showHint(.Antitracking)
+                if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint() && !self.urlBar.isAntiTrackingButtonHidden() {
+                    self.showHint(.antitracking(newCount))
                 }
 			}
 			
 		}
 	}
     
-	func urlBarDidClickAntitracking(urlBar: URLBarView, trackersCount: Int, status: String) {
+	func urlBarDidClickAntitracking(_ urlBar: URLBarView, trackersCount: Int, status: String) {
         
         if let controlCenter = self.controlCenterController {
             if controlCenter.visible == true {
@@ -114,14 +115,14 @@ extension BrowserViewController: ControlCenterViewDelegate {
                 self.controlCenterController?.visible = false
                 
                 // log telemetry signal
-                let customData : [String: AnyObject] = ["tracker_count": trackersCount, "status": status, "state": "open"]
+                let customData : [String: AnyObject] = ["tracker_count": trackersCount as AnyObject, "status": status as AnyObject, "state": "open" as AnyObject]
                 logToolbarSignal("click", target: "control_center", customData: customData)
                 
                 return
             }
         }
         
-        if let tab = self.tabManager.selectedTab, webView = tab.webView, url = self.urlBar.currentURL {
+        if let tab = self.tabManager.selectedTab, let webView = tab.webView, let url = self.urlBar.currentURL {
         
             let panelLayout = OrientationUtil.controlPanelLayout()
             
@@ -133,7 +134,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             
             let toolbarHeight: CGFloat = 44.0
             
-            if (panelLayout != .LandscapeRegularSize){
+            if (panelLayout != .landscapeRegularSize){
                 var r = self.view.bounds
                 r.origin.y = -r.size.height
                 r.size.height = r.size.height - toolbarHeight
@@ -149,20 +150,20 @@ extension BrowserViewController: ControlCenterViewDelegate {
             }
             
             self.view.addSubview(controlCenterVC.view)
-            self.view.bringSubviewToFront(self.urlBar)
+            self.view.bringSubview(toFront: self.urlBar)
             //self.urlBar.enableAntitrackingButton(false)
             
             // log telemetry signal
-            let customData : [String: AnyObject] = ["tracker_count": trackersCount, "status": status, "state": "closed"]
+            let customData : [String: AnyObject] = ["tracker_count": trackersCount as AnyObject, "status": status as AnyObject, "state": "closed" as AnyObject]
             logToolbarSignal("click", target: "control_center", customData: customData)
             
             
-            if (panelLayout != .LandscapeRegularSize){
-                UIView.animateWithDuration(0.5, animations: {
+            if (panelLayout != .landscapeRegularSize){
+                UIView.animate(withDuration: 0.5, animations: {
                     controlCenterVC.view.frame.origin.y = self.view.frame.origin.y + toolbarHeight
                     }, completion: { (finished) in
                         if finished {
-                            self.view.bringSubviewToFront(controlCenterVC.view)
+                            self.view.bringSubview(toFront: controlCenterVC.view)
                             self.controlCenterController?.visible = true
                         }
                 })
@@ -172,11 +173,11 @@ extension BrowserViewController: ControlCenterViewDelegate {
                 self.controlCenterActiveInLandscape = true
                 self.updateViewConstraints()
                 
-                UIView.animateWithDuration(0.12, animations: {
+                UIView.animate(withDuration: 0.12, animations: {
                     controlCenterVC.view.frame.origin.x = self.view.frame.size.width/2
                     }, completion: { (finished) in
                         if finished {
-                            self.view.bringSubviewToFront(controlCenterVC.view)
+                            self.view.bringSubview(toFront: controlCenterVC.view)
                             self.controlCenterController?.visible = true
                         }
                 })
@@ -186,54 +187,54 @@ extension BrowserViewController: ControlCenterViewDelegate {
         
 	}
     
-    func urlBarDidClearSearchField(urlBar: URLBarView, oldText: String?) {
+    func urlBarDidClearSearchField(_ urlBar: URLBarView, oldText: String?) {
         if let charCount = oldText?.characters.count {
             self.logToolbarDeleteSignal(charCount)
         }
         self.urlBar(urlBar, didEnterText: "")
     }
 
-	func controlCenterViewWillClose(controlCenterView: UIView) {
+	func controlCenterViewWillClose(_ controlCenterView: UIView) {
         if self.controlCenterActiveInLandscape {
             self.controlCenterActiveInLandscape = false
             self.updateViewConstraints()
         }
         self.controlCenterController = nil
 		//self.urlBar.enableAntitrackingButton(true)
-		self.view.bringSubviewToFront(self.urlBar)
+		self.view.bringSubview(toFront: self.urlBar)
 	}
     func reloadCurrentPage() {
-        if let tab = self.tabManager.selectedTab, webView = tab.webView {
+        if let tab = self.tabManager.selectedTab, let webView = tab.webView {
             webView.reload()
         }
     }
 
-    func showAntiPhishingAlert(domainName: String) {
-        let antiPhishingShowTime = NSDate.getCurrentMillis()
+    func showAntiPhishingAlert(_ domainName: String) {
+        let antiPhishingShowTime = Date.getCurrentMillis()
         
         let title = NSLocalizedString("Warning: deceptive website!", tableName: "Cliqz", comment: "Antiphishing alert title")
         let message = NSLocalizedString("CLIQZ has blocked access to %1$ because it has been reported as a phishing website.Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information", tableName: "Cliqz", comment: "Antiphishing alert message")
         let personnalizedMessage = message.replace("%1$", replacement: domainName)
         
-        let alert = UIAlertController(title: title, message: personnalizedMessage, preferredStyle: .Alert)
+        let alert = UIAlertController(title: title, message: personnalizedMessage, preferredStyle: .alert)
         
         let backToSafeSiteButtonTitle = NSLocalizedString("Back to safe site", tableName: "Cliqz", comment: "Back to safe site buttun title in antiphishing alert title")
-        alert.addAction(UIAlertAction(title: backToSafeSiteButtonTitle, style: .Default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: backToSafeSiteButtonTitle, style: .default, handler: { (action) in
             // go back
             self.goBack()
             TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("click", "back", nil))
-            let duration = Int(NSDate.getCurrentMillis()-antiPhishingShowTime)
+            let duration = Int(Date.getCurrentMillis()-antiPhishingShowTime)
             TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("hide", nil, duration))
         }))
         
         let continueDespiteWarningButtonTitle = NSLocalizedString("Continue despite warning", tableName: "Cliqz", comment: "Continue despite warning buttun title in antiphishing alert title")
-        alert.addAction(UIAlertAction(title: continueDespiteWarningButtonTitle, style: .Destructive, handler: { (action) in
+        alert.addAction(UIAlertAction(title: continueDespiteWarningButtonTitle, style: .destructive, handler: { (action) in
             TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("click", "continue", nil))
-            let duration = Int(NSDate.getCurrentMillis()-antiPhishingShowTime)
+            let duration = Int(Date.getCurrentMillis()-antiPhishingShowTime)
             TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("hide", nil, duration))
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
         TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("show", nil, nil))
         
     }
@@ -246,19 +247,19 @@ extension BrowserViewController: ControlCenterViewDelegate {
     func logToolbarBlurSignal() {
         logToolbarSignal("blur", target: "search", customData: nil)
     }
-    func logToolbarDeleteSignal(charCount: Int) {
-        logToolbarSignal("click", target: "delete", customData: ["char_count": charCount])
+    func logToolbarDeleteSignal(_ charCount: Int) {
+        logToolbarSignal("click", target: "delete", customData: ["char_count": charCount as AnyObject])
         
     }
     func logToolbarOverviewSignal() {
         let openTabs = self.tabManager.tabs.count
-        logToolbarSignal("click", target: "overview", customData: ["open_tabs_count" :openTabs])
+        logToolbarSignal("click", target: "overview", customData: ["open_tabs_count" :openTabs as AnyObject])
     }
-    func logToolbarReaderModeSignal(state: Bool) {
-        logToolbarSignal("click", target: "reader_mode", customData: ["state" :state])
+    func logToolbarReaderModeSignal(_ state: Bool) {
+        logToolbarSignal("click", target: "reader_mode", customData: ["state" :state as AnyObject])
     }
     
-    private func logToolbarSignal(action: String, target: String, customData: [String: AnyObject]?) {
+    fileprivate func logToolbarSignal(_ action: String, target: String, customData: [String: AnyObject]?) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
             let view = getCurrentView() {
             TelemetryLogger.sharedInstance.logEvent(.Toolbar(action, target, view, isForgetMode, customData))
@@ -266,38 +267,37 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
     
     //MARK - keyboard telemetry signals
-    func keyboardWillShow(notification: NSNotification) {
+    func keyboardWillShow(_ notification: Notification) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
             let view = getCurrentView() {
-            keyboardShowTime = NSDate.getCurrentMillis()
+            keyboardShowTime = Date.getCurrentMillis()
             TelemetryLogger.sharedInstance.logEvent(.Keyboard("show", view, isForgetMode, nil))
         }
     }
-    func keyboardWillHide(notification: NSNotification) {
+    func keyboardWillHide(_ notification: Notification) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate,
             let view = getCurrentView(),
             let showTime = keyboardShowTime {
-            let showDuration = Int(NSDate.getCurrentMillis() - showTime)
+            let showDuration = Int(Date.getCurrentMillis() - showTime)
             TelemetryLogger.sharedInstance.logEvent(.Keyboard("hide", view, isForgetMode, showDuration))
             keyboardShowTime = nil
         }
     }
     
     //MARK - WebMenu signals
-    func logWebMenuSignal(action: String, target: String) {
+    func logWebMenuSignal(_ action: String, target: String) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate {
             TelemetryLogger.sharedInstance.logEvent(.WebMenu(action, target, isForgetMode))
         }
     }
 
-	func showHint(type: HintType) {
-        if type == HintType.Antitracking && self.urlBar.isAntiTrackingButtonHidden(){
-            return
-        }
-		let intro = InteractiveIntroViewController()
-		intro.modalPresentationStyle = .OverFullScreen
-		intro.showHint(type)
-		self.presentViewController(intro, animated: true) { 
+
+    func showHint(_ type: HintType) {
+        
+        let intro = InteractiveIntroViewController()
+		intro.modalPresentationStyle = .overFullScreen
+        intro.showHint(type)
+		self.present(intro, animated: true) { 
 			InteractiveIntro.sharedInstance.updateHintPref(type, value: false)
 		}
 		

@@ -19,9 +19,9 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
     var profile: Profile!
     var tabManager: TabManager!
 
-    private typealias DefaultCheckedState = Bool
+    fileprivate typealias DefaultCheckedState = Bool
 
-    private lazy var clearables: [(clearable: Clearable, checked: DefaultCheckedState)] = {
+    fileprivate lazy var clearables: [(clearable: Clearable, checked: DefaultCheckedState)] = {
         return [
             (HistoryClearable(profile: self.profile), true),
             // Cliqz: Added option to clear bookmarks
@@ -37,11 +37,11 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
     let clearHistoryCellIndex = 0
     let clearFavoriteHistoryCellIndex = 1
     
-    private lazy var toggles: [Bool] = {
+    fileprivate lazy var toggles: [Bool] = {
         if var savedToggles = self.profile.prefs.arrayForKey(TogglesPrefKey) as? [Bool] {
             // Cliqz: Added option to include bookmarks items
             if savedToggles.count == 4 {
-                savedToggles.insert(true, atIndex:1)
+                savedToggles.insert(true, at:1)
             }
             return savedToggles
         }
@@ -49,16 +49,16 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         return self.clearables.map { $0.checked }
     }()
 
-    private var clearButtonEnabled = true {
+    fileprivate var clearButtonEnabled = true {
         didSet {
-            clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.HighlightBlue : UIColor.lightGrayColor()
+            clearButton?.textLabel?.textColor = clearButtonEnabled ? UIConstants.HighlightBlue : UIColor.lightGray
         }
     }
     override func getSectionFooter(section: Int) -> String {
         if section == 1 {
             return NSLocalizedString("Clear Private Data footer", tableName: "Cliqz", comment: "[Settings -> Clear Private Data] Clear Private Data footer ")
         }
-        return super.getSectionFooter(section)
+        return super.getSectionFooter(section: section)
     }
     
     override func getViewName() -> String {
@@ -72,17 +72,17 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
 
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 
         if indexPath.section == SectionToggles {
             cell.textLabel?.text = clearables[indexPath.item].clearable.label
             let control = UISwitch()
             control.onTintColor = UIConstants.ControlTintColor
-            control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-            control.on = toggles[indexPath.item]
+            control.addTarget(self, action: #selector(ClearPrivateDataTableViewController.switchValueChanged(_:)), for: UIControlEvents.valueChanged)
+            control.isOn = toggles[indexPath.item]
             cell.accessoryView = control
-            cell.selectionStyle = .None
+            cell.selectionStyle = .none
             control.tag = indexPath.item
             
         } else {
@@ -97,11 +97,11 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         return cell
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return NumberOfSections
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == SectionToggles {
             return clearables.count
         }
@@ -109,20 +109,20 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         return 1
     }
 
-    override func tableView(tableView: UITableView, shouldHighlightRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         guard indexPath.section == SectionButton else { return false }
 
         // Highlight the button only if it's enabled.
         return clearButtonEnabled
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == SectionButton else { return }
 
-        func clearPrivateData(action: UIAlertAction) {
+        func clearPrivateData(_ action: UIAlertAction) {
             let toggles = self.toggles
             self.clearables
-                .enumerate()
+                .enumerated()
                 .flatMap { (i, pair) in
                     guard toggles[i] else {
                         return nil
@@ -137,10 +137,10 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
                     // Cliqz Moved updating preferences part to toggles switch handler method to save changes immedietely.
                     //                    self.profile.prefs.setObject(self.toggles, forKey: TogglesPrefKey)
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async() {
                         // Disable the Clear Private Data button after it's clicked.
                         self.clearButtonEnabled = false
-                        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                        self.tableView.deselectRow(at: indexPath, animated: true)
                     }
             }
             
@@ -153,7 +153,7 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         // We have been asked to clear history and we have an account.
         // (Whether or not it's in a good state is irrelevant.)
         if self.toggles[HistoryClearableIndex] && profile.hasAccount() {
-            profile.syncManager.hasSyncedHistory().uponQueue(dispatch_get_main_queue()) { yes in
+            profile.syncManager.hasSyncedHistory().uponQueue(DispatchQueue.main) { yes in
                 // Err on the side of warning, but this shouldn't fail.
                 let alert: UIAlertController
                 if yes.successValue ?? true {
@@ -163,23 +163,23 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
                 } else {
                     alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
                 }
-                self.presentViewController(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
                 return
             }
         } else {
             let alert = UIAlertController.clearPrivateDataAlert(clearPrivateData)
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
             
             // Cliqz: log telemetry signal
             let clearSignal = TelemetryLogEventType.Settings("private_data", "click", "clear", nil, nil)
             TelemetryLogger.sharedInstance.logEvent(clearSignal)
         }
 
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
 
-    @objc func switchValueChanged(toggle: UISwitch) {
-        toggles[toggle.tag] = toggle.on
+    @objc fileprivate func switchValueChanged(_ toggle: UISwitch) {
+        toggles[toggle.tag] = toggle.isOn
 
         // Dim the clear button if no clearables are selected.
         clearButtonEnabled = toggles.contains(true)
@@ -191,12 +191,13 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         
         // Cliqz: log telemetry signal
         let target = getTelemetrySignalTarget(toggle.tag)
-        let state = toggle.on == true ? "off" : "on" // we log old value
+        let state = toggle.isOn == true ? "off" : "on" // we log old value
         let valueChangedSignal = TelemetryLogEventType.Settings("private_data", "click", target, state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
     }
+
     // Cliqz: getting getTelemetrySignalTarget for given toggle
-    func getTelemetrySignalTarget(toggleIndex: Int) -> String {
+    func getTelemetrySignalTarget(_ toggleIndex: Int) -> String {
         var target = ""
         switch toggleIndex {
         case 0:
@@ -215,8 +216,8 @@ class ClearPrivateDataTableViewController: SubSettingsTableViewController {
         return target;
     }
     
-    private func clearQueries() {
+    fileprivate func clearQueries() {
         let includeFavorites = toggles[clearFavoriteHistoryCellIndex]
-        NSNotificationCenter.defaultCenter().postNotificationName(NotificationPrivateDataClearQueries, object: includeFavorites)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: includeFavorites)
     }
 }

@@ -67,7 +67,7 @@ class TopSitesTests: KIFTestCase {
 
         // Load a set of dummy domains.
         for i in 1...10 {
-            BrowserUtils.addHistoryEntry("", url: NSURL(string: "https://test\(i).com")!)
+            BrowserUtils.addHistoryEntry("", url: URL(string: "https://test\(i).com")!)
         }
 
         // Switch back to the Top Sites panel.
@@ -77,7 +77,7 @@ class TopSitesTests: KIFTestCase {
         let collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
 
         // Get the first cell (test10.com).
-        let cell = collection.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+        let cell = collection.cellForItemAtIndexPath(IndexPath(forItem: 0, inSection: 0))!
 
         let cellToDeleteLabel = cell.accessibilityLabel
         tester().longPressViewWithAccessibilityLabel(cellToDeleteLabel, duration: 1)
@@ -98,7 +98,7 @@ class TopSitesTests: KIFTestCase {
         tester().tapViewWithAccessibilityLabel("Top sites")
 
         var collection = tester().waitForViewWithAccessibilityIdentifier("Top Sites View") as! UICollectionView
-        let firstCell = collection.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0))!
+        let firstCell = collection.cellForItemAtIndexPath(IndexPath(forItem: 0, inSection: 0))!
         let cellToDeleteLabel = firstCell.accessibilityLabel
         tester().longPressViewWithAccessibilityLabel(cellToDeleteLabel, duration: 1)
         tester().tapViewWithAccessibilityLabel("Remove page - \(cellToDeleteLabel!)")
@@ -132,7 +132,7 @@ class TopSitesTests: KIFTestCase {
         // Add a new history item
 
         // Verify that empty state no longer appears
-        BrowserUtils.addHistoryEntry("", url: NSURL(string: "https://mozilla.org")!)
+        BrowserUtils.addHistoryEntry("", url: URL(string: "https://mozilla.org")!)
 
         tester().tapViewWithAccessibilityLabel("Bookmarks")
         tester().tapViewWithAccessibilityLabel("Top sites")

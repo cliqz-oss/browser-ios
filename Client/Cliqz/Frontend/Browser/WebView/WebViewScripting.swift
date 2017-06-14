@@ -17,19 +17,19 @@ class LegacyUserContentController
     var scripts:[WKUserScript] = []
     weak var webView: CliqzWebView?
     
-    func addScriptMessageHandler(scriptMessageHandler: WKScriptMessageHandler, name: String) {
+    func addScriptMessageHandler(_ scriptMessageHandler: WKScriptMessageHandler, name: String) {
         scriptHandlersMainFrame[name] = scriptMessageHandler
     }
     
-    func removeScriptMessageHandler(name name: String) {
-        scriptHandlersMainFrame.removeValueForKey(name)
-        scriptHandlersSubFrames.removeValueForKey(name)
+    func removeScriptMessageHandler(_ name: String) {
+        scriptHandlersMainFrame.removeValue(forKey: name)
+        scriptHandlersSubFrames.removeValue(forKey: name)
     }
     
-    func addUserScript(script:WKUserScript) {
+    func addUserScript(_ script:WKUserScript) {
         var mainFrameOnly = true
-        if !script.forMainFrameOnly {
-            debugPrint("Inject to subframes")
+        if !script.isForMainFrameOnly {
+            print("Inject to subframes")
             // Only contextMenu injection to subframes for now,
             // whitelist this explicitly, don't just inject scripts willy-nilly into frames without
             // careful consideration. For instance, there are security implications with password management in frames
@@ -45,7 +45,7 @@ class LegacyUserContentController
     func injectIntoMain() {
         guard let webView = webView else { return }
         
-        let result = webView.stringByEvaluatingJavaScriptFromString("window.hasOwnProperty('__firefox__')")
+        let result = webView.stringByEvaluatingJavaScript(from: "window.hasOwnProperty('__firefox__')")
         if result == "true" {
             // already injected into this context
             return
@@ -55,40 +55,40 @@ class LegacyUserContentController
         js.windowOpenOverride(webView, context:nil)
 
         for (name, handler) in scriptHandlersMainFrame {
-            js.installHandlerForWebView(webView, handlerName: name, handler:handler)
+            js.installHandler(for: webView, handlerName: name, handler:handler)
         }
 
         for script in scripts {
-            webView.stringByEvaluatingJavaScriptFromString(script.source)
+            webView.stringByEvaluatingJavaScript(from: script.source)
         }
     }
     
     func injectIntoSubFrame() {
         let js = LegacyJSContext()
-        let contexts = js.findNewFramesForWebView(webView, withFrameContexts: webView?.knownFrameContexts)
+        let contexts = js.findNewFrames(for: webView, withFrameContexts: webView?.knownFrameContexts)
         
-        for ctx in contexts {
+        for ctx in contexts! {
             js.windowOpenOverride(webView, context:ctx)
             
-            webView?.knownFrameContexts.insert(ctx.hash)
+            webView?.knownFrameContexts.insert((ctx as AnyObject).hash as NSObject)
             
             for (name, handler) in scriptHandlersSubFrames {
-                js.installHandlerForContext(ctx, handlerName: name, handler:handler, webView:webView)
+                js.installHandler(forContext: ctx, handlerName: name, handler:handler, webView:webView)
             }
             for script in scripts {
-                if !script.forMainFrameOnly {
-                    js.callOnContext(ctx, script: script.source)
+                if !script.isForMainFrameOnly {
+                    js.call(onContext: ctx, script: script.source)
                 }
             }
         }
     }
     
-    static func injectJsIntoAllFrames(webView: CliqzWebView, script: String) {
-        webView.stringByEvaluatingJavaScriptFromString(script)
+    static func injectJsIntoAllFrames(_ webView: CliqzWebView, script: String) {
+        webView.stringByEvaluatingJavaScript(from: script)
         let js = LegacyJSContext()
-        let contexts = js.findNewFramesForWebView(webView, withFrameContexts: nil)
-        for ctx in contexts {
-            js.callOnContext(ctx, script: script)
+        let contexts = js.findNewFrames(for: webView, withFrameContexts: nil)
+        for ctx in contexts! {
+            js.call(onContext: ctx, script: script)
         }
     }
 

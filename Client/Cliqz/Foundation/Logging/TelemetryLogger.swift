@@ -13,36 +13,36 @@ public enum TelemetryLogEventType {
     case ApplicationUsage   (String, String, Int, Double, String?, Double?, Double?)
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
-    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: AnyObject])
-    case Onboarding         (String, Int, Int?)
+    case Environment        (String, String, String, String, String, String, String, Int, Int, [String: Any])
+    case Onboarding         (String, [String: Any]?)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
-    case JavaScriptSignal   ([String: AnyObject])
+    case JavaScriptSignal   ([String: Any])
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, String, String)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool?, [String: AnyObject]?)
+    case Toolbar            (String, String, String, Bool?, [String: Any]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
-    case DashBoard            (String, String, String?, [String: AnyObject]?)
+    case DashBoard            (String, String, String?, [String: Any]?)
     case ContextMenu            (String, String)
-    case QuerySuggestions        (String, [String: AnyObject]?)
-    case ControlCenter         (String, String?, String?, [String: AnyObject]?)
-    case FreshTab           (String, String?, [String: AnyObject]?)
+    case QuerySuggestions        (String, [String: Any]?)
+    case ControlCenter         (String, String?, String?, [String: Any]?)
+	case FreshTab (String, String?, [String: Any]?)
 }
 
 
 class TelemetryLogger : EventsLogger {
     
-    let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
+    let dispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.utility)
     
-    private var isForgetModeActivate = false
-    private let preventedTypesInForgetMode = ["home", "cards", "web", "web_menu", "context_menu", "share_menu", "attrack", "anti_phishing", "video_downloader"]
-    private let preventedActionsInForgetMode = ["result_enter", "key_stroke", "keystroke_del", "paste", "results", "result_click"]
+    fileprivate var isForgetModeActivate = false
+    fileprivate let preventedTypesInForgetMode = ["home", "cards", "web", "web_menu", "context_menu", "share_menu", "attrack", "anti_phishing", "video_downloader"]
+    fileprivate let preventedActionsInForgetMode = ["result_enter", "key_stroke", "keystroke_del", "paste", "results", "result_click"]
     
     //MARK: - Singltone
     static let sharedInstance = TelemetryLogger()
@@ -53,18 +53,18 @@ class TelemetryLogger : EventsLogger {
         ABTestsManager.checkABTests(sessionId)
     }
     
-    func updateForgetModeStatue(newStatus: Bool) {
-        dispatch_async(dispatchQueue) {[weak self] in
+    func updateForgetModeStatue(_ newStatus: Bool) {
+        dispatchQueue.async {[weak self] in
             self?.isForgetModeActivate = newStatus
         }
     }
     
     //MARK: - Instant Variables
     var telemetrySeq: AtomicInt?
-    private let telementrySequenceKey = "TelementrySequence"
+    fileprivate let telementrySequenceKey = "TelementrySequence"
 
-    private func loadTelemetrySeq() {
-        dispatch_sync(serialDispatchQueue) {
+    fileprivate func loadTelemetrySeq() {
+        serialDispatchQueue.sync {
             if let lastStoredSeq = self.getLastStoredSeq() {
                 self.telemetrySeq = AtomicInt(initialValue: lastStoredSeq)
             } else if let storedSeq = LocalDataStore.objectForKey(self.telementrySequenceKey) as? Int {
@@ -86,10 +86,10 @@ class TelemetryLogger : EventsLogger {
     }
     
     //MARK: - Log events
-    internal func logEvent(eventType: TelemetryLogEventType){
+    internal func logEvent(_ eventType: TelemetryLogEventType) {
         
-        dispatch_async(dispatchQueue) {
-            var event: [String: AnyObject]
+        dispatchQueue.async {
+            var event: [String: Any]
             var disableSendingEvent = false
 
             switch (eventType) {
@@ -111,8 +111,8 @@ class TelemetryLogger : EventsLogger {
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
-            case .Onboarding(let action, let index, let duration):
-                event = self.createOnboardingEvent(action, index: index, duration: duration)
+            case .Onboarding(let action, let customData):
+                event = self.createOnboardingEvent(action, customData: customData)
                
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
@@ -167,10 +167,8 @@ class TelemetryLogger : EventsLogger {
                 
             case .ControlCenter (let action, let view, let target, let customData):
                 event = self.createControlCenterEvent(action, view: view, target: target, customData: customData)
-                
-            case .FreshTab(let action, let target, let customData):
+			case .FreshTab(let action, let target, let customData):
                 event = self.createFreshTabEvent(action, target: target, customData: customData)
-                
             }
             
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -187,14 +185,12 @@ class TelemetryLogger : EventsLogger {
         }
     }
 
-    private func shouldPreventEventInForgetMode(event: [String: AnyObject]) -> Bool {
-        if let type = event["type"] as? String
-            where preventedTypesInForgetMode.contains(type) {
+    fileprivate func shouldPreventEventInForgetMode(_ event: [String: Any]) -> Bool {
+        if let type = event["type"] as? String, preventedTypesInForgetMode.contains(type) {
             return true
         }
         
-        if let action = event["action"] as? String
-            where preventedActionsInForgetMode.contains(action) {
+        if let action = event["action"] as? String, preventedActionsInForgetMode.contains(action) {
             return true
         }
         
@@ -202,12 +198,12 @@ class TelemetryLogger : EventsLogger {
     }
     // MARK: - Private Helper methods
 
-    internal func createBasicEvent() ->[String: AnyObject] {
-        var event = [String: AnyObject]()
+    internal func createBasicEvent() ->[String: Any] {
+        var event = [String: Any]()
 
         event["session"] = self.sessionId
         event["seq"] = getNextTelemetrySeq()
-        event["ts"] = NSNumber(longLong: Int64(NSDate.getCurrentMillis()))
+        event["ts"] = NSNumber(value: Int64(Date.getCurrentMillis()) as Int64)
 
         if telemetrySeq!.get() % 10 == 0 {
             // periodically store the telemetrySeq
@@ -216,7 +212,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func getNextTelemetrySeq() -> Int {
+    fileprivate func getNextTelemetrySeq() -> Int {
         let nextTelemetrySeq = telemetrySeq!.incrementAndGet()
 
         // periodically store the telemetrySeq
@@ -228,7 +224,7 @@ class TelemetryLogger : EventsLogger {
     }
 
     
-    private func createLifeCycleEvent(action: String, distVersion: String) -> [String: AnyObject]{
+    fileprivate func createLifeCycleEvent(_ action: String, distVersion: String) -> [String: Any]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
@@ -237,21 +233,22 @@ class TelemetryLogger : EventsLogger {
 
         return event
     }
-    private func createApplicationUsageEvent(action: String, network: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, openDuration: Double?) -> [String: AnyObject]{
+
+    fileprivate func createApplicationUsageEvent(_ action: String, network: String, battery: Int, memory: Double, startupType: String?, startupTime: Double?, openDuration: Double?) -> [String: Any]{
         var event = createBasicEvent()
 
         event["type"] = "app_state_change"
         event["state"] = action
         event["network"] = network
         event["battery"] = battery
-        event["memory"] = NSNumber(longLong: Int64(memory))
+        event["memory"] = NSNumber(value: Int64(memory) as Int64)
 
         if let startupType = startupType {
             event["startup_type"] = startupType
         }
         
         if let startupTime = startupTime {
-            event["startup_time"] = NSNumber(longLong: Int64(startupTime))
+            event["startup_time"] = NSNumber(value: Int64(startupTime) as Int64)
         }
 
         if let openDuration = openDuration {
@@ -260,7 +257,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createEnvironmentEvent(device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: AnyObject]) -> [String: AnyObject] {
+    fileprivate func createEnvironmentEvent(_ device: String, language: String, extensionVersion: String, distVersion: String, hostVersion: String, osVersion: String, defaultSearchEngine: String, historyUrls: Int, historyDays: Int, prefs: [String: Any]) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "environment"
@@ -277,7 +274,7 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    private func createNetworkStatusEvent(network: String, duration: Int) -> [String: AnyObject]{
+    fileprivate func createNetworkStatusEvent(_ network: String, duration: Int) -> [String: Any]{
         var event = createBasicEvent()
         
         event["type"] = "network_status"
@@ -287,7 +284,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createQueryInteractionEvent(action: String, currentLength: Int) -> [String: AnyObject]{
+    fileprivate func createQueryInteractionEvent(_ action: String, currentLength: Int) -> [String: Any]{
         var event = createBasicEvent()
         
         event["type"] = "activity"
@@ -297,25 +294,21 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createOnboardingEvent(action: String, index: Int, duration: Int?) -> [String: AnyObject] {
+    fileprivate func createOnboardingEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "onboarding"
         event["action"] = action
-		event["version"] = "1.0"
-        event["index"] = index
         
-        if action == "click" {
-           event["target"] = "next"
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
         }
-        
-        if let showduration = duration {
-            event["show_duration"] = showduration
-		}
         return event
     }
     
-    private func createNavigationEvent(action: String, step: Int, urlLength: Int, displayTime: Double) -> [String: AnyObject] {
+    fileprivate func createNavigationEvent(_ action: String, step: Int, urlLength: Int, displayTime: Double) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "navigation"
@@ -327,7 +320,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createResultEnterEvent(queryLength: Int, autocompletedLength: Int, autocompletedUrl: String?, reactionTime: Double, urlbarTime: Double) -> [String: AnyObject] {
+    fileprivate func createResultEnterEvent(_ queryLength: Int, autocompletedLength: Int, autocompletedUrl: String?, reactionTime: Double, urlbarTime: Double) -> [String: Any] {
         var event = createBasicEvent()
         // This handel three types of signals: AutoComplete, DirectURL, and Google search
         event["type"] = "activity"
@@ -362,7 +355,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 
-    private func creatJavaScriptSignalEvent(javaScriptSignal: [String: AnyObject]) -> [String: AnyObject] {
+    fileprivate func creatJavaScriptSignalEvent(_ javaScriptSignal: [String: Any]) -> [String: Any] {
         var event = javaScriptSignal
         
         event["session"] = self.sessionId
@@ -371,7 +364,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 
-	private func createLocationServicesStatusEvent(action: String, status: String?) -> [String: AnyObject]{
+	fileprivate func createLocationServicesStatusEvent(_ action: String, status: String?) -> [String: Any]{
 		var event = createBasicEvent()
 		event["type"] = "location_access"
 		event["action"] = action
@@ -381,7 +374,7 @@ class TelemetryLogger : EventsLogger {
 		return event
 	}
     
-    private func createHomeScreenShortcutEvent(targetType: String, targetIndex: Int) -> [String: AnyObject]{
+    fileprivate func createHomeScreenShortcutEvent(_ targetType: String, targetIndex: Int) -> [String: Any]{
         var event = createBasicEvent()
         event["type"] = "home_screen"
         event["action"] = "click"
@@ -390,14 +383,14 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createNewsNotificationEvent(action: String) -> [String: AnyObject] {
+    fileprivate func createNewsNotificationEvent(_ action: String) -> [String: Any] {
         var event = createBasicEvent()
         event["type"] = "news_notification"
         event["action"] = action
         return event
     }
 	
-	private func createYoutubeVideoDownloaderEvent(action: String, statusKey: String, statusValue: String) -> [String: AnyObject] {
+	fileprivate func createYoutubeVideoDownloaderEvent(_ action: String, statusKey: String, statusValue: String) -> [String: Any] {
 		var event = createBasicEvent()
 		event["type"] = "video_downloader"
 		event["action"] = action
@@ -405,7 +398,7 @@ class TelemetryLogger : EventsLogger {
 		return event
 	}
     
-    private func createSettingsEvent(view: String, action: String, target: String, state: String?, duration: Int?) -> [String: AnyObject] {
+    fileprivate func createSettingsEvent(_ view: String, action: String, target: String, state: String?, duration: Int?) -> [String: Any] {
         var event = createBasicEvent()
         event["type"] = "settings"
         event["view"] = view
@@ -420,7 +413,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createToolbarEvent(action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    fileprivate func createToolbarEvent(_ action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
@@ -441,7 +434,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createKeyboardEvent(action: String, view: String, isForgetMode: Bool, showDuration: Int?) -> [String: AnyObject] {
+    fileprivate func createKeyboardEvent(_ action: String, view: String, isForgetMode: Bool, showDuration: Int?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "keyboard"
@@ -456,7 +449,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createWebMenuEvent(action: String, target: String, isForgetMode: Bool) -> [String: AnyObject] {
+    fileprivate func createWebMenuEvent(_ action: String, target: String, isForgetMode: Bool) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "web_menu"
@@ -467,7 +460,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createAntiPhishingEvent(action: String, target: String?, showDuration: Int?) -> [String: AnyObject] {
+    fileprivate func createAntiPhishingEvent(_ action: String, target: String?, showDuration: Int?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "anti_phishing"
@@ -482,7 +475,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createShareMenuEvent(action: String, target: String) -> [String: AnyObject] {
+    fileprivate func createShareMenuEvent(_ action: String, target: String) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "share_menu"
@@ -493,7 +486,7 @@ class TelemetryLogger : EventsLogger {
     }
     
     
-    private func createDashBoardEvent(type: String, action: String, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    fileprivate func createDashBoardEvent(_ type: String, action: String, target: String?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
     
         event["type"] = type
@@ -512,7 +505,7 @@ class TelemetryLogger : EventsLogger {
     }
     
     
-    private func createContextMenuEvent(target: String, view: String) -> [String: AnyObject] {
+    fileprivate func createContextMenuEvent(_ target: String, view: String) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "context_menu"
@@ -523,7 +516,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createQuerySuggestionsEvent(action: String, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    fileprivate func createQuerySuggestionsEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "query_suggestions"
@@ -539,7 +532,7 @@ class TelemetryLogger : EventsLogger {
     }
     
     
-    private func createControlCenterEvent(action: String, view: String?, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    fileprivate func createControlCenterEvent(_ action: String, view: String?, target: String?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "control_center"
@@ -563,7 +556,7 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    private func createFreshTabEvent(action: String, target: String?, customData: [String: AnyObject]?) -> [String: AnyObject] {
+    private func createFreshTabEvent(_ action: String, target: String?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "home"

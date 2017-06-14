@@ -4,12 +4,12 @@ import Foundation
 
 class LegacyBackForwardListItem {
     
-    var URL: NSURL = NSURL() {
+	var url: URL {
         didSet {
             checkForLocalWebserver()
         }
     }
-    var initialURL: NSURL = NSURL()
+	var initialURL: URL
     var title:String = "" {
         didSet {
             checkForLocalWebserver()
@@ -17,24 +17,24 @@ class LegacyBackForwardListItem {
     }
     
     private func checkForLocalWebserver()  {
-        if AboutUtils.isAboutURL(URL) && !title.isEmpty {
+        if AboutUtils.isAboutURL(url) && !title.isEmpty {
             title = ""
         }
     }
     
-    init(url: NSURL) {
-        URL = url
+    init(url: URL) {
+        self.url = url
         // In order to mimic the built-in API somewhat, the initial url is stripped of mobile site
         // parts of the host (mobile.nytimes.com -> initial url is nytimes.com). The initial url
         // is the pre-page-forwarding url
-        let normal = url.scheme ?? "http" + "://" + (url.normalizedHostAndPath() ?? url.absoluteString ?? "")
-        initialURL = NSURL(string: normal) ?? url
+        let normal = url.scheme ?? "http" + "://" + (url.normalizedHostAndPath() ?? url.absoluteString)
+        initialURL = URL(string: normal) ?? url
     }
 }
 
 extension LegacyBackForwardListItem: Equatable {}
 func == (lhs: LegacyBackForwardListItem, rhs: LegacyBackForwardListItem) -> Bool {
-    return lhs.URL.absoluteString == rhs.URL.absoluteString;
+    return lhs.url.absoluteString == rhs.url.absoluteString;
 }
 
 
@@ -51,10 +51,10 @@ class WebViewBackForwardList {
     }
     
     
-    private func isSpecial(_url: NSURL?) -> Bool {
+    private func isSpecial(_url: URL?) -> Bool {
         guard let url = _url else { return false }
         #if !TEST
-            return url.absoluteString?.rangeOfString(WebServer.sharedInstance.base) != nil
+            return url.absoluteString.range(of: WebServer.sharedInstance.base) != nil
         #else
             return false
         #endif
@@ -62,13 +62,13 @@ class WebViewBackForwardList {
     
     func update() {
         let currIndicator = ">>> "
-        guard let obj = webView?.valueForKeyPath("documentView.webView.backForwardList") else { return }
-        let history = obj.description
-        let nsHistory = history as NSString
-        
-        if cachedHistoryStringLength > 0 && cachedHistoryStringLength == nsHistory.length &&
+        guard let obj = webView?.value(forKeyPath: "documentView.webView.backForwardList") else { return }
+        let history = (obj as AnyObject).description
+//        let nsHistory = history as NSString
+		
+        guard let nsHistory = history as? NSString, !(cachedHistoryStringLength > 0 && cachedHistoryStringLength == nsHistory.length &&
             cachedHistoryStringPositionOfCurrentMarker > -1 &&
-            nsHistory.substringWithRange(NSMakeRange(cachedHistoryStringPositionOfCurrentMarker, currIndicator.characters.count)) == currIndicator {
+			nsHistory.substring(with: NSMakeRange(cachedHistoryStringPositionOfCurrentMarker, currIndicator.characters.count)) == currIndicator) else {
             // the history is unchanged (based on this guesstimate)
             return
         }
@@ -78,21 +78,21 @@ class WebViewBackForwardList {
         backForwardList = []
         
         let regex = try! NSRegularExpression(pattern:"\\d+\\) +<WebHistoryItem.+> (http.+) ", options: [])
-        let result = regex.matchesInString(history, options: [], range: NSMakeRange(0, history.characters.count))
+        let result = regex.matches(in: nsHistory as String, options: [], range: NSMakeRange(0, nsHistory.length))
         var i = 0
         var foundCurrent = false
         for match in result {
-            var extractedUrl = nsHistory.substringWithRange(match.rangeAtIndex(1))
-            let parts = extractedUrl.componentsSeparatedByString(" ")
+			var extractedUrl = nsHistory.substring(with: match.rangeAt(1))
+            let parts = extractedUrl.components(separatedBy: " ")
             if parts.count > 1 {
                 extractedUrl = parts[0]
             }
             guard let url = NSURL(string: extractedUrl) else { continue }
-            let item = LegacyBackForwardListItem(url: url)
+            let item = LegacyBackForwardListItem(url: url as URL)
             backForwardList.append(item)
             
             let rangeStart = match.range.location - currIndicator.characters.count
-            if rangeStart > -1 && nsHistory.substringWithRange(NSMakeRange(rangeStart, currIndicator.characters.count)) == currIndicator {
+			if rangeStart > -1 && nsHistory.substring(with: NSMakeRange(rangeStart, currIndicator.characters.count)) == currIndicator {
                 currentIndex = i
                 foundCurrent = true
                 cachedHistoryStringPositionOfCurrentMarker = rangeStart
@@ -106,8 +106,8 @@ class WebViewBackForwardList {
     
     var currentItem: LegacyBackForwardListItem? {
         get {
-            guard let item = itemAtIndex(currentIndex) else {
-                if let url = webView?.URL {
+            guard let item = itemAtIndex(index: currentIndex) else {
+                if let url = webView?.url {
                     let item = LegacyBackForwardListItem(url: url)
                     return item
                 } else {
@@ -120,12 +120,12 @@ class WebViewBackForwardList {
     
     var backItem: LegacyBackForwardListItem? {
         get {
-            return itemAtIndex(currentIndex - 1)
+            return itemAtIndex(index: currentIndex - 1)
         }}
     
     var forwardItem: LegacyBackForwardListItem? {
         get {
-            return itemAtIndex(currentIndex + 1)
+            return itemAtIndex(index: currentIndex + 1)
         }}
     
     func itemAtIndex(index: Int) -> LegacyBackForwardListItem? {

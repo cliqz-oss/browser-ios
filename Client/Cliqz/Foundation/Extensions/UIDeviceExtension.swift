@@ -44,8 +44,8 @@ public extension UIDevice {
     public var deviceType: String {
         var systemInfo = utsname()
         uname(&systemInfo)
-        let modelCode = withUnsafeMutablePointer(&systemInfo.machine) {
-            ptr in String.fromCString(UnsafePointer<CChar>(ptr))
+        let modelCode = withUnsafeMutablePointer(to: &systemInfo.machine) {
+            ptr in String(cString: UnsafeRawPointer(ptr).assumingMemoryBound(to: CChar.self))
         }
         var modelMap : [ String : Model ] = [
             "i386"      : .simulator,
@@ -102,10 +102,11 @@ public extension UIDevice {
             "iPhone8,2" : .iPhone6Splus,
             "iPhone8,4" : .iPhoneSE
         ]
-		let code = String.fromCString(modelCode!)!
-        if let model = modelMap[code] {
-            return model.rawValue
-        }
-        return code
+		return UIDevice.current.model
+//		let code = String(cString: modelCode)
+//        if let model = modelMap[code] {
+//            return model.rawValue
+//        }
+//        return code
     }
 }
