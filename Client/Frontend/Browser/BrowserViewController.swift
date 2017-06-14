@@ -2104,9 +2104,33 @@ extension BrowserViewController: TabToolbarDelegate {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
                 return
         }
-
+        showDatePicker()
         toggleBookmarkForTabState(tab.tabState)
     }
+    
+    func showDatePicker() {
+        let datePicker = CIDatePickerViewController()
+        datePicker.delegate = self
+        self.addChildViewController(datePicker)
+        self.view.addSubview(datePicker.view)
+        
+        datePicker.view.snp.makeConstraints { (make) in
+            make.top.left.right.equalTo(self.view)
+            make.bottom.equalTo(self.view).inset(44)
+        }
+    }
+
+    func hideDatePicker(datePicker:CIDatePickerViewController) {
+        datePicker.view.removeFromSuperview()
+        datePicker.removeFromParentViewController()
+    }
+    
+    func sendBookmark(date: NSDate){
+        let url = self.urlBar.currentURL?.absoluteString ?? ""
+        let title = self.tabManager.selectedTab?.title ?? ""
+        HistoryBridge.readLater(urlInfo: ["url":url as AnyObject, "title": title as AnyObject, "timestamp": Int(date.timeIntervalSince1970 * 1000000) as AnyObject])
+    }
+
 
     func tabToolbarDidLongPressBookmark(_ tabToolbar: TabToolbarProtocol, button: UIButton) {
     }
@@ -2237,6 +2261,18 @@ extension BrowserViewController: MenuViewControllerDelegate {
         return isiPhone && currentOrientation != newOrientation
     }
 }
+
+extension BrowserViewController: CIDatePickerDelegate {
+    func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.hideDatePicker(datePicker: datePicker)
+    }
+    
+    func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.sendBookmark(date: datePicker.datePicker.date as NSDate)
+        self.hideDatePicker(datePicker: datePicker)
+    }
+}
+
 
 extension BrowserViewController: WindowCloseHelperDelegate {
     func windowCloseHelper(_ helper: WindowCloseHelper, didRequestToCloseTab tab: Tab) {
