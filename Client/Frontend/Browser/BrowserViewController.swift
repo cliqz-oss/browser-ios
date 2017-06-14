@@ -1740,6 +1740,10 @@ extension BrowserViewController {
 }
 
 extension BrowserViewController: URLBarDelegate {
+    
+    func urlBarDidPressHome(urlBar: URLBarView) {
+        self.navigationController?.popViewController(animated: false)
+    }
 
     func urlBarDidPressReload(_ urlBar: URLBarView) {
         tabManager.selectedTab?.reload()
@@ -2130,7 +2134,6 @@ extension BrowserViewController: TabToolbarDelegate {
         let title = self.tabManager.selectedTab?.title ?? ""
         HistoryBridge.readLater(urlInfo: ["url":url as AnyObject, "title": title as AnyObject, "timestamp": Int(date.timeIntervalSince1970 * 1000000) as AnyObject])
     }
-
 
     func tabToolbarDidLongPressBookmark(_ tabToolbar: TabToolbarProtocol, button: UIButton) {
     }

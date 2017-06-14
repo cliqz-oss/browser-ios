@@ -83,6 +83,7 @@ protocol URLBarDelegate: class {
     func urlBar(_ urlBar: URLBarView, didEnterText text: String)
     func urlBar(_ urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(_ url: URL?) -> String?
+    func urlBarDidPressHome(urlBar: URLBarView)
     
     
     // Cliqz: Add delegate methods for new tab button
@@ -778,6 +779,7 @@ class URLBarView: UIView {
 
     func SELdidClickCancel() {
         leaveOverlayMode(didCancel: true)
+        delegate?.urlBarDidPressHome(self)
     }
 
     func SELtappedScrollToTopArea() {
