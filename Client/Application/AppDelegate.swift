@@ -760,7 +760,7 @@ extension AppDelegate {
         DispatchQueue.main.async() {
             self.browserViewController.needsNewTab = false
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
-            self.browserViewController.navigateToTab(tabID: tabID)
+            self.browserViewController.navigateToTab(tabID)
         }
     }
     

@@ -597,7 +597,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC done.")
         
         if (needsNewTab) {
-            self.tabManager.addTabAndSelect()
+            _ = self.tabManager.addTabAndSelect()
             needsNewTab = false
         }
 
@@ -658,7 +658,7 @@ class BrowserViewController: UIViewController {
 //        presentIntroViewController()
         
         // Cliqz: switch to search mode if needed
-        switchToSearchModeIfNeeded()
+        //switchToSearchModeIfNeeded()
         // Cliqz: ask for news notification permission according to our workflow
         askForNewsNotificationPermissionIfNeeded()
         
@@ -1256,7 +1256,7 @@ class BrowserViewController: UIViewController {
         profile.bookmarks.modelFactory >>== {
             $0.isBookmarked(url).uponQueue(DispatchQueue.main) { [weak tab] result in
                 guard let bookmarked = result.successValue else {
-                    log.error("Error getting bookmark status: \(result.failureValue).")
+                    log.error("Error getting bookmark status: \(String(describing: result.failureValue)).")
                     return
                 }
                 tab?.isBookmarked = bookmarked
@@ -1265,6 +1265,7 @@ class BrowserViewController: UIViewController {
                 }
             }
         }
+        self.toolbar?.updateTabStatus(tab.keepOpen)
     }
     // Mark: Opening New Tabs
 
@@ -1750,8 +1751,9 @@ extension BrowserViewController: URLBarDelegate {
     }
 
 	func urlBarDidPressHome(urlBar: URLBarView) {
-		self.navigationController?.popViewController(animated: false)
+//		self.navigationController?.popViewController(animated: false)
         ConversationalHistoryAPI.homePressed()
+        self.navigateToHome()
 	}
 
     func urlBarDidPressTabs(_ urlBar: URLBarView) {
@@ -2174,31 +2176,38 @@ extension BrowserViewController: TabToolbarDelegate {
     
     // Cliqz: Add delegate methods for tabs button
     func tabToolbarDidPressTabs(_ tabToolbar: TabToolbarProtocol, button: UIButton) {
-        // check if the dashboard is already pushed before
-        guard self.navigationController?.topViewController != dashboard else {
-            return
-        }
-        // Cliqz: telemetry logging for toolbar
-        self.logToolbarOverviewSignal()
         
-        self.webViewContainerToolbar.isHidden = true
-        updateFindInPageVisibility(visible: false)
-        
-        if let tab = tabManager.selectedTab {
-            screenshotHelper.takeScreenshot(tab)
+        if let tab = self.tabManager.selectedTab {
+            tab.keepOpen = !tab.keepOpen
+            self.toolbar?.updateTabStatus(tab.keepOpen)
+            self.urlBar.updateTabStatus(tab.keepOpen)
         }
         
-        if let controlCenter = controlCenterController {
-            controlCenter.closeControlCenter()
-        }
-        
-        // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
-        /*
-         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
-         self.navigationController?.pushViewController(tabTrayController, animated: true)
-         self.tabTrayController = tabTrayController
-         */
-        self.navigationController?.pushViewController(dashboard, animated: false)
+//        // check if the dashboard is already pushed before
+//        guard self.navigationController?.topViewController != dashboard else {
+//            return
+//        }
+//        // Cliqz: telemetry logging for toolbar
+//        self.logToolbarOverviewSignal()
+//        
+//        self.webViewContainerToolbar.isHidden = true
+//        updateFindInPageVisibility(visible: false)
+//        
+//        if let tab = tabManager.selectedTab {
+//            screenshotHelper.takeScreenshot(tab)
+//        }
+//        
+//        if let controlCenter = controlCenterController {
+//            controlCenter.closeControlCenter()
+//        }
+//        
+//        // Cliqz: Replaced FF TabsController with our's which also contains history and favorites
+//        /*
+//         let tabTrayController = TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
+//         self.navigationController?.pushViewController(tabTrayController, animated: true)
+//         self.tabTrayController = tabTrayController
+//         */
+//        self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
     // Cliqz: Add delegate methods for tabs button
@@ -2269,10 +2278,12 @@ extension BrowserViewController: MenuViewControllerDelegate {
 
 extension BrowserViewController: CIDatePickerDelegate {
     func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.toolbar?.updateBookmarkStatus(false)
         self.hideDatePicker(datePicker: datePicker)
     }
     
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
+        self.toolbar?.updateBookmarkStatus(true)
         self.sendBookmark(date: datePicker.datePicker.date as NSDate)
         self.hideDatePicker(datePicker: datePicker)
     }
@@ -4305,7 +4316,7 @@ extension BrowserViewController {
         ConversationalHistoryAPI.homePressed()
     }
     
-    func navigateToTab(tabID: Int) {
+    func navigateToTab(_ tabID: Int) {
         for tab in self.tabManager.tabs {
             if tab.webView?.uniqueId == tabID {
                 self.tabManager.selectTab(tab)

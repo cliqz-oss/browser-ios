@@ -13,5 +13,5 @@ protocol BrowserNavigationDelegate: class {
 	func navigateToURL(_ url: URL)
 	func navigateToURLInNewTab(_ url: URL)
 	func navigateToQuery(_ query: String)
-
+    func navigateToTab(_ tabID: Int)
 }

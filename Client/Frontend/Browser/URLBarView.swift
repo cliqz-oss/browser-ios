@@ -794,6 +794,11 @@ class URLBarView: UIView {
 }
 
 extension URLBarView: TabToolbarProtocol {
+    
+    func updateTabStatus(_ keepOpen: Bool) {
+        tabsButton.isSelected = keepOpen
+    }
+
     func updateBackStatus(_ canGoBack: Bool) {
         backButton.isEnabled = canGoBack
     }

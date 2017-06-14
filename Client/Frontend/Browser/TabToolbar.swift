@@ -29,6 +29,7 @@ protocol TabToolbarProtocol {
     func updateBookmarkStatus(_ isBookmarked: Bool)
     func updateReloadStatus(_ isLoading: Bool)
     func updatePageStatus(_ isWebPage: Bool)
+    func updateTabStatus(_ keepOpen: Bool)
 }
 
 @objc
@@ -129,7 +130,8 @@ open class TabToolbarHelper: NSObject {
         toolbar.homePageButton.addTarget(self, action: #selector(TabToolbarHelper.SELdidClickHomePage), for: UIControlEvents.touchUpInside)
         
         // Cliqz: Add tabs button
-        toolbar.tabsButton.setImage(UIImage.templateImageNamed("tabs"), for: .normal)
+        toolbar.tabsButton.setImage(UIImage(named: "tabs"), for: .normal)
+        toolbar.tabsButton.setImage(UIImage(named: "tabs_selected"), for: .selected)
         toolbar.tabsButton.accessibilityLabel = NSLocalizedString("Show Tabs", comment: "Accessibility label for the tabs button in the tab toolbar.")
         let longPressGestureTabsButton = UILongPressGestureRecognizer(target: self, action: #selector(TabToolbarHelper.SELdidLongPressTabs(_:)))
         toolbar.tabsButton.addGestureRecognizer(longPressGestureTabsButton)
@@ -145,8 +147,8 @@ open class TabToolbarHelper: NSObject {
 
         } else {
             toolbar.bookmarkButton.contentMode = UIViewContentMode.center
-            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmark"), for: .normal)
-            toolbar.bookmarkButton.setImage(UIImage.templateImageNamed("bookmarked"), for: UIControlState.selected)
+            toolbar.bookmarkButton.setImage(UIImage(named: "bookmark"), for: .normal)
+            toolbar.bookmarkButton.setImage(UIImage(named: "bookmarked"), for: .selected)
             // Cliqz: Removed highlighted state - discussed with Sven
 //            toolbar.bookmarkButton.setImage(UIImage(named: "bookmarkHighlighted"), forState: UIControlState.Highlighted)
             toolbar.bookmarkButton.accessibilityLabel = NSLocalizedString("Bookmark", comment: "Accessibility Label for the tab toolbar Bookmark button")
@@ -219,6 +221,8 @@ open class TabToolbarHelper: NSObject {
         loading = isLoading
     }
     
+    
+    
     // Cliqz: Add actions for tabs button
     func SELdidClickTabs() {
         toolbar.tabToolbarDelegate?.tabToolbarDidPressTabs(toolbar, button: toolbar.tabsButton)
@@ -232,6 +236,7 @@ open class TabToolbarHelper: NSObject {
 }
 
 class TabToolbar: Toolbar, TabToolbarProtocol {
+
     weak var tabToolbarDelegate: TabToolbarDelegate?
 
     let shareButton: UIButton
@@ -331,6 +336,10 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
         }
         stopReloadButton.isEnabled = isWebPage
         shareButton.isEnabled = isWebPage
+    }
+    
+    func updateTabStatus(_ keepOpen: Bool) {
+        tabsButton.isSelected = keepOpen
     }
 
     override func draw(_ rect: CGRect) {
