@@ -2183,6 +2183,8 @@ extension BrowserViewController: TabToolbarDelegate {
             self.urlBar.updateTabStatus(tab.keepOpen)
         }
         
+        self.navigateToHome()
+        
 //        // check if the dashboard is already pushed before
 //        guard self.navigationController?.topViewController != dashboard else {
 //            return
@@ -4311,7 +4313,7 @@ extension BrowserViewController {
                 self.tabManager.removeTab(tab)
             }
         }
-        self.needsNewTab = true
+        //self.needsNewTab = true
         self.navigationController?.popViewController(animated: false)
         ConversationalHistoryAPI.homePressed()
     }
