@@ -94,6 +94,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         
         region = SettingsPrefs.getRegionPref()
 		updateView()
+        topSitesCollection?.isHidden = true
+        newsTableView?.isHidden = true
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
