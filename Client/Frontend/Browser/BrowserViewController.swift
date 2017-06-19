@@ -17,6 +17,7 @@ import MobileCoreServices
 import WebImage
 import Crashlytics
 import SwiftyJSON
+import CoreMotion
 
 
 private let log = Logger.browserLogger
@@ -4329,6 +4330,36 @@ extension BrowserViewController {
 //                    self.toolbar?.tabsButton.isSelected = true
 //                }
             }
+        }
+    }
+    
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            showDeleteHistoryAlert()
+        }
+    }
+    
+    func showDeleteHistoryAlert(){
+        let controller = UIAlertController(title: "Delete History?", message: nil, preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            
+        }
+        
+        let delete = UIAlertAction(title: "Delete", style: .default) { (action) in
+            //delete
+            _ = HistoryClearable(profile: self.profile).clear()
+            _ = BookmarksClearable(profile: self.profile).clear()
+            // Cliqz: changed the default value of clearables to false
+            _ = CacheClearable(tabManager: self.tabManager).clear()
+            _ = CookiesClearable(tabManager: self.tabManager).clear()
+            _ = SiteDataClearable(tabManager: self.tabManager).clear()
+        }
+        
+        controller.addAction(cancel)
+        controller.addAction(delete)
+        
+        self.present(controller, animated: true) { 
+            //
         }
     }
 }
