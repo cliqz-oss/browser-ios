@@ -11,12 +11,13 @@ import SnapKit
 import Storage
 import Shared
 import Alamofire
+import SwiftyJSON
 
 struct FreshtabViewUX {
 
 	static let TopSitesMinHeight = 95.0
 	static let TopSitesMaxHeight = 185.0
-	static let TopSitesCellSize = CGSizeMake(76, 86)
+	static let TopSitesCellSize = CGSize(width: 76, height: 86)
 	static let TopSitesCountOnRow = 4
 	static let TopSitesOffset = 5.0
 	
@@ -33,44 +34,44 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.updateView()
 		}
 	}
-    private let configUrl = "http://newbeta.cliqz.com/api/v1/config"
-    private let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
+    fileprivate let configUrl = "http://newbeta.cliqz.com/api/v1/config"
+    fileprivate let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
 	
 	// TODO: Change topSitesCollection to optional
-	private var topSitesCollection: UICollectionView?
-	private var newsTableView: UITableView?
+	fileprivate var topSitesCollection: UICollectionView?
+	fileprivate var newsTableView: UITableView?
 
-	private lazy var emptyTopSitesHint: UILabel = {
+	fileprivate lazy var emptyTopSitesHint: UILabel = {
 		let lbl = UILabel()
 		lbl.text = NSLocalizedString("Empty TopSites hint", tableName: "Cliqz", comment: "Hint on Freshtab when there is no topsites")
-		lbl.font = UIFont.systemFontOfSize(12)
-		lbl.textColor = UIColor.lightGrayColor()
-		lbl.textAlignment = .Center
+		lbl.font = UIFont.systemFont(ofSize: 12)
+		lbl.textColor = UIColor.lightGray
+		lbl.textAlignment = .center
 		return lbl
 	}()
-	private var normalModeView: UIView!
-	private var forgetModeView: UIView!
+	fileprivate var normalModeView: UIView!
+	fileprivate var forgetModeView: UIView!
 
 	var isNewsExpanded = false
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
-	var news = [[String: AnyObject]]()
+	var news = [[String: Any]]()
     var region = SettingsPrefs.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
     
-    var startTime : Double = NSDate.getCurrentMillis()
+    var startTime : Double = Date.getCurrentMillis()
     var isLoadCompleted = false
 
 
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(loadTopsites), name: NotificationPrivateDataClearedHistory, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadTopsites), name: NotificationPrivateDataClearedHistory, object: nil)
 	}
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
 	required init?(coder aDecoder: NSCoder) {
@@ -86,22 +87,22 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         loadRegion()
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-        startTime = NSDate.getCurrentMillis()
+        startTime = Date.getCurrentMillis()
         isLoadCompleted = false
         
         region = SettingsPrefs.getRegionPref()
 		updateView()
 	}
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         logHideSignal()
     }
 
-	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
 	}
 
@@ -112,7 +113,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
-		self.topSitesCollection?.snp_updateConstraints(closure: { (make) in
+		self.topSitesCollection?.snp_updateConstraints({ (make) in
 			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow {
 				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
 			} else {
@@ -121,11 +122,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		})
 	}
 
-	func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
-			let location = touch.locationInView(self.topSitesCollection)
-			if let index = self.topSitesCollection?.indexPathForItemAtPoint(location),
-				cell = self.topSitesCollection?.cellForItemAtIndexPath(index) as? TopSiteViewCell {
+			let location = touch.location(in: self.topSitesCollection)
+			if let index = self.topSitesCollection?.indexPathForItem(at: location),
+				let cell = self.topSitesCollection?.cellForItem(at: index) as? TopSiteViewCell {
 				return cell.isDeleteMode
 			}
 			return true
@@ -133,29 +134,28 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		return false
 	}
 
-    @objc private func cancelActions(sender: UITapGestureRecognizer) {
+    @objc fileprivate func cancelActions(_ sender: UITapGestureRecognizer) {
 		if !isForgetMode {
 			self.removeDeletedTopSites()
 			
 			// fire `didSelectRowAtIndexPath` when user click on a cell in news table
-			let p = sender.locationInView(self.newsTableView)
-            if let selectedIndex = self.newsTableView?.indexPathForRowAtPoint(p) {
-                self.tableView(self.newsTableView!, didSelectRowAtIndexPath: selectedIndex)
-            }            
+			let p = sender.location(in: self.newsTableView)
+			if let selectedIndex = self.newsTableView?.indexPathForRow(at: p) {
+				self.tableView(self.newsTableView!, didSelectRowAt: selectedIndex)
+			}
 		}
 		
 	}
     
-    private func removeDeletedTopSites() {
-
-		if let cells = self.topSitesCollection?.visibleCells() as? [TopSiteViewCell] {
+    fileprivate func removeDeletedTopSites() {
+		if let cells = self.topSitesCollection?.visibleCells as? [TopSiteViewCell] {
 			for cell in cells {
 				cell.isDeleteMode = false
 			}
 			
-			self.topSitesIndexesToRemove.sortInPlace{a,b in a > b} //order in descending order to avoid index mismatches
+			self.topSitesIndexesToRemove.sort{a,b in a > b} //order in descending order to avoid index mismatches
 			for index in self.topSitesIndexesToRemove {
-				self.topSites.removeAtIndex(index)
+				self.topSites.remove(at: index)
 			}
 			
             logTopsiteEditModeSignal()
@@ -165,25 +165,25 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
     }
 
-	private func constructForgetModeView() {
+	fileprivate func constructForgetModeView() {
 		if forgetModeView == nil {
 			self.forgetModeView = UIView()
 			self.forgetModeView.backgroundColor = UIConstants.PrivateModeBackgroundColor
-			let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+			let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .light))
 			self.forgetModeView.addSubview(blurEffect)
-			self.forgetModeView.snp_makeConstraints(closure: { (make) in
+			self.forgetModeView.snp_makeConstraints({ (make) in
 				make.top.left.right.bottom.equalTo(self.forgetModeView)
 			})
-			self.view.backgroundColor = UIColor.clearColor()
+			self.view.backgroundColor = UIColor.clear
 			self.view.addSubview(forgetModeView)
-			self.forgetModeView.snp_makeConstraints(closure: { (make) in
+			self.forgetModeView.snp_makeConstraints({ (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
 			let iconImg = UIImage(named: "forgetModeIcon")
-			let forgetIcon = UIImageView(image: iconImg!.imageWithRenderingMode(.AlwaysTemplate))
+			let forgetIcon = UIImageView(image: iconImg!.withRenderingMode(.alwaysTemplate))
 			forgetIcon.tintColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(forgetIcon)
-			forgetIcon.snp_makeConstraints(closure: { (make) in
+			forgetIcon.snp_makeConstraints({ (make) in
 				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
 				make.centerX.equalTo(self.forgetModeView)
 			})
@@ -191,11 +191,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			let title = UILabel()
 			title.text = NSLocalizedString("Forget Tab", tableName: "Cliqz", comment: "Title on Freshtab for forget mode")
 			title.numberOfLines = 1
-			title.textAlignment = .Center
-			title.font = UIFont.boldSystemFontOfSize(19)
+			title.textAlignment = .center
+			title.font = UIFont.boldSystemFont(ofSize: 19)
 			title.textColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(title)
-			title.snp_makeConstraints(closure: { (make) in
+			title.snp_makeConstraints({ (make) in
 				make.top.equalTo(forgetIcon.snp_bottom).offset(20)
 				make.left.right.equalTo(self.forgetModeView)
 				make.height.equalTo(20)
@@ -205,11 +205,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			description.text = NSLocalizedString("Forget Tab Description", tableName: "Cliqz", comment: "Description on Freshtab for forget mode")
 			self.forgetModeView.addSubview(description)
 			description.numberOfLines = 0
-			description.textAlignment = .Center
-			description.font = UIFont.systemFontOfSize(13)
+			description.textAlignment = .center
+			description.font = UIFont.systemFont(ofSize: 13)
 			description.textColor = UIColor(white: 1, alpha: 0.57)
 			description.textColor = FreshtabViewUX.forgetModeTextColor
-			description.snp_makeConstraints(closure: { (make) in
+			description.snp_makeConstraints({ (make) in
 				make.top.equalTo(title.snp_bottom).offset(15)
 				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
 				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.forgetModeOffset)
@@ -217,22 +217,22 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 	
-	private func constructNormalModeView() {
+	fileprivate func constructNormalModeView() {
 		if self.normalModeView == nil {
 			self.normalModeView = UIView()
 			self.normalModeView.backgroundColor = UIConstants.AppBackgroundColor
 			self.view.addSubview(self.normalModeView)
-			self.normalModeView.snp_makeConstraints(closure: { (make) in
+			self.normalModeView.snp_makeConstraints({ (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
 		}
 		if self.topSitesCollection == nil {
-			self.topSitesCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+			self.topSitesCollection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
 			self.topSitesCollection?.delegate = self
 			self.topSitesCollection?.dataSource = self
 			self.topSitesCollection?.backgroundColor = UIConstants.AppBackgroundColor
-			self.topSitesCollection?.registerClass(TopSiteViewCell.self, forCellWithReuseIdentifier: "TopSite")
-			self.topSitesCollection?.scrollEnabled = false
+			self.topSitesCollection?.register(TopSiteViewCell.self, forCellWithReuseIdentifier: "TopSite")
+			self.topSitesCollection?.isScrollEnabled = false
 			self.normalModeView.addSubview(self.topSitesCollection!)
 			self.topSitesCollection?.snp_makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView)
@@ -254,21 +254,21 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.right.bottom.equalTo(self.view)
 				make.top.equalTo(self.topSitesCollection!.snp_bottom).offset(5)
 			}
-			newsTableView?.registerClass(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
-			newsTableView?.separatorStyle = .None
+			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
+			newsTableView?.separatorStyle = .none
             self.newsTableView?.accessibilityLabel = "topNews"
 		}
 	}
 
-	private func updateView() {
+	fileprivate func updateView() {
 		if isForgetMode {
 			self.constructForgetModeView()
-			self.forgetModeView.hidden = false
-			self.normalModeView?.hidden = true
+			self.forgetModeView.isHidden = false
+			self.normalModeView?.isHidden = true
 		} else {
 			self.constructNormalModeView()
-			self.normalModeView.hidden = false
-			self.forgetModeView?.hidden = true
+			self.normalModeView.isHidden = false
+			self.forgetModeView?.isHidden = true
 		}
 		if !isForgetMode {
 			self.loadNews()
@@ -276,44 +276,46 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	@objc private func loadTopsites() {
+	@objc fileprivate func loadTopsites() {
 		self.loadTopSitesWithLimit(15)
         //self.topSitesCollection?.reloadData()
 	}
     
-    private func loadRegion() {
+    fileprivate func loadRegion() {
         guard region == nil  else {
             return
         }
         
-        Alamofire.request(.GET, configUrl, parameters: nil, encoding: .JSON, headers: nil).responseJSON { (response) in
+		Alamofire.request(configUrl, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
             if response.result.isSuccess {
-                if let location = response.result.value!["location"] as? String, backends = response.result.value!["backends"] as? [String]
-                where backends.contains(location) {
-                    
-                    self.region = location.uppercaseString
-                    SettingsPrefs.updateRegionPref(self.region!)
-                    self.loadNews()
-                }
+				if let data = response.result.value as? [String: Any] {
+					if let location = data["location"] as? String, let backends = data["backends"] as? [String], backends.contains(location) {
+						
+						self.region = location.uppercased()
+						SettingsPrefs.updateRegionPref(self.region!)
+						self.loadNews()
+					}
+				}
             }
         }
     }
 
-	private func loadNews() {
+	fileprivate func loadNews() {
 		self.news.removeAll()
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
-		]
+		] as [String : Any]
         let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
-        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(NSLocale.currentLocale().localeIdentifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
+        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
 
-		Alamofire.request(.PUT, newsUrl + uri, parameters: data, encoding: .JSON, headers: nil).responseJSON { (response) in
+		Alamofire.request(newsUrl + uri, method: .put, parameters: data, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
-				if let result = response.result.value?["results"] as? [[String: AnyObject]] {
-					if let snippet = result[0]["snippet"] as? [String: AnyObject],
-						extra = snippet["extra"] as? [String: AnyObject],
-						articles = extra["articles"] as? [[String: AnyObject]]
+				if let data = response.result.value as? [String: Any],
+					let result = data["results"] as? [[String: Any]] {
+					if let snippet = result[0]["snippet"] as? [String: Any],
+						let extra = snippet["extra"] as? [String: Any],
+						let articles = extra["articles"] as? [[String: Any]]
 						{
 							self.news = articles
 							self.newsTableView?.reloadData()
@@ -321,21 +323,21 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
                                 self.isLoadCompleted = true
                                 self.logShowSignal()
                             }
-						}
+					}
 				}
 			}
 		}
 	}
 
-	private func loadTopSitesWithLimit(limit: Int) -> Success {
-		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
+	fileprivate func loadTopSitesWithLimit(_ limit: Int) -> Success {
+		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(DispatchQueue.main) { result in
 			//var results = [[String: String]]()
 			if let r = result.successValue {
 				self.topSites.removeAll()
 				var filter = Set<String>()
 				for site in r {
-					if let url = NSURL(string: site!.url),
-						host = url.host {
+					if let url = URL(string: site!.url),
+						let host = url.host {
 						if !filter.contains(host) {
 							var d = Dictionary<String, String>()
 							d["url"] = site!.url
@@ -348,7 +350,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			}
 			if self.topSites.count == 0 {
 				self.normalModeView.addSubview(self.emptyTopSitesHint)
-				self.emptyTopSitesHint.snp_makeConstraints(closure: { (make) in
+				self.emptyTopSitesHint.snp_makeConstraints({ (make) in
 					make.top.equalTo(self.normalModeView).offset(3)
 					make.left.right.top.equalTo(self.normalModeView)
 					make.height.equalTo(14)
@@ -363,7 +365,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 	
-	@objc private func showMoreNews() {
+	@objc fileprivate func showMoreNews() {
 		self.isNewsExpanded = true
 		self.newsTableView?.reloadData()
 	}
@@ -371,26 +373,26 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if self.news.count >= 2 {
 			return self.isNewsExpanded ? self.news.count : 2
 		}
 		return 0
 	}
 	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = self.newsTableView?.dequeueReusableCellWithIdentifier("NewsCell", forIndexPath: indexPath) as! NewsViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = self.newsTableView?.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsViewCell
 		if indexPath.row < self.news.count {
 			var n = self.news[indexPath.row]
 			let title = NSMutableAttributedString()
 			if let b = n["breaking"] as? NSNumber,
-				t = n["breaking_label"] as? String where b.boolValue == true {
-				title.appendAttributedString(NSAttributedString(string: t.uppercaseString + ": ", attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0xE64C66)]))
+				let t = n["breaking_label"] as? String, b.boolValue == true {
+				title.append(NSAttributedString(string: t.uppercased() + ": ", attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0xE64C66)]))
 			}
 			if let t = n["short_title"] as? String {
-				title.appendAttributedString(NSAttributedString(string: t))
+				title.append(NSAttributedString(string: t))
 			} else if let t = n["title"] as? String {
-				title.appendAttributedString(NSAttributedString(string: t))
+				title.append(NSAttributedString(string: t))
 			}
 			cell.titleLabel.attributedText = title
 			if let domain = n["domain"] as? String {
@@ -402,15 +404,15 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
             cell.tag = indexPath.row
             
 			if let url = n["url"] as? String {
-                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: NSError?) in
-                    if cell.tag == indexPath.row{
+                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: Error?) in
+                    if cell.tag == indexPath.row {
                         if let img = image {
                             cell.logoImageView.image = img
                         }
                         else if let fakeView = fakeLogo{
                             cell.fakeLogoView = fakeView
                             cell.logoContainerView.addSubview(fakeView)
-                            fakeView.snp_makeConstraints(closure: { (make) in
+                            fakeView.snp_makeConstraints({ (make) in
                                 make.top.left.right.bottom.equalTo(cell.logoContainerView)
                             })
                         }
@@ -418,25 +420,25 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
                 }
 			}
 		}
-		cell.selectionStyle = .None
+		cell.selectionStyle = .none
 		return cell
 	}
 	
-	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 85
 	}
 
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.row < self.news.count {
 			let selectedNews = self.news[indexPath.row]
 			let urlString = selectedNews["url"] as? String
-			if let url = NSURL(string: urlString!) {
+			if let url = URL(string: urlString!) {
 				delegate?.didSelectURL(url, searchQuery: nil)
-			} else if let url = NSURL(string: urlString!.escapeURL()) {
+			} else if let url = URL(string: urlString!.escapeURL()) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
             
-            if let currentCell = tableView.cellForRowAtIndexPath(indexPath) as? NewsViewCell, isBreakingNews = selectedNews["breaking"] as? Bool {
+            if let currentCell = tableView.cellForRow(at: indexPath) as? NewsViewCell, let isBreakingNews = selectedNews["breaking"] as? Bool {
                 let target  = isBreakingNews ? "breakingnews" : "topnews"
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
             }
@@ -463,30 +465,30 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 */
 
-	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return 0
 	}
 
-	func scrollViewDidScroll(scrollView: UIScrollView) {
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		self.delegate?.dismissKeyboard()
 	}
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.topSites.count > FreshtabViewUX.TopSitesCountOnRow ? 2 * FreshtabViewUX.TopSitesCountOnRow : FreshtabViewUX.TopSitesCountOnRow
 	}
 	
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TopSite", forIndexPath: indexPath) as! TopSiteViewCell
+	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopSite", for: indexPath) as! TopSiteViewCell
 		cell.tag = -1
 		cell.delegate = self
 		if indexPath.row < self.topSites.count {
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let url = s["url"] {
-                LogoLoader.loadLogoImageOrFakeLogo(url) { (image: UIImage?, fakeLogo:UIView?, error: NSError?) in
+                LogoLoader.loadLogoImageOrFakeLogo(url) { (image: UIImage?, fakeLogo:UIView?, error: Error?) in
                     if cell.tag == indexPath.row{
                         if let img = image {
                             cell.logoImageView.image = img
@@ -494,14 +496,14 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
                         else if let fakeView = fakeLogo{
                             cell.fakeLogoView = fakeView
                             cell.logoContainerView.addSubview(fakeView)
-                            fakeView.snp_makeConstraints(closure: { (make) in
+                            fakeView.snp_makeConstraints({ (make) in
                                 make.top.left.right.bottom.equalTo(cell.logoContainerView)
                             })
                         }
                     }
                 }
 				let hostComponents = getHostComponents(forURL: url)
-				cell.logoHostLabel.text = hostComponents[0].capitalizedString
+				cell.logoHostLabel.text = hostComponents[0].capitalized
 			}
 		}
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites(_:)))
@@ -510,49 +512,49 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 		return cell
 	}
 
-	@objc private func deleteTopSites(gestureReconizer: UILongPressGestureRecognizer)  {
-		let cells = self.topSitesCollection?.visibleCells()
+	@objc private func deleteTopSites(_ gestureReconizer: UILongPressGestureRecognizer)  {
+		let cells = self.topSitesCollection?.visibleCells
 		for cell in cells as! [TopSiteViewCell] {
 			cell.isDeleteMode = true
 		}
         
         if let index = gestureReconizer.view?.tag {
-            logTopsiteSignal("longpress", index: index)
+            logTopsiteSignal(action: "longpress", index: index)
         }
 	}
 
-	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row) {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
-				if let url = NSURL(string: urlString) {
+				if let url = URL(string: urlString) {
 					delegate?.didSelectURL(url, searchQuery: nil)
-				} else if let url = NSURL(string: urlString.escapeURL()) {
+				} else if let url = URL(string: urlString.escapeURL()) {
 					delegate?.didSelectURL(url, searchQuery: nil)
 				}
                 
-                logTopsiteSignal("click", index: indexPath.row)
+                logTopsiteSignal(action: "click", index: indexPath.row)
 			}
 		}
 	}
 	
-	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return FreshtabViewUX.TopSitesCellSize
 	}
 	
-	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 		return 3.0
 	}
 
-	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 		return UIEdgeInsetsMake(10, sideInset(collectionView), 0, sideInset(collectionView))
 	}
 	
-	func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
 		return cellSpacing(collectionView)
 	}
     
-    func sideInset(collectionView: UICollectionView) -> CGFloat {
+    func sideInset(_ collectionView: UICollectionView) -> CGFloat {
         //Constraint = cellSpacing should never be negative
         let v = collectionView.frame.size.width - CGFloat(FreshtabViewUX.TopSitesCountOnRow) * FreshtabViewUX.TopSitesCellSize.width
         
@@ -564,7 +566,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
         return 0.0
     }
     
-    func cellSpacing(collectionView: UICollectionView) -> CGFloat{
+    func cellSpacing(_ collectionView: UICollectionView) -> CGFloat{
         let inset = sideInset(collectionView)
         if inset > 1.0 {
             return inset - 1
@@ -576,7 +578,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 
 extension FreshtabViewController: TopSiteCellDelegate {
 
-	func topSiteHided(index: Int) {
+	func topSiteHided(_ index: Int) {
 		let s = self.topSites[index]
 		if let url = s["url"] {
 			self.profile.history.hideTopSite(url)
@@ -593,31 +595,31 @@ extension FreshtabViewController: TopSiteCellDelegate {
 
 // extension for telemetry signals
 extension FreshtabViewController {
-    private func logTopsiteSignal(action: String, index: Int) {
+    fileprivate func logTopsiteSignal(action: String, index: Int) {
      
-        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "index": index]
+        let customData: [String: Any] = ["topsite_count": topSites.count, "index": index]
         self.logFreshTabSignal(action, target: "topsite", customData: customData)
     }
     
-    private func logDeleteTopsiteSignal(index: Int) {
-        let customData: [String: AnyObject] = ["index": index]
+    fileprivate func logDeleteTopsiteSignal(_ index: Int) {
+        let customData: [String: Any] = ["index": index]
         self.logFreshTabSignal("click", target: "delete_topsite", customData: customData)
     }
     
-    private func logTopsiteEditModeSignal() {
-        let customData: [String: AnyObject] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
+    fileprivate func logTopsiteEditModeSignal() {
+        let customData: [String: Any] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
         self.logFreshTabSignal("click", target: nil, customData: customData)
     }
     
-    private func logNewsSignal(target: String, element: String, index: Int) {
+    fileprivate func logNewsSignal(_ target: String, element: String, index: Int) {
         
-        let customData: [String: AnyObject] = ["element": element, "index": index]
+        let customData: [String: Any] = ["element": element, "index": index]
         self.logFreshTabSignal("click", target: target, customData: customData)
     }
     
-    private func logShowSignal() {
-        let loadDuration = Int(NSDate.getCurrentMillis() - startTime)
-        var customData: [String: AnyObject] = ["topsite_count": topSites.count, "load_duration": loadDuration]
+    fileprivate func logShowSignal() {
+        let loadDuration = Int(Date.getCurrentMillis() - startTime)
+        var customData: [String: Any] = ["topsite_count": topSites.count, "load_duration": loadDuration]
         if isLoadCompleted {
             customData["is_complete"] = true
             let breakingNews = news.filter() {
@@ -638,14 +640,15 @@ extension FreshtabViewController {
 
     }
     
-    private func logHideSignal() {
+    fileprivate func logHideSignal() {
         if !isLoadCompleted {
             logShowSignal()
         }
-        let showDuration = Int(NSDate.getCurrentMillis() - startTime)
+        let showDuration = Int(Date.getCurrentMillis() - startTime)
         logFreshTabSignal("hide", target: nil, customData: ["show_duration": showDuration])
     }
-    private func logFreshTabSignal(action: String, target: String?, customData: [String: AnyObject]?) {
+
+    private func logFreshTabSignal(_ action: String, target: String?, customData: [String: Any]?) {
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
     }
     

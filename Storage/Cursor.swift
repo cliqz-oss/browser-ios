@@ -13,7 +13,7 @@ public enum CursorStatus {
     case Closed
 }
 
-public protocol TypedCursor: SequenceType {
+public protocol TypedCursor: Sequence {
     associatedtype T
     var count: Int { get }
     var status: CursorStatus { get }
@@ -25,14 +25,14 @@ public protocol TypedCursor: SequenceType {
 /**
  * Provides a generic method of returning some data and status information about a request.
  */
-public class Cursor<T>: TypedCursor {
-    public var count: Int {
+open class Cursor<T>: TypedCursor {
+    open var count: Int {
         get { return 0 }
     }
 
     // Extra status information
-    public var status: CursorStatus
-    public var statusMessage: String
+    open var status: CursorStatus
+    open var statusMessage: String
 
     init(err: NSError) {
         self.status = .Failure
@@ -45,11 +45,11 @@ public class Cursor<T>: TypedCursor {
     }
 
     // Collection iteration and access functions
-    public subscript(index: Int) -> T? {
+    open subscript(index: Int) -> T? {
         get { return nil }
     }
 
-    public func asArray() -> [T] {
+    open func asArray() -> [T] {
         var acc = [T]()
         acc.reserveCapacity(self.count)
         for row in self {
@@ -62,9 +62,9 @@ public class Cursor<T>: TypedCursor {
         return acc
     }
 
-    public func generate() -> AnyGenerator<T?> {
+    open func makeIterator() -> AnyIterator<T?> {
         var nextIndex = 0
-        return AnyGenerator() {
+        return AnyIterator() {
             if (nextIndex >= self.count || self.status != CursorStatus.Success) {
                 return nil
             }
@@ -74,7 +74,7 @@ public class Cursor<T>: TypedCursor {
         }
     }
 
-    public func close() {
+    open func close() {
         status = .Closed
         statusMessage = "Closed"
     }
@@ -89,10 +89,10 @@ public class Cursor<T>: TypedCursor {
 /*
  * A cursor implementation that wraps an array.
  */
-public class ArrayCursor<T> : Cursor<T> {
-    private var data : [T]
+open class ArrayCursor<T> : Cursor<T> {
+    fileprivate var data : [T]
 
-    public override var count : Int {
+    open override var count : Int {
         if (status != .Success) {
             return 0
         }
@@ -108,7 +108,7 @@ public class ArrayCursor<T> : Cursor<T> {
         self.init(data: data, status: CursorStatus.Success, statusMessage: "Success")
     }
 
-    public override subscript(index: Int) -> T? {
+    open override subscript(index: Int) -> T? {
         get {
             if (index >= data.count || index < 0 || status != .Success) {
                 return nil
@@ -117,7 +117,7 @@ public class ArrayCursor<T> : Cursor<T> {
         }
     }
 
-    override public func close() {
+    override open func close() {
         data = [T]()
         super.close()
     }

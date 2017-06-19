@@ -9,8 +9,8 @@
 import Foundation
 import Shared
 
-public class CliqzBookmarkItem: BookmarkItem {
-	public let bookmarkedDate: Timestamp!
+open class CliqzBookmarkItem: BookmarkItem {
+	open let bookmarkedDate: Timestamp!
 	
 	public init(guid: String, title: String, url: String, bookmarkedDate: Timestamp, isEditable: Bool=false) {
 		self.bookmarkedDate = bookmarkedDate

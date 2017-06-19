@@ -6,7 +6,7 @@ class HistorySwiper : NSObject {
     var topLevelView: UIView!
     var webViewContainer: UIView!
     
-    func setup(topLevelView topLevelView: UIView, webViewContainer: UIView) {
+    func setup(_ topLevelView: UIView, webViewContainer: UIView) {
         self.topLevelView = topLevelView
         self.webViewContainer = webViewContainer
         
@@ -34,22 +34,22 @@ class HistorySwiper : NSObject {
         return topLevelView.frame.width
     }
     
-    private func handleSwipe(recognizer: UIGestureRecognizer) {
+    fileprivate func handleSwipe(_ recognizer: UIGestureRecognizer) {
         if getApp().browserViewController.homePanelController != nil {
             return
         }
         
-        guard let tab = getApp().browserViewController.tabManager.selectedTab, webview = tab.webView else { return }
-        let p = recognizer.locationInView(recognizer.view)
+        guard let tab = getApp().browserViewController.tabManager.selectedTab, let webview = tab.webView else { return }
+        let p = recognizer.location(in: recognizer.view)
         let shouldReturnToZero = recognizer == goBackSwipe ? p.x < screenWidth() / 2.0 : p.x > screenWidth() / 2.0
         
-        if recognizer.state == .Ended || recognizer.state == .Cancelled || recognizer.state == .Failed {
-            UIView.animateWithDuration(0.25, animations: {
+        if recognizer.state == .ended || recognizer.state == .cancelled || recognizer.state == .failed {
+            UIView.animate(withDuration: 0.25, animations: {
                 if shouldReturnToZero {
-                    self.webViewContainer.transform = CGAffineTransformMakeTranslation(0, self.webViewContainer.transform.ty)
+                    self.webViewContainer.transform = CGAffineTransform(translationX: 0, y: self.webViewContainer.transform.ty)
                 } else {
                     let x = recognizer == self.goBackSwipe ? self.screenWidth() : -self.screenWidth()
-                    self.webViewContainer.transform = CGAffineTransformMakeTranslation(x, self.webViewContainer.transform.ty)
+                    self.webViewContainer.transform = CGAffineTransform(translationX: x, y: self.webViewContainer.transform.ty)
                     self.webViewContainer.alpha = 0
                 }
                 }, completion: { (Bool) -> Void in
@@ -60,44 +60,44 @@ class HistorySwiper : NSObject {
                             getApp().browserViewController.goForward()
                         }
                         
-                        self.webViewContainer.transform = CGAffineTransformMakeTranslation(0, self.webViewContainer.transform.ty)
+                        self.webViewContainer.transform = CGAffineTransform(translationX: 0, y: self.webViewContainer.transform.ty)
                         
                         // when content size is updated
                         postAsyncToMain(3.0) {
                             self.restoreWebview()
                         }
-                        NSNotificationCenter.defaultCenter().removeObserver(self)
-                        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistorySwiper.updateDetected), name: CliqzWebViewConstants.kNotificationPageInteractive, object: webview)
-                        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HistorySwiper.updateDetected), name: CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed, object: webview)
+                        NotificationCenter.default.removeObserver(self)
+                        NotificationCenter.default.addObserver(self, selector: #selector(HistorySwiper.updateDetected), name: NSNotification.Name(rawValue: CliqzWebViewConstants.kNotificationPageInteractive), object: webview)
+                        NotificationCenter.default.addObserver(self, selector: #selector(HistorySwiper.updateDetected), name: NSNotification.Name(rawValue: CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed), object: webview)
                     }
             })
         } else {
             let tx = recognizer == goBackSwipe ? p.x : p.x - screenWidth()
-            webViewContainer.transform = CGAffineTransformMakeTranslation(tx, self.webViewContainer.transform.ty)
+            webViewContainer.transform = CGAffineTransform(translationX: tx, y: self.webViewContainer.transform.ty)
             
         }
     }
     
     func restoreWebview() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
             postAsyncToMain(0.4) { // after a render detected, allow ample time for drawing to complete
-                UIView.animateWithDuration(0.2) {
+                UIView.animate(withDuration: 0.2, animations: {
                     self.webViewContainer.alpha = 1.0
-                }
+                }) 
             }
     }
     
-    @objc func screenRightEdgeSwiped(recognizer: UIScreenEdgePanGestureRecognizer) {
+    @objc func screenRightEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
         handleSwipe(recognizer)
     }
     
-    @objc func screenLeftEdgeSwiped(recognizer: UIScreenEdgePanGestureRecognizer) {
+    @objc func screenLeftEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
         handleSwipe(recognizer)
     }
 }
 
 extension HistorySwiper : UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(recognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ recognizer: UIGestureRecognizer) -> Bool {
         guard let tab = getApp().browserViewController.tabManager.selectedTab else { return false}
         if (recognizer == goBackSwipe && !tab.canGoBack) ||
             (recognizer == goForwardSwipe && !tab.canGoForward) {
@@ -105,16 +105,16 @@ extension HistorySwiper : UIGestureRecognizerDelegate {
         }
         
         guard let recognizer = recognizer as? UIPanGestureRecognizer else { return false }
-        let v = recognizer.velocityInView(recognizer.view)
+        let v = recognizer.velocity(in: recognizer.view)
         if fabs(v.x) < fabs(v.y) {
             return false
         }
         
         let tolerance = CGFloat(30.0)
-        let p = recognizer.locationInView(recognizer.view)
+        let p = recognizer.location(in: recognizer.view)
         return recognizer == goBackSwipe ? p.x < tolerance : p.x > screenWidth() - tolerance
     }
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }

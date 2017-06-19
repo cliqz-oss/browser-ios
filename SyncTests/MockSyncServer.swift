@@ -285,7 +285,7 @@ class MockSyncServer {
     }
 
     private func modifiedResponse(timestamp: Timestamp) -> GCDWebServerResponse {
-        let body = JSON(["modified": NSNumber(unsignedLongLong: timestamp)]).toString()
+        let body = JSON(["modified": NSNumber(value: timestamp)]).toString()
         let bodyData = body.utf8EncodedData
         let response = GCDWebServerDataResponse(data: bodyData, contentType: "application/json")
         return MockSyncServer.withHeaders(response)

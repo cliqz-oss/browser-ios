@@ -10,7 +10,7 @@ import Foundation
 
 protocol TopSiteCellDelegate: NSObjectProtocol {
 	
-	func topSiteHided(index: Int)
+	func topSiteHided(_ index: Int)
 }
 
 class TopSiteViewCell: UICollectionViewCell {
@@ -23,9 +23,9 @@ class TopSiteViewCell: UICollectionViewCell {
 	lazy var logoHostLabel = UILabel()
 
 	lazy var deleteButton: UIButton = {
-		let b = UIButton(type: .Custom)
-		b.setImage(UIImage(named: "removeTopsite"), forState: .Normal)
-		b.addTarget(self, action: #selector(hideTopSite), forControlEvents: .TouchUpInside)
+		let b = UIButton(type: .custom)
+		b.setImage(UIImage(named: "removeTopsite"), for: UIControlState())
+		b.addTarget(self, action: #selector(hideTopSite), for: .touchUpInside)
 		return b
 	}()
 	
@@ -33,7 +33,7 @@ class TopSiteViewCell: UICollectionViewCell {
 		didSet {
 			if isDeleteMode && !self.isEmptyContent() {
 				self.contentView.addSubview(self.deleteButton)
-				self.deleteButton.snp_makeConstraints(closure: { (make) in
+				self.deleteButton.snp_makeConstraints({ (make) in
 					make.top.equalTo(self.contentView.frame.origin.y)
                     make.left.equalTo(self.contentView.frame.origin.x)
 				})
@@ -45,14 +45,14 @@ class TopSiteViewCell: UICollectionViewCell {
 		}
 	}
 	
-	private func isEmptyContent() -> Bool {
+	fileprivate func isEmptyContent() -> Bool {
 		return self.logoContainerView.subviews.count == 0 || (self.logoImageView.image == nil && self.fakeLogoView?.superview == nil)
 	}
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		self.backgroundColor = UIColor.clearColor()
-		self.contentView.backgroundColor = UIColor.clearColor()
+		self.backgroundColor = UIColor.clear
+		self.contentView.backgroundColor = UIColor.clear
 
 		self.contentView.addSubview(self.logoContainerView)
 		logoContainerView.snp_makeConstraints { make in
@@ -65,10 +65,10 @@ class TopSiteViewCell: UICollectionViewCell {
 		logoImageView.snp_makeConstraints { make in
 			make.top.left.bottom.right.equalTo(self.logoContainerView)
 		}
-		self.logoContainerView.backgroundColor = UIColor.lightGrayColor()
+		self.logoContainerView.backgroundColor = UIColor.lightGray
 		self.logoContainerView.layer.cornerRadius = 12
         self.logoContainerView.layer.borderWidth = 2
-        self.logoContainerView.layer.borderColor = UIColor.clearColor().CGColor//UIConstants.AppBackgroundColor.CGColor
+        self.logoContainerView.layer.borderColor = UIColor.clear.cgColor//UIConstants.AppBackgroundColor.CGColor
         self.logoContainerView.layer.shouldRasterize = false
 		self.logoContainerView.clipsToBounds = true
 		
@@ -77,8 +77,8 @@ class TopSiteViewCell: UICollectionViewCell {
 			make.left.right.bottom.equalTo(self.contentView)
 			make.top.equalTo(self.logoContainerView.snp_bottom).offset(3)
 		}
-		self.logoHostLabel.textAlignment = .Center
-		self.logoHostLabel.font = UIFont.systemFontOfSize(10)
+		self.logoHostLabel.textAlignment = .center
+		self.logoHostLabel.font = UIFont.systemFont(ofSize: 10)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -94,7 +94,7 @@ class TopSiteViewCell: UICollectionViewCell {
 		self.logoHostLabel.text = ""
 	}
 	
-	private func startWobbling() {
+	fileprivate func startWobbling() {
 		let startAngle = -M_PI_4/10
 		let endAngle = M_PI_4/10
 		
@@ -105,15 +105,15 @@ class TopSiteViewCell: UICollectionViewCell {
 		wobblingAnimation.repeatCount = FLT_MAX
 		wobblingAnimation.timingFunction = CAMediaTimingFunction.init(name:kCAMediaTimingFunctionLinear)
         self.logoContainerView.layer.shouldRasterize = true
-		self.layer.addAnimation(wobblingAnimation, forKey: "rotation")
+		self.layer.add(wobblingAnimation, forKey: "rotation")
 	}
 	
-	private func stopWobbling() {
+	fileprivate func stopWobbling() {
 		self.layer.removeAllAnimations()
         self.logoContainerView.layer.shouldRasterize = false
 	}
 	
-	@objc private func hideTopSite() {
+	@objc fileprivate func hideTopSite() {
         self.logoImageView.image = nil
         self.fakeLogoView?.removeFromSuperview()
         self.fakeLogoView = nil

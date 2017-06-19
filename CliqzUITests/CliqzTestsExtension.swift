@@ -18,130 +18,131 @@ extension XCTestCase {
         }
         else{
             if tester.viewExistsWithLabel("Address and Search"){
-                tester.tapViewWithAccessibilityLabel("Address and Search")
+                tester.tapView(withAccessibilityLabel: "Address and Search")
             }
             else{
-                tester.tapViewWithAccessibilityIdentifier("url")
+                tester.tapView(withAccessibilityIdentifier: "url")
             }
         }
-        tester.tapViewWithAccessibilityLabel("delete")
+        tester.tapView(withAccessibilityLabel: "delete")
         tester.setText(url, intoViewWithAccessibilityLabel: "Address and Search")
         tester.waitForSoftwareKeyboard()
-        tester.tapViewWithAccessibilityLabel("Go")
+        tester.tapView(withAccessibilityLabel: "Go")
 //        let checkOnboarding = try tester.tryFindingTappableViewWithAccessibilityLabel("OK")
         if  tester.viewExistsWithLabel("OK") {
-            tester.tapViewWithAccessibilityLabel("OK")
-            tester.tapViewWithAccessibilityLabel("Address and Search")
+            tester.tapView(withAccessibilityLabel: "OK")
+            tester.tapView(withAccessibilityLabel: "Address and Search")
             tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
-            tester.waitForTimeInterval(1)
+            tester.tapView(withAccessibilityLabel: "Go")
+            tester.wait(forTimeInterval: 1)
         }
-        tester.waitForTimeInterval(1)
+        tester.wait(forTimeInterval: 1)
     }
 
     func goToLinkInWebPage(){
-        tester.waitForViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
-        tester.tapViewWithAccessibilityLabel("https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
-        tester.tapViewWithAccessibilityLabel("delete")
-        tester.tapViewWithAccessibilityLabel("Address and Search")
+        tester.waitForView(withAccessibilityLabel: "https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
+        tester.tapView(withAccessibilityLabel: "https://cdn.cliqz.com/mobile/browser/tests/forward_test.html")
+        tester.tapView(withAccessibilityLabel: "delete")
+        tester.tapView(withAccessibilityLabel: "Address and Search")
         tester.setText("https://cdn.cliqz.com/mobile/browser/tests/testpage.html", intoViewWithAccessibilityLabel: "Address and Search")
-        tester.tapViewWithAccessibilityLabel("Go")
-        tester.waitForTimeInterval(1)
+        tester.tapView(withAccessibilityLabel: "Go")
+        tester.wait(forTimeInterval: 1)
     }
 
     func showToolBar(){
         if tester.viewExistsWithLabel("urlExpand"){
-            tester.tapViewWithAccessibilityLabel("urlExpand")
+            tester.tapView(withAccessibilityLabel: "urlExpand")
             tester.waitForAbsenceOfSoftwareKeyboard()
-            tester.waitForViewWithAccessibilityLabel("Show Tabs")
+            tester.waitForView(withAccessibilityLabel: "Show Tabs")
         }
     }
     
-    func resetApp(accessibilityLabels: [String]){
+    func resetApp(_ accessibilityLabels: [String]){
         showToolBar()
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.waitForView(withAccessibilityLabel: accessibilityLabel)
         for accessibilityLabel in accessibilityLabels {
-            tester.waitForViewWithAccessibilityLabel(accessibilityLabel)
-            tester.tapViewWithAccessibilityLabel("closeTab")
-            tester.waitForTimeInterval(1)
+            tester.waitForView(withAccessibilityLabel: accessibilityLabel)
+            tester.tapView(withAccessibilityLabel: "closeTab")
+            tester.wait(forTimeInterval: 1)
         }
         if tester.viewExistsWithLabel("Go"){
         }
         else{
             if tester.viewExistsWithLabel("Address and Search"){
-                tester.tapViewWithAccessibilityLabel("")
-                tester.tapViewWithAccessibilityLabel("Search")
+                tester.tapView(withAccessibilityLabel: "")
+                tester.tapView(withAccessibilityLabel: "Search")
             }
             else{
-                tester.tapViewWithAccessibilityIdentifier("url")
+                tester.tapView(withAccessibilityIdentifier: "url")
             }
         }
     }
     
     func changeAndCheckSearchEngineLabel(accessibilityLabel:String){
-        tester.tapViewWithAccessibilityLabel(accessibilityLabel)
-        XCTAssertTrue((tester.waitForViewWithAccessibilityLabel(accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine \(accessibilityLabel) was not selected after tapping it")
-        tester.tapViewWithAccessibilityLabel("Settings")
+        tester.tapView(withAccessibilityLabel: accessibilityLabel)
+        XCTAssertTrue((tester.waitForView(withAccessibilityLabel: accessibilityLabel, traits: UIAccessibilityTraitSelected)) != nil, "Search Engine \(accessibilityLabel) was not selected after tapping it")
+        tester.tapView(withAccessibilityLabel: "Settings")
         XCTAssertTrue(tester.viewExistsWithLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)"), "Search Engine Label did not change to \(accessibilityLabel)")
-        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
+        tester.tapView(withAccessibilityLabel: "\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
     }
     
-    func checkSearchEngineChange(accessibilityLabel:String, query:String, url:String){
-        tester.tapViewWithAccessibilityLabel("\(accessibilityLabel)")
-        tester.tapViewWithAccessibilityLabel("Settings")
-        tester.tapViewWithAccessibilityLabel("Done")
-        tester.tapViewWithAccessibilityLabel("cliqzBack")
+    func checkSearchEngineChange(_ accessibilityLabel:String, query:String, url:String){
+        tester.tapView(withAccessibilityLabel: "\(accessibilityLabel)")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "Done")
+        tester.tapView(withAccessibilityLabel: "cliqzBack")
         if tester.viewExistsWithLabel("Address and Search"){
-        tester.tapViewWithAccessibilityLabel("Address and Search")
+        tester.tapView(withAccessibilityLabel: "Address and Search")
         }
         else{
-        tester.tapViewWithAccessibilityIdentifier("url")
+        tester.tapView(withAccessibilityIdentifier: "url")
         }
-        let urlBar = tester.waitForViewWithAccessibilityLabel("Address and Search")
-        if urlBar.accessibilityValue == query{
-            tester.tapViewWithAccessibilityLabel("Go")
+        let urlBar = tester.waitForView(withAccessibilityLabel: "Address and Search")
+        if urlBar?.accessibilityValue == query{
+            tester.tapView(withAccessibilityLabel: "Go")
             if tester.viewExistsWithLabel("OK"){
-                tester.tapViewWithAccessibilityLabel("OK")
+                tester.tapView(withAccessibilityLabel: "OK")
                 if tester.viewExistsWithLabel("Address and Search"){
-                    tester.tapViewWithAccessibilityLabel("Address and Search")
+                    tester.tapView(withAccessibilityLabel: "Address and Search")
                 }
                 else{
-                    tester.tapViewWithAccessibilityIdentifier("url")
+                    tester.tapView(withAccessibilityIdentifier: "url")
                 }
                 tester.waitForSoftwareKeyboard()
-                tester.tapViewWithAccessibilityLabel("Go")
+                tester.tapView(withAccessibilityLabel: "Go")
             }
-            tester.waitForTimeInterval(3)
+            tester.wait(forTimeInterval: 3)
         }
         else{
-            tester.tapViewWithAccessibilityLabel("delete")
+            tester.tapView(withAccessibilityLabel: "delete")
             tester.setText(query, intoViewWithAccessibilityLabel: "Address and Search")
             tester.waitForSoftwareKeyboard()
-            tester.tapViewWithAccessibilityLabel("Go")
+            tester.tapView(withAccessibilityLabel: "Go")
             if tester.viewExistsWithLabel("OK"){
-                tester.tapViewWithAccessibilityLabel("OK")
+                tester.tapView(withAccessibilityLabel: "OK")
                 if tester.viewExistsWithLabel("Address and Search"){
-                    tester.tapViewWithAccessibilityLabel("Address and Search")
+                    tester.tapView(withAccessibilityLabel: "Address and Search")
                 }
                 else{
-                    tester.tapViewWithAccessibilityIdentifier("url")
+                    tester.tapView(withAccessibilityIdentifier: "url")
                 }
                 tester.waitForSoftwareKeyboard()
-                tester.tapViewWithAccessibilityLabel("Go")
+                tester.tapView(withAccessibilityLabel: "Go")
             }
-            tester.waitForTimeInterval(3)
+            tester.wait(forTimeInterval: 3)
         }
 //        if tester.viewExistsWithLabel("")
-        let searchUrl = tester.waitForViewWithAccessibilityIdentifier("url")
-        XCTAssertTrue(searchUrl.accessibilityValue!.startsWith(url), "Search Engine url is  \(accessibilityValue) instead of \(url)")
-        XCTAssertTrue(searchUrl.accessibilityValue!.localizedCaseInsensitiveContainsString(query))
+        let searchUrl = tester.waitForView(withAccessibilityIdentifier: "url")
+        XCTAssertTrue((searchUrl?.accessibilityValue!.startsWith(url))!, "Search Engine url is  \(accessibilityValue) instead of \(url)")
+		
+		XCTAssertTrue((searchUrl?.accessibilityValue!.localizedCaseInsensitiveContains(query))!)
         if tester.viewExistsWithLabel("OK"){
-            tester.tapViewWithAccessibilityLabel("OK")
+            tester.tapView(withAccessibilityLabel: "OK")
         }
-        tester.tapViewWithAccessibilityLabel("Show Tabs")
-        tester.tapViewWithAccessibilityLabel("Settings")
-        tester.tapViewWithAccessibilityLabel("\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
+        tester.tapView(withAccessibilityLabel: "Show Tabs")
+        tester.tapView(withAccessibilityLabel: "Settings")
+        tester.tapView(withAccessibilityLabel: "\(getComplementarySearchIdentifier()), \(accessibilityLabel)")
     }
     
 }

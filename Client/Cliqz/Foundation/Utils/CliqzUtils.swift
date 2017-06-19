@@ -9,11 +9,11 @@
 import Foundation
 import WebKit
 
-func ensureMainThread(closure:()->()) {
-	if NSThread.isMainThread() {
+func ensureMainThread(_ closure:()->()) {
+	if Thread.isMainThread {
 		closure()
 	} else {
-		dispatch_sync(dispatch_get_main_queue(), closure)
+		DispatchQueue.main.sync(execute: closure)
 	}
 }
 
@@ -21,10 +21,10 @@ struct DangerousReturnWKNavigation {
 	static let emptyNav = WKNavigation()
 }
 
-func md5(string: String) -> String {
-    var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
-    if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
-        CC_MD5(data.bytes, CC_LONG(data.length), &digest)
+func md5(_ string: String) -> String {
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+    if let data = string.data(using: String.Encoding.utf8) {
+        CC_MD5((data as NSData).bytes, CC_LONG(data.count), &digest)
     }
     
     var digestHex = ""
@@ -35,17 +35,13 @@ func md5(string: String) -> String {
     return digestHex
 }
 
-func postAsyncToMain(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+func postAsyncToMain(_ delay:Double, closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 
 func getApp() -> AppDelegate {
-    return UIApplication.sharedApplication().delegate as! AppDelegate
+    return UIApplication.shared.delegate as! AppDelegate
 }
 
 func getCurrentWebView() -> CliqzWebView? {
@@ -56,12 +52,12 @@ func getHostComponents(forURL url: String) -> [String] {
 	var result = [String]()
 	var domainIndex = Int.max
 	let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
-	if let url = NSURL(string: url),
-		host = url.host {
-		let comps = host.componentsSeparatedByString(".")
+	if let url = URL(string: url),
+		let host = url.host {
+		let comps = host.components(separatedBy: ".")
 		domainIndex = comps.count - 1
 		if let lastComp = comps.last,
-			firstLevel = LogoLoader.topDomains[lastComp] where firstLevel == "cc" && comps.count > 2 {
+			let firstLevel = LogoLoader.topDomains[lastComp], firstLevel == "cc" && comps.count > 2 {
 			if let _ = LogoLoader.topDomains[comps[comps.count - 2]] {
 				domainIndex = comps.count - 2
 			}
@@ -84,8 +80,9 @@ func getHostComponents(forURL url: String) -> [String] {
 	return result
 }
 
-func isCliqzGoToURL(url: NSURL?) -> Bool {
-    if let url = url, absoluteString = url.absoluteString where url.isLocal {
+func isCliqzGoToURL(url: URL?) -> Bool {
+    if let url = url, url.isLocal {
+		let absoluteString = url.absoluteString
         return absoluteString.contains("cliqz/goto.html?")
     }
     return false

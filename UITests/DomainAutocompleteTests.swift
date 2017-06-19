@@ -7,9 +7,9 @@ import Shared
 
 class DomainAutocompleteTests: KIFTestCase {
     func testAutocomplete() {
-        BrowserUtils.addHistoryEntry("Mozilla", url: NSURL(string: "http://mozilla.org/")!)
-        BrowserUtils.addHistoryEntry("Yahoo", url: NSURL(string: "http://www.yahoo.com/")!)
-        BrowserUtils.addHistoryEntry("Foo bar baz", url: NSURL(string: "https://foo.bar.baz.org/dingbat")!)
+        BrowserUtils.addHistoryEntry("Mozilla", url: URL(string: "http://mozilla.org/")!)
+        BrowserUtils.addHistoryEntry("Yahoo", url: URL(string: "http://www.yahoo.com/")!)
+        BrowserUtils.addHistoryEntry("Foo bar baz", url: URL(string: "https://foo.bar.baz.org/dingbat")!)
 
         tester().tapViewWithAccessibilityIdentifier("url")
         let textField = tester().waitForViewWithAccessibilityLabel("Address and Search") as! UITextField

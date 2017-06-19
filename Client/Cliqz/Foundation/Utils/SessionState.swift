@@ -14,12 +14,12 @@ class SessionState {
 	static let timeoutDuration: Double = 1800
 	static var isTimeout: Bool = false
 	class func sessionPaused() {
-        LocalDataStore.setObject(NSDate(), forKey: lastVisitedKey)
+        LocalDataStore.setObject(Date(), forKey: lastVisitedKey)
 	}
 
 	class func sessionResumed() {
-		if let date = LocalDataStore.objectForKey(lastVisitedKey) as? NSDate {
-			isTimeout = NSDate().timeIntervalSinceDate(date) > timeoutDuration
+		if let date = LocalDataStore.objectForKey(lastVisitedKey) as? Date {
+			isTimeout = Date().timeIntervalSince(date) > timeoutDuration
 		}
 	}
 

@@ -11,8 +11,8 @@ import Shared
 
 class AntitrackingPanel: ControlCenterPanel {
     //MARK: - Constants
-    private static let trackerInfoURL = "https://cliqz.com/whycliqz/anti-tracking/tracker#"
-    private let trackerCellIdentifier = "TabCell"
+    fileprivate static let trackerInfoURL = "https://cliqz.com/whycliqz/anti-tracking/tracker#"
+    fileprivate let trackerCellIdentifier = "TabCell"
     
     //MARK: - Instance variables
     //MARK: data
@@ -20,16 +20,16 @@ class AntitrackingPanel: ControlCenterPanel {
     var trackersCount = 0
     
     //MARK: views
-    private let trackersCountLabel = UILabel()
-    private let configContainerView = UIView()
-    private let domainLabel = UILabel()
-    private let enableFeatureSwitch = UISwitch()
+    fileprivate let trackersCountLabel = UILabel()
+    fileprivate let configContainerView = UIView()
+    fileprivate let domainLabel = UILabel()
+    fileprivate let enableFeatureSwitch = UISwitch()
     
     lazy var legendView : UIView! = {
        return self.createLegendView()
     }()
     
-    private let trackersTableView = UITableView()
+    fileprivate let trackersTableView = UITableView()
     
     //MARK: LandscapeRegular specific views.
     let toTableViewButton = UIButton()
@@ -37,7 +37,7 @@ class AntitrackingPanel: ControlCenterPanel {
     let secondViewTitleLabel = UILabel()
     let secondViewBackButton = UIButton()
     
-    override init(webViewID: Int, url: NSURL, privateMode: Bool = false) {
+    override init(webViewID: Int, url: URL, privateMode: Bool = false) {
         super.init(webViewID: webViewID, url: url, privateMode: privateMode)
 	}
     
@@ -46,44 +46,44 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
 	deinit {
-		NSNotificationCenter.defaultCenter().removeObserver(self, name: NotificationBadRequestDetected, object: nil)
+		NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
 	}
     
     //MARK: - View LifeCycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SELBadRequestDetected), name: NotificationBadRequestDetected, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(SELBadRequestDetected), name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
 		
 		trackersCountLabel.textColor = self.textColor()
-		trackersCountLabel.font = UIFont.systemFontOfSize(30)
+		trackersCountLabel.font = UIFont.systemFont(ofSize: 30)
 		self.view.addSubview(trackersCountLabel)
-		trackersCountLabel.textAlignment = .Center
+		trackersCountLabel.textAlignment = .center
 
         // Configuration view
         self.view.addSubview(configContainerView)
         if let domain = self.currentURL.host {
             domainLabel.text = domain
         }
-        domainLabel.font = UIFont.boldSystemFontOfSize(16)
-        domainLabel.textColor = UIColor.blackColor()
-        if let privateMode = self.isPrivateMode where privateMode == true {
-            domainLabel.textColor = UIColor.whiteColor()
+        domainLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        domainLabel.textColor = UIColor.black
+        if let privateMode = self.isPrivateMode, privateMode == true {
+            domainLabel.textColor = UIColor.white
         }
         self.configContainerView.addSubview(domainLabel)
         
-        enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
-        enableFeatureSwitch.addTarget(self, action: #selector(toggleFeatureForCurrentWebsite), forControlEvents: .ValueChanged)
+		enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
+        enableFeatureSwitch.addTarget(self, action: #selector(toggleFeatureForCurrentWebsite), for: .valueChanged)
         self.configContainerView.addSubview(enableFeatureSwitch)
         
         
         self.view.addSubview(legendView)
         
-        trackersTableView.registerClass(TrackerViewCell.self, forCellReuseIdentifier: self.trackerCellIdentifier)
+        trackersTableView.register(TrackerViewCell.self, forCellReuseIdentifier: self.trackerCellIdentifier)
         trackersTableView.delegate = self
         trackersTableView.dataSource = self
-        trackersTableView.backgroundColor = UIColor.clearColor()
+        trackersTableView.backgroundColor = UIColor.clear
         trackersTableView.tableFooterView = UIView()
-        trackersTableView.separatorStyle = .None
+        trackersTableView.separatorStyle = .none
         trackersTableView.clipsToBounds = true
         trackersTableView.allowsSelection = true
         self.view.addSubview(trackersTableView)
@@ -94,33 +94,33 @@ class AntitrackingPanel: ControlCenterPanel {
         let secondViewTitle = NSLocalizedString("AntiTracking Information", tableName: "Cliqz", comment: "AntiTracking Information text for landscape mode.")
         secondViewTitleLabel.text = secondViewTitle
         secondViewTitleLabel.textColor = UIConstants.CliqzThemeColor
-        secondViewTitleLabel.font = UIFont.boldSystemFontOfSize(18)
-        secondViewTitleLabel.textAlignment = .Center
-        secondViewTitleLabel.hidden = true
+        secondViewTitleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        secondViewTitleLabel.textAlignment = .center
+        secondViewTitleLabel.isHidden = true
         self.view.addSubview(secondViewTitleLabel)
         
         
-        let backButtonImage = UIImage.init(imageLiteral: "cliqzBack")
-        secondViewBackButton.setImage(backButtonImage,forState: .Normal)
+        let backButtonImage = UIImage(named: "cliqzBack")
+        secondViewBackButton.setImage(backButtonImage,for: UIControlState())
         secondViewBackButton.imageView?.tintColor = UIConstants.CliqzThemeColor
-        secondViewBackButton.backgroundColor = UIColor.clearColor()
-        secondViewBackButton.addTarget(self, action: #selector(hideTableView), forControlEvents: .TouchUpInside)
-        secondViewBackButton.hidden = true
+        secondViewBackButton.backgroundColor = UIColor.clear
+        secondViewBackButton.addTarget(self, action: #selector(hideTableView), for: .touchUpInside)
+        secondViewBackButton.isHidden = true
         self.view.addSubview(secondViewBackButton)
         
         let panelLayout = OrientationUtil.controlPanelLayout()
         
-        if panelLayout == .LandscapeRegularSize {
-            trackersTableView.hidden = true
-            legendView.hidden = true
+        if panelLayout == .landscapeRegularSize {
+            trackersTableView.isHidden = true
+            legendView.isHidden = true
         }
         else{
-            toTableViewButton.hidden = true
+            toTableViewButton.isHidden = true
         }
         
 	}
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         resetViewForLandscapeRegularSize()
     }
@@ -130,151 +130,162 @@ class AntitrackingPanel: ControlCenterPanel {
         
         let panelLayout = OrientationUtil.controlPanelLayout()
         
-        if panelLayout == .Portrait {
-            trackersCountLabel.snp_makeConstraints { make in
+        if panelLayout == .portrait {
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
-                make.top.equalTo(panelIcon.snp_bottom).offset(15)
+                make.top.equalTo(panelIcon.snp.bottom).offset(15)
                 make.height.equalTo(30)
             }
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(trackersCountLabel.snp_bottom).offset(15)
-            }
+            subtitleLabel.snp.remakeConstraints({ (make) in
+				make.top.equalTo(trackersCountLabel.snp.bottom).offset(15)
+				make.left.equalTo(self.view).offset(20)
+				make.width.equalTo(self.view.frame.width - 40)
+				make.height.equalTo(20)
+			})
             
-            configContainerView.snp_makeConstraints { make in
+            configContainerView.snp.remakeConstraints { make in
                 make.left.right.equalTo(trackersTableView)
-                make.top.equalTo(subtitleLabel.snp_bottom).offset(20)
+                make.top.equalTo(subtitleLabel.snp.bottom).offset(20)
                 make.height.equalTo(40)
             }
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView)
             }
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
             
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.right.equalTo(trackersTableView)
-                make.top.equalTo(configContainerView.snp_bottom).offset(10)
+                make.top.equalTo(configContainerView.snp.bottom).offset(10)
                 make.height.equalTo(25)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view).offset(25)
                 make.right.equalTo(self.view).offset(-25)
-                make.top.equalTo(legendView.snp_bottom)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-15)
+                make.top.equalTo(legendView.snp.bottom)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-15)
             }
         }
-        else if panelLayout == .LandscapeCompactSize{
+        else if panelLayout == .landscapeCompactSize{
             
-            trackersCountLabel.snp_makeConstraints { make in
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.equalTo(titleLabel)
                 make.width.equalTo(titleLabel)
-                make.top.equalTo(panelIcon.snp_bottom).offset(15)
+                make.top.equalTo(panelIcon.snp.bottom).offset(15)
                 make.height.equalTo(30)
             }
             
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(trackersCountLabel.snp_bottom).offset(16)
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(trackersCountLabel.snp.bottom).offset(16)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.bounds.width/2 - 40)
+                make.height.equalTo(20)
             }
             
-            configContainerView.snp_makeConstraints { make in
+            configContainerView.snp.remakeConstraints { make in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2)
                 make.top.equalTo(self.view).offset(0)
                 make.height.equalTo(40)
             }
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView).inset(20)
             }
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
 
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2 - 20)
-                make.top.equalTo(configContainerView.snp_bottom).offset(10)
+                make.top.equalTo(configContainerView.snp.bottom).offset(10)
                 make.height.equalTo(25)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view.bounds.width/2)
                 make.width.equalTo(self.view.bounds.width/2 - 20)
-                make.top.equalTo(legendView.snp_bottom)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-10)
+                make.top.equalTo(legendView.snp.bottom)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-10)
             }
             
-            okButton.snp_updateConstraints { (make) in
+            okButton.snp.remakeConstraints { (make) in
+                make.size.equalTo(CGSize(width: 80, height: 40))
+                make.bottom.equalTo(self.view).offset(-12)
                 make.centerX.equalTo(configContainerView)
             }
         }
         else
         {
-            secondViewTitleLabel.snp_makeConstraints(closure: { (make) in
+            secondViewTitleLabel.snp.remakeConstraints({ (make) in
                 make.top.equalTo(self.view)
                 make.right.left.equalTo(self.view)
                 make.height.equalTo(34)
             })
             
-            secondViewBackButton.snp_makeConstraints {make in
+            secondViewBackButton.snp.remakeConstraints {make in
                 make.top.equalTo(self.view)
                 make.left.equalTo(20)
                 make.height.width.equalTo(34)
             }
             
-            trackersCountLabel.snp_makeConstraints { make in
+            trackersCountLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.view)
-                make.top.equalTo(panelIcon.snp_bottom).offset(10)
+                make.top.equalTo(panelIcon.snp.bottom).offset(10)
                 make.height.equalTo(24)
             }
             
-            subtitleLabel.snp_updateConstraints { make in
-                make.top.equalTo(trackersCountLabel.snp_bottom).offset(10)
+            subtitleLabel.snp.remakeConstraints { make in
+                make.top.equalTo(trackersCountLabel.snp.bottom).offset(10)
+                make.left.equalTo(self.view).offset(20)
+                make.width.equalTo(self.view.frame.width - 40)
+                make.height.equalTo(20)
             }
             
-            configContainerView.snp_makeConstraints { make in
-                make.bottom.equalTo(toTableViewButton.snp_top)
+            configContainerView.snp.remakeConstraints { make in
+                make.bottom.equalTo(toTableViewButton.snp.top)
                 make.height.equalTo(40)
                 make.left.equalTo(self.view).offset(20)
                 make.right.equalTo(self.view).inset(20)
             }
             
-            enableFeatureSwitch.snp_makeConstraints { make in
+            enableFeatureSwitch.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.right.equalTo(configContainerView)
             }
             
-            domainLabel.snp_makeConstraints { make in
+            domainLabel.snp.remakeConstraints { make in
                 make.centerY.equalTo(configContainerView)
                 make.left.equalTo(configContainerView)
-                make.right.equalTo(enableFeatureSwitch.snp_left).offset(-5)
+                make.right.equalTo(enableFeatureSwitch.snp.left).offset(-5)
             }
             
-            toTableViewButton.snp_makeConstraints { (make) in
+            toTableViewButton.snp.remakeConstraints { (make) in
                 make.width.equalTo(self.view)
                 make.height.equalTo(48)
                 make.left.equalTo(self.view)
-                make.bottom.equalTo(okButton.snp_top)
+                make.bottom.equalTo(okButton.snp.top)
             }
             
-            legendView.snp_makeConstraints { make in
+            legendView.snp.remakeConstraints { make in
                 make.left.right.equalTo(self.trackersTableView)
-                make.top.equalTo(self.secondViewTitleLabel.snp_bottom).offset(8)
+                make.top.equalTo(self.secondViewTitleLabel.snp.bottom).offset(8)
                 make.height.equalTo(30)
             }
             
-            trackersTableView.snp_makeConstraints { (make) in
+            trackersTableView.snp.remakeConstraints { (make) in
                 make.left.equalTo(self.view.frame.width)
                 make.width.equalTo(self.view.frame.width - 40)
-                make.top.equalTo(self.legendView.snp_bottom).offset(4)
-                make.bottom.equalTo(self.okButton.snp_top).offset(-15)
+                make.top.equalTo(self.legendView.snp.bottom).offset(4)
+                make.bottom.equalTo(self.okButton.snp.top).offset(-15)
             }
 
             
@@ -303,8 +314,8 @@ class AntitrackingPanel: ControlCenterPanel {
         return UIImage(named: "shieldIcon")
     }
     
-    override func getLearnMoreURL() -> NSURL? {
-        return NSURL(string: "https://cliqz.com/whycliqz/anti-tracking")
+    override func getLearnMoreURL() -> URL? {
+        return URL(string: "https://cliqz.com/whycliqz/anti-tracking")
     }
     
     override func isFeatureEnabledForCurrentWebsite() -> Bool {
@@ -337,25 +348,25 @@ class AntitrackingPanel: ControlCenterPanel {
         
         
         if isFeatureEnabled() {
-            configContainerView.hidden = false
+            configContainerView.isHidden = false
             
             if isFeatureEnabledForCurrentWebsite() {
-                trackersCountLabel.hidden = false
-                legendView.hidden = trackersList.isEmpty ? true : false
-                trackersTableView.hidden =  trackersList.isEmpty ? true : false
-                toTableViewButton.hidden = trackersList.isEmpty || (OrientationUtil.controlPanelLayout() != .LandscapeRegularSize) ? true : false
+                trackersCountLabel.isHidden = false
+                legendView.isHidden = trackersList.isEmpty ? true : false
+                trackersTableView.isHidden =  trackersList.isEmpty ? true : false
+                toTableViewButton.isHidden = trackersList.isEmpty || (OrientationUtil.controlPanelLayout() != .landscapeRegularSize) ? true : false
             } else {
-                trackersCountLabel.hidden = true
-                legendView.hidden = true
-                trackersTableView.hidden =  true
-                toTableViewButton.hidden = true
+                trackersCountLabel.isHidden = true
+                legendView.isHidden = true
+                trackersTableView.isHidden =  true
+                toTableViewButton.isHidden = true
             }
         } else {
-            configContainerView.hidden = true
-            trackersCountLabel.hidden = true
-            legendView.hidden = true
-            trackersTableView.hidden =  true
-            toTableViewButton.hidden = true
+            configContainerView.isHidden = true
+            trackersCountLabel.isHidden = true
+            legendView.isHidden = true
+            trackersTableView.isHidden =  true
+            toTableViewButton.isHidden = true
         }
         
     }
@@ -363,7 +374,7 @@ class AntitrackingPanel: ControlCenterPanel {
     
     
     func showTableView(){
-        UIView.animateWithDuration(0.08, animations: {
+        UIView.animate(withDuration: 0.08, animations: {
             self.titleLabel.alpha = 0
             self.trackersCountLabel.alpha = 0
             self.subtitleLabel.alpha = 0
@@ -375,18 +386,18 @@ class AntitrackingPanel: ControlCenterPanel {
             if finished {
                 
                 self.trackersTableView.alpha  = 0
-                self.trackersTableView.hidden = false
+                self.trackersTableView.isHidden = false
                 
                 self.legendView.alpha = 0
-                self.legendView.hidden = false
+                self.legendView.isHidden = false
                 
                 self.secondViewTitleLabel.alpha = 0
-                self.secondViewTitleLabel.hidden = false
+                self.secondViewTitleLabel.isHidden = false
                 
                 self.secondViewBackButton.alpha = 0
-                self.secondViewBackButton.hidden = false
+                self.secondViewBackButton.isHidden = false
                 
-                UIView.animateWithDuration(0.22, animations: {
+                UIView.animate(withDuration: 0.22, animations: {
                     
                     self.trackersTableView.alpha = 1
                     self.trackersTableView.frame.origin.x = 20
@@ -409,7 +420,7 @@ class AntitrackingPanel: ControlCenterPanel {
     
     func hideTableView(){
         
-        UIView.animateWithDuration(0.18, animations: {
+        UIView.animate(withDuration: 0.18, animations: {
             
             self.trackersTableView.frame.origin.x = self.view.frame.width
             self.legendView.frame.origin.x = self.view.frame.width
@@ -422,12 +433,12 @@ class AntitrackingPanel: ControlCenterPanel {
         }, completion: { (finished) in
             if finished {
                 
-                self.trackersTableView.hidden = true
-                self.legendView.hidden = true
-                self.secondViewTitleLabel.hidden = true
-                self.secondViewBackButton.hidden = true
+                self.trackersTableView.isHidden = true
+                self.legendView.isHidden = true
+                self.secondViewTitleLabel.isHidden = true
+                self.secondViewBackButton.isHidden = true
                 
-                UIView.animateWithDuration(0.08, animations: {
+                UIView.animate(withDuration: 0.08, animations: {
                     
                     self.titleLabel.alpha = 1
                     self.trackersCountLabel.alpha = 1
@@ -448,17 +459,17 @@ class AntitrackingPanel: ControlCenterPanel {
     
     func resetViewForLandscapeRegularSize(){
         
-        if OrientationUtil.controlPanelLayout() == .LandscapeRegularSize{
+        if OrientationUtil.controlPanelLayout() == .landscapeRegularSize{
             
             self.trackersTableView.alpha = 1
             self.legendView.alpha = 1
             self.secondViewTitleLabel.alpha = 1
             self.secondViewBackButton.alpha = 1
             
-            self.trackersTableView.hidden = true
-            self.legendView.hidden = true
-            self.secondViewTitleLabel.hidden = true
-            self.secondViewBackButton.hidden = true
+            self.trackersTableView.isHidden = true
+            self.legendView.isHidden = true
+            self.secondViewTitleLabel.isHidden = true
+            self.secondViewBackButton.isHidden = true
             
             self.titleLabel.alpha = 1
             self.trackersCountLabel.alpha = 1
@@ -480,16 +491,16 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     //MARK: - Helper methods
-	@objc private func SELBadRequestDetected(notification: NSNotification) {
-		dispatch_async(dispatch_get_main_queue()) {
+	@objc fileprivate func SELBadRequestDetected(_ notification: Notification) {
+		DispatchQueue.main.async {
 			self.updateView()
 		}
 	}
 
     
-    private func createLegendView() -> UIView? {
+    fileprivate func createLegendView() -> UIView? {
         let header = UIView()
-        header.backgroundColor = UIColor.clearColor()
+        header.backgroundColor = UIColor.clear
         let underline = UIView()
         underline.backgroundColor = self.textColor()
         header.addSubview(underline)
@@ -497,31 +508,31 @@ class AntitrackingPanel: ControlCenterPanel {
         let nameTitle = UILabel()
         nameTitle.text = NSLocalizedString("Companies title", tableName: "Cliqz", comment: "Antitracking UI title for companies column")
         
-        nameTitle.font = UIFont.systemFontOfSize(12)
+        nameTitle.font = UIFont.systemFont(ofSize: 12)
         nameTitle.textColor = self.textColor()
-        nameTitle.textAlignment = .Left
-        nameTitle.tag = 10
+        nameTitle.textAlignment = .left
+nameTitle.tag = 10
         header.addSubview(nameTitle)
         
         let countTitle = UILabel()
         countTitle.text = NSLocalizedString("Trackers count title", tableName: "Cliqz", comment: "Antitracking UI title for tracked count column")
-        countTitle.font = UIFont.systemFontOfSize(12)
+        countTitle.font = UIFont.systemFont(ofSize: 12)
         countTitle.textColor = self.textColor()
-        countTitle.textAlignment = .Right
+        countTitle.textAlignment = .right
         countTitle.tag = 20
         header.addSubview(countTitle)
         
-        nameTitle.snp_makeConstraints { (make) in
+        nameTitle.snp.makeConstraints { (make) in
             make.left.top.equalTo(header)
             make.height.equalTo(20)
-            make.right.equalTo(countTitle.snp_left)
+            make.right.equalTo(countTitle.snp.left)
         }
-        underline.snp_makeConstraints { (make) in
+        underline.snp.makeConstraints { (make) in
             make.left.right.equalTo(header)
             make.height.equalTo(1)
-            make.top.equalTo(nameTitle.snp_bottom)
+            make.top.equalTo(nameTitle.snp.bottom)
         }
-        countTitle.snp_makeConstraints { (make) in
+        countTitle.snp.makeConstraints { (make) in
             make.right.top.equalTo(header)
             make.height.equalTo(20)
             make.width.equalTo(header).multipliedBy(0.5)
@@ -530,69 +541,69 @@ class AntitrackingPanel: ControlCenterPanel {
         return header
     }
     
-    func customizeToTableViewButton(button: UIButton){
+    func customizeToTableViewButton(_ button: UIButton){
         
         //let button = UIButton()
-        button.backgroundColor = UIColor.clearColor()
-        button.addTarget(self, action: #selector(showTableView), forControlEvents: .TouchUpInside)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(showTableView), for: .touchUpInside)
         
         //TODO: Localize this string
         let toTableViewButtonTitle = NSLocalizedString("AntiTracking Information", tableName: "Cliqz", comment: "AntiTracking Information text for landscape mode.")
         
         let label = UILabel()
         label.text = toTableViewButtonTitle
-        label.textColor = UIColor.blackColor()
-        label.font = UIFont.systemFontOfSize(18)
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 18)
         button.addSubview(label)
         
-        let toastImage = UIImage.init(imageLiteral: "toastInfo")
+        let toastImage = UIImage(named: "toastInfo")
         let infoImageView = UIImageView()
         infoImageView.image = toastImage
         button.addSubview(infoImageView)
         
-        let backButtonImage = UIImage.init(imageLiteral: "cliqzBack")
-        let arrowImage = UIImage(CGImage: backButtonImage.CGImage!, scale: 1.0, orientation: UIImageOrientation.UpMirrored)
+        let backButtonImage = UIImage(named: "cliqzBack")
+        let arrowImage = UIImage(cgImage: (backButtonImage?.cgImage)!, scale: 1.0, orientation: UIImageOrientation.upMirrored)
         let arrowImageView = UIImageView()
         arrowImageView.image = arrowImage
         button.addSubview(arrowImageView)
         
         let separatorView1 = UIView()
-        separatorView1.backgroundColor = UIColor.lightGrayColor()
+        separatorView1.backgroundColor = UIColor.lightGray
         let separatorView2 = UIView()
-        separatorView2.backgroundColor = UIColor.lightGrayColor()
+        separatorView2.backgroundColor = UIColor.lightGray
         button.addSubview(separatorView1)
         button.addSubview(separatorView2)
         
-        if let privateMode = self.isPrivateMode where privateMode == true {
-            label.textColor = UIColor.whiteColor()
-            changeTintColor(arrowImageView, color: UIColor.whiteColor())
-            changeTintColor(infoImageView, color: UIColor.whiteColor())
+        if let privateMode = self.isPrivateMode, privateMode == true {
+            label.textColor = UIColor.white
+            changeTintColor(arrowImageView, color: UIColor.white)
+            changeTintColor(infoImageView, color: UIColor.white)
         }
         
-        label.snp_makeConstraints { (make) in
+        label.snp.makeConstraints { (make) in
             make.centerY.equalTo(button)
             make.left.equalTo(50)
         }
         
-        infoImageView.snp_makeConstraints { (make) in
-            make.centerY.equalTo(button.center.y)
+        infoImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(button)
             make.left.equalTo(8)
             make.height.width.equalTo(30)
         }
         
-        arrowImageView.snp_makeConstraints{ make in
-            make.centerY.equalTo(button.center.y)
+        arrowImageView.snp.makeConstraints{ make in
+            make.centerY.equalTo(button)
             make.right.equalTo(button).inset(14)
             make.width.height.equalTo(30)
         }
         
-        separatorView1.snp_makeConstraints{make in
+        separatorView1.snp.makeConstraints{make in
             make.width.equalTo(button)
             make.height.equalTo(1)
             make.top.left.equalTo(button)
         }
         
-        separatorView2.snp_makeConstraints{make in
+        separatorView2.snp.makeConstraints{make in
             make.width.equalTo(button)
             make.height.equalTo(1)
             make.bottom.left.equalTo(button)
@@ -602,57 +613,57 @@ class AntitrackingPanel: ControlCenterPanel {
     
 }
 
-func changeTintColor(imageView: UIImageView, color: UIColor){
-    let templateImage = imageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+func changeTintColor(_ imageView: UIImageView, color: UIColor){
+    let templateImage = imageView.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
     imageView.image = templateImage
     imageView.tintColor = color
 }
 
 extension AntitrackingPanel: UITableViewDataSource, UITableViewDelegate {
 
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let list = self.trackersList else {
             return 0
         }
         return list.count
 	}
 
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = self.trackersTableView.dequeueReusableCellWithIdentifier(trackerCellIdentifier, forIndexPath: indexPath) as! TrackerViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = self.trackersTableView.dequeueReusableCell(withIdentifier: trackerCellIdentifier, for: indexPath) as! TrackerViewCell
 		cell.isPrivateMode = self.isPrivateMode
 		let item = self.trackersList[indexPath.row]
 		cell.nameLabel.text = item.0
 		cell.countLabel.text = "\(item.1)"
-		cell.selectionStyle = .None
-		cell.backgroundColor = UIColor.clearColor()
+		cell.selectionStyle = .none
+		cell.backgroundColor = UIColor.clear
 		return cell
 	}
 
-	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 30
 	}
 	
-	func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return 3
 	}
 
-	func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		let footer = UIView()
-		footer.backgroundColor = UIColor.clearColor()
+		footer.backgroundColor = UIColor.clear
 		let underline = UIView()
 		underline.backgroundColor = self.textColor()
 		footer.addSubview(underline)
-		underline.snp_makeConstraints { (make) in
+		underline.snp.makeConstraints { (make) in
 			make.left.right.bottom.equalTo(footer)
 			make.height.equalTo(1)
 		}
 		return footer
 	}
 
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let item = self.trackersList[indexPath.row]
-		let tracker = item.0.stringByReplacingOccurrencesOfString(" ", withString: "-")
-		let url = NSURL(string: AntitrackingPanel.trackerInfoURL.stringByAppendingString(tracker))
+		let tracker = item.0.replacingOccurrences(of: " ", with: "-")
+		let url = URL(string: AntitrackingPanel.trackerInfoURL + tracker)
 		if let u = url {
             logTelemetrySignal("click", target: "info_company", customData: ["index": indexPath.row])
 			self.delegate?.navigateToURLInNewTab(u)

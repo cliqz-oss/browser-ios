@@ -3,6 +3,30 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 private struct ETLDEntry: CustomStringConvertible {
     let entry: String
@@ -17,7 +41,7 @@ private struct ETLDEntry: CustomStringConvertible {
         self.isException = entry.hasPrefix("!")
     }
 
-    private var description: String {
+    fileprivate var description: String {
         return "{ Entry: \(entry), isWildcard: \(isWild), isException: \(isException) }"
     }
 }
@@ -25,8 +49,8 @@ private struct ETLDEntry: CustomStringConvertible {
 private typealias TLDEntryMap = [String:ETLDEntry]
 
 private func loadEntriesFromDisk() -> TLDEntryMap? {
-    if let data = NSString.contentsOfFileWithResourceName("effective_tld_names", ofType: "dat", fromBundle: NSBundle(identifier: "org.mozilla.Shared")!, encoding: NSUTF8StringEncoding, error: nil) {
-        let lines = data.componentsSeparatedByString("\n")
+    if let data = String.contentsOfFileWithResourceName1("effective_tld_names", ofType: "dat", fromBundle: Bundle(identifier: "org.mozilla.Shared")!, encoding: String.Encoding.utf8, error: nil) {
+        let lines = data.components(separatedBy: "\n")
         let trimmedLines = lines.filter { !$0.hasPrefix("//") && $0 != "\n" && $0 != "" }
 
         var entries = TLDEntryMap()
@@ -35,10 +59,10 @@ private func loadEntriesFromDisk() -> TLDEntryMap? {
             let key: String
             if entry.isWild {
                 // Trim off the '*.' part of the line
-                key = line.substringFromIndex(line.startIndex.advancedBy(2))
+                key = line.substring(from: line.characters.index(line.startIndex, offsetBy: 2))
             } else if entry.isException {
                 // Trim off the '!' part of the line
-                key = line.substringFromIndex(line.startIndex.advancedBy(1))
+                key = line.substring(from: line.characters.index(line.startIndex, offsetBy: 1))
             } else {
                 key = line
             }
@@ -54,71 +78,71 @@ private var etldEntries: TLDEntryMap? = {
 }()
 
 // MARK: - Local Resource URL Extensions
-extension NSURL {
+extension URL {
 
     public func allocatedFileSize() -> Int64 {
         // First try to get the total allocated size and in failing that, get the file allocated size
-        return getResourceLongLongForKey(NSURLTotalFileAllocatedSizeKey)
-            ?? getResourceLongLongForKey(NSURLFileAllocatedSizeKey)
+        return getResourceLongLongForKey(URLResourceKey.totalFileAllocatedSizeKey.rawValue)
+            ?? getResourceLongLongForKey(URLResourceKey.fileAllocatedSizeKey.rawValue)
             ?? 0
     }
 
-    public func getResourceValueForKey(key: String) -> AnyObject? {
+    public func getResourceValueForKey(_ key: String) -> AnyObject? {
         var val: AnyObject?
         do {
-            try getResourceValue(&val, forKey: key)
+			try val = self.resourceValues(forKeys: [URLResourceKey(rawValue: key)]) as AnyObject
         } catch _ {
             return nil
         }
         return val
     }
 
-    public func getResourceLongLongForKey(key: String) -> Int64? {
-        return (getResourceValueForKey(key) as? NSNumber)?.longLongValue
+    public func getResourceLongLongForKey(_ key: String) -> Int64? {
+        return (getResourceValueForKey(key) as? NSNumber)?.int64Value
     }
 
-    public func getResourceBoolForKey(key: String) -> Bool? {
+    public func getResourceBoolForKey(_ key: String) -> Bool? {
         return getResourceValueForKey(key) as? Bool
     }
 
     public var isRegularFile: Bool {
-        return getResourceBoolForKey(NSURLIsRegularFileKey) ?? false
+        return getResourceBoolForKey(URLResourceKey.isRegularFileKey.rawValue) ?? false
     }
 
-    public func lastComponentIsPrefixedBy(prefix: String) -> Bool {
-        return (pathComponents?.last?.hasPrefix(prefix) ?? false)
+    public func lastComponentIsPrefixedBy(_ prefix: String) -> Bool {
+        return (pathComponents.last?.hasPrefix(prefix) ?? false)
     }
 }
 
 // The list of permanent URI schemes has been taken from http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml 
 private let permanentURISchemes = ["aaa", "aaas", "about", "acap", "acct", "cap", "cid", "coap", "coaps", "crid", "data", "dav", "dict", "dns", "example", "file", "ftp", "geo", "go", "gopher", "h323", "http", "https", "iax", "icap", "im", "imap", "info", "ipp", "ipps", "iris", "iris.beep", "iris.lwz", "iris.xpc", "iris.xpcs", "jabber", "ldap", "mailto", "mid", "msrp", "msrps", "mtqp", "mupdate", "news", "nfs", "ni", "nih", "nntp", "opaquelocktoken", "pkcs11", "pop", "pres", "reload", "rtsp", "rtsps", "rtspu", "service", "session", "shttp", "sieve", "sip", "sips", "sms", "snmp", "soap.beep", "soap.beeps", "stun", "stuns", "tag", "tel", "telnet", "tftp", "thismessage", "tip", "tn3270", "turn", "turns", "tv", "urn", "vemmi", "vnc", "ws", "wss", "xcon", "xcon-userid", "xmlrpc.beep", "xmlrpc.beeps", "xmpp", "z39.50r", "z39.50s"]
 
-extension NSURL {
+extension URL {
 
-    public func withQueryParams(params: [NSURLQueryItem]) -> NSURL {
-        let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: false)!
+    public func withQueryParams(_ params: [URLQueryItem]) -> URL {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)!
         var items = (components.queryItems ?? [])
         for param in params {
             items.append(param)
         }
         components.queryItems = items
-        return components.URL!
+        return components.url!
     }
 
-    public func withQueryParam(name: String, value: String) -> NSURL {
-        let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: false)!
-        let item = NSURLQueryItem(name: name, value: value)
+    public func withQueryParam(_ name: String, value: String) -> URL {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)!
+        let item = URLQueryItem(name: name, value: value)
         components.queryItems = (components.queryItems ?? []) + [item]
-        return components.URL!
+        return components.url!
     }
 
     public func getQuery() -> [String: String] {
         var results = [String: String]()
-        let keyValues = self.query?.componentsSeparatedByString("&")
+        let keyValues = self.query?.components(separatedBy: "&")
 
         if keyValues?.count > 0 {
             for pair in keyValues! {
-                let kv = pair.componentsSeparatedByString("=")
+                let kv = pair.components(separatedBy: "=")
                 if kv.count > 1 {
                     results[kv[0]] = kv[1]
                 }
@@ -130,7 +154,7 @@ extension NSURL {
 
     public var hostPort: String? {
         if let host = self.host {
-            if let port = self.port?.intValue {
+            if let port = (self as URL).port {
                 return "\(host):\(port)"
             }
             return host
@@ -157,12 +181,12 @@ extension NSURL {
     public func absoluteDisplayString() -> String? {
         var urlString = self.absoluteString
         // For http URLs, get rid of the trailing slash if the path is empty or '/'
-        if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString!.endsWith("/") {
-            urlString = urlString!.substringToIndex(urlString!.endIndex.advancedBy(-1))
+        if (self.scheme == "http" || self.scheme == "https") && (self.path == "/" || self.path == nil) && urlString.endsWith("/") {
+            urlString = urlString.substring(to: urlString.characters.index(urlString.endIndex, offsetBy: -1))
         }
         // If it's basic http, strip out the string but leave anything else in
-        if urlString!.hasPrefix("http://") ?? false {
-            return urlString!.substringFromIndex(urlString!.startIndex.advancedBy(7))
+        if urlString.hasPrefix("http://") ?? false {
+            return urlString.substring(from: urlString.characters.index(urlString.startIndex, offsetBy: 7))
         } else {
             return urlString
         }
@@ -193,15 +217,15 @@ extension NSURL {
      *
      * Any failure? Return this URL.
      */
-    public func domainURL() -> NSURL {
+    public func domainURL() -> URL {
         if let normalized = self.normalizedHost() {
             // Use NSURLComponents instead of NSURL since the former correctly preserves
             // brackets for IPv6 hosts, whereas the latter escapes them.
-            let components = NSURLComponents()
+            var components = URLComponents()
             components.scheme = self.scheme
             components.host = normalized
             components.path = "/"
-            return components.URL ?? self
+            return components.url ?? self
         }
         return self
     }
@@ -209,11 +233,11 @@ extension NSURL {
     public func normalizedHost() -> String? {
         // Use components.host instead of self.host since the former correctly preserves
         // brackets for IPv6 hosts, whereas the latter strips them.
-        guard let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: false),
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
               var host = components.host else { return nil }
 
-        if let range = host.rangeOfString("^(www|mobile|m)\\.", options: .RegularExpressionSearch) {
-            host.replaceRange(range, with: "")
+        if let range = host.range(of: "^(www|mobile|m)\\.", options: .regularExpression) {
+            host.replaceSubrange(range, with: "")
         }
 
         return host
@@ -237,7 +261,7 @@ extension NSURL {
         let httpSchemes = ["http", "https"]
 
         if let s = scheme,
-			let _ = httpSchemes.indexOf(s) {
+			let _ = httpSchemes.index(of: s) {
             return true
         }
 
@@ -246,15 +270,15 @@ extension NSURL {
 
     public var isLocal: Bool {
         // iOS forwards hostless URLs (e.g., http://:6571) to localhost.
-        guard let host = host where !host.isEmpty else {
+        guard let host = host, !host.isEmpty else {
             return true
         }
 
-        return host.lowercaseString == "localhost" || host == "127.0.0.1"
+        return host.lowercased() == "localhost" || host == "127.0.0.1"
     }
 
     public var isIPv6: Bool {
-        return host?.containsString(":") ?? false
+        return host?.contains(":") ?? false
     }
     
     /**
@@ -270,8 +294,8 @@ extension NSURL {
 }
 
 //MARK: Private Helpers
-private extension NSURL {
-    private func publicSuffixFromHost( host: String, withAdditionalParts additionalPartCount: Int) -> String? {
+private extension URL {
+    func publicSuffixFromHost( _ host: String, withAdditionalParts additionalPartCount: Int) -> String? {
         if host.isEmpty {
             return nil
         }
@@ -303,7 +327,7 @@ private extension NSURL {
         *  top domain level so we use it by default.
         */
 
-        let tokens = host.componentsSeparatedByString(".")
+        let tokens = host.components(separatedBy: ".")
         let tokenCount = tokens.count
         var suffix: String?
         var previousDomain: String? = nil
@@ -311,7 +335,7 @@ private extension NSURL {
 
         for offset in 0..<tokenCount {
             // Store the offset for use outside of this scope so we can add additional parts if needed
-            let nextDot: String? = offset + 1 < tokenCount ? tokens[offset + 1..<tokenCount].joinWithSeparator(".") : nil
+            let nextDot: String? = offset + 1 < tokenCount ? tokens[offset + 1..<tokenCount].joined(separator: ".") : nil
 
             if let entry = etldEntries?[currentDomain] {
                 if entry.isWild && (previousDomain != nil) {
@@ -338,15 +362,15 @@ private extension NSURL {
         if additionalPartCount > 0 {
             if let suffix = suffix {
                 // Take out the public suffixed and add in the additional parts we want.
-                let literalFromEnd: NSStringCompareOptions = [NSStringCompareOptions.LiteralSearch,        // Match the string exactly.
-                                     NSStringCompareOptions.BackwardsSearch,      // Search from the end.
-                                     NSStringCompareOptions.AnchoredSearch]         // Stick to the end.
-                let suffixlessHost = host.stringByReplacingOccurrencesOfString(suffix, withString: "", options: literalFromEnd, range: nil)
-                let suffixlessTokens = suffixlessHost.componentsSeparatedByString(".").filter { $0 != "" }
+                let literalFromEnd: NSString.CompareOptions = [NSString.CompareOptions.literal,        // Match the string exactly.
+                                     NSString.CompareOptions.backwards,      // Search from the end.
+                                     NSString.CompareOptions.anchored]         // Stick to the end.
+                let suffixlessHost = host.replacingOccurrences(of: suffix, with: "", options: literalFromEnd, range: nil)
+                let suffixlessTokens = suffixlessHost.components(separatedBy: ".").filter { $0 != "" }
                 let maxAdditionalCount = max(0, suffixlessTokens.count - additionalPartCount)
                 let additionalParts = suffixlessTokens[maxAdditionalCount..<suffixlessTokens.count]
-                let partsString = additionalParts.joinWithSeparator(".")
-                baseDomain = [partsString, suffix].joinWithSeparator(".")
+                let partsString = additionalParts.joined(separator: ".")
+                baseDomain = [partsString, suffix].joined(separator: ".")
             } else {
                 return nil
             }

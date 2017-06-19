@@ -132,15 +132,15 @@ class AuthenticationManagerTests: KIFTestCase {
         tester().waitForAnimationsToFinish()
 
         let tableView = tester().waitForViewWithAccessibilityIdentifier("AuthenticationManager.passcodeIntervalTableView") as! UITableView
-        var immediatelyCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
-        var oneHourCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 5, inSection: 0))!
+        var immediatelyCell = tableView.cellForRowAtIndexPath(IndexPath(forRow: 0, inSection: 0))!
+        var oneHourCell = tableView.cellForRowAtIndexPath(IndexPath(forRow: 5, inSection: 0))!
 
         XCTAssertEqual(immediatelyCell.accessoryType, UITableViewCellAccessoryType.Checkmark)
         XCTAssertEqual(oneHourCell.accessoryType, UITableViewCellAccessoryType.None)
 
-        tester().tapRowAtIndexPath(NSIndexPath(forRow: 5, inSection: 0), inTableViewWithAccessibilityIdentifier: "AuthenticationManager.passcodeIntervalTableView")
-        immediatelyCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
-        oneHourCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 5, inSection: 0))!
+        tester().tapRowAtIndexPath(IndexPath(forRow: 5, inSection: 0), inTableViewWithAccessibilityIdentifier: "AuthenticationManager.passcodeIntervalTableView")
+        immediatelyCell = tableView.cellForRowAtIndexPath(IndexPath(forRow: 0, inSection: 0))!
+        oneHourCell = tableView.cellForRowAtIndexPath(IndexPath(forRow: 5, inSection: 0))!
 
         XCTAssertEqual(immediatelyCell.accessoryType, UITableViewCellAccessoryType.None)
         XCTAssertEqual(oneHourCell.accessoryType, UITableViewCellAccessoryType.Checkmark)
@@ -151,7 +151,7 @@ class AuthenticationManagerTests: KIFTestCase {
         tester().tapViewWithAccessibilityLabel("Back")
 
         let settingsTableView = tester().waitForViewWithAccessibilityIdentifier("AuthenticationManager.settingsTableView") as! UITableView
-        let requirePasscodeCell = settingsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 1))!
+        let requirePasscodeCell = settingsTableView.cellForRowAtIndexPath(IndexPath(forRow: 0, inSection: 1))!
         XCTAssertEqual(requirePasscodeCell.detailTextLabel!.text, PasscodeInterval.OneHour.settingTitle)
 
         closeAuthenticationManager()
@@ -348,7 +348,7 @@ class AuthenticationManagerTests: KIFTestCase {
         PasscodeUtils.enterPasscode(tester(), digits: "1337")
         tester().waitForAnimationsToFinish()
 
-        tester().tapRowAtIndexPath(NSIndexPath(forRow: 5, inSection: 0), inTableViewWithAccessibilityIdentifier: "AuthenticationManager.passcodeIntervalTableView")
+        tester().tapRowAtIndexPath(IndexPath(forRow: 5, inSection: 0), inTableViewWithAccessibilityIdentifier: "AuthenticationManager.passcodeIntervalTableView")
 
         // Go back to logins and make sure it asks us for the passcode again
         tester().tapViewWithAccessibilityLabel("Back")

@@ -31,12 +31,12 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	var profile: Profile!
 	var tabManager: TabManager!
 
-	private let maxFrecencyLimit: Int = 30
+	fileprivate let maxFrecencyLimit: Int = 30
 
 	weak var delegate: BrowserNavigationDelegate?
     var reload = false
 
-	private var spinnerView: UIActivityIndicatorView!
+	fileprivate var spinnerView: UIActivityIndicatorView!
 
 	init(profile: Profile) {
 		self.profile = profile
@@ -52,16 +52,16 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 		loadFreshtab()
 		
-		self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+		self.navigationController?.navigationBar.tintColor = UIColor.white
 		self.navigationController?.navigationBar.barTintColor = UIColor(red: 68.0/255.0, green: 166.0/255.0, blue: 48.0/255.0, alpha: 1)
 		self.navigationController?.navigationBar.titleTextAttributes = [
-			NSForegroundColorAttributeName : UIColor.whiteColor()]
+			NSForegroundColorAttributeName : UIColor.white]
         self.title = NSLocalizedString("Search recommendations", tableName: "Cliqz", comment: "Search Recommendations and top visited sites title")
         
-		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: #selector(RecommendationsViewController.dismiss))
+		self.navigationItem.leftBarButtonItems = createBarButtonItems("present", action: #selector(RecommendationsViewController.dismissAnimated))
 		self.navigationItem.rightBarButtonItems = createBarButtonItems("cliqzSettings", action: #selector(RecommendationsViewController.openSettings))
 
-		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 		self.view.addSubview(spinnerView)
 		spinnerView.startAnimating()
 
@@ -70,38 +70,38 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		self.refreshTopSites(maxFrecencyLimit)
 	}
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if self.reload == true {
             self.reload = false;
             self.reloadTopSitesWithLimit(5, callback: "CLIQZEnvironment.displayTopSites")
         }
     }
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         self.reload = true;
     }
 
 	// Mark: WKScriptMessageHandler
-	func userContentController(userContentController:  WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+	func userContentController(_ userContentController:  WKUserContentController, didReceive message: WKScriptMessage) {
         javaScriptBridge.handleJSMessage(message)
 	}
     
 	// Mark: Navigation delegate
-	func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 		stopLoadingAnimation()
 	}
 	
-	func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+		ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error as NSError)
 	}
 	
-	func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
-		ErrorHandler.handleError(.CliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+		ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error as NSError)
 	}
 
 	// Mark: Action handlers
-	func dismiss() {
-		self.dismissViewControllerAnimated(true, completion: nil)
+	func dismissAnimated() {
+		self.dismiss(animated: true, completion: nil)
 	}
 
 	func openSettings() {
@@ -110,12 +110,12 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		settingsTableViewController.tabManager = tabManager
 		
 		let controller = SettingsNavigationController(rootViewController: settingsTableViewController)
-		controller.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-		presentViewController(controller, animated: true, completion: nil)
+		controller.modalPresentationStyle = UIModalPresentationStyle.formSheet
+		present(controller, animated: true, completion: nil)
 	}
 
 	// Mark: AlertViewDelegate
-	func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+	func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 		switch (buttonIndex) {
 		case 0:
 			stopLoadingAnimation()
@@ -127,7 +127,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	}
 
 	// Mark: Data loader
-	private func refreshTopSites(frecencyLimit: Int) {
+	fileprivate func refreshTopSites(_ frecencyLimit: Int) {
 		// Reload right away with whatever is in the cache, then check to see if the cache is invalid. If it's invalid,
 		// invalidate the cache and requery. This allows us to always show results right away if they are cached but
 		// also load in the up-to-date results asynchronously if needed
@@ -138,8 +138,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		}
 	}
 
-	private func reloadTopSitesWithLimit(limit: Int, callback: String) -> Success {
-		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(dispatch_get_main_queue()) { result in
+	fileprivate func reloadTopSitesWithLimit(_ limit: Int, callback: String) -> Success {
+		return self.profile.history.getTopSitesWithLimit(limit).bindQueue(DispatchQueue.main) { result in
             var results = [[String: String]]()
 			if let r = result.successValue {
 				for site in r {
@@ -150,8 +150,8 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 				}
 			}
 			do {
-				let json = try NSJSONSerialization.dataWithJSONObject(results, options: NSJSONWritingOptions(rawValue: 0))
-				let jsonStr = NSString(data:json, encoding: NSUTF8StringEncoding)!
+				let json = try JSONSerialization.data(withJSONObject: results, options: JSONSerialization.WritingOptions(rawValue: 0))
+				let jsonStr = NSString(data:json, encoding: String.Encoding.utf8.rawValue)!
 				let exec = "\(callback)(\(jsonStr))"
 				self.topSitesWebView.evaluateJavaScript(exec, completionHandler: nil)
 			} catch let error as NSError {
@@ -162,7 +162,7 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 	}
 
 	// Mark: Configure Layout
-	private func setupConstraints() {
+	fileprivate func setupConstraints() {
 		self.topSitesWebView.snp_remakeConstraints { make in
 			make.top.equalTo(0)
 			make.left.right.bottom.equalTo(self.view)
@@ -174,26 +174,26 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 		}
 	}
 	
-	private func createBarButtonItems(imageName: String, action: Selector) -> [UIBarButtonItem] {
-		let button: UIButton = UIButton(type: UIButtonType.Custom)
-		button.setImage(UIImage(named: imageName), forState: UIControlState.Normal)
-		button.addTarget(self, action: action, forControlEvents: UIControlEvents.TouchUpInside)
-		button.frame = CGRectMake(0, 0, 36, 36)
+	fileprivate func createBarButtonItems(_ imageName: String, action: Selector) -> [UIBarButtonItem] {
+		let button: UIButton = UIButton(type: UIButtonType.custom)
+		button.setImage(UIImage(named: imageName), for: UIControlState())
+		button.addTarget(self, action: action, for: UIControlEvents.touchUpInside)
+		button.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
 		
 		let barButton = UIBarButtonItem(customView: button)
         
-        let spacerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target:nil, action: nil)
+        let spacerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target:nil, action: nil)
         spacerBarButtonItem.width = -5
         
         return [spacerBarButtonItem, barButton]
 	}
 
-	private func loadFreshtab() {
-        let url = NSURL(string: NavigationExtension.freshtabURL)
-		self.topSitesWebView.loadRequest(NSURLRequest(URL: url!))
+	fileprivate func loadFreshtab() {
+        let url = URL(string: NavigationExtension.freshtabURL)
+		self.topSitesWebView.load(URLRequest(url: url!))
 	}
 	
-	private func stopLoadingAnimation() {
+	fileprivate func stopLoadingAnimation() {
 		self.spinnerView.removeFromSuperview()
 		self.spinnerView.stopAnimating()
 	}
@@ -203,12 +203,12 @@ class RecommendationsViewController: UIViewController, WKNavigationDelegate, WKS
 
 extension RecommendationsViewController: JavaScriptBridgeDelegate {
     
-    func didSelectUrl(url: NSURL) {
+    func didSelectUrl(_ url: URL) {
         delegate?.navigateToURL(url)
-        self.dismiss()
+        self.dismissAnimated()
     }
     
-    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
-        self.topSitesWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
+    func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
+        self.topSitesWebView.evaluateJavaScript(javaScriptString, completionHandler: completionHandler as! ((Any?, Error?) -> Void)?)
     }
 }
