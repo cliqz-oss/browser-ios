@@ -588,7 +588,7 @@ class BrowserViewController: UIViewController {
             showRestoreTabsAlert()
         } else {
             log.debug("Restoring tabs.")
-            tabManager.restoreTabs()
+            //tabManager.restoreTabs()
             log.debug("Done restoring tabs.")
         }
 
@@ -596,7 +596,7 @@ class BrowserViewController: UIViewController {
         updateTabCountUsingTabManager(tabManager, animated: false)
         log.debug("BVC done.")
         
-        if (needsNewTab) {
+        if (needsNewTab || self.tabManager.tabs.count == 0) {
             _ = self.tabManager.addTabAndSelect()
             needsNewTab = false
         }
@@ -1752,6 +1752,7 @@ extension BrowserViewController: URLBarDelegate {
 
 	func urlBarDidPressHome(urlBar: URLBarView) {
 //		self.navigationController?.popViewController(animated: false)
+        self.needsNewTab = false
         ConversationalHistoryAPI.homePressed()
         self.navigateToHome()
 	}
@@ -2182,6 +2183,8 @@ extension BrowserViewController: TabToolbarDelegate {
             self.toolbar?.updateTabStatus(tab.keepOpen)
             self.urlBar.updateTabStatus(tab.keepOpen)
         }
+        
+        self.needsNewTab = true
         
         self.navigateToHome()
         
@@ -4319,14 +4322,14 @@ extension BrowserViewController {
     }
     
     func navigateToTab(_ tabID: Int) {
-        for tab in self.tabManager.tabs {
-            if tab.webView?.uniqueId == tabID {
-                self.tabManager.selectTab(tab)
-                if tab.keepOpen {
-                    self.toolbar?.tabsButton.isSelected = true
-                }
-            }
-        }
+//        for tab in self.tabManager.tabs {
+//            if tab.webView?.uniqueId == tabID {
+//                self.tabManager.selectTab(tab)
+//                if tab.keepOpen {
+//                    self.toolbar?.tabsButton.isSelected = true
+//                }
+//            }
+//        }
     }
 }
 

@@ -739,7 +739,7 @@ extension AppDelegate {
     func openUrlInWebView(url: URL) {
         DispatchQueue.main.async() {
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
-            let delayTime = DispatchTime.now() + 0.3 * Double(NSEC_PER_SEC)
+            let delayTime = DispatchTime.now() + 0.000003
             DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
                 self.browserViewController.navigateToURL(url)
             })
@@ -749,8 +749,7 @@ extension AppDelegate {
     func searchInWebView(text: String) {
         DispatchQueue.main.async() {
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
-            self.browserViewController.needsNewTab = true
-            let delayTime = DispatchTime.now() + 0.3 * Double(NSEC_PER_SEC)
+            let delayTime = DispatchTime.now() + 0.000003
             DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
                 self.browserViewController.searchForQuery(text)
             })
