@@ -4311,25 +4311,25 @@ extension BrowserViewController: CrashlyticsDelegate {
 extension BrowserViewController {
     
     func navigateToHome() {
-        for tab in self.tabManager.tabs {
-            if !tab.keepOpen {
-                self.tabManager.removeTab(tab)
-            }
-        }
+//        for tab in self.tabManager.tabs {
+//            if !tab.keepOpen {
+//                self.tabManager.removeTab(tab)
+//            }
+//        }
         //self.needsNewTab = true
         self.navigationController?.popViewController(animated: false)
         ConversationalHistoryAPI.homePressed()
     }
     
     func navigateToTab(_ tabID: Int) {
-//        for tab in self.tabManager.tabs {
-//            if tab.webView?.uniqueId == tabID {
-//                self.tabManager.selectTab(tab)
+        for tab in self.tabManager.tabs {
+            if tab.webView?.uniqueId == tabID {
+                self.tabManager.selectTab(tab)
 //                if tab.keepOpen {
 //                    self.toolbar?.tabsButton.isSelected = true
 //                }
-//            }
-//        }
+            }
+        }
     }
 }
 
