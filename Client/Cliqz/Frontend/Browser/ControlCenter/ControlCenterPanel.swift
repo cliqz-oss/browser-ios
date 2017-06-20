@@ -10,9 +10,9 @@ import UIKit
 
 class ControlCenterPanel: UIViewController {
     //MARK: - Constants
-    let enabledColor = UIColor(rgb: 0x2EBA85)
-    let partiallyDisabledColor = UIColor(rgb: 0xF5C03E)
-    let disabledColor = UIColor(rgb: 0x858585)
+    let enabledColor = UIConstants.CliqzThemeColor//UIColor(rgb: 0x2EBA85)
+    let partiallyDisabledColor = UIConstants.GhosteryGray//UIColor(rgb: 0xF5C03E)
+    let disabledColor = UIConstants.GhosteryGray//UIColor(rgb: 0x858585)
     
     //MARK: - Instance variables
     let trackedWebViewID: Int!
@@ -137,8 +137,8 @@ class ControlCenterPanel: UIViewController {
         self.activateButton.setTitle(activateButtonTitle, for: UIControlState())
         self.activateButton.setTitleColor(UIColor.white, for: UIControlState())
         self.activateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        self.activateButton.backgroundColor = UIColor(rgb: 0x4CBB17)
-        self.activateButton.layer.cornerRadius = 10
+        self.activateButton.backgroundColor = UIConstants.CliqzThemeColor//UIColor(rgb: 0x4CBB17)
+        self.activateButton.layer.cornerRadius = 20
         self.activateButton.addTarget(self, action: #selector(enableFeature), for: .touchUpInside)
         self.activateButton.contentEdgeInsets = UIEdgeInsetsMake(6, 4, 6, 4)
         self.view.addSubview(self.activateButton)

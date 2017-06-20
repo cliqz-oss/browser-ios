@@ -238,7 +238,7 @@ class InteractiveIntroViewController: UIViewController {
         option1_img_bg.clipsToBounds = true
         
         let option1_icon = UIImageView()
-        option1_icon.image = CliqzURLBarView.antitrackingGreenIcon
+        option1_icon.image = CliqzURLBarView.antitrackingActiveNormal
         option1_img_bg.addSubview(option1_icon)
         
         let option2_img_bg = UIView()
@@ -247,7 +247,7 @@ class InteractiveIntroViewController: UIViewController {
         option2_img_bg.clipsToBounds = true
         
         let option2_icon = UIImageView()
-        option2_icon.image = CliqzURLBarView.antitrackingOrangeIcon
+        option2_icon.image = CliqzURLBarView.antitrackingInactiveNormal
         option2_img_bg.addSubview(option2_icon)
         
         

@@ -1743,6 +1743,10 @@ extension BrowserViewController {
 }
 
 extension BrowserViewController: URLBarDelegate {
+    
+    func isPrivate() -> Bool {
+        return self.tabManager.selectedTab?.isPrivate ?? false
+    }
 
     func urlBarDidPressReload(_ urlBar: URLBarView) {
         tabManager.selectedTab?.reload()
