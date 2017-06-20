@@ -100,7 +100,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
                 let newCount = (self.tabManager.selectedTab?.webView?.unsafeRequests)!
                 self.urlBar.updateTrackersCount(newCount)
                 if newCount > 0 && InteractiveIntro.sharedInstance.shouldShowAntitrackingHint() && !self.urlBar.isAntiTrackingButtonHidden() {
-                    self.showHint(.antitracking(newCount))
+//                    self.showHint(.antitracking(newCount))
                 }
 			}
 			

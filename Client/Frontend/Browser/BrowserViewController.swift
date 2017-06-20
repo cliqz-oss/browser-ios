@@ -1922,10 +1922,10 @@ extension BrowserViewController: URLBarDelegate {
         // If we can't make a valid URL, do a search query.
         // If we still don't have a valid URL, something is broken. Give up.
 		
-		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint() {
-			urlBar.locationTextField?.enforceResignFirstResponder()
-            self.showHint(.cliqzSearch(text.characters.count))
-		} else {
+//		if InteractiveIntro.sharedInstance.shouldShowCliqzSearchHint() {
+//			urlBar.locationTextField?.enforceResignFirstResponder()
+//            self.showHint(.cliqzSearch(text.characters.count))
+//		} else {
 
 			var url = URIFixup.getURL(text)
 			
@@ -1953,9 +1953,9 @@ extension BrowserViewController: URLBarDelegate {
 			}
 			finishEditingAndSubmit(url!, visitType: VisitType.Typed)
 			*/
-		}
+//		}
     }
-    
+
     func urlBarDidEnterOverlayMode(_ urlBar: URLBarView) {
         self.controlCenterController?.closeControlCenter()
         // Cliqz: telemetry logging for toolbar
