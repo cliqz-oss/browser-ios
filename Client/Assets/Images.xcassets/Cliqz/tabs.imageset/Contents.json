@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Tab_Overview.png",
+      "filename" : "Dashboard Plus Copy.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Tab_Overview@2x.png",
+      "filename" : "Dashboard Plus Copy@1x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Tab_Overview@3x.png",
+      "filename" : "Dashboard Plus Copy@1,5x.png",
       "scale" : "3x"
     }
   ],

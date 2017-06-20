@@ -305,9 +305,9 @@ class URLBarView: UIView {
 
 		cancelButton.snp_makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.leading.equalTo(self)
+			make.trailing.equalTo(self)
             // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
-            make.size.equalTo(UIConstants.ToolbarHeight)
+            make.size.equalTo(CGSize(width: 25, height: 25))
 		}
 
 		// Cliqz: Moved Tabs button to the right of URL bar
@@ -389,9 +389,8 @@ class URLBarView: UIView {
 			self.locationContainer.snp.remakeConstraints({  make in
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
                 
-                make.trailing.equalTo(self).offset(-1 * URLBarViewUX.LocationLeftPadding)
-                make.leading.equalTo(self.cancelButton.snp_trailing).offset(-1 * URLBarViewUX.LocationLeftPadding)
-//                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
+                make.trailing.equalTo(self.cancelButton.snp_leading)//                make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
                 
@@ -674,6 +673,8 @@ class URLBarView: UIView {
         
         // Cliqz: return back the current theme of the URLBar
         self.applyTheme(currentTheme)
+		self.backgroundColor = UIColor.white
+
     }
 
     func prepareOverlayAnimation() {
