@@ -2772,8 +2772,8 @@ extension BrowserViewController: WKNavigationDelegate {
         // First special case are some schemes that are about Calling. We prompt the user to confirm this action. This
         // gives us the exact same behaviour as Safari.
         if url.scheme == "tel" || url.scheme == "facetime" || url.scheme == "facetime-audio" {
-            if let phoneNumber = url.path.removingPercentEncoding, !phoneNumber.isEmpty {
-                let formatter = PhoneNumberFormatter()
+			if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false), let phoneNumber = components.path, !phoneNumber.isEmpty {
+				let formatter = PhoneNumberFormatter()
                 let formattedPhoneNumber = formatter.formatPhoneNumber(phoneNumber)
                 let alert = UIAlertController(title: formattedPhoneNumber, message: nil, preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Label for Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
