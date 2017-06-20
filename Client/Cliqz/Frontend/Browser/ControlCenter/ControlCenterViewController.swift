@@ -119,6 +119,12 @@ class ControlCenterViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if isPrivateMode {
+            self.panelSegmentedSeparator.isHidden = true
+        }
+        else {
+            self.panelSegmentedSeparator.isHidden = false
+        }
         self.showPanelViewController(self.antitrackingPanel)
     }
     

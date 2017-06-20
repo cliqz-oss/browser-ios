@@ -84,6 +84,7 @@ protocol URLBarDelegate: class {
     func urlBar(_ urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(_ url: URL?) -> String?
     
+    func isPrivate() -> Bool
     
     // Cliqz: Add delegate methods for new tab button
     func urlBarDidPressNewTab(_ urlBar: URLBarView, button: UIButton)
