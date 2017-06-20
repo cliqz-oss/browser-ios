@@ -639,6 +639,7 @@
 		AFA6F3E71E67424700BA630B /* ControlCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */; };
 		AFA6F3E81E67424700BA630B /* OrientationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E11E67424700BA630B /* OrientationUtil.swift */; };
 		AFA6F3E91E67424700BA630B /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */; };
+		AFAC41131EF96A2200FDABB3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AFAC41121EF96A2200FDABB3 /* assets */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
@@ -2094,6 +2095,7 @@
 		AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterViewController.swift; sourceTree = "<group>"; };
 		AFA6F3E11E67424700BA630B /* OrientationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationUtil.swift; sourceTree = "<group>"; };
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
+		AFAC41121EF96A2200FDABB3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = JSEngine/assets; sourceTree = SOURCE_ROOT; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		B3068568766D906E43CCFA48 /* Pods-CliqzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -4126,6 +4128,7 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
+				AFAC41121EF96A2200FDABB3 /* assets */,
 				B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */,
 				B354B5BB1E5C5A06001B38A1 /* Engine.swift */,
 				B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */,
@@ -5892,6 +5895,7 @@
 				1E79DDD81D507D26006BEB4A /* SendTo.strings in Resources */,
 				1E79DDCC1D507D26006BEB4A /* ErrorPages.strings in Resources */,
 				1E79DDCD1D507D26006BEB4A /* FindInPage.strings in Resources */,
+				AFAC41131EF96A2200FDABB3 /* assets in Resources */,
 				1E79DDD01D507D26006BEB4A /* Intro.strings in Resources */,
 				A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
@@ -8505,7 +8509,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
