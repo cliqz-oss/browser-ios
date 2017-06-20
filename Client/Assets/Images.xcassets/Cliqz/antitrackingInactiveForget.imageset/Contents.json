@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "antitrackingOrange.png",
+      "filename" : "Grey_White.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "antitrackingOrange@2x.png",
+      "filename" : "Grey_White@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "antitrackingOrange@3x.png",
+      "filename" : "Grey_White@3.png",
       "scale" : "3x"
     }
   ],
