@@ -359,7 +359,7 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     // Cliqz: update tabs button in the bottom toolbar
     func updateTabCount(_ count: Int) {
         self.tabsButton.accessibilityValue = count.description
-        self.tabsButton.title.text = count.description
+//        self.tabsButton.title.text = count.description
     }
 }
 
