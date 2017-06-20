@@ -7867,7 +7867,7 @@
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "c15ad72b-d864-4ed7-b628-b0f120960a15";
-				PROVISIONING_PROFILE_SPECIFIER = "CliqzBeta AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = HackDay;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

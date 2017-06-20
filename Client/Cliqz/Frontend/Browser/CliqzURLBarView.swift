@@ -87,7 +87,7 @@ class CliqzURLBarView: URLBarView {
 	}
 
 	func showAntitrackingButton(_ hidden: Bool) {
-		self.antitrackingButton.isHidden = !hidden
+//		self.antitrackingButton.isHidden = !hidden
 		self.bringSubview(toFront: self.antitrackingButton)
 		self.setNeedsUpdateConstraints()
 	}
@@ -97,7 +97,7 @@ class CliqzURLBarView: URLBarView {
     }
 
 	func enableAntitrackingButton(_ enable: Bool) {
-		self.antitrackingButton.isEnabled = enable
+//		self.antitrackingButton.isEnabled = enable
 	}
     
     func refreshAntiTrackingButton(_ notification: Notification){

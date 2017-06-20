@@ -943,7 +943,7 @@ class BrowserViewController: UIViewController {
                 // Cliqz: always set showInline to true to show the bottom toolbar
 //                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
                 let showInline = true
-                showHomePanelController(inline: showInline)
+//                showHomePanelController(inline: showInline)
 				self.urlBar.showAntitrackingButton(false)
             } else {
                 hideHomePanelController()
@@ -1891,7 +1891,10 @@ extension BrowserViewController: URLBarDelegate {
         searchLoader.query = text
         // Cliqz: always show search controller even if query was empty
         createSearchController()
-        
+        showSearchController()
+		searchController!.searchQuery = text
+
+		/*
 		if text != "" {
 			hideHomePanelController()
 			showSearchController()
@@ -1900,6 +1903,7 @@ extension BrowserViewController: URLBarDelegate {
 			hideSearchController()
 			showHomePanelController(inline: true)
 		}
+*/
         /*
         if text.isEmpty {
             hideSearchController()

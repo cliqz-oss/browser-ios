@@ -150,7 +150,7 @@
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "You are browsing in Forget Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.";
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "You will see your most visited sites here---";
+"Empty TopSites hint" = "You will see your most visited sites here";
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
 /* Ad-Blocking panel name on control center. */
