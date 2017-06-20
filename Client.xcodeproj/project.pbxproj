@@ -7687,7 +7687,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
@@ -7715,7 +7715,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Today;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
@@ -7849,6 +7849,8 @@
 				INFOPLIST_FILE = Client/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MOZ_BUNDLE_DISPLAY_NAME = "Talk to me";
+				MOZ_BUNDLE_ID = hackDay.cliqz.com;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -7861,7 +7863,7 @@
 					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ -DBETA";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "c15ad72b-d864-4ed7-b628-b0f120960a15";
@@ -7913,7 +7915,7 @@
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "UniversalBeta App Store";
@@ -7941,7 +7943,7 @@
 				INFOPLIST_FILE = Extensions/SendTo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
@@ -8193,7 +8195,7 @@
 				INFOPLIST_FILE = Extensions/ViewLater/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
@@ -8220,7 +8222,7 @@
 				INFOPLIST_FILE = Extensions/ViewLater/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ViewLater;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
@@ -8489,6 +8491,8 @@
 				INFOPLIST_FILE = Client/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MOZ_BUNDLE_DISPLAY_NAME = "Talk to me";
+				MOZ_BUNDLE_ID = hackDay.cliqz.com;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -8502,7 +8506,7 @@
 					"\"RNFS\"",
 				);
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "fe1a483b-a38e-4fc0-b477-bcde8e8a70e6";
@@ -8548,7 +8552,7 @@
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.ShareTo;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
@@ -8576,7 +8580,7 @@
 				INFOPLIST_FILE = Extensions/SendTo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.SendTo;
+				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
