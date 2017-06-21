@@ -20,6 +20,7 @@ import SwiftyJSON
 import CoreMotion
 
 
+
 private let log = Logger.browserLogger
 
 private let KVOLoading = "loading"
@@ -2294,11 +2295,21 @@ extension BrowserViewController: CIDatePickerDelegate {
     
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
         self.toolbar?.updateBookmarkStatus(true)
-        self.sendBookmark(date: datePicker.datePicker.date as NSDate)
+        //self.sendBookmark(date: datePicker.datePicker.date as NSDate)
+        
+        let title = self.tabManager.selectedTab?.title ?? ""
+        if let url = self.urlBar.currentURL?.absoluteString {
+            CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: datePicker.datePicker.date)
+        }
+        else {
+            //handle invalid url
+            debugPrint("!!!!!!!!!!!  --------- ERROR ---------  !!!!!!!!!!!")
+            debugPrint("customPressed -- url is not valid")
+        }
+        
         self.hideDatePicker(datePicker: datePicker)
     }
 }
-
 
 extension BrowserViewController: WindowCloseHelperDelegate {
     func windowCloseHelper(_ helper: WindowCloseHelper, didRequestToCloseTab tab: Tab) {
@@ -2308,7 +2319,7 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 
 extension BrowserViewController: TabDelegate {
     
-    func urlChangedForTab(tab: Tab) {
+    func urlChangedForTab(_ tab: Tab) {
         if self.tabManager.selectedTab == tab  && tab.url?.baseDomain() != "localhost" {
             //update the url in the urlbar
             self.urlBar.currentURL = tab.url

@@ -303,6 +303,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AntiTrackingModule.sharedInstance.initModule()
         AdblockingModule.sharedInstance.initModule()
         
+        //Register for local notifications
+        application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
+        
         log.debug("Done with applicationDidFinishLaunching.")
 
         return shouldPerformAdditionalDelegateHandling
@@ -605,6 +608,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
+        if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
+            if isReminder {
+                //To DO: handle reminder
+            }
+        }
         viewURLInNewTab(notification)
     }
 
