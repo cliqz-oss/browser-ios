@@ -631,6 +631,7 @@
 		AF8266201EB09FBA0023C77C /* LandscapeFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */; };
 		AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */; };
 		AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661F1EB09FBA0023C77C /* TabViewCell.swift */; };
+		AFA32BD91EF978C800A5D482 /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */; };
 		AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */; };
 		AFA6F3E31E67424700BA630B /* AdBlockerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */; };
 		AFA6F3E41E67424700BA630B /* AntiPhishingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */; };
@@ -642,7 +643,6 @@
 		AFAC41131EF96A2200FDABB3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AFAC41121EF96A2200FDABB3 /* assets */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
-		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
 		B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BB1E5C5A06001B38A1 /* Engine.swift */; };
 		B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */; };
 		B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */; };
@@ -2087,6 +2087,7 @@
 		AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandscapeFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661F1EB09FBA0023C77C /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
+		AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
 		AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
 		AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingPanel.swift; sourceTree = "<group>"; };
@@ -2099,7 +2100,6 @@
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		B3068568766D906E43CCFA48 /* Pods-CliqzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.release.xcconfig"; sourceTree = "<group>"; };
-		B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
 		B354B5BB1E5C5A06001B38A1 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = JSEngine/Engine.swift; sourceTree = "<group>"; };
 		B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = JSEngine/WebRequest.swift; sourceTree = "<group>"; };
 		B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebRequestBridge.m; path = JSEngine/WebRequestBridge.m; sourceTree = "<group>"; };
@@ -4128,8 +4128,8 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
+				AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */,
 				AFAC41121EF96A2200FDABB3 /* assets */,
-				B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */,
 				B354B5BB1E5C5A06001B38A1 /* Engine.swift */,
 				B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */,
 				B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */,
@@ -5871,7 +5871,6 @@
 				0BDA568B1B26B1BE008C9B96 /* LoginsHelper.js in Resources */,
 				E4B7B7791A793CF20022C5E0 /* FiraSans-Light.ttf in Resources */,
 				D38A1BF01A9FA2CA00F6A386 /* SiteTableViewControllerHeader.xib in Resources */,
-				B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */,
 				E49BFF591B1F48C3009368CC /* Readability.js in Resources */,
 				1E01FD1E1DDB148E00570663 /* Gotham-Book.otf in Resources */,
 				E4CD9E9A1A68980A00318571 /* ReaderMode.js in Resources */,
@@ -5888,6 +5887,7 @@
 				1E79DDCF1D507D26006BEB4A /* InfoPlist.strings in Resources */,
 				2F834D161A80629A006A0B7B /* FxASignIn.js in Resources */,
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
+				AFA32BD91EF978C800A5D482 /* jsengine.bundle.js in Resources */,
 				3BE7274E1CCFE8A30099189F /* CustomSearchHelper.js in Resources */,
 				E4B7B7681A793CF20022C5E0 /* FiraSans-Bold.ttf in Resources */,
 				1E79DDCB1D507D26006BEB4A /* ClearPrivateDataConfirm.strings in Resources */,
