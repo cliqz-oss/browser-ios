@@ -5,16 +5,14 @@ PLATFORM=ios
 # when jsengine is in navigation-extenion, we can pull tags from there. In the meantime we'll
 # put them on cdn.cliqz.com
 BASE_RELEASE_URL=https://s3.amazonaws.com/cdn.cliqz.com/mobile/jsengine
-BUNDLE_NAME=jsengine.bundle.$PLATFORM.$JSENGINE_RELEASE
-PACKAGEJSON_PATH=package.json.$PLATFORM.$JSENGINE_RELEASE
+BUNDLE_NAME=jsengine.$PLATFORM.$JSENGINE_RELEASE.tar.gz
 
 # enter JSEngine directory
 mkdir -p ./JSEngine && cd ./JSEngine
 
-curl -O $BASE_RELEASE_URL/$BUNDLE_NAME.gz
-curl -O $BASE_RELEASE_URL/$PACKAGEJSON_PATH
-gunzip ./$BUNDLE_NAME.gz -d && mv $BUNDLE_NAME jsengine.bundle.js
-mv $PACKAGEJSON_PATH package.json
+curl -O $BASE_RELEASE_URL/$BUNDLE_NAME
+tar -xf $BUNDLE_NAME
+rm $BUNDLE_NAME
 
 # install react dependencies
 npm install
