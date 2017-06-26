@@ -44,6 +44,8 @@ class BrowserViewController: UIViewController {
 //    var homePanelController: CliqzSearchViewController?
     var homePanelController: FreshtabViewController?
     
+    var visible: Bool = false
+    
     var controlCenterController: ControlCenterViewController?
     var controlCenterActiveInLandscape: Bool = false
 	
@@ -2296,7 +2298,7 @@ extension BrowserViewController: CIDatePickerDelegate {
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
         self.toolbar?.updateBookmarkStatus(true)
         //self.sendBookmark(date: datePicker.datePicker.date as NSDate)
-        
+        //["url", "title", "timestamp"]
         let title = self.tabManager.selectedTab?.title ?? ""
         if let url = self.urlBar.currentURL?.absoluteString {
             CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: datePicker.datePicker.date)
@@ -4333,6 +4335,7 @@ extension BrowserViewController {
 //            }
 //        }
         //self.needsNewTab = true
+        visible = false
         self.navigationController?.popViewController(animated: false)
         ConversationalHistoryAPI.homePressed()
     }

@@ -18,4 +18,6 @@ RCT_EXTERN_METHOD(getOpenTabs:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
 
 RCT_EXTERN_METHOD(openTab:(NSInteger)tabID)
 
+RCT_EXTERN_METHOD(getReminders:(NSString)domain resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

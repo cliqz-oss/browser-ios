@@ -610,10 +610,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
             if isReminder {
-                //To DO: handle reminder
+                if UIApplication.shared.applicationState == .active {
+                    presentReminderAlert(title: "Reminder", body: (dict["title"] as? String) ?? "", url: (dict["url"] as? String) ?? "")
+                }
+                else if let _url = URL(string: (dict["url"] as? String) ?? "") {
+                    self.browserViewController.openURLInNewTab(_url)
+                }
+                return
             }
         }
         viewURLInNewTab(notification)
+    }
+    
+    func presentReminderAlert(title:String, body: String, url: String) {
+        let controller = UIAlertController(title: title, message: body, preferredStyle: .alert)
+        let dismiss = UIAlertAction(title: "Dismiss", style: .cancel)
+        let open    = UIAlertAction(title: "Open", style: .default) { (action) in
+            if let _url = URL(string: url) {
+                if self.browserViewController.visible == false{
+                    self.rootViewController.pushViewController(self.browserViewController, animated: false)
+                    self.browserViewController.visible = true
+                }
+                self.browserViewController.openURLInNewTab(_url)
+            }
+        }
+        controller.addAction(dismiss)
+        controller.addAction(open)
+        presentContollerOnTop(controller: controller)
+    }
+    
+    func presentContollerOnTop(controller: UIViewController) {
+        
+        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        if let navigationController = rootViewController as? UINavigationController {
+            rootViewController = navigationController.viewControllers.first
+        }
+        if let tabBarController = rootViewController as? UITabBarController {
+            rootViewController = tabBarController.selectedViewController
+        }
+        rootViewController?.present(controller, animated: true, completion: nil)
     }
 
     fileprivate func presentEmailComposerWithLogs() {
@@ -747,6 +782,7 @@ extension AppDelegate {
     func openUrlInWebView(url: URL) {
         DispatchQueue.main.async() {
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            self.browserViewController.visible = true
             let delayTime = DispatchTime.now() + 0.000003
             DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
                 self.browserViewController.navigateToURL(url)
@@ -757,6 +793,7 @@ extension AppDelegate {
     func searchInWebView(text: String) {
         DispatchQueue.main.async() {
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            self.browserViewController.visible = true
             let delayTime = DispatchTime.now() + 0.000003
             DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
                 self.browserViewController.searchForQuery(text)
@@ -768,6 +805,7 @@ extension AppDelegate {
         DispatchQueue.main.async() {
             self.browserViewController.needsNewTab = false
             self.rootViewController.pushViewController(self.browserViewController, animated: false)
+            self.browserViewController.visible = true
             self.browserViewController.navigateToTab(tabID)
         }
     }

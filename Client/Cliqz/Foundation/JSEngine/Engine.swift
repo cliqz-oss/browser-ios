@@ -20,12 +20,12 @@ open class Engine {
     //MARK: - Init
     public init() {
         #if React_Debug
-            let jsCodeLocation = URL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
+            let jsCodeLocation = URL(string: "http://192.168.2.32:8081/index.ios.bundle?platform=ios")
         #else
             let jsCodeLocation = Bundle.main.url(forResource: "jsengine.bundle", withExtension: "js")
         #endif
         
-        rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ConversationUI", initialProperties: nil, launchOptions: nil )
+        rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ExtensionApp", initialProperties: nil, launchOptions: nil )
         bridge = rootView.bridge
     }
     

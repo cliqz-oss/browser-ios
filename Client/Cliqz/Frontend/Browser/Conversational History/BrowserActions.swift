@@ -50,4 +50,17 @@ public class BrowserActions: NSObject {
 			appDelegate.openTab(tabID: tabID as Int)
 		}
 	}
+    
+    @objc(getReminders:resolve:reject:)
+    public func getReminders(domain:NSString, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock){
+        //TO DO: Check if call works from react.
+        // Implement React part
+        CIReminderManager.sharedInstance.allValidReminders { (reminders) in
+            let array = reminders.map({ (reminder) -> [String:AnyObject] in
+                return ["url": reminder.url as AnyObject, "title": reminder.title as AnyObject, "timestamp": Int(reminder.date.timeIntervalSince1970 * 1000000) as AnyObject]
+            })
+            resolve(array)
+        }
+        
+    }
 }
