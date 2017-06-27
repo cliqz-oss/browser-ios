@@ -253,6 +253,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         AppStatus.sharedInstance.appDidFinishLaunching()
+        
+        //UIApplication.shared.cancelAllLocalNotifications()
 
         // Override point for customization after application launch.
         let shouldPerformAdditionalDelegateHandling = true
@@ -616,6 +618,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 else if let _url = URL(string: (dict["url"] as? String) ?? "") {
                     self.browserViewController.openURLInNewTab(_url)
                 }
+                CIReminderManager.sharedInstance.didRemindersChange = .True
                 return
             }
         }

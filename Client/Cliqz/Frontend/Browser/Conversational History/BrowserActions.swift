@@ -53,14 +53,31 @@ public class BrowserActions: NSObject {
     
     @objc(getReminders:resolve:reject:)
     public func getReminders(domain:NSString, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock){
-        //TO DO: Check if call works from react.
-        // Implement React part
+        
+        let processed_domain = domain as String
+        
         CIReminderManager.sharedInstance.allValidReminders { (reminders) in
-            let array = reminders.map({ (reminder) -> [String:AnyObject] in
+            
+            var processed_array = reminders
+            
+            if !domain.isEqual(to: "All") {
+                processed_array = reminders.filter({ (reminder) -> Bool in
+                    if let url = URL(string: reminder.url)?.host {
+                        return url.contains(processed_domain)
+                    }
+                    let condition = reminder.url.contains(processed_domain) //weakness: what if the processed_domain is passed as an argument in the url. - Solve...use the host
+                    return condition
+                })
+            }
+            
+            let array = processed_array.map({ (reminder) -> [String:AnyObject] in
                 return ["url": reminder.url as AnyObject, "title": reminder.title as AnyObject, "timestamp": Int(reminder.date.timeIntervalSince1970 * 1000000) as AnyObject]
             })
+            
             resolve(array)
         }
+        
+        //resolve([["url": "" as AnyObject, "title": "First" as AnyObject, "timestamp": 1234564323456754 as AnyObject],["url": "" as AnyObject, "title": "Second" as AnyObject, "timestamp": 12345654323456 as AnyObject]])
         
     }
 }

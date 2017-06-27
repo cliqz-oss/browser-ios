@@ -2122,7 +2122,7 @@ extension BrowserViewController: TabToolbarDelegate {
                 return
         }
         showDatePicker()
-        toggleBookmarkForTabState(tab.tabState)
+        //toggleBookmarkForTabState(tab.tabState)
     }
     
     func showDatePicker() {
@@ -2297,8 +2297,6 @@ extension BrowserViewController: CIDatePickerDelegate {
     
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
         self.toolbar?.updateBookmarkStatus(true)
-        //self.sendBookmark(date: datePicker.datePicker.date as NSDate)
-        //["url", "title", "timestamp"]
         let title = self.tabManager.selectedTab?.title ?? ""
         if let url = self.urlBar.currentURL?.absoluteString {
             CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: datePicker.datePicker.date)
