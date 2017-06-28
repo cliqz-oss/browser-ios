@@ -14,7 +14,7 @@ node('ios-osx') {
                 brew install xctool
                 brew install carthage
                 pod --version
-                ./bootstrap.sh
+                echo A |./bootstrap.sh 
             '''
         }
         

@@ -28,6 +28,7 @@ class HumanWebSettingsTableViewController: SubSettingsTableViewController {
         control.onTintColor = UIConstants.ControlTintColor
         control.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
         control.isOn = toggle
+        control.accessibilityLabel = "Human Web Switch"
         cell.accessoryView = control
         cell.selectionStyle = .none
         control.tag = indexPath.item
