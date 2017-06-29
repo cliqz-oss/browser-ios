@@ -622,6 +622,9 @@ class BrowserViewController: UIViewController {
 		if let tab = self.tabManager.selectedTab {
 			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 		}
+        
+        //updateReminderButtonState(url_str: tab.displayURL?.absoluteString ?? "")
+    
     }
 
     fileprivate func showRestoreTabsAlert() {
@@ -1078,8 +1081,8 @@ class BrowserViewController: UIViewController {
             // Dispatch to the main thread to update the UI
             DispatchQueue.main.async { _ in
                 self.animateBookmarkStar()
-                self.toolbar?.updateBookmarkStatus(true)
-                self.urlBar.updateBookmarkStatus(true)
+                //self.toolbar?.updateBookmarkStatus(true)
+                //self.urlBar.updateBookmarkStatus(true)
             }
         }
     }
@@ -1112,8 +1115,8 @@ class BrowserViewController: UIViewController {
                         tab.isBookmarked = false
                     }
                     if !AppConstants.MOZ_MENU {
-                        self.toolbar?.updateBookmarkStatus(false)
-                        self.urlBar.updateBookmarkStatus(false)
+                        //self.toolbar?.updateBookmarkStatus(false)
+                        //self.urlBar.updateBookmarkStatus(false)
                     }
                 }
             }
@@ -1130,8 +1133,8 @@ class BrowserViewController: UIViewController {
                             tab.isBookmarked = false
                         }
                         if !AppConstants.MOZ_MENU {
-                            self.toolbar?.updateBookmarkStatus(added)
-                            self.urlBar.updateBookmarkStatus(added)
+                            //self.toolbar?.updateBookmarkStatus(added)
+                            //self.urlBar.updateBookmarkStatus(added)
                         }
                     }
                 }
@@ -1265,11 +1268,14 @@ class BrowserViewController: UIViewController {
                 }
                 tab?.isBookmarked = bookmarked
                 if !AppConstants.MOZ_MENU {
-                    self.navigationToolbar.updateBookmarkStatus(bookmarked)
+                    ///self.navigationToolbar.updateBookmarkStatus(bookmarked)
                 }
             }
         }
         self.toolbar?.updateTabStatus(tab.keepOpen)
+        // ------------------------------------------
+        self.updateReminderButtonState(url_str: url)
+        // ------------------------------------------
     }
     // Mark: Opening New Tabs
 
@@ -2309,6 +2315,11 @@ extension BrowserViewController: CIDatePickerDelegate {
         
         self.hideDatePicker(datePicker: datePicker)
     }
+    
+    func updateReminderButtonState(url_str: String) {
+        let active = CIReminderManager.sharedInstance.isUrlRegistered(url_str: url_str)
+        self.navigationToolbar.updateBookmarkStatus(active)
+    }
 }
 
 extension BrowserViewController: WindowCloseHelperDelegate {
@@ -2627,6 +2638,9 @@ extension BrowserViewController: TabManagerDelegate {
             #endif
 
             if let url = webView.url?.absoluteString {
+                // ------------------------------------------
+                self.updateReminderButtonState(url_str: url)
+                // ------------------------------------------
                 // Don't bother fetching bookmark state for about/sessionrestore and about/home.
                 if AboutUtils.isAboutURL(webView.url) {
                     // Indeed, because we don't show the toolbar at all, don't even blank the star.
@@ -2643,8 +2657,8 @@ extension BrowserViewController: TabManagerDelegate {
 
 
                             if !AppConstants.MOZ_MENU {
-                                self.toolbar?.updateBookmarkStatus(isBookmarked)
-                                self.urlBar.updateBookmarkStatus(isBookmarked)
+                                //self.toolbar?.updateBookmarkStatus(isBookmarked)
+                                //self.urlBar.updateBookmarkStatus(isBookmarked)
                             }
                         }
                     }
@@ -2689,6 +2703,7 @@ extension BrowserViewController: TabManagerDelegate {
         }
 
         updateInContentHomePanel(selected?.url as URL?)
+
     }
 
     func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {

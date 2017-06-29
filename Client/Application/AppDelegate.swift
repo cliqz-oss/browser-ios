@@ -612,6 +612,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
             if isReminder {
+                CIReminderManager.sharedInstance.reminderFired(url_str: (dict["url"] as? String) ?? "")
                 if UIApplication.shared.applicationState == .active {
                     presentReminderAlert(title: "Reminder", body: (dict["title"] as? String) ?? "", url: (dict["url"] as? String) ?? "")
                 }

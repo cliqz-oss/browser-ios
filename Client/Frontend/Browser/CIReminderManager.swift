@@ -19,72 +19,43 @@ class CIReminderManager: NSObject {
         case Unknown
     }
     
+    typealias Reminder = [String : Any]
+    typealias Host = String
+    typealias Url  = String
+    
     var didRemindersChange: RemindersChanged = .Unknown
     
     private var rem_cache: [Reminder] = []
     
-    typealias Host = String
-    typealias Url  = String
-    
     //instead of a hashmap I could build a trie tree, where the first layer of nodes is host names, and then attached to them path components
-    private var url_hash_map: [Host : Url] = [:]
-    
-    struct Reminder {
-        var url: String
-        var title: String
-        var date: Date
-        //var domain: String
-    }
+    private var url_hash_map: [Host : [Url]] = [:]
     
     static let sharedInstance = CIReminderManager()
     
     override init() {
         super.init()
+        url_hash_map = buildUrlHashMap(reminders: allValidReminders())
     }
     
-//    func buildUrlHashMap(notifications:[Notification]) -> [Host : Url] {
-//        
-//    }
-    
     func registerReminder(url: String, title: String, date: Date) {
-        
-        //let domain = URL(string: url)?.absoluteURL.baseURL?.absoluteString ?? ""
 
         let userInfo = ["url": url, "title": title, "date": date, "isReminder": true] as [String : Any]
         
-//        if #available(iOS 10.0, *) {
-//            let content = UNMutableNotificationContent()
-//            content.body = NSString.localizedUserNotificationString(forKey: "\(title) (Reminder)", arguments: nil)
-//            content.userInfo = userInfo
-//            content.sound = UNNotificationSound.default()
-//            
-//            // Trigger time
-//            let timeDifference = date.timeIntervalSince(Date.init(timeIntervalSinceNow: 0))
-//            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeDifference, repeats: false)
-//            
-//            // Schedule the notification.
-//            let request = UNNotificationRequest(identifier: "FiveSecond", content: content, trigger: trigger)
-//            let center = UNUserNotificationCenter.current()
-//            center.add(request, withCompletionHandler: nil)
-//        
-//        } else {
-            // Fallback on earlier versions
-            
-            let notification = UILocalNotification()
-            notification.alertBody = "\(title) (Reminder)" // text that will be displayed in the notification
-            notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
-            notification.fireDate = date // todo item due date (when notification will be fired) notification.soundName = UILocalNotificationDefaultSoundName // play default sound
-            notification.userInfo = userInfo // assign a unique identifier to the notification so that we can retrieve it later
-            
-            UIApplication.shared.scheduleLocalNotification(notification)
-        //}
+        let notification = UILocalNotification()
+        notification.alertBody = "\(title) (Reminder)" // text that will be displayed in the notification
+        notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
+        notification.fireDate = date // todo item due date (when notification will be fired) notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+        notification.userInfo = userInfo // assign a unique identifier to the notification so that we can retrieve it later
+        
+        UIApplication.shared.scheduleLocalNotification(notification)
         
         didRemindersChange = .True
+        url_hash_map = addUrlToHashMap(map: url_hash_map, url_str: url)
         
     }
     
     
-    func allValidReminders(completion: @escaping ([Reminder]) -> Void ) {
+    func allValidReminders() -> [Reminder] {
         
         //Caching mechanism
         //There are 2 ways reminders are modified:
@@ -94,41 +65,97 @@ class CIReminderManager: NSObject {
         //if didRemindersChange == false return cache, else query
         
         if didRemindersChange == .False {
-            completion(rem_cache)
-            return
+            return rem_cache
+        }
+
+        if let notifications = UIApplication.shared.scheduledLocalNotifications {
+            let reminders = notifications.map({ (notification) -> Reminder in
+                return notification.userInfo as! Reminder
+            })
+            rem_cache = reminders
+            didRemindersChange = .False
+            return reminders
+        }
+        else {
+            return []
+        }
+
+    }
+    
+    func isUrlRegistered(url_str: Url) -> Bool {
+        if let host = URL(string: url_str)?.host {
+            if let array = url_hash_map[host] {
+                if array.contains(url_str) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func reminderFired(url_str: String) {
+        url_hash_map = removeUrlFromHashMap(map: url_hash_map, url_str: url_str)
+    }
+    
+    private func buildUrlHashMap(reminders: [Reminder]) -> [Host : [Url]] {
+        
+        var return_dict: [Host : [Url]] = [:]
+        for reminder in reminders {
+            let url_str = reminder["url"] as! String
+            return_dict = addUrlToHashMap(map: return_dict, url_str: url_str)
         }
         
-//        if #available(iOS 10.0, *) {
-//            UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { (array_requests) in
-//                let reminders = array_requests.map({ (request) -> Reminder in
-//                    let url   = request.content.userInfo["url"] as! String
-//                    let title = request.content.userInfo["title"] as! String
-//                    let date  = request.content.userInfo["date"] as! Date
-//                    
-//                    return Reminder(url: url, title: title, date: date)
-//                })
-//                
-//                completion(reminders)
-//            })
-//        }
-//        else {
-            if let notifications = UIApplication.shared.scheduledLocalNotifications {
-                let reminders = notifications.map({ (notification) -> Reminder in
-                    let url   = notification.userInfo?["url"] as! String
-                    //let domain = notification.userInfo?["domain"] as! String
-                    let title = notification.userInfo?["title"] as! String
-                    let date  = notification.userInfo?["date"] as! Date
-                    
-                    return Reminder(url: url, title: title, date: date)//, domain: domain)
-                })
-                rem_cache = reminders
-                didRemindersChange = .False
-                completion(reminders)
+        return return_dict
+    }
+    
+    private func addUrlToHashMap(map: [Host : [Url]], url_str: Url) -> [Host:[Url]] {
+        
+        var map_copy = map
+        
+        if let url = URL(string: url_str), let host = url.host {
+            if var array = map_copy[host] {
+                array.append(url_str)
+                map_copy[host] = array
             }
             else {
-                completion([])
+                map_copy[host] = [url_str]
             }
-        //}
+        }
+        else {
+            //this is an invalid url. We ignore it
+        }
+        
+        return map_copy
+        
+    }
+    
+    private func removeUrlFromHashMap(map: [Host : [Url]], url_str: Url) -> [Host:[Url]] {
+        
+        var map_copy = map
+        
+        //delete just the first instance of the url. There might be multiple instances of the same url in the array.
+        if let url = URL(string: url_str), let host = url.host {
+            if var array = map_copy[host] {
+                for i in 0..<array.count {
+                    let url_array = array[i]
+                    if url_array == url_str {
+                        array.remove(at: i)
+                        break
+                    }
+                }
+                map_copy[host] = array
+            }
+            else {
+                //since the host is not here, the url is not either. Nothing to remove.
+            }
+        }
+        else {
+            //this is an invalid url. We ignore it.
+            //this is fine since we do not add invalid urls in the first place.
+        }
+        
+        return map_copy
+        
     }
     
 }

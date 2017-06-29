@@ -56,28 +56,23 @@ public class BrowserActions: NSObject {
         
         let processed_domain = domain as String
         
-        CIReminderManager.sharedInstance.allValidReminders { (reminders) in
-            
-            var processed_array = reminders
-            
-            if !domain.isEqual(to: "All") {
-                processed_array = reminders.filter({ (reminder) -> Bool in
-                    if let url = URL(string: reminder.url)?.host {
-                        return url.contains(processed_domain)
-                    }
-                    let condition = reminder.url.contains(processed_domain) //weakness: what if the processed_domain is passed as an argument in the url. - Solve...use the host
-                    return condition
-                })
-            }
-            
-            let array = processed_array.map({ (reminder) -> [String:AnyObject] in
-                return ["url": reminder.url as AnyObject, "title": reminder.title as AnyObject, "timestamp": Int(reminder.date.timeIntervalSince1970 * 1000000) as AnyObject]
+        var reminders = CIReminderManager.sharedInstance.allValidReminders()
+        
+        if !domain.isEqual(to: "All") {
+            reminders = reminders.filter({ (reminder) -> Bool in
+                let url_str = reminder["url"] as! String
+                
+                if let host = URL(string: url_str)?.host {
+                    return host.contains(processed_domain) //check if host contains the domain
+                }
+                
+                let condition = url_str.contains(processed_domain) //weakness: what if the processed_domain is passed as an argument in the url. - Solve...use the host
+                return condition
             })
-            
-            resolve(array)
         }
         
-        //resolve([["url": "" as AnyObject, "title": "First" as AnyObject, "timestamp": 1234564323456754 as AnyObject],["url": "" as AnyObject, "title": "Second" as AnyObject, "timestamp": 12345654323456 as AnyObject]])
+        resolve(reminders)
         
+        //resolve([["url": "" as AnyObject, "title": "First" as AnyObject, "timestamp": 1234564323456754 as AnyObject],["url": "" as AnyObject, "title": "Second" as AnyObject, "timestamp": 12345654323456 as AnyObject]])
     }
 }

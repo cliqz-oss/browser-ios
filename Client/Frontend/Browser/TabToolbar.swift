@@ -331,9 +331,9 @@ class TabToolbar: Toolbar, TabToolbarProtocol {
     }
 
     func updatePageStatus(_ isWebPage: Bool) {
-        if !AppConstants.MOZ_MENU {
-            bookmarkButton.isEnabled = isWebPage
-        }
+//        if !AppConstants.MOZ_MENU {
+//            bookmarkButton.isEnabled = isWebPage
+//        }
         stopReloadButton.isEnabled = isWebPage
         shareButton.isEnabled = isWebPage
     }
