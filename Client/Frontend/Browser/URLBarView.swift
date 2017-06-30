@@ -307,7 +307,7 @@ class URLBarView: UIView {
 			make.centerY.equalTo(self.locationContainer)
 			make.trailing.equalTo(self)
             // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
-            make.size.equalTo(CGSize(width: 25, height: 25))
+            make.size.equalTo(CGSize(width: 40, height: 40))
 		}
 
 		// Cliqz: Moved Tabs button to the right of URL bar
