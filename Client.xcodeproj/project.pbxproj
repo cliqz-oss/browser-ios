@@ -631,7 +631,6 @@
 		AF8266201EB09FBA0023C77C /* LandscapeFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */; };
 		AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */; };
 		AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661F1EB09FBA0023C77C /* TabViewCell.swift */; };
-		AFA32BD91EF978C800A5D482 /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */; };
 		AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */; };
 		AFA6F3E31E67424700BA630B /* AdBlockerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */; };
 		AFA6F3E41E67424700BA630B /* AntiPhishingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */; };
@@ -640,11 +639,12 @@
 		AFA6F3E71E67424700BA630B /* ControlCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */; };
 		AFA6F3E81E67424700BA630B /* OrientationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E11E67424700BA630B /* OrientationUtil.swift */; };
 		AFA6F3E91E67424700BA630B /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */; };
-		AFAC41131EF96A2200FDABB3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AFAC41121EF96A2200FDABB3 /* assets */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		AFF2B67A1EFA9F1000475971 /* CIReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */; };
 		AFF2B68A1EFAA8C500475971 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF2B6891EFAA8C500475971 /* UserNotifications.framework */; };
+		AFF34E5E1F0698CA00F548E3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = AFF34E5C1F0698CA00F548E3 /* assets */; };
+		AFF34E5F1F0698CA00F548E3 /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = AFF34E5D1F0698CA00F548E3 /* jsengine.bundle.js */; };
 		B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BB1E5C5A06001B38A1 /* Engine.swift */; };
 		B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */; };
 		B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */; };
@@ -2089,7 +2089,6 @@
 		AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandscapeFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661F1EB09FBA0023C77C /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
-		AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
 		AFA6F3AB1E673B3500BA630B /* AntiTrackingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiTrackingModule.swift; sourceTree = "<group>"; };
 		AFA6F3DC1E67424700BA630B /* AdBlockerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerPanel.swift; sourceTree = "<group>"; };
 		AFA6F3DD1E67424700BA630B /* AntiPhishingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingPanel.swift; sourceTree = "<group>"; };
@@ -2098,11 +2097,12 @@
 		AFA6F3E01E67424700BA630B /* ControlCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterViewController.swift; sourceTree = "<group>"; };
 		AFA6F3E11E67424700BA630B /* OrientationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationUtil.swift; sourceTree = "<group>"; };
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
-		AFAC41121EF96A2200FDABB3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = JSEngine/assets; sourceTree = SOURCE_ROOT; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIReminderManager.swift; sourceTree = "<group>"; };
 		AFF2B6891EFAA8C500475971 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		AFF34E5C1F0698CA00F548E3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = JSEngine/assets; sourceTree = SOURCE_ROOT; };
+		AFF34E5D1F0698CA00F548E3 /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
 		B3068568766D906E43CCFA48 /* Pods-CliqzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B354B5BB1E5C5A06001B38A1 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = JSEngine/Engine.swift; sourceTree = "<group>"; };
 		B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = JSEngine/WebRequest.swift; sourceTree = "<group>"; };
@@ -4134,8 +4134,8 @@
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
 			isa = PBXGroup;
 			children = (
-				AFA32BD81EF978C800A5D482 /* jsengine.bundle.js */,
-				AFAC41121EF96A2200FDABB3 /* assets */,
+				AFF34E5C1F0698CA00F548E3 /* assets */,
+				AFF34E5D1F0698CA00F548E3 /* jsengine.bundle.js */,
 				B354B5BB1E5C5A06001B38A1 /* Engine.swift */,
 				B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */,
 				B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */,
@@ -5888,13 +5888,14 @@
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
 				1E79DD311D4FB2C5006BEB4A /* NewsPermissionAsking-6Plus.png in Resources */,
 				4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */,
+				AFF34E5E1F0698CA00F548E3 /* assets in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
 				1E79DD3A1D4FB2C5006BEB4A /* Lato-Medium.ttf in Resources */,
 				E4B7B7641A793CF20022C5E0 /* CharisSILR.ttf in Resources */,
 				1E79DDCF1D507D26006BEB4A /* InfoPlist.strings in Resources */,
 				2F834D161A80629A006A0B7B /* FxASignIn.js in Resources */,
+				AFF34E5F1F0698CA00F548E3 /* jsengine.bundle.js in Resources */,
 				D3BA7E0C1B0E902A00153782 /* ContextMenu.js in Resources */,
-				AFA32BD91EF978C800A5D482 /* jsengine.bundle.js in Resources */,
 				3BE7274E1CCFE8A30099189F /* CustomSearchHelper.js in Resources */,
 				E4B7B7681A793CF20022C5E0 /* FiraSans-Bold.ttf in Resources */,
 				1E79DDCB1D507D26006BEB4A /* ClearPrivateDataConfirm.strings in Resources */,
@@ -5902,7 +5903,6 @@
 				1E79DDD81D507D26006BEB4A /* SendTo.strings in Resources */,
 				1E79DDCC1D507D26006BEB4A /* ErrorPages.strings in Resources */,
 				1E79DDCD1D507D26006BEB4A /* FindInPage.strings in Resources */,
-				AFAC41131EF96A2200FDABB3 /* assets in Resources */,
 				1E79DDD01D507D26006BEB4A /* Intro.strings in Resources */,
 				A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */,
 				0BA1E00E1B03FB0B007675AF /* NetError.html in Resources */,
@@ -8517,7 +8517,7 @@
 					"-framework",
 					"\"RNFS\"",
 				);
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA -DReact_Debug";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -DDEBUG -DBETA";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
