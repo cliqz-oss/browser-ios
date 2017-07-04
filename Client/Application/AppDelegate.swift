@@ -253,7 +253,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         log.debug("Setting up Adjust")
         self.adjustIntegration?.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
-        
+		
         log.debug("Making window key and visible…")
         self.window!.makeKeyAndVisible()
         
