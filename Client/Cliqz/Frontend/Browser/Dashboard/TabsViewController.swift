@@ -293,14 +293,15 @@ extension TabsViewController: UICollectionViewDataSource {
 
         if let url = tab.displayURL?.absoluteString {
             
-            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
+            LogoLoader.loadLogo(url, completionBlock: { (image, logoInfo, error) in
                 guard cell.tag == indexPath.row else { return }
                 
                 if image != nil {
                     cell.setBigLogo(image: image, cliqzLogo: false)
                 }
-                else {
-                    let fakeLogo = LogoLoader.generateFakeLogo(url: url, fontSize: 44)
+                else if var info = logoInfo {
+					info.fontSize = 44
+                    let fakeLogo = LogoPlaceholder(logoInfo: info)
                     cell.setBigLogoView(fakeLogo)
                 }
             })

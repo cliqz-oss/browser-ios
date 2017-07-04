@@ -10,164 +10,97 @@ import Foundation
 import Alamofire
 import SnapKit
 import WebImage
+import SwiftyJSON
 
-
-
+struct LogoInfo {
+	var url: String?
+	var color: String?
+	var prefix: String?
+	var fontSize: Int?
+	var hostName: String?
+}
 
 class LogoLoader {
-    
-	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
-	static let logoVersionKey: String = "logoVersion"
-    static let topDomains = ["co": "cc", "uk": "cc", "ru": "cc", "gb": "cc", "de": "cc", "net": "na", "com": "na", "org": "na", "edu": "na", "gov": "na", "ac":"cc"]
-    
-    
-    class func loadLogoImageOrFakeLogo(_ url:String, completed:@escaping (_ image: UIImage?, _ fakeLogo:UIView?, _ error: Error?) -> Void) {
-        LogoLoader.loadLogo(url) { (image, error) in
-            if let img = image {
-                completed(img, nil, error)
-            }
-            else{
-                completed(nil, LogoLoader.generateFakeLogo(url: url, fontSize: 16), error)
-            }
-        }
-    }
-    
-    
-     class func loadLogo(_ url: String, completionBlock:@escaping (_ image:UIImage?, _ error: Error?) -> Void){
-        LogoLoader.constructImageURL(url) { (imageUrl, hasSecond, urlWithoutSecond) in
-            
-            guard let imageUrl = imageUrl else { completionBlock(nil, LogoLoader.errorWithMessage("imageUrl is nil")); return
-			}
-            
-            guard let url = URL(string: imageUrl) else { completionBlock(nil, LogoLoader.errorWithMessage("could not convert imageUrl to NSURL")); return
-			}
-            
-            LogoLoader.downloadImage(url, completed: { (image, error) in
-                if error == nil && image != nil {completionBlock(image, nil)}
-                else
-                {
-                    if hasSecond == true {
-                        if let urlString = urlWithoutSecond, let url = URL(string: urlString){
-                            LogoLoader.downloadImage(url, completed: { (image, error) in
-                                if error == nil && image != nil {completionBlock(image, nil)}
-                                else{
-                                    completionBlock(nil, LogoLoader.errorWithMessage("image download failed - \(url)"))
-                                }
-                            })
-                        }
-                        else{
-                            completionBlock(nil, LogoLoader.errorWithMessage("could not convert imageUrl to NSURL - urlWithoutFirst"))
-                        }
-                    }
-                    else{
-                       completionBlock(nil, LogoLoader.errorWithMessage("image download failed - \(url)"))
-                    }
-                }
-            })
-        }
-    }
-    
-    class func downloadImage(_ url:URL, completed:@escaping (_ image: UIImage?, _ error:  Error?) -> Void) {
-        SDWebImageManager.shared().downloadImage(with: url, options:SDWebImageOptions.highPriority, progress: { (receivedSize, expectedSize) in },
-                                                 completed: { (image, error, _, _, _) in completed(image, error)} as SDWebImageCompletionWithFinishedBlock)
-    }
 
-    class func generateFakeLogo(url: String?, fontSize: Int) -> UIView? {
-        guard (url != nil) else {return nil}
-        let hostComps = getHostComponents(forURL: url!)
-        guard hostComps.count > 0 else {return nil}
-        let hostName = hostComps[0]
-		let v = UIView()
-		v.backgroundColor = UIColor.black
-		let l = UILabel()
-		l.textColor = UIColor.white
-		if hostName.characters.count > 1 {
-			l.text = hostName.substring(to: hostName.characters.index(hostName.startIndex, offsetBy: 2)).capitalized
-		} else if hostName.characters.count > 0 {
-			l.text = hostName.substring(to: hostName.characters.index(hostName.startIndex, offsetBy: 1)).capitalized
-		} else {
-			l.text = "N/A"
+	private static let dbVersion = "1483980213630"
+
+	private static var _logoDB: JSON?
+	private static var logoDB: JSON? {
+		get {
+			if self._logoDB == nil {
+				if let path = Bundle.main.path(forResource: "logo-database", ofType: "json", inDirectory: "Extension/build/mobile/search/core"),
+				   let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data {
+					self._logoDB = JSON(jsonData)["domains"]
+				}
+			}
+			return self._logoDB
 		}
-        l.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
-		v.addSubview(l)
-		l.snp_makeConstraints({ (make) in
-			make.center.equalTo(v)
-		})
-		return v
+		set {
+			self._logoDB = newValue
+		}
 	}
-    
-    
-    class func errorWithMessage(_ message:String!) -> NSError{
-        return NSError(domain: "com.cliqz.LogoLoader", code: 501, userInfo: ["error":message])
-    }
-    
-    
-    class func constructImageURL(_ url: String, completionBlock:@escaping (_ imageUrl: String?, _ hasSecond: Bool?, _ urlWithoutSecond: String?) -> Void) {
-        LogoLoader.lastLogoVersion() { (version) in
-            guard let version = version else {
-				completionBlock(nil, nil, nil)
-				return
-			}
-            let hostComps = getHostComponents(forURL: url)
-            guard hostComps.count > 0 else {
-				completionBlock(nil, nil, nil)
-				return
-			}
-            let mainURL = "http://cdn.cliqz.com/brands-database/database/\(version)/pngs"
-            
-            var hasSecond = false
-            
-            let first = hostComps[0]
-            let second : String
-            
-            var imageURL = "\(mainURL)/\(first)/$_192.png"
-            
-            if hostComps.count > 1 {
-                hasSecond = true
-                second = !hostComps[1].isEmpty ? hostComps[1] + "." : hostComps[1]
-                imageURL = "\(mainURL)/\(first)/\(second)$_192.png"
-            }
-            
-            completionBlock(imageURL, hasSecond, "\(mainURL)/\(first)/$_192.png")
-        }
-    }
 
+	class func loadLogo(_ url: String, completionBlock: @escaping (_ image: UIImage?, _ logoInfo: LogoInfo?,  _ error: Error?) -> Void) {
+		let details = LogoLoader.fetchLogoDetails(url)
+		if let u = details.url {
+			LogoLoader.downloadImage(u, completed: { (image, error) in
+				completionBlock(image, details, error)
+			})
+		} else {
+			completionBlock(nil, details, nil)
+		}
+	}
 
-    class func isLogoVersionExpired() -> Bool {
-		let date = LocalDataStore.objectForKey(logoVersionUpdatedDateKey)
-		if date == nil { return true }
-		if let d = date as? Date, Date().daysSinceDate(d) > 1 {
-			return true
+	class func clearDB() {
+		self.logoDB = nil
+	}
+
+	private class func fetchLogoDetails(_ url: String) -> LogoInfo {
+		var logoDetails = LogoInfo()
+		logoDetails.color = "000000"
+		logoDetails.fontSize = 16
+		if let urlDetails = URLParser.getURLDetails(url),
+		   let hostName = urlDetails.name,
+		   let details = self.logoDB?[hostName] {
+			logoDetails.hostName = hostName
+			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: 2)).capitalized
+			if let list = details.array,
+				list.count > 0 {
+				for info in list {
+
+					if info != JSON.null,
+					   let r = info["r"].string,
+					   isMatchingLogoRule(urlDetails, r) || info == list.last {
+
+						if let doesLogoExist = info["l"].number, doesLogoExist == 1 {
+							logoDetails.url = "https://cdn.cliqz.com/brands-database/database/\(self.dbVersion)/pngs/\(hostName)/\(r)_192.png"
+						}
+						logoDetails.color = info["b"].string
+						if let txt = info["t"].string {
+							logoDetails.prefix = txt
+						}
+					}
+				}
+			}
+		}
+		return logoDetails
+	}
+
+	private class func isMatchingLogoRule(_ urlDetails: URLDetails, _ rule: String) -> Bool {
+		if let ix = urlDetails.host.range(of: urlDetails.name, options: .backwards, range: nil, locale: nil) {
+			let newHost = urlDetails.host.replacingCharacters(in: ix, with: "$")
+			return newHost == rule
 		}
 		return false
 	}
 
-	class func lastLogoVersion(_ completionBlock: @escaping (String?) -> Void) {
-		if LogoLoader.isLogoVersionExpired() {
-			let logoVersionURL = "https://newbeta.cliqz.com/api/v1/config"
-			if let url = URL(string: logoVersionURL) {
-				Alamofire.request(url, method: .get).responseJSON { response in
-					if response.result.isSuccess,
-						let data = response.result.value as? [String: AnyObject],
-						let versionID = data["png_logoVersion"] as? String {
-						LocalDataStore.setObject(versionID, forKey: LogoLoader.logoVersionKey)
-						LocalDataStore.setObject(Date(), forKey: LogoLoader.logoVersionUpdatedDateKey)
-						completionBlock(versionID)
-					} else {
-						completionBlock(nil)
-					}
-				}
-			} else {
-				completionBlock(nil)
-			}
-			return
-		} else if let currentVersion = LocalDataStore.objectForKey(logoVersionKey) as? String {
-			completionBlock(currentVersion)
+	private class func downloadImage(_ url: String, completed: @escaping (_ image: UIImage?, _ error:  Error?) -> Void) {
+		if let u = URL(string: url) {
+			SDWebImageManager.shared().downloadImage(with: u, options:SDWebImageOptions.highPriority, progress: { (receivedSize, expectedSize) in },
+													 completed: { (image, error, _, _, _) in completed(image, error)} as SDWebImageCompletionWithFinishedBlock)
 		} else {
-			completionBlock(nil)
+			completed(nil, nil)
 		}
 	}
 
-
 }
-

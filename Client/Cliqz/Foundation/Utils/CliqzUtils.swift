@@ -48,6 +48,7 @@ func getCurrentWebView() -> CliqzWebView? {
     return getApp().browserViewController.tabManager.selectedTab?.webView
 }
 
+/*
 func getHostComponents(forURL url: String) -> [String] {
 	var result = [String]()
 	var domainIndex = Int.max
@@ -57,7 +58,7 @@ func getHostComponents(forURL url: String) -> [String] {
 		let comps = host.components(separatedBy: ".")
 		domainIndex = comps.count - 1
 		if let lastComp = comps.last,
-			let firstLevel = LogoLoader.topDomains[lastComp], firstLevel == "cc" && comps.count > 2 {
+			let firstLevel = LogoLoader1.topDomains[lastComp], firstLevel == "cc" && comps.count > 2 {
 			if let _ = LogoLoader.topDomains[comps[comps.count - 2]] {
 				domainIndex = comps.count - 2
 			}
@@ -79,6 +80,7 @@ func getHostComponents(forURL url: String) -> [String] {
 	}
 	return result
 }
+*/
 
 func isCliqzGoToURL(url: URL?) -> Bool {
     if let url = url, url.isLocal {
