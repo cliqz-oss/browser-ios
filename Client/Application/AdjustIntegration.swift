@@ -4,7 +4,7 @@
 
 import Foundation
 import Shared
-import AdjustSdk
+//import AdjustSdk
 
 private let AdjustIntegrationErrorDomain = "org.mozilla.ios.Firefox.AdjustIntegrationErrorDomain"
 
@@ -42,6 +42,8 @@ class AdjustIntegration: NSObject {
     /// environment are. If those keys are either missing or empty in the Info.plist then it is
     /// assumed that Adjust is not enabled for this build.
 
+	// Cliqz: removed Adjust from the project
+	/*
     fileprivate func getConfig() -> ADJConfig? {
         guard let settings = getSettings() else {
             return nil
@@ -53,11 +55,14 @@ class AdjustIntegration: NSObject {
         }
         config?.delegate = self
         return config
+		return nil
     }
-
+*/
     /// Returns the Adjust settings from our Info.plist. If the settings are missing or invalid, such as an unknown
     /// environment, then it will return nil.
 
+	// Cliqz: removed Adjust from the project
+/*
     fileprivate func getSettings() -> AdjustSettings? {
         let bundle = Bundle.main
         guard let adjustAppToken = bundle.object(forInfoDictionaryKey: AdjustAppTokenKey) as? String,
@@ -73,7 +78,8 @@ class AdjustIntegration: NSObject {
         }
         return AdjustSettings(appToken: adjustAppToken, environment: environment)
     }
-
+*/
+	
     /// Returns true if the attribution file is present.
 
     fileprivate func hasAttribution() throws -> Bool {
@@ -84,13 +90,16 @@ class AdjustIntegration: NSObject {
     /// written is a JSON file with a single dictionary in it. We add one extra item to it that contains the current
     /// timestamp in seconds since the UNIX epoch.
 
+	// Cliqz: removed Adjust from the project
+	/*
     fileprivate func saveAttribution(_ attribution: ADJAttribution) throws -> Void {
         let dictionary = NSMutableDictionary(dictionary: attribution.dictionary())
         dictionary["_timestamp"] = NSNumber(value: Int64(Date().timeIntervalSince1970) as Int64)
         let data = try JSONSerialization.data(withJSONObject: dictionary, options: [JSONSerialization.WritingOptions.prettyPrinted])
         try data.write(to: URL(fileURLWithPath: try getAttributionPath()), options: [])
     }
-
+*/
+	
     /// Return the path to the `AdjustAttribution.json` file. Throws an `NSError` if we could not build the path.
 
     fileprivate func getAttributionPath() throws -> String {
@@ -120,12 +129,14 @@ class AdjustIntegration: NSObject {
     }
 }
 
-extension AdjustIntegration: AdjustDelegate {
+extension AdjustIntegration { //: AdjustDelegate {
     /// This is called as part of `UIApplication.didFinishLaunchingWithOptions()`. We always initialize the
     /// Adjust SDK. We always let it send the initial attribution ping. Session tracking is only enabled if
     /// the Send Anonymous Usage Data setting is turned on.
 
     func triggerApplicationDidFinishLaunchingWithOptions(_ launchOptions: [AnyHashable: Any]?) -> Void {
+		// Cliqz: removed Adjust from the project
+		/*
         do {
             if let config = getConfig() {
                 // Always initialize Adjust - otherwise we cannot enable/disable it later. Their SDK must be
@@ -148,6 +159,7 @@ extension AdjustIntegration: AdjustDelegate {
             Logger.browserLogger.error("Adjust - Disabling because we failed to configure: \(error)")
             Adjust.setEnabled(false)
         }
+*/
     }
 
     /// This is called when Adjust has figured out the attribution. It will call us with a summary
@@ -156,6 +168,8 @@ extension AdjustIntegration: AdjustDelegate {
     ///
     /// Here we also disable Adjust based on the Send Anonymous Usage Data setting.
 
+	// Cliqz: removed Adjust from the project
+/*
     func adjustAttributionChanged(_ attribution: ADJAttribution!) {
         do {
             Logger.browserLogger.info("Adjust - Saving attribution info to disk")
@@ -172,11 +186,13 @@ extension AdjustIntegration: AdjustDelegate {
             Adjust.setEnabled(false)
         }
     }
+*/
 
     /// This is called from the Settings screen. The settings screen will remember the choice in the
     /// profile and then use this method to disable or enable Adjust.
     
     static func setEnabled(_ enabled: Bool) {
-        Adjust.setEnabled(enabled)
+		// Cliqz: removed Adjust from the project
+//        Adjust.setEnabled(enabled)
     }
 }
