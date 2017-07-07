@@ -89,4 +89,32 @@ open class Engine {
     func renameDevice(_ peerId: String, newName: String) {
         self.getBridge().callAction("mobile-pairing:renameDevice", args: [peerId, newName])
     }
+    
+    func setRandomSeed() {
+        let length = 128
+        if let randomSeed = generateRandomBytes(length) {
+            self.getBridge().callAction("setRandomSeed", args: [randomSeed])
+        }
+    }
+    
+    // MARK: - Private helpers
+    
+    private func generateRandomBytes(_ length: Int) -> String? {
+        var keyData = Data(count: length)
+        let result = keyData.withUnsafeMutableBytes {
+            SecRandomCopyBytes(kSecRandomDefault, keyData.count, $0)
+        }
+        if result == errSecSuccess {
+            return keyData.base64EncodedString()
+        } else {
+            // in case of failure
+            var randomString = ""
+            for _ in 0..<length {
+                let randomNumber = Int(arc4random_uniform(10))
+                randomString += String(randomNumber)
+            }
+            return randomString.data(using: String.Encoding.utf8)?.base64EncodedString()
+        }
+    }
+    
 }
