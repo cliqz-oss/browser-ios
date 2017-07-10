@@ -270,7 +270,7 @@
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Aucune connection wi-fi";
 /* [Connect] No Wi-Fi connection alert message */
-"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles est limité. Veuillez changer les Paramètres > Limiter la consommation des données mobiles.\n";
+"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles est limité. Veuillez changer cela dans Paramètres > Limiter la consommation des données mobiles.\n";
 /* [Connect] Dismiss No Wi-Fi connection alert */
 "Dismiss" = "Annuler";
 /* [Settings] Connect */
@@ -290,7 +290,7 @@
 /* [Connect] instructions text part#1 */
 "Go to " = "Aller ";
 /* [Connect] instructions text part#2 */
-" and select connect to scan the QR-Code" = " and select connect to scan the QR-Code";
+" and select connect to scan the QR-Code" = " et selectionnez";
 /* [Connect] Scan QR-Code alert title */
 "Open Cliqz Browser" = "Ouvrez le Navigateur Cliqz";
 /* [Connect] Scan QR-Code alert message */
