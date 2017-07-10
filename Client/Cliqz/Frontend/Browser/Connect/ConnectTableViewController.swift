@@ -150,7 +150,7 @@ class ConnectTableViewController: SubSettingsTableViewController {
         let alertMessage = NSLocalizedString("Sorry but devices could not be connected. Please try again.", tableName: "Cliqz", comment: "[Connect] Connection Failed alert message")
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Ok"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel"), style: .default, handler: nil))
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Retry", tableName: "Cliqz", comment: "[Connect] Retry button for Connection Failed alert"), style: .default, handler: { (_) in
             ConnectManager.sharedInstance.retryLastConnection()
         }))
@@ -162,6 +162,23 @@ class ConnectTableViewController: SubSettingsTableViewController {
     
     @objc private func connectionSucceeded() {
         logConnectionStatusTelemetrySingal(true)
+        showFirstSuccessfulConnectionAlert()
+    }
+    
+    private func showFirstSuccessfulConnectionAlert() {
+        let successfulConnectionKey = "SuccessfulConnection"
+        guard LocalDataStore.objectForKey(successfulConnectionKey) == nil else {
+            return
+        }
+        LocalDataStore.setObject(true, forKey: successfulConnectionKey)
+        
+        // Show Connection successful Alert
+        let alertTitle = NSLocalizedString("Connection successful", tableName: "Cliqz", comment: "[Connect] Connection successful alert title")
+        let alertMessage = NSLocalizedString(" You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device.", tableName: "Cliqz", comment: "[Connect] Connection Successful alert message")
+        let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Ok", tableName: "Cliqz", comment: "Ok"), style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Telemetry
