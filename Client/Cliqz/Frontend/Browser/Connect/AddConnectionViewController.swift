@@ -118,10 +118,31 @@ class AddConnectionViewController: UIViewController, AVCaptureMetadataOutputObje
             }
             
         } catch {
-            // If any error occurs, simply print it out and don't continue any more.
-            print(error)
+            showAllowCameraAccessAlert()
             return
         }
+    }
+    
+    private func showAllowCameraAccessAlert() {
+        let settingsOptionTitle = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings option for turning on Camera access")
+        let message = NSLocalizedString("Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera.", tableName: "Cliqz", comment: "[Connect] Alert message for turning on Camera access when Scanning QR Code")
+        let settingsAction = UIAlertAction(title: settingsOptionTitle, style: .default) { (_) -> Void in
+            if let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(settingsUrl)
+            }
+        }
+        
+        let title = NSLocalizedString("Allow Camera Access", tableName: "Cliqz", comment: "[Connect] Alert title for turning on Camera access when scanning QRCode")
+        let alertController = UIAlertController (title: title, message: message, preferredStyle: .alert)
+        
+        let notNowOptionTitle = NSLocalizedString("Not Now", tableName: "Cliqz", comment: "Not now option for turning on Camera access")
+        let cancelAction = UIAlertAction(title: notNowOptionTitle, style: .default, handler: nil)
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(settingsAction)
+        
+        present(alertController, animated: true, completion: nil)
+        
     }
     
     private func adjustVideoPreviewLayerFrame() {
