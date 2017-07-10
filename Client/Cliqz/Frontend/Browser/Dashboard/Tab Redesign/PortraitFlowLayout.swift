@@ -67,7 +67,7 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         
         if let attr = attribute.copy() as? TabSwitcherLayoutAttributes {
             
-            attr.zIndex = attr.indexPath.item
+            //attr.zIndex = attr.indexPath.item
             attr.displayTransform = currentTransform
             
             return attr
