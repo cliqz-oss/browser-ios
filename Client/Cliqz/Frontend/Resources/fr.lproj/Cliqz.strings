@@ -270,7 +270,7 @@
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Aucune connection wi-fi";
 /* [Connect] No Wi-Fi connection alert message */
-"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles est";
+"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles est limité. Veuillez changer les Paramètres > Limiter la consommation des données mobiles.\n";
 /* [Connect] Dismiss No Wi-Fi connection alert */
 "Dismiss" = "Annuler";
 /* [Settings] Connect */
