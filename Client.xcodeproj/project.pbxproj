@@ -7845,6 +7845,7 @@
 					"$(PROJECT_DIR)/ThirdParty/PLCrashReporter",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/JSEngine/node_modules/react-native-webrtc/ios",
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8485,6 +8486,7 @@
 					"\"$PODS_CONFIGURATION_BUILD_DIR/React\"",
 					"\"$PODS_CONFIGURATION_BUILD_DIR/RNFS\"",
 					"$(PROJECT_DIR)/ThirdParty/Lookback/HD",
+					"$(PROJECT_DIR)/JSEngine/node_modules/react-native-webrtc/ios",
 				);
 				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				HEADER_SEARCH_PATHS = (
