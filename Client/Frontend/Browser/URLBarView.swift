@@ -83,6 +83,8 @@ protocol URLBarDelegate: class {
     func urlBar(_ urlBar: URLBarView, didEnterText text: String)
     func urlBar(_ urlBar: URLBarView, didSubmitText text: String)
     func urlBarDisplayTextForURL(_ url: URL?) -> String?
+    // Cliqz: Added video download button to urlBar
+    func urlBarDidTapVideoDownload(_ urlBar: URLBarView)
     
     func isPrivate() -> Bool
     
@@ -867,6 +869,11 @@ extension URLBarView: TabLocationViewDelegate {
 
     func tabLocationViewLocationAccessibilityActions(_ tabLocationView: TabLocationView) -> [UIAccessibilityCustomAction]? {
         return delegate?.urlBarLocationAccessibilityActions(self)
+    }
+    
+    //Cliqz: Added video download button
+    func tabLocationViewDidTapVideoDownload(_ tabLocationView: TabLocationView) {
+        delegate?.urlBarDidTapVideoDownload(self)
     }
 }
 
