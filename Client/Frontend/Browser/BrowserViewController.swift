@@ -2008,7 +2008,13 @@ extension BrowserViewController: URLBarDelegate {
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "new_tab")
     }
-
+    
+    // Cliqz: Added video download button to urlBar
+    func urlBarDidTapVideoDownload(_ urlBar: URLBarView) {
+        if let url = self.urlBar.currentURL {
+            self.downloadVideoFromURL(url.absoluteString, sourceRect: urlBar.frame)
+        }
+    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {

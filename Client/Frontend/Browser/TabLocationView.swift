@@ -17,6 +17,8 @@ protocol TabLocationViewDelegate {
     /// - returns: whether the long-press was handled by the delegate; i.e. return `false` when the conditions for even starting handling long-press were not satisfied
     func tabLocationViewDidLongPressReaderMode(_ tabLocationView: TabLocationView) -> Bool
     func tabLocationViewLocationAccessibilityActions(_ tabLocationView: TabLocationView) -> [UIAccessibilityCustomAction]?
+    //Cliqz: Added video download button
+    func tabLocationViewDidTapVideoDownload(_ tabLocationView: TabLocationView)
 }
 
 struct TabLocationViewUX {
@@ -68,6 +70,7 @@ class TabLocationView: UIView {
             if wasHidden != lockImageView.isHidden {
                 UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
             }
+            videoDownloadButton.isHidden = !YoutubeVideoDownloader.isYoutubeURL(url)
             updateTextWithURL()
             setNeedsUpdateConstraints()
         }
@@ -167,6 +170,17 @@ class TabLocationView: UIView {
         return readerModeButton
     }()
 
+    // Cliqz: Added video download button
+    private lazy var videoDownloadButton: UIButton = {
+        let videoDownloadButton = UIButton(frame: CGRect.zero)
+        videoDownloadButton.isHidden = true
+        videoDownloadButton.setImage(UIImage(named: "downloadVideo"), for: .normal)
+        videoDownloadButton.addTarget(self, action: #selector(TabLocationView.SELtapVideoDownloadButton), for: .touchUpInside)
+        videoDownloadButton.isAccessibilityElement = true
+        videoDownloadButton.accessibilityLabel = NSLocalizedString("Download Video", comment: "Accessibility label for the Download Video button")
+        return videoDownloadButton
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -177,6 +191,8 @@ class TabLocationView: UIView {
         addSubview(forgetModeImageView)
         addSubview(lockImageView)
         addSubview(readerModeButton)
+        // Cliqz: Added video download button
+        addSubview(videoDownloadButton)
         
         // Cliqz: added constaints for forget mode icon
         forgetModeImageView.snp_makeConstraints { make in
@@ -206,6 +222,13 @@ class TabLocationView: UIView {
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         
+        // Cliqz: Added video download button
+        videoDownloadButton.snp_makeConstraints { make in
+            make.centerY.equalTo(self)
+            make.leading.equalTo(readerModeButton.snp_trailing)
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
+        }
+
         // Cliqz: moved the guesture recognizers to the tabLocationView as the urlTextField does not take the whole view
         self.longPressRecognizer.delegate = self
         self.addGestureRecognizer(self.longPressRecognizer)
@@ -216,7 +239,7 @@ class TabLocationView: UIView {
 
     override var accessibilityElements: [Any]! {
         get {
-            return [forgetModeImageView, lockImageView, urlTextField, readerModeButton].filter { !$0.isHidden }
+            return [forgetModeImageView, lockImageView, urlTextField, readerModeButton, videoDownloadButton].filter { !$0.isHidden }
         }
         set {
             super.accessibilityElements = newValue
@@ -245,13 +268,33 @@ class TabLocationView: UIView {
                 make.leading.equalTo(forgetModeImageView.snp_trailing)
             }
         }
+        
+        videoDownloadButton.snp_remakeConstraints { make in
+            
+            make.centerY.equalTo(self)
+            make.width.equalTo(TabLocationViewUX.ButtonWidth)
+            
+            if readerModeButton.isHidden {
+                if forgetModeImageView.isHidden {
+                    make.leading.equalTo(self)
+                } else {
+                    make.leading.equalTo(forgetModeImageView.snp_trailing)
+                }
+            } else {
+                make.leading.equalTo(readerModeButton.snp_trailing)
+            }
+        }
         super.updateConstraints()
     }
 
     func SELtapReaderModeButton() {
         delegate?.tabLocationViewDidTapReaderMode(self)
     }
-
+    
+    func SELtapVideoDownloadButton() {
+        delegate?.tabLocationViewDidTapVideoDownload(self)
+    }
+    
     func SELlongPressReaderModeButton(_ recognizer: UILongPressGestureRecognizer) {
         if recognizer.state == UIGestureRecognizerState.began {
             delegate?.tabLocationViewDidLongPressReaderMode(self)
@@ -347,6 +390,9 @@ class TabLocationView: UIView {
         }
         if !readerModeButton.isHidden {
             maxWidth -= readerModeButton.frame.width
+        }
+        if !videoDownloadButton.isHidden {
+            maxWidth -= videoDownloadButton.frame.width
         }
         
         return maxWidth

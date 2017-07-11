@@ -14,7 +14,8 @@ import Alamofire
 
 class YoutubeVideoDownloader {
 
-	class func isYoutubeURL(_ url: URL) -> Bool {
+	class func isYoutubeURL(_ url: URL?) -> Bool {
+        guard let url = url else { return false }
 		let pattern = "https?://(m\\.|www\\.)?youtube.+/watch\\?v=.*"
 		return url.absoluteString.range(of: pattern, options: .regularExpression) != nil
 	}
