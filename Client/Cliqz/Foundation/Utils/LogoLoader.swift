@@ -20,6 +20,19 @@ struct LogoInfo {
 	var hostName: String?
 }
 
+extension String {
+
+	func asciiValue() -> Int {
+		var s = UInt32(0)
+		for ch in self.unicodeScalars {
+			if ch.isASCII {
+				s += ch.value
+			}
+		}
+		return Int(s)
+	}
+}
+
 class LogoLoader {
 
 	private static let dbVersion = "1483980213630"
@@ -30,7 +43,7 @@ class LogoLoader {
 			if self._logoDB == nil {
 				if let path = Bundle.main.path(forResource: "logo-database", ofType: "json", inDirectory: "Extension/build/mobile/search/core"),
 				   let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data {
-					self._logoDB = JSON(jsonData)["domains"]
+					self._logoDB = JSON(jsonData)
 				}
 			}
 			return self._logoDB
@@ -57,17 +70,16 @@ class LogoLoader {
 
 	private class func fetchLogoDetails(_ url: String) -> LogoInfo {
 		var logoDetails = LogoInfo()
-		logoDetails.color = "000000"
+		logoDetails.color = nil
 		logoDetails.fontSize = 16
 		if let urlDetails = URLParser.getURLDetails(url),
 		   let hostName = urlDetails.name,
-		   let details = self.logoDB?[hostName] {
+		   let details = self.logoDB?["domains"][hostName] {
 			logoDetails.hostName = hostName
 			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: 2)).capitalized
 			if let list = details.array,
 				list.count > 0 {
 				for info in list {
-
 					if info != JSON.null,
 					   let r = info["r"].string,
 					   isMatchingLogoRule(urlDetails, r) || info == list.last {
@@ -81,6 +93,15 @@ class LogoLoader {
 						}
 					}
 				}
+			}
+		}
+		if logoDetails.color == nil {
+			logoDetails.color = "000000"
+			let palette = self.logoDB?["palette"]
+			if let list = palette?.array,
+				let asciiVal = logoDetails.hostName?.asciiValue() {
+				let idx = asciiVal % list.count
+				logoDetails.color = list[idx].string
 			}
 		}
 		return logoDetails
