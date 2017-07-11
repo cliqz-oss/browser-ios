@@ -150,7 +150,7 @@
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "Stai navigando su un DimentiTab: i siti web che visiti in questa modalità non appariranno nella cronologia e i tuoi dati locali, cookie inclusi, non verranno salvati.";
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "Qui apparariranno i tuoi siti più visitati.";
+"Empty TopSites hint" = "Qui appariranno i tuoi siti più visitati.";
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
 /* Ad-Blocking panel name on control center. */
