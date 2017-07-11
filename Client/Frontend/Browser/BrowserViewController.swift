@@ -1029,6 +1029,7 @@ class BrowserViewController: UIViewController {
     }
 
     fileprivate func finishEditingAndSubmit(_ url: URL, visitType: VisitType) {
+        
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
         
@@ -1045,6 +1046,11 @@ class BrowserViewController: UIViewController {
 		}
 #endif
 
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+            self.openURLInNewTab(url, isPrivate: true)
+            return
+        }
+        
         if let nav = tab.loadRequest(PrivilegedRequest(url: url) as URLRequest) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
         }
@@ -1292,20 +1298,28 @@ class BrowserViewController: UIViewController {
     }
 
     func openURLInNewTab(_ url: URL?, isPrivate: Bool = false) {
+        
+        var _isPrivate = isPrivate
+        
         if let selectedTab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(selectedTab)
         }
         let request: URLRequest?
         if let url = url {
             request = PrivilegedRequest(url: url) as URLRequest
+            
+            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+                _isPrivate = true
+            }
+            
         } else {
             request = nil
         }
         if #available(iOS 9, *) {
-            switchToPrivacyMode(isPrivate: isPrivate)
-            tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+            switchToPrivacyMode(isPrivate: _isPrivate)
+            _ = tabManager.addTabAndSelect(request, isPrivate: _isPrivate)
         } else {
-            tabManager.addTabAndSelect(request)
+            _ = tabManager.addTabAndSelect(request)
         }
     }
 
