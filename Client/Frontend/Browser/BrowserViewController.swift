@@ -1372,15 +1372,6 @@ class BrowserViewController: UIViewController {
     fileprivate func presentActivityViewController(_ url: URL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
-		// Cliqz: Added Activity for Youtube video downloader from sharing menu
-		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
-			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
-				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_page"]))
-                self.downloadVideoFromURL(url.absoluteString, sourceRect: sourceRect)
-			}
-			activities.append(youtubeDownloader)
-		}
-        
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
             // Cliqz: log telemetry signal for share menu
