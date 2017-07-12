@@ -74,7 +74,7 @@
 /* Hide images title */
 "Hide Images" = "Masquer les images";
 /* Night mode title */
-"Night Mode" = "Night Mode";
+"Night Mode" = "Mode Nuit";
 /* Turn off Night mode title */
 "Night Mode off" = "Night Mode Off";
 /* Remove favorites title */
@@ -108,9 +108,9 @@
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "Le premier navigateur avec recherche intégrée\n\nno detours, directly to the right destination.";
 /* Second card text in onBorading */
-"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Tapez ici votre requête.\n\nVous verrez les résultats meilleurs.\n\nFrappez pour en voir d'autres.";
 /* Thrid card text in onBorading */
-"When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
+"When you share your location, you also get results for locations near you (Google Maps)" = "En partageant votre position, vous verrez des résultats pour des endroit à vous prôches.";
 /* Start buttun title for onBorading */
 "Let's start!" = "Commencer";
 /* Toast message shown when youtube video download started */
@@ -264,13 +264,13 @@
 /* [Settings -> About] Licenses */
 "Licenses" = "Licenses";
 /* [Settings] Limit Mobile Data Usage */
-"Limit Mobile Data Usage" = "Limiter la consommation des données mobiles.";
+"Limit Mobile Data Usage" = "Limiter la consommation des données mobiles";
 /* [Settings -> Limit Mobile Data Usage] toogle footer */
 "Download videos on Wi-Fi Only" = "Télécharger les vidéos seulement sur wi-fi";
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Aucune connection wi-fi";
 /* [Connect] No Wi-Fi connection alert message */
-"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles est limité. Veuillez changer cela dans Paramètres > Limiter la consommation des données mobiles.\n";
+"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles n'est pas permis. \nVeuillez changer cela dans Paramètres > Limiter la consommation des données mobiles.\n";
 /* [Connect] Dismiss No Wi-Fi connection alert */
 "Dismiss" = "Annuler";
 /* [Settings] Connect */
@@ -290,7 +290,7 @@
 /* [Connect] instructions text part#1 */
 "Go to " = "Aller ";
 /* [Connect] instructions text part#2 */
-" and select connect to scan the QR-Code" = " et selectionnez";
+" and select connect to scan the QR-Code" = " et sélectionnez «Connect» pour lire le code QR.";
 /* [Connect] Scan QR-Code alert title */
 "Open Cliqz Browser" = "Ouvrez le Navigateur Cliqz";
 /* [Connect] Scan QR-Code alert message */
@@ -300,7 +300,7 @@
 /* [Connect] Connection Failed alert message */
 "Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.\n";
 /* [Connect] Retry button for Connection Failed alert */
-"Retry" = "Veuillez réessayer.";
+"Retry" = "Veuillez réessayer";
 /* [Settings -> Connect] remove connection */
 "Remove Connection" = "Annuler la connexion";
 /* [Settings -> Connect] rename connection */
