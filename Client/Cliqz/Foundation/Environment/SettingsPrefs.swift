@@ -16,6 +16,7 @@ class SettingsPrefs {
     static let HumanWebPrefKey = "humanweb.toggle"
 	static let ShowAntitrackingHintKey = "showAntitrackingHint"
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
+    static let ShowVideoDownloaderHintKey = "ShowVideoDownloaderHint"
     static let blockPopupsPrefKey = "blockPopups"
     static let countryPrefKey = "UserCountry"
     static let querySuggestionPrefKey = "QuerySuggestion"
@@ -73,6 +74,10 @@ class SettingsPrefs {
 	class func updateShowCliqzSearchHintPref(_ newValue: Bool) {
 		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue as AnyObject)
 	}
+    
+    class func updateShowVideoDownloaderHintPref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(ShowVideoDownloaderHintKey, value: newValue as AnyObject)
+    }
 
 	class func getShowCliqzSearchHintPref() -> Bool {
 		let defaultValue = true
@@ -88,7 +93,15 @@ class SettingsPrefs {
 			return showAntitrackingHintPref
 		}
 		return defaultValue
-	}
+    }
+    
+    class func getShowVideoDownloaderHintPref() -> Bool {
+        let defaultValue = true
+        if let showVideoDownloaderPref = SettingsPrefs.getBoolPref(ShowVideoDownloaderHintKey) {
+            return showVideoDownloaderPref
+        }
+        return defaultValue
+    }
 
     
     class func getBlockPopupsPref() -> Bool {

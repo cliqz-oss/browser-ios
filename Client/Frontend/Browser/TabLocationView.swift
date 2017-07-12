@@ -19,6 +19,7 @@ protocol TabLocationViewDelegate {
     func tabLocationViewLocationAccessibilityActions(_ tabLocationView: TabLocationView) -> [UIAccessibilityCustomAction]?
     //Cliqz: Added video download button
     func tabLocationViewDidTapVideoDownload(_ tabLocationView: TabLocationView)
+    func tabLocationViewDidShowVideoDownload(_ tabLocationView: TabLocationView)
 }
 
 struct TabLocationViewUX {
@@ -72,6 +73,7 @@ class TabLocationView: UIView {
             }
             if YoutubeVideoDownloader.isYoutubeURL(url) {
                 videoDownloadButton.isHidden = false
+                delegate?.tabLocationViewDidShowVideoDownload(self)
                 TelemetryLogger.sharedInstance.logEvent(.Toolbar("show", nil, "video_downloader", nil, nil))
             } else {
                 videoDownloadButton.isHidden = true

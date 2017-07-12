@@ -315,3 +315,7 @@
 "Allow Camera Access" = "Kamerazugriff erlauben";
 /* [Connect] Alert message for turning on Camera access when Scanning QR Code */
 "Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz Browser kann nicht auf die Kamera zugreifen. Um Zugriff zu erlauben, tippe auf „Einstellungen“ und aktiviere die Kamera.";
+/* Video Downloader hint title */
+"Video Downloader" = "Video Downloader";
+/* Video Downloader hint description */
+"Download YouTube videos to your Smartphone." = "Lade YouTube-Videos auf dein Smartphone herunter.";

@@ -2017,6 +2017,12 @@ extension BrowserViewController: URLBarDelegate {
             TelemetryLogger.sharedInstance.logEvent(.Toolbar("click", "video_downloader", "web", isForgetMode, nil))
         }
     }
+    
+    func urlBarDidShowVideoDownload(_ urlBar: URLBarView) {
+        if InteractiveIntro.sharedInstance.shouldShowVideoDownloaderHint() {
+            self.showHint(.videoDownloader)
+        }
+    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {
