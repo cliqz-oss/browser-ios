@@ -308,3 +308,11 @@
 "Rename Connection" = "Rinomina la connessione";
 /* [Settings -> Connect] rename connection alert message */
 "Prompt description" = "Scegli un nuovo nome per la connessione:";
+/* [Connect] Connection successful alert title */
+"Connection successful" = "Connessione stabilita";
+/* [Connect] Connection Successful alert message */
+"You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device." = "Hai connesso il tuo primo dispositivo! \n\nOra sei pront* per inviare siti web e video YouTube  dal computer al tuo smartphone";
+/* [Connect] Alert title for turning on Camera access when scanning QRCode */
+"Allow Camera Access" = "Consenti l’accesso alla fotocamera";
+/* [Connect] Alert message for turning on Camera access when Scanning QR Code */
+"Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz non può accedere alla fotocamera. Per consentire l’accesso, clicca su Impostazioni e attiva la fotocamera.";
