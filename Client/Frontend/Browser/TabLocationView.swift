@@ -70,7 +70,13 @@ class TabLocationView: UIView {
             if wasHidden != lockImageView.isHidden {
                 UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
             }
-            videoDownloadButton.isHidden = !YoutubeVideoDownloader.isYoutubeURL(url)
+            if YoutubeVideoDownloader.isYoutubeURL(url) {
+                videoDownloadButton.isHidden = false
+                TelemetryLogger.sharedInstance.logEvent(.Toolbar("show", nil, "video_downloader", nil, nil))
+            } else {
+                videoDownloadButton.isHidden = true
+            }
+            
             updateTextWithURL()
             setNeedsUpdateConstraints()
         }

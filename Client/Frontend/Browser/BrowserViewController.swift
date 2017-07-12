@@ -2013,6 +2013,8 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidTapVideoDownload(_ urlBar: URLBarView) {
         if let url = self.urlBar.currentURL {
             self.downloadVideoFromURL(url.absoluteString, sourceRect: urlBar.frame)
+            let isForgetMode = self.tabManager.selectedTab?.isPrivate
+            TelemetryLogger.sharedInstance.logEvent(.Toolbar("click", "video_downloader", "web", isForgetMode, nil))
         }
     }
 }
@@ -3568,7 +3570,8 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         var dialogTitle: String?
-
+        let telemetryView = getTelemetryView(elements.link)
+        
         if let url = elements.link, let currentTab = tabManager.selectedTab {
             dialogTitle = url.absoluteString
             let isPrivate = currentTab.isPrivate
@@ -3577,7 +3580,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(URLRequest(url: url as URL))
-                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", telemetryView))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
@@ -3590,7 +3593,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
-                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", telemetryView))
                         self.tabManager.addTab(URLRequest(url: url as URL), isPrivate: true)
                     })
                 }
@@ -3602,7 +3605,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
                 let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_link"]))
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu("download_video", telemetryView))
                 }
                 actionSheetController.addAction(downloadVideo)
             }
@@ -3610,14 +3613,14 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.general
                 pasteBoard.url = url as URL
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", telemetryView))
             }
             actionSheetController.addAction(copyAction)
 
             let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
             let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.default) { _ in
                 self.presentActivityViewController(url as URL, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .any)
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", telemetryView))
             }
             actionSheetController.addAction(shareAction)
         }
@@ -3686,13 +3689,17 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         actionSheetController.title = dialogTitle?.ellipsize(maxLength: ActionSheetTitleMaxLength)
         let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.cancel){ (action: UIAlertAction) -> Void in
-            let view = elements.link != nil ? "link" : "image"
-            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", telemetryView))
         }
         actionSheetController.addAction(cancelAction)
         self.present(actionSheetController, animated: true, completion: nil)
     }
-
+    
+    private func getTelemetryView(_ url: URL?) -> String {
+        guard let url = url else {return "image"}
+        return YoutubeVideoDownloader.isYoutubeURL(url) ? "video" : "link"
+    }
+    
     fileprivate func getImage(_ url: URL, success: @escaping (UIImage) -> ()) {
 		Alamofire.request(url, method: .get)
             .validate(statusCode: 200..<300)
