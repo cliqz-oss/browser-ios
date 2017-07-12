@@ -23,7 +23,7 @@ public enum TelemetryLogEventType {
     case NewsNotification   (String)
 	case YoutubeVideoDownloader	(String, [String: Any]?)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool?, [String: Any]?)
+    case Toolbar            (String, String?, String, Bool?, [String: Any]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case AntiPhishing            (String, String?, Int?)
@@ -424,13 +424,16 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    fileprivate func createToolbarEvent(_ action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: Any]?) -> [String: Any] {
+    fileprivate func createToolbarEvent(_ action: String, target: String?, view: String, isForgetMode: Bool?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
         event["action"] = action
-        event["target"] = target
         event["view"] = view
+        
+        if let target = target {
+            event["target"] = target
+        }
         
         if let isForgetMode = isForgetMode {
             event["is_forget"] = isForgetMode
