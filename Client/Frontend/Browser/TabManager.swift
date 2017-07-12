@@ -568,6 +568,8 @@ extension TabManager {
         }
 
         init?(tab: Tab, isSelected: Bool) {
+            guard !tab.isPrivate else { return nil }
+            
             // Cliqz: preserve tabs is done now in background thread
 //            assert(NSThread.isMainThread())
 

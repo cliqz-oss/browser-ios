@@ -2958,7 +2958,7 @@ extension BrowserViewController: WKNavigationDelegate {
         }
         
         //Cliqz: store changes of tabs 
-        if let url = tab.url {
+        if let url = tab.url, !tab.isPrivate {
             if !ErrorPageHelper.isErrorPageURL(url) {
                 self.tabManager.storeChanges()
             }
