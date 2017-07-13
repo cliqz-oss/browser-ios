@@ -15,6 +15,7 @@ class EditConnectionViewController: SubSettingsTableViewController {
     
     
     var connection: Connection?
+    var connectionRemoved = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +69,7 @@ class EditConnectionViewController: SubSettingsTableViewController {
     //MARK: - Private Helpers
     func removeConnection() {
         ConnectManager.sharedInstance.removeConnection(connection)
+        connectionRemoved = true
         self.navigationController?.popViewController(animated: true)
         logAlterConnectionTelemetrySingal("remove")
     }
@@ -106,12 +108,16 @@ class EditConnectionViewController: SubSettingsTableViewController {
         guard let openTime = settingsOpenTime else {
             return
         }
-        
-        let customData: [String : Any] = ["view" : getViewName(),
-                                          "target" : "back",
+        var customData: [String : Any] = ["view" : getViewName(),
                                           "show_duration": Int(Date.getCurrentMillis() - openTime)]
         
-        let signal = TelemetryLogEventType.Connect("click", customData)
+        var signal: TelemetryLogEventType!
+        if connectionRemoved {
+            signal = .Connect("hide", customData)
+        } else {
+            customData["target"] = "back"
+            signal = .Connect("back", customData)
+        }
         TelemetryLogger.sharedInstance.logEvent(signal)
         
         settingsOpenTime = nil
