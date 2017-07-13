@@ -37,6 +37,10 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
 
 	func downloadVideoFromURL(_ url: String, sourceRect: CGRect) {
+        guard self.canDownloadYoutubeVideo() else {
+            return
+        }
+        
 		if let filepath = Bundle.main.path(forResource: "main", ofType: "js") {
 			do {
                 let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
@@ -323,15 +327,19 @@ extension BrowserViewController: ControlCenterViewDelegate {
         guard let data = notification.object as? [String: String], let urlString = data["url"] else {
             return
         }
-        
+        if self.canDownloadYoutubeVideo() {
+            YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
+        }
+    }
+    
+    private func canDownloadYoutubeVideo() -> Bool {
         let limitMobileDataUsage = SettingsPrefs.getLimitMobileDataUsagePref()
         
         if let networkReachabilityStatus = NetworkReachability.sharedInstance.networkReachabilityStatus, limitMobileDataUsage == true && networkReachabilityStatus != .reachableViaWiFi {
             showNoWifiConnectionAlert()
-            return
+            return false
         }
-        
-        YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
+        return true
     }
     
     func showNoWifiConnectionAlert() {
