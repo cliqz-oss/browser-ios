@@ -53,6 +53,7 @@
 		1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E106E581E643C1C00E6F53B /* QuerySuggestions.swift */; };
 		1E1864FB1D5B14FF0079B2CE /* WebViewScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */; };
 		1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */; };
+		1E19D9811F17A5B600BF3EAA /* BackgroundTasksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E19D9801F17A5B600BF3EAA /* BackgroundTasksManager.swift */; };
 		1E1CB9A31DD46C050098D980 /* FeedbackUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */; };
 		1E2AD4DE1EC2F26700F71159 /* AddConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2AD4DD1EC2F26700F71159 /* AddConnectionViewController.swift */; };
 		1E2AD4EF1EC33B9C00F71159 /* ConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2AD4EE1EC33B9C00F71159 /* ConnectManager.swift */; };
@@ -1448,6 +1449,7 @@
 		1E1864FA1D5B14FF0079B2CE /* WebViewScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewScripting.swift; sourceTree = "<group>"; };
 		1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyJSContext.h; sourceTree = "<group>"; };
 		1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegacyJSContext.m; sourceTree = "<group>"; };
+		1E19D9801F17A5B600BF3EAA /* BackgroundTasksManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTasksManager.swift; sourceTree = "<group>"; };
 		1E1CB9A21DD46C050098D980 /* FeedbackUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackUI.swift; sourceTree = "<group>"; };
 		1E2AD4DD1EC2F26700F71159 /* AddConnectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddConnectionViewController.swift; sourceTree = "<group>"; };
 		1E2AD4EE1EC33B9C00F71159 /* ConnectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectManager.swift; sourceTree = "<group>"; };
@@ -2813,6 +2815,7 @@
 			children = (
 				1E79DCAD1D4FB2C5006BEB4A /* NewsNotificationPermissionHelper.swift */,
 				1E79DCAE1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift */,
+				1E19D9801F17A5B600BF3EAA /* BackgroundTasksManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -6678,6 +6681,7 @@
 				7B59FC411C68E9B600F58EF5 /* SWLongPressGestureRecognizer.m in Sources */,
 				3BCE6D3C1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift in Sources */,
 				1E79DEA21D508368006BEB4A /* AWSSTSService.m in Sources */,
+				1E19D9811F17A5B600BF3EAA /* BackgroundTasksManager.swift in Sources */,
 				745DAB301CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift in Sources */,
 				B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */,
 				1E79DD101D4FB2C5006BEB4A /* EventsLogger.swift in Sources */,
