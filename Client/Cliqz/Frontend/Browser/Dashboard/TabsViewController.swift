@@ -197,12 +197,22 @@ class TabsViewController: UIViewController {
             return
         }
         
+        var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
+        let tabsCount = self.tabManager.tabs.count
+        if tabsCount > 1 {
+            closeAllTabsHandler = { (action: UIAlertAction) in
+                self.tabManager.removeAll()
+                TelemetryLogger.sharedInstance.logEvent(.DashBoard("close_all_tabs", "click", "new_forget_tab", nil))
+                self.navigationController?.popViewController(animated: false)
+            }
+        }
+        
         let cancelHandler = { (action: UIAlertAction) in
             // do no thing
             TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
         }
         
-        let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+        let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler, closeAllTabsHandler: closeAllTabsHandler)
         
         self.present(actionSheetController, animated: true, completion: nil)
         
