@@ -64,9 +64,9 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	
 	func downloadVideoOfSelectedFormat(_ urls: [AnyObject], sourceRect: CGRect) {
 		if urls.count > 0 {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "true"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": true]))
 		} else {
-			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", "is_downloadable", "false"))
+			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": false]))
 		}
         FeedbackUI.dismissHUD()
         let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
@@ -76,12 +76,12 @@ extension BrowserViewController: ControlCenterViewDelegate {
 			if let f = url["label"] as? String, let u = url["url"] as? String {
 				actionSheet.addAction(UIAlertAction(title: f, style: .default, handler: { _ in
 					YoutubeVideoDownloader.downloadFromURL(u)
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", f.replace(" ", replacement: "_")))
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": f.replace(" ", replacement: "_")]))
 				}))
 			}
 		}
         actionSheet.addAction(UIAlertAction(title: UIConstants.CancelString, style: .cancel, handler: { _ in
-            TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target", "cancel"))
+            TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": "cancel"]))
         }))
         
         if let popoverPresentationController = actionSheet.popoverPresentationController {
@@ -302,5 +302,55 @@ extension BrowserViewController: ControlCenterViewDelegate {
 		}
 		
 	}
+    
+    // MARK: - Connect
+    
+    func openTabViaConnect(notification: NSNotification) {
+        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
+            return
+        }
+        if let url = URL(string: urlString)  {
+            openURLInNewTab(url)
+            self.urlBar.leaveOverlayMode()
+            self.homePanelController?.view.isHidden = true
+        }
+        
+        // Telemetry
+        TelemetryLogger.sharedInstance.logEvent(.Connect("open_tab", nil))
+    }
+    
+    func downloadVideoViaConnect(notification: NSNotification) {
+        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
+            return
+        }
+        
+        let limitMobileDataUsage = SettingsPrefs.getLimitMobileDataUsagePref()
+        
+        if let networkReachabilityStatus = NetworkReachability.sharedInstance.networkReachabilityStatus, limitMobileDataUsage == true && networkReachabilityStatus != .reachableViaWiFi {
+            showNoWifiConnectionAlert()
+            return
+        }
+        
+        YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
+    }
+    
+    func showNoWifiConnectionAlert() {
+        let title = NSLocalizedString("No Wi-Fi Connection", tableName: "Cliqz", comment: "[Connect] No Wi-Fi connection alert title")
+        let message = NSLocalizedString("No Wi-Fi Connection message", tableName: "Cliqz", comment: "[Connect] No Wi-Fi connection alert message")
+        
+        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings"), style: .default) { (_) in
+            
+            self.openSettings()
+        }
+        
+        let dismissAction = UIAlertAction(title: NSLocalizedString("Dismiss", tableName: "Cliqz", comment: "Dismiss No Wi-Fi connection alert"), style: .cancel) { (_) in }
+        
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(settingsAction)
+        alertController.addAction(dismissAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
 }
 

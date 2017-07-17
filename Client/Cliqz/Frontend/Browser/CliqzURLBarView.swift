@@ -17,10 +17,14 @@ enum Whitelisted {
     case undefined
 }
 
+protocol CliqzURLBarViewProtocol: class{
+    func isPrivate() -> Bool
+}
+
 class CliqzURLBarView: URLBarView {
 
-	static let antitrackingGreenBackgroundColor = UIColor(rgb: 0x2CBA84)
-    static let antitrackingOrangeBackgroundColor = UIColor(rgb: 0xF5C03E)
+	static let antitrackingGreenBackgroundColor = UIConstants.CliqzThemeColor
+    static let antitrackingOrangeBackgroundColor = UIConstants.GhosteryGray
 	static let antitrackingButtonSize = CGSize(width: 42, height: CGFloat(URLBarViewUX.LocationHeight))
 	private var trackersCount = 0
     
@@ -49,8 +53,10 @@ class CliqzURLBarView: URLBarView {
         return button
     }()
     
-    static let antitrackingGreenIcon = UIImage(named: "antitrackingGreen")
-    static let antitrackingOrangeIcon = UIImage(named: "antitrackingOrange")
+    static let antitrackingActiveNormal = UIImage(named: "antitrackingActiveNormal")
+    static let antitrackingInactiveNormal = UIImage(named: "antitrackingInactiveNormal")
+    static let antitrackingActiveForget = UIImage(named: "antitrackingActiveForget")
+    static let antitrackingInactiveForget = UIImage(named: "antitrackingInactiveForget")
     
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -136,10 +142,10 @@ class CliqzURLBarView: URLBarView {
             theURL = url
         }
         else {
-            return CliqzURLBarView.antitrackingGreenIcon
+            return (delegate?.isPrivate() ?? false) ? CliqzURLBarView.antitrackingActiveForget : CliqzURLBarView.antitrackingActiveNormal
         }
         
-        guard let domain = theURL.host else {return CliqzURLBarView.antitrackingGreenIcon}
+        guard let domain = theURL.host else {return (delegate?.isPrivate() ?? false) ? CliqzURLBarView.antitrackingActiveForget : CliqzURLBarView.antitrackingActiveNormal}
         var isAntiTrackingEnabled = false
         
         //Doc: If the observer checks if the website is whitelisted, it might get the wrong value, since the correct value may not be set yet. 
@@ -152,11 +158,11 @@ class CliqzURLBarView: URLBarView {
         
         let isWebsiteOnPhisingList = AntiPhishingDetector.isDetectedPhishingURL(theURL)
         
-        if isAntiTrackingEnabled && !isWebsiteOnPhisingList{
-            return CliqzURLBarView.antitrackingGreenIcon
+        if isAntiTrackingEnabled && !isWebsiteOnPhisingList {
+            return (delegate?.isPrivate() ?? false) ? CliqzURLBarView.antitrackingActiveForget : CliqzURLBarView.antitrackingActiveNormal
         }
         
-        return CliqzURLBarView.antitrackingOrangeIcon
+        return (delegate?.isPrivate() ?? false) ? CliqzURLBarView.antitrackingInactiveForget : CliqzURLBarView.antitrackingInactiveNormal
     }
 
 	fileprivate func commonInit() {
@@ -164,16 +170,16 @@ class CliqzURLBarView: URLBarView {
         NotificationCenter.default.addObserver(self, selector:#selector(refreshAntiTrackingButton) , name: NSNotification.Name(rawValue: NotificationRefreshAntiTrackingButton), object: nil)
         
 		addSubview(self.antitrackingButton)
-		antitrackingButton.snp_makeConstraints { make in
+		antitrackingButton.snp.makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1 * URLBarViewUX.ButtonWidth)
+			make.leading.equalTo(self.locationContainer.snp.trailing).offset(-1 * URLBarViewUX.ButtonWidth)
 			make.size.equalTo(CliqzURLBarView.antitrackingButtonSize)
 		}
         
         addSubview(newTabButton)
         // Cliqz: Changed new tab position, now it should be befores tabs button
         newTabButton.snp.makeConstraints { make in
-            make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+            make.right.equalTo(self.tabsButton.snp.left).offset(-URLBarViewUX.URLBarButtonOffset)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }

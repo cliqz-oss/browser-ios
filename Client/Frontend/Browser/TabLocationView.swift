@@ -27,7 +27,7 @@ struct TabLocationViewUX {
     static let HostPitch = 1.0
     static let LocationContentInset = 8
     // Cliqz: added constant for buttons width
-    static let ButtonWidth = 25.0
+    static let ButtonWidth = 32.0
     
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
@@ -194,14 +194,15 @@ class TabLocationView: UIView {
         lockImageView.snp_makeConstraints { make in
             make.trailing.equalTo(urlTextField.snp_leading)
             make.centerY.equalTo(self)
-            // Cliqz: changd the width constraint of the lockImageView
+            // Cliqz: changed the width constraint of the lockImageView
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         
         readerModeButton.snp_makeConstraints { make in
             make.centerY.equalTo(self)
-            make.leading.equalTo(forgetModeImageView.snp_trailing)
-            // Cliqz: changd the width constraint of the readerModeButton
+            make.leading.equalTo(forgetModeImageView.snp.trailing)
+            // Cliqz: changed the width constraint of the readerModeButton
+            make.height.equalTo(self)
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         

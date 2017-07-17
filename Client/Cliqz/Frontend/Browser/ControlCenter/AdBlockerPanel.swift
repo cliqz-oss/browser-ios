@@ -80,9 +80,8 @@ class AdBlockerPanel: AntitrackingPanel {
         else {
             panelIcon.snp.remakeConstraints { (make) in
                 make.centerX.equalTo(self.view)
-                make.top.equalTo(titleLabel.snp.bottom).offset(20)
-                make.height.equalTo(75)
-                make.width.equalTo(75)
+                make.top.equalTo(titleLabel.snp.bottom).offset(12)
+                make.height.width.equalTo(44)
             }
         }
 		

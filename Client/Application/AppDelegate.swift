@@ -203,6 +203,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         sendCorePing()
 		
+        //Init the bloomFilter
+        _ = BloomFilterManager.sharedInstance
+        
         log.debug("Done with setting up the application.")
 
         return true
@@ -253,7 +256,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         log.debug("Setting up Adjust")
         self.adjustIntegration?.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
-        
+		
         log.debug("Making window key and visible…")
         self.window!.makeKeyAndVisible()
         

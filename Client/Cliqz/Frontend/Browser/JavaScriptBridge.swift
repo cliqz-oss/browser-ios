@@ -299,7 +299,7 @@ class JavaScriptBridge {
             UIApplication.shared.openURL(url)
         }
     }
-    
+
     fileprivate func openGoogleMaps(_ url: String) {
         if let mapURL = URL(string:url) {
             delegate?.didSelectUrl(mapURL)

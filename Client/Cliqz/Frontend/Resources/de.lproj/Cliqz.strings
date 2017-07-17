@@ -263,3 +263,55 @@
 "Privacy Policy" = "Datenschutzerklärung";
 /* [Settings -> About] Licenses */
 "Licenses" = "Lizenzen";
+/* [Settings] Limit Mobile Data Usage */
+"Limit Mobile Data Usage" = "Mobile Daten begrenzen";
+/* [Settings -> Limit Mobile Data Usage] toogle footer */
+"Download videos on Wi-Fi Only" = "Videos nur über WLAN herunterladen";
+/* [Connect] No Wi-Fi connection alert title */
+"No Wi-Fi Connection" = "Keine WLAN-Verbindung";
+/* [Connect] No Wi-Fi connection alert message */
+"No Wi-Fi Connection message" = "Du bist nicht mit dem WLAN verbunden. Video-Downloads sind bei mobiler Datennutzung derzeit eingeschränkt. \nGehe zu \"Einstellungen\" > \"Download-Optionen\", um dies zu ändern.\n";
+/* [Connect] Dismiss No Wi-Fi connection alert */
+"Dismiss" = "Schließen";
+/* [Settings] Connect */
+"Connect" = "Connect";
+/* [Settings -> Connect] Add Connection title */
+"Add Connection" = "Verbindung hinzufügen";
+/* [Settings -> Connect] Add Connection footer */
+"Add Connection footer" = "Verbinde Cliqz auf deinem mobilen Endgerät mit Cliqz auf deinem Computer. Damit kannst du Tabs von deinem Computer auf den mobilen Browser schicken. Du kannst außerdem Videos direkt auf dein mobiles Gerät herunterladen.";
+/* [Settings -> Connect] Online Connections Header */
+"Online Connections" = "Online-Verbindungen";
+/* [Settings -> Connect] Offline Connections Header */
+"Offline Connections" = "Offline-Verbindungen";
+/* [Settings -> Connect] pending connection title */
+"Connecting to Desktop" = "Verbindung zu Desktop wird hergestellt";
+/* [Settings -> Connect] Scan QR-Code */
+"Scan QR-Code" = "QR-Code scannen";
+/* [Connect] instructions text part#1 */
+"Go to " = "Gehe zu ";
+/* [Connect] instructions text part#2 */
+" and select connect to scan the QR-Code" = " und wähle \"Connect\", um den QR-Code zu scannen.";
+/* [Connect] Scan QR-Code alert title */
+"Open Cliqz Browser" = "Öffne den Cliqz Browser";
+/* [Connect] Scan QR-Code alert message */
+"Please open Cliqz Browser on your computer (or get it from cliqz.com)." = "Öffne den Cliqz Browser auf deinem Computer (oder lade ihn von cliqz.com herunter).";
+/* [Connect] Connection Failed alert title */
+"Connection Failed" = "Verbindung fehlgeschlagen";
+/* [Connect] Connection Failed alert message */
+"Sorry but devices could not be connected. Please try again." = "Leider konnte keine Verbindung hergestellt werden. Bitte versuche es erneut.\n";
+/* [Connect] Retry button for Connection Failed alert */
+"Retry" = "Erneut versuchen";
+/* [Settings -> Connect] remove connection */
+"Remove Connection" = "Verbindung entfernen";
+/* [Settings -> Connect] rename connection */
+"Rename Connection" = "Verbindung umbenennen";
+/* [Settings -> Connect] rename connection alert message */
+"Prompt description" = "Gib einen neuen Namen für die Verbindung ein:";
+/* [Connect] Connection successful alert title */
+"Connection successful" = "Verbindung erfolgreich";
+/* [Connect] Connection Successful alert message */
+"You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device." = "Du hast dein erstes Gerät verbunden!\n\nJetzt kannst du Websites und YouTube Videos von deinem Computer an dein mobiles Gerät senden.";
+/* [Connect] Alert title for turning on Camera access when scanning QRCode */
+"Allow Camera Access" = "Kamerazugriff erlauben";
+/* [Connect] Alert message for turning on Camera access when Scanning QR Code */
+"Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz Browser kann nicht auf die Kamera zugreifen. Um Zugriff zu erlauben, tippe auf „Einstellungen“ und aktiviere die Kamera.";

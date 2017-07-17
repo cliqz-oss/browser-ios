@@ -19,6 +19,7 @@ class SettingsPrefs {
     static let blockPopupsPrefKey = "blockPopups"
     static let countryPrefKey = "UserCountry"
     static let querySuggestionPrefKey = "QuerySuggestion"
+    static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -129,6 +130,18 @@ class SettingsPrefs {
             return querySuggestionPref
         }
         return defaultValue
+    }
+    
+    class func getLimitMobileDataUsagePref() -> Bool {
+        let defaultValue = true
+        if let LimitMobileDataUsagePref = SettingsPrefs.getBoolPref(LimitMobileDataUsagePrefKey) {
+            return LimitMobileDataUsagePref
+        }
+        return defaultValue
+    }
+    
+    class func updateLimitMobileDataUsagePref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
     }
     
     // MARK: - Private helper metods

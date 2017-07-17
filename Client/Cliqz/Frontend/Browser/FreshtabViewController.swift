@@ -403,20 +403,21 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
             cell.tag = indexPath.row
             
 			if let url = n["url"] as? String {
-                LogoLoader.loadLogoImageOrFakeLogo(url){(image: UIImage?, fakeLogo:UIView?, error: Error?) in
-                    if cell.tag == indexPath.row {
-                        if let img = image {
-                            cell.logoImageView.image = img
-                        }
-                        else if let fakeView = fakeLogo{
-                            cell.fakeLogoView = fakeView
-                            cell.logoContainerView.addSubview(fakeView)
-                            fakeView.snp_makeConstraints({ (make) in
-                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
-                            })
-                        }
-                    }
-                }
+                LogoLoader.loadLogo(url, completionBlock: { (image, logoInfo, error) in
+					if cell.tag == indexPath.row {
+						if let img = image {
+							cell.logoImageView.image = img
+						}
+						else if let info = logoInfo {
+							let placeholder = LogoPlaceholder(logoInfo: info)
+							cell.fakeLogoView = placeholder
+							cell.logoContainerView.addSubview(placeholder)
+							placeholder.snp.makeConstraints({ (make) in
+								make.top.left.right.bottom.equalTo(cell.logoContainerView)
+							})
+						}
+					}
+				})
 			}
 		}
 		cell.selectionStyle = .none
@@ -487,22 +488,22 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 			cell.tag = indexPath.row
 			let s = self.topSites[indexPath.row]
 			if let url = s["url"] {
-                LogoLoader.loadLogoImageOrFakeLogo(url) { (image: UIImage?, fakeLogo:UIView?, error: Error?) in
-                    if cell.tag == indexPath.row{
-                        if let img = image {
-                            cell.logoImageView.image = img
-                        }
-                        else if let fakeView = fakeLogo{
-                            cell.fakeLogoView = fakeView
-                            cell.logoContainerView.addSubview(fakeView)
-                            fakeView.snp_makeConstraints({ (make) in
-                                make.top.left.right.bottom.equalTo(cell.logoContainerView)
-                            })
-                        }
-                    }
-                }
-				let hostComponents = getHostComponents(forURL: url)
-				cell.logoHostLabel.text = hostComponents[0].capitalized
+				LogoLoader.loadLogo(url, completionBlock: { (img, logoInfo, error) in
+					if cell.tag == indexPath.row {
+						if let img = img {
+							cell.logoImageView.image = img
+						}
+						else if let info = logoInfo {
+							let placeholder = LogoPlaceholder(logoInfo: info)
+							cell.fakeLogoView = placeholder
+							cell.logoContainerView.addSubview(placeholder)
+							placeholder.snp.makeConstraints({ (make) in
+								make.top.left.right.bottom.equalTo(cell.logoContainerView)
+							})
+						}
+					}
+					cell.logoHostLabel.text = logoInfo?.hostName
+				})
 			}
 		}
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites(_:)))

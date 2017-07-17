@@ -377,6 +377,9 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
 		// Cliqz: removed observer of NotificationBadRequestDetected notification
 		NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
+        // Cliqz: removed observers for Connect features
+        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
     }
 
     override func viewDidLoad() {
@@ -387,6 +390,11 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidEnterBackgroundNotification), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        
+        // Cliqz: Add observers for Connection features
+        NotificationCenter.default.addObserver(self, selector: #selector(openTabViaConnect), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(downloadVideoViaConnect), name: DownloadVideoNotification, object: nil)
+
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         log.debug("BVC adding footer and header…")
@@ -1021,6 +1029,7 @@ class BrowserViewController: UIViewController {
     }
 
     fileprivate func finishEditingAndSubmit(_ url: URL, visitType: VisitType) {
+        
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
         
@@ -1037,6 +1046,11 @@ class BrowserViewController: UIViewController {
 		}
 #endif
 
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+            self.openURLInNewTab(url, isPrivate: true)
+            return
+        }
+        
         if let nav = tab.loadRequest(PrivilegedRequest(url: url) as URLRequest) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: visitType)
         }
@@ -1284,20 +1298,28 @@ class BrowserViewController: UIViewController {
     }
 
     func openURLInNewTab(_ url: URL?, isPrivate: Bool = false) {
+        
+        var _isPrivate = isPrivate
+        
         if let selectedTab = tabManager.selectedTab {
             screenshotHelper.takeScreenshot(selectedTab)
         }
         let request: URLRequest?
         if let url = url {
             request = PrivilegedRequest(url: url) as URLRequest
+            
+            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+                _isPrivate = true
+            }
+            
         } else {
             request = nil
         }
         if #available(iOS 9, *) {
-            switchToPrivacyMode(isPrivate: isPrivate)
-            tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+            switchToPrivacyMode(isPrivate: _isPrivate)
+            _ = tabManager.addTabAndSelect(request, isPrivate: _isPrivate)
         } else {
-            tabManager.addTabAndSelect(request)
+            _ = tabManager.addTabAndSelect(request)
         }
     }
 
@@ -1353,7 +1375,7 @@ class BrowserViewController: UIViewController {
 		// Cliqz: Added Activity for Youtube video downloader from sharing menu
 		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
 			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
-				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_page"))
+				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_page"]))
                 self.downloadVideoFromURL(url.absoluteString, sourceRect: sourceRect)
 			}
 			activities.append(youtubeDownloader)
@@ -1588,7 +1610,7 @@ class BrowserViewController: UIViewController {
         return .tab(tabState: tab.tabState)
     }
 
-    @objc fileprivate func openSettings() {
+    @objc internal func openSettings() {
         assert(Thread.isMainThread, "Opening settings requires being invoked on the main thread")
 
         let settingsTableViewController = AppSettingsTableViewController()
@@ -1735,6 +1757,10 @@ extension BrowserViewController {
 }
 
 extension BrowserViewController: URLBarDelegate {
+    
+    func isPrivate() -> Bool {
+        return self.tabManager.selectedTab?.isPrivate ?? false
+    }
 
     func urlBarDidPressReload(_ urlBar: URLBarView) {
         tabManager.selectedTab?.reload()
@@ -2760,8 +2786,8 @@ extension BrowserViewController: WKNavigationDelegate {
         // First special case are some schemes that are about Calling. We prompt the user to confirm this action. This
         // gives us the exact same behaviour as Safari.
         if url.scheme == "tel" || url.scheme == "facetime" || url.scheme == "facetime-audio" {
-            if let phoneNumber = url.path.removingPercentEncoding, !phoneNumber.isEmpty {
-                let formatter = PhoneNumberFormatter()
+			if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false), let phoneNumber = components.path, !phoneNumber.isEmpty {
+				let formatter = PhoneNumberFormatter()
                 let formattedPhoneNumber = formatter.formatPhoneNumber(phoneNumber)
                 let alert = UIAlertController(title: formattedPhoneNumber, message: nil, preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Label for Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
@@ -2932,7 +2958,7 @@ extension BrowserViewController: WKNavigationDelegate {
         }
         
         //Cliqz: store changes of tabs 
-        if let url = tab.url {
+        if let url = tab.url, !tab.isPrivate {
             if !ErrorPageHelper.isErrorPageURL(url) {
                 self.tabManager.storeChanges()
             }
@@ -3579,7 +3605,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
                 let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_link"]))
                 }
                 actionSheetController.addAction(downloadVideo)
             }

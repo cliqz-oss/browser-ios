@@ -79,7 +79,7 @@ class QuerySuggestionView: UIView {
     
     //MARK:- Helper methods
     fileprivate func clearSuggestions() {
-        
+        self.currentSuggestions.removeAll()
         let subViews = scrollView.subviews
         for subView in subViews {
             subView.removeFromSuperview()

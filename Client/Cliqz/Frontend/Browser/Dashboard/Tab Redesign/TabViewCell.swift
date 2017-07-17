@@ -254,6 +254,7 @@ class TabViewCell: UICollectionViewCell {
 
         if let attr = layoutAttributes as? TabSwitcherLayoutAttributes {
             displayView.layer.transform = attr.displayTransform
+            self.layer.zPosition = self.frame.origin.y
             currentTransform = attr.displayTransform
         }
         

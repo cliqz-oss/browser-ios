@@ -73,6 +73,7 @@ class AntitrackingPanel: ControlCenterPanel {
         
 		enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
         enableFeatureSwitch.addTarget(self, action: #selector(toggleFeatureForCurrentWebsite), for: .valueChanged)
+        enableFeatureSwitch.onTintColor = UIConstants.CliqzThemeColor
         self.configContainerView.addSubview(enableFeatureSwitch)
         
         

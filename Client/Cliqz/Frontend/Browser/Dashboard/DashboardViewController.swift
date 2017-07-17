@@ -94,11 +94,16 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
 		self.switchPanel(self.panelSwitchControl)
+        
+        // Add observers for Connection features
+        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
+        // Removed observers for Connect features
+        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -109,6 +114,12 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         // setting the navigation bar origin to (0,0) to prevent shifting it when rotating from landscape to portrait orientation
         self.navigationController?.navigationBar.frame.origin = CGPoint(x: 0, y: 0)
+    }
+    
+    // Called when send tab notification sent from Connect while dashboard is presented
+    func newTabOpened() {
+            self.tabManager.selectTab(self.tabManager.selectedTab)
+            self.navigationController?.popViewController(animated: false)
     }
     
 	func didSelectURL(_ url: URL) {
