@@ -24,7 +24,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         tableView.accessibilityIdentifier = "AppSettingsTableViewController.tableView"
         
         // Cliqz: Add observers for Connection features
-        NotificationCenter.default.addObserver(self, selector: #selector(connectEventRecieved), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
 
     }
     
@@ -34,8 +34,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
         
     }
     
-    // Cliqz: called when notification sent from Connect while setting is opened
-    func connectEventRecieved(notification: NSNotification) {
+    // Called when send tab notification sent from Connect while dashboard is presented
+    func newTabOpened(notification: NSNotification) {
         self.dismiss(animated: true, completion: nil)
     }
 
