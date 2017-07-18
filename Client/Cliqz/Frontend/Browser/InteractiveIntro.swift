@@ -161,29 +161,29 @@ class InteractiveIntroViewController: UIViewController {
 		button.addTarget(self, action: #selector(closeHint), for: .touchUpInside)
 		self.contentView!.addSubview(button)
 		
-		self.contentView!.snp_makeConstraints { (make) in
+		self.contentView!.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(self.view)
 		}
 		
-		title.snp_makeConstraints { (make) in
+		title.snp.makeConstraints { (make) in
 			make.left.equalTo(self.contentView!).offset(15)
 			make.right.equalTo(self.contentView!)
-			make.top.equalTo(self.contentView!.snp_bottom).offset(-200)
+			make.top.equalTo(self.contentView!.snp.bottom).offset(-200)
 			make.height.equalTo(40)
 		}
 		
-		description.snp_makeConstraints { (make) in
+		description.snp.makeConstraints { (make) in
 			make.left.equalTo(self.contentView!).offset(15)
 			make.right.equalTo(self.contentView!)
-			make.top.equalTo(title.snp_bottom)
-			make.bottom.equalTo(button.snp_top)
+			make.top.equalTo(title.snp.bottom)
+			make.bottom.equalTo(button.snp.top)
 		}
 		
-		blurrySemiTransparentView.snp_makeConstraints { (make) in
+		blurrySemiTransparentView.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(contentView!)
 		}
 		
-		button.snp_makeConstraints { (make) in
+		button.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
 			make.bottom.equalTo(self.contentView!).offset(-20)
 			make.width.equalTo(80)
@@ -284,73 +284,73 @@ class InteractiveIntroViewController: UIViewController {
         self.contentView?.addSubview(option2_container)
 
 
-		self.contentView!.snp_makeConstraints { (make) in
+		self.contentView!.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(self.view)
 		}
 
-		title.snp_makeConstraints { (make) in
+		title.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
             make.height.equalTo(70)
-            make.bottom.equalTo(description.snp_topMargin)
+            make.bottom.equalTo(description.snp.topMargin)
 		}
 
-		description.snp_makeConstraints { (make) in
+		description.snp.makeConstraints { (make) in
 			make.center.equalTo(self.contentView!)
 			make.left.right.equalTo(self.contentView!).inset(14)
 			make.height.equalTo(60)
 		}
         
-        option1_container.snp_makeConstraints { (make) in
+        option1_container.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.view)
-            make.top.equalTo(description.snp_bottomMargin).offset(6)
+            make.top.equalTo(description.snp.bottomMargin).offset(6)
             make.width.equalTo(180)
             make.height.equalTo(44)
         }
         
-        option1_img_bg.snp_makeConstraints { (make) in
+        option1_img_bg.snp.makeConstraints { (make) in
             make.height.equalTo(CliqzURLBarView.antitrackingButtonSize.height)
             make.width.equalTo(CliqzURLBarView.antitrackingButtonSize.width)
             make.left.centerY.equalTo(option1_container)
         }
         
-        option1_label.snp_makeConstraints { (make) in
+        option1_label.snp.makeConstraints { (make) in
             make.height.equalTo(option1_container)
-            make.left.equalTo(option1_img_bg.snp_rightMargin).offset(18)
+            make.left.equalTo(option1_img_bg.snp.rightMargin).offset(18)
             make.top.equalTo(option1_container)
         }
         
-        option1_icon.snp_makeConstraints { (make) in
+        option1_icon.snp.makeConstraints { (make) in
             make.center.equalTo(option1_img_bg)
         }
         
-        option2_container.snp_makeConstraints { (make) in
+        option2_container.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.view)
-            make.top.equalTo(option1_container.snp_bottomMargin).offset(6)
+            make.top.equalTo(option1_container.snp.bottomMargin).offset(6)
             make.width.equalTo(180)
             make.height.equalTo(44)
         }
         
-        option2_img_bg.snp_makeConstraints { (make) in
+        option2_img_bg.snp.makeConstraints { (make) in
             make.height.equalTo(CliqzURLBarView.antitrackingButtonSize.height)
             make.width.equalTo(CliqzURLBarView.antitrackingButtonSize.width)
             make.left.centerY.equalTo(option2_container)
         }
         
-        option2_label.snp_makeConstraints { (make) in
+        option2_label.snp.makeConstraints { (make) in
             make.height.equalTo(option2_container)
-            make.left.equalTo(option2_img_bg.snp_rightMargin).offset(18)
+            make.left.equalTo(option2_img_bg.snp.rightMargin).offset(18)
             make.top.equalTo(option2_container)
         }
         
-        option2_icon.snp_makeConstraints { (make) in
+        option2_icon.snp.makeConstraints { (make) in
             make.center.equalTo(option2_img_bg)
         }
         
-		blurrySemiTransparentView.snp_makeConstraints { (make) in
+		blurrySemiTransparentView.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(contentView!)
 		}
 
-		button.snp_makeConstraints { (make) in
+		button.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
 			make.bottom.equalTo(self.contentView!).offset(-20)
 			make.width.equalTo(80)
@@ -401,27 +401,27 @@ class InteractiveIntroViewController: UIViewController {
         button.addTarget(self, action: #selector(closeHint), for: .touchUpInside)
         self.contentView!.addSubview(button)
         
-        self.contentView!.snp_makeConstraints { (make) in
+        self.contentView!.snp.makeConstraints { (make) in
             make.top.left.right.bottom.equalTo(self.view)
         }
         
-        title.snp_makeConstraints { (make) in
+        title.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.contentView!)
             make.height.equalTo(70)
-            make.bottom.equalTo(description.snp_topMargin)
+            make.bottom.equalTo(description.snp.topMargin)
         }
         
-        description.snp_makeConstraints { (make) in
+        description.snp.makeConstraints { (make) in
             make.center.equalTo(self.contentView!)
             make.left.right.equalTo(self.contentView!).inset(14)
             make.height.equalTo(60)
         }
         
-        blurrySemiTransparentView.snp_makeConstraints { (make) in
+        blurrySemiTransparentView.snp.makeConstraints { (make) in
             make.top.left.right.bottom.equalTo(contentView!)
         }
         
-        button.snp_makeConstraints { (make) in
+        button.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.contentView!)
             make.bottom.equalTo(self.contentView!).offset(-20)
             make.width.equalTo(80)
