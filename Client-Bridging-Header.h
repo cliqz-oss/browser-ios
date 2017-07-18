@@ -25,5 +25,7 @@
 // Cliqz: Commented crash reporter
 //#import <CrashReporter/CrashReporter.h>
 
+// Cliqz: Connect Crypto
+#include "CryptoBridge.h"
 
 #endif
