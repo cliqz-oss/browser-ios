@@ -229,7 +229,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.rootViewController = nil
 
         AppStatus.sharedInstance.appWillTerminate()
-
+        
+        CIReminderManager.sharedInstance.saveState()
     }
 
     /**
@@ -325,7 +326,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         guard let scheme = components.scheme, urlSchemes.contains(scheme) else {
-            log.warning("Cannot handle \(components.scheme) URL scheme")
+            log.warning("Cannot handle \(String(describing: components.scheme)) URL scheme")
             return false
         }
 
@@ -451,6 +452,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         self.clearCache()
         application.endBackgroundTask(taskId)
+        
+        CIReminderManager.sharedInstance.saveState()
     }
     
     // Cliqz: clear cache if the cache size exceed predified limits
@@ -612,12 +615,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
             if isReminder {
-                CIReminderManager.sharedInstance.reminderFired(url_str: (dict["url"] as? String) ?? "")
+                guard let url = dict["url"] as? String else {return}
+                CIReminderManager.sharedInstance.reminderFired(url_str: url, date: notification.fireDate)
                 if UIApplication.shared.applicationState == .active {
-                    presentReminderAlert(title: "Reminder", body: (dict["title"] as? String) ?? "", url: (dict["url"] as? String) ?? "")
+                    presentReminderAlert(title: "Reminder", body: (dict["title"] as? String) ?? "", url: url)
                 }
-                else if let _url = URL(string: (dict["url"] as? String) ?? "") {
+                else if let _url = URL(string: url) {
                     self.browserViewController.openURLInNewTab(_url)
+                    //notification pressed
+                    CIReminderManager.sharedInstance.reminderPressed(url_str: url)
                 }
                 CIReminderManager.sharedInstance.didRemindersChange = .True
                 return
@@ -631,11 +637,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dismiss = UIAlertAction(title: "Dismiss", style: .cancel)
         let open    = UIAlertAction(title: "Open", style: .default) { (action) in
             if let _url = URL(string: url) {
-                if self.browserViewController.visible == false{
+                if self.browserViewController.visible == false {
                     self.rootViewController.pushViewController(self.browserViewController, animated: false)
                     self.browserViewController.visible = true
                 }
                 self.browserViewController.openURLInNewTab(_url)
+                //notification pressed
+                CIReminderManager.sharedInstance.reminderPressed(url_str: url)
             }
         }
         controller.addAction(dismiss)
@@ -653,6 +661,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             rootViewController = tabBarController.selectedViewController
         }
         rootViewController?.present(controller, animated: true, completion: nil)
+    }
+    
+    func presentActionSheet(title: String?, message: String?, actions:[UIAlertAction]) {
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        
+        //there must be at least a cancel action...check still to be implemented.
+        for action in actions {
+            controller.addAction(action)
+        }
+        
+        
+        presentContollerOnTop(controller: controller)
     }
 
     fileprivate func presentEmailComposerWithLogs() {

@@ -2127,32 +2127,41 @@ extension BrowserViewController: TabToolbarDelegate {
                 log.error("Bookmark error: No tab is selected, or no URL in tab.")
                 return
         }
-        showDatePicker()
+        //showDatePicker()
         //toggleBookmarkForTabState(tab.tabState)
-    }
-    
-    func showDatePicker() {
-        let datePicker = CIDatePickerViewController()
-        datePicker.delegate = self
-        self.addChildViewController(datePicker)
-        self.view.addSubview(datePicker.view)
         
-        datePicker.view.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(self.view)
-            make.bottom.equalTo(self.view).inset(44)
+        if let url = self.urlBar.currentURL?.absoluteString {
+            if CIReminderManager.sharedInstance.isUrlRegistered(url_str: url) {
+                showRemoveReminderActionSheet()
+            }
+            else {
+                showSetReminderActionSheet()
+            }
         }
     }
-
-    func hideDatePicker(datePicker:CIDatePickerViewController) {
-        datePicker.view.removeFromSuperview()
-        datePicker.removeFromParentViewController()
-    }
     
-    func sendBookmark(date: NSDate){
-        let url = self.urlBar.currentURL?.absoluteString ?? ""
-        let title = self.tabManager.selectedTab?.title ?? ""
-        HistoryBridge.readLater(urlInfo: ["url":url as AnyObject, "title": title as AnyObject, "timestamp": Int(date.timeIntervalSince1970 * 1000000) as AnyObject])
-    }
+//    func showDatePicker() {
+//        let datePicker = CIDatePickerViewController()
+//        datePicker.delegate = self
+//        self.addChildViewController(datePicker)
+//        self.view.addSubview(datePicker.view)
+//        
+//        datePicker.view.snp.makeConstraints { (make) in
+//            make.top.left.right.equalTo(self.view)
+//            make.bottom.equalTo(self.view).inset(44)
+//        }
+//    }
+//
+//    func hideDatePicker(datePicker:CIDatePickerViewController) {
+//        datePicker.view.removeFromSuperview()
+//        datePicker.removeFromParentViewController()
+//    }
+//    
+//    func sendBookmark(date: NSDate){
+//        let url = self.urlBar.currentURL?.absoluteString ?? ""
+//        let title = self.tabManager.selectedTab?.title ?? ""
+//        HistoryBridge.readLater(urlInfo: ["url":url as AnyObject, "title": title as AnyObject, "timestamp": Int(date.timeIntervalSince1970 * 1000000) as AnyObject])
+//    }
 
     func tabToolbarDidLongPressBookmark(_ tabToolbar: TabToolbarProtocol, button: UIButton) {
     }
@@ -2268,6 +2277,143 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 }
 
+extension BrowserViewController {
+    
+    enum ReminderOption {
+        case Option1
+        case Option2
+        case Option3
+        case Option4
+    }
+    
+    func showSetReminderActionSheet(){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+        
+        //define actions
+        let first_option = UIAlertAction(title: "30 Minutes", style: .default) { (action) in
+            self.reminderSet(option: .Option1)
+        }
+        
+        let second_option = UIAlertAction(title: "4 Hours", style: .default) { (action) in
+            self.reminderSet(option: .Option2)
+        }
+        
+        let third_option = UIAlertAction(title: "8 Hours", style: .default) { (action) in
+            self.reminderSet(option: .Option3)
+        }
+        
+        let fourth_option = UIAlertAction(title: "Tomorrow", style: .default) { (action) in
+            self.reminderSet(option: .Option4)
+        }
+        
+        let cancel_action = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        let actions = [first_option, second_option, third_option, fourth_option, cancel_action]
+        let title   = "When would you like to be reminded?"
+        let message: String? = nil
+        
+        appDelegate.presentActionSheet(title: title, message: message, actions: actions)
+        
+    }
+    
+    func showRemoveReminderActionSheet(){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+        
+        //define actions
+        let first_option = UIAlertAction(title: "Remove Reminder", style: .destructive) { (action) in
+            self.reminderRemove()
+        }
+        
+        let cancel_action = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        let actions = [first_option, cancel_action]
+        var title: String?   = nil
+        let message: String? = nil
+        
+        if let url = self.urlBar.currentURL?.absoluteString {
+            let array = CIReminderManager.sharedInstance.remindersWith(url: url)
+            if !array.isEmpty {
+                let notification = array.first
+                if let seconds = notification?.fireDate?.timeIntervalSinceNow {
+                    let time = convert(seconds: Int(seconds))
+                    if seconds >= 0 {
+                        title = "You will be reminded in " + time
+                    }
+                    else if seconds < 0 {
+                        title = "You were reminded " + time + " ago"
+                    }
+                    
+                }
+            }
+        }
+        
+        appDelegate.presentActionSheet(title: title, message: message, actions: actions)
+        
+    }
+    
+    func reminderSet(option: ReminderOption) {
+        
+        var timeInterval: TimeInterval = 0.0
+        
+        switch option {
+        case .Option1: //30 Minutes
+            timeInterval = 1 * 60//30 * 60
+        case .Option2: //4 Hours
+            timeInterval = (4 * 60) * 60
+        case .Option3: //8 Hours
+            timeInterval = (8 * 60) * 60
+        case .Option4: //Tomorrow
+            timeInterval = (24 * 60) * 60
+        }
+        
+        let date = Date.init(timeIntervalSinceNow: timeInterval)
+        let title = self.tabManager.selectedTab?.title ?? ""
+        if let url = self.urlBar.currentURL?.absoluteString {
+            CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: date)
+            self.toolbar?.updateBookmarkStatus(true)
+        }
+        else {
+            //handle invalid url
+            debugPrint("!!!!!!!!!!!  --------- ERROR ---------  !!!!!!!!!!!")
+            debugPrint("reminderSet -- url is not valid")
+        }
+    }
+    
+    func reminderRemove(){
+
+        if let url = self.urlBar.currentURL?.absoluteString {
+            let reminders = CIReminderManager.sharedInstance.remindersWith(url: url)
+            for reminder in reminders {
+                CIReminderManager.sharedInstance.unregisterReminder(reminder: reminder)
+                self.toolbar?.updateBookmarkStatus(false)
+            }
+        }
+        
+    }
+    
+    func convert(seconds: Int) -> String {
+        
+        let days = seconds / (24 * 60 * 60)
+        if days != 0 {
+            let hours = (seconds % (24 * 60 * 60)) / 60
+            return String(days) + " days" + " " + String(hours) + " hours"
+        }
+        
+        let hours = seconds / (60 * 60)
+        if hours != 0 {
+            let minutes = (seconds % (60 * 60)) / 60
+            return String(hours) + " hours" + " " + String(minutes) + " minutes"
+        }
+        
+        let minutes = seconds / 60
+        if minutes != 0 {
+            return String(minutes) + " minutes"
+        }
+        
+        return String(seconds) + " seconds"
+    }
+}
+
 extension BrowserViewController: MenuViewControllerDelegate {
     func menuViewControllerDidDismiss(_ menuViewController: MenuViewController) {
         self.menuViewController = nil
@@ -2297,23 +2443,23 @@ extension BrowserViewController: MenuViewControllerDelegate {
 
 extension BrowserViewController: CIDatePickerDelegate {
     func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
-        self.toolbar?.updateBookmarkStatus(false)
-        self.hideDatePicker(datePicker: datePicker)
+        //self.toolbar?.updateBookmarkStatus(false)
+        //self.hideDatePicker(datePicker: datePicker)
     }
     
     func customPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
-        self.toolbar?.updateBookmarkStatus(true)
-        let title = self.tabManager.selectedTab?.title ?? ""
-        if let url = self.urlBar.currentURL?.absoluteString {
-            CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: datePicker.datePicker.date)
-        }
-        else {
-            //handle invalid url
-            debugPrint("!!!!!!!!!!!  --------- ERROR ---------  !!!!!!!!!!!")
-            debugPrint("customPressed -- url is not valid")
-        }
+//        self.toolbar?.updateBookmarkStatus(true)
+//        let title = self.tabManager.selectedTab?.title ?? ""
+//        if let url = self.urlBar.currentURL?.absoluteString {
+//            CIReminderManager.sharedInstance.registerReminder(url: url, title: title, date: datePicker.datePicker.date)
+//        }
+//        else {
+//            //handle invalid url
+//            debugPrint("!!!!!!!!!!!  --------- ERROR ---------  !!!!!!!!!!!")
+//            debugPrint("customPressed -- url is not valid")
+//        }
         
-        self.hideDatePicker(datePicker: datePicker)
+        //self.hideDatePicker(datePicker: datePicker)
     }
     
     func updateReminderButtonState(url_str: String) {
