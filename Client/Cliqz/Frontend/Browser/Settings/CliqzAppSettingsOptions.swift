@@ -349,10 +349,8 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
     
     override func onClick(_ navigationController: UINavigationController?) {
         let localDataBaseFile = try! profile.files.getAndEnsureDirectory()
-		
-//			).appendingPathComponent("browser.db")
-		if let path = URL(string: localDataBaseFile),
-			let data = try? Data(contentsOf: path.appendingPathComponent("browser.db"), options: []) {
+		let path = URL(fileURLWithPath: localDataBaseFile)
+		if let data = try? Data(contentsOf: path.appendingPathComponent("browser.db"), options: []) {
 			if MFMailComposeViewController.canSendMail() {
 				let mailComposeViewController = configuredMailComposeViewController(data: data)
 				navigationController?.present(mailComposeViewController, animated: true, completion: nil)
@@ -369,7 +367,7 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
         return mailComposerVC
     }
     // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
 }
