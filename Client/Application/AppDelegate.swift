@@ -12,6 +12,7 @@ import Crashlytics
 import WebImage
 import SwiftKeychainWrapper
 import LocalAuthentication
+import CRToast
 
 import React
 
@@ -622,7 +623,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let title = dict["title"] as? String ?? ""
                 CIReminderManager.sharedInstance.reminderFired(url_str: url, date: notification.fireDate, title: title)
                 if UIApplication.shared.applicationState == .active {
-                    presentReminderAlert(title: "Reminder", body: title, url: url)
+                    //presentReminderAlert(title: "Reminder", body: title, url: url)
+                    presentReminderToast(message: title, url: url)
                 }
                 else if let _url = URL(string: url) {
                     self.browserViewController.openURLInNewTab(_url)
@@ -653,6 +655,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         controller.addAction(dismiss)
         controller.addAction(open)
         presentContollerOnTop(controller: controller)
+    }
+    
+    func presentReminderToast(message: String, url: String) {
+        
+        let defaultOptions : [AnyHashable: Any] = [
+            kCRToastTextAlignmentKey : NSNumber(value: NSTextAlignment.left.rawValue),
+            kCRToastNotificationTypeKey: NSNumber(value: CRToastType.navigationBar.rawValue),
+            kCRToastNotificationPresentationTypeKey: NSNumber(value: CRToastPresentationType.cover.rawValue),
+            kCRToastAnimationInTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+            kCRToastAnimationOutTypeKey : NSNumber(value: CRToastAnimationType.linear.rawValue),
+            kCRToastAnimationInDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+            kCRToastAnimationOutDirectionKey : NSNumber(value: CRToastAnimationDirection.top.rawValue),
+            kCRToastImageAlignmentKey: NSNumber(value: CRToastAccessoryViewAlignment.left.rawValue)
+        ]
+        
+        let tapInteraction = CRToastInteractionResponder.init(interactionType: .tap, automaticallyDismiss: true) { (tap) in
+            if let _url = URL(string: url) {
+                if self.browserViewController.visible == false {
+                    self.rootViewController.pushViewController(self.browserViewController, animated: false)
+                    self.browserViewController.visible = true
+                }
+                self.browserViewController.openURLInNewTab(_url)
+                //notification pressed
+                CIReminderManager.sharedInstance.reminderPressed(url_str: url)
+            }
+        }
+        
+        var options : [AnyHashable: Any] = [kCRToastTextKey: message]
+        
+        options[kCRToastBackgroundColorKey] = UIColor(colorString: "24262f")
+        options[kCRToastInteractionRespondersKey] = [tapInteraction]
+        options[kCRToastImageKey] = UIImage(named:"notificationImg")!
+        options[kCRToastTextColorKey] = UIColor.white
+        options[kCRToastTimeIntervalKey] = 5
+        
+        // copy default options to the current options dictionary
+        defaultOptions.forEach { options[$0] = $1 }
+        
+        DispatchQueue.main.async {
+            CRToastManager.showNotification(options: options, completionBlock: nil)
+        }
     }
     
     func presentContollerOnTop(controller: UIViewController) {
