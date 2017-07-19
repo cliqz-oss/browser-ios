@@ -9,16 +9,7 @@
 import UIKit
 import UserNotifications
 
-extension UILocalNotification {
-    func isExpired() -> Bool {
-        if self.fireDate?.compare(Date.init(timeIntervalSinceNow: 0)) == ComparisonResult.orderedDescending {
-            return true
-        }
-        return false
-    }
-}
-
-class CIReminderManager: NSObject {
+final class CIReminderManager: NSObject {
     
     //ATTENTION ONLY 64 REMINDERS ARE ALLOWED
     
@@ -34,11 +25,13 @@ class CIReminderManager: NSObject {
     //Add: When app opens and there are fired reminders
     //Add: When app is active, reminder fireed, but it is not pressed (use reminder fired in combination with reminder pressed)
     
+    //I would like to get the fired reminders by host.
+    
     //TO DO:
     // 0. Write interface for read/write firedReminders and Copy.
-    // 1. Test fired reminders - Here
-    // 2. Make an api for it
-    // 3. Link with React
+    // 1. Test fired reminders - Done
+    // 2. Make an api for it - Done
+    // 3. Link with React - Done
     
     enum RemindersChanged {
         case True
@@ -50,27 +43,29 @@ class CIReminderManager: NSObject {
     struct ReminderStruct: Equatable, Hashable {
         let url: String
         let date: Date
+        let title: String
         var hashValue: Int {
             return url.hashValue ^ date.hashValue
         }
         static func == (lhs: ReminderStruct, rhs: ReminderStruct) -> Bool {
-            return lhs.url == rhs.url && lhs.date == rhs.date
+            return lhs.url == rhs.url
         }
         
         func dict() -> [String: Any] {
-            return ["url":url, "date": date]
+            return ["url":url, "date": date, "title": title]
         }
     }
     
     typealias Reminder = [String : Any]
     typealias Host = String
     typealias Url  = String
+    typealias FiredReminders = [String: [ReminderStruct]]
     
     var didRemindersChange: RemindersChanged = .Unknown
     
     private var rem_cache: [Reminder] = []
     
-    private var firedReminders: [ReminderStruct] = []
+    private var firedReminders: FiredReminders = [:]
     
     //instead of a hashmap I could build a trie tree, where the first layer of nodes is host names, and then attached to them path components
     private var url_hash_map: [Host : [Url]] = [:]
@@ -101,9 +96,10 @@ class CIReminderManager: NSObject {
     
     func remindersFired() -> Set<ReminderStruct> {
         //here have an interface for creating the reminders_defaults
-        guard let reminders_system = UIApplication.shared.scheduledLocalNotifications else {return Set()}
         let fired_and_notfired = readCopy()
-        let unfired = localNotifications2Set(notifications: reminders_system)
+        //in case there are no reminders from the system, return the fired_and_notfired. In this case fire_and_notfired contains only the fired notifications.
+        guard let reminders_system = UIApplication.shared.scheduledLocalNotifications else {return fired_and_notfired}
+        let unfired = transformToNotificationsSet(notifications: reminders_system)
         return fired_and_notfired.subtracting(unfired)
     }
     
@@ -211,9 +207,9 @@ class CIReminderManager: NSObject {
         return false
     }
     
-    func reminderFired(url_str: String, date: Date?) {
+    func reminderFired(url_str: String, date: Date?, title: String?) {
         //add to FiredReminders
-        addToFiredReminders(url: url_str, date: date ?? Date())
+        addToFiredReminders(url: url_str, date: date ?? Date(), title: title ?? "")
     }
     
     func reminderPressed(url_str: String) {
@@ -221,6 +217,15 @@ class CIReminderManager: NSObject {
         //remove from FiredReminders
         removeFromFiredReminders(url: url_str)
     }
+    
+    func getFiredReminders(host: String) -> [[String: Any]] {
+        if let array = firedReminders[host] {
+            return transformRemindersStruct2Dict(reminders: array)
+        }
+        return []
+    }
+    
+    //Private Methods -----------------------------------------------------------------------------
     
     private func buildUrlHashMap(reminders: [Reminder]) -> [Host : [Url]] {
         
@@ -233,163 +238,176 @@ class CIReminderManager: NSObject {
         return return_dict
     }
     
-    private func addUrlToHashMap(map: [Host : [Url]], url_str: Url) -> [Host:[Url]] {
-        
-        var map_copy = map
-        
-        if let url = URL(string: url_str), let host = url.host {
-            if var array = map_copy[host] {
-                array.append(url_str)
-                map_copy[host] = array
-            }
-            else {
-                map_copy[host] = [url_str]
-            }
+    private func keyGenerator_URL(elem: String) -> String? {
+        if let url = URL(string: elem), let host = url.host {
+            return host
         }
-        else {
-            //this is an invalid url. We ignore it
-        }
-        
-        return map_copy
-        
+        return nil
+    }
+    
+    private func addUrlToHashMap(map: [Host : [Url]], url_str: Url) -> [Host: [Url]] {
+        return addToHashMap(map: map, element: url_str, keyGenerator: keyGenerator_URL)
     }
     
     private func removeUrlFromHashMap(map: [Host : [Url]], url_str: Url) -> [Host:[Url]] {
-        
-        var map_copy = map
-        
-        //delete just the first instance of the url. There might be multiple instances of the same url in the array.
-        if let url = URL(string: url_str), let host = url.host {
-            if var array = map_copy[host] {
-                for i in 0..<array.count {
-                    let url_array = array[i]
-                    if url_array == url_str {
-                        array.remove(at: i)
-                        break
-                    }
-                }
-                if array.isEmpty {
-                    map_copy[host] = nil
-                }
-                else {
-                    map_copy[host] = array
-                }
-
-            }
-            else {
-                //since the host is not here, the url is not either. Nothing to remove.
-            }
-        }
-        else {
-            //this is an invalid url. We ignore it.
-            //this is fine since we do not add invalid urls in the first place.
-        }
-        
-        return map_copy
-        
+        return removeFromHashMap(map: map, element: url_str, keyGenerator: keyGenerator_URL)
     }
     
-    private func loadFiredReminders() -> [ReminderStruct] {
+    private func loadFiredReminders() -> FiredReminders {
         
-        func transformToReminders(array:[[String: Any]]) -> [ReminderStruct] {
-            var ret_array:[ReminderStruct] = []
-            for elem in array {
-                if let url = elem["url"] as? String, let date = elem["date"] as? Date {
-                    ret_array.append(ReminderStruct(url: url, date: date))
-                }
-            }
-            return ret_array
+        if let dict = UserDefaults.standard.value(forKey: firedKey) as? [String: [[String:Any]]] {
+            return transformToFiredReminders(dict: dict)
         }
-        
-        if let array = UserDefaults.standard.value(forKey: firedKey) as? [[String:Any]] {
-            return transformToReminders(array: array)
-        }
-        return []
+        return [:]
     }
     
-    //TO DO: interface for fired reminders
     private func saveFiredReminders(){
         
-        func tansformReminders(reminders: [ReminderStruct]) -> [[String: Any]] {
-            var array: [[String: Any]] = []
-            for reminder in reminders {
-                let date = reminder.date
-                let url = reminder.url
-                array.append(["url":url, "date":date])
-            }
-            return array
+        var morphed_firedReminders: [String: [[String: Any]]] = [:]
+        
+        for key in firedReminders.keys {
+            morphed_firedReminders[key] = transformRemindersStruct2Dict(reminders: firedReminders[key]!)
         }
         
-        UserDefaults.standard.set(tansformReminders(reminders: firedReminders), forKey: firedKey)
+        UserDefaults.standard.set(morphed_firedReminders, forKey: firedKey)
         UserDefaults.standard.synchronize()
     }
     
-    private func addToFiredReminders(url: String, date: Date) {
-        addToFiredReminders(reminder: ReminderStruct(url: url, date: date))
+    private func addToFiredReminders(url: String, date: Date, title: String) {
+        addToFiredReminders(reminder: ReminderStruct(url: url, date: date, title: title))
     }
     
     private func addToFiredReminders(reminder: ReminderStruct) {
-        firedReminders.append(reminder)
+        firedReminders = addToHashMap(map: firedReminders, element: reminder, keyGenerator: keyGenerator_ReminderStruct)
     }
     
     private func removeFromFiredReminders(url: String) {
         //the url is the unique identifier. Only one reminder per url.
-        var index = 0
-        for reminder in firedReminders {
-            if reminder.url == url {
-                firedReminders.remove(at: index)
-                break
-            }
-            index = index + 1
-        }
+        firedReminders = removeFromHashMap(map: firedReminders, element: ReminderStruct(url:url, date:Date(), title:""), keyGenerator: keyGenerator_ReminderStruct)
     }
-    
-    private func localNotifications2Set(notifications: [UILocalNotification]) -> Set<ReminderStruct> {
-        var set: Set<ReminderStruct> = Set.init()
-        for notification in notifications {
-            if let date = notification.fireDate, let url = notification.userInfo?["url"] as? String {
-                set.insert(ReminderStruct(url: url, date: date))
-            }
-        }
-        return set
-    }
-    
-//    private func localNotifications2Set(notifications: [UILocalNotification]) -> Set<[String: Any]> {
-//        var set: Set<[String: Any]> = Set.init()
-//        for notification in notifications {
-//            if let date = notification.fireDate, let url = notification.userInfo?["url"] as? String {
-//                set.insert(["url":url, "date":date])
-//            }
-//        }
-//        return set
-//    }
     
     private func makeCopy() {
-        func tansformNotifications(notifications: [UILocalNotification]) -> [[String: Any]] {
-            var array: [[String: Any]] = []
-            for notification in notifications {
-                if let date = notification.fireDate, let url = notification.userInfo?["url"] as? String {
-                    array.append(["url":url, "date":date])
-                }
-            }
-            return array
-        }
-        
         guard let notifications = UIApplication.shared.scheduledLocalNotifications else {return}
-        let array = tansformNotifications(notifications: notifications)
+        let array = transformToNotificationsDict(notifications: notifications)
         UserDefaults.standard.set(array, forKey: copyKey)
         UserDefaults.standard.synchronize()
     }
     
     private func readCopy() -> Set<ReminderStruct>{
         guard let array = UserDefaults.standard.value(forKey: copyKey) as? [[String: Any]] else {return Set()}
+        return transformToRemindersSet(array: array)
+    }
+    
+    private func keyGenerator_ReminderStruct(elem: ReminderStruct) -> String? {
+        return self.keyGenerator_URL(elem: elem.url)
+    }
+    
+    private func transformToFiredReminders(dict: [String: [[String: Any]]]) -> [String: [ReminderStruct]] {
+        var ret_dict:[String: [ReminderStruct]] = [:]
+        for key in dict.keys {
+            ret_dict[key] = transformRemindersDict2Struct(reminders: dict[key]!)
+        }
+        return ret_dict
+    }
+    
+    private func transformToRemindersSet(array: [[String: Any]]) -> Set<ReminderStruct> {
         var set: Set<ReminderStruct> = Set()
         for elem in array {
-            if let url = elem["url"] as? String, let date = elem["date"] as? Date {
-                set.insert(ReminderStruct(url: url, date: date))
+            if let url = elem["url"] as? String, let date = elem["date"] as? Date, let title = elem["title"] as? String {
+                set.insert(ReminderStruct(url: url, date: date, title: title))
             }
         }
         return set
+    }
+    
+    private func transformToNotificationsDict(notifications: [UILocalNotification]) -> [[String: Any]] {
+        var array: [[String: Any]] = []
+        for notification in notifications {
+            if let date = notification.fireDate, let url = notification.userInfo?["url"] as? String, let title = notification.userInfo?["title"] as? String {
+                array.append(["url":url, "title":title, "date":date])
+            }
+        }
+        return array
+    }
+    
+    private func transformToNotificationsSet(notifications: [UILocalNotification]) -> Set<ReminderStruct> {
+        var set: Set<ReminderStruct> = Set.init()
+        for notification in notifications {
+            if let date = notification.fireDate, let url = notification.userInfo?["url"] as? String, let title = notification.userInfo?["title"] as? String {
+                set.insert(ReminderStruct(url: url, date: date, title: title))
+            }
+        }
+        return set
+    }
+    
+    private func transformRemindersStruct2Dict(reminders: [ReminderStruct]) -> [[String: Any]] {
+        var array: [[String: Any]] = []
+        for reminder in reminders {
+            let date = reminder.date
+            let url = reminder.url
+            let title = reminder.title
+            array.append(["url":url, "date":date, "title": title])
+        }
+        return array
+    }
+    
+    private func transformRemindersDict2Struct(reminders: [[String: Any]]) -> [ReminderStruct] {
+        var array: [ReminderStruct] = []
+        for elem in reminders {
+            if let url = elem["url"] as? String, let date = elem["date"] as? Date, let title = elem["title"] as? String {
+                array.append(ReminderStruct(url: url, date: date, title: title))
+            }
+        }
+        return array
+    }
+    
+    private func addToHashMap<A>(map: [String: [A]], element: A, keyGenerator: ((A) -> String?)) -> [String: [A]] {
+        var map_copy = map
+        
+        if let key = keyGenerator(element) {
+            if var array = map_copy[key] {
+                array.append(element)
+                map_copy[key] = array
+            }
+            else {
+                map_copy[key] = [element]
+            }
+        }
+        
+        
+        return map_copy
+    }
+    
+    private func removeFromHashMap<A:Equatable>(map: [String : [A]], element: A, keyGenerator:((A) -> String?)) -> [String: [A]] {
+        
+        var map_copy = map
+        
+        if let key = keyGenerator(element) {
+            if var array = map_copy[key] {
+                for i in 0..<array.count {
+                    let other_elem = array[i]
+                    if other_elem == element {
+                        array.remove(at: i)
+                        break
+                    }
+                }
+                if array.isEmpty {
+                    map_copy[key] = nil
+                }
+                else {
+                    map_copy[key] = array
+                }
+                
+            }
+            else {
+                //Nothing to remove.
+            }
+        }
+        else {
+            //this is an invalid key
+        }
+        
+        return map_copy
     }
 }
 

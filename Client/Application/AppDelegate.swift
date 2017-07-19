@@ -306,6 +306,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AntiTrackingModule.sharedInstance.initModule()
         AdblockingModule.sharedInstance.initModule()
         
+        //Init Reminder Manager
+        _ = CIReminderManager.sharedInstance
+        
         //Register for local notifications
         application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
         
@@ -616,9 +619,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
             if isReminder {
                 guard let url = dict["url"] as? String else {return}
-                CIReminderManager.sharedInstance.reminderFired(url_str: url, date: notification.fireDate)
+                let title = dict["title"] as? String ?? ""
+                CIReminderManager.sharedInstance.reminderFired(url_str: url, date: notification.fireDate, title: title)
                 if UIApplication.shared.applicationState == .active {
-                    presentReminderAlert(title: "Reminder", body: (dict["title"] as? String) ?? "", url: url)
+                    presentReminderAlert(title: "Reminder", body: title, url: url)
                 }
                 else if let _url = URL(string: url) {
                     self.browserViewController.openURLInNewTab(_url)
