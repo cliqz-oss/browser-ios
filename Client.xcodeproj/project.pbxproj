@@ -1471,7 +1471,6 @@
 		1E4706851EB0952000516BA5 /* SubSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E638EF81F1CEC84002194F6 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Crypto.swift; path = JSEngine/Crypto.swift; sourceTree = "<group>"; };
 		1E638F091F1CECB3002194F6 /* CryptoBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CryptoBridge.m; path = JSEngine/CryptoBridge.m; sourceTree = "<group>"; };
-		1E638F691F1E1B01002194F6 /* CryptoBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CryptoBridge.h; path = JSEngine/CryptoBridge.h; sourceTree = "<group>"; };
 		1E79DC941D4FB2B3006BEB4A /* Extension */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Extension; sourceTree = "<group>"; };
 		1E79DC9B1D4FB2C5006BEB4A /* CustomPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1E79DC9D1D4FB2C5006BEB4A /* AtomicInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicInt.swift; sourceTree = "<group>"; };
@@ -4227,7 +4226,6 @@
 				B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */,
 				1E638EF81F1CEC84002194F6 /* Crypto.swift */,
 				1E638F091F1CECB3002194F6 /* CryptoBridge.m */,
-				1E638F691F1E1B01002194F6 /* CryptoBridge.h */,
 			);
 			name = JSEngine;
 			sourceTree = "<group>";
