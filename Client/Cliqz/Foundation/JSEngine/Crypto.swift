@@ -12,6 +12,9 @@ import React
 
 @objc(Crypto)
 open class Crypto : RCTEventEmitter {
+    private let privateKeyTag = "com.connect.cliqz.private"
+    private let publicKeyTag = "com.connect.cliqz.public"
+    
     
     @objc(generateRandomSeed:reject:)
     func generateRandomSeed(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -25,29 +28,56 @@ open class Crypto : RCTEventEmitter {
     
     @objc(generateRSAKey:reject:)
     func generateRSAKey(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        var privateKey: CCRSACryptorRef?
-        var publicKey: CCRSACryptorRef?
         
-        var status = CCRSACryptorGeneratePair(2048, 65537, &publicKey, &privateKey)
-        guard status == noErr else {
-            reject("CCRSACryptorGeneratePair", "Generate pair failed with status \(status)", nil)
-            return
+        let privateKeyAttr : [String: Any] = [
+            kSecAttrIsPermanent as String: kCFBooleanTrue,
+            kSecAttrApplicationTag as String: privateKeyTag
+        ]
+        
+        let publicKeyAttr : [String: Any] = [
+            kSecAttrIsPermanent as String: kCFBooleanTrue,
+            kSecAttrApplicationTag as String: publicKeyTag
+        ]
+        
+        
+        let parameters: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeySizeInBits as String: 2048,
+            kSecPrivateKeyAttrs as String : privateKeyAttr,
+            kSecPublicKeyAttrs as String: publicKeyAttr
+            ]
+        
+        var publicKey, privateKey: SecKey?
+        
+        SecKeyGeneratePair(parameters as CFDictionary, &publicKey, &privateKey)
+        var privateKeyData: Data?
+        
+        if #available(iOS 10.0, *) {
+            var error:Unmanaged<CFError>?
+            if let cfdata = SecKeyCopyExternalRepresentation(privateKey!, &error) {
+                privateKeyData = cfdata as Data
+            }
+        } else {
+            let query: [String:Any] = [
+                kSecClass as String: kSecClassKey,
+                kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+                kSecAttrApplicationTag as String: privateKeyTag,
+                kSecReturnData as String: kCFBooleanTrue,
+            ]
+            
+            var secureItemValue: AnyObject?
+            let statusCode: OSStatus = SecItemCopyMatching(query as CFDictionary, &secureItemValue)
+            if let data = secureItemValue as? Data, statusCode == noErr {
+                privateKeyData = data
+            }
         }
         
-        defer { CCRSACryptorRelease(privateKey) }
-        defer { CCRSACryptorRelease(publicKey) }
-        
-        var privKeyDataLength = 8192
-        let privKeyData = NSMutableData(length: privKeyDataLength)!
-        
-        status = CCRSACryptorExport(privateKey, privKeyData.mutableBytes, &privKeyDataLength)
-        guard status == noErr else {
-            reject("CCRSACryptorExport", "Export privateKey failed with status \(status)", nil)
-            return
+        if let data = privateKeyData {
+            resolve(data.base64EncodedString())
+        } else {
+            reject("generateRSAKeyError", "Export privateKey failed.", nil)
         }
         
-        privKeyData.length = privKeyDataLength
-        resolve(privKeyData.base64EncodedString())
     }
     
     
