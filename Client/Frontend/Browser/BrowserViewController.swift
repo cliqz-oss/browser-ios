@@ -2357,7 +2357,7 @@ extension BrowserViewController {
         
         switch option {
         case .Option1: //30 Minutes
-            timeInterval = 1 * 60//30 * 60
+            timeInterval = 30 * 60
         case .Option2: //4 Hours
             timeInterval = (4 * 60) * 60
         case .Option3: //8 Hours

@@ -682,13 +682,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        var options : [AnyHashable: Any] = [kCRToastTextKey: message]
+        var options : [AnyHashable: Any] = [kCRToastTextKey: "Reminder: " + message]
         
         options[kCRToastBackgroundColorKey] = UIColor(colorString: "24262f")
         options[kCRToastInteractionRespondersKey] = [tapInteraction]
         options[kCRToastImageKey] = UIImage(named:"notificationImg")!
         options[kCRToastTextColorKey] = UIColor.white
-        options[kCRToastTimeIntervalKey] = 5
+        options[kCRToastTimeIntervalKey] = 15
         
         // copy default options to the current options dictionary
         defaultOptions.forEach { options[$0] = $1 }
