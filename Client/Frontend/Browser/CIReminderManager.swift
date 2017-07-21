@@ -33,6 +33,8 @@ final class CIReminderManager: NSObject {
     // 2. Make an api for it - Done
     // 3. Link with React - Done
     
+    let RefreshReminderUI_Notification_Name = NSNotification.Name(rawValue: "NotificationRefreshReminderUI")
+    
     enum RemindersChanged {
         case True
         case False
@@ -89,18 +91,13 @@ final class CIReminderManager: NSObject {
         saveState()
     }
     
+    func refresh() {
+        url_hash_map = buildUrlHashMap(reminders: allValidReminders())
+    }
+    
     func saveState() {
         makeCopy()
         saveFiredReminders()
-    }
-    
-    func remindersFired() -> Set<ReminderStruct> {
-        //here have an interface for creating the reminders_defaults
-        let fired_and_notfired = readCopy()
-        //in case there are no reminders from the system, return the fired_and_notfired. In this case fire_and_notfired contains only the fired notifications.
-        guard let reminders_system = UIApplication.shared.scheduledLocalNotifications else {return fired_and_notfired}
-        let unfired = transformToNotificationsSet(notifications: reminders_system)
-        return fired_and_notfired.subtracting(unfired)
     }
     
     func registerReminder(url: String, title: String, date: Date) {
@@ -208,12 +205,12 @@ final class CIReminderManager: NSObject {
     }
     
     func reminderFired(url_str: String, date: Date?, title: String?) {
+        url_hash_map = removeUrlFromHashMap(map: url_hash_map, url_str: url_str)
         //add to FiredReminders
         addToFiredReminders(url: url_str, date: date ?? Date(), title: title ?? "")
     }
     
     func reminderPressed(url_str: String) {
-        url_hash_map = removeUrlFromHashMap(map: url_hash_map, url_str: url_str)
         //remove from FiredReminders
         removeFromFiredReminders(url: url_str)
     }
@@ -284,6 +281,15 @@ final class CIReminderManager: NSObject {
     private func removeFromFiredReminders(url: String) {
         //the url is the unique identifier. Only one reminder per url.
         firedReminders = removeFromHashMap(map: firedReminders, element: ReminderStruct(url:url, date:Date(), title:""), keyGenerator: keyGenerator_ReminderStruct)
+    }
+    
+    private func remindersFired() -> Set<ReminderStruct> {
+        //here have an interface for creating the reminders_defaults
+        let fired_and_notfired = readCopy()
+        //in case there are no reminders from the system, return the fired_and_notfired. In this case fire_and_notfired contains only the fired notifications.
+        guard let reminders_system = UIApplication.shared.scheduledLocalNotifications else {return fired_and_notfired}
+        let unfired = transformToNotificationsSet(notifications: reminders_system)
+        return fired_and_notfired.subtracting(unfired)
     }
     
     private func makeCopy() {
@@ -374,6 +380,7 @@ final class CIReminderManager: NSObject {
             }
         }
         
+        stateChanged()
         
         return map_copy
     }
@@ -407,7 +414,17 @@ final class CIReminderManager: NSObject {
             //this is an invalid key
         }
         
+        stateChanged()
+        
         return map_copy
+    }
+    
+    private func stateChanged() {
+        postUIRefreshNotification()
+    }
+    
+    private func postUIRefreshNotification() {
+        NotificationCenter.default.post(name: RefreshReminderUI_Notification_Name, object: nil)
     }
 }
 

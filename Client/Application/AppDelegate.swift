@@ -23,6 +23,7 @@ let AllowThirdPartyKeyboardsKey = "settings.allowThirdPartyKeyboards"
 private let InitialPingSentKey = "initialPingSent"
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     var window: UIWindow?
     var browserViewController: BrowserViewController!
     var rootViewController: UINavigationController!
@@ -254,6 +255,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
         AppStatus.sharedInstance.appDidFinishLaunching()
         
         //UIApplication.shared.cancelAllLocalNotifications()
@@ -314,6 +316,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
         
         log.debug("Done with applicationDidFinishLaunching.")
+        
+        if let notification = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as? UILocalNotification {
+            handleLocalNotification(notification: notification, startUp: true)
+        }
 
         return shouldPerformAdditionalDelegateHandling
     }
@@ -505,6 +511,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // is that this method is only invoked whenever the application is entering the foreground where as 
         // `applicationDidBecomeActive` will get called whenever the Touch ID authentication overlay disappears.
         self.updateAuthenticationInfo()
+        
+        CIReminderManager.sharedInstance.refresh()
 
         // Cliqz: call AppStatus
         AppStatus.sharedInstance.appWillEnterForeground()
@@ -513,6 +521,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         profile?.reopen()
     }
+    
 
     fileprivate func resetForegroundStartTime() {
         foregroundStartTime = Int(Date().timeIntervalSince1970)
@@ -617,40 +626,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
+        handleLocalNotification(notification: notification, startUp: false)
+    }
+    
+    func handleLocalNotification(notification: UILocalNotification, startUp: Bool) {
         if let dict = notification.userInfo, let isReminder = dict["isReminder"] as? Bool {
             if isReminder {
                 guard let url = dict["url"] as? String else {return}
                 let title = dict["title"] as? String ?? ""
                 CIReminderManager.sharedInstance.reminderFired(url_str: url, date: notification.fireDate, title: title)
+                
                 if UIApplication.shared.applicationState == .active {
                     //presentReminderAlert(title: "Reminder", body: title, url: url)
                     presentReminderToast(message: title, url: url)
                 }
-                else if let _url = URL(string: url) {
-                    self.browserViewController.openURLInNewTab(_url)
-                    //notification pressed
-                    CIReminderManager.sharedInstance.reminderPressed(url_str: url)
+                else {
+                    let extend = startUp ? 2.0 : 0.5
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + extend, execute: {
+                        self.specialOpenUrl(url: url)
+                    })
                 }
+                
                 CIReminderManager.sharedInstance.didRemindersChange = .True
                 return
             }
         }
         viewURLInNewTab(notification)
     }
+
+    func specialOpenUrl(url:String) {
+        if let _url = URL(string: url) {
+            if self.browserViewController.visible == false {
+                self.rootViewController.pushViewController(self.browserViewController, animated: false)
+                self.browserViewController.visible = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
+                self.browserViewController.openURLInNewTab(_url)
+            })
+            
+            //notification pressed
+            CIReminderManager.sharedInstance.reminderPressed(url_str: url)
+        }
+    }
     
     func presentReminderAlert(title:String, body: String, url: String) {
         let controller = UIAlertController(title: title, message: body, preferredStyle: .alert)
         let dismiss = UIAlertAction(title: "Dismiss", style: .cancel)
         let open    = UIAlertAction(title: "Open", style: .default) { (action) in
-            if let _url = URL(string: url) {
-                if self.browserViewController.visible == false {
-                    self.rootViewController.pushViewController(self.browserViewController, animated: false)
-                    self.browserViewController.visible = true
-                }
-                self.browserViewController.openURLInNewTab(_url)
-                //notification pressed
-                CIReminderManager.sharedInstance.reminderPressed(url_str: url)
-            }
+            self.specialOpenUrl(url: url)
         }
         controller.addAction(dismiss)
         controller.addAction(open)
@@ -671,15 +695,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ]
         
         let tapInteraction = CRToastInteractionResponder.init(interactionType: .tap, automaticallyDismiss: true) { (tap) in
-            if let _url = URL(string: url) {
-                if self.browserViewController.visible == false {
-                    self.rootViewController.pushViewController(self.browserViewController, animated: false)
-                    self.browserViewController.visible = true
-                }
-                self.browserViewController.openURLInNewTab(_url)
-                //notification pressed
-                CIReminderManager.sharedInstance.reminderPressed(url_str: url)
-            }
+            self.specialOpenUrl(url: url)
         }
         
         var options : [AnyHashable: Any] = [kCRToastTextKey: "Reminder: " + message]

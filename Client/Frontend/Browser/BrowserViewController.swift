@@ -619,12 +619,29 @@ class BrowserViewController: UIViewController {
                                                          selector: #selector(BrowserViewController.keyboardWillHide(_:)),
                                                          name: NSNotification.Name.UIKeyboardWillHide,
                                                          object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(BrowserViewController.refreshReminderButton(_:)),
+                                               name: CIReminderManager.sharedInstance.RefreshReminderUI_Notification_Name,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(BrowserViewController.refreshReminderButton(_:)),
+                                               name: NSNotification.Name.UIApplicationDidBecomeActive,
+                                               object: nil)
+        
 		if let tab = self.tabManager.selectedTab {
 			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 		}
         
         //updateReminderButtonState(url_str: tab.displayURL?.absoluteString ?? "")
     
+    }
+    
+    func refreshReminderButton(_ notification:Notification) {
+        guard let tab = self.tabManager.selectedTab else {return}
+        guard let url = tab.displayURL?.absoluteString else {return}
+        updateReminderButtonState(url_str: url)
     }
 
     fileprivate func showRestoreTabsAlert() {
@@ -723,11 +740,7 @@ class BrowserViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationStatusNotificationTapped), object: nil)
-        
-        // Cliqz: remove keyboard obervers
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
 
     func resetBrowserChrome() {
@@ -1794,6 +1807,7 @@ extension BrowserViewController: URLBarDelegate {
 
     func urlBarDidPressReaderMode(_ urlBar: URLBarView) {
         self.controlCenterController?.closeControlCenter()
+        
         if let tab = tabManager.selectedTab {
             if let readerMode = tab.getHelper("ReaderMode") as? ReaderMode {
                 switch readerMode.state {
@@ -2357,7 +2371,7 @@ extension BrowserViewController {
         
         switch option {
         case .Option1: //30 Minutes
-            timeInterval = 30 * 60
+            timeInterval = 30//30 * 60
         case .Option2: //4 Hours
             timeInterval = (4 * 60) * 60
         case .Option3: //8 Hours
@@ -4159,7 +4173,7 @@ class BlurWrapper: UIView {
             effectView.removeFromSuperview()
             effectView = newEffect
             insertSubview(effectView, belowSubview: wrappedView)
-            effectView.snp_remakeConstraints { make in
+            effectView.snp.remakeConstraints { make in
                 make.edges.equalTo(self)
             }
         }
