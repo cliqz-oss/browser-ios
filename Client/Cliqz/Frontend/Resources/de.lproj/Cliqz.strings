@@ -1,5 +1,6 @@
 /* The text shown in the search field */
-"Search" = "Suche";
+"Search.placeholder" = "Cliqz Suche";
+
 /* Error message title */
 "Sorry" = "Entschuldigung";
 /* Error message when JS scripts for search can't be loaded */
@@ -143,8 +144,16 @@
 "Retrieving video information" = "Lade Videoinformationen";
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Alle Tabs schliessen";
+
 /* Title to expand news stream */
-"MoreNews" = "Mehr Nachrichten";
+"MoreNews" = "Mehr anzeigen";
+
+/* Title to shrink news stream */
+"LessNews" = "Weniger anzeigen";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "Vergessen Tab";
 /* Description on Freshtab for forget mode */

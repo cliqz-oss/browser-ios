@@ -386,6 +386,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC viewDidLoad…")
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
+
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELBookmarkStatusDidChange(_:)), name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
@@ -402,8 +403,9 @@ class BrowserViewController: UIViewController {
         footerBackdrop.backgroundColor = UIColor.white
         view.addSubview(footerBackdrop)
         headerBackdrop = UIView()
-        headerBackdrop.backgroundColor = UIColor.white
-        view.addSubview(headerBackdrop)
+        headerBackdrop.backgroundColor = UIColor.clear
+	
+		view.addSubview(headerBackdrop)
 
         log.debug("BVC setting up webViewContainer…")
         webViewContainerBackdrop = UIView()
@@ -419,7 +421,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC setting up status bar…")
         // Temporary work around for covering the non-clipped web view content
         statusBarOverlay = UIView()
-        statusBarOverlay.backgroundColor = BrowserViewControllerUX.BackgroundColor
+        statusBarOverlay.backgroundColor = UIColor.clear
         view.addSubview(statusBarOverlay)
 
         log.debug("BVC setting up top touch area…")
@@ -2553,13 +2555,15 @@ extension BrowserViewController: TabManagerDelegate {
             updateURLBarDisplayURL(tab)
             TelemetryLogger.sharedInstance.updateForgetModeStatue(tab.isPrivate)
 
-            if tab.isPrivate {
-                readerModeCache = MemoryReaderModeCache.sharedInstance
-                applyTheme(Theme.PrivateMode)
-            } else {
-                readerModeCache = DiskReaderModeCache.sharedInstance
-                applyTheme(Theme.NormalMode)
-            }
+			if self.navigationController?.topViewController == self {
+				if tab.isPrivate {
+					readerModeCache = MemoryReaderModeCache.sharedInstance
+					applyTheme(Theme.PrivateMode)
+				} else {
+					readerModeCache = DiskReaderModeCache.sharedInstance
+					applyTheme(Theme.NormalMode)
+				}
+			}
             ReaderModeHandlers.readerModeCache = readerModeCache
 
             scrollController.tab = selected
@@ -3933,15 +3937,13 @@ extension BrowserViewController: Themeable {
 //            header.blurStyle = .ExtraLight
             footerBackground?.blurStyle = .extraLight
             // Cliqz: changed status bar look and feel in normal mode
-			AppDelegate.changeStatusBarStyle(.default, backgroundColor: UIConstants.AppBackgroundColor)
-            
+
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
             footerBackground?.blurStyle = .dark
             // Cliqz: changed status bar look and feel in forget mode
-            AppDelegate.changeStatusBarStyle(.lightContent, backgroundColor: UIConstants.PrivateModeBackgroundColor)
-            
+
         default:
             log.debug("Unknown Theme \(themeName)")
         }

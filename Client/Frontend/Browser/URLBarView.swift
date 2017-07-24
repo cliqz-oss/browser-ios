@@ -14,6 +14,8 @@ struct URLBarViewUX {
     static let TextFieldBorderColor = UIColor(rgb: 0xBBBBBB)
     static let TextFieldActiveBorderColor = UIColor(rgb: 0x4A90E2)
     static let TextFieldContentInset = UIOffsetMake(9, 5)
+	static let EditModeBackgroundColor = UIColor.white
+	static let NonEditModeBackgroundColor = UIColor(rgb: 0x00AEF0)
     static let LocationLeftPadding: CGFloat = 10
     static let LocationHeight = 28
     static let ButtonWidth = 42
@@ -44,7 +46,7 @@ struct URLBarViewUX {
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
-        
+
         themes[Theme.PrivateMode] = theme
 
         theme = Theme()
@@ -56,8 +58,8 @@ struct URLBarViewUX {
         // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
         theme.buttonTintColor = UIColor.black
         // Cliqz: Set URLBar backgroundColor because of requirements
-        theme.backgroundColor = UIConstants.AppBackgroundColor.withAlphaComponent(1)
-        
+        theme.backgroundColor = UIColor.white //UIConstants.AppBackgroundColor.withAlphaComponent(1)
+
         themes[Theme.NormalMode] = theme
 
         return themes
@@ -243,6 +245,7 @@ class URLBarView: UIView {
                 }
             }
             locationView.url = newURL
+			self.applyTheme(self.currentTheme)
         }
     }
 
@@ -659,7 +662,7 @@ class URLBarView: UIView {
         
         // Cliqz: Modify the background of the URLBar so that the search text appear as expanded (emphasis the search) and adjusting the status bar
         if currentTheme == Theme.NormalMode {
-            self.backgroundColor = UIColor.white
+            self.backgroundColor = URLBarViewUX.EditModeBackgroundColor
         } else {
             self.backgroundColor = UIConstants.PrivateModeExpandBackgroundColor
         }
@@ -933,9 +936,9 @@ extension URLBarView {
     fileprivate func applyThemeOnStatusBar(_ themeName: String) {
         switch(themeName) {
         case Theme.NormalMode:
-            AppDelegate.changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!)
+			getApp().changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!, true)
         case Theme.PrivateMode:
-            AppDelegate.changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!)
+            getApp().changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!, false)
         default:
             break;
         }
@@ -960,7 +963,15 @@ extension URLBarView: Themeable {
         cancelTextColor = theme.textColor
         actionButtonTintColor = theme.buttonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
-        backgroundColor = theme.backgroundColor
+		if self.inOverlayMode {
+			backgroundColor = theme.backgroundColor
+		} else {
+			if self.currentURL == nil || self.currentURL!.absoluteString == "" {
+				self.backgroundColor = UIColor.clear
+			} else {
+				self.backgroundColor = URLBarViewUX.NonEditModeBackgroundColor
+			}
+		}
         // Cliqz: used regular button instead of TabsButton
         tabsButton.applyTheme(themeName)
         // Cliqz: Adjust statusbar according to the current theme
