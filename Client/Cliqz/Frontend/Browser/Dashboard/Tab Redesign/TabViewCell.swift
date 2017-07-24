@@ -294,6 +294,9 @@ class TabViewCell: UICollectionViewCell {
             })
             
             self.domainLabel.snp.remakeConstraints { (make) in
+                //self.domainLabel.isHidden = false
+                self.domainLabel.textAlignment = .left
+                self.domainLabel.textColor = UIColor(colorString: "0086E0")
                 make.top.equalTo(self.displayView).inset(14)
                 make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
@@ -301,13 +304,13 @@ class TabViewCell: UICollectionViewCell {
             }
             
 			self.descriptionLabel.snp.remakeConstraints { (make) in
-                self.descriptionLabel.isHidden = false
                 make.top.equalTo(self.domainLabel.snp.bottom)
                 make.left.right.equalTo(self.displayView).inset(10.0)
                 make.height.equalTo(50.0)//54
             }
             
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
+                self.bigLogoImageView.layer.cornerRadius = 3
                 make.top.equalTo(self.descriptionLabel.snp.bottom)
                 make.left.right.bottom.equalTo(self.displayView).inset(10)
             }
@@ -340,19 +343,27 @@ class TabViewCell: UICollectionViewCell {
             })
             
 			self.domainLabel.snp.remakeConstraints({ (make) in
-                make.top.equalTo(self.displayView)
-                make.left.equalTo(self.displayView).offset(10.0)
-                make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(44.0)
+                //self.domainLabel.isHidden = true
+                self.domainLabel.textAlignment = .center
+                self.domainLabel.textColor = UIColor.gray
+                make.bottom.equalTo(self.displayView)
+                make.left.right.equalTo(self.displayView)//.offset(10.0)
+                make.height.equalTo(28.0)
             })
             
 			self.descriptionLabel.snp.remakeConstraints({ (make) in
-				self.descriptionLabel.isHidden = true
+                make.top.equalTo(self.displayView).offset(4)
+                make.left.equalTo(self.displayView).offset(10.0)
+                make.right.equalTo(self.deleteButton).inset(44.0)
+                make.height.equalTo(44.0)
 			})
 			
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
-                make.top.equalTo(self.domainLabel.snp.bottom)
-                make.left.right.bottom.equalTo(self.displayView).inset(10)
+                self.bigLogoImageView.layer.cornerRadius = 3
+                make.top.equalTo(self.descriptionLabel.snp.bottom).offset(4)
+                make.left.equalTo(self.displayView).offset(10)
+                make.right.equalTo(self.displayView).inset(10)
+                make.bottom.equalTo(self.domainLabel.snp.top)
             }
             
 			self.smallCenterImageView.snp.remakeConstraints { (make) in
