@@ -2274,7 +2274,7 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 
 extension BrowserViewController: TabDelegate {
     
-    func urlChangedForTab(tab: Tab) {
+    func urlChangedForTab(_ tab: Tab) {
         if self.tabManager.selectedTab == tab  && tab.url?.baseDomain() != "localhost" {
             //update the url in the urlbar
             self.urlBar.currentURL = tab.url

@@ -600,9 +600,8 @@ private class HelperManager: NSObject, WKScriptMessageHandler {
 }
 
 extension Tab: CliqzWebViewDelegate {
-    func didFinishLoadingRequest(request: NSURLRequest?) {
-        //finished loading request
-        self.url = request?.url
+    func updateTabUrl(url: URL?) {
+        self.url = url
         self.tabDelegate?.urlChangedForTab?(self)
     }
 }
