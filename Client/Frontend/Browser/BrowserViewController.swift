@@ -1048,7 +1048,7 @@ class BrowserViewController: UIViewController {
 		}
 #endif
 
-        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tab) {
             self.openURLInNewTab(url, isPrivate: true)
             return
         }
@@ -1310,7 +1310,7 @@ class BrowserViewController: UIViewController {
         if let url = url {
             request = PrivilegedRequest(url: url) as URLRequest
             
-            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tabManager.selectedTab) {
                 _isPrivate = true
             }
             
@@ -4115,10 +4115,19 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
     fileprivate func navigateToUrl(_ url: URL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = URL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tabManager.selectedTab) {
+            urlBar.currentURL = url
+            urlBar.leaveOverlayMode()
+            self.openURLInNewTab(url, isPrivate: true)
+            return
+        }
+        
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(url: u) as URLRequest) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
 		}
+        
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
     }

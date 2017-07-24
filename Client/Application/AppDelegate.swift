@@ -208,8 +208,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         sendCorePing()
 		
-        //Init the bloomFilter
-        _ = BloomFilterManager.sharedInstance
+        //Turn on the bloomFilter
+        BloomFilterManager.sharedInstance.turnOn()
         
         log.debug("Done with setting up the application.")
 
