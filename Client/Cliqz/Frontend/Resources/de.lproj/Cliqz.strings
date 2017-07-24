@@ -230,6 +230,8 @@
 "Browsing & History" = "Browsing & Verlauf";
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Popup-Fenster blockieren";
+/* [Settings] Automatic Forget Tab*/
+"Automatic Forget Tab" = "Automatische Vergessen-Tabs";
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Werbeblocker (BETA)";
@@ -267,6 +269,8 @@
 "Limit Mobile Data Usage" = "Mobile Daten begrenzen";
 /* [Settings -> Limit Mobile Data Usage] toogle footer */
 "Download videos on Wi-Fi Only" = "Videos nur über WLAN herunterladen";
+/* [Settings -> AutoForget Tab] toogle footer */
+"Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history." = "Websites, die bekannt sind für nicht-jugendfreie Inhalte, werden automatisch in einem Vergessen-Tab geöffnet. Das heißt, Besuche dieser Seiten werden nicht im Verlauf gespeichert.";
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Keine WLAN-Verbindung";
 /* [Connect] No Wi-Fi connection alert message */

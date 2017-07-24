@@ -65,12 +65,13 @@ class AppSettingsTableViewController: SettingsTableViewController {
         // Browsing & History Section
         let connectSetting              = CliqzConnectSetting(settings: self)
         let blockPopupsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", tableName: "Cliqz", comment: " [Settings] Block pop-up windows"))
+        let autoForgetTabSetting        = AutoForgetTabSetting(settings: self)
         let limitMobileDataUsageSetting = LimitMobileDataUsageSetting(settings: self)
         let adBlockerSetting            = AdBlockerSetting(settings: self)
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
         
-        var browsingAndHistorySection: [Setting] = [connectSetting, blockPopupsSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        var browsingAndHistorySection: [Setting] = [connectSetting, blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]

@@ -21,6 +21,7 @@ class SettingsPrefs {
     static let countryPrefKey = "UserCountry"
     static let querySuggestionPrefKey = "QuerySuggestion"
     static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
+    static let AutoForgetTabPrefKey = "AutoForgetTab"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -155,6 +156,26 @@ class SettingsPrefs {
     
     class func updateLimitMobileDataUsagePref(_ newValue: Bool) {
         SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
+    }
+    
+    class func getAutoForgetTabPref() -> Bool {
+        let defaultValue = true
+        if let AutoForgetTabPref = SettingsPrefs.getBoolPref(AutoForgetTabPrefKey) {
+            return AutoForgetTabPref
+        }
+        return defaultValue
+    }
+    
+    class func updateAutoForgetTabPref(_ newValue: Bool) {
+        
+        SettingsPrefs.updatePref(AutoForgetTabPrefKey, value: newValue as AnyObject)
+        
+        if newValue == true {
+            BloomFilterManager.sharedInstance.turnOn()
+        } else {
+            BloomFilterManager.sharedInstance.turnOff()
+        }
+        
     }
     
     // MARK: - Private helper metods
