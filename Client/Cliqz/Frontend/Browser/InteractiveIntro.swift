@@ -77,6 +77,7 @@ class InteractiveIntroViewController: UIViewController {
     private let version = "1.2"
     private let cardsShowCountKey = "OnBoardingCardsShowCount"
     private let attrackShowCountKey = "OnBoardingAttrackShowCount"
+    private let videoDownloaderShowCountKey = "OnBoardingVideoDownloadersShowCount"
     private var introOpenTime: Double?
 
     
@@ -428,12 +429,13 @@ class InteractiveIntroViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        let showCount: Int = LocalDataStore.objectForKey(attrackShowCountKey) as? Int ?? 1
+        let showCount: Int = LocalDataStore.objectForKey(videoDownloaderShowCountKey) as? Int ?? 1
         let customData: [String : Any] = ["view" : "video_downloader",
+                                          "show_count" : showCount,
                                           "version" : version]
         
         TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
-        LocalDataStore.setObject(showCount+1, forKey: attrackShowCountKey)
+        LocalDataStore.setObject(showCount+1, forKey: videoDownloaderShowCountKey)
     }
     
 	private func cliqzSearchMaskLayer() -> CAShapeLayer {
@@ -504,6 +506,8 @@ class InteractiveIntroViewController: UIViewController {
             customData["view"] = "attrack"
         case .cliqzSearch( _):
             customData["view"] = "cards"
+        case .videoDownloader:
+            customData["view"] = "video_downloader"
         default:
             customData["view"] = "unknown"
         }
