@@ -126,7 +126,7 @@ class SettingsPrefs {
         if let countryCode = currentLocale.regionCode, availableCountries.contains(countryCode) {
             return countryCode
         }
-        return "DE"
+        return "US"
     }
     
     class func updateRegionPref(_ newValue: String) {

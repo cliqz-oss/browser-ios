@@ -21,9 +21,13 @@ struct FreshtabViewUX {
 	static let TopSitesCountOnRow = 4
 	static let TopSitesOffset = 5.0
 	
-	static let forgetModeTextColor = UIColor(rgb: 0x999999)
-	static let forgetModeOffset = 50.0
+	static let ForgetModeTextColor = UIColor(rgb: 0x999999)
+	static let ForgetModeOffset = 50.0
 
+	static let NewsViewMinHeight: CGFloat = 162.0
+	static let NewsCellHeight: CGFloat = 68.0
+	static let MinNewsCellsCount = 2
+	static let MaxNewsCellsCount = 4
 }
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -113,7 +117,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
-		self.topSitesCollection?.snp_updateConstraints({ (make) in
+		self.topSitesCollection?.snp.updateConstraints({ (make) in
 			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow {
 				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
 			} else {
@@ -144,6 +148,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				self.tableView(self.newsTableView!, didSelectRowAt: selectedIndex)
 			}
 		}
+		self.delegate?.dismissKeyboard()
 	}
     
     fileprivate func removeDeletedTopSites() {
@@ -167,23 +172,29 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	fileprivate func constructForgetModeView() {
 		if forgetModeView == nil {
 			self.forgetModeView = UIView()
-			self.forgetModeView.backgroundColor = UIConstants.PrivateModeBackgroundColor
+			self.forgetModeView.backgroundColor = UIColor.clear
 			let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .light))
 			self.forgetModeView.addSubview(blurEffect)
-			self.forgetModeView.snp_makeConstraints({ (make) in
+			self.forgetModeView.snp.makeConstraints({ (make) in
 				make.top.left.right.bottom.equalTo(self.forgetModeView)
 			})
+			let bgView = UIImageView(image: UIImage(named: "forgetModeFreshtabBgImage"))
+			self.forgetModeView.addSubview(bgView)
+			bgView.snp.makeConstraints { (make) in
+				make.left.right.top.bottom.equalTo(self.forgetModeView)
+			}
+
 			self.view.backgroundColor = UIColor.clear
 			self.view.addSubview(forgetModeView)
-			self.forgetModeView.snp_makeConstraints({ (make) in
+			self.forgetModeView.snp.makeConstraints({ (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
 			let iconImg = UIImage(named: "forgetModeIcon")
 			let forgetIcon = UIImageView(image: iconImg!.withRenderingMode(.alwaysTemplate))
 			forgetIcon.tintColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(forgetIcon)
-			forgetIcon.snp_makeConstraints({ (make) in
-				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
+			forgetIcon.snp.makeConstraints({ (make) in
+				make.top.equalTo(self.forgetModeView).offset(FreshtabViewUX.ForgetModeOffset)
 				make.centerX.equalTo(self.forgetModeView)
 			})
 
@@ -194,8 +205,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			title.font = UIFont.boldSystemFont(ofSize: 19)
 			title.textColor = UIColor(white: 1, alpha: 0.57)
 			self.forgetModeView.addSubview(title)
-			title.snp_makeConstraints({ (make) in
-				make.top.equalTo(forgetIcon.snp_bottom).offset(20)
+			title.snp.makeConstraints({ (make) in
+				make.top.equalTo(forgetIcon.snp.bottom).offset(20)
 				make.left.right.equalTo(self.forgetModeView)
 				make.height.equalTo(20)
 			})
@@ -207,11 +218,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			description.textAlignment = .center
 			description.font = UIFont.systemFont(ofSize: 13)
 			description.textColor = UIColor(white: 1, alpha: 0.57)
-			description.textColor = FreshtabViewUX.forgetModeTextColor
-			description.snp_makeConstraints({ (make) in
-				make.top.equalTo(title.snp_bottom).offset(15)
-				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.forgetModeOffset)
-				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.forgetModeOffset)
+			description.textColor = FreshtabViewUX.ForgetModeTextColor
+			description.snp.makeConstraints({ (make) in
+				make.top.equalTo(title.snp.bottom).offset(15)
+				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.ForgetModeOffset)
+				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.ForgetModeOffset)
 			})
 		}
 	}
@@ -221,19 +232,24 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.normalModeView = UIView()
 			self.normalModeView.backgroundColor = UIConstants.AppBackgroundColor
 			self.view.addSubview(self.normalModeView)
-			self.normalModeView.snp_makeConstraints({ (make) in
+			self.normalModeView.snp.makeConstraints({ (make) in
 				make.top.left.bottom.right.equalTo(self.view)
 			})
+			let bgView = UIImageView(image: UIImage(named: "normalModeFreshtabBgImage"))
+			self.normalModeView.addSubview(bgView)
+			bgView.snp.makeConstraints { (make) in
+				make.left.right.top.bottom.equalTo(self.normalModeView)
+			}
 		}
 		if self.topSitesCollection == nil {
 			self.topSitesCollection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
 			self.topSitesCollection?.delegate = self
 			self.topSitesCollection?.dataSource = self
-			self.topSitesCollection?.backgroundColor = UIConstants.AppBackgroundColor
+			self.topSitesCollection?.backgroundColor = UIColor.clear
 			self.topSitesCollection?.register(TopSiteViewCell.self, forCellWithReuseIdentifier: "TopSite")
 			self.topSitesCollection?.isScrollEnabled = false
 			self.normalModeView.addSubview(self.topSitesCollection!)
-			self.topSitesCollection?.snp_makeConstraints { (make) in
+			self.topSitesCollection?.snp.makeConstraints { (make) in
 				make.top.equalTo(self.normalModeView)
 				make.left.equalTo(self.normalModeView).offset(FreshtabViewUX.TopSitesOffset)
 				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
@@ -243,18 +259,22 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 		
 		if self.newsTableView == nil {
-			self.newsTableView = UITableView()
+			self.newsTableView = UITableView(frame: CGRect.zero, style: .grouped)
 			self.newsTableView?.delegate = self
 			self.newsTableView?.dataSource = self
-			self.newsTableView?.backgroundColor = UIConstants.AppBackgroundColor
+			self.newsTableView?.backgroundColor = UIColor.clear
 			self.normalModeView.addSubview(self.newsTableView!)
-			self.newsTableView?.tableFooterView = UIView()
-			self.newsTableView?.snp_makeConstraints { (make) in
-				make.left.right.bottom.equalTo(self.view)
-				make.top.equalTo(self.topSitesCollection!.snp_bottom).offset(5)
+			self.newsTableView?.tableFooterView = UIView(frame: CGRect.zero)
+			self.newsTableView?.layer.cornerRadius = 9.0
+			self.newsTableView?.isScrollEnabled = false
+			self.newsTableView?.snp.makeConstraints { (make) in
+				make.left.equalTo(self.view).offset(21)
+				make.right.equalTo(self.view).offset(-21)
+				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
+				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(20)
 			}
 			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
-			newsTableView?.separatorStyle = .none
+			newsTableView?.separatorStyle = .singleLine
             self.newsTableView?.accessibilityLabel = "topNews"
 		}
 	}
@@ -276,7 +296,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	@objc fileprivate func loadTopsites() {
-		self.loadTopSitesWithLimit(15)
+		let _ = self.loadTopSitesWithLimit(15)
         //self.topSitesCollection?.reloadData()
 	}
     
@@ -349,7 +369,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			}
 			if self.topSites.count == 0 {
 				self.normalModeView.addSubview(self.emptyTopSitesHint)
-				self.emptyTopSitesHint.snp_makeConstraints({ (make) in
+				self.emptyTopSitesHint.snp.makeConstraints({ (make) in
 					make.top.equalTo(self.normalModeView).offset(3)
 					make.left.right.top.equalTo(self.normalModeView)
 					make.height.equalTo(14)
@@ -365,7 +385,16 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 	
 	@objc fileprivate func showMoreNews() {
-		self.isNewsExpanded = true
+		self.isNewsExpanded = !self.isNewsExpanded
+		if self.isNewsExpanded {
+			self.newsTableView?.snp.updateConstraints { (make) in
+				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
+			}
+		} else {
+			self.newsTableView?.snp.updateConstraints { (make) in
+				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
+			}
+		}
 		self.newsTableView?.reloadData()
 	}
 }
@@ -373,10 +402,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if self.news.count >= 2 {
-			return self.isNewsExpanded ? self.news.count : 2
-		}
-		return 0
+		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
+			self.isNewsExpanded ? min(self.news.count, (DeviceInfo.getDeviceType() == .iPhone5 ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
+		FreshtabViewUX.MinNewsCellsCount
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -425,7 +453,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 85
+		return FreshtabViewUX.NewsCellHeight
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -443,6 +471,42 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
             }
 		}
+	}
+
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let v = UIView()
+//		v.backgroundColor = UIColor(colorString: "D1D1D2")
+		v.backgroundColor = UIColor.black
+		let l = UILabel()
+		l.text = NSLocalizedString("NEWS", tableName: "Cliqz", comment: "Title to expand news stream")
+		l.textColor = UIColor.white
+		l.font = UIFont.systemFont(ofSize: 13)
+		v.addSubview(l)
+		l.snp.makeConstraints { (make) in
+			make.left.equalTo(v).offset(10)
+			make.top.equalTo(v)
+			make.height.equalTo(27)
+			make.right.equalTo(v)
+		}
+		let btn = UIButton()
+		v.addSubview(btn)
+		btn.contentHorizontalAlignment = .right
+		btn.snp.makeConstraints { (make) in
+			make.top.equalTo(v).offset(3)
+			make.right.equalTo(v).offset(-9)
+			make.height.equalTo(20)
+			make.width.equalTo(v).dividedBy(2)
+		}
+		if self.isNewsExpanded {
+			btn.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+		} else {
+			btn.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+		}
+		btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+		btn.titleLabel?.textAlignment = .right
+		btn.setTitleColor(UIColor.white, for: .normal)
+		btn.addTarget(self, action: #selector(showMoreNews), for: .touchUpInside)
+		return v
 	}
 
 	/*
@@ -466,7 +530,17 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 */
 
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		return 0
+		return 1.0
+	}
+
+	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		var rect = CGRect.zero
+		rect.size.height = 1
+		return UIView(frame: rect)
+	}
+
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 27.0
 	}
 
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -581,7 +655,7 @@ extension FreshtabViewController: TopSiteCellDelegate {
 	func topSiteHided(_ index: Int) {
 		let s = self.topSites[index]
 		if let url = s["url"] {
-			self.profile.history.hideTopSite(url)
+			let _ = self.profile.history.hideTopSite(url)
 		}
         
         self.topSitesIndexesToRemove.append(index)

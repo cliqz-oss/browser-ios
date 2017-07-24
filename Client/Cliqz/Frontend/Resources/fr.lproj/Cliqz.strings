@@ -1,5 +1,5 @@
 /* The text shown in the search field */
-"Search" = "Rechercher";
+"Search.placeholder" = "Rechercher avec Cliqz";
 /* Error message title */
 "Sorry" = "Désolé";
 /* Error message when JS scripts for search can't be loaded */
@@ -142,7 +142,14 @@
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 /* Title to expand news stream */
-"MoreNews" = "Plus d'actualités";
+"MoreNews" = "En afficher plus";
+
+/* Title to shrink news stream */
+"LessNews" = "En afficher moins";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
 /* Title on Freshtab for forget mode */

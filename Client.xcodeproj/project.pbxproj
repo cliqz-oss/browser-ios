@@ -428,7 +428,6 @@
 		2FFC4D1B1ABE3C360081D675 /* FxAState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D1A1ABE3C360081D675 /* FxAState.swift */; };
 		2FFC4D381ABE3C420081D675 /* FxAStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D371ABE3C420081D675 /* FxAStateTests.swift */; };
 		3905274C1C874D35007E0BB7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3905274B1C874D35007E0BB7 /* NotificationCenter.framework */; };
-		390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3905274A1C874D35007E0BB7 /* Today.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39098DC41CAD5ACB00AE87F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 391AEFD11C8F11ED00691F84 /* Images.xcassets */; };
 		392ED6B71D06E85E009D9B62 /* NewTabChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392ED6B61D06E85E009D9B62 /* NewTabChoiceViewController.swift */; };
 		392ED7E41D0AEF56009D9B62 /* NewTabAccessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392ED7E31D0AEF56009D9B62 /* NewTabAccessors.swift */; };
@@ -643,7 +642,6 @@
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFB8E5971F179CD00048767A /* ActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AFB8E5961F179CD00048767A /* ActionViewController.m */; };
 		AFB8E59A1F179CD00048767A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFB8E5981F179CD00048767A /* MainInterface.storyboard */; };
-		AFB8E59E1F179CD00048767A /* Open In Cliqz.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AFB8E5931F179CCF0048767A /* Open In Cliqz.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AFB8E5B51F17A4D80048767A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F84B21EF1A0910F600AAB793 /* Images.xcassets */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
@@ -1103,13 +1101,6 @@
 			remoteGlobalIDString = 288A2D851AB8B3260023ABC3;
 			remoteInfo = Shared;
 		};
-		390527541C874D35007E0BB7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 390527491C874D35007E0BB7;
-			remoteInfo = Today;
-		};
 		4F58EEAC1E97D1DB00FDDC00 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
@@ -1186,13 +1177,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
 			remoteInfo = Client;
-		};
-		AFB8E59C1F179CD00048767A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AFB8E5921F179CCF0048767A;
-			remoteInfo = "Open In Cliqz";
 		};
 		B31A31D71E68824400A9DA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1369,8 +1353,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */,
-				AFB8E59E1F179CD00048767A /* Open In Cliqz.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5404,8 +5386,6 @@
 				288A2D9C1AB8B3260023ABC3 /* PBXTargetDependency */,
 				2FCAE2301ABB51F800877008 /* PBXTargetDependency */,
 				E4D5672E1ADECE2800F1EFE7 /* PBXTargetDependency */,
-				390527551C874D35007E0BB7 /* PBXTargetDependency */,
-				AFB8E59D1F179CD00048767A /* PBXTargetDependency */,
 			);
 			name = Client;
 			productName = Client;
@@ -7167,11 +7147,6 @@
 			target = 288A2D851AB8B3260023ABC3 /* Shared */;
 			targetProxy = 2FCAE23B1ABB520700877008 /* PBXContainerItemProxy */;
 		};
-		390527551C874D35007E0BB7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 390527491C874D35007E0BB7 /* Today */;
-			targetProxy = 390527541C874D35007E0BB7 /* PBXContainerItemProxy */;
-		};
 		4F58EEAD1E97D1DB00FDDC00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2FA435FA1ABB83B4008031D1 /* Account */;
@@ -7191,11 +7166,6 @@
 			isa = PBXTargetDependency;
 			target = F84B21BD1A090F8100AAB793 /* Client */;
 			targetProxy = 7BEB645C1C7346100092C02E /* PBXContainerItemProxy */;
-		};
-		AFB8E59D1F179CD00048767A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AFB8E5921F179CCF0048767A /* Open In Cliqz */;
-			targetProxy = AFB8E59C1F179CD00048767A /* PBXContainerItemProxy */;
 		};
 		D39FA1661A83E0EC00EE869C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

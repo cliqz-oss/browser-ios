@@ -4,8 +4,16 @@
 
 import UIKit
 
+public enum DeviceType: String {
+	case iPhone4        = "4"
+	case iPhone5        = "5"
+	case iPhone6        = "6"
+	case iPhone6Plus    = "6Plus"
+}
+
 open class DeviceInfo {
     // List of device names that don't support advanced visual settings
+	
     static let lowGraphicsQualityModels = ["iPad", "iPad1,1", "iPhone1,1", "iPhone1,2", "iPhone2,1", "iPhone3,1", "iPhone3,2", "iPhone3,3", "iPod1,1", "iPod2,1", "iPod2,2", "iPod3,1", "iPod4,1", "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4", "iPad3,1", "iPad3,2", "iPad3,3"]
 
     open static var specificModelName: String {
@@ -74,6 +82,27 @@ open class DeviceInfo {
         // Thus, testing has to take place on actual devices.
         return !lowGraphicsQualityModels.contains(specificModelName)
     }
+
+	open class func getDeviceType() -> DeviceType {
+		var deviceSuffix: DeviceType
+		
+		let screenHeight = Int(UIScreen.main.bounds.size.height)
+		if screenHeight == 480 {
+			deviceSuffix = .iPhone4
+		} else if screenHeight == 568 {
+			deviceSuffix = .iPhone5
+		} else if screenHeight == 667 {
+			deviceSuffix = .iPhone6
+		} else if screenHeight == 736 {
+			deviceSuffix = .iPhone6Plus
+		} else {
+			// iPad
+			deviceSuffix = .iPhone6
+		}
+		
+		return deviceSuffix
+		
+	}
 
     open class func hasConnectivity() -> Bool {
         let status = Reach().connectionStatus()
