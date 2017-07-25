@@ -42,7 +42,7 @@ class Knobs {
         return UIScreen.main.bounds.size.width / CGFloat(ratio)
     }
     class func landscapeSize() -> CGSize {
-        return CGSize(width: 240, height: 180)
+        return CGSize(width: 240, height: 160)
     }
     class func tiltAngle(count: Int) -> Double {
         return increasing(max: Knobs.maxTiltAngle(), min: Knobs.minTiltAngle(), factor: 0.85)(count)
