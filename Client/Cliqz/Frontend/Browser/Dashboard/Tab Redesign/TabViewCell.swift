@@ -341,7 +341,7 @@ class TabViewCell: UICollectionViewCell {
 			})
 			
 			self.deleteButton.snp.remakeConstraints({ (make) in
-                self.deleteButton.backgroundColor = UIColor(colorString: "F6F6F6")
+                //self.deleteButton.backgroundColor = UIColor(colorString: "F6F6F6")
                 make.top.equalTo(self.displayView)
                 make.right.equalTo(self.displayView)//.inset(10)
                 make.width.height.equalTo(40.0)
@@ -349,11 +349,11 @@ class TabViewCell: UICollectionViewCell {
             
 			self.domainLabel.snp.remakeConstraints({ (make) in
                 //self.domainLabel.isHidden = true
-                self.domainLabel.backgroundColor = UIColor(colorString: "F6F6F6")
-                self.domainLabel.textAlignment = .center
-                self.domainLabel.textColor = UIColor.darkGray
+                //self.domainLabel.backgroundColor = UIColor(colorString: "F6F6F6")
+                //self.domainLabel.textAlignment = .center
+                //self.domainLabel.textColor = UIColor.darkGray
                 make.top.equalTo(self.displayView)
-                make.left.equalTo(self.displayView)
+                make.left.equalTo(self.displayView).offset(6)
                 make.right.equalTo(self.deleteButton).inset(40.0)
                 make.height.equalTo(40.0)
             })
@@ -362,18 +362,18 @@ class TabViewCell: UICollectionViewCell {
                 self.descriptionLabel.numberOfLines = 1
                 //self.descriptionLabel.backgroundColor = UIColor.white.withAlphaComponent(0.86)
                 make.top.equalTo(self.domainLabel.snp.bottom)
-                make.left.equalTo(self.displayView).offset(10)
-                make.right.equalTo(self.displayView).inset(10)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
                 //make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(38.0)
+                make.height.equalTo(26.0)
 			})
 			
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
-                self.bigLogoImageView.layer.cornerRadius = 0
-                make.top.equalTo(self.descriptionLabel.snp.bottom)
-                make.left.equalTo(self.displayView)//.offset(10)
-                make.right.equalTo(self.displayView)//.inset(10)
-                make.bottom.equalTo(self.displayView)//.inset(10)
+                //self.bigLogoImageView.layer.cornerRadius = 0
+                make.top.equalTo(self.descriptionLabel.snp.bottom).offset(4)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
+                make.bottom.equalTo(self.displayView).inset(6)
             }
             
 			self.smallCenterImageView.snp.remakeConstraints { (make) in
