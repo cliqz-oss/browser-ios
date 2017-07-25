@@ -385,6 +385,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 	
 	@objc fileprivate func showMoreNews() {
+		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
 		if self.isNewsExpanded {
 			self.newsTableView?.snp.updateConstraints { (make) in
