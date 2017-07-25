@@ -91,6 +91,7 @@ class LogoLoader {
 						if let txt = info["t"].string {
 							logoDetails.prefix = txt
 						}
+						break
 					}
 				}
 			}
@@ -110,7 +111,7 @@ class LogoLoader {
 	private class func isMatchingLogoRule(_ urlDetails: URLDetails, _ rule: String) -> Bool {
 		if let ix = urlDetails.host.range(of: urlDetails.name, options: .backwards, range: nil, locale: nil) {
 			let newHost = urlDetails.host.replacingCharacters(in: ix, with: "$")
-			return newHost == rule
+			return newHost.contains(rule)
 		}
 		return false
 	}
