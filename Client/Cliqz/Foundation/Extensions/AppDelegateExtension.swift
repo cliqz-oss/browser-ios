@@ -65,7 +65,7 @@ extension AppDelegate {
     }
 
     // Cliqz: Change the status bar style and color
-	func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor, _ isNormalMode: Bool) {
+	func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor, isNormalMode: Bool) {
         UIApplication.shared.statusBarStyle = statusBarStyle
 		var img = self.forgetModeBgImage
 		if isNormalMode {
