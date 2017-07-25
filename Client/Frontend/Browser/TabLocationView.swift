@@ -30,7 +30,7 @@ struct TabLocationViewUX {
     static let HostPitch = 1.0
     static let LocationContentInset = 8
     // Cliqz: added constant for buttons width
-    static let ButtonWidth = 32.0
+    static let ButtonWidth = 35.0
     
     static let Themes: [String: Theme] = {
         var themes = [String: Theme]()
