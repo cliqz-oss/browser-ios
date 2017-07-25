@@ -95,7 +95,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		getApp().changeStatusBarStyle(.default, backgroundColor: self.view.backgroundColor!, true)
+		getApp().changeStatusBarStyle(.default, backgroundColor: self.view.backgroundColor!, isNormalMode: true)
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
