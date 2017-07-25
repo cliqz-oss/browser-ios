@@ -49,7 +49,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let lbl = UILabel()
 		lbl.text = NSLocalizedString("Empty TopSites hint", tableName: "Cliqz", comment: "Hint on Freshtab when there is no topsites")
 		lbl.font = UIFont.systemFont(ofSize: 12)
-		lbl.textColor = UIColor.lightGray
+		lbl.textColor = UIColor(rgb: 0x97A4AE)
 		lbl.textAlignment = .center
 		return lbl
 	}()
@@ -66,7 +66,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var startTime : Double = Date.getCurrentMillis()
     var isLoadCompleted = false
-
 
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
@@ -94,10 +93,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         startTime = Date.getCurrentMillis()
+
         isLoadCompleted = false
-        
         region = SettingsPrefs.getRegionPref()
 		updateView()
+		self.isNewsExpanded = false
+		updateNewsView()
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -250,7 +251,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.topSitesCollection?.isScrollEnabled = false
 			self.normalModeView.addSubview(self.topSitesCollection!)
 			self.topSitesCollection?.snp.makeConstraints { (make) in
-				make.top.equalTo(self.normalModeView)
+				make.top.equalTo(self.normalModeView).offset(11)
 				make.left.equalTo(self.normalModeView).offset(FreshtabViewUX.TopSitesOffset)
 				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
@@ -370,8 +371,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			if self.topSites.count == 0 {
 				self.normalModeView.addSubview(self.emptyTopSitesHint)
 				self.emptyTopSitesHint.snp.makeConstraints({ (make) in
-					make.top.equalTo(self.normalModeView).offset(3)
-					make.left.right.top.equalTo(self.normalModeView)
+					make.top.equalTo(self.normalModeView).offset(8)
+					make.left.right.equalTo(self.normalModeView)
 					make.height.equalTo(14)
 				})
 			} else {
@@ -383,10 +384,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			return succeed()
 		}
 	}
-	
+
 	@objc fileprivate func showMoreNews() {
 		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
+		self.updateNewsView()
+	}
+
+	private func updateNewsView() {
 		if self.isNewsExpanded {
 			self.newsTableView?.snp.updateConstraints { (make) in
 				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
@@ -493,9 +498,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 		v.addSubview(btn)
 		btn.contentHorizontalAlignment = .right
 		btn.snp.makeConstraints { (make) in
-			make.top.equalTo(v).offset(3)
+			make.top.equalTo(v).offset(-2)
 			make.right.equalTo(v).offset(-9)
-			make.height.equalTo(20)
+			make.height.equalTo(30)
 			make.width.equalTo(v).dividedBy(2)
 		}
 		if self.isNewsExpanded {
@@ -648,7 +653,6 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         return 0.0
     }
-    
 }
 
 extension FreshtabViewController: TopSiteCellDelegate {
@@ -658,12 +662,12 @@ extension FreshtabViewController: TopSiteCellDelegate {
 		if let url = s["url"] {
 			let _ = self.profile.history.hideTopSite(url)
 		}
-        
-        self.topSitesIndexesToRemove.append(index)
-        logDeleteTopsiteSignal(index)
-        
-        if self.topSites.count == self.topSitesIndexesToRemove.count {
-            self.removeDeletedTopSites()
+
+		self.topSitesIndexesToRemove.append(index)
+		logDeleteTopsiteSignal(index)
+
+		if self.topSites.count == self.topSitesIndexesToRemove.count {
+			self.removeDeletedTopSites()
         }
 	}
 }
