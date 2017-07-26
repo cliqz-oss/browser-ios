@@ -12,5 +12,7 @@
 
 RCT_EXTERN_METHOD(generateRandomSeed:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(generateRSAKey:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
+RCT_EXTERN_METHOD(encryptRSA:(nonnull NSString *)base64Data base64PublicKey:(nonnull NSString *)base64PublicKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(decryptRSA:(nonnull NSString *)base64Data base64PrivateKey:(nonnull NSString *)base64PrivateKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(signRSA:(nonnull NSString *)base64Data base64PrivateKey:(nonnull NSString *)base64PrivateKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 @end
