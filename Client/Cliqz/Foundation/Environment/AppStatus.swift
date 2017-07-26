@@ -221,7 +221,7 @@ class AppStatus {
         
         dispatchQueue.async {
             self.lastEnvironmentEventDate = Date()
-            let device: String = UIDevice.current.deviceType
+            let device: String = UIDevice.current.modelName
             let language = self.getAppLanguage()
             let extensionVersion = self.extensionVersion
             let distVersion = self.distVersion
