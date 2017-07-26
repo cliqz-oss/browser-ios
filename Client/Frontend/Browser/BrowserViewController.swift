@@ -2205,6 +2205,7 @@ extension BrowserViewController: TabToolbarDelegate {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
                 self.tabManager.addTabAndSelect()
+				self.homePanelController?.restoreToInitialState()
                 self.logWebMenuSignal("click", target: "new_tab")
                 self.switchToSearchModeIfNeeded()
             }
