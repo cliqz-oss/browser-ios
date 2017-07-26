@@ -71,7 +71,13 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
         
-        var browsingAndHistorySection: [Setting] = [connectSetting, blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        var browsingAndHistorySection = [Setting]()
+        
+        if ConnectManager.sharedInstance.isDeviceSupported() {
+            browsingAndHistorySection += [connectSetting]
+        }
+        
+        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]
