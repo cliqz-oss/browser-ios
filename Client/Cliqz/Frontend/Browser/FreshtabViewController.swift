@@ -385,10 +385,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	@objc fileprivate func showMoreNews() {
+	@objc fileprivate func modifyNewsView() {
 		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
 		self.updateNewsView()
+		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
 	}
 
 	private func updateNewsView() {
@@ -511,29 +512,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 		btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
 		btn.titleLabel?.textAlignment = .right
 		btn.setTitleColor(UIColor.white, for: .normal)
-		btn.addTarget(self, action: #selector(showMoreNews), for: .touchUpInside)
+		btn.addTarget(self, action: #selector(modifyNewsView), for: .touchUpInside)
 		return v
 	}
-
-	/*
-	func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-		if self.isNewsExpanded || self.news.count == 0 {
-			return nil
-		}
-		let v = UIView()
-		let btn = UIButton()
-		btn.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), forState: .Normal)
-		v.addSubview(btn)
-		btn.snp_makeConstraints { (make) in
-			make.right.top.equalTo(v)
-			make.height.equalTo(20)
-			make.width.equalTo(150)
-		}
-		btn.addTarget(self, action: #selector(showMoreNews), forControlEvents: .TouchUpInside)
-		btn.setTitleColor(UIColor.blueColor(), forState: .Normal)
-		return v
-	}
-*/
 
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return 1.0
@@ -675,7 +656,6 @@ extension FreshtabViewController: TopSiteCellDelegate {
 // extension for telemetry signals
 extension FreshtabViewController {
     fileprivate func logTopsiteSignal(action: String, index: Int) {
-     
         let customData: [String: Any] = ["topsite_count": topSites.count, "index": index]
         self.logFreshTabSignal(action, target: "topsite", customData: customData)
     }
@@ -727,8 +707,14 @@ extension FreshtabViewController {
         logFreshTabSignal("hide", target: nil, customData: ["show_duration": showDuration])
     }
 
+	fileprivate func logNewsViewModifiedSignal(isExpanded expanded: Bool) {
+		let target = expanded ? "show_more" : "show_less"
+		let customData: [String: Any] = ["view": "news"]
+		logFreshTabSignal("click", target: target, customData: customData)
+	}
+
     private func logFreshTabSignal(_ action: String, target: String?, customData: [String: Any]?) {
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
     }
-    
+
 }
