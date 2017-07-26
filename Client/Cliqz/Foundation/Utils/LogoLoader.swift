@@ -35,7 +35,7 @@ extension String {
 
 class LogoLoader {
 
-	private static let dbVersion = "1483980213630"
+	private static let dbVersion = "1499436510395"
 
 	private static var _logoDB: JSON?
 	private static var logoDB: JSON? {
