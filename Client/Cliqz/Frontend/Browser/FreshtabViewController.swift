@@ -56,7 +56,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	fileprivate var normalModeView: UIView!
 	fileprivate var forgetModeView: UIView!
 
-	var isNewsExpanded = false
+	var isNewsExpanded = false {
+		didSet {
+			self.updateNewsView()
+		}
+	}
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: Any]]()
@@ -98,7 +102,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         region = SettingsPrefs.getRegionPref()
 		updateView()
 		self.isNewsExpanded = false
-		updateNewsView()
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -114,6 +117,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
+	}
+
+	func restoreToInitialState() {
+		self.isNewsExpanded = false
 	}
 
 	override func updateViewConstraints() {
@@ -388,7 +395,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	@objc fileprivate func modifyNewsView() {
 		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
-		self.updateNewsView()
 		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
 	}
 
