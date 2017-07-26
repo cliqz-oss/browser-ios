@@ -1520,14 +1520,14 @@ class BrowserViewController: UIViewController {
         urlBar.tabLocationViewDidTapLocation(urlBar.locationView)
     }
 
-    func newTab(){
+    func newTab() {
         openBlankNewTabAndFocus(isPrivate: false)
     }
-    func newPrivateTab(){
+    func newPrivateTab() {
         openBlankNewTabAndFocus(isPrivate: true)
     }
 
-    func closeTab(){
+    func closeTab() {
         if(tabManager.tabs.count > 1){
             tabManager.removeTab(tabManager.selectedTab!);
         }
@@ -1536,7 +1536,7 @@ class BrowserViewController: UIViewController {
         }
     }
 
-    func nextTab(){
+    func nextTab() {
         if(tabManager.selectedIndex < (tabManager.tabs.count - 1) ){
             tabManager.selectTab(tabManager.tabs[tabManager.selectedIndex+1])
         }
@@ -1547,7 +1547,7 @@ class BrowserViewController: UIViewController {
         }
     }
 
-    func previousTab(){
+    func previousTab() {
         if(tabManager.selectedIndex > 0){
             tabManager.selectTab(tabManager.tabs[tabManager.selectedIndex-1])
         }
