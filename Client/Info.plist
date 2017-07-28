@@ -99,6 +99,7 @@
 		<string>Lato-Light.ttf</string>
 		<string>Lato-Medium.ttf</string>
 		<string>Gotham-Book.otf</string>
+		<string>EvilIcons.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
