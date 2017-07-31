@@ -14,12 +14,13 @@ import Alamofire
 
 class YoutubeVideoDownloader {
 
-	class func isYoutubeURL(_ url: URL) -> Bool {
+    class func isYoutubeURL(_ url: URL?) -> Bool {
+        guard let url = url else { return false }
 		let pattern = "https?://(m\\.|www\\.)?youtube.+/watch\\?v=.*"
 		return url.absoluteString.range(of: pattern, options: .regularExpression) != nil
 	}
 
-	class func downloadFromURL(_ url: String) {
+    class func downloadFromURL(_ url: String, viaConnect: Bool = false) {
 		if var videoUrl = url.removingPercentEncoding {
 			videoUrl = videoUrl.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
 			let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -34,6 +35,11 @@ class YoutubeVideoDownloader {
                     let infoMessage = NSLocalizedString("The video is being downloaded.", tableName: "Cliqz", comment: "Toast message shown when youtube video download started")
                     FeedbackUI.showToastMessage(infoMessage, messageType: .info)
                     
+                    // Telemetry
+                    if viaConnect {
+                        TelemetryLogger.sharedInstance.logEvent(.Connect("show", ["view": "message_download_start"]))
+                    }
+                    BackgroundTasksManager.sharedInstance.beginBackgroundTask()
                     Alamofire.download(videoUrl, to: {  (temporaryURL, response) -> (destinationURL: URL, options: Alamofire.DownloadRequest.DownloadOptions) in
                         let pathComponent = Date().description + (response.suggestedFilename ?? "")
                         localPath = directoryURL.appendingPathComponent(pathComponent)
@@ -45,9 +51,17 @@ class YoutubeVideoDownloader {
                                 
                                 let errorMessage = NSLocalizedString("The download failed.", tableName: "Cliqz", comment: "Toast message shown when youtube video download faild")
                                 FeedbackUI.showToastMessage(errorMessage, messageType: .error)
+                                // Telemetry
+                                if viaConnect {
+                                    TelemetryLogger.sharedInstance.logEvent(.Connect("download", ["is_success": false]))
+                                } else {
+                                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", ["is_success": false]))
+                                }
+                                BackgroundTasksManager.sharedInstance.endBackgroundTask()
                             } else {
-                                YoutubeVideoDownloader.saveVideoToPhotoLibrary(localPath)
+                                YoutubeVideoDownloader.saveVideoToPhotoLibrary(localPath, viaConnect: viaConnect)
                             }
+                            
                     }
                 }
 				
@@ -55,27 +69,31 @@ class YoutubeVideoDownloader {
 		}
 	}
 	
-    fileprivate class func saveVideoToPhotoLibrary(_ localPath: URL) {
+    fileprivate class func saveVideoToPhotoLibrary(_ localPath: URL, viaConnect: Bool = false) {
         PHPhotoLibrary.shared().performChanges({
             let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: localPath)
             creationRequest?.creationDate = Date()
         }) { completed, error in
-                if completed {
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "true"))
-                    
-                    let infoMessage = NSLocalizedString("The download is complete. Open the Photos app to watch the video.", tableName: "Cliqz", comment: "Toast message shown when youtube video is Successfully downloaded")
-                    FeedbackUI.showToastMessage(infoMessage, messageType: .done)
-                } else {
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", "is_success", "false"))
-                    
-                    let errorMessage = NSLocalizedString("The download failed.", tableName: "Cliqz", comment: "Toast message shown when youtube video download faild")
-                    FeedbackUI.showToastMessage(errorMessage, messageType: .error)
-                }
+            if completed {
+                let infoMessage = NSLocalizedString("The download is complete. Open the Photos app to watch the video.", tableName: "Cliqz", comment: "Toast message shown when youtube video is Successfully downloaded")
+                FeedbackUI.showToastMessage(infoMessage, messageType: .done)
+            } else {
+                let errorMessage = NSLocalizedString("The download failed.", tableName: "Cliqz", comment: "Toast message shown when youtube video download faild")
+                FeedbackUI.showToastMessage(errorMessage, messageType: .error)
+            }
 
-                // Delete the local file after saving it to photos library
-                YoutubeVideoDownloader.deleteLocalVideo(localPath)
-                
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            // Delete the local file after saving it to photos library
+            YoutubeVideoDownloader.deleteLocalVideo(localPath)
+            
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            // Telemetry
+            if viaConnect {
+                TelemetryLogger.sharedInstance.logEvent(.Connect("download", ["is_success": completed]))
+            } else {
+                TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", ["is_success": completed]))
+            }
+            BackgroundTasksManager.sharedInstance.endBackgroundTask()
         }
     }
     

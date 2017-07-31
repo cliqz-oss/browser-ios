@@ -22,19 +22,19 @@ class CliqzUITests: KIFTestCase {
         tester.tapView(withAccessibilityLabel: "CliqzClear")
 	}
     
-    func testQuerySuggestion(){
-        tester.waitForAnimationsToFinish()
-        showToolBar()
-        tester.tapView(withAccessibilityLabel: "Show Tabs")
-        tester.tapView(withAccessibilityLabel: "Settings")
-        let searchQuerySuggestion = tester.waitForView(withAccessibilityLabel: "Search Query Suggestions")
-        XCTAssertTrue(searchQuerySuggestion?.accessibilityValue == "1", "Search Query suggestion is turned off, it should be turned on by default")
-        tester.tapView(withAccessibilityLabel: "Done")
-        tester.tapView(withAccessibilityLabel: "cliqzBack")
-        tester.enterText(intoCurrentFirstResponder: "Cliqz")
-        XCTAssertTrue(tester.viewExistsWithLabel("cliqz browser"), "Query suggestion is turned on but is not displayed")
-        tester.tapView(withAccessibilityLabel: "CliqzClear")
-    }
+//    func testQuerySuggestion(){
+//        tester.waitForAnimationsToFinish()
+//        showToolBar()
+//        tester.tapView(withAccessibilityLabel: "Show Tabs")
+//        tester.tapView(withAccessibilityLabel: "Settings")
+//        let searchQuerySuggestion = tester.waitForView(withAccessibilityLabel: "Search Query Suggestions")
+//        XCTAssertTrue(searchQuerySuggestion?.accessibilityValue == "1", "Search Query suggestion is turned off, it should be turned on by default")
+//        tester.tapView(withAccessibilityLabel: "Done")
+//        tester.tapView(withAccessibilityLabel: "cliqzBack")
+//        tester.enterText(intoCurrentFirstResponder: "Cliqz")
+//        XCTAssertTrue(tester.viewExistsWithLabel("cliqz browser"), "Query suggestion is turned on but is not displayed")
+//        tester.tapView(withAccessibilityLabel: "CliqzClear")
+//    }
     
     func testQuerySuggestionDisabled(){
         tester.waitForAnimationsToFinish()

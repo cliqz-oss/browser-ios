@@ -150,6 +150,7 @@ class TabViewCell: UICollectionViewCell {
         description_label.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
         description_label.text = ""
         description_label.numberOfLines = 0
+        description_label.layer.zPosition = 100
         displayView.addSubview(description_label)
         descriptionLabel = description_label
         
@@ -254,6 +255,7 @@ class TabViewCell: UICollectionViewCell {
 
         if let attr = layoutAttributes as? TabSwitcherLayoutAttributes {
             displayView.layer.transform = attr.displayTransform
+            self.layer.zPosition = self.frame.origin.y
             currentTransform = attr.displayTransform
         }
         
@@ -287,12 +289,17 @@ class TabViewCell: UICollectionViewCell {
             }
             
 			self.deleteButton.snp.remakeConstraints({ (make) in
+                self.deleteButton.backgroundColor = UIColor.clear
                 make.top.equalTo(self.displayView)
                 make.right.equalTo(self.displayView)//.inset(10)
                 make.width.height.equalTo(44.0)
             })
             
             self.domainLabel.snp.remakeConstraints { (make) in
+                //self.domainLabel.isHidden = false
+                self.domainLabel.backgroundColor = UIColor.clear
+                self.domainLabel.textAlignment = .left
+                self.domainLabel.textColor = UIColor(colorString: "0086E0")
                 make.top.equalTo(self.displayView).inset(14)
                 make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
@@ -300,13 +307,14 @@ class TabViewCell: UICollectionViewCell {
             }
             
 			self.descriptionLabel.snp.remakeConstraints { (make) in
-                self.descriptionLabel.isHidden = false
+                self.descriptionLabel.numberOfLines = 0
                 make.top.equalTo(self.domainLabel.snp.bottom)
                 make.left.right.equalTo(self.displayView).inset(10.0)
                 make.height.equalTo(50.0)//54
             }
             
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
+                self.bigLogoImageView.layer.cornerRadius = 3
                 make.top.equalTo(self.descriptionLabel.snp.bottom)
                 make.left.right.bottom.equalTo(self.displayView).inset(10)
             }
@@ -333,30 +341,44 @@ class TabViewCell: UICollectionViewCell {
 			})
 			
 			self.deleteButton.snp.remakeConstraints({ (make) in
+                //self.deleteButton.backgroundColor = UIColor(colorString: "F6F6F6")
                 make.top.equalTo(self.displayView)
                 make.right.equalTo(self.displayView)//.inset(10)
-                make.width.height.equalTo(44.0)
+                make.width.height.equalTo(40.0)
             })
             
 			self.domainLabel.snp.remakeConstraints({ (make) in
+                //self.domainLabel.isHidden = true
+                //self.domainLabel.backgroundColor = UIColor(colorString: "F6F6F6")
+                //self.domainLabel.textAlignment = .center
+                //self.domainLabel.textColor = UIColor.darkGray
                 make.top.equalTo(self.displayView)
-                make.left.equalTo(self.displayView).offset(10.0)
-                make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(44.0)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.deleteButton).inset(40.0)
+                make.height.equalTo(40.0)
             })
             
 			self.descriptionLabel.snp.remakeConstraints({ (make) in
-				self.descriptionLabel.isHidden = true
+                self.descriptionLabel.numberOfLines = 1
+                //self.descriptionLabel.backgroundColor = UIColor.white.withAlphaComponent(0.86)
+                make.top.equalTo(self.domainLabel.snp.bottom)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
+                //make.right.equalTo(self.deleteButton).inset(44.0)
+                make.height.equalTo(26.0)
 			})
 			
 			self.bigLogoImageView.snp.remakeConstraints { (make) in
-                make.top.equalTo(self.domainLabel.snp.bottom)
-                make.left.right.bottom.equalTo(self.displayView).inset(10)
+                //self.bigLogoImageView.layer.cornerRadius = 0
+                make.top.equalTo(self.descriptionLabel.snp.bottom).offset(4)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
+                make.bottom.equalTo(self.displayView).inset(6)
             }
             
 			self.smallCenterImageView.snp.remakeConstraints { (make) in
                 make.center.equalTo(self.bigLogoImageView)
-                make.height.width.equalTo(40.0)//80
+                make.height.width.equalTo(44.0)//80
             }
             self.cliqzLogoImageView.snp.remakeConstraints({ (make) in
                 make.center.equalTo(self.bigLogoImageView)

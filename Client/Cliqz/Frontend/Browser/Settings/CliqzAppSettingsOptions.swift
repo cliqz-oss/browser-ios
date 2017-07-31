@@ -349,10 +349,8 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
     
     override func onClick(_ navigationController: UINavigationController?) {
         let localDataBaseFile = try! profile.files.getAndEnsureDirectory()
-		
-//			).appendingPathComponent("browser.db")
-		if let path = URL(string: localDataBaseFile),
-			let data = try? Data(contentsOf: path.appendingPathComponent("browser.db"), options: []) {
+		let path = URL(fileURLWithPath: localDataBaseFile)
+		if let data = try? Data(contentsOf: path.appendingPathComponent("browser.db"), options: []) {
 			if MFMailComposeViewController.canSendMail() {
 				let mailComposeViewController = configuredMailComposeViewController(data: data)
 				navigationController?.present(mailComposeViewController, animated: true, completion: nil)
@@ -369,9 +367,94 @@ class ExportLocalDatabaseSetting: Setting, MFMailComposeViewControllerDelegate {
         return mailComposerVC
     }
     // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
 }
 
+class LimitMobileDataUsageSetting: Setting {
+    
+    let profile: Profile
+    
+    override var style: UITableViewCellStyle { return .value1 }
+    
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
+    }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Limit Mobile Data Usage", tableName: "Cliqz", comment: "[Settings] Limit Mobile Data Usage")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = LimitMobileDataUsageTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let limitMobileDataUsageSingal = TelemetryLogEventType.Settings("main", "click", viewController.getViewName(), nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(limitMobileDataUsageSingal)
+    }
+}
 
+
+class AutoForgetTabSetting: Setting {
+    
+    let profile: Profile
+    
+    override var style: UITableViewCellStyle { return .value1 }
+    
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.getAutoForgetTabPref() ? Setting.onStatus : Setting.offStatus)
+    }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Automatic Forget Tab", tableName: "Cliqz", comment: " [Settings] Automatic Forget Tab")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = AutoForgetTabTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let limitMobileDataUsageSingal = TelemetryLogEventType.Settings("main", "click", viewController.getViewName(), nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(limitMobileDataUsageSingal)
+    }
+}
+
+
+class CliqzConnectSetting: Setting {
+    
+    let profile: Profile
+    
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Connect", tableName: "Cliqz", comment: "[Settings] Connect")
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = ConnectTableViewController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        
+        // log Telemerty signal
+        let connectSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(connectSingal)
+    }
+}

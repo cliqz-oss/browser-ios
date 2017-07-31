@@ -24,8 +24,8 @@ var _firefox_ReaderMode = {
             __cliqzjs___readerModeMessageHandler({Type: "ReaderModeStateChange", Value: "Active"});
             return;
         }
-
-        if ((document.location.protocol === "http:" || document.location.protocol === "https:") && document.location.pathname !== "/") {
+        // CLIQZ: Added check to prevent showing reader mode in youtube pages
+        if ((document.location.protocol === "http:" || document.location.protocol === "https:") && document.location.pathname !== "/" && document.location.hostname.indexOf("youtube.com") == -1) {
             // Short circuit in case we already ran Readability. This mostly happens when going
             // back/forward: the page will be cached and the result will still be there.
             if (_firefox_ReaderMode.readabilityResult && _firefox_ReaderMode.readabilityResult.content) {

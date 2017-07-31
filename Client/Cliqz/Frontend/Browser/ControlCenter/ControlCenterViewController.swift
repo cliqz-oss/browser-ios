@@ -13,7 +13,7 @@ protocol ControlCenterViewDelegate: class {
     
     func controlCenterViewWillClose(_ antitrackingView: UIView)
     func reloadCurrentPage()
-    
+
 }
 
 class ControlCenterViewController: UIViewController {

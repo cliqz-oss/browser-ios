@@ -10,7 +10,6 @@ import UIKit
 import Shared
 import Crashlytics
 
-
 // Cliqz: handel home screen quick actions
 extension AppDelegate {
 
@@ -64,10 +63,27 @@ extension AppDelegate {
             
         }
     }
+
     // Cliqz: Change the status bar style and color
-    static func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor) {
-        UIApplication.shared.setStatusBarStyle(statusBarStyle, animated: false)
-		UIApplication.shared.delegate?.window??.backgroundColor = backgroundColor
+	func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor, isNormalMode: Bool) {
+        UIApplication.shared.statusBarStyle = statusBarStyle
+		var img = self.forgetModeBgImage
+		if isNormalMode {
+			img = self.normalModeBgImage
+		}
+		self.forgetModeBgImage?.removeFromSuperview()
+		self.normalModeBgImage?.removeFromSuperview()
+		if backgroundColor == UIColor.clear {
+			if img?.superview == nil {
+				self.window?.addSubview(img!)
+				self.window?.sendSubview(toBack: img!)
+				img?.snp.makeConstraints { (make) in
+					make.left.right.top.bottom.equalTo(self.window!)
+				}
+			}
+		} else {
+			UIApplication.shared.delegate?.window??.backgroundColor = backgroundColor
+		}
 	}
 
 	// MARK:- Private methods

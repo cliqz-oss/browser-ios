@@ -21,9 +21,9 @@ public enum TelemetryLogEventType {
 	case LocationServicesStatus (String, String?)
     case HomeScreenShortcut (String, Int)
     case NewsNotification   (String)
-	case YoutubeVideoDownloader	(String, String, String)
+	case YoutubeVideoDownloader	(String, [String: Any]?)
     case Settings (String, String, String, String?, Int?)
-    case Toolbar            (String, String, String, Bool?, [String: Any]?)
+    case Toolbar            (String, String?, String, Bool?, [String: Any]?)
     case Keyboard            (String, String, Bool, Int?)
     case WebMenu            (String, String, Bool)
     case AntiPhishing            (String, String?, Int?)
@@ -33,6 +33,7 @@ public enum TelemetryLogEventType {
     case QuerySuggestions        (String, [String: Any]?)
     case ControlCenter         (String, String?, String?, [String: Any]?)
 	case FreshTab (String, String?, [String: Any]?)
+    case Connect (String, [String: Any]?)
 }
 
 
@@ -132,8 +133,8 @@ class TelemetryLogger : EventsLogger {
             case .NewsNotification(let action):
                 event = self.createNewsNotificationEvent(action)
 			
-			case .YoutubeVideoDownloader(let action, let statusKey, let statusValue):
-				event = self.createYoutubeVideoDownloaderEvent(action, statusKey: statusKey, statusValue: statusValue)
+			case .YoutubeVideoDownloader(let action, let customData):
+				event = self.createYoutubeVideoDownloaderEvent(action, customData: customData)
                 
             case .Settings(let view, let action, let target, let state, let duration):
                 event = self.createSettingsEvent(view, action: action, target: target, state: state, duration: duration)
@@ -167,8 +168,12 @@ class TelemetryLogger : EventsLogger {
                 
             case .ControlCenter (let action, let view, let target, let customData):
                 event = self.createControlCenterEvent(action, view: view, target: target, customData: customData)
+                
 			case .FreshTab(let action, let target, let customData):
                 event = self.createFreshTabEvent(action, target: target, customData: customData)
+                
+            case .Connect(let action, let customData):
+                event = self.createConnectEvent(action, customData: customData)
             }
             
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -390,11 +395,17 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 	
-	fileprivate func createYoutubeVideoDownloaderEvent(_ action: String, statusKey: String, statusValue: String) -> [String: Any] {
+	fileprivate func createYoutubeVideoDownloaderEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
 		var event = createBasicEvent()
 		event["type"] = "video_downloader"
 		event["action"] = action
-		event[statusKey] = statusValue
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        
 		return event
 	}
     
@@ -413,13 +424,16 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    fileprivate func createToolbarEvent(_ action: String, target: String, view: String, isForgetMode: Bool?, customData: [String: Any]?) -> [String: Any] {
+    fileprivate func createToolbarEvent(_ action: String, target: String?, view: String, isForgetMode: Bool?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "toolbar"
         event["action"] = action
-        event["target"] = target
         event["view"] = view
+        
+        if let target = target {
+            event["target"] = target
+        }
         
         if let isForgetMode = isForgetMode {
             event["is_forget"] = isForgetMode
@@ -574,5 +588,18 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    
+    private func createConnectEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
+        var event = createBasicEvent()
+        
+        event["type"] = "connect"
+        event["action"] = action
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        return event
+    }
+        
 }

@@ -16,9 +16,12 @@ class SettingsPrefs {
     static let HumanWebPrefKey = "humanweb.toggle"
 	static let ShowAntitrackingHintKey = "showAntitrackingHint"
 	static let ShowCliqzSearchHintKey = "showCliqzSearchHint"
+    static let ShowVideoDownloaderHintKey = "ShowVideoDownloaderHint"
     static let blockPopupsPrefKey = "blockPopups"
     static let countryPrefKey = "UserCountry"
     static let querySuggestionPrefKey = "QuerySuggestion"
+    static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
+    static let AutoForgetTabPrefKey = "AutoForgetTab"
 
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
@@ -72,6 +75,10 @@ class SettingsPrefs {
 	class func updateShowCliqzSearchHintPref(_ newValue: Bool) {
 		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue as AnyObject)
 	}
+    
+    class func updateShowVideoDownloaderHintPref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(ShowVideoDownloaderHintKey, value: newValue as AnyObject)
+    }
 
 	class func getShowCliqzSearchHintPref() -> Bool {
 		let defaultValue = true
@@ -87,7 +94,15 @@ class SettingsPrefs {
 			return showAntitrackingHintPref
 		}
 		return defaultValue
-	}
+    }
+    
+    class func getShowVideoDownloaderHintPref() -> Bool {
+        let defaultValue = true
+        if let showVideoDownloaderPref = SettingsPrefs.getBoolPref(ShowVideoDownloaderHintKey) {
+            return showVideoDownloaderPref
+        }
+        return defaultValue
+    }
 
     
     class func getBlockPopupsPref() -> Bool {
@@ -112,7 +127,7 @@ class SettingsPrefs {
         if let countryCode = currentLocale.regionCode, availableCountries.contains(countryCode) {
             return countryCode
         }
-        return "DE"
+        return "US"
     }
     
     class func updateRegionPref(_ newValue: String) {
@@ -129,6 +144,38 @@ class SettingsPrefs {
             return querySuggestionPref
         }
         return defaultValue
+    }
+    
+    class func getLimitMobileDataUsagePref() -> Bool {
+        let defaultValue = true
+        if let LimitMobileDataUsagePref = SettingsPrefs.getBoolPref(LimitMobileDataUsagePrefKey) {
+            return LimitMobileDataUsagePref
+        }
+        return defaultValue
+    }
+    
+    class func updateLimitMobileDataUsagePref(_ newValue: Bool) {
+        SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
+    }
+    
+    class func getAutoForgetTabPref() -> Bool {
+        let defaultValue = true
+        if let AutoForgetTabPref = SettingsPrefs.getBoolPref(AutoForgetTabPrefKey) {
+            return AutoForgetTabPref
+        }
+        return defaultValue
+    }
+    
+    class func updateAutoForgetTabPref(_ newValue: Bool) {
+        
+        SettingsPrefs.updatePref(AutoForgetTabPrefKey, value: newValue as AnyObject)
+        
+        if newValue == true {
+            BloomFilterManager.sharedInstance.turnOn()
+        } else {
+            BloomFilterManager.sharedInstance.turnOff()
+        }
+        
     }
     
     // MARK: - Private helper metods

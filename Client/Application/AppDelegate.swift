@@ -21,6 +21,9 @@ private let InitialPingSentKey = "initialPingSent"
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+	var normalModeBgImage: UIImageView?
+	var forgetModeBgImage: UIImageView?
+
     var browserViewController: BrowserViewController!
     var rootViewController: UIViewController!
     weak var profile: BrowserProfile?
@@ -157,6 +160,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         self.window!.rootViewController = rootViewController
+		self.normalModeBgImage = UIImageView(image: UIImage(named: "normalModeBgImage"))
+		self.forgetModeBgImage = UIImageView(image: UIImage(named: "forgetModeBgImage"))
 
         // Cliqz: disable crash reporting
 //        do {
@@ -203,6 +208,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         sendCorePing()
 		
+        //Turn on the bloomFilter
+        BloomFilterManager.sharedInstance.turnOn()
+        
         log.debug("Done with setting up the application.")
 
         return true
@@ -253,7 +261,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         log.debug("Setting up Adjust")
         self.adjustIntegration?.triggerApplicationDidFinishLaunchingWithOptions(launchOptions)
-        
+		
         log.debug("Making window key and visible…")
         self.window!.makeKeyAndVisible()
         
@@ -445,7 +453,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let currentMemoryUsage = URLCache.shared.currentMemoryUsage
         let currentDiskUsage = URLCache.shared.currentDiskUsage
-        
+
         if currentMemoryUsage > CacheMemoryCapacity || currentDiskUsage > CacheDiskCapacity {
             let cacheClearable = CacheClearable(tabManager: self.tabManager)
             cacheClearable.clear()

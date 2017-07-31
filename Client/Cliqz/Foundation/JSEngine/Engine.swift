@@ -27,6 +27,7 @@ open class Engine {
         
         rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ExtensionApp", initialProperties: nil, launchOptions: nil )
         bridge = rootView.bridge
+        ConnectManager.sharedInstance.refresh()
     }
     
     open func getBridge() -> JSBridge {
@@ -35,6 +36,10 @@ open class Engine {
     
     open func getWebRequest() -> WebRequest {
         return bridge.module(for: WebRequest.self) as! WebRequest
+    }
+    
+    open func getCrypto() -> Crypto {
+        return bridge.module(for: Crypto.self) as! Crypto
     }
     
     //MARK: - Public APIs
@@ -71,4 +76,22 @@ open class Engine {
         }
         return "{}"
     }
+    
+    //MARK: - Connect
+    func requestPairingData() {
+        self.getBridge().callAction("mobile-pairing:requestPairingData", args: [])
+    }
+    
+    func receiveQRValue(_ qrCode: String) {
+        self.getBridge().callAction("mobile-pairing:receiveQRValue", args: [qrCode])
+    }
+    
+    func unpairDevice(_ deviceId: String) {
+        self.getBridge().callAction("mobile-pairing:unpairDevice", args: [deviceId])
+    }
+    
+    func renameDevice(_ peerId: String, newName: String) {
+        self.getBridge().callAction("mobile-pairing:renameDevice", args: [peerId, newName])
+    }
+    
 }

@@ -42,6 +42,7 @@ class AdBlockerSettingsTableViewController: SubSettingsTableViewController {
         control.onTintColor = UIConstants.ControlTintColor
         control.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
         control.isOn = toggles[indexPath.section]
+        control.accessibilityLabel = "AdBlock Switch"
         cell.accessoryView = control
         cell.selectionStyle = .none
         control.tag = indexPath.section

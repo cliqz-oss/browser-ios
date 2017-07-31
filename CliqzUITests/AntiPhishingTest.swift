@@ -29,9 +29,9 @@ class AntiPhishingTest: KIFTestCase{
         super.tearDown()
     }
     func testAntiPhishing() {
-        openWebPage(url: "http://link43wow.com.s3-website.eu-central-1.amazonaws.com/Stake7_DE_FB/desk/index.html")
+        openWebPage(url: "https://varvy.com/pagespeed/wicked-fast.html")
         XCTAssertFalse(tester.viewExistsWithLabel("Warning: deceptive website!"),
-                       "AntiPhishing website is shown for http://link43wow.com.s3-website.eu-central-1.amazonaws.com/Stake7_DE_FB/desk/index.html when it shouldn't")
+                       "AntiPhishing website is shown for https://varvy.com/pagespeed/wicked-fast.html when it shouldn't")
         openWebPage(url: "http://marketing-customer.info/webapps/ab983f6f33/")
         XCTAssertTrue(tester.viewExistsWithLabel("Warning: deceptive website!"),
                       "AntiPhishing Warning is not shown for http://marketing-customer.info/webapps/ab983f6f33")
