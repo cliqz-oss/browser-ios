@@ -344,7 +344,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						let extra = snippet["extra"] as? [String: Any],
 						let articles = extra["articles"] as? [[String: Any]]
 						{
-							self.news = articles
+							// Temporary filter to avoid reuters crashing UIWebview on iOS 10.3.2/10.3.3
+							self.news = articles.filter({ (article) -> Bool in
+								print(article)
+								if let domain = article["domain"] as? String {
+									return !domain.contains("reuters")
+								}
+								return true
+							})
 							self.newsTableView?.reloadData()
                             if !self.isLoadCompleted {
                                 self.isLoadCompleted = true
