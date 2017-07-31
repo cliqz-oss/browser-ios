@@ -16,6 +16,7 @@ if AppConstants.IsRunningTest || AppConstants.IsRunningFastlaneSnapshot {
         appDelegate = AppDelegate.self
     }
 }
+
 //Cliqz: Ignoring SIGPIPE signal prevent the app from crashing if something went wrong in the WebRTC connection
 signal(SIGPIPE, SIG_IGN)
 
