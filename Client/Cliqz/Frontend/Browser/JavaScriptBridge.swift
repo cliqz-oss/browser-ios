@@ -22,9 +22,9 @@ import Storage
 	@objc optional func getFavorites(_ callback: String?)
 	@objc optional func getSearchHistory(_ offset:Int,limit:Int,callback: String?)
 	@objc optional func getSearchHistoryResults(_ query: String?, _ callback: String?)
-    @objc optional func shareCard(_ cardURL: String)
     @objc optional func autoCompeleteQuery(_ autoCompleteText: String)
     @objc optional func isReady()
+    @objc optional func shareCard(_ card: String, title: String, width: Int, height: Int)
 }
 
 class JavaScriptBridge {
@@ -189,8 +189,12 @@ class JavaScriptBridge {
             }
             
         case "shareCard":
-            if let cardURL = data as? String {
-                delegate?.shareCard?(cardURL)
+            if let cardData = data as? [String: AnyObject],
+                let card = cardData["html"] as? String,
+                let title = cardData["title"] as? String,
+                let height = cardData["height"] as? Int,
+                let width = cardData["width"] as? Int {
+                delegate?.shareCard?(card, title: title, width: width, height: height)
             }
             
         case "autocomplete":

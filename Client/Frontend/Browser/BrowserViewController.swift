@@ -4142,8 +4142,10 @@ extension BrowserViewController {
     fileprivate func switchToSearchModeIfNeeded() {
         if let selectedTab = self.tabManager.selectedTab {
             if (selectedTab.inSearchMode) {
-                self.urlBar.enterOverlayMode("", pasted: true)
-                scrollController.showToolbars(false)
+                if self.urlBar.inOverlayMode == false {
+                    self.urlBar.enterOverlayMode("", pasted: true)
+                    scrollController.showToolbars(false)
+                }
             } else if self.homePanelController?.view.isHidden == false {
                 self.urlBar.leaveOverlayMode()
             }

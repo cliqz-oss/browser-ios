@@ -545,6 +545,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
         SessionRestoreHandler.register(server)
+        ShareCardHelper.register(server)
 
         // Cliqz: Registered trampolineForward to be able to load it via URLRequest
         server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
