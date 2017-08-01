@@ -575,13 +575,15 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 								make.top.left.right.bottom.equalTo(cell.logoContainerView)
 							})
 						}
+						cell.logoHostLabel.text = logoInfo?.hostName
 					}
-					cell.logoHostLabel.text = logoInfo?.hostName
 				})
 			}
 		}
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites(_:)))
-		cell.addGestureRecognizer(longPressGestureRecognizer)
+		if cell.gestureRecognizers == nil {
+			let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(deleteTopSites(_:)))
+			cell.addGestureRecognizer(longPressGestureRecognizer)
+	 	}
         cell.tag = indexPath.row
 		return cell
 	}
