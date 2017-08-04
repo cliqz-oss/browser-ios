@@ -34,6 +34,9 @@ public enum TelemetryLogEventType {
     case ControlCenter         (String, String?, String?, [String: Any]?)
 	case FreshTab (String, String?, [String: Any]?)
     case Connect (String, [String: Any]?)
+    case Subscription (String, String?, [String: Any]?)
+    case Notification (String, String)
+    
 }
 
 
@@ -174,6 +177,12 @@ class TelemetryLogger : EventsLogger {
                 
             case .Connect(let action, let customData):
                 event = self.createConnectEvent(action, customData: customData)
+                
+            case .Subscription (let action, let view, let customData):
+                event = self.createSubscriptionEvent(action, view: view, customData: customData)
+                
+            case .Notification (let action, let view):
+                event = self.createNotificationEvent(action, view: view)
             }
             
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -605,5 +614,32 @@ class TelemetryLogger : EventsLogger {
         }
         return event
     }
+    
+    private func createSubscriptionEvent(_ action: String, view: String?, customData: [String: Any]?) -> [String: Any] {
+        var event = createBasicEvent()
         
+        event["type"] = "subscription"
+        event["action"] = action
+        
+        if let view = view {
+            event["view"] = view
+        }
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
+        return event
+    }
+    
+    private func createNotificationEvent(_ action: String, view: String) -> [String: Any] {
+        var event = createBasicEvent()
+        
+        event["type"] = "notification"
+        event["action"] = action
+        event["view"] = view
+
+        return event
+    }
 }

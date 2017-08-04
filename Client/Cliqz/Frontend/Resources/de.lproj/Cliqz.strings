@@ -332,3 +332,25 @@
 "Video Downloader" = "Video Downloader";
 /* Video Downloader hint description */
 "Download YouTube videos to your Smartphone." = "Lade YouTube-Videos auf dein Smartphone herunter.";
+/** Subscriptions **/
+/* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
+"Would you like to subscribe to the {1}?" = "Would you like to subscribe to the #?";
+/* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
+"You will be notified about games, goals and important happenings of the #." = "You will be notified about games, goals and important happenings of the {1}.";
+/* [Subscriptions] soccer notification */
+"league" = "League";
+/* [Subscriptions] soccer notification */
+"team" = "Team";
+/* [Subscriptions] soccer notification */
+"game" = "Game";
+/* [Subscriptions] Subscribe alert button */
+"Subscribe" = "Subscribe";
+/* [Subscriptions] Alert title for asking to enable push notificaiton from the system
+ [Subscriptions] Alert title when failing to subscribe to soccer notification */
+"Could not subscribe to {1}?" = "Could not subscribe to {1}?";
+/* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
+"Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Activate push notification to use this feature. Go to settings to allow push notifications then retry.";
+/* [Subscriptions] Alert message when failing to subscribe to soccer notification */
+"Sorry, we encountered some technical difficulties. Please try again" = "Sorry, we encountered some technical difficulties. Please try again";
+/* [Subscriptions] Subscribing HUD */
+"Subscribe to {1}." = "Subscribe to {1}.";

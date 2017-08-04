@@ -1300,6 +1300,8 @@ class BrowserViewController: UIViewController {
     }
 
     func openURLInNewTab(_ url: URL?, isPrivate: Bool = false) {
+        // Cliqz: leave overlay mode before opening a new tab
+        self.urlBar.leaveOverlayMode()
         
         var _isPrivate = isPrivate
         
