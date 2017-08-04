@@ -358,10 +358,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
 	fileprivate func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
+        let subscriptions = SubscriptionsHandler.sharedInstance.getSubscriptions()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode,
                       "backend_country" : self.getCountry(),
-                      "suggestionsEnabled"  : QuerySuggestions.isEnabled()] as [String : Any]
+                      "suggestionsEnabled"  : QuerySuggestions.isEnabled(),
+                      "subscriptions" : subscriptions] as [String : Any]
         
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
@@ -530,7 +532,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}
-
+    
     func shareCard(_ card: String, title: String, width: Int, height: Int) {
         let screenWidth = Int(UIScreen.main.bounds.width)
         if let url = ShareCardHelper.shareCardURL {
@@ -541,4 +543,19 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         }
     }
 
+    func subscribeToNotifications(withType type: String, subType: String, id: String) {
+        let notificationType = RemoteNotificationType.subscriptoinNotification(type, subType, id)
+        SubscriptionsHandler.sharedInstance.subscribeForRemoteNotification(ofType: notificationType, completionHandler: { [weak self] () -> Void in
+            self?.updateExtensionPreferences()
+            self?.searchWithLastQuery()
+        })
+    }
+    
+    func unsubscribeToNotifications(withType type: String, subType: String, id: String) {
+        let notificationType = RemoteNotificationType.subscriptoinNotification(type, subType, id)
+        SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
+        self.updateExtensionPreferences()
+        self.searchWithLastQuery()
+    }
 }
+
