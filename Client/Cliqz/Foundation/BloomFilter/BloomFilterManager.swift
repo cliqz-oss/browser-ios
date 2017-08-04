@@ -17,29 +17,58 @@ class BloomFilterManager: NSObject {
     
     static let sharedInstance = BloomFilterManager()
     
-    var failedInit: Bool = false
     var bloomFilter: BloomFilter? = nil
     
-    override init() {
-        super.init()
-        guard let filter_path = Bundle.main.path(forResource: "bloomData", ofType: "bloom") else { failedInit = true; return }
+    func turnOn() {
+        if bloomFilter == nil && SettingsPrefs.getAutoForgetTabPref() == true {
+            DispatchQueue.global(qos: .background).async {
+                self.load()
+            }
+        }
+    }
+    
+    func turnOff() {
+        bloomFilter = nil
+    }
+    
+    private func load() {
+        guard let filter_path = Bundle.main.path(forResource: "bloomData", ofType: "bloom") else { return }
         let filter_url  = URL(fileURLWithPath: filter_path)
         do {
             let filter_data = try Data(contentsOf: filter_url, options: .alwaysMapped)
             bloomFilter = BloomFilter.unarchived(fromData: filter_data)
-            if bloomFilter == nil {
-                failedInit = true
-            }
         }
         catch {
-            failedInit = true
+            //error
         }
     }
     
-    func shouldOpenInPrivateTab(url:URL) -> Bool {
-        guard failedInit == false else { return false }
+    func shouldOpenInPrivateTab(url:URL, currentTab: Tab?) -> Bool {
+        guard let filter = bloomFilter else { return false }
         guard let host = url.host else { return false }
-        return bloomFilter?.query(host) ?? false
+        if let tab = currentTab {
+            if tab.isPrivate {
+                return false
+            }
+        }
+        return filter.query(cleanHost(host: host)) 
+    }
+    
+    func cleanHost(host: String) -> String {
+        var components = host.components(separatedBy: ".")
+        if let first_part = components.first {
+            if first_part == "www" || first_part == "m" {
+                components.remove(at: 0)
+                return components.reduce("", { (result, a) -> String in
+                    if result == "" {
+                        return a
+                    }
+                    return result + "." + a
+                })
+            }
+        }
+        
+        return host
     }
     
 }

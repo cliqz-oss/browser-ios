@@ -386,6 +386,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC viewDidLoad…")
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
+
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELBookmarkStatusDidChange(_:)), name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
@@ -402,8 +403,9 @@ class BrowserViewController: UIViewController {
         footerBackdrop.backgroundColor = UIColor.white
         view.addSubview(footerBackdrop)
         headerBackdrop = UIView()
-        headerBackdrop.backgroundColor = UIColor.white
-        view.addSubview(headerBackdrop)
+        headerBackdrop.backgroundColor = UIColor.clear
+	
+		view.addSubview(headerBackdrop)
 
         log.debug("BVC setting up webViewContainer…")
         webViewContainerBackdrop = UIView()
@@ -419,7 +421,7 @@ class BrowserViewController: UIViewController {
         log.debug("BVC setting up status bar…")
         // Temporary work around for covering the non-clipped web view content
         statusBarOverlay = UIView()
-        statusBarOverlay.backgroundColor = BrowserViewControllerUX.BackgroundColor
+        statusBarOverlay.backgroundColor = UIColor.clear
         view.addSubview(statusBarOverlay)
 
         log.debug("BVC setting up top touch area…")
@@ -1046,7 +1048,7 @@ class BrowserViewController: UIViewController {
 		}
 #endif
 
-        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tab) {
             self.openURLInNewTab(url, isPrivate: true)
             return
         }
@@ -1308,7 +1310,7 @@ class BrowserViewController: UIViewController {
         if let url = url {
             request = PrivilegedRequest(url: url) as URLRequest
             
-            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url) {
+            if !_isPrivate && BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tabManager.selectedTab) {
                 _isPrivate = true
             }
             
@@ -1372,15 +1374,6 @@ class BrowserViewController: UIViewController {
     fileprivate func presentActivityViewController(_ url: URL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
         var activities = [UIActivity]()
 
-		// Cliqz: Added Activity for Youtube video downloader from sharing menu
-		if (YoutubeVideoDownloader.isYoutubeURL(url)) {
-			let youtubeDownloader = YoutubeVideoDownloaderActivity() {
-				TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_page"]))
-                self.downloadVideoFromURL(url.absoluteString, sourceRect: sourceRect)
-			}
-			activities.append(youtubeDownloader)
-		}
-        
         let findInPageActivity = FindInPageActivity() { [unowned self] in
             self.updateFindInPageVisibility(visible: true)
             // Cliqz: log telemetry signal for share menu
@@ -1527,14 +1520,14 @@ class BrowserViewController: UIViewController {
         urlBar.tabLocationViewDidTapLocation(urlBar.locationView)
     }
 
-    func newTab(){
+    func newTab() {
         openBlankNewTabAndFocus(isPrivate: false)
     }
-    func newPrivateTab(){
+    func newPrivateTab() {
         openBlankNewTabAndFocus(isPrivate: true)
     }
 
-    func closeTab(){
+    func closeTab() {
         if(tabManager.tabs.count > 1){
             tabManager.removeTab(tabManager.selectedTab!);
         }
@@ -1543,7 +1536,7 @@ class BrowserViewController: UIViewController {
         }
     }
 
-    func nextTab(){
+    func nextTab() {
         if(tabManager.selectedIndex < (tabManager.tabs.count - 1) ){
             tabManager.selectTab(tabManager.tabs[tabManager.selectedIndex+1])
         }
@@ -1554,7 +1547,7 @@ class BrowserViewController: UIViewController {
         }
     }
 
-    func previousTab(){
+    func previousTab() {
         if(tabManager.selectedIndex > 0){
             tabManager.selectTab(tabManager.tabs[tabManager.selectedIndex-1])
         }
@@ -2017,7 +2010,21 @@ extension BrowserViewController: URLBarDelegate {
         // Cliqz: log telemetry singal for web menu
         logWebMenuSignal("click", target: "new_tab")
     }
-
+    
+    // Cliqz: Added video download button to urlBar
+    func urlBarDidTapVideoDownload(_ urlBar: URLBarView) {
+        if let url = self.urlBar.currentURL {
+            self.downloadVideoFromURL(url.absoluteString, sourceRect: urlBar.frame)
+            let isForgetMode = self.tabManager.selectedTab?.isPrivate
+            TelemetryLogger.sharedInstance.logEvent(.Toolbar("click", "video_downloader", "web", isForgetMode, nil))
+        }
+    }
+    
+    func urlBarDidShowVideoDownload(_ urlBar: URLBarView) {
+        if InteractiveIntro.sharedInstance.shouldShowVideoDownloaderHint() {
+            self.showHint(.videoDownloader)
+        }
+    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {
@@ -2198,6 +2205,7 @@ extension BrowserViewController: TabToolbarDelegate {
         if #available(iOS 9, *) {
             let newTabHandler = { (action: UIAlertAction) in
                 self.tabManager.addTabAndSelect()
+				self.homePanelController?.restoreToInitialState()
                 self.logWebMenuSignal("click", target: "new_tab")
                 self.switchToSearchModeIfNeeded()
             }
@@ -2267,7 +2275,7 @@ extension BrowserViewController: WindowCloseHelperDelegate {
 
 extension BrowserViewController: TabDelegate {
     
-    func urlChangedForTab(tab: Tab) {
+    func urlChangedForTab(_ tab: Tab) {
         if self.tabManager.selectedTab == tab  && tab.url?.baseDomain() != "localhost" {
             //update the url in the urlbar
             self.urlBar.currentURL = tab.url
@@ -2548,13 +2556,15 @@ extension BrowserViewController: TabManagerDelegate {
             updateURLBarDisplayURL(tab)
             TelemetryLogger.sharedInstance.updateForgetModeStatue(tab.isPrivate)
 
-            if tab.isPrivate {
-                readerModeCache = MemoryReaderModeCache.sharedInstance
-                applyTheme(Theme.PrivateMode)
-            } else {
-                readerModeCache = DiskReaderModeCache.sharedInstance
-                applyTheme(Theme.NormalMode)
-            }
+			if self.navigationController?.topViewController == self {
+				if tab.isPrivate {
+					readerModeCache = MemoryReaderModeCache.sharedInstance
+					applyTheme(Theme.PrivateMode)
+				} else {
+					readerModeCache = DiskReaderModeCache.sharedInstance
+					applyTheme(Theme.NormalMode)
+				}
+			}
             ReaderModeHandlers.readerModeCache = readerModeCache
 
             scrollController.tab = selected
@@ -3571,7 +3581,8 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         var dialogTitle: String?
-
+        let telemetryView = getTelemetryView(elements.link)
+        
         if let url = elements.link, let currentTab = tabManager.selectedTab {
             dialogTitle = url.absoluteString
             let isPrivate = currentTab.isPrivate
@@ -3580,7 +3591,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
                         self.tabManager.addTab(URLRequest(url: url as URL))
-                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", telemetryView))
                     })
                 }
                 actionSheetController.addAction(openNewTabAction)
@@ -3593,7 +3604,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 
                 let openNewPrivateTabAction =  UIAlertAction(title: openNewPrivateTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
-                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", "link"))
+                        TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_forget_tab", telemetryView))
                         self.tabManager.addTab(URLRequest(url: url as URL), isPrivate: true)
                     })
                 }
@@ -3605,7 +3616,7 @@ extension BrowserViewController: ContextMenuHelperDelegate {
                 let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
                 let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
                     self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target_type": "download_link"]))
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu("download_video", telemetryView))
                 }
                 actionSheetController.addAction(downloadVideo)
             }
@@ -3613,14 +3624,14 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
                 let pasteBoard = UIPasteboard.general
                 pasteBoard.url = url as URL
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", telemetryView))
             }
             actionSheetController.addAction(copyAction)
 
             let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
             let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.default) { _ in
                 self.presentActivityViewController(url as URL, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .any)
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", telemetryView))
             }
             actionSheetController.addAction(shareAction)
         }
@@ -3689,13 +3700,17 @@ extension BrowserViewController: ContextMenuHelperDelegate {
 
         actionSheetController.title = dialogTitle?.ellipsize(maxLength: ActionSheetTitleMaxLength)
         let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.cancel){ (action: UIAlertAction) -> Void in
-            let view = elements.link != nil ? "link" : "image"
-            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+            TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", telemetryView))
         }
         actionSheetController.addAction(cancelAction)
         self.present(actionSheetController, animated: true, completion: nil)
     }
-
+    
+    private func getTelemetryView(_ url: URL?) -> String {
+        guard let url = url else {return "image"}
+        return YoutubeVideoDownloader.isYoutubeURL(url) ? "video" : "link"
+    }
+    
     fileprivate func getImage(_ url: URL, success: @escaping (UIImage) -> ()) {
 		Alamofire.request(url, method: .get)
             .validate(statusCode: 200..<300)
@@ -3923,15 +3938,13 @@ extension BrowserViewController: Themeable {
 //            header.blurStyle = .ExtraLight
             footerBackground?.blurStyle = .extraLight
             // Cliqz: changed status bar look and feel in normal mode
-			AppDelegate.changeStatusBarStyle(.default, backgroundColor: UIConstants.AppBackgroundColor)
-            
+
         case Theme.PrivateMode:
             // Cliqz: Commented because header is now UIView which doesn't have style
 //            header.blurStyle = .Dark
             footerBackground?.blurStyle = .dark
             // Cliqz: changed status bar look and feel in forget mode
-            AppDelegate.changeStatusBarStyle(.lightContent, backgroundColor: UIConstants.PrivateModeBackgroundColor)
-            
+
         default:
             log.debug("Unknown Theme \(themeName)")
         }
@@ -4103,10 +4116,19 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
     fileprivate func navigateToUrl(_ url: URL, searchQuery: String?) {
         let query = (searchQuery != nil) ? searchQuery! : ""
         let forwardUrl = URL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(url.absoluteString.encodeURL())&q=\(query.encodeURL())")
+        
+        if BloomFilterManager.sharedInstance.shouldOpenInPrivateTab(url: url, currentTab: tabManager.selectedTab) {
+            urlBar.currentURL = url
+            urlBar.leaveOverlayMode()
+            self.openURLInNewTab(url, isPrivate: true)
+            return
+        }
+        
         if let tab = tabManager.selectedTab,
             let u = forwardUrl, let nav = tab.loadRequest(PrivilegedRequest(url: u) as URLRequest) {
             self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
 		}
+        
         urlBar.currentURL = url
         urlBar.leaveOverlayMode()
     }

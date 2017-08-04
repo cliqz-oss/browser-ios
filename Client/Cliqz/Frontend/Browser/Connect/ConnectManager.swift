@@ -89,6 +89,12 @@ class ConnectManager: NSObject {
         Engine.sharedInstance.requestPairingData()
     }
     
+    func isDeviceSupported() -> Bool {
+        if #available(iOS 10.0, *) {
+            return true
+        }
+        return !UIDevice.current.modelName.contains("iPhone 5")
+    }
     //MARK: - Private Helpers
     @objc private func updateConnections(notification: NSNotification) {
         guard let pairingData = notification.object as? [String: AnyObject],  let devices = pairingData["devices"] as? [[String: String]] else {

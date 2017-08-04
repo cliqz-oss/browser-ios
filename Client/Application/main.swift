@@ -17,5 +17,8 @@ if AppConstants.IsRunningTest || AppConstants.IsRunningFastlaneSnapshot {
     }
 }
 
+//Cliqz: Ignoring SIGPIPE signal prevent the app from crashing if something went wrong in the WebRTC connection
+signal(SIGPIPE, SIG_IGN)
+
 private let pointer = UnsafeMutableRawPointer(CommandLine.unsafeArgv).bindMemory(to: UnsafeMutablePointer<Int8>.self, capacity: Int(CommandLine.argc))
 UIApplicationMain(CommandLine.argc, pointer, NSStringFromClass(UIApplication.self), NSStringFromClass(appDelegate))

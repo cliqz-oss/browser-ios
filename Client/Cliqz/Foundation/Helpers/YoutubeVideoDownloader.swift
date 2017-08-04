@@ -14,7 +14,8 @@ import Alamofire
 
 class YoutubeVideoDownloader {
 
-	class func isYoutubeURL(_ url: URL) -> Bool {
+    class func isYoutubeURL(_ url: URL?) -> Bool {
+        guard let url = url else { return false }
 		let pattern = "https?://(m\\.|www\\.)?youtube.+/watch\\?v=.*"
 		return url.absoluteString.range(of: pattern, options: .regularExpression) != nil
 	}
@@ -38,7 +39,7 @@ class YoutubeVideoDownloader {
                     if viaConnect {
                         TelemetryLogger.sharedInstance.logEvent(.Connect("show", ["view": "message_download_start"]))
                     }
-                    
+                    BackgroundTasksManager.sharedInstance.beginBackgroundTask()
                     Alamofire.download(videoUrl, to: {  (temporaryURL, response) -> (destinationURL: URL, options: Alamofire.DownloadRequest.DownloadOptions) in
                         let pathComponent = Date().description + (response.suggestedFilename ?? "")
                         localPath = directoryURL.appendingPathComponent(pathComponent)
@@ -56,9 +57,11 @@ class YoutubeVideoDownloader {
                                 } else {
                                     TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", ["is_success": false]))
                                 }
+                                BackgroundTasksManager.sharedInstance.endBackgroundTask()
                             } else {
                                 YoutubeVideoDownloader.saveVideoToPhotoLibrary(localPath, viaConnect: viaConnect)
                             }
+                            
                     }
                 }
 				
@@ -90,7 +93,7 @@ class YoutubeVideoDownloader {
             } else {
                 TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("download", ["is_success": completed]))
             }
-
+            BackgroundTasksManager.sharedInstance.endBackgroundTask()
         }
     }
     

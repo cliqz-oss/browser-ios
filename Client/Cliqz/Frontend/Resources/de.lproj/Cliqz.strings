@@ -1,5 +1,6 @@
 /* The text shown in the search field */
-"Search" = "Suche";
+"Search.placeholder" = "Cliqz Suche";
+
 /* Error message title */
 "Sorry" = "Entschuldigung";
 /* Error message when JS scripts for search can't be loaded */
@@ -143,8 +144,16 @@
 "Retrieving video information" = "Lade Videoinformationen";
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Alle Tabs schliessen";
+
 /* Title to expand news stream */
-"MoreNews" = "Mehr Nachrichten";
+"MoreNews" = "Mehr anzeigen";
+
+/* Title to shrink news stream */
+"LessNews" = "Weniger anzeigen";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "Vergessen Tab";
 /* Description on Freshtab for forget mode */
@@ -230,6 +239,8 @@
 "Browsing & History" = "Browsing & Verlauf";
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Popup-Fenster blockieren";
+/* [Settings] Automatic Forget Tab*/
+"Automatic Forget Tab" = "Automatische Vergessen-Tabs";
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Werbeblocker (BETA)";
@@ -267,6 +278,8 @@
 "Limit Mobile Data Usage" = "Mobile Daten begrenzen";
 /* [Settings -> Limit Mobile Data Usage] toogle footer */
 "Download videos on Wi-Fi Only" = "Videos nur über WLAN herunterladen";
+/* [Settings -> AutoForget Tab] toogle footer */
+"Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history." = "Websites, die bekannt sind für nicht-jugendfreie Inhalte, werden automatisch in einem Vergessen-Tab geöffnet. Das heißt, Besuche dieser Seiten werden nicht im Verlauf gespeichert.";
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Keine WLAN-Verbindung";
 /* [Connect] No Wi-Fi connection alert message */
@@ -315,3 +328,7 @@
 "Allow Camera Access" = "Kamerazugriff erlauben";
 /* [Connect] Alert message for turning on Camera access when Scanning QR Code */
 "Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz Browser kann nicht auf die Kamera zugreifen. Um Zugriff zu erlauben, tippe auf „Einstellungen“ und aktiviere die Kamera.";
+/* Video Downloader hint title */
+"Video Downloader" = "Video Downloader";
+/* Video Downloader hint description */
+"Download YouTube videos to your Smartphone." = "Lade YouTube-Videos auf dein Smartphone herunter.";

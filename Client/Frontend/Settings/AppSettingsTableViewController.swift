@@ -24,7 +24,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         tableView.accessibilityIdentifier = "AppSettingsTableViewController.tableView"
         
         // Cliqz: Add observers for Connection features
-        NotificationCenter.default.addObserver(self, selector: #selector(connectEventRecieved), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
 
     }
     
@@ -34,8 +34,8 @@ class AppSettingsTableViewController: SettingsTableViewController {
         
     }
     
-    // Cliqz: called when notification sent from Connect while setting is opened
-    func connectEventRecieved(notification: NSNotification) {
+    // Called when send tab notification sent from Connect while dashboard is presented
+    func newTabOpened(notification: NSNotification) {
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -65,12 +65,19 @@ class AppSettingsTableViewController: SettingsTableViewController {
         // Browsing & History Section
         let connectSetting              = CliqzConnectSetting(settings: self)
         let blockPopupsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.blockPopupsPrefKey, defaultValue: true, titleText: NSLocalizedString("Block Pop-up Windows", tableName: "Cliqz", comment: " [Settings] Block pop-up windows"))
+        let autoForgetTabSetting        = AutoForgetTabSetting(settings: self)
         let limitMobileDataUsageSetting = LimitMobileDataUsageSetting(settings: self)
         let adBlockerSetting            = AdBlockerSetting(settings: self)
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
         
-        var browsingAndHistorySection: [Setting] = [connectSetting, blockPopupsSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        var browsingAndHistorySection = [Setting]()
+        
+        if ConnectManager.sharedInstance.isDeviceSupported() {
+            browsingAndHistorySection += [connectSetting]
+        }
+        
+        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]

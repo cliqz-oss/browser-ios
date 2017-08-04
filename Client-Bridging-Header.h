@@ -25,5 +25,4 @@
 // Cliqz: Commented crash reporter
 //#import <CrashReporter/CrashReporter.h>
 
-
 #endif

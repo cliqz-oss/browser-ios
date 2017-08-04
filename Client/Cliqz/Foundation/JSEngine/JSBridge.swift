@@ -182,11 +182,6 @@ open class JSBridge : RCTEventEmitter {
     
     @objc(pushEvent:data:)
     func pushEvent(eventId: NSString, data: NSDictionary) {
-        if eventId as String == requestRandomSeedEventId {
-            Engine.sharedInstance.setRandomSeed()
-            return
-        }
-        
         DispatchQueue.main.async() {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: eventId as String), object: data, userInfo: nil)
         }

@@ -1,5 +1,6 @@
 /* The text shown in the search field */
-"Search" = "Search";
+"Search.placeholder" = "Cerca con Cliqz";
+
 /* Error message title */
 "Sorry" = "Ops";
 /* Error message when JS scripts for search can't be loaded */
@@ -106,23 +107,23 @@
 /* Context menu option for opening a link in a new private tab */
 "Open In New Forget Tab" = "Apri in un DimentiTab";
 /* First card text in onBorading */
-"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "Il primo browser con ricerca integrata\n\nSenza deviazioni, dritto alla meta";
+"The first browser with a built-in quick-search\nno detours, directly to the right destination." = "Il primo browser con ricerca integrata\n\nSenza deviazioni, dritto alla meta.";
 /* Second card text in onBorading */
-"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Inizia a digitare\n\nVedrai subito il risultato migliore\n\nScorri per vederne altri.";
 /* Thrid card text in onBorading */
-"When you share your location, you also get results for locations near you (Google Maps)" = "Se condividi la tua posizione, riceverai anche risultati vicino a te (Google Maps)";
+"When you share your location, you also get results for locations near you (Google Maps)" = "Se condividi la tua posizione, vedrai anche dei risultati per luoghi vicino a te (Google Maps)";
 /* Start buttun title for onBorading */
 "Let's start!" = "Andiamo!";
 /* Toast message shown when youtube video download started */
-"The video is being downloaded." = "Download in corso";
+"The video is being downloaded." = "Download in corso.";
 /* Toast message shown when youtube video download faild */
-"The download failed." = "Download non riuscito";
+"The download failed." = "Download non riuscito.";
 /* Toast message shown when youtube video is Successfully downloaded */
-"The download is complete. Open the Photos app to watch the video." = "The download is complete. Open the Photos app to watch the video.";
+"The download is complete. Open the Photos app to watch the video." = "Il download è finito. Apri le Foto per guardare il video.";
 /* Brading label for onBorading */
 "Faster and safer" = "Più veloce e più sicuro";
 /* subtitle label for onBorading */
-"SEARCH ENGINE \n IN THE BROWSER" = "RICERCA INTEGRATA\n NEL BROWSER";
+"SEARCH ENGINE \n IN THE BROWSER" = "RICERCA INTEGRATA\nNEL BROWSER";
 /* Control Center hint title */
 "Control Center" = "Pannello di Controllo";
 /* Control Center hint description */
@@ -144,13 +145,20 @@
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Chiudi tutti i tab";
 /* Title to expand news stream */
-"MoreNews" = "Altre news";
+"MoreNews" = "Mostra di più";
+
+/* Title to shrink news stream */
+"LessNews" = "Mostra meno";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "DimentiTab";
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "Stai navigando su un DimentiTab: i siti web che visiti in questa modalità non appariranno nella cronologia e i tuoi dati locali, cookie inclusi, non verranno salvati.";
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "Qui appariranno i tuoi siti più visitati.";
+"Empty TopSites hint" = "I siti più visitati appariranno qui";
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
 /* Ad-Blocking panel name on control center. */
@@ -198,7 +206,7 @@
 /* Alert message for turning on location service when clicking share location on local card */
 "To share your location, go to the settings for the CLIQZ app:\n1.Tap Location\n2.Enable 'While Using'" = "Per condividere la tua posizione, vai sulle Impostazioni dell'iPhone per Cliqz\n\n1. Clicca su \"Posizione\" \n2. Seleziona \"Se in uso\"";
 /* Alert message for turning on location service when clicking share location on local card */
-"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "To share your location, go to the settings of your smartphone:\n\n1. Turn on Location Services\n2. Select the CLIQZ App\n3. Enable 'While Using'";
+"To share your location, go to the settings of your smartphone:\n1.Turn on Location Services\n2.Select the CLIQZ App\n3.Enable 'While Using'" = "Per condividere la tua posizione, apri le Impostazioni del tuo smartphone\n\n1.Seleziona l'app Cliqz\n2.Vai su \"Posizione\"\n3. Attiva \"Mentre usi l'app\"";
 /* Not now option for turning on location service */
 "Not Now" = "Non ora";
 /** Settings **/
@@ -231,6 +239,8 @@
 "Browsing & History" = "Navigazione & Cronologia";
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Blocca pop-up";
+/* [Settings] Automatic Forget Tab*/
+"Automatic Forget Tab" = "DimentiTab automatico";
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Blocca Pubblicità (Beta)";
@@ -268,6 +278,8 @@
 "Limit Mobile Data Usage" = "Limita consumo dati mobili";
 /* [Settings -> Limit Mobile Data Usage] toogle footer */
 "Download videos on Wi-Fi Only" = "Scarica video solo con il Wi-Fi";
+/* [Settings -> AutoForget Tab] toogle footer */
+"Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history." = "I siti web che includono contenuti espliciti saranno aperti automaticamente in un DimentiTab e non verranno salvati nella storia.";
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Nessuna connessione Wi-Fi";
 /* [Connect] No Wi-Fi connection alert message */
@@ -285,7 +297,7 @@
 /* [Settings -> Connect] Offline Connections Header */
 "Offline Connections" = "Connessioni offline";
 /* [Settings -> Connect] pending connection title */
-"Connecting to Desktop" = "Connessione in corso...";
+"Connecting to Desktop" = "Connessione in corso";
 /* [Settings -> Connect] Scan QR-Code */
 "Scan QR-Code" = "Scansiona il codice QR";
 /* [Connect] instructions text part#1 */
@@ -316,3 +328,7 @@
 "Allow Camera Access" = "Consenti l’accesso alla fotocamera";
 /* [Connect] Alert message for turning on Camera access when Scanning QR Code */
 "Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz non può accedere alla fotocamera. Per consentire l’accesso, clicca su Impostazioni e attiva la fotocamera.";
+/* Video Downloader hint title */
+"Video Downloader" = "Video Downloader";
+/* Video Downloader hint description */
+"Download YouTube videos to your Smartphone." = "Scarica i video di Youtube sul tuo smartphone.";

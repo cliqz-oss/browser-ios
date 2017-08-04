@@ -131,7 +131,8 @@ namespace cliqz {
             }
             
             const auto friendlyUrl = string(cleanHost).append(extra);
-            
+
+			/*
             cout << "Protocol: " << proto << endl
                 << "Authority: " << authority << endl
                 << "User: " << user << endl
@@ -148,7 +149,7 @@ namespace cliqz {
                 << "Clean Host: " << cleanHost << endl
                 << "Extra: " << extra << endl
                 << "Friendly Url: " << friendlyUrl << endl << endl;
-            
+            */
             return (UrlDetails) {
                 proto,      // scheme
                 name,       // name

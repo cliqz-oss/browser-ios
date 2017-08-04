@@ -51,6 +51,10 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
         self.historyViewController.loadExtensionWebView()
         self.favoritesViewController.loadExtensionWebView()
 	}
+    deinit {
+        // Removed observers for Connect features
+        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+    }
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -85,25 +89,22 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		view.backgroundColor = UIColor.white
         
         viewOpenTime = Date.getCurrentMillis()
+        // Add observers for Connection features
+        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-        AppDelegate.changeStatusBarStyle(.default, backgroundColor: self.view.backgroundColor!)
+		getApp().changeStatusBarStyle(.default, backgroundColor: self.view.backgroundColor!, isNormalMode: true)
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
 		self.switchPanel(self.panelSwitchControl)
-        
-        // Add observers for Connection features
-        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
-        // Removed observers for Connect features
-        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -118,8 +119,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
     
     // Called when send tab notification sent from Connect while dashboard is presented
     func newTabOpened() {
-            self.tabManager.selectTab(self.tabManager.selectedTab)
-            self.navigationController?.popViewController(animated: false)
+        self.navigationController?.popViewController(animated: false)
     }
     
 	func didSelectURL(_ url: URL) {
