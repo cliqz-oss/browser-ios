@@ -28,12 +28,18 @@ extension AppDelegate {
         completionHandler(self.handleShortcut(shortcutItem))
 	}
 	
+    // MARK: Remote notifications
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let deviceTokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        SubscriptionsHandler.sharedInstance.didRegisterForRemoteNotifications(withDeviceToken: deviceTokenString)
+    }
+    
+    func application(_ application: UIApplication,didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        SubscriptionsHandler.sharedInstance.didFailToRegisterForRemoteNotifications(withError: error)
+    }
+    
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		if let notificationData = (userInfo["aps"] as? NSDictionary),
-			let urlString = (notificationData.value(forKey: "url") as? String) {
-			self.browserViewController.initialURL = urlString
-		}
-		completionHandler(.noData)
+        SubscriptionsHandler.sharedInstance.didReceiveRemoteNotification(userInfo, fetchCompletionHandler: completionHandler)
 	}
 
     // MARK:- Public API
