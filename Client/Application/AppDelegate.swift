@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = CliqzMainWindow(frame: UIScreen.main.bounds)
         self.window!.backgroundColor = UIConstants.AppBackgroundColor
 		
-		AWSSNSManager.configureCongnitoPool()
+		SubscriptionsHandler.sharedInstance.configureRemoteNotifications()
 
         // Short c ircuit the app if we want to email logs from the debug menu
         if DebugSettingsBundleOptions.launchIntoEmailComposer {
@@ -75,18 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 		
     }
-
-	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-		let deviceTokenString = "\(deviceToken)"
-			.trimmingCharacters(in: CharacterSet(charactersIn:"<>"))
-			.replacingOccurrences(of: " ", with: "")
-		AWSSNSManager.createPlatformEndpoint(deviceTokenString)
-	}
-
-	func application(_ application: UIApplication,didFailToRegisterForRemoteNotificationsWithError error: Error) {
-		print("Register for Notifications is failed with error: \(error)")
-	}
-
+    
     fileprivate func startApplication(_ application: UIApplication,  withLaunchOptions launchOptions: [AnyHashable: Any]?) -> Bool {
         log.debug("Setting UA…")
         // Set the Firefox UA for browsing.
@@ -148,6 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)
         browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
         browserViewController.restorationClass = AppDelegate.self as? UIViewControllerRestoration.Type
+        SubscriptionsHandler.sharedInstance.delegate = browserViewController
 
         let navigationController = UINavigationController(rootViewController: browserViewController)
         navigationController.delegate = self
@@ -608,7 +598,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         viewURLInNewTab(notification)
     }
-
+    
     fileprivate func presentEmailComposerWithLogs() {
         if let buildNumber = Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? NSString {
             let mailComposeViewController = MFMailComposeViewController()
@@ -654,6 +644,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let urlToOpen = URL(string: alertURL) {
                 browserViewController.openURLInNewTab(urlToOpen)
             }
+        } else if let message = notification.alertBody, let url = notification.userInfo?["url"] as? String {
+            if UIApplication.shared.applicationState == .active {
+                FeedbackUI.showToastMessage(message, messageType: .info, tabHandler: {[weak self] in
+                    self?.browserViewController.openURLInNewTab(URL(string: url))
+                    TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
+                })
+            } else {
+                browserViewController.openURLInNewTab(URL(string: url))
+                TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
+            }
+            
         }
     }
 
