@@ -10,7 +10,7 @@ import UIKit
 
 class RegionalSettingsTableViewController: SubSettingsTableViewController {
 
-    let regions = ["DE", "FR", "US"]
+    let regions = SettingsPrefs.SearchBackendOptions
     let telemetrySignalViewName = "search_results_from"
     
     var selectedRegion: String {
