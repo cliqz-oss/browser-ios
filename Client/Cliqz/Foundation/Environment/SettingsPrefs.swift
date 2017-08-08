@@ -23,6 +23,8 @@ class SettingsPrefs {
     static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
     static let AutoForgetTabPrefKey = "AutoForgetTab"
 
+	static let SearchBackendOptions = ["DE", "US", "FR"]
+
 	class func getAdBlockerPref() -> Bool {
 		let defaultValue = false
 		if let blockAdsPref = SettingsPrefs.getBoolPref(AdBlockerPrefKey) {
@@ -116,28 +118,30 @@ class SettingsPrefs {
     class func updateBlockPopupsPref(_ newValue: Bool) {
         SettingsPrefs.updatePref(blockPopupsPrefKey, value: newValue as AnyObject)
     }
-    
+
     class func getRegionPref() -> String? {
         return SettingsPrefs.getStringPref(countryPrefKey)
     }
-    
+
     class func getDefaultRegion() -> String {
-        let availableCountries = ["DE", "US", "UK", "FR"]
         let currentLocale = Locale.current
-        if let countryCode = currentLocale.regionCode, availableCountries.contains(countryCode) {
-            return countryCode
+		let langToRegionMapping = ["de": "DE", "en": "US", "fr": "FR"]
+        if let languageCode = currentLocale.languageCode,
+			langToRegionMapping.keys.contains(languageCode),
+			let val = langToRegionMapping[languageCode] {
+            return val
         }
         return "US"
     }
-    
+
     class func updateRegionPref(_ newValue: String) {
         SettingsPrefs.updatePref(countryPrefKey, value: newValue as AnyObject)
     }
-    
+
     class func updateQuerySuggestionPref(_ newValue: Bool) {
         SettingsPrefs.updatePref(querySuggestionPrefKey, value: newValue as AnyObject)
     }
-    
+
     class func getQuerySuggestionPref() -> Bool {
         let defaultValue = true
         if let querySuggestionPref = SettingsPrefs.getBoolPref(querySuggestionPrefKey) {

@@ -358,6 +358,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         }
         return SettingsPrefs.getDefaultRegion()
     }
+	
     //MARK: - Reset TopSites
     func showBlockedTopSites(_ notification: Notification) {
         javaScriptBridge.publishEvent("restore-blocked-topsites")
