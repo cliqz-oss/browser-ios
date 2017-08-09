@@ -449,6 +449,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         
         let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+            if let target = activityType?.rawValue {
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+            }
+            
+        }
         present(activityViewController, animated: true, completion: nil)
         
     }
@@ -514,7 +521,5 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
             loadShareCardWebView(url, frame: cardFrame)
         }
     }
-    
-    
 
 }
