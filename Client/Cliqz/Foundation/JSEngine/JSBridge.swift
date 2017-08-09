@@ -33,6 +33,7 @@ open class JSBridge : RCTEventEmitter {
     fileprivate let callbackDispatchQueue = DispatchQueue(label: "com.cliqz.jsbridge.callback", attributes: DispatchQueue.Attributes.concurrent)
     
     let ACTION_TIMEOUT : Int64 = 200000000 // 200ms
+    let requestRandomSeedEventId = "requestRandomSeed"
     
     public override init() {
         super.init()
@@ -176,6 +177,15 @@ open class JSBridge : RCTEventEmitter {
                 self.awaitingRegistration[actionName] = []
             }
         }
+    }
+    
+    
+    @objc(pushEvent:data:)
+    func pushEvent(eventId: NSString, data: NSDictionary) {
+        DispatchQueue.main.async() {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: eventId as String), object: data, userInfo: nil)
+        }
+        
     }
     
 }

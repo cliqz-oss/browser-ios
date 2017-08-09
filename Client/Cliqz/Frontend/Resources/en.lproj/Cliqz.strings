@@ -1,5 +1,6 @@
 /* The text shown in the search field */
-"Search" = "Search";
+"Search.placeholder" = "Cliqz Search";
+
 /* Error message title */
 "Sorry" = "Sorry";
 /* Error message when JS scripts for search can't be loaded */
@@ -143,8 +144,16 @@
 "Retrieving video information" = "Retrieving video information";
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Close All Tabs";
+
 /* Title to expand news stream */
-"MoreNews" = "More News";
+"MoreNews" = "Show More";
+
+/* Title to shrink news stream */
+"LessNews" = "Show Less";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "Forget Tab";
 /* Description on Freshtab for forget mode */
@@ -205,6 +214,7 @@
 
 /* [Settings] Search section title */
 "Search" = "Search";
+
 /* [Settings] Search Results for */
 "Search Results for" = "Search Results for";
 /* Localized String for specific region */
@@ -231,6 +241,8 @@
 "Browsing & History" = "Browsing & History";
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Block Pop-up Windows";
+/* [Settings] Automatic Forget Tab*/
+"Automatic Forget Tab" = "Automatic Forget Tab";
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Ad-Blocking (Beta)";
@@ -264,3 +276,61 @@
 "Privacy Policy" = "Privacy Policy";
 /* [Settings -> About] Licenses */
 "Licenses" = "Licenses";
+/* [Settings] Limit Mobile Data Usage */
+"Limit Mobile Data Usage" = "Limit Mobile Data Usage";
+/* [Settings -> Limit Mobile Data Usage] toogle footer */
+"Download videos on Wi-Fi Only" = "Only download video on Wi-Fi";
+/* [Settings -> AutoForget Tab] toogle footer */
+"Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history." = "Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history.";
+/* [Connect] No Wi-Fi connection alert title */
+"No Wi-Fi Connection" = "No Wi-Fi Connection";
+/* [Connect] No Wi-Fi connection alert message */
+"No Wi-Fi Connection message" = "You are not connected to a Wi-Fi network and video downloads with mobile data is restricted. \nTo change this, go to Settings > Limit Mobile Data Usage.\n";
+/* [Connect] Dismiss No Wi-Fi connection alert */
+"Dismiss" = "Dismiss";
+/* [Settings] Connect */
+"Connect" = "Connect";
+/* [Settings -> Connect] Add Connection title */
+"Add Connection" = "Add Connection";
+/* [Settings -> Connect] Add Connection footer */
+"Add Connection footer" = "Connect Cliqz on your computer with Cliqz on your Android device. This will allow you to send tabs from your desktop to your mobile device. You can also directly download videos from your desktop browser to your mobile device.";
+/* [Settings -> Connect] Online Connections Header */
+"Online Connections" = "Online Connections";
+/* [Settings -> Connect] Offline Connections Header */
+"Offline Connections" = "Offline Connections";
+/* [Settings -> Connect] pending connection title */
+"Connecting to Desktop" = "Connecting to Desktop";
+/* [Settings -> Connect] Scan QR-Code */
+"Scan QR-Code" = "Scan QR Code";
+/* [Connect] instructions text part#1 */
+"Go to " = "Go to ";
+/* [Connect] instructions text part#2 */
+" and select connect to scan the QR-Code" = " and select 'Connect' to scan the QR Code.";
+/* [Connect] Scan QR-Code alert title */
+"Open Cliqz Browser" = "Open Cliqz Browser";
+/* [Connect] Scan QR-Code alert message */
+"Please open Cliqz Browser on your computer (or get it from cliqz.com)." = "Open Cliqz Browser on your computer (or get it from cliqz.com).";
+/* [Connect] Connection Failed alert title */
+"Connection Failed" = "Connection Failed";
+/* [Connect] Connection Failed alert message */
+"Sorry but devices could not be connected. Please try again." = "Sorry, but the devices could not be connected. Please try again.\n";
+/* [Connect] Retry button for Connection Failed alert */
+"Retry" = "Retry";
+/* [Settings -> Connect] remove connection */
+"Remove Connection" = "Remove Connection";
+/* [Settings -> Connect] rename connection */
+"Rename Connection" = "Rename Connection";
+/* [Settings -> Connect] rename connection alert message */
+"Prompt description" = "Enter a new name for the connection:";
+/* [Connect] Connection successful alert title */
+"Connection successful" = "Connection successful";
+/* [Connect] Connection Successful alert message */
+"You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device." = "You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device.";
+/* [Connect] Alert title for turning on Camera access when scanning QRCode */
+"Allow Camera Access" = "Allow Camera Access";
+/* [Connect] Alert message for turning on Camera access when Scanning QR Code */
+"Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera.";
+/* Video Downloader hint title */
+"Video Downloader" = "Video Downloader";
+/* Video Downloader hint description */
+"Download YouTube videos to your Smartphone." = "Download YouTube videos to your Smartphone.";

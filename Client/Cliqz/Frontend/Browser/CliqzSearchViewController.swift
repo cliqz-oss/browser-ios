@@ -111,6 +111,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 
     }
+
     func showOpenSettingsAlert(_ notification: Notification) {
         var message: String!
         var settingsAction: UIAlertAction!
@@ -426,8 +427,8 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         delegate?.searchForQuery(query)
     }
     
-    func getSearchHistoryResults(_ callback: String?) {
-		let fullResults = NSDictionary(objects: [getHistory(), self.searchQuery ?? ""], forKeys: ["results" as NSCopying, "query" as NSCopying])
+	func getSearchHistoryResults(_ query: String?, _ callback: String?) {
+		let fullResults = NSDictionary(objects: [getHistory(), query ?? ""], forKeys: ["results" as NSCopying, "query" as NSCopying])
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     

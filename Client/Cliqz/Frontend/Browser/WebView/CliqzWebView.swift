@@ -102,7 +102,7 @@ struct CliqzWebViewConstants {
 }
 
 protocol CliqzWebViewDelegate: class {
-    func didFinishLoadingRequest(request: NSURLRequest?)
+    func updateTabUrl(url: URL?)
 }
 
 class CliqzWebView: UIWebView {
@@ -348,8 +348,9 @@ class CliqzWebView: UIWebView {
             guard let location = self.stringByEvaluatingJavaScript(from: "window.location.href"), let currentUrl = url?.absoluteString, shouldUpdateUrl(currentUrl, newLocation: location) else {
                 return
             }
-            
-            setUrl(Foundation.URL(string: location), reliableSource: false)
+            let newUrl = Foundation.URL(string: location)
+            self.webViewDelegate?.updateTabUrl(url: newUrl)
+            setUrl(newUrl, reliableSource: false)
 
             progress?.reset()
         }

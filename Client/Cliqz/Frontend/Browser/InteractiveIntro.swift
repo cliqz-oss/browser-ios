@@ -14,6 +14,7 @@ import SnapKit
 enum HintType {
 	case antitracking(Int)
 	case cliqzSearch(Int)
+    case videoDownloader
 	case unknown
 }
 
@@ -22,9 +23,17 @@ class InteractiveIntro {
 	func shouldShowAntitrackingHint() -> Bool {
 		return SettingsPrefs.getShowAntitrackingHintPref() && OrientationUtil.isPortrait()
 	}
+    
 	func shouldShowCliqzSearchHint() -> Bool {
         return SettingsPrefs.getShowCliqzSearchHintPref() && OrientationUtil.isPortrait()
 	}
+    
+    func shouldShowVideoDownloaderHint() -> Bool {
+        guard !shouldShowAntitrackingHint() && !shouldShowCliqzSearchHint()  else {
+            return false
+        }
+        return SettingsPrefs.getShowVideoDownloaderHintPref() && OrientationUtil.isPortrait()
+    }
     
     func setShouldShowCliqzSearchHint(value: Bool) {
         SettingsPrefs.updateShowCliqzSearchHintPref(value)
@@ -33,6 +42,10 @@ class InteractiveIntro {
     func setShouldShowAntitrackingHint(value: Bool) {
         SettingsPrefs.updateShowAntitrackingHintPref(value)
     }
+    
+    func setShouldShowVideoDownloaderHint(value: Bool) {
+        SettingsPrefs.updateShowVideoDownloaderHintPref(value)
+    }
 
 	func updateHintPref(_ type: HintType, value: Bool) {
 		switch type {
@@ -40,6 +53,8 @@ class InteractiveIntro {
 			setShouldShowAntitrackingHint(value: value)
 		case .cliqzSearch:
 			setShouldShowCliqzSearchHint(value: value)
+        case .videoDownloader:
+            setShouldShowVideoDownloaderHint(value: value)
 		default:
 			debugPrint("Wront Hint Type")
 		}
@@ -54,6 +69,7 @@ class InteractiveIntro {
 	func reset() {
         setShouldShowCliqzSearchHint(value: true)
         setShouldShowAntitrackingHint(value: true)
+        setShouldShowVideoDownloaderHint(value: true)
 	}
 }
 
@@ -61,6 +77,7 @@ class InteractiveIntroViewController: UIViewController {
     private let version = "1.2"
     private let cardsShowCountKey = "OnBoardingCardsShowCount"
     private let attrackShowCountKey = "OnBoardingAttrackShowCount"
+    private let videoDownloaderShowCountKey = "OnBoardingVideoDownloadersShowCount"
     private var introOpenTime: Double?
 
     
@@ -90,6 +107,8 @@ class InteractiveIntroViewController: UIViewController {
 			bgView?.layer.mask = self.antitrackingMaskLayer()
 		case .cliqzSearch:
 			bgView?.layer.mask = self.cliqzSearchMaskLayer()
+        case .videoDownloader:
+            bgView?.layer.mask = self.videoDownloaderMaskLayer()
 		default:
 			debugPrint("Wrong Type")
 		}
@@ -102,7 +121,9 @@ class InteractiveIntroViewController: UIViewController {
 		case .antitracking(let trackerCount):
 			showAntitrackingHint(trackerCount)
 		case .cliqzSearch(let queryLength):
-			showCliqzSearchHint(queryLength)
+            showCliqzSearchHint(queryLength)
+        case .videoDownloader:
+            showVideoDownloaderHint()
 		default:
 			debugPrint("Wrong type")
 		}
@@ -132,7 +153,7 @@ class InteractiveIntroViewController: UIViewController {
 		description.font = UIFont.systemFont(ofSize: InteractiveIntroViewController.descriptionFontSize)
 		description.numberOfLines = 0
 		let button = UIButton()
-		button.setTitle("OK", for: UIControlState())
+		button.setTitle(NSLocalizedString("OK", tableName: "Cliqz", comment: "OK"), for: UIControlState())
 		button.setTitleColor(UIColor.white, for: UIControlState())
 		button.layer.borderColor = UIColor.white.cgColor
 		button.layer.borderWidth = 2
@@ -141,29 +162,29 @@ class InteractiveIntroViewController: UIViewController {
 		button.addTarget(self, action: #selector(closeHint), for: .touchUpInside)
 		self.contentView!.addSubview(button)
 		
-		self.contentView!.snp_makeConstraints { (make) in
+		self.contentView!.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(self.view)
 		}
 		
-		title.snp_makeConstraints { (make) in
+		title.snp.makeConstraints { (make) in
 			make.left.equalTo(self.contentView!).offset(15)
 			make.right.equalTo(self.contentView!)
-			make.top.equalTo(self.contentView!.snp_bottom).offset(-200)
+			make.top.equalTo(self.contentView!.snp.bottom).offset(-200)
 			make.height.equalTo(40)
 		}
 		
-		description.snp_makeConstraints { (make) in
+		description.snp.makeConstraints { (make) in
 			make.left.equalTo(self.contentView!).offset(15)
 			make.right.equalTo(self.contentView!)
-			make.top.equalTo(title.snp_bottom)
-			make.bottom.equalTo(button.snp_top)
+			make.top.equalTo(title.snp.bottom)
+			make.bottom.equalTo(button.snp.top)
 		}
 		
-		blurrySemiTransparentView.snp_makeConstraints { (make) in
+		blurrySemiTransparentView.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(contentView!)
 		}
 		
-		button.snp_makeConstraints { (make) in
+		button.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
 			make.bottom.equalTo(self.contentView!).offset(-20)
 			make.width.equalTo(80)
@@ -205,7 +226,7 @@ class InteractiveIntroViewController: UIViewController {
 		description.numberOfLines = 0
 		description.textAlignment = .center
 		let button = UIButton()
-		button.setTitle("OK", for: UIControlState())
+		button.setTitle(NSLocalizedString("OK", tableName: "Cliqz", comment: "OK"), for: UIControlState())
 		button.setTitleColor(UIColor.white, for: UIControlState())
 		button.layer.borderColor = UIColor.white.cgColor
 		button.layer.borderWidth = 2
@@ -264,73 +285,73 @@ class InteractiveIntroViewController: UIViewController {
         self.contentView?.addSubview(option2_container)
 
 
-		self.contentView!.snp_makeConstraints { (make) in
+		self.contentView!.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(self.view)
 		}
 
-		title.snp_makeConstraints { (make) in
+		title.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
             make.height.equalTo(70)
-            make.bottom.equalTo(description.snp_topMargin)
+            make.bottom.equalTo(description.snp.topMargin)
 		}
 
-		description.snp_makeConstraints { (make) in
+		description.snp.makeConstraints { (make) in
 			make.center.equalTo(self.contentView!)
 			make.left.right.equalTo(self.contentView!).inset(14)
 			make.height.equalTo(60)
 		}
         
-        option1_container.snp_makeConstraints { (make) in
+        option1_container.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.view)
-            make.top.equalTo(description.snp_bottomMargin).offset(6)
+            make.top.equalTo(description.snp.bottomMargin).offset(6)
             make.width.equalTo(180)
             make.height.equalTo(44)
         }
         
-        option1_img_bg.snp_makeConstraints { (make) in
+        option1_img_bg.snp.makeConstraints { (make) in
             make.height.equalTo(CliqzURLBarView.antitrackingButtonSize.height)
             make.width.equalTo(CliqzURLBarView.antitrackingButtonSize.width)
             make.left.centerY.equalTo(option1_container)
         }
         
-        option1_label.snp_makeConstraints { (make) in
+        option1_label.snp.makeConstraints { (make) in
             make.height.equalTo(option1_container)
-            make.left.equalTo(option1_img_bg.snp_rightMargin).offset(18)
+            make.left.equalTo(option1_img_bg.snp.rightMargin).offset(18)
             make.top.equalTo(option1_container)
         }
         
-        option1_icon.snp_makeConstraints { (make) in
+        option1_icon.snp.makeConstraints { (make) in
             make.center.equalTo(option1_img_bg)
         }
         
-        option2_container.snp_makeConstraints { (make) in
+        option2_container.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.view)
-            make.top.equalTo(option1_container.snp_bottomMargin).offset(6)
+            make.top.equalTo(option1_container.snp.bottomMargin).offset(6)
             make.width.equalTo(180)
             make.height.equalTo(44)
         }
         
-        option2_img_bg.snp_makeConstraints { (make) in
+        option2_img_bg.snp.makeConstraints { (make) in
             make.height.equalTo(CliqzURLBarView.antitrackingButtonSize.height)
             make.width.equalTo(CliqzURLBarView.antitrackingButtonSize.width)
             make.left.centerY.equalTo(option2_container)
         }
         
-        option2_label.snp_makeConstraints { (make) in
+        option2_label.snp.makeConstraints { (make) in
             make.height.equalTo(option2_container)
-            make.left.equalTo(option2_img_bg.snp_rightMargin).offset(18)
+            make.left.equalTo(option2_img_bg.snp.rightMargin).offset(18)
             make.top.equalTo(option2_container)
         }
         
-        option2_icon.snp_makeConstraints { (make) in
+        option2_icon.snp.makeConstraints { (make) in
             make.center.equalTo(option2_img_bg)
         }
         
-		blurrySemiTransparentView.snp_makeConstraints { (make) in
+		blurrySemiTransparentView.snp.makeConstraints { (make) in
 			make.top.left.right.bottom.equalTo(contentView!)
 		}
 
-		button.snp_makeConstraints { (make) in
+		button.snp.makeConstraints { (make) in
 			make.centerX.equalTo(self.contentView!)
 			make.bottom.equalTo(self.contentView!).offset(-20)
 			make.width.equalTo(80)
@@ -347,7 +368,76 @@ class InteractiveIntroViewController: UIViewController {
         LocalDataStore.setObject(showCount+1, forKey: attrackShowCountKey)
 	}
     
-
+    fileprivate func showVideoDownloaderHint() {
+        contentView = UIView()
+        self.contentView!.backgroundColor = UIColor.clear
+        self.view.addSubview(self.contentView!)
+        
+        let blurrySemiTransparentView = UIView(frame:self.view.bounds)
+        blurrySemiTransparentView.backgroundColor = UIColor(rgb: 0x2d3e50).withAlphaComponent(0.9)
+        self.contentView!.addSubview(blurrySemiTransparentView)
+        blurrySemiTransparentView.tag = InteractiveIntroViewController.blurryBackgroundViewTag
+        blurrySemiTransparentView.layer.mask = self.antitrackingMaskLayer()
+        
+        let title = UILabel()
+        title.text = NSLocalizedString("Video Downloader", tableName: "Cliqz", comment: "Video Downloader hint title")
+        title.font = UIFont.systemFont(ofSize: InteractiveIntroViewController.titleFontSize)
+        title.textColor = UIColor.white
+        title.textAlignment = .center
+        self.contentView!.addSubview(title)
+        let description = UILabel()
+        self.contentView!.addSubview(description)
+        description.text = NSLocalizedString("Download YouTube videos to your Smartphone.", tableName: "Cliqz", comment: "Video Downloader hint description")
+        description.textColor = UIColor.white
+        description.font = UIFont.systemFont(ofSize: InteractiveIntroViewController.descriptionFontSize)
+        description.numberOfLines = 0
+        description.textAlignment = .center
+        let button = UIButton()
+        button.setTitle(NSLocalizedString("OK", tableName: "Cliqz", comment: "OK"), for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderWidth = 2
+        button.layer.cornerRadius = 6
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(closeHint), for: .touchUpInside)
+        self.contentView!.addSubview(button)
+        
+        self.contentView!.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self.view)
+        }
+        
+        title.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.contentView!)
+            make.height.equalTo(70)
+            make.bottom.equalTo(description.snp.topMargin)
+        }
+        
+        description.snp.makeConstraints { (make) in
+            make.center.equalTo(self.contentView!)
+            make.left.right.equalTo(self.contentView!).inset(14)
+            make.height.equalTo(60)
+        }
+        
+        blurrySemiTransparentView.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(contentView!)
+        }
+        
+        button.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.contentView!)
+            make.bottom.equalTo(self.contentView!).offset(-20)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
+        }
+        
+        let showCount: Int = LocalDataStore.objectForKey(videoDownloaderShowCountKey) as? Int ?? 1
+        let customData: [String : Any] = ["view" : "video_downloader",
+                                          "show_count" : showCount,
+                                          "version" : version]
+        
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+        LocalDataStore.setObject(showCount+1, forKey: videoDownloaderShowCountKey)
+    }
+    
 	private func cliqzSearchMaskLayer() -> CAShapeLayer {
 		let path = UIBezierPath()
 		let arcRadius: CGFloat = self.view.frame.size.width / 2 - 15
@@ -377,6 +467,20 @@ class InteractiveIntroViewController: UIViewController {
 		maskLayer.path = path.cgPath
 		return maskLayer
 	}
+    
+    fileprivate func videoDownloaderMaskLayer() -> CAShapeLayer {
+        let path = UIBezierPath()
+        let arcRadius: CGFloat = 80
+        path.move(to: CGPoint(x: arcRadius, y: 0))
+        path.addArc(withCenter: CGPoint(x: 0, y: 0), radius: arcRadius, startAngle: 0, endAngle: 1.57, clockwise: true)
+        path.addLine(to: CGPoint(x: 0, y: self.view.frame.size.height))
+        path.addLine(to: CGPoint(x: self.view.frame.size.width, y: self.view.frame.size.height))
+        path.addLine(to: CGPoint(x: self.view.frame.size.width, y: 0))
+        path.close()
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+        return maskLayer
+    }
 
 	@objc fileprivate func closeHint() {
 		self.contentView?.removeFromSuperview()
@@ -402,6 +506,8 @@ class InteractiveIntroViewController: UIViewController {
             customData["view"] = "attrack"
         case .cliqzSearch( _):
             customData["view"] = "cards"
+        case .videoDownloader:
+            customData["view"] = "video_downloader"
         default:
             customData["view"] = "unknown"
         }

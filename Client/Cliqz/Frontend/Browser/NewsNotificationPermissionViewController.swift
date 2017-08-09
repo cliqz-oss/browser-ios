@@ -7,14 +7,7 @@
 //
 
 import UIKit
-
-
-private enum DeviceType: String {
-    case iPhone4        = "4"
-    case iPhone5        = "5"
-    case iPhone6        = "6"
-    case iPhone6Plus    = "6Plus"
-}
+import Shared
 
 private enum PermissionState {
     case firstTimeAsking
@@ -110,7 +103,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     fileprivate func addBackgroundImage(_ permissionState: PermissionState) {
         let backgroundImageView = getBackgroundImageView(permissionState)
         self.view.addSubview(backgroundImageView)
-        let height = (getDeviceType() == .iPhone6Plus) ? 1000 : backgroundImageView.frame.height
+        let height = (DeviceInfo.getDeviceType() == .iPhone6Plus) ? 1000 : backgroundImageView.frame.height
         
         backgroundImageView.snp_makeConstraints{ make in
             make.top.equalTo(0)
@@ -121,7 +114,7 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     fileprivate func getBackgroundImageView(_ permissionState: PermissionState) -> UIImageView {
         
-        let deviceSuffix = getDeviceType().rawValue
+        let deviceSuffix = DeviceInfo.getDeviceType().rawValue
         var backgroundImageName: String
 
         if permissionState == .howToEnable {
@@ -134,28 +127,7 @@ class NewsNotificationPermissionViewController: UIViewController {
         
         return UIImageView(image: backgroundImage)
     }
-    
-    fileprivate func getDeviceType() -> DeviceType {
-        var deviceSuffix: DeviceType
-        
-        let screenHeight = Int(self.view.frame.size.height)
-        if screenHeight == 480 {
-            deviceSuffix = .iPhone4
-        } else if screenHeight == 568 {
-            deviceSuffix = .iPhone5
-        } else if screenHeight == 667 {
-            deviceSuffix = .iPhone6
-        } else if screenHeight == 736 {
-            deviceSuffix = .iPhone6Plus
-        } else {
-            // iPad
-            deviceSuffix = .iPhone6
-        }
-        
-        return deviceSuffix
-        
-    }
-    
+
     fileprivate func createButton(_ title: String, titleColor: UIColor, backgroundColor: UIColor, action: Selector) -> UIButton {
         let button = UIButton()
         button.backgroundColor = backgroundColor
@@ -169,9 +141,9 @@ class NewsNotificationPermissionViewController: UIViewController {
     
     fileprivate func addActionButtons(_ permissionState: PermissionState) {
         var offsetFactor = 1.0
-        if getDeviceType() == .iPhone4 {
+        if DeviceInfo.getDeviceType() == .iPhone4 {
             offsetFactor = 2.0
-        } else if getDeviceType() == .iPhone6  || getDeviceType() == .iPhone6Plus{
+        } else if DeviceInfo.getDeviceType() == .iPhone6  || DeviceInfo.getDeviceType() == .iPhone6Plus{
             offsetFactor = 0.75
         }
         

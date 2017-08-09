@@ -1,5 +1,5 @@
 /* The text shown in the search field */
-"Search" = "Rechercher";
+"Search.placeholder" = "Rechercher avec Cliqz";
 /* Error message title */
 "Sorry" = "Désolé";
 /* Error message when JS scripts for search can't be loaded */
@@ -74,7 +74,7 @@
 /* Hide images title */
 "Hide Images" = "Masquer les images";
 /* Night mode title */
-"Night Mode" = "Night Mode";
+"Night Mode" = "Mode Nuit";
 /* Turn off Night mode title */
 "Night Mode off" = "Night Mode Off";
 /* Remove favorites title */
@@ -108,17 +108,17 @@
 /* First card text in onBorading */
 "The first browser with a built-in quick-search\nno detours, directly to the right destination." = "Le premier navigateur avec recherche intégrée\n\nno detours, directly to the right destination.";
 /* Second card text in onBorading */
-"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more.";
+"Simply start typing.\n\nYou immediately see the best result.\n\nSwipe to see more." = "Tapez ici votre requête.\n\nVous verrez les résultats meilleurs.\n\nFrappez pour en voir d'autres.";
 /* Thrid card text in onBorading */
-"When you share your location, you also get results for locations near you (Google Maps)" = "When you share your location, you also get results for locations near you (Google Maps)";
+"When you share your location, you also get results for locations near you (Google Maps)" = "En partageant votre position, vous verrez des résultats pour des endroit à vous prôches.";
 /* Start buttun title for onBorading */
 "Let's start!" = "Commencer";
 /* Toast message shown when youtube video download started */
-"The video is being downloaded." = "La vidéo a été téléchargée.";
+"The video is being downloaded." = "Téléchargement de la vidéo en cours.";
 /* Toast message shown when youtube video download faild */
 "The download failed." = "Échec lors du téléchargement.";
 /* Toast message shown when youtube video is Successfully downloaded */
-"The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Vidéo » afin de visionner la vidéo.";
+"The download is complete. Open the Photos app to watch the video." = "Le téléchargement est terminé. Ouvrir l'application « Photos » afin de visionner la vidéo.";
 /* Brading label for onBorading */
 "Faster and safer" = "Instantanée et sans intermédiaire";
 /* subtitle label for onBorading */
@@ -142,7 +142,14 @@
 /* HUD message displayed while youtube downloader grabing the download URLs of the video */
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 /* Title to expand news stream */
-"MoreNews" = "Plus d'actualités";
+"MoreNews" = "En afficher plus";
+
+/* Title to shrink news stream */
+"LessNews" = "En afficher moins";
+
+/* Title of news stream */
+"News" = "NEWS";
+
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
 /* Title on Freshtab for forget mode */
@@ -230,6 +237,8 @@
 "Browsing & History" = "Navigation & Historique";
 /* [Settings] Block pop-up windows*/
 "Block Pop-up Windows" = "Bloquer les pop-ups";
+/* [Settings] Automatic Forget Tab*/
+"Automatic Forget Tab" = "Mode Oubli Automatique";
 /* [Setting] Block Ads
  [Settings -> Block Ads] Block Ads */
 "Block Ads" = "Bloqueur de Pubs (Bêta)";
@@ -263,3 +272,61 @@
 "Privacy Policy" = "Politique de confidentialité";
 /* [Settings -> About] Licenses */
 "Licenses" = "Licenses";
+/* [Settings] Limit Mobile Data Usage */
+"Limit Mobile Data Usage" = "Limiter la consommation des données mobiles";
+/* [Settings -> Limit Mobile Data Usage] toogle footer */
+"Download videos on Wi-Fi Only" = "Télécharger les vidéos seulement sur wi-fi";
+/* [Settings -> AutoForget Tab] toogle footer */
+"Websites which are known to contain explicit content are automatically opened in Forget Tabs. Visits to such websites are therefore not saved to your history." = "Les sites web avec du contenu explicite seront ouvert en Mode Oubli de façon automatique et ils ne seront pas sauvegardés dans vostre historique.";
+/* [Connect] No Wi-Fi connection alert title */
+"No Wi-Fi Connection" = "Aucune connection wi-fi";
+/* [Connect] No Wi-Fi connection alert message */
+"No Wi-Fi Connection message" = "Vous n'êtes pas connecté·e au wi-fi et le téléchargement des vidéos avec les réseaux mobiles n'est pas permis. \nVeuillez changer cela dans Paramètres > Limiter la consommation des données mobiles.\n";
+/* [Connect] Dismiss No Wi-Fi connection alert */
+"Dismiss" = "Annuler";
+/* [Settings] Connect */
+"Connect" = "Connect";
+/* [Settings -> Connect] Add Connection title */
+"Add Connection" = "Ajouter une connexion";
+/* [Settings -> Connect] Add Connection footer */
+"Add Connection footer" = "Connectez Cliqz sur votre ordinateur avec Cliqz sur votre dispositif Android. Ainsi, vous pourrez envoyer des onglets depuis votre ordinateur vers votre smartphone ou tablette. Vous pourrez aussi télécharger des vidéos depuis votre ordinateur vers votre dispositif.";
+/* [Settings -> Connect] Online Connections Header */
+"Online Connections" = "Connexions en ligne";
+/* [Settings -> Connect] Offline Connections Header */
+"Offline Connections" = "Connections hors-ligne";
+/* [Settings -> Connect] pending connection title */
+"Connecting to Desktop" = "Connexion en cours…";
+/* [Settings -> Connect] Scan QR-Code */
+"Scan QR-Code" = "Lire le code QR";
+/* [Connect] instructions text part#1 */
+"Go to " = "Aller ";
+/* [Connect] instructions text part#2 */
+" and select connect to scan the QR-Code" = " et sélectionnez «Connect» pour lire le code QR.";
+/* [Connect] Scan QR-Code alert title */
+"Open Cliqz Browser" = "Ouvrez le Navigateur Cliqz";
+/* [Connect] Scan QR-Code alert message */
+"Please open Cliqz Browser on your computer (or get it from cliqz.com)." = "Veuillez ouvrir le Navigateur Cliqz sur votre ordinateur (ou téléchargez-le sur cliqz.com).";
+/* [Connect] Connection Failed alert title */
+"Connection Failed" = "La connexion a échouée";
+/* [Connect] Connection Failed alert message */
+"Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.\n";
+/* [Connect] Retry button for Connection Failed alert */
+"Retry" = "Veuillez réessayer";
+/* [Settings -> Connect] remove connection */
+"Remove Connection" = "Annuler la connexion";
+/* [Settings -> Connect] rename connection */
+"Rename Connection" = "Renommer la connexion";
+/* [Settings -> Connect] rename connection alert message */
+"Prompt description" = "Veuillez entrer un nouveau nom pour la connexion :";
+/* [Connect] Connection successful alert title */
+"Connection successful" = "La connexion a réussi";
+/* [Connect] Connection Successful alert message */
+"You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device." = "Vous avez connecté votre premier appareil !\n\nVous pouvez dès maintenant envoyer des onglets et des vidéos YouTube depuis Cliqz pour ordinateur à votre appareil mobile.";
+/* [Connect] Alert title for turning on Camera access when scanning QRCode */
+"Allow Camera Access" = "Permettre l’accès à l’appareil photo";
+/* [Connect] Alert message for turning on Camera access when Scanning QR Code */
+"Cliqz Browser does not have access to your camera. To enable access, tap ‘Settings’ and turn on camera." = "Le navigateur Cliqz ne peut pas accéder à l’appareil photo. Pour permettre l’accès, cliquez sur Paramètres et activez l’appareil photo.";
+/* Video Downloader hint title */
+"Video Downloader" = "Téléchargeur des vidéos";
+/* Video Downloader hint description */
+"Download YouTube videos to your Smartphone." = "Téléchargez les vidéos YouTube vers votre smartphone.";

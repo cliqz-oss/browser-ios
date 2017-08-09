@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0800"
+   LastUpgradeVersion = "0700"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -33,9 +33,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EE247ADC1C3F04ED00AE3E12"
-               BuildableName = "SQLiteTests iOS.xctest"
-               BlueprintName = "SQLiteTests iOS"
+               BlueprintIdentifier = "DC2B29EB1B26F718001C60EA"
+               BuildableName = "SQLite iOS Tests.xctest"
+               BlueprintName = "SQLite iOS Tests"
                ReferencedContainer = "container:SQLite.xcodeproj">
             </BuildableReference>
          </TestableReference>
