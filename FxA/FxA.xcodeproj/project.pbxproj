@@ -12,7 +12,6 @@
 		0A80BCD01EC538DD00926C6A /* encrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A80BCCA1EC538DD00926C6A /* encrypt.c */; };
 		0A80BCD11EC538DD00926C6A /* keys.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A80BCCB1EC538DD00926C6A /* keys.c */; };
 		0A80BCD21EC538DD00926C6A /* params.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A80BCCC1EC538DD00926C6A /* params.c */; };
-		0A80BCD31EC538DD00926C6A /* trailer.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A80BCCD1EC538DD00926C6A /* trailer.c */; };
 		0A80BCD61EC538F500926C6A /* ece in Resources */ = {isa = PBXBuildFile; fileRef = 0A80BCD41EC538F500926C6A /* ece */; };
 		0A80BCD71EC538F500926C6A /* ece.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A80BCD51EC538F500926C6A /* ece.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28F9520119D0F9FA00DCE892 /* FxA.h in Headers */ = {isa = PBXBuildFile; fileRef = 28F9520019D0F9FA00DCE892 /* FxA.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -135,7 +134,6 @@
 		0A80BCCA1EC538DD00926C6A /* encrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = encrypt.c; path = ../ThirdParty/ecec/src/encrypt.c; sourceTree = "<group>"; };
 		0A80BCCB1EC538DD00926C6A /* keys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keys.c; path = ../ThirdParty/ecec/src/keys.c; sourceTree = "<group>"; };
 		0A80BCCC1EC538DD00926C6A /* params.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = params.c; path = ../ThirdParty/ecec/src/params.c; sourceTree = "<group>"; };
-		0A80BCCD1EC538DD00926C6A /* trailer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = trailer.c; path = ../ThirdParty/ecec/src/trailer.c; sourceTree = "<group>"; };
 		0A80BCD41EC538F500926C6A /* ece */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ece; path = ../ThirdParty/ecec/include/ece; sourceTree = "<group>"; };
 		0A80BCD51EC538F500926C6A /* ece.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ece.h; path = ../ThirdParty/ecec/include/ece.h; sourceTree = "<group>"; };
 		28F951FB19D0F9FA00DCE892 /* FxA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FxA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -283,7 +281,6 @@
 				0A80BCCA1EC538DD00926C6A /* encrypt.c */,
 				0A80BCCB1EC538DD00926C6A /* keys.c */,
 				0A80BCCC1EC538DD00926C6A /* params.c */,
-				0A80BCCD1EC538DD00926C6A /* trailer.c */,
 				28F951FD19D0F9FA00DCE892 /* FxA */,
 				28F9520719D0F9FB00DCE892 /* FxATests */,
 				28F951FC19D0F9FA00DCE892 /* Products */,
@@ -674,7 +671,6 @@
 				0A80BCCE1EC538DD00926C6A /* base64url.c in Sources */,
 				2FF825EC19D3CAFF003ED08E /* ASNUtils.m in Sources */,
 				2FF8264719D3CAFF003ED08E /* NSData+KeyDerivation.m in Sources */,
-				0A80BCD31EC538DD00926C6A /* trailer.c in Sources */,
 				2FF8264B19D3CAFF003ED08E /* NSData+Utils.m in Sources */,
 				0A80BCD11EC538DD00926C6A /* keys.c in Sources */,
 				2FF825EF19D3CAFF003ED08E /* CHMutableNumber.m in Sources */,
