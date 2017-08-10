@@ -148,8 +148,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         //		 REACT ----
-        let viewController = UIViewController()
-        viewController.view = Engine.sharedInstance.rootView
+//        let viewController = UIViewController()
+//        viewController.view = Engine.sharedInstance.rootView
+//        viewController.view.backgroundColor = UIColor.black
+        
+        let viewController = MainContainerViewController()
+        
+//        let viewController    = ConversationalContainer()
 
         browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)
         browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
@@ -167,6 +172,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //        self.window!.rootViewController = rootViewController
         self.window!.rootViewController = navigationController
+        
+        self.window?.backgroundColor = UIColor.red
+        self.window?.rootViewController?.view.backgroundColor = UIColor.green
 
         // Cliqz: disable crash reporting
 //        do {

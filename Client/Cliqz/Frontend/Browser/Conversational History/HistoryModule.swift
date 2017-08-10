@@ -87,11 +87,11 @@ final class HistoryModule: NSObject {
         return NSDictionary(dictionary: returnDict)
     }
     
-    class func getHistory(profile: Profile, completion:@escaping (_ result:[Domain]?, _ error:NSError?) -> Void) {
+    class func getHistory(profile: Profile, completion: @escaping (_ result:[Domain]?, _ error:NSError?) -> Void) {
         //limit is static for now.
         //later there will be a mechanism in place to handle a variable limit and offset.
         //It will keep a window of results that updates as the user scrolls.
-        let backgroundQueue = DispatchQueue.global()
+        let backgroundQueue = DispatchQueue.global(qos: .background)
         profile.history.getHistoryVisits(0, limit: 1000).uponQueue(backgroundQueue) { (result) in
             let rawDomainDetails = processRawDataResults(result: result)
             let domainList       = processDomainDetails(details: rawDomainDetails)
@@ -124,78 +124,81 @@ final class HistoryModule: NSObject {
     
     class func processDomainDetails(details: [DomainDetail]) -> [Domain] {
         
-        //group domain details by domain.
-        var domainName_to_details: [String: [String: DomainDetail]] = Dictionary()
-        var domainName_to_date   : [String: Date] = Dictionary()
+        func mostRecentDate(details:[DomainDetail]) -> Date? {
+            guard details.count > 0 else {
+                return nil
+            }
+            var most_recent_date = details.first?.date
+            for detail in details {
+                if let detail_date = detail.date, let max = most_recent_date {
+                    if detail_date > max {
+                        most_recent_date = detail_date
+                    }
+                }
+            }
+            
+            return most_recent_date ?? nil
+        }
         
-        //warning: Non-elegant code.
-        //TODO: refactor
-        //What am I doing here?
-        //First I determine which Domain(s) I have in the list I receive
-        //Second I make sure that each DomainDetail belonging to Domain is unique. I don't want multiple entries that are the same but have different dates. I take only the one with the most recent date.
-        //Third...some recent DomainDetail(s) miss the title sometimes, so I just take it from another DomainDetail with matching url.
+        func removeDuplicates(details: [DomainDetail]) -> [DomainDetail] {
+            //duplicates can be identified by the title, or the url
+            // I will take the url as the unique identifier
+            
+            
+            var array: [DomainDetail] = []
+            
+            var group_by_url = groupBy(array: details) { (detail) -> NSURL in
+                return detail.url
+            }
+            
+            for url in group_by_url.keys {
+                if let details = group_by_url[url] {
+                    let most_recent_date = mostRecentDate(details: details)
+                    array.append(DomainDetail(title: details.first?.title ?? "", url: url, date: most_recent_date))
+                }
+            }
+            
+            return array
+            
+        }
         
-        for detail in details {
-            if let domainName = urlToDomain(url: detail.url), let url_abs_string = detail.url.absoluteString {
-                //add the details
-                if var nested_dict = domainName_to_details[domainName] {
-                    //nested dictionary
-                    //inside dict is a mapping from detail.url -> DomainDetail with the most recent date
-                    if let inside_domainDetail = nested_dict[url_abs_string] {
-                        if inside_domainDetail.date! < detail.date! {
-                            
-                            var final_detail = detail
-                            
-                            if detail.title == "" {
-                                final_detail.title = inside_domainDetail.title
-                            }
-                            nested_dict[url_abs_string] = final_detail
-                        }
-                    }
-                    else{
-                        nested_dict[url_abs_string] = detail
-                    }
-                }
-                else{
-                    domainName_to_details[domainName] = [url_abs_string : detail]
-                }
-                
-                //check if the date can be replaced by a more recent one
-                if domainName_to_date[domainName] != nil {
-                    if  domainName_to_date[domainName]! <  detail.date! {//domainName_to_date[domainName]?.timeIntervalSince1970 < detail.date?.timeIntervalSince1970 {
-                        domainName_to_date[domainName] = detail.date
-                    }
-                }
-                else{
-                    domainName_to_date[domainName] = detail.date
-                }
+        var finalArray: [Domain] = []
+        
+        let clean_details = removeDuplicates(details: details)
+        
+        let groupedDetails_by_Domain = groupBy(array: clean_details) { (detail) -> String in
+            return detail.url.host ?? ""
+        }
+        
+        for domain in groupedDetails_by_Domain.keys {
+            if let details = groupedDetails_by_Domain[domain] {
+                let most_recent_date = mostRecentDate(details: details)
+                finalArray.append(Domain(domainName: domain, domainDetails: details, date: most_recent_date))
             }
         }
         
-        //now contruct the Detail array. Each Detail object should be complete.
+        return finalArray
         
-        var domainArray: [Domain] = []
-        
-        for domainName in domainName_to_details.keys {
-            let domainDetailsArray = domainName_to_details[domainName]?.map({ (url, detail) -> DomainDetail in
-                return detail
-            })
-            if let array = domainDetailsArray {
-                let domain = Domain(domainName: domainName, domainDetails: array, date: domainName_to_date[domainName])
-                domainArray.append(domain)
-            }
-        }
-        
-        return domainArray
     }
     
-    class func urlToDomain(url:NSURL) -> String? {
-        return url.baseURL?.baseDomain()
+    private class func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
+        var dict: Dictionary<B, [A]> = [:]
+        
+        for elem in array {
+            let key = hashF(elem)
+            if var array = dict[key] {
+                array.append(elem)
+                dict[key] = array
+            }
+            else {
+                dict[key] = [elem]
+            }
+        }
+        
+        return dict
     }
     
 }
-
-
 
 
 extension Date {
@@ -206,4 +209,9 @@ extension Date {
     static public func <(lhs: Date, rhs: Date) -> Bool {
         return lhs.compare(rhs) == .orderedAscending
     }
+    
+    static public func >(lhs: Date, rhs: Date) -> Bool {
+        return lhs.compare(rhs) == .orderedDescending
+    }
+    
 }

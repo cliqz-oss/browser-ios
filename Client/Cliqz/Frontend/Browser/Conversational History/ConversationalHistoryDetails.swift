@@ -6,250 +6,305 @@
 //  Copyright © 2016 Mozilla. All rights reserved.
 //
 
-//import Foundation
-//import UIKit
-//import SnapKit
-//import Alamofire
-//
-//protocol HistoryDetailsProtocol: class {
-//    func urlLabelText(indexPath:NSIndexPath) -> String
-//    func titleLabelText(indexPath:NSIndexPath) -> String
-//    func timeLabelText(indexPath:NSIndexPath) -> String
-//    func baseUrl() -> String
-//    func numberOfCells() -> Int
-//    func image() -> UIImage?
-//    func isNews() -> Bool
-//}
-//
-//// This is the View Controller for the Domain Details View (What you see after you press on a certain domain)
-//
-//class ConversationalHistoryDetails: UIViewController, UITableViewDataSource, UITableViewDelegate {
-//	
-//	var historyTableView: UITableView!
-//	let historyCellID = "HistoryCell"
-//	var sortedURLs = [String]()
-//    var dataSource: HistoryDetailsProtocol? = nil
-//
-//	weak var delegate: BrowserNavigationDelegate?
-//	
-//	private var urls: NSArray!
-//    
-//    var didPressBack: () -> () = { _ in }
-//
-//	override func viewDidLoad() {
-//		super.viewDidLoad()
-//		self.historyTableView = UITableView(frame: CGRectZero, style: .Plain)
-//		self.view.addSubview(self.historyTableView)
-//		self.historyTableView.snp_makeConstraints { (make) in
-//			make.top.left.right.bottom.equalTo(self.view)
-//		}
-//		self.historyTableView.delegate = self
-//		self.historyTableView.dataSource = self
-//		self.historyTableView.registerClass(HistoryDetailCell.self, forCellReuseIdentifier: historyCellID)
-//		self.historyTableView.separatorStyle = .None
-//	}
-//
-//	override func viewWillAppear(animated: Bool) {
-//		super.viewWillAppear(animated)
-//		self.navigationController?.navigationBarHidden = true
-//	}
-//
-//	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//		return dataSource?.numberOfCells() ?? 0
-//	}
-//
-//	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//		let cell =  self.historyTableView.dequeueReusableCellWithIdentifier(self.historyCellID) as! HistoryDetailCell
-//        
-//        let articleLink    = dataSource?.urlLabelText(indexPath)
-//        cell.URLLabel.text = articleLink
-//        cell.titleLabel.text = dataSource?.titleLabelText(indexPath)
-//        cell.timeLabel.text = dataSource?.timeLabelText(indexPath)
-//		cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//		cell.selectionStyle = .None
-//        
-//        if let isNews = dataSource?.isNews() where isNews == true {
-//            if let art_link = articleLink where ReadNewsManager.sharedInstance.isRead(art_link) == false {
-//                cell.changeBorderColor(to: .Highlighted)
-//            }
-//            else{
-//                cell.changeBorderColor(to: .NotHighlighted)
-//            }
-//        }
-//        
-//		return cell
-//	}
-//	
-//	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//		return 120
-//	}
-//	
-//	func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//		return 65
-//	}
-//	
-//	func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//		let header = UIView()
-//		header.backgroundColor = UIColor.whiteColor()
-//		let backBtn = UIButton(type: .Custom)
-//		backBtn.tintColor = UIColor.blueColor()
-//		backBtn.setImage(UIImage(named:"cliqzBack"), forState: .Normal)
-//		header.addSubview(backBtn)
-//		backBtn.addTarget(self, action: #selector(goBack), forControlEvents: .TouchUpInside)
-//		backBtn.snp_makeConstraints { (make) in
-//			make.top.equalTo(header)
-//			make.left.equalTo(header).offset(5)
-//		}
-//		let title = UILabel()
-//		title.textAlignment = .Center
-//		title.numberOfLines = 0
-//		title.font = UIFont.boldSystemFontOfSize(10)
-//		header.addSubview(title)
-//		let logo = UIButton(type: .Custom)
-//		logo.layer.cornerRadius = 15
-//		logo.clipsToBounds = true
-//		header.addSubview(logo)
-//		logo.snp_remakeConstraints { (make) in
-//			make.centerX.equalTo(header)
-//			make.top.equalTo(header).offset(6)
-//			make.width.equalTo(30)
-//			make.height.equalTo(30)
-//		}
-//		logo.addTarget(self, action: #selector(logoPressed), forControlEvents: .TouchUpInside)
-//        logo.setImage(dataSource?.image() ?? UIImage(named: "coolLogo"), forState: .Normal)
-//
-//		title.snp_remakeConstraints { (make) in
-//			make.top.equalTo(logo.snp_bottom)
-//			make.left.right.equalTo(header)
-//			make.height.equalTo(20)
-//		}
-//        
-//		if let baseURL = dataSource?.baseUrl() {
-//            title.text = baseURL
-//		}
-//        
-//		let sep = UIView()
-//		sep.backgroundColor = UIColor.lightGrayColor()
-//		header.addSubview(sep)
-//		sep.snp_remakeConstraints { (make) in
-//			make.bottom.equalTo(header).offset(-5)
-//			make.left.right.equalTo(header)
-//			make.height.equalTo(1)
-//		}
-//
-//		return header
-//	}
-//
-//	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//		if let urlString = dataSource?.urlLabelText(indexPath), let url = NSURL(string: urlString) {
-//            ReadNewsManager.sharedInstance.markAsRead(urlString)
-//			self.navigationController?.popViewControllerAnimated(false)
-//			self.delegate?.navigateToURL(url)
-//		}
-//	}
-//	
-//	@objc private func goBack() {
-//        didPressBack()
-//	}
-//	
-//	@objc private func logoPressed() {
-//		if let baseURL = dataSource?.baseUrl(), let url = NSURL(string: baseURL) {
-//            self.navigationController?.popViewControllerAnimated(false)
-//			self.delegate?.navigateToURL(url)
-//		}
-//
-//	}
-//}
-//
-//class HistoryDetailCell: UITableViewCell {
-//    
-//    enum BorderState{
-//        case Highlighted
-//        case NotHighlighted
-//    }
-//    
-//	let titleLabel = UILabel()
-//	let descriptionLabel = UILabel()
-//	let URLLabel = UILabel()
-//	let timeLabel = UILabel()
-//	let borderView = UIView()
-//
-//	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-//		super.init(style: style, reuseIdentifier: reuseIdentifier)
-//	
-//		self.contentView.addSubview(self.borderView)
-//		self.borderView.backgroundColor = UIColor.clearColor()
-//		self.borderView.layer.borderColor = UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1).CGColor
-//		self.borderView.layer.cornerRadius = 2
-//		self.borderView.layer.borderWidth = 1
-//
-//		self.contentView.addSubview(titleLabel)
-//		titleLabel.numberOfLines = 2
-//		titleLabel.font = UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)
-//		titleLabel.textColor = UIColor.blackColor()
-//		titleLabel.backgroundColor = UIColor.clearColor()
-//		self.contentView.addSubview(URLLabel)
-//		descriptionLabel.font = UIFont.systemFontOfSize(14)
-//		descriptionLabel.numberOfLines = 0
-//		descriptionLabel.backgroundColor = UIColor.clearColor()
-//		self.contentView.addSubview(descriptionLabel)
-//
-//		URLLabel.font = UIFont.systemFontOfSize(12, weight: UIFontWeightMedium)
-//		URLLabel.textColor = UIColor.lightGrayColor() //UIColor(rgb: 0x77ABE6)
-//		URLLabel.numberOfLines = 2
-//		URLLabel.backgroundColor = UIColor.clearColor()
-//		URLLabel.textAlignment = .Left
-//		timeLabel.font = UIFont.systemFontOfSize(12)
-//		timeLabel.textAlignment = .Right
-//		timeLabel.textColor = UIConstants.CliqzThemeColor
-//		self.contentView.addSubview(timeLabel)
-//	}
-//	
-//	required init?(coder aDecoder: NSCoder) {
-//		fatalError("init(coder:) has not been implemented")
-//	}
-//    
-//    func changeBorderColor(to state:BorderState) {
-//        if state == .Highlighted{
-//            self.borderView.layer.borderColor = UIColor(colorString: "4FACED").CGColor
-//        }
-//        else{
-//            self.borderView.layer.borderColor = UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1).CGColor
-//        }
-//    }
-//	
-//	override func layoutSubviews() {
-//		self.borderView.snp_makeConstraints { (make) in
-//			make.top.equalTo(self.contentView).offset(4)
-//			make.bottom.equalTo(self.contentView).offset(-4)
-//			make.left.equalTo(self.contentView).offset(8)
-//			make.right.equalTo(self.contentView).offset(-8)
-//		}
-//		self.titleLabel.snp_remakeConstraints { (make) in
-//			make.top.equalTo(self.contentView).offset(10)
-//			make.left.equalTo(self.contentView).offset(14)
-//			make.height.equalTo(35)
-//			make.right.equalTo(self.contentView).offset(-14)
-//		}
-//		self.descriptionLabel.snp_makeConstraints { (make) in
-//			make.right.equalTo(self.contentView).offset(-14)
-//			make.left.equalTo(self.contentView).offset(14)
-//			make.top.equalTo(self.titleLabel.snp_bottom)
-//			make.height.equalTo(50)
-//		}
-//		self.URLLabel.snp_remakeConstraints { (make) in
-//			make.top.equalTo(self.titleLabel.snp_bottom).offset(10)
-//			make.left.equalTo(self.contentView).offset(14)
-//			make.height.equalTo(25)
-//			make.right.equalTo(self.contentView).offset(-14)
-//		}
-//		self.timeLabel.snp_makeConstraints { (make) in
-//			make.right.equalTo(self.contentView).offset(-15)
-//			make.bottom.equalTo(self.contentView).offset(-10)
-//			make.height.equalTo(12)
-//			make.left.equalTo(self.contentView)
-//		}
-//
-//	}
-//}
+import Foundation
+import UIKit
+import SnapKit
+import Alamofire
+import QuartzCore
 
+protocol HistoryDetailsProtocol: class {
+    func urlLabelText(indexPath: IndexPath) -> String
+    func titleLabelText(indexPath: IndexPath) -> String
+    func sectionTitle(section: Int) -> String
+    func timeLabelText(indexPath: IndexPath) -> String
+    func isQuery(indexPath: IndexPath) -> Bool
+    func numberOfSections() -> Int
+    func numberOfCells() -> Int
+    func image() -> UIImage?
+    func isNews() -> Bool
+    func baseUrl() -> String
+}
+
+// This is the View Controller for the Domain Details View (What you see after you press on a certain domain)
+
+// Attention!!!!
+// To Do: Take out the table view into a separate component
+
+class ConversationalHistoryDetails: UIViewController {
+	
+	var historyTableView: UITableView!
+	let historyCellID_Left = "HistoryCellLeft"
+    let historyCellID_Right = "HistoryCellRight"
+	var sortedURLs = [String]()
+    var dataSource: HistoryDetailsProtocol? = nil
+    let headerView = DetailHeaderView()
+    let recommendationsCollection = RecommedationsCollectionView()
+
+	weak var delegate: BrowserNavigationDelegate?
+	
+	private var urls: NSArray!
+    
+    var didPressBack: () -> () = { _ in }
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+        
+        componentSetUp()
+        
+        self.view.addSubview(headerView)
+        self.view.addSubview(recommendationsCollection)
+		self.view.addSubview(historyTableView)
+        
+        setStyling()
+        setConstraints()
+        
+        //this will have to be moved to the table view controller.
+        //when I make it a separate class.
+        if dataSource?.numberOfCells() == 0 {
+            historyTableView.isHidden = true
+        }
+	}
+    
+    func componentSetUp() {
+        
+        headerView.delegate = self
+        headerView.logo.setImage(dataSource?.image() ?? UIImage(named: "coolLogo"), for: .normal)
+        headerView.title.text = dataSource?.baseUrl() ?? "www.test.com"
+        
+        recommendationsCollection.recomDataSource = RecommendationsDataSource()
+        
+        self.historyTableView = UITableView(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0), style: .plain)
+        self.historyTableView.delegate = self
+        self.historyTableView.dataSource = self
+        self.historyTableView.register(HistoryDetailsLeftCell.self, forCellReuseIdentifier: historyCellID_Left)
+        self.historyTableView.register(HistoryDetailsRightCell.self, forCellReuseIdentifier: historyCellID_Right)
+    }
+    
+    func setStyling() {
+        
+        self.view.backgroundColor = UIColor.clear
+        
+        self.historyTableView.separatorStyle = .none
+        self.historyTableView.backgroundColor = UIColor.clear
+    }
+    
+    func setConstraints() {
+        
+        self.headerView.snp.remakeConstraints { (make) in
+            make.top.left.right.equalTo(self.view)
+            make.height.equalTo(64)
+        }
+        
+        self.recommendationsCollection.snp.makeConstraints { (make) in
+            make.left.right.equalTo(self.view)
+            make.top.equalTo(self.headerView.snp.bottom)
+            make.height.equalTo(204)
+        }
+        
+        self.historyTableView.snp.remakeConstraints { (make) in
+            make.left.right.bottom.equalTo(self.view)
+            make.top.equalTo(self.recommendationsCollection.snp.bottom)
+        }
+    }
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		self.navigationController?.isNavigationBarHidden = true
+	}
+	
+	@objc private func logoPressed() {
+		if let baseURL = dataSource?.baseUrl(), let url = NSURL(string: baseURL) {
+            self.navigationController?.popViewController(animated: false)
+			self.delegate?.navigateToURL(url as URL)
+		}
+
+	}
+}
+
+extension ConversationalHistoryDetails: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource?.numberOfCells() ?? 0
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return dataSource?.numberOfSections() ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if dataSource?.isQuery(indexPath: indexPath) == true {
+            let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID_Right) as! HistoryDetailsRightCell
+            cell.titleLabel.text = dataSource?.titleLabelText(indexPath: indexPath)
+            cell.timeLabel.text = dataSource?.timeLabelText(indexPath: indexPath)
+            return cell
+        }
+        
+        let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID_Left) as! HistoryDetailsLeftCell
+        cell.titleLabel.text = dataSource?.titleLabelText(indexPath: indexPath)
+        cell.urlLabel.text = dataSource?.urlLabelText(indexPath: indexPath)
+        cell.timeLabel.text = dataSource?.timeLabelText(indexPath: indexPath)
+        return cell
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if dataSource?.isQuery(indexPath: indexPath) == true {
+            return 70
+        }
+        
+        return 90
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let container = UIView()
+        let bubble = UIView()
+        let label = UILabel()
+        
+        //setup
+        label.text = dataSource?.sectionTitle(section: section)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        
+        bubble.addSubview(label)
+        container.addSubview(bubble)
+        
+        //styling
+        bubble.backgroundColor = UIColor.white
+        bubble.layer.cornerRadius = 10
+        
+        
+        //constraints
+        bubble.snp.makeConstraints { (make) in
+            make.center.equalTo(container)
+            make.width.equalTo(label.snp.width).multipliedBy(1.5)
+            make.height.equalTo(20)
+        }
+        
+        label.snp.makeConstraints { (make) in
+            make.center.equalTo(bubble)
+        }
+        
+        
+        return container
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let urlString = dataSource?.urlLabelText(indexPath: indexPath), let url = NSURL(string: urlString) {
+            ReadNewsManager.sharedInstance.markAsRead(articleLink: urlString)
+            self.navigationController?.popViewController(animated: false)
+            self.delegate?.navigateToURL(url as URL)
+        }
+    }
+    
+}
+
+extension ConversationalHistoryDetails: DetailHeaderViewDelegate {
+    func headerLogoPressed() {
+        
+    }
+    
+    func headerGoBackPressed() {
+        didPressBack()
+    }
+}
+
+protocol DetailHeaderViewDelegate {
+    func headerGoBackPressed()
+    func headerLogoPressed()
+}
+
+class DetailHeaderView: UIView {
+    
+    let backBtn = UIButton(type: .custom)
+    let title = UILabel()
+    let logo = UIButton(type: .custom)
+    let sep = UIView()
+    
+    var delegate: DetailHeaderViewDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        componentSetUp()
+        
+        self.addSubview(backBtn)
+        self.addSubview(title)
+        self.addSubview(logo)
+        self.addSubview(sep)
+        
+        setConstraints()
+        setStyling()
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func componentSetUp() {
+        backBtn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        logo.addTarget(self, action: #selector(logoPressed), for: .touchUpInside)
+    }
+    
+    func setConstraints() {
+        
+        backBtn.snp.remakeConstraints { (make) in
+            make.centerY.equalTo(self)
+            make.left.equalTo(self)
+            make.height.width.equalTo(40)
+        }
+        
+        logo.snp.remakeConstraints { (make) in
+            make.centerX.equalTo(self)
+            make.top.equalTo(self).offset(6)
+            make.width.equalTo(38)
+            make.height.equalTo(38)
+        }
+        
+        title.snp.remakeConstraints { (make) in
+            make.top.equalTo(logo.snp.bottom)
+            make.left.right.equalTo(self)
+            make.height.equalTo(20)
+        }
+        
+        sep.snp.remakeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.left.right.equalTo(self)
+            make.height.equalTo(1)
+        }
+    }
+    
+    func setStyling() {
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        
+        backBtn.tintColor = UIColor.white
+        backBtn.setImage(UIImage(named:"cliqzBackWhite"), for: .normal)
+        
+        title.textAlignment = .center
+        title.numberOfLines = 0
+        title.font = UIFont.boldSystemFont(ofSize: 10)
+        title.textColor = UIColor(colorString: "F8F8F8")
+        
+        logo.layer.cornerRadius = 4
+        logo.clipsToBounds = true
+        
+        sep.backgroundColor = UIColor.clear
+    }
+    
+    @objc
+    func goBack(_ sender: UIButton) {
+        self.delegate?.headerGoBackPressed()
+    }
+    
+    @objc
+    func logoPressed(_ sender: UIButton) {
+        self.delegate?.headerLogoPressed()
+    }
+    
+}

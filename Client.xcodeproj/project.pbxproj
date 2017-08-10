@@ -224,17 +224,6 @@
 		1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6C1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m */; };
 		1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6F1D508368006BEB4A /* AWSXMLDictionary.m */; };
 		1E79DEAC1D508368006BEB4A /* AWSXMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE721D508368006BEB4A /* AWSXMLWriter.m */; };
-		1E79DEE11D5098F6006BEB4A /* Deferred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BA4A9631C4CFE840091D032 /* Deferred.framework */; };
-		1E79DEE21D5098F6006BEB4A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6231C001B90A44F005ABB0D /* libz.tbd */; };
-		1E79DEE31D5098F6006BEB4A /* KIF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B604F981C494F74006EEEC3 /* KIF.framework */; };
-		1E79DEE41D5098F6006BEB4A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36998881AD70A0A00650C6C /* IOKit.framework */; };
-		1E79DEE51D5098F6006BEB4A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D39FA16B1A83E17800EE869C /* CoreGraphics.framework */; };
-		1E79DEEE1D5098F6006BEB4A /* youtube.ico in Resources */ = {isa = PBXBuildFile; fileRef = E67422C41CFF2D39009E8373 /* youtube.ico */; };
-		1E79DEEF1D5098F6006BEB4A /* KIFHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = D3E171C11A841EAD00AB44CD /* KIFHelper.js */; };
-		1E79DEF31D5098F6006BEB4A /* KIF.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D30EBB6A1C75503800105AE9 /* KIF.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1E79DEFE1D509981006BEB4A /* CliqzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB71D5098CC006BEB4A /* CliqzUITests.swift */; };
-		1E79DEFF1D509986006BEB4A /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DEB81D5098CC006BEB4A /* Global.swift */; };
-		1E79DF001D50998D006BEB4A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DEB91D5098CC006BEB4A /* Info.plist */; };
 		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
@@ -242,10 +231,6 @@
 		1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293F01DB7D08F00D852C8 /* ElementAtPoint.swift */; };
 		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
 		1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC603A51E718926007921BF /* ABTestsManager.swift */; };
-		1ECAE3401DA4EE5800CB8102 /* core.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE3381DA4EE5800CB8102 /* core.js */; };
-		1ECAE3411DA4EE5800CB8102 /* es6-promise.js in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33A1DA4EE5800CB8102 /* es6-promise.js */; };
-		1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33B1DA4EE5800CB8102 /* es5tests.json */; };
-		1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ECAE33C1DA4EE5800CB8102 /* es6tests.json */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
@@ -583,13 +568,6 @@
 		7BF5A1EA1B41640500EA9DD8 /* SyncQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1E91B41640500EA9DD8 /* SyncQueue.swift */; };
 		7BF5A1EE1B429B3100EA9DD8 /* SyncCommandsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5A1ED1B429B3100EA9DD8 /* SyncCommandsTests.swift */; };
 		7C18EF921E6458880081697F /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3905274E1C874D35007E0BB7 /* TodayViewController.swift */; };
-		7C346B221E1D313D00C1FD3B /* AntiPhishingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C346B211E1D313D00C1FD3B /* AntiPhishingTest.swift */; };
-		7C4474F81E07F6B2008E34E6 /* SettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4474F71E07F6B2008E34E6 /* SettingsTest.swift */; };
-		7C4475091E07F7BF008E34E6 /* TabsManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4475081E07F7BF008E34E6 /* TabsManagerTest.swift */; };
-		7C44750B1E07F83F008E34E6 /* URLBarTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C44750A1E07F83F008E34E6 /* URLBarTest.swift */; };
-		7C44750D1E07F84F008E34E6 /* BrowserToolbarTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C44750C1E07F84F008E34E6 /* BrowserToolbarTest.swift */; };
-		7C44750F1E07FA6A008E34E6 /* CliqzTestsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C44750E1E07FA6A008E34E6 /* CliqzTestsExtension.swift */; };
-		7C4475111E097001008E34E6 /* FreshTabTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4475101E097001008E34E6 /* FreshTabTest.swift */; };
 		7FB63CC91C08B27E0047F9A4 /* DynamicFontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */; };
 		7FB63CEF1C08D4910047F9A4 /* DynamicFontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB63CC81C08B27E0047F9A4 /* DynamicFontHelper.swift */; };
 		A826F0D21CBEB8160084CF9A /* PhoneNumberFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A826F0D11CBEB8160084CF9A /* PhoneNumberFormatterTests.swift */; };
@@ -606,7 +584,6 @@
 		AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */; };
 		AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */; };
 		AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */; };
-		AF2C3DF51EEFDEF1005DD628 /* CINotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */; };
 		AF2C3DF61EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */; };
 		AF2C3DF71EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */; };
 		AF2C3DF81EEFDEF1005DD628 /* ConversationalContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */; };
@@ -616,10 +593,14 @@
 		AF2C3DFC1EEFDEF1005DD628 /* HistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */; };
 		AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */; };
 		AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */; };
-		AF2C3DFF1EEFDEF1005DD628 /* NewsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */; };
+		AF2C3DFF1EEFDEF1005DD628 /* NewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */; };
 		AF2C3E001EEFDEF1005DD628 /* ReadNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */; };
 		AF2C3E151EEFED79005DD628 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3E141EEFED79005DD628 /* History.swift */; };
 		AF2C3E251EEFEDB2005DD628 /* HistoryBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */; };
+		AF3BF5B31F3C797500097346 /* RecommendationsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BF5B21F3C797500097346 /* RecommendationsDataSource.swift */; };
+		AF3BF5B51F3C79AA00097346 /* RecommedationsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BF5B41F3C79AA00097346 /* RecommedationsCollectionView.swift */; };
+		AF3BF5B71F3C79ED00097346 /* RecommendationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BF5B61F3C79ED00097346 /* RecommendationsCell.swift */; };
+		AF3BF5C11F3C871E00097346 /* DashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BF5C01F3C871E00097346 /* DashViewController.swift */; };
 		AF4541011F2A33A000979B7D /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4540F71F2A33A000979B7D /* Entypo.ttf */; };
 		AF4541021F2A33A000979B7D /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4540F81F2A33A000979B7D /* EvilIcons.ttf */; };
 		AF4541031F2A33A000979B7D /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4540F91F2A33A000979B7D /* FontAwesome.ttf */; };
@@ -630,12 +611,20 @@
 		AF4541081F2A33A000979B7D /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4540FE1F2A33A000979B7D /* Octicons.ttf */; };
 		AF4541091F2A33A000979B7D /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4540FF1F2A33A000979B7D /* SimpleLineIcons.ttf */; };
 		AF45410A1F2A33A000979B7D /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF4541001F2A33A000979B7D /* Zocial.ttf */; };
+		AF4541251F309DE800979B7D /* MainContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4541241F309DE800979B7D /* MainContainerViewController.swift */; };
+		AF4541271F309F1100979B7D /* MainContainerLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4541261F309F1100979B7D /* MainContainerLogic.swift */; };
+		AF4541291F309F5900979B7D /* URLBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4541281F309F5900979B7D /* URLBarViewController.swift */; };
+		AF45412B1F309F7200979B7D /* URLBarLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF45412A1F309F7200979B7D /* URLBarLogic.swift */; };
 		AF4A652F1E681EC5000278CD /* BlockedRequestsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */; };
 		AF4A65301E681EC5000278CD /* ContentPolicyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */; };
 		AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */; };
 		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
+		AF7ED4BA1F39AEF000E41737 /* StateAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7ED4B91F39AEF000E41737 /* StateAnimator.swift */; };
+		AF7ED4CA1F39B83B00E41737 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7ED4C91F39B83B00E41737 /* HistoryCell.swift */; };
+		AF7ED4CD1F39D62C00E41737 /* HistoryDetailsLeftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7ED4CB1F39D62C00E41737 /* HistoryDetailsLeftCell.swift */; };
+		AF7ED4D01F39EBCD00E41737 /* HistoryDetailsRightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7ED4CF1F39EBCD00E41737 /* HistoryDetailsRightCell.swift */; };
 		AF8266201EB09FBA0023C77C /* LandscapeFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */; };
 		AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */; };
 		AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF82661F1EB09FBA0023C77C /* TabViewCell.swift */; };
@@ -659,7 +648,6 @@
 		B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */; };
 		B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */; };
 		B729F06A1B75CBEF00745F7A /* UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729F0691B75CBEF00745F7A /* UserAgent.swift */; };
-		B8E12F8F6E0F19668C86A081 /* Pods_CliqzUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 578A38A7BE686663C3E3AF0D /* Pods_CliqzUITests.framework */; };
 		BACD89A94251835AA0CB4750 /* Pods_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399FCBDEFD043DB818CBBC20 /* Pods_Client.framework */; };
 		C400467C1CF4E43E00B08303 /* BackForwardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */; };
 		C40046FA1CF8E0B200B08303 /* BackForwardListAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40046F91CF8E0B200B08303 /* BackForwardListAnimator.swift */; };
@@ -956,13 +944,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = sqlcipher;
-		};
-		1E79DEC01D5098F6006BEB4A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F84B21B61A090F8100AAB793 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F84B21BD1A090F8100AAB793;
-			remoteInfo = Client;
 		};
 		2827316A1ABC9BE700AA1954 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1317,16 +1298,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1E79DEF21D5098F6006BEB4A /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1E79DEF31D5098F6006BEB4A /* KIF.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2F3444EC1AB2378200FD9731 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1735,7 +1706,6 @@
 		1E79DEB71D5098CC006BEB4A /* CliqzUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUITests.swift; sourceTree = "<group>"; };
 		1E79DEB81D5098CC006BEB4A /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		1E79DEB91D5098CC006BEB4A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CliqzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
 		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
@@ -2073,7 +2043,6 @@
 		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserActions.m; sourceTree = "<group>"; };
 		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserActions.swift; sourceTree = "<group>"; };
 		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
-		AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CINotificationManager.swift; sourceTree = "<group>"; };
 		AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzHistoryDetailsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzNewsDetailsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalContainer.swift; sourceTree = "<group>"; };
@@ -2083,10 +2052,14 @@
 		AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
 		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryModuleBridge.m; sourceTree = "<group>"; };
-		AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDataSource.swift; sourceTree = "<group>"; };
+		AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsManager.swift; sourceTree = "<group>"; };
 		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadNewsManager.swift; sourceTree = "<group>"; };
 		AF2C3E141EEFED79005DD628 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = JSEngine/History.swift; sourceTree = "<group>"; };
 		AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryBridge.m; path = JSEngine/HistoryBridge.m; sourceTree = "<group>"; };
+		AF3BF5B21F3C797500097346 /* RecommendationsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsDataSource.swift; sourceTree = "<group>"; };
+		AF3BF5B41F3C79AA00097346 /* RecommedationsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommedationsCollectionView.swift; sourceTree = "<group>"; };
+		AF3BF5B61F3C79ED00097346 /* RecommendationsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsCell.swift; sourceTree = "<group>"; };
+		AF3BF5C01F3C871E00097346 /* DashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashViewController.swift; sourceTree = "<group>"; };
 		AF4540F71F2A33A000979B7D /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
 		AF4540F81F2A33A000979B7D /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF4540F91F2A33A000979B7D /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -2097,12 +2070,20 @@
 		AF4540FE1F2A33A000979B7D /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		AF4540FF1F2A33A000979B7D /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF4541001F2A33A000979B7D /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		AF4541241F309DE800979B7D /* MainContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainContainerViewController.swift; path = "Conversational Native/MainContainerViewController.swift"; sourceTree = "<group>"; };
+		AF4541261F309F1100979B7D /* MainContainerLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainContainerLogic.swift; path = "Conversational Native/MainContainerLogic.swift"; sourceTree = "<group>"; };
+		AF4541281F309F5900979B7D /* URLBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLBarViewController.swift; path = "Conversational Native/URLBarViewController.swift"; sourceTree = "<group>"; };
+		AF45412A1F309F7200979B7D /* URLBarLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLBarLogic.swift; path = "Conversational Native/URLBarLogic.swift"; sourceTree = "<group>"; };
 		AF4A652C1E681EC5000278CD /* BlockedRequestsCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedRequestsCache.swift; path = JSEngine/BlockedRequestsCache.swift; sourceTree = "<group>"; };
 		AF4A652D1E681EC5000278CD /* ContentPolicyDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentPolicyDetector.swift; path = JSEngine/ContentPolicyDetector.swift; sourceTree = "<group>"; };
 		AF4A652E1E681EC5000278CD /* InterceptorURLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterceptorURLProtocol.swift; path = JSEngine/InterceptorURLProtocol.swift; sourceTree = "<group>"; };
 		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		AF7ED4B91F39AEF000E41737 /* StateAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateAnimator.swift; path = "Conversational Native/StateAnimator.swift"; sourceTree = "<group>"; };
+		AF7ED4C91F39B83B00E41737 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
+		AF7ED4CB1F39D62C00E41737 /* HistoryDetailsLeftCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsLeftCell.swift; sourceTree = "<group>"; };
+		AF7ED4CF1F39EBCD00E41737 /* HistoryDetailsRightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsRightCell.swift; sourceTree = "<group>"; };
 		AF82661D1EB09FBA0023C77C /* LandscapeFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LandscapeFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661E1EB09FBA0023C77C /* PortraitFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitFlowLayout.swift; sourceTree = "<group>"; };
 		AF82661F1EB09FBA0023C77C /* TabViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewCell.swift; sourceTree = "<group>"; };
@@ -2419,19 +2400,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1E79DEE01D5098F6006BEB4A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1E79DEE11D5098F6006BEB4A /* Deferred.framework in Frameworks */,
-				1E79DEE21D5098F6006BEB4A /* libz.tbd in Frameworks */,
-				1E79DEE31D5098F6006BEB4A /* KIF.framework in Frameworks */,
-				1E79DEE41D5098F6006BEB4A /* IOKit.framework in Frameworks */,
-				1E79DEE51D5098F6006BEB4A /* CoreGraphics.framework in Frameworks */,
-				B8E12F8F6E0F19668C86A081 /* Pods_CliqzUITests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2827315A1ABC9BE600AA1954 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2867,6 +2835,7 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				AF4541231F309D3D00979B7D /* Conversational Native */,
 				AF2C3DE21EEFDEF1005DD628 /* Conversational History */,
 				1E47067E1EB0952000516BA5 /* Settings */,
 				AFA6F3DB1E67424700BA630B /* ControlCenter */,
@@ -4068,23 +4037,77 @@
 		AF2C3DE21EEFDEF1005DD628 /* Conversational History */ = {
 			isa = PBXGroup;
 			children = (
+				AF3BF5BD1F3C869400097346 /* Dashboard */,
+				AF3BF5BC1F3C7CDA00097346 /* History Navigation */,
+				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
+				AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */,
 				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
 				AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */,
-				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
-				AF2C3DE61EEFDEF1005DD628 /* CINotificationManager.swift */,
-				AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */,
-				AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */,
-				AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */,
-				AF2C3DEA1EEFDEF1005DD628 /* ConversationalHistory.swift */,
-				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
-				AF2C3DEC1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift */,
-				AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */,
-				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
 				AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */,
-				AF2C3DF01EEFDEF1005DD628 /* NewsDataSource.swift */,
-				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
+				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
+				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
+				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
 			);
 			path = "Conversational History";
+			sourceTree = "<group>";
+		};
+		AF3BF5B81F3C7A6400097346 /* RecommendationsCollection */ = {
+			isa = PBXGroup;
+			children = (
+				AF3BF5B41F3C79AA00097346 /* RecommedationsCollectionView.swift */,
+				AF3BF5B61F3C79ED00097346 /* RecommendationsCell.swift */,
+			);
+			name = RecommendationsCollection;
+			sourceTree = "<group>";
+		};
+		AF3BF5B91F3C7B0D00097346 /* Data Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AF3BF5B21F3C797500097346 /* RecommendationsDataSource.swift */,
+				AF2C3DED1EEFDEF1005DD628 /* HistoryDataSource.swift */,
+				AF2C3DE71EEFDEF1005DD628 /* CliqzHistoryDetailsDataSource.swift */,
+				AF2C3DE81EEFDEF1005DD628 /* CliqzNewsDetailsDataSource.swift */,
+			);
+			name = "Data Sources";
+			sourceTree = "<group>";
+		};
+		AF3BF5BA1F3C7B3900097346 /* HistoryDetails */ = {
+			isa = PBXGroup;
+			children = (
+				AF2C3DEC1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift */,
+				AF7ED4CB1F39D62C00E41737 /* HistoryDetailsLeftCell.swift */,
+				AF7ED4CF1F39EBCD00E41737 /* HistoryDetailsRightCell.swift */,
+				AF3BF5B81F3C7A6400097346 /* RecommendationsCollection */,
+			);
+			name = HistoryDetails;
+			sourceTree = "<group>";
+		};
+		AF3BF5BB1F3C7B7F00097346 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				AF2C3DEA1EEFDEF1005DD628 /* ConversationalHistory.swift */,
+				AF7ED4C91F39B83B00E41737 /* HistoryCell.swift */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
+		AF3BF5BC1F3C7CDA00097346 /* History Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				AF2C3DE91EEFDEF1005DD628 /* ConversationalContainer.swift */,
+				AF3BF5BB1F3C7B7F00097346 /* History */,
+				AF3BF5BA1F3C7B3900097346 /* HistoryDetails */,
+				AF3BF5B91F3C7B0D00097346 /* Data Sources */,
+			);
+			name = "History Navigation";
+			sourceTree = "<group>";
+		};
+		AF3BF5BD1F3C869400097346 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				AF3BF5C01F3C871E00097346 /* DashViewController.swift */,
+			);
+			name = Dashboard;
 			sourceTree = "<group>";
 		};
 		AF4540F61F2A33A000979B7D /* Fonts */ = {
@@ -4102,6 +4125,18 @@
 				AF4541001F2A33A000979B7D /* Zocial.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		AF4541231F309D3D00979B7D /* Conversational Native */ = {
+			isa = PBXGroup;
+			children = (
+				AF7ED4B91F39AEF000E41737 /* StateAnimator.swift */,
+				AF4541241F309DE800979B7D /* MainContainerViewController.swift */,
+				AF4541261F309F1100979B7D /* MainContainerLogic.swift */,
+				AF4541281F309F5900979B7D /* URLBarViewController.swift */,
+				AF45412A1F309F7200979B7D /* URLBarLogic.swift */,
+			);
+			name = "Conversational Native";
 			sourceTree = "<group>";
 		};
 		AF82661C1EB09FBA0023C77C /* Tab Redesign */ = {
@@ -4717,7 +4752,6 @@
 				7BEB644D1C7345600092C02E /* L10nSnapshotTests.xctest */,
 				7BEB645A1C7345990092C02E /* MarketingUITests.xctest */,
 				3905274A1C874D35007E0BB7 /* Today.appex */,
-				1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4983,28 +5017,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1E79DEBE1D5098F6006BEB4A /* CliqzUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1E79DEF41D5098F6006BEB4A /* Build configuration list for PBXNativeTarget "CliqzUITests" */;
-			buildPhases = (
-				B116C63843F13793C54A97E4 /* [CP] Check Pods Manifest.lock */,
-				1E79DEC11D5098F6006BEB4A /* Sources */,
-				1E79DEE01D5098F6006BEB4A /* Frameworks */,
-				1E79DEE61D5098F6006BEB4A /* Resources */,
-				1E79DEF21D5098F6006BEB4A /* CopyFiles */,
-				83F408CD9FF601CCD8C2CF3C /* [CP] Embed Pods Frameworks */,
-				7C6D6E0694F1E8F5E0F63C7E /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1E79DEBF1D5098F6006BEB4A /* PBXTargetDependency */,
-			);
-			name = CliqzUITests;
-			productName = UITests;
-			productReference = 1E79DEFB1D5098F6006BEB4A /* CliqzUITests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		2827315D1ABC9BE600AA1954 /* Sync */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 282731971ABC9BE800AA1954 /* Build configuration list for PBXNativeTarget "Sync" */;
@@ -5407,11 +5419,6 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Mozilla;
 				TargetAttributes = {
-					1E79DEBE1D5098F6006BEB4A = {
-						DevelopmentTeam = 2UYYSSHVUH;
-						LastSwiftMigration = 0820;
-						ProvisioningStyle = Automatic;
-					};
 					2827315D1ABC9BE600AA1954 = {
 						CreatedOnToolsVersion = 6.2;
 						LastSwiftMigration = 0820;
@@ -5585,7 +5592,6 @@
 				E6F9650B1B2F1CF20034B023 /* SharedTests */,
 				7BEB64401C7345600092C02E /* L10nSnapshotTests */,
 				7BEB644F1C7345990092C02E /* MarketingUITests */,
-				1E79DEBE1D5098F6006BEB4A /* CliqzUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -5706,20 +5712,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1E79DEE61D5098F6006BEB4A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1E79DEEE1D5098F6006BEB4A /* youtube.ico in Resources */,
-				1E79DEEF1D5098F6006BEB4A /* KIFHelper.js in Resources */,
-				1E79DF001D50998D006BEB4A /* Info.plist in Resources */,
-				1ECAE3421DA4EE5800CB8102 /* es5tests.json in Resources */,
-				1ECAE3431DA4EE5800CB8102 /* es6tests.json in Resources */,
-				1ECAE3411DA4EE5800CB8102 /* es6-promise.js in Resources */,
-				1ECAE3401DA4EE5800CB8102 /* core.js in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2827315C1ABC9BE600AA1954 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6073,36 +6065,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		7C6D6E0694F1E8F5E0F63C7E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		83F408CD9FF601CCD8C2CF3C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8CAA59E7506CB34AEF609A18 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6116,21 +6078,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Client/Pods-Client-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B116C63843F13793C54A97E4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */ = {
@@ -6150,22 +6097,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1E79DEC11D5098F6006BEB4A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7C44750D1E07F84F008E34E6 /* BrowserToolbarTest.swift in Sources */,
-				1E79DEFE1D509981006BEB4A /* CliqzUITests.swift in Sources */,
-				7C4474F81E07F6B2008E34E6 /* SettingsTest.swift in Sources */,
-				1E79DEFF1D509986006BEB4A /* Global.swift in Sources */,
-				7C346B221E1D313D00C1FD3B /* AntiPhishingTest.swift in Sources */,
-				7C4475091E07F7BF008E34E6 /* TabsManagerTest.swift in Sources */,
-				7C44750B1E07F83F008E34E6 /* URLBarTest.swift in Sources */,
-				7C4475111E097001008E34E6 /* FreshTabTest.swift in Sources */,
-				7C44750F1E07FA6A008E34E6 /* CliqzTestsExtension.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		282731591ABC9BE600AA1954 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6598,6 +6529,7 @@
 				7B59FC411C68E9B600F58EF5 /* SWLongPressGestureRecognizer.m in Sources */,
 				3BCE6D3C1CEB9E4D0080928C /* ThirdPartySearchAlerts.swift in Sources */,
 				1E79DEA21D508368006BEB4A /* AWSSTSService.m in Sources */,
+				AF45412B1F309F7200979B7D /* URLBarLogic.swift in Sources */,
 				745DAB301CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift in Sources */,
 				B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */,
 				1E79DD101D4FB2C5006BEB4A /* EventsLogger.swift in Sources */,
@@ -6622,6 +6554,7 @@
 				1EB293F11DB7D08F00D852C8 /* ElementAtPoint.swift in Sources */,
 				0B62EFD21AD63CD100ACB9CD /* Clearables.swift in Sources */,
 				1E79DD0B1D4FB2C5006BEB4A /* StringExtension.swift in Sources */,
+				AF7ED4CD1F39D62C00E41737 /* HistoryDetailsLeftCell.swift in Sources */,
 				1E47068B1EB0952000516BA5 /* SettingsActivity.swift in Sources */,
 				1E79DE781D508368006BEB4A /* AWSBolts.m in Sources */,
 				D3BE7B481B05596800641031 /* AuroraAppDelegate.swift in Sources */,
@@ -6663,7 +6596,7 @@
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
-				AF2C3DF51EEFDEF1005DD628 /* CINotificationManager.swift in Sources */,
+				AF7ED4D01F39EBCD00E41737 /* HistoryDetailsRightCell.swift in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
 				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
@@ -6675,8 +6608,9 @@
 				AF2C3DFA1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift in Sources */,
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
+				AF4541271F309F1100979B7D /* MainContainerLogic.swift in Sources */,
 				AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */,
-				AF2C3DFF1EEFDEF1005DD628 /* NewsDataSource.swift in Sources */,
+				AF2C3DFF1EEFDEF1005DD628 /* NewsManager.swift in Sources */,
 				0BB5B30B1AC0AD1F0052877D /* LoginsHelper.swift in Sources */,
 				B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */,
 				1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */,
@@ -6719,6 +6653,7 @@
 				E6927EC01C7B6FB800D03F75 /* ErrorToast.swift in Sources */,
 				AF4A652F1E681EC5000278CD /* BlockedRequestsCache.swift in Sources */,
 				1E2DECAC1E818C2D003D76B7 /* SessionRestoreHelper.swift in Sources */,
+				AF4541291F309F5900979B7D /* URLBarViewController.swift in Sources */,
 				D30B101E1AA7F9C600C01CA3 /* HomePanels.swift in Sources */,
 				F84B22041A0910F600AAB793 /* AppDelegate.swift in Sources */,
 				AF8266211EB09FBA0023C77C /* PortraitFlowLayout.swift in Sources */,
@@ -6738,6 +6673,7 @@
 				D31A0FC71A65D6D000DC8C7E /* SearchSuggestClient.swift in Sources */,
 				1E79DD151D4FB2C5006BEB4A /* ErrorHandler.swift in Sources */,
 				0B7100481B4C72D60046AF87 /* FaviconFetcher.swift in Sources */,
+				AF3BF5B71F3C79ED00097346 /* RecommendationsCell.swift in Sources */,
 				1E79DE7D1D508368006BEB4A /* AWSTask.m in Sources */,
 				1E79DEA81D508368006BEB4A /* AWSLogging.m in Sources */,
 				A83E5AB71C1D993D0026D912 /* UIPasteboardExtensions.swift in Sources */,
@@ -6806,6 +6742,7 @@
 				AF2C3DF81EEFDEF1005DD628 /* ConversationalContainer.swift in Sources */,
 				AF2C3DFB1EEFDEF1005DD628 /* ConversationalHistoryDetails.swift in Sources */,
 				D3968F251A38FE8500CEFD3B /* TabManager.swift in Sources */,
+				AF4541251F309DE800979B7D /* MainContainerViewController.swift in Sources */,
 				2816F0001B33E05400522243 /* UIConstants.swift in Sources */,
 				1E79DD071D4FB2C5006BEB4A /* AppStatus.swift in Sources */,
 				7B59FC471C68E9B600F58EF5 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
@@ -6827,8 +6764,10 @@
 				1E79DE8A1D508368006BEB4A /* AWSMTLModel+NSCoding.m in Sources */,
 				1E79DE961D508368006BEB4A /* AWSNetworking.m in Sources */,
 				D3BE7B261B054D4400641031 /* main.swift in Sources */,
+				AF3BF5C11F3C871E00097346 /* DashViewController.swift in Sources */,
 				1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */,
 				0BA1E02E1B046F1E007675AF /* ErrorPageHelper.swift in Sources */,
+				AF7ED4BA1F39AEF000E41737 /* StateAnimator.swift in Sources */,
 				1E79DD011D4FB2C5006BEB4A /* CustomPageControl.swift in Sources */,
 				1E79DE841D508368006BEB4A /* AWSFMDatabasePool.m in Sources */,
 				1E1CB9A31DD46C050098D980 /* FeedbackUI.swift in Sources */,
@@ -6850,6 +6789,7 @@
 				1E79DE871D508368006BEB4A /* AWSGZIP.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,
 				1E79DD0C1D4FB2C5006BEB4A /* UIDeviceExtension.swift in Sources */,
+				AF3BF5B31F3C797500097346 /* RecommendationsDataSource.swift in Sources */,
 				1E2DEC831E816516003D76B7 /* WebViewBackForward.swift in Sources */,
 				7BC68CC61CC152B70043562A /* MenuItem.swift in Sources */,
 				1E79DE831D508368006BEB4A /* AWSFMDatabaseAdditions.m in Sources */,
@@ -6860,6 +6800,7 @@
 				1E79DE9C1D508368006BEB4A /* AWSURLResponseSerialization.m in Sources */,
 				1E79DE7F1D508368006BEB4A /* AWSCognitoIdentityModel.m in Sources */,
 				AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */,
+				AF3BF5B51F3C79AA00097346 /* RecommedationsCollectionView.swift in Sources */,
 				1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
@@ -6895,6 +6836,7 @@
 				59A68FD5260B8D520F890F4A /* ReaderPanel.swift in Sources */,
 				7BC68CC91CC152B70043562A /* PagingMenuItemCollectionViewLayout.swift in Sources */,
 				E40FAB0C1A7ABB77009CB80D /* WebServer.swift in Sources */,
+				AF7ED4CA1F39B83B00E41737 /* HistoryCell.swift in Sources */,
 				59A68D66379CFA85C4EAF00B /* TwoLineCell.swift in Sources */,
 				1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */,
 				1E79DD4F1D4FB2F8006BEB4A /* AWSSNSResources.m in Sources */,
@@ -6976,11 +6918,6 @@
 			isa = PBXTargetDependency;
 			name = sqlcipher;
 			targetProxy = 0B742CCD1B32493800EE9264 /* PBXContainerItemProxy */;
-		};
-		1E79DEBF1D5098F6006BEB4A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F84B21BD1A090F8100AAB793 /* Client */;
-			targetProxy = 1E79DEC01D5098F6006BEB4A /* PBXContainerItemProxy */;
 		};
 		2827316B1ABC9BE700AA1954 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7491,72 +7428,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1E79DEF51D5098F6006BEB4A /* Fennec */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC51CC4D525D25940DC5DDFD /* Pods-CliqzUITests.fennec.xcconfig */;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armvs7,
-				);
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
-				INFOPLIST_FILE = CliqzUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/UITests/UITests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
-			};
-			name = Fennec;
-		};
-		1E79DEF61D5098F6006BEB4A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D6190F787A21B83507F5D076 /* Pods-CliqzUITests.release.xcconfig */;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armvs7,
-				);
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
-				INFOPLIST_FILE = "UITests copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Client.app/Client";
-			};
-			name = Release;
-		};
-		1E79DEF71D5098F6006BEB4A /* Firefox */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59C27E7A4623DF4A38E40D8D /* Pods-CliqzUITests.firefox.xcconfig */;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armvs7,
-				);
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.allizom.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Firefox;
-		};
 		282731771ABC9BE800AA1954 /* Fennec */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7732,13 +7603,14 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
-				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ";
+				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_FENNEC -DCLIQZ -Onone";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.Today;
 				PRODUCT_NAME = Today;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Fennec;
@@ -7760,7 +7632,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/Today/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.Today;
@@ -7868,7 +7740,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9F800417F20F999EBD2853A9 /* Pods-Client.firefox.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -7895,7 +7767,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = "Talk to me";
 				MOZ_BUNDLE_ID = hackDay.cliqz.com;
@@ -7961,7 +7833,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7989,7 +7861,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/SendTo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8241,7 +8113,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ViewLater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8268,7 +8140,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ViewLater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8508,7 +8380,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7D662A3F76EB2F38FE1CBD07 /* Pods-Client.fennec.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -8537,7 +8409,7 @@
 					"$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)/include/**",
 				);
 				INFOPLIST_FILE = Client/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MOZ_BUNDLE_DISPLAY_NAME = "Talk to me";
 				MOZ_BUNDLE_ID = hackDay.cliqz.com;
@@ -8598,7 +8470,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/ShareTo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ShareTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8626,7 +8498,7 @@
 					"$(PROJECT_DIR)/ThirdParty/Lookback/Safe",
 				);
 				INFOPLIST_FILE = Extensions/SendTo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8640,16 +8512,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1E79DEF41D5098F6006BEB4A /* Build configuration list for PBXNativeTarget "CliqzUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1E79DEF51D5098F6006BEB4A /* Fennec */,
-				1E79DEF61D5098F6006BEB4A /* Release */,
-				1E79DEF71D5098F6006BEB4A /* Firefox */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Fennec;
-		};
 		282731971ABC9BE800AA1954 /* Build configuration list for PBXNativeTarget "Sync" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
