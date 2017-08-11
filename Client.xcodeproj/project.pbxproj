@@ -637,6 +637,13 @@
 		AFA6F3E81E67424700BA630B /* OrientationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E11E67424700BA630B /* OrientationUtil.swift */; };
 		AFA6F3E91E67424700BA630B /* TrackerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */; };
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
+		AFD9F5FD1F3DB07200215365 /* ExpandableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F5FB1F3DB07200215365 /* ExpandableView.swift */; };
+		AFD9F5FE1F3DB07200215365 /* ExpandableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F5FC1F3DB07200215365 /* ExpandableViewCell.swift */; };
+		AFD9F60E1F3DB47100215365 /* DashRemindersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F60D1F3DB47100215365 /* DashRemindersDataSource.swift */; };
+		AFD9F6101F3DB48300215365 /* DashRecommendationsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F60F1F3DB48300215365 /* DashRecommendationsDataSource.swift */; };
+		AFD9F61E1F3E10E100215365 /* CustomDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61C1F3E10E100215365 /* CustomDots.swift */; };
+		AFD9F61F1F3E10E100215365 /* SurfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61D1F3E10E100215365 /* SurfViewController.swift */; };
+		AFD9F6211F3E10F700215365 /* PageNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		AFF2B67A1EFA9F1000475971 /* CIReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */; };
 		AFF2B68A1EFAA8C500475971 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF2B6891EFAA8C500475971 /* UserNotifications.framework */; };
@@ -2096,6 +2103,13 @@
 		AFA6F3E11E67424700BA630B /* OrientationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationUtil.swift; sourceTree = "<group>"; };
 		AFA6F3E21E67424700BA630B /* TrackerViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerViewCell.swift; sourceTree = "<group>"; };
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
+		AFD9F5FB1F3DB07200215365 /* ExpandableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableView.swift; sourceTree = "<group>"; };
+		AFD9F5FC1F3DB07200215365 /* ExpandableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableViewCell.swift; sourceTree = "<group>"; };
+		AFD9F60D1F3DB47100215365 /* DashRemindersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashRemindersDataSource.swift; sourceTree = "<group>"; };
+		AFD9F60F1F3DB48300215365 /* DashRecommendationsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashRecommendationsDataSource.swift; sourceTree = "<group>"; };
+		AFD9F61C1F3E10E100215365 /* CustomDots.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDots.swift; sourceTree = "<group>"; };
+		AFD9F61D1F3E10E100215365 /* SurfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfViewController.swift; sourceTree = "<group>"; };
+		AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageNavigationViewController.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIReminderManager.swift; sourceTree = "<group>"; };
 		AFF2B6891EFAA8C500475971 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
@@ -4037,8 +4051,7 @@
 		AF2C3DE21EEFDEF1005DD628 /* Conversational History */ = {
 			isa = PBXGroup;
 			children = (
-				AF3BF5BD1F3C869400097346 /* Dashboard */,
-				AF3BF5BC1F3C7CDA00097346 /* History Navigation */,
+				AFD9F6111F3DB86200215365 /* Page Navigation */,
 				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
 				AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */,
 				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
@@ -4106,6 +4119,10 @@
 			isa = PBXGroup;
 			children = (
 				AF3BF5C01F3C871E00097346 /* DashViewController.swift */,
+				AFD9F5FB1F3DB07200215365 /* ExpandableView.swift */,
+				AFD9F5FC1F3DB07200215365 /* ExpandableViewCell.swift */,
+				AFD9F60D1F3DB47100215365 /* DashRemindersDataSource.swift */,
+				AFD9F60F1F3DB48300215365 /* DashRecommendationsDataSource.swift */,
 			);
 			name = Dashboard;
 			sourceTree = "<group>";
@@ -4177,6 +4194,18 @@
 				AFB749941E6076DB00195004 /* AdblockingModule.swift */,
 			);
 			name = Adblocking;
+			sourceTree = "<group>";
+		};
+		AFD9F6111F3DB86200215365 /* Page Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */,
+				AFD9F61C1F3E10E100215365 /* CustomDots.swift */,
+				AFD9F61D1F3E10E100215365 /* SurfViewController.swift */,
+				AF3BF5BD1F3C869400097346 /* Dashboard */,
+				AF3BF5BC1F3C7CDA00097346 /* History Navigation */,
+			);
+			name = "Page Navigation";
 			sourceTree = "<group>";
 		};
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
@@ -6522,6 +6551,7 @@
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
 				1E79DE791D508368006BEB4A /* AWSCancellationToken.m in Sources */,
 				7B0B1B9D1C1B6A3F00DF4AB5 /* InstructionsViewController.swift in Sources */,
+				AFD9F61E1F3E10E100215365 /* CustomDots.swift in Sources */,
 				AF8266221EB09FBA0023C77C /* TabViewCell.swift in Sources */,
 				1E79DD281D4FB2C5006BEB4A /* RecommendationsViewController.swift in Sources */,
 				D308E4E41A5306F500842685 /* SearchEngines.swift in Sources */,
@@ -6542,6 +6572,7 @@
 				AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */,
 				7BC68CC71CC152B70043562A /* MenuItemImageView.swift in Sources */,
 				1E79DE7C1D508368006BEB4A /* AWSExecutor.m in Sources */,
+				AFD9F61F1F3E10E100215365 /* SurfViewController.swift in Sources */,
 				D301AAEE1A3A55B70078DD1D /* TabTrayController.swift in Sources */,
 				1E79DD1C1D4FB2C5006BEB4A /* SessionState.swift in Sources */,
 				0B3E7D951B27A7CE00E2E84D /* AboutHomeHandler.swift in Sources */,
@@ -6559,12 +6590,14 @@
 				1E79DE781D508368006BEB4A /* AWSBolts.m in Sources */,
 				D3BE7B481B05596800641031 /* AuroraAppDelegate.swift in Sources */,
 				1E79DD131D4FB2C5006BEB4A /* AWSSNSManager.swift in Sources */,
+				AFD9F6101F3DB48300215365 /* DashRecommendationsDataSource.swift in Sources */,
 				C40046FA1CF8E0B200B08303 /* BackForwardListAnimator.swift in Sources */,
 				1E79DEA41D508368006BEB4A /* AWSTMDiskCache.m in Sources */,
 				1E79DE7B1D508368006BEB4A /* AWSCancellationTokenSource.m in Sources */,
 				1E79DEA01D508368006BEB4A /* AWSSTSModel.m in Sources */,
 				1E79DE811D508368006BEB4A /* AWSCognitoIdentityService.m in Sources */,
 				1E79DE851D508368006BEB4A /* AWSFMDatabaseQueue.m in Sources */,
+				AFD9F60E1F3DB47100215365 /* DashRemindersDataSource.swift in Sources */,
 				DD31E0FB1B382B520077078A /* TabPrintPageRenderer.swift in Sources */,
 				4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */,
 				1E79DE941D508368006BEB4A /* NSValueTransformer+AWSMTLInversionAdditions.m in Sources */,
@@ -6689,6 +6722,7 @@
 				D3972BF41C22412B00035B87 /* TitleActivityItemProvider.swift in Sources */,
 				1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */,
 				1E1865101D5B2B580079B2CE /* LegacyJSContext.m in Sources */,
+				AFD9F5FE1F3DB07200215365 /* ExpandableViewCell.swift in Sources */,
 				1E79DEA71D508368006BEB4A /* AWSCategory.m in Sources */,
 				1E79DD2C1D4FB2C5006BEB4A /* YoutubeVideoDownloaderActivity.swift in Sources */,
 				1E79DE931D508368006BEB4A /* NSObject+AWSMTLComparisonAdditions.m in Sources */,
@@ -6719,6 +6753,7 @@
 				1E79DD091D4FB2C5006BEB4A /* BrowserProfileExtension.swift in Sources */,
 				1E79DE911D508368006BEB4A /* NSDictionary+AWSMTLManipulationAdditions.m in Sources */,
 				AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */,
+				AFD9F6211F3E10F700215365 /* PageNavigationViewController.swift in Sources */,
 				392ED6B71D06E85E009D9B62 /* NewTabChoiceViewController.swift in Sources */,
 				4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */,
 				1E79DE881D508368006BEB4A /* AWSMTLJSONAdapter.m in Sources */,
@@ -6757,6 +6792,7 @@
 				1E79DE7E1D508368006BEB4A /* AWSTaskCompletionSource.m in Sources */,
 				7B59FC3E1C68E9B600F58EF5 /* SWCellScrollView.m in Sources */,
 				B354B5E01E5C86C5001B38A1 /* JSBridge.swift in Sources */,
+				AFD9F5FD1F3DB07200215365 /* ExpandableView.swift in Sources */,
 				1E79DE981D508368006BEB4A /* AWSReachability.m in Sources */,
 				1E79DE8D1D508368006BEB4A /* AWSMTLValueTransformer.m in Sources */,
 				B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */,

@@ -154,6 +154,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let viewController = MainContainerViewController()
         
+//        let viewController = DashViewController()
+        
 //        let viewController    = ConversationalContainer()
 
         browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)

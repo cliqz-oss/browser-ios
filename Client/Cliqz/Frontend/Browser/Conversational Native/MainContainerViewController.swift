@@ -11,7 +11,7 @@ import UIKit
 class MainContainerViewController: UIViewController {
     
     private let URLBarVC = URLBarViewController()
-    private let ConversationalVC = ConversationalContainer()
+    private let ConversationalVC = PageNavigationViewController()//DashViewController()//ConversationalContainer()
     private let backgroundImage = UIImageView()
 
     override func viewDidLoad() {
