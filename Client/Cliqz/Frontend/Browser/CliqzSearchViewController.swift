@@ -449,6 +449,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         
         let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.excludedActivityTypes = [.assignToContact]
         
         activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
             if let target = activityType?.rawValue {
