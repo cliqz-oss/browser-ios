@@ -2049,20 +2049,20 @@
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
 		AC51CC4D525D25940DC5DDFD /* Pods-CliqzUITests.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.fennec.xcconfig"; sourceTree = "<group>"; };
-		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserActions.m; sourceTree = "<group>"; };
-		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserActions.swift; sourceTree = "<group>"; };
-		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
+		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrowserActions.m; path = "Conversational History/BrowserActions.m"; sourceTree = "<group>"; };
+		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserActions.swift; path = "Conversational History/BrowserActions.swift"; sourceTree = "<group>"; };
+		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CIDatePickerViewController.swift; path = "Conversational History/CIDatePickerViewController.swift"; sourceTree = "<group>"; };
 		AF2C3DE71EEFDEF1005DD628 /* DomainDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DE81EEFDEF1005DD628 /* NewsDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DE91EEFDEF1005DD628 /* HistoryNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryNavigationViewController.swift; sourceTree = "<group>"; };
 		AF2C3DEA1EEFDEF1005DD628 /* DomainsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsViewController.swift; sourceTree = "<group>"; };
-		AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationalHistoryAPI.swift; sourceTree = "<group>"; };
+		AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationalHistoryAPI.swift; path = "Conversational History/ConversationalHistoryAPI.swift"; sourceTree = "<group>"; };
 		AF2C3DEC1EEFDEF1005DD628 /* DomainDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsViewController.swift; sourceTree = "<group>"; };
 		AF2C3DED1EEFDEF1005DD628 /* DomainsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsDataSource.swift; sourceTree = "<group>"; };
-		AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
-		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryModuleBridge.m; sourceTree = "<group>"; };
-		AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsManager.swift; sourceTree = "<group>"; };
-		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadNewsManager.swift; sourceTree = "<group>"; };
+		AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HistoryModule.swift; path = "Conversational History/HistoryModule.swift"; sourceTree = "<group>"; };
+		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryModuleBridge.m; path = "Conversational History/HistoryModuleBridge.m"; sourceTree = "<group>"; };
+		AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewsManager.swift; path = "Conversational History/NewsManager.swift"; sourceTree = "<group>"; };
+		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReadNewsManager.swift; path = "Conversational History/ReadNewsManager.swift"; sourceTree = "<group>"; };
 		AF2C3E141EEFED79005DD628 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = JSEngine/History.swift; sourceTree = "<group>"; };
 		AF2C3E241EEFEDB2005DD628 /* HistoryBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryBridge.m; path = JSEngine/HistoryBridge.m; sourceTree = "<group>"; };
 		AF3BF5B21F3C797500097346 /* RecommendationsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsDataSource.swift; sourceTree = "<group>"; };
@@ -2853,6 +2853,7 @@
 		1E79DCC61D4FB2C5006BEB4A /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				AFC021B31F420990003B820C /* Conversational UI */,
 				AF4541231F309D3D00979B7D /* Conversational Native */,
 				AF2C3DE21EEFDEF1005DD628 /* Conversational History */,
 				1E47067E1EB0952000516BA5 /* Settings */,
@@ -4055,16 +4056,6 @@
 		AF2C3DE21EEFDEF1005DD628 /* Conversational History */ = {
 			isa = PBXGroup;
 			children = (
-				AFC8E5511F41AF1C004822D5 /* Reusable Components */,
-				AFD9F6111F3DB86200215365 /* Page Navigation */,
-				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
-				AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */,
-				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
-				AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */,
-				AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */,
-				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
-				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
-				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
 			);
 			path = "Conversational History";
 			sourceTree = "<group>";
@@ -4189,6 +4180,23 @@
 			name = Adblocking;
 			sourceTree = "<group>";
 		};
+		AFC021B31F420990003B820C /* Conversational UI */ = {
+			isa = PBXGroup;
+			children = (
+				AFC8E5511F41AF1C004822D5 /* Reusable Components */,
+				AFD9F6111F3DB86200215365 /* Page Navigation */,
+				AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */,
+				AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */,
+				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
+				AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */,
+				AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */,
+				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
+				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
+				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
+			);
+			name = "Conversational UI";
+			sourceTree = "<group>";
+		};
 		AFC8E5511F41AF1C004822D5 /* Reusable Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -4199,6 +4207,7 @@
 				AFD9F61D1F3E10E100215365 /* SurfViewController.swift */,
 			);
 			name = "Reusable Components";
+			path = "Conversational History";
 			sourceTree = "<group>";
 		};
 		AFC8E5521F41AF37004822D5 /* ExpandableView */ = {
@@ -4228,6 +4237,7 @@
 				AF3BF5BC1F3C7CDA00097346 /* History Navigation */,
 			);
 			name = "Page Navigation";
+			path = "Conversational History";
 			sourceTree = "<group>";
 		};
 		B354B5AD1E5C59C5001B38A1 /* JSEngine */ = {
