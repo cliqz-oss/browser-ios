@@ -1,5 +1,5 @@
 //
-//  HistoryDetailsLeftCell.swift
+//  HistoryDetailsRightCell.swift
 //  Client
 //
 //  Created by Tim Palade on 8/8/17.
@@ -8,11 +8,10 @@
 
 import UIKit
 
-class HistoryDetailsLeftCell: UITableViewCell {
-
+class BubbleRightCell: UITableViewCell {
+    
     let titleLabel = UILabel()
-    let urlLabel = UILabel()
-    let timeLabel = UILabel()
+    let timeLabel  = UILabel()
     
     private let bubbleView = UIView()
     
@@ -22,14 +21,17 @@ class HistoryDetailsLeftCell: UITableViewCell {
         setupComponents()
         
         bubbleView.addSubview(titleLabel)
-        bubbleView.addSubview(urlLabel)
         bubbleView.addSubview(timeLabel)
         contentView.addSubview(bubbleView)
         
         setStyles()
         setConstraints()
-        
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     func setupComponents() {
         
@@ -40,53 +42,42 @@ class HistoryDetailsLeftCell: UITableViewCell {
         self.backgroundColor = UIColor.clear
         contentView.backgroundColor = UIColor.clear
         
-        bubbleView.backgroundColor = UIColor.white.withAlphaComponent(0.96)
         bubbleView.layer.cornerRadius = 10
+        bubbleView.backgroundColor = UIColor(colorString: "00B3EF")
         
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        urlLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = UIFont.systemFont(ofSize: 14)
         timeLabel.font = UIFont.systemFont(ofSize: 12)
         
-        urlLabel.textColor = UIColor.lightGray
-        timeLabel.textColor = UIColor.lightGray
+        titleLabel.textColor = UIColor.white
+        timeLabel.textColor = UIColor.white
         
         titleLabel.numberOfLines = 2
-        urlLabel.numberOfLines = 1
         timeLabel.numberOfLines = 1
+        
     }
     
     func setConstraints() {
         bubbleView.snp.makeConstraints { (make) in
-            make.top.equalTo(contentView).inset(10)
-            make.bottom.equalTo(contentView)
-            make.left.equalTo(contentView).offset(20)
-            make.width.equalTo(contentView.bounds.width * 0.94)
+            make.top.equalTo(self.contentView).inset(10)
+            make.bottom.equalTo(self.contentView)
+            make.right.equalTo(self.contentView).inset(20)
+            make.width.equalTo(self.contentView.bounds.width * 0.7)
         }
         
         titleLabel.snp.makeConstraints { (make) in
+            make.bottom.equalTo(self.bubbleView.snp.centerY).offset(9)
             make.left.equalTo(self.bubbleView).offset(10)
-            make.right.equalTo(self.bubbleView).inset(20)
-            make.bottom.equalTo(self.bubbleView.snp.centerY)
-        }
-        
-        urlLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self.bubbleView.snp.centerY).offset(6)
-            make.left.equalTo(bubbleView).offset(10)
-            make.right.equalTo(bubbleView).inset(44)
+            make.right.equalTo(self.bubbleView).inset(10)
         }
         
         timeLabel.snp.makeConstraints { (make) in
-            make.bottom.right.equalTo(bubbleView).inset(4)
+            make.bottom.right.equalTo(self.bubbleView).inset(4)
         }
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -94,5 +85,5 @@ class HistoryDetailsLeftCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+
 }

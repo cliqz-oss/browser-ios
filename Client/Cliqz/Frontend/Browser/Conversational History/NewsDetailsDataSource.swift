@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CliqzNewsDetailsDataSource: HistoryDetailsProtocol {
+class CliqzNewsDetailsDataSource: DomainDetailsProtocol {
     
     var img: UIImage?
     var articles:[[String:AnyObject]]
@@ -46,7 +46,7 @@ class CliqzNewsDetailsDataSource: HistoryDetailsProtocol {
         return 1
     }
     
-    func numberOfCells() -> Int {
+    func numberOfCells(section: Int) -> Int {
         return articles.count
     }
     

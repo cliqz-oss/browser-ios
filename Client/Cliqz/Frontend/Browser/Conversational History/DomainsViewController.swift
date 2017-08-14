@@ -11,7 +11,7 @@ import SnapKit
 import Alamofire
 import Shared
 
-protocol HistoryProtocol: class{
+protocol DomainsProtocol: class{
     func numberOfCells() -> Int
     func urlLabelText(indexPath:IndexPath) -> String
     func titleLabelText(indexPath:IndexPath) -> String
@@ -22,12 +22,12 @@ protocol HistoryProtocol: class{
     func notificationNumber(indexPath:IndexPath) -> Int
 }
 
-class ConversationalHistory: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class DomainsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	var historyTableView: UITableView!
-	let historyCellID = "HistoryCell"
+	let historyCellID = "DomainsCell"
     
-    var dataSource: HistoryDataSource = HistoryDataSource()
+    var dataSource: DomainsDataSource = DomainsDataSource()
     var first_appear:Bool = true
     
     var didPressCell:(_ indexPath:IndexPath, _ image: UIImage?) -> () = { _ in }
@@ -43,7 +43,7 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
 		}
 		self.historyTableView.delegate = self
 		self.historyTableView.dataSource = self
-		self.historyTableView.register(HistoryCell.self, forCellReuseIdentifier: historyCellID)
+		self.historyTableView.register(DomainsCell.self, forCellReuseIdentifier: historyCellID)
 		self.historyTableView.tableFooterView = UIView()
 		self.historyTableView.separatorStyle = .singleLine
 		self.historyTableView.separatorColor = UIColor.lightGray
@@ -82,7 +82,7 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-		let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID) as! HistoryCell
+		let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID) as! DomainsCell
 		cell.delegate = self
         cell.tag = indexPath.row
         
@@ -114,7 +114,7 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! HistoryCell
+        let cell = tableView.cellForRow(at: indexPath) as! DomainsCell
         let image = cell.logoButton.imageView?.image
         didPressCell(indexPath, image)
     }
@@ -137,7 +137,7 @@ class ConversationalHistory: UIViewController, UITableViewDataSource, UITableVie
 	
 }
 
-extension ConversationalHistory: HistoryActionDelegate {
+extension DomainsViewController: HistoryActionDelegate {
 	func didSelectLogo(atIndex index: Int) {
         if index == 0{
             //pressed on the cliqz news logo
@@ -152,7 +152,7 @@ extension ConversationalHistory: HistoryActionDelegate {
 	}
 }
 
-extension ConversationalHistory: KeyboardHelperDelegate {
+extension DomainsViewController: KeyboardHelperDelegate {
     
     func keyboardHelper(_ keyboardHelper: KeyboardHelper, keyboardWillShowWithState state: KeyboardState) {
         updateViewConstraints()

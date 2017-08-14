@@ -10,7 +10,7 @@ import Foundation
 
 //The data source for the ConversationalHistory View. 
 
-final class HistoryDataSource: NSObject, HistoryProtocol {
+final class DomainsDataSource: NSObject, DomainsProtocol {
     
     //Note: The mechanism is not robust enough to handle the failure of ConversationalHistoryAPI.getHistory
     //TO DO: Work on that.

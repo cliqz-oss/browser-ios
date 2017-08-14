@@ -8,14 +8,9 @@
 
 import UIKit
 
-// This manages the state of the User Interface for the Conversational Experiment components
-// Here you can find the definition for what should happen when a domain cell is pressed
-
-// Change changeState is the core method.
-
-final class ConversationalContainer: UIViewController {
+final class HistoryNavigationViewController: UIViewController {
     
-    var conversationalHistory: ConversationalHistory = ConversationalHistory()
+    var conversationalHistory: DomainsViewController = DomainsViewController()
     var searchController: CliqzSearchViewController?
     var nc: UINavigationController = UINavigationController()
     weak var browsing_delegate: BrowserNavigationDelegate?
@@ -61,8 +56,8 @@ final class ConversationalContainer: UIViewController {
         }
     }
     
-    private func setUpConversationalHistoryDetails(indexPath:IndexPath, image: UIImage?) -> ConversationalHistoryDetails {
-        let conversationalHistoryDetails = ConversationalHistoryDetails()
+    private func setUpConversationalHistoryDetails(indexPath:IndexPath, image: UIImage?) -> DomainDetailsViewController {
+        let conversationalHistoryDetails = DomainDetailsViewController()
         conversationalHistoryDetails.delegate = self.browsing_delegate
         conversationalHistoryDetails.didPressBack = {
             self.showConversationalHistory()
@@ -87,7 +82,7 @@ final class ConversationalContainer: UIViewController {
         return conversationalHistory.dataSource.domains[indexPath.row].domainDetails
     }
     
-    private func detailsDataSource(indexPath:IndexPath, image:UIImage?) -> HistoryDetailsProtocol? {
+    private func detailsDataSource(indexPath:IndexPath, image:UIImage?) -> DomainDetailsProtocol? {
         if indexPath.row == 0 {
             return CliqzNewsDetailsDataSource(image:image, articles: NewsDataSource.sharedInstance.articles)
         }

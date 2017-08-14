@@ -11,7 +11,7 @@ import UIKit
 class PageNavigationViewController: UIViewController {
     
     let pageControl = CustomDots(numberOfPages: 2)
-    let surfViewController = SurfViewController(viewControllers: [ConversationalContainer(), DashViewController()])
+    let surfViewController = SurfViewController(viewControllers: [HistoryNavigationViewController(), DashViewController()])
     
     
     //styling

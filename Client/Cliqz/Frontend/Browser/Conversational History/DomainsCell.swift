@@ -12,7 +12,7 @@ protocol HistoryActionDelegate: class {
     func didSelectLogo(atIndex index: Int)
 }
 
-class HistoryCell: UITableViewCell {
+class DomainsCell: UITableViewCell {
     
     let titleLabel = UILabel()
     let URLLabel = UILabel()
