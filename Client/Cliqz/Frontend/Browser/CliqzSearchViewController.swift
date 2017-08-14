@@ -418,7 +418,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     func unLoadShareCardWebView() {
         shareCardWebView.frame = CGRect.zero
         shareCardWebView.removeFromSuperview()
-        removeObserver(self, forKeyPath: CliqzSearchViewController.KVOLoading)
+        shareCardWebView.removeObserver(self, forKeyPath: CliqzSearchViewController.KVOLoading)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
