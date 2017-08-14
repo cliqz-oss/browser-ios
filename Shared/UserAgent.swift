@@ -84,7 +84,7 @@ open class UserAgent {
         }
 
         let mutableUA = NSMutableString(string: userAgent)
-        mutableUA.insert("FxiOS/\(appVersion) ", at: mobileRange.location)
+        mutableUA.insert("\(appVersion) ", at: mobileRange.location)
 
         let firefoxUA = "\(mutableUA) Safari/\(webKitVersion)"
 
@@ -105,7 +105,7 @@ open class UserAgent {
         userAgent.replaceCharacters(in: platformMatch.range, with: "(Macintosh; Intel Mac OS X 10_11_1)")
 
         // Strip mobile section
-        let mobileRegex = try! NSRegularExpression(pattern: " FxiOS/[^ ]+ Mobile/[^ ]+", options: [])
+        let mobileRegex = try! NSRegularExpression(pattern: "[^ ]+ Mobile/[^ ]+", options: [])
         guard let mobileMatch = mobileRegex.firstMatch(in: userAgent as String, options:[], range: NSMakeRange(0, userAgent.length)) else {
             print("Error: Unable to find Mobile section in UA.")
             return String(userAgent)

@@ -197,7 +197,7 @@ class QuerySuggestionView: UIView {
             self.isHidden = true
             return
         }
-        
+
         clearSuggestions()
         if OrientationUtil.isPortrait() {
             self.isHidden = false

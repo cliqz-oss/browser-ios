@@ -31,6 +31,17 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     fileprivate var lastQuery: String?
 
 	var webView: WKWebView?
+    lazy var shareCardWebView: WKWebView = {
+        let preferences = WKPreferences()
+        preferences.javaScriptEnabled = false
+        let configuration = WKWebViewConfiguration()
+        configuration.preferences = preferences
+        
+        let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
+        webView.navigationDelegate = self
+        return webView
+    }()
+    private static let KVOLoading = "loading"
     
     var privateMode = false
     
@@ -75,7 +86,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationShowBlockedTopSites), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
-
     }
 
 	override func viewDidLoad() {
@@ -87,7 +97,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		self.webView?.navigationDelegate = self
         self.webView?.scrollView.isScrollEnabled = false
         self.webView?.accessibilityLabel = "Web content"
-
         self.view.addSubview(self.webView!)
         
 
@@ -95,6 +104,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             make.top.equalTo(0)
             make.bottom.left.right.equalTo(self.view)
         }
+        
         
 		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 		self.view.addSubview(spinnerView)
@@ -108,7 +118,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: NSNotification.Name.UIDeviceOrientationDidChange, object: UIDevice.current)
         
         NotificationCenter.default.addObserver(self, selector: #selector(showOpenSettingsAlert(_:)), name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
-
 
     }
 
@@ -268,6 +277,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     //MARK: - WKWebView Delegate
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if webView == shareCardWebView {
+            decisionHandler(.allow)
+        }
+        
 		if !navigationAction.request.url!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
 //			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
 			decisionHandler(.cancel)
@@ -293,7 +306,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func userContentController(_ userContentController:  WKUserContentController, didReceive message: WKScriptMessage) {
 		javaScriptBridge.handleJSMessage(message)
 	}
-
+    
 	// Mark: AlertViewDelegate
 	func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 		switch (buttonIndex) {
@@ -358,6 +371,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         }
         return SettingsPrefs.getDefaultRegion()
     }
+	
     //MARK: - Reset TopSites
     func showBlockedTopSites(_ notification: Notification) {
         javaScriptBridge.publishEvent("restore-blocked-topsites")
@@ -389,6 +403,62 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+    
+    // MARK:- Share Card
+    func loadShareCardWebView(_ url: URL, frame: CGRect) {
+        self.view.addSubview(shareCardWebView)
+        shareCardWebView.frame = frame
+        shareCardWebView.load(URLRequest(url: url))
+        shareCardWebView.addObserver(self, forKeyPath: CliqzSearchViewController.KVOLoading,
+                                     options: .new, context: nil)
+        
+    }
+    
+    func unLoadShareCardWebView() {
+        shareCardWebView.frame = CGRect.zero
+        shareCardWebView.removeFromSuperview()
+        shareCardWebView.removeObserver(self, forKeyPath: CliqzSearchViewController.KVOLoading)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        guard let keyPath = keyPath else { return }
+        
+        switch keyPath {
+        case CliqzSearchViewController.KVOLoading:
+            guard let loading = change?[NSKeyValueChangeKey.newKey] as? Bool else { break }
+            
+            if (!loading) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+                    if let image = self?.shareCardWebView.screenshot(), let title = ShareCardHelper.sharedInstance.currentCardTitle {
+                        self?.presentShareCardActivityViewController(title, image: image)
+                        self?.unLoadShareCardWebView()
+                    }
+                })
+            }
+        default:break
+            
+        }
+    }
+    
+    func presentShareCardActivityViewController(_ title:String, image: UIImage) {
+        
+        var activityItems = [AnyObject]()
+        activityItems.append(TitleActivityItemProvider(title: title))
+        activityItems.append(image)
+        
+        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.excludedActivityTypes = [.assignToContact]
+        
+        activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+            if let target = activityType?.rawValue {
+                TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+            }
+            
+        }
+        present(activityViewController, animated: true, completion: nil)
+        
     }
 }
 
@@ -432,28 +502,6 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
     }
     
-    func shareCard(_ cardURL: String) {
-
-        // start by empty activity items
-        var activityItems = [AnyObject]()
-        
-        // add the url to activity items
-        activityItems.append(cardURL as AnyObject)
-        
-        // add cliqz footer to activity items
-        let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")
-        activityItems.append(FooterActivityItemProvider(footer: "\n\n\(footer)"))
-        
-        // creating the ActivityController and presenting it
-        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
-            self.present(activityViewController, animated: true, completion: nil)
-        } else {
-            let popup: UIPopoverController = UIPopoverController(contentViewController: activityViewController)
-            popup.present(from: CGRect(x: self.view.frame.size.width / 2, y: self.view.frame.size.height / 2, width: 0, height: 0), in: self.view, permittedArrowDirections: UIPopoverArrowDirection(), animated: true)
-        }
-    }
-    
     func autoCompeleteQuery(_ autoCompleteText: String) {
         delegate?.autoCompeleteQuery(autoCompleteText)
     }
@@ -464,5 +512,15 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}
+
+    func shareCard(_ card: String, title: String, width: Int, height: Int) {
+        let screenWidth = Int(UIScreen.main.bounds.width)
+        if let url = ShareCardHelper.shareCardURL {
+            ShareCardHelper.sharedInstance.currentCard = card
+            ShareCardHelper.sharedInstance.currentCardTitle = title
+            let cardFrame = CGRect(x: 2*screenWidth, y: 0, width: width, height: height)
+            loadShareCardWebView(url, frame: cardFrame)
+        }
+    }
 
 }
