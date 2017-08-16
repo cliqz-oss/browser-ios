@@ -247,7 +247,7 @@ class AppStatus {
         prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
         if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
-                let data = try JSONSerialization.data(withJSONObject: abTests, options: .prettyPrinted)
+                let data = try JSONSerialization.data(withJSONObject: abTests, options: [])
                 let stringifiedAbTests = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                 prefs["ABTests"]   = stringifiedAbTests
             } catch let error as NSError {
