@@ -26,30 +26,31 @@ node('ios-osx') {
         }
 
         stage('Appium') {
-        sh '''#!/bin/bash -l
-            cd external/auobots
-            ls
-            cd ../..
-            brew install node
-            npm install -g appium
-            npm install wd
-            appium &
-        '''
+            sh '''#!/bin/bash -l
+                cd external/auobots
+                ls
+                cd ../..
+                brew install node
+                npm install -g appium
+                npm install wd
+                appium &
+            '''
         }
 
         stage('Run Tests') {
-        sh '''#!/bin/bash -l 
-            git submodule init
-            git submodule update
-            cd external/auobots
-            git checkout development
-            export platformName="ios"
-            export udid="ADEE0E24-A523-48C9-AC91-BFD8762FC2E2"
-            export deviceName="iPhone 6"
-            export platformVersion="9.3"
-            chmod 0755 requirements.txt
-            sudo -H pip install -r requirements.txt
-            python testRunner.py | true
+            sh '''#!/bin/bash -l 
+                git submodule init
+                git submodule update
+                cd external/auobots
+                git checkout development
+                export platformName="ios"
+                export udid="ADEE0E24-A523-48C9-AC91-BFD8762FC2E2"
+                export deviceName="iPhone 6"
+                export platformVersion="9.3"
+                chmod 0755 requirements.txt
+                sudo -H pip install -r requirements.txt
+                python testRunner.py | true
+            '''
         }
 
         stage('Upload Results') {
