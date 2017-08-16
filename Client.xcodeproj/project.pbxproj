@@ -5598,8 +5598,7 @@
 		7B9A62DB1C4002B1005C83DC /* SQLite.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = SQLite.framework;
-			path = .framework;
+			path = SQLite.framework;
 			remoteRef = 7B9A62DA1C4002B1005C83DC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -8777,6 +8776,7 @@
 				82DF54321F4497F9001CE654 /* Firefox */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Fennec;
 		};
 		AFB8E59F1F179CD00048767A /* Build configuration list for PBXNativeTarget "Open In Cliqz" */ = {
 			isa = XCConfigurationList;
