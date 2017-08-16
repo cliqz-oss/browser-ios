@@ -38,7 +38,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.updateView()
 		}
 	}
-    fileprivate let configUrl = "http://newbeta.cliqz.com/api/v1/config"
+    fileprivate let configUrl = "https://newbeta.cliqz.com/api/v1/config"
     fileprivate let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
 	
 	// TODO: Change topSitesCollection to optional
@@ -319,9 +319,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 					if let location = data["location"] as? String, let backends = data["backends"] as? [String], backends.contains(location) {
 						
 						self.region = location.uppercased()
-						SettingsPrefs.updateRegionPref(self.region!)
 						self.loadNews()
+					} else {
+						self.region = SettingsPrefs.getDefaultRegion()
 					}
+					SettingsPrefs.updateRegionPref(self.region!)
 				}
             }
         }
