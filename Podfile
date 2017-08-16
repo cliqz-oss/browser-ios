@@ -24,9 +24,6 @@ target 'Client' do
     project_pods
 end
 
-target 'CliqzUITests' do
-    project_pods
-end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
