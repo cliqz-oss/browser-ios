@@ -2,8 +2,17 @@ node('ios-osx') {
     ws('ios-browser') {
         stage("Checkout") {
             checkout scm 
-            sh '''#!/bin/bash -l
-            	git submodule update --init'''
+            withCredentials([file(credentialsId: 'ceb2d5e9-fc88-418f-aa65-ce0e0d2a7ea1', variable: 'CLIQZ_CI_SSH_KEY')]) {
+                sh '''
+                /bin/bash -l
+                mkdir -p ~/.ssh
+                cp $CLIQZ_CI_SSH_KEY ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+                echo $CLIQZ_CI_SSH_KEY
+                ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+                git submodule update --init
+                '''
+            }
         }
         
         stage('Prepare') {
@@ -23,7 +32,7 @@ node('ios-osx') {
         stage('Build') {
             sh '''#!/bin/bash -l
                 rvm use ruby-2.4.0
-                xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=9.3,id=ADEE0E24-A523-48C9-AC91-BFD8762FC2E2" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -tc && exit ${PIPESTATUS[0]}
+                xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=9.3,id=ADEE0E24-A523-48C9-AC91-BFD8762FC2E2" ONLY_ACTIVE_ARCH=NO -derivedDataPath build test clean | xcpretty -tc && exit ${PIPESTATUS[0]}
             '''
         }
 
@@ -53,7 +62,7 @@ node('ios-osx') {
         step([
             $class: 'JUnitResultArchiver',
             allowEmptyResults: false,
-            testResults: "test-reports/*.xml"
+            testResults: "external/autobots/test-reports/*.xml"
         ])
         }
     }
