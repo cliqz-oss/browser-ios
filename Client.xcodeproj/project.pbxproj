@@ -6139,7 +6139,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SWXMLHash.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XCGLogger.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/GCDWebServers.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OnePasswordExtension.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Deferred.framework",
