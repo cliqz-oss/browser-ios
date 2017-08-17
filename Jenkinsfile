@@ -2,6 +2,8 @@ node('ios-osx') {
     ws('ios-browser') {
         stage("Checkout") {
             checkout scm 
+            sh '''#!/bin/bash -l
+            	git submodule update --init'''
         }
         
         stage('Prepare') {
@@ -27,9 +29,6 @@ node('ios-osx') {
 
         stage('Appium') {
             sh '''#!/bin/bash -l
-                cd external/auobots
-                ls
-                cd ../..
                 brew install node
                 npm install -g appium
                 npm install wd
@@ -39,10 +38,7 @@ node('ios-osx') {
 
         stage('Run Tests') {
             sh '''#!/bin/bash -l 
-                git submodule init
-                git submodule update
                 cd external/auobots
-                git checkout development
                 export platformName="ios"
                 export udid="ADEE0E24-A523-48C9-AC91-BFD8762FC2E2"
                 export deviceName="iPhone 6"
