@@ -232,7 +232,7 @@
 		1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6C1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m */; };
 		1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6F1D508368006BEB4A /* AWSXMLDictionary.m */; };
 		1E79DEAC1D508368006BEB4A /* AWSXMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE721D508368006BEB4A /* AWSXMLWriter.m */; };
-		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		1E97773C1E50EEAE0035EF60 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
 		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
@@ -5832,8 +5832,8 @@
 				E4B7B7621A793CF20022C5E0 /* CharisSILBI.ttf in Resources */,
 				1E79DDD41D507D26006BEB4A /* OnePasswordExtension.strings in Resources */,
 				7B4980A81CE363ED0017547C /* Settings.xcassets in Resources */,
-				1E97773C1E50EEAE0035EF60 /* (null) in Resources */,
-				1E97773C1E50EEAE0035EF60 /* (null) in Resources */,
+				1E97773C1E50EEAE0035EF60 /* BuildFile in Resources */,
+				1E97773C1E50EEAE0035EF60 /* BuildFile in Resources */,
 				E4A961361AC052DE0069AD6F /* ReadabilityTabHelper.js in Resources */,
 				1E79DDC81D507D26006BEB4A /* BookmarkPanelDeleteConfirm.strings in Resources */,
 				E4B7B7861A793CF20022C5E0 /* FiraSans-UltraLight.ttf in Resources */,
@@ -6024,7 +6024,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */ = {
@@ -8426,8 +8426,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$SRCROOT/,
-					$SDKROOT/usr/include/libxml2,
+					"$SRCROOT/",
+					"$SDKROOT/usr/include/libxml2",
 					"$SRCROOT/ThirdParty/**",
 				);
 				INFOPLIST_FILE = NativeRefTests/Other/Info.plist;
@@ -8448,8 +8448,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$SRCROOT/,
-					$SDKROOT/usr/include/libxml2,
+					"$SRCROOT/",
+					"$SDKROOT/usr/include/libxml2",
 					"$SRCROOT/ThirdParty/**",
 				);
 				INFOPLIST_FILE = NativeRefTests/Other/Info.plist;
