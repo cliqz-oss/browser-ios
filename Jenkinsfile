@@ -26,40 +26,47 @@ node('ios-osx') {
             echo A |./bootstrap.sh 
         '''
     }
-    
-    stage('Build') {
-        timeout(20) {
-            sh '''#!/bin/bash -l -x
-                rvm use ruby-2.4.0
-                xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=9.3,id=ADEE0E24-A523-48C9-AC91-BFD8762FC2E2" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -tc && exit ${PIPESTATUS[0]}
-            '''
-        }
-    }
-
-    stage('Appium') {
-        sh '''#!/bin/bash -l -x
-            brew install node
-            npm install -g appium
-            npm install wd
-            appium &
-        '''
-    }
-
-    stage('Run Tests') {
-        withEnv(['platformName=ios', 'udid=ADEE0E24-A523-48C9-AC91-BFD8762FC2E2', 'deviceName=iPhone 6', 'platformVersion=9.3']) {
-            timeout(30) {
+    try {        
+        stage('Build') {
+            timeout(20) {
                 sh '''#!/bin/bash -l -x
-                    cd external/autobots
-                    chmod 0755 requirements.txt
-                    sudo -H pip install -r requirements.txt
-                    python testRunner.py | true
-                    xcrun simctl uninstall booted cliqz.ios.CliqzBeta
+                    rvm use ruby-2.4.0
+                    xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=10.3.1,id=8F1A1F1B-4428-45F4-B282-DE628D9A54A1" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -tc && exit ${PIPESTATUS[0]}
                 '''
             }
         }
-    }
 
-    stage('Upload Results') {
-        junit "external/autobots/test-reports/*.xml"
+        stage('Appium') {
+            sh '''#!/bin/bash -l -x
+                brew install node
+                npm install -g appium
+                npm install wd
+                appium &
+            '''
+        }
+
+        stage('Run Tests') {
+            withEnv(['platformName=ios', 'udid=8F1A1F1B-4428-45F4-B282-DE628D9A54A1', 'deviceName=iPhone 6', 'platformVersion=10.3.1']) {
+                timeout(20) {
+                    sh '''#!/bin/bash -l -x
+                        cd external/autobots
+                        chmod 0755 requirements.txt
+                        sudo -H pip install -r requirements.txt
+                        python testRunner.py | true
+                    '''
+                }
+            }
+        }
+        stage('Upload Results') {
+            junit "external/autobots/test-reports/*.xml"
+        }
+    }
+    finally {
+        stage('Cleanup') {
+            sh '''#!/bin/bash -l -x
+                xcrun simctl uninstall booted cliqz.ios.CliqzBeta
+                rm -rf JSEngine
+            '''
+        }
     }
 }
