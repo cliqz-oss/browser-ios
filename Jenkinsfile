@@ -64,7 +64,7 @@ node('ios-osx') {
     finally {
         stage('Cleanup') {
             sh '''#!/bin/bash -l -x
-                xcrun simctl uninstall booted cliqz.ios.CliqzBeta
+                xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
                 rm -rf JSEngine
             '''
         }
