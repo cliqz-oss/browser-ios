@@ -29,7 +29,7 @@ public enum TelemetryLogEventType {
     case AntiPhishing            (String, String?, Int?)
     case ShareMenu            (String, String)
     case DashBoard            (String, String, String?, [String: Any]?)
-    case ContextMenu            (String, String)
+    case ContextMenu            (String, String, [String: Any]?)
     case QuerySuggestions        (String, [String: Any]?)
     case ControlCenter         (String, String?, String?, [String: Any]?)
 	case FreshTab (String, String?, [String: Any]?)
@@ -160,8 +160,8 @@ class TelemetryLogger : EventsLogger {
                 event = self.createDashBoardEvent(type, action: action, target: target, customData: customData)
                 
                 
-            case .ContextMenu (let target, let view):
-                event = self.createContextMenuEvent(target, view: view)
+            case .ContextMenu (let target, let view, let customData):
+                event = self.createContextMenuEvent(target, view: view, customData: customData)
             
             case .QuerySuggestions (let action, let customData):
                 event = self.createQuerySuggestionsEvent(action, customData: customData)
@@ -519,14 +519,18 @@ class TelemetryLogger : EventsLogger {
     }
     
     
-    fileprivate func createContextMenuEvent(_ target: String, view: String) -> [String: Any] {
+    fileprivate func createContextMenuEvent(_ target: String, view: String, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "context_menu"
         event["action"] = "click"
         event["target"] = target
         event["view"] = view
-        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
         return event
     }
     
