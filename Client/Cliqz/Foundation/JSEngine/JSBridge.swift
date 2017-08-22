@@ -71,7 +71,7 @@ open class JSBridge : RCTEventEmitter {
     open func callAction(_ functionName: String, args: Array<Any>) -> NSDictionary {
         // check listener is registered on other end
         guard self.registeredActions.contains(functionName) else {
-            debugPrint("ERROR: callAction - function not registered")
+            debugPrint("ERROR: callAction - function not registered: \(functionName)")
             return ["error": "function not registered"]
         }
         
