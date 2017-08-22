@@ -1,13 +1,15 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '8.0'
+platform :ios, '8.0'
 use_frameworks!
 
 def project_pods
     react_path = './JSEngine/node_modules/react-native'
     yoga_path = File.join(react_path, 'ReactCommon/yoga')
-    
+
     pod 'React', :path => './JSEngine/node_modules/react-native', :subspecs => [
     'Core',
+    'DevSupport',
+    'BatchedBridge',
     'RCTText',
     'RCTNetwork',
     'RCTWebSocket',
@@ -18,6 +20,7 @@ def project_pods
     pod 'RNFS', :path => './JSEngine/node_modules/react-native-fs'
     pod 'react-native-webrtc', :path => './JSEngine/node_modules/react-native-webrtc'
     pod 'RNDeviceInfo', :path => './JSEngine/node_modules/react-native-device-info'
+    pod 'RNSqlite2', :path => './JSEngine/node_modules/react-native-sqlite-2/ios/'
 end
 
 target 'Client' do
