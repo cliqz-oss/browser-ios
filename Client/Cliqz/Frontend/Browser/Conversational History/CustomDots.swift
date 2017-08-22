@@ -56,7 +56,6 @@ final class CustomDots: UIView {
     
     private func setStyling() {
         
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         dotContainer.backgroundColor = .clear
         
         if pageWithinBounds(page: currentPage) {

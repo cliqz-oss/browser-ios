@@ -8,28 +8,45 @@
 
 import UIKit
 
+protocol HasDataSource: class {
+    func dataSourceWasUpdated()
+}
+
+
 class MainContainerViewController: UIViewController {
     
-    private let URLBarVC = URLBarViewController()
-    private let ConversationalVC = PageNavigationViewController()//DashViewController()//ConversationalContainer()
     private let backgroundImage = UIImageView()
+    
+    private let URLBarVC = URLBarViewController()
+    private let ContentNavVC = ContentNavigationViewController()
+    private let ToolbarVC = ToolbarViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        backgroundImage.layer.zPosition = -100
-        backgroundImage.image = UIImage(named: "conversationalBG")
+        setUpComponent()
+        setStyling()
+        setConstraints()
+    }
+    
+    private func setUpComponent() {
         self.view.addSubview(backgroundImage)
-
-        // Do any additional setup after loading the view.
-        self.view.backgroundColor = UIColor(colorString: "E9E9E9")        
+        
         self.addChildViewController(URLBarVC)
         self.view.addSubview(URLBarVC.view)
         
-        self.addChildViewController(ConversationalVC)
-        self.view.addSubview(ConversationalVC.view)
+        self.addChildViewController(ToolbarVC)
+        self.view.addSubview(ToolbarVC.view)
         
-        setConstraints()
+        self.addChildViewController(ContentNavVC)
+        self.view.addSubview(ContentNavVC.view)
+        
+        Router.sharedInstance.registerController(viewController: ContentNavVC, as: .contentNavigation)
+    }
+    
+    private func setStyling() {
+        self.view.backgroundColor = UIColor(colorString: "E9E9E9")
+        backgroundImage.layer.zPosition = -100
+        backgroundImage.image = UIImage(named: "conversationalBG")
     }
     
     private func setConstraints() {
@@ -43,9 +60,15 @@ class MainContainerViewController: UIViewController {
             make.height.equalTo(URLBarVC.URLBarHeight)
         }
         
-        ConversationalVC.view.snp.makeConstraints { (make) in
+        ToolbarVC.view.snp.makeConstraints { (make) in
+            make.height.equalTo(44)
+            make.left.right.bottom.equalToSuperview()
+        }
+        
+        ContentNavVC.view.snp.makeConstraints { (make) in
             make.top.equalTo(URLBarVC.view.snp.bottom)
-            make.left.right.bottom.equalTo(self.view)
+            make.left.right.equalTo(self.view)
+            make.bottom.equalTo(ToolbarVC.view.snp.top)
         }
     }
 

@@ -6,40 +6,37 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
-class RecommendationsDataSource: RecommendationsProtocol {
+class RecommendationsDataSource: RecommendationsCollectionProtocol {
+    
+    var baseUrl: String
+    var recommendations: [Recommendation]
+    
+    init(baseUrl: String) {
+        self.baseUrl = baseUrl
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl))
+    }
     
     func numberOfItems() -> Int {
-        return 5
+        return recommendations.count
     }
     
     func cellType(indexPath: IndexPath) -> RecommendationsCellType {
-        if indexPath.row % 2 == 0 {
-            return .Recommendation
-        }
-        
-        return .Reminder
+        return .Recommendation
     }
     
     func text(indexPath: IndexPath) -> String {
-        return "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. "
+        return recommendations[indexPath.row].text
     }
     
-    func dateText(indexPath: IndexPath) -> String {
-        return "20 Donnerstag"
+    func date(indexPath: IndexPath) -> String {
+        return ""
     }
     
     func picture(indexPath: IndexPath) -> UIImage? {
-        if indexPath.row % 2 == 0 {
-            return UIImage(named:"conversationalBG")
-        }
         return nil
     }
     
     func time(indexPath: IndexPath) -> String {
-        if indexPath.row % 2 == 0 {
-            return ""
-        }
-        
-        return "12:30"
+        return ""
     }
 }

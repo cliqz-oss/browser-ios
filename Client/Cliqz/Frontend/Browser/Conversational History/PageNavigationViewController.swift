@@ -36,6 +36,7 @@ class PageNavigationViewController: UIViewController {
     
     func setStyling() {
         self.view.backgroundColor = .clear
+        self.pageControl.backgroundColor = UIColor.black.withAlphaComponent(0.5)
     }
     
     func setConstraints() {

@@ -13,7 +13,12 @@ protocol DomainDetailsHeaderViewDelegate {
     func headerLogoPressed()
 }
 
-class DomainDetailsHeaderView: UIView {
+protocol DomainDetailsHeaderViewProtocol {
+    func image() -> UIImage?
+    func baseUrl() -> String
+}
+
+final class DomainDetailsHeaderView: UIView {
     
     let backBtn = UIButton(type: .custom)
     let title = UILabel()
@@ -21,17 +26,14 @@ class DomainDetailsHeaderView: UIView {
     let sep = UIView()
     
     var delegate: DomainDetailsHeaderViewDelegate?
+    var dataSource: DomainDetailsHeaderViewProtocol
     
-    override init(frame: CGRect) {
+    init(frame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0), dataSource: DomainDetailsHeaderViewProtocol) {
+        
+        self.dataSource = dataSource
         super.init(frame: frame)
         
         componentSetUp()
-        
-        self.addSubview(backBtn)
-        self.addSubview(title)
-        self.addSubview(logo)
-        self.addSubview(sep)
-        
         setConstraints()
         setStyling()
         
@@ -41,12 +43,21 @@ class DomainDetailsHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func componentSetUp() {
+    private func componentSetUp() {
+        
+        self.addSubview(backBtn)
+        self.addSubview(title)
+        self.addSubview(logo)
+        self.addSubview(sep)
+        
         backBtn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
         logo.addTarget(self, action: #selector(logoPressed), for: .touchUpInside)
+        
+        logo.setImage(dataSource.image(), for: .normal) //?? UIImage(named: "coolLogo")
+        title.text = dataSource.baseUrl()
     }
     
-    func setConstraints() {
+    private func setConstraints() {
         
         backBtn.snp.remakeConstraints { (make) in
             make.centerY.equalTo(self)
@@ -74,7 +85,7 @@ class DomainDetailsHeaderView: UIView {
         }
     }
     
-    func setStyling() {
+    private func setStyling() {
         
         self.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         
@@ -93,12 +104,12 @@ class DomainDetailsHeaderView: UIView {
     }
     
     @objc
-    func goBack(_ sender: UIButton) {
+    private func goBack(_ sender: UIButton) {
         self.delegate?.headerGoBackPressed()
     }
     
     @objc
-    func logoPressed(_ sender: UIButton) {
+    private func logoPressed(_ sender: UIButton) {
         self.delegate?.headerLogoPressed()
     }
     

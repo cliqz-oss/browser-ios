@@ -10,33 +10,33 @@
 
 import Alamofire
 
-final class NewsDataSource {
+final class NewsManager {
     
     //here is where I should take care of computing the number of new articles. 
     //should show notification if the number of new articles is greater than zero
     //when pressing the news cell, set the number of new articles to zero.
     
-    //how many news to fetch...Does not seem to have any effec. I receive all anyway.
+    //how many news to fetch...Does not seem to have any effect. I receive all anyway.
     let news_to_fetch = 5
     
     //user defaults key 
-    let userDefaultsKey_ArticleLinks = "ID_LAST_ARTICLE_LINKS"
+    static let userDefaultsKey_ArticleLinks = "ID_LAST_ARTICLE_LINKS"
     
     //notification name
-    let notification_ready_name = "NotificationsNewsReady"
+    static let notification_ready_name = "NotificationsNewsReady"
     
-    static let sharedInstance = NewsDataSource()
+    static let sharedInstance = NewsManager()
     
     var ready = false
     var news_version: Int = 0
     var last_update_server: Int = 0
-    var articles: [[String:AnyObject]] = []
+    var articles: [[String: Any]] = []
     private var articleLinks: Set<String> = []
     private var new_article_count: Int = 0
     
     init() {
         let userDefaults = UserDefaults.standard
-        if let art_links = userDefaults.value(forKey: userDefaultsKey_ArticleLinks) as? [String] {
+        if let art_links = userDefaults.value(forKey: NewsManager.userDefaultsKey_ArticleLinks) as? [String] {
             //I will use this to compute the number of new links from the backend.
             self.articleLinks = Set(art_links)
         }
@@ -56,7 +56,7 @@ final class NewsDataSource {
     }
     
     func save() {
-        UserDefaults.standard.setValue(Array(self.articleLinks), forKey: userDefaultsKey_ArticleLinks)
+        UserDefaults.standard.setValue(Array(self.articleLinks), forKey: NewsManager.userDefaultsKey_ArticleLinks)
         UserDefaults.standard.synchronize()
     }
     
@@ -73,19 +73,16 @@ final class NewsDataSource {
         Alamofire.request(final_uri, method: .put, parameters: data, encoding: JSONEncoding.default , headers: nil).responseJSON { (response) in
             if response.result.isSuccess {
                 
-//                let dict = try! JSONSerialization.jsonObject(with: response, options: JSONSerialization.ReadingOptions.allowFragments)
-//                
-//                if let d = dict as? [String: [[String: AnyObject]]] {
-//                    debugPrint(d)
-//                }
-                
-                if let result_dict = response.result.value as? [String : [[String: AnyObject]]] {
-                    if let result = result_dict["results"] {
-                        if let snippet = result[0]["snippet"] as? [String: AnyObject],
-                            let extra = snippet["extra"] as? [String: AnyObject],
-                            let articles = extra["articles"] as? [[String: AnyObject]]
+                if let response_wrap = response.result.value as? [String: Any] {
+                    if let result = response_wrap["results"] as? [[String: Any]] {
+                        if let snippet = result[0]["snippet"] as? [String: Any],
+                            let extra = snippet["extra"] as? [String: Any],
+                            let articles = extra["articles"] as? [[String: Any]]
                         {
                             self.setLocalVariables(extra: extra, articles: articles)
+                            self.ready = true
+                            
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: NewsManager.notification_ready_name), object: nil)
                         }
                     }
                 }
@@ -95,7 +92,7 @@ final class NewsDataSource {
         
     }
     
-    private func setLocalVariables(extra: [String: AnyObject], articles: [[String: AnyObject]]) {
+    private func setLocalVariables(extra: [String: Any], articles: [[String: Any]]) {
         self.news_version = (extra["news_version"] as? NSNumber)?.intValue ?? 0
         self.last_update_server = (extra["last_update"] as? NSNumber)?.intValue ?? 0
         self.articles = articles
@@ -103,13 +100,9 @@ final class NewsDataSource {
         let new_links = newLinks(articles: articles)
         self.new_article_count = newArticles(between: articleLinks, and: new_links)
         self.articleLinks = new_links
-        
-        self.ready = true
-        
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: notification_ready_name), object: nil)
     }
     
-    private func newLinks(articles: [[String:AnyObject]]) -> Set<String> {
+    private func newLinks(articles: [[String: Any]]) -> Set<String> {
         var new_links:Set<String> = []
         
         for article in articles{
@@ -133,9 +126,6 @@ final class NewsDataSource {
         if let countryCode = currentLocale.regionCode, availableCountries.contains(countryCode) {
             return countryCode
         }
-//        if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String, availableCountries.contains(countryCode) {
-//            return countryCode
-//        }
         return "DE"
     }
 }

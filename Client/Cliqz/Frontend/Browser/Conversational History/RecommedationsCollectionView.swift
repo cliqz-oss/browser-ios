@@ -13,11 +13,11 @@ enum RecommendationsCellType {
     case Reminder
 }
 
-protocol RecommendationsProtocol {
+protocol RecommendationsCollectionProtocol {
     func numberOfItems() -> Int
     func cellType(indexPath: IndexPath) -> RecommendationsCellType
     func text(indexPath: IndexPath) -> String
-    func dateText(indexPath: IndexPath) -> String
+    func date(indexPath: IndexPath) -> String
     func picture(indexPath: IndexPath) -> UIImage?
     func time(indexPath: IndexPath) -> String
 }
@@ -26,7 +26,7 @@ class RecommedationsCollectionView: UICollectionView {
     
     let cellReuseId = "recommedationsCell"
     let customLayout = RecommedationsCollectionLayout()
-    var recomDataSource: RecommendationsProtocol? = nil
+    var customDataSource: RecommendationsCollectionProtocol? = nil
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: customLayout)
@@ -53,18 +53,18 @@ extension RecommedationsCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! RecommendationsCell
-        cell.textLabel.text = recomDataSource?.text(indexPath: indexPath)
-        cell.dateLabel.text = recomDataSource?.dateText(indexPath: indexPath)
-        cell.pictureView.image = recomDataSource?.picture(indexPath: indexPath)
-        cell.timeLabel.text = recomDataSource?.time(indexPath: indexPath)
-        cell.cellType = recomDataSource?.cellType(indexPath: indexPath) ?? .Recommendation
+        cell.textLabel.text = customDataSource?.text(indexPath: indexPath)
+        cell.dateLabel.text = customDataSource?.date(indexPath: indexPath)
+        cell.pictureView.image = customDataSource?.picture(indexPath: indexPath)
+        cell.timeLabel.text = customDataSource?.time(indexPath: indexPath)
+        cell.cellType = customDataSource?.cellType(indexPath: indexPath) ?? .Recommendation
         cell.updateState(indexPath: indexPath)
         cell.delegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recomDataSource?.numberOfItems() ?? 0
+        return customDataSource?.numberOfItems() ?? 0
     }
     
 }

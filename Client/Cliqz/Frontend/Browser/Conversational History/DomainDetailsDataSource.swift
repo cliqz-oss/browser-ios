@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CliqzHistoryDetailsDataSource: DomainDetailsProtocol {
+class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewDataSource {
 
     var img: UIImage?
     var domainDetails: [DomainDetail]
@@ -23,23 +23,27 @@ class CliqzHistoryDetailsDataSource: DomainDetailsProtocol {
         })
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func image() -> UIImage? {
         return self.img
     }
     
-    func urlLabelText(indexPath: IndexPath) -> String {
+    func url(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.url.absoluteString ?? ""
     }
     
-    func titleLabelText(indexPath: IndexPath) -> String {
+    func title(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.title ?? ""
     }
     
-    func sectionTitle(section: Int) -> String {
+    func titleSectionHeader(section: Int) -> String {
         return "Today"
     }
     
-    func timeLabelText(indexPath: IndexPath) -> String {
+    func time(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.date?.toRelativeTimeString() ?? ""
     }
     
@@ -47,7 +51,7 @@ class CliqzHistoryDetailsDataSource: DomainDetailsProtocol {
         return 1
     }
     
-    func numberOfCells(section: Int) -> Int {
+    func numberOfRows(section: Int) -> Int {
         return domainDetails.count
     }
     
@@ -59,7 +63,7 @@ class CliqzHistoryDetailsDataSource: DomainDetailsProtocol {
         return false
     }
     
-    func isQuery(indexPath: IndexPath) -> Bool {
+    func useRightCell(indexPath: IndexPath) -> Bool {
         if indexPath.row == 1 {
             return true
         }
