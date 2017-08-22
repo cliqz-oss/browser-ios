@@ -2074,6 +2074,7 @@
 		B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebRequestBridge.m; path = JSEngine/WebRequestBridge.m; sourceTree = "<group>"; };
 		B354B5DF1E5C86C5001B38A1 /* JSBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSBridge.swift; path = JSEngine/JSBridge.swift; sourceTree = "<group>"; };
 		B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSBridgeBridge.m; path = JSEngine/JSBridgeBridge.m; sourceTree = "<group>"; };
+		B3F220351F2F274000E4EEE6 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B729F0691B75CBEF00745F7A /* UserAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgent.swift; path = ../Shared/UserAgent.swift; sourceTree = "<group>"; };
 		B9FA3D1FE0070404FF391FEC /* Pods-CliqzUITests.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.fennec.xcconfig"; sourceTree = "<group>"; };
 		C400467B1CF4E43E00B08303 /* BackForwardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardListViewController.swift; sourceTree = "<group>"; };
@@ -3858,6 +3859,8 @@
 			isa = PBXGroup;
 			children = (
 				4F59D5AC1F02B80F007D70B1 /* libURLParser.a */,
+				B3F220351F2F274000E4EEE6 /* libsqlite3.tbd */,
+				AFF2B6891EFAA8C500475971 /* UserNotifications.framework */,
 				4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */,
 				1EBC01431DD4786D000912B9 /* CRToast.framework */,
 				1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */,
