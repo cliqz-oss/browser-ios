@@ -21,7 +21,7 @@ We encourage you to participate in this open source project. We love Pull Reques
 
 * IRC:            [#mobile](https://wiki.mozilla.org/IRC) for general discussion and [#mobistatus](https://wiki.mozilla.org/IRC) for team status updates.
 * Mailing list:   [mobile-firefox-dev@mozilla.org](https://mail.mozilla.org/listinfo/mobile-firefox-dev).
-* Bugs:           [File a new bug](https://bugzilla.mozilla.org/enter_bug.cgi?bug_file_loc=http%3A%2F%2F&bug_ignored=0&op_sys=iOS%20&product=Firefox%20for%20iOS&rep_platform=All) • [Existing bugs](https://bugzilla.mozilla.org/describecomponents.cgi?product=Firefox%20for%20iOS) 
+* Bugs:           [File a new bug](https://bugzilla.mozilla.org/enter_bug.cgi?bug_file_loc=http%3A%2F%2F&bug_ignored=0&op_sys=iOS%20&product=Firefox%20for%20iOS&rep_platform=All) • [Existing bugs](https://bugzilla.mozilla.org/describecomponents.cgi?product=Firefox%20for%20iOS)
 
 Want to contribute but don't know where to start? Here is a list of [Good First Bugs.](http://www.joshmatthews.net/bugsahoy/?mobileios=1&simple=1)
 
@@ -58,6 +58,19 @@ Building the code
   sh ./bootstrap.sh
   ```
 
+1. Get dependencies for react-native:
+
+  ```shell
+  npm install
+  pod install
+  ```
+
+1. Build react-native bundle
+
+  ```shell
+  npm run dev-bundle
+  ```
+
 1. Open `Client.xcodeproj` in Xcode.
 1. Build the `Fennec` scheme in Xcode.
 
@@ -79,30 +92,10 @@ You can enable extra debug tools for React by passing a `DEBUG` flag to the reac
 
 By default React uses the `jsengine.bundle.js` code bundle to run. In order to develop you can use the react-native command line tools to auto re-generate this bundle when you change the code.
 
- 1. Check out the navigation-extension code on this branch: https://github.com/sam-cliqz/navigation-extension/tree/react
- 2. Install dependencies:
-
- ```shell
- ./fern.js install
- ```
- 3. Build the react-native config into the `specific/react-native/build` directory:
- 
- ```shell
- CLIQZ_OUTPUT_PATH=specific/react-native/build ./fern.js serve configs/react-native.json
- ```
-
- 4. Install the react-native cli tools
-
- ```shell
- cd specific/react-native/
- npm install
- ```
-
- 5. Run the react-native bundler
-
- ```shell
- npm start
- ```
+ 1. Start react-native dev server
+  ```shell
+  npm run dev-server
+  ```
 
  6. Configure react to use the debug server: in `Client.xcodeproj` under build settings, go to 'Other Swift Flags' and add `-DReact_Debug` to the `Fennec` flags.
 
@@ -113,8 +106,7 @@ By default React uses the `jsengine.bundle.js` code bundle to run. In order to d
 You can create a new js bundle using the react-native cli:
 
 ```shell
-cd navigation-extension/specific/react-native
-node node_modules/react-native/local-cli/cli.js bundle --entry-file index.ios.js --platform ios --bundle-output path/to/jsengine.bundle.js
+npm run dev-bundle
 ```
 
 ## Contributor guidelines
