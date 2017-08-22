@@ -31,7 +31,7 @@ node('ios-osx') {
             timeout(20) {
                 sh '''#!/bin/bash -l -x
                     rvm use ruby-2.4.0
-                    xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=10.3.1,id=8F1A1F1B-4428-45F4-B282-DE628D9A54A1" ONLY_ACTIVE_ARCH=NO -derivedDataPath build clean test | xcpretty -tc && exit ${PIPESTATUS[0]}
+                    xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=10.3.1,id=8F1A1F1B-4428-45F4-B282-DE628D9A54A1" ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test | xcpretty -tc && exit ${PIPESTATUS[0]}
                 '''
             }
         }
@@ -58,7 +58,9 @@ node('ios-osx') {
             }
         }
         stage('Upload Results') {
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'external/autobots/*.log'
             junit "external/autobots/test-reports/*.xml"
+            zip archive: true, dir: 'external/autobots/screenshots', glob: '', zipFile: 'external/autobots/screenshots.zip'
         }
     }
     finally {
@@ -66,6 +68,7 @@ node('ios-osx') {
             sh '''#!/bin/bash -l -x
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
                 rm -rf JSEngine
+                rm -rf external/autobots
             '''
         }
     }
