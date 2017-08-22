@@ -1,6 +1,6 @@
 node('ios-osx') {
     stage("Checkout") {
-        checkout scm 
+        checkout scm
         withCredentials([file(credentialsId: 'ceb2d5e9-fc88-418f-aa65-ce0e0d2a7ea1', variable: 'CLIQZ_CI_SSH_KEY')]) {
             sh '''#!/bin/bash -l -x
             mkdir -p ~/.ssh
@@ -12,9 +12,9 @@ node('ios-osx') {
             '''
         }
     }
-    
+
     stage('Prepare') {
-        
+
         sh '''#!/bin/bash -l -x
             rvm use ruby-2.4.0
             gem install xcpretty -N
@@ -23,10 +23,15 @@ node('ios-osx') {
             brew install xctool
             brew install carthage
             pod --version
-            echo A |./bootstrap.sh 
+            echo A |./bootstrap.sh
+        '''
+        sh '''#!/bin/bash -l -x
+            npm install
+            pod install
+            npm run dev-bundle
         '''
     }
-    try {        
+    try {
         stage('Build') {
             timeout(20) {
                 sh '''#!/bin/bash -l -x
