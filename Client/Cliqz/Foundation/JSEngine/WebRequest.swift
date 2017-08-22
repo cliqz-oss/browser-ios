@@ -47,7 +47,7 @@ open class WebRequest : RCTEventEmitter {
             print("xxxxx -> block \(String(describing: request.url))")
             // update unsafe requests count for the webivew that issued this request
             if let tabId = requestInfo["tabId"] as? Int, let webView = WebViewToUAMapper.idToWebView(tabId),
-                let _ = blockResponse["source"] {
+                let _ = blockResponse["shouldIncrementCounter"] {
                 let unsafeRequestsCount = webView.unsafeRequests
                 webView.updateUnsafeRequestsCount(unsafeRequestsCount + 1)
             }
