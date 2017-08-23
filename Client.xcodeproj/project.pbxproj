@@ -582,6 +582,7 @@
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
 		AF0E13C71F4C58F800651728 /* RecommendationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */; };
+		AF0E13CE1F4DC39700651728 /* GeneralUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */; };
 		AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */; };
 		AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */; };
 		AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */; };
@@ -2054,6 +2055,7 @@
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
 		AC51CC4D525D25940DC5DDFD /* Pods-CliqzUITests.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.fennec.xcconfig"; sourceTree = "<group>"; };
 		AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsManager.swift; sourceTree = "<group>"; };
+		AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralUtils.swift; sourceTree = "<group>"; };
 		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrowserActions.m; path = "Conversational History/BrowserActions.m"; sourceTree = "<group>"; };
 		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserActions.swift; path = "Conversational History/BrowserActions.swift"; sourceTree = "<group>"; };
 		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
@@ -4280,6 +4282,7 @@
 		AFC021B31F420990003B820C /* Conversational UI */ = {
 			isa = PBXGroup;
 			children = (
+				AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */,
 				AFA93A631F4B0D10001425C4 /* Router.swift */,
 				AFA93A601F4AE6EC001425C4 /* Managers and Modules */,
 				AFC8E5511F41AF1C004822D5 /* Reusable Components */,
@@ -6826,6 +6829,7 @@
 				1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */,
 				E664B45A1CD7ECDB0045A6A4 /* NotificationRootViewController.swift in Sources */,
 				2FDE87FE1ABB3817005317B1 /* RemoteTabsPanel.swift in Sources */,
+				AF0E13CE1F4DC39700651728 /* GeneralUtils.swift in Sources */,
 				39DD030D1CD53E1900BC09B3 /* HomePageHelper.swift in Sources */,
 				1E07DF761DCB72B200CC6BF0 /* HistorySwiper.swift in Sources */,
 				C4F3B29A1CFCF93A00966259 /* ButtonToast.swift in Sources */,
