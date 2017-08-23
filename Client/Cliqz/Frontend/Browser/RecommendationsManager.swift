@@ -19,7 +19,7 @@ final class RecommendationsManager {
     
     static let sharedInstance = RecommendationsManager()
     
-    static let notification_ready_name = NSNotification.Name(rawValue: "RecomandationsManagerReady")
+    static let notification_updated = NSNotification.Name(rawValue: "RecomandationsManagerUpdated")
     
     private var recommendations: [Recommendation] = []
     
@@ -37,11 +37,10 @@ final class RecommendationsManager {
             let news_recommendations = convertArticles2Recommendations(articles: news_articles)
             recommendations += news_recommendations
             
-            NotificationCenter.default.post(name: RecommendationsManager.notification_ready_name, object: nil)
-            
+            NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
         }
         else {
-            NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NSNotification.Name(rawValue: NewsManager.notification_ready_name), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NewsManager.notification_updated, object: nil)
         }
     }
     

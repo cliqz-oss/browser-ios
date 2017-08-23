@@ -8,10 +8,15 @@
 
 import UIKit
 
-protocol HasDataSource: class {
-    func dataSourceWasUpdated()
-}
+//Documentation of Important Global Ideas
 
+//UI Update Rules:
+//1. Managers or Modules update each other using Notifications.
+//2. Datasources update controllers using delegates.
+
+protocol HasDataSource: class {
+    func dataSourceWasUpdated(identifier: String)
+}
 
 class MainContainerViewController: UIViewController {
     

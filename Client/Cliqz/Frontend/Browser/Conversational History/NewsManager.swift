@@ -23,7 +23,7 @@ final class NewsManager {
     static let userDefaultsKey_ArticleLinks = "ID_LAST_ARTICLE_LINKS"
     
     //notification name
-    static let notification_ready_name = "NotificationsNewsReady"
+    static let notification_updated = Notification.Name(rawValue: "NotificationNewsUpdated")
     
     static let sharedInstance = NewsManager()
     
@@ -82,7 +82,7 @@ final class NewsManager {
                             self.setLocalVariables(extra: extra, articles: articles)
                             self.ready = true
                             
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: NewsManager.notification_ready_name), object: nil)
+                            NotificationCenter.default.post(name: NewsManager.notification_updated, object: nil)
                         }
                     }
                 }

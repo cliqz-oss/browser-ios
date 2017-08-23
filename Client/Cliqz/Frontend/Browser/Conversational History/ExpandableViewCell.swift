@@ -61,7 +61,7 @@ class ExpandableViewCell: UITableViewCell {
         cardView.backgroundColor = UIColor.clear
         cardView.layer.cornerRadius = 4
         
-        titleLabel.font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+        titleLabel.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
         titleLabel.textColor = .black
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.numberOfLines = 2
@@ -79,14 +79,27 @@ class ExpandableViewCell: UITableViewCell {
     
     func setConstraints() {
         
+//        URLLabel.snp.makeConstraints { (make) in
+//            make.top.equalTo(logoContainerView.snp.top)
+//            make.left.equalTo(logoImageView.snp.right).offset(URLLeftOffset)
+//            make.right.equalTo(cardView)
+//        }
+        
+//        titleLabel.snp.remakeConstraints { (make) in
+//            make.top.equalTo(URLLabel.snp.bottom).offset(2)
+//            make.left.equalTo(logoImageView.snp.right).offset(URLLeftOffset)
+//            make.right.equalTo(cardView).offset(-contentOffset)
+//        }
+        
         URLLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(cardView.snp.centerY)
+            make.bottom.equalTo(titleLabel.snp.top)
             make.left.equalTo(logoImageView.snp.right).offset(URLLeftOffset)
             make.right.equalTo(cardView)
+            make.height.equalTo(16)
         }
         
         titleLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(cardView.snp.centerY).offset(3)
+            make.centerY.equalTo(logoContainerView.snp.centerY).offset(10)
             make.left.equalTo(logoImageView.snp.right).offset(URLLeftOffset)
             make.right.equalTo(cardView).offset(-contentOffset)
         }
@@ -99,7 +112,7 @@ class ExpandableViewCell: UITableViewCell {
         }
         
         logoContainerView.snp.makeConstraints { make in
-            make.top.equalTo(cardView).offset(10)
+            make.centerY.equalTo(cardView)
             make.left.equalTo(cardView).offset(10)
             make.size.equalTo(logoSize)
         }

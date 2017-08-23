@@ -10,13 +10,15 @@ import UIKit
 
 final class DashRecommendationsDataSource: ExpandableViewProtocol {
     
+    static let identifier = "DashRecommendationsDataSource"
+    
     var recommendations: [Recommendation] = RecommendationsManager.sharedInstance.recommendations(domain: nil)
     
     weak var delegate: HasDataSource?
     
     init(delegate: HasDataSource) {
         self.delegate = delegate
-        NotificationCenter.default.addObserver(self, selector: #selector(recommendationsReady), name: RecommendationsManager.notification_ready_name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recommendationsReady), name: RecommendationsManager.notification_updated, object: nil)
     }
     
     func maxNumCells() -> Int {
@@ -46,7 +48,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     @objc
     private func recommendationsReady(_ sender: Notification) {
         self.updateRecommendations()
-        delegate?.dataSourceWasUpdated()
+        delegate?.dataSourceWasUpdated(identifier: DashRecommendationsDataSource.identifier)
     }
     
     private func updateRecommendations() {
