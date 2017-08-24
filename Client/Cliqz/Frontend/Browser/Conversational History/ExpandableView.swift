@@ -13,7 +13,7 @@ protocol ExpandableViewProtocol {
     func minNumCells() -> Int
     func title(indexPath: IndexPath) -> String
     func url(indexPath: IndexPath) -> String
-    func picture(indexPath: IndexPath) -> UIImage?
+    func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void)
     func cellPressed(indexPath: IndexPath)
 }
 
@@ -144,9 +144,14 @@ extension ExpandableView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ExpandableViewCell
+        cell.tag = indexPath.row
         cell.titleLabel.text = customDataSource?.title(indexPath: indexPath)
         cell.URLLabel.text = customDataSource?.url(indexPath: indexPath)
-        cell.logoImageView.image = customDataSource?.picture(indexPath: indexPath)
+        customDataSource?.picture(indexPath: indexPath, completionBlock: { (image) in
+            if cell.tag == indexPath.row {
+                cell.logoImageView.image = image
+            }
+        })
         return cell
     }
     
@@ -176,10 +181,15 @@ extension ExpandableView: ExpandableViewHeaderDataSource {
     func headerTitle() -> String {
         return self.headerTitleText
     }
+    
+    func isShowMoreEnabled() -> Bool {
+        return numCells(state: .expanded) > numCells(state: .collapsed)
+    }
 }
 
 protocol ExpandableViewHeaderDataSource {
     func headerTitle() -> String
+    func isShowMoreEnabled() -> Bool
 }
 
 
@@ -205,14 +215,16 @@ final class ExpandableViewHeader: UIView {
         super.init(frame: frame)
         self.dataSource = dataSource
         self.parentState = state
+        
+        self.addSubview(l)
+        self.addSubview(btn)
+        
         setUpComponents()
         setStyling()
         setConstraints()
     }
     
     private func setUpComponents() {
-        self.addSubview(l)
-        self.addSubview(btn)
         
         btn.addTarget(self, action: #selector(showMorePressed), for: .touchUpInside)
         l.text = dataSource?.headerTitle()
@@ -222,6 +234,10 @@ final class ExpandableViewHeader: UIView {
         }
         else {
             btn.setTitle(buttonTitle_less, for: .normal)
+        }
+        
+        if dataSource?.isShowMoreEnabled() == false {
+            btn.isHidden = true
         }
     }
     
