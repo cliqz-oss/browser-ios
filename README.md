@@ -88,7 +88,7 @@ You can enable extra debug tools for React by passing a `DEBUG` flag to the reac
  2. Under `Preprocessor Macros` add a `DEBUG=1` option for the `Fennec` build.
  3. Now React debug options will be available after a 'shake' gesture in the app.
 
-#### Developing js code
+#### Developing JS code
 
 By default React uses the `jsengine.bundle.js` code bundle to run. In order to develop you can use the react-native command line tools to auto re-generate this bundle when you change the code.
 
@@ -97,9 +97,28 @@ By default React uses the `jsengine.bundle.js` code bundle to run. In order to d
   npm run dev-server
   ```
 
- 6. Configure react to use the debug server: in `Client.xcodeproj` under build settings, go to 'Other Swift Flags' and add `-DReact_Debug` to the `Fennec` flags.
+ 2. Configure react to use the debug server: in `Client.xcodeproj` under build settings, go to 'Other Swift Flags' and add `-DReact_Debug` to the `Fennec` flags.
 
- 7. Now the app will load code provided by the bundler when starting.
+ 3. Now the app will load code provided by the bundler when starting.
+
+ 4. Checkout a copy of [browser-core](https://github.com/cliqz-oss/browser-core) (Cliqzers, use [navigation-extension](https://github.com/cliqz/navigation-extension) for non-release versions).
+
+ 5. Get browser-core dependencies::
+ ```shell
+ cd /path/to/browser-core
+ ./fern.js install
+ ```
+
+ 6. Build browser-core with the `react-native.json` config, and output to node_modules for `browser-ios`:
+ ```shell
+ CLIQZ_OUTPUT_PATH=/path/to/browser-ios/node_modules/browser-core/build/ ./fern.js serve configs/react-native.json
+ ```
+
+With this workflow, any code changes will be automatically rebuild, then you can reload the js bundle in the app (running in the emulator) to see the changes.
+
+#### Debugging JS code
+
+The Cliqz extension modules are exposed to debuggers via the `app` global variable. You can use this as an entry point to inspect the state of the app.
 
 #### Creating a new bundle
 
@@ -108,6 +127,7 @@ You can create a new js bundle using the react-native cli:
 ```shell
 npm run dev-bundle
 ```
+
 
 ## Contributor guidelines
 
