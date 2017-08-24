@@ -127,9 +127,7 @@ class TabLocationView: UIView {
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultChromeFont
-
-        // Cliqz: Center allignment for the url TextField
-        urlTextField.textAlignment = .center
+		urlTextField.textAlignment = .left
         
         return urlTextField
     }()
@@ -188,7 +186,7 @@ class TabLocationView: UIView {
             make.top.bottom.equalTo(self)
             // Cliqz: changd the constraints of the urlTextField to make it centered
             make.centerX.equalTo(self)
-            make.width.equalTo(urlTextFieldWidth)
+            make.width.equalTo(self)
         }
         
         lockImageView.snp_makeConstraints { make in
@@ -227,12 +225,12 @@ class TabLocationView: UIView {
     }
 
     override func updateConstraints() {
-        
+		
         // Cliqz: update the constrains of the urlTextField & readerModeButton
-        urlTextField.snp_updateConstraints { make in
-            make.width.equalTo(urlTextFieldWidth)
-        }
-        
+//        urlTextField.snp_updateConstraints { make in
+//            make.width.equalTo(urlTextFieldWidth)
+//        }
+		
         readerModeButton.snp_remakeConstraints { make in
             
             make.centerY.equalTo(self)
@@ -311,7 +309,7 @@ class TabLocationView: UIView {
         attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(value: TabLocationViewUX.HostPitch), range: nsRange)
         
         urlTextField.attributedText = attributedString
-        urlTextField.textAlignment = .center
+        urlTextField.textAlignment = .left
         urlTextFieldWidth = attributedString.size().width + 30
         
         let maxUrlTextFieldWidth = getMaxUrlTextFieldWidth()
@@ -383,7 +381,7 @@ extension TabLocationView: Themeable {
         backgroundColor = theme.backgroundColor
         forgetModeImageView.isHidden = (themeName == Theme.NormalMode)
         lockImageView.tintColor = (themeName == Theme.NormalMode) ? UIConstants.NormalModeTextColor : UIConstants.PrivateModeTextColor
-        setNeedsUpdateConstraints()
+//        setNeedsUpdateConstraints()
     }
 }
 

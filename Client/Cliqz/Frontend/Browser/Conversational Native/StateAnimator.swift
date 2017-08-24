@@ -41,7 +41,18 @@ struct Animator {
     let propertyAnimator: UIViewPropertyAnimator
 }
 
+final class StateGenerator {
 
+	class func generateStates(transitions: [Transition]) -> [() -> ()] {
+		return transitions.map({t in t.endState})
+	}
+
+	class func applyState(endStates: [() -> ()]) {
+		for state in endStates {
+			state()
+		}
+	}
+}
 
 final class StateAnimator {
     
@@ -53,10 +64,6 @@ final class StateAnimator {
             
             animator.propertyAnimator.startAnimation()
         }
-    }
-    
-    class func generateStates(transitions: [Transition]) -> [() -> ()] {
-        return transitions.map({t in t.endState})
     }
     
     class func generateAnimators(state: [Transition], parentView: UIView) -> [Animator] {

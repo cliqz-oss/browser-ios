@@ -198,13 +198,13 @@ class CliqzURLBarView: URLBarView {
     func SELdidClickNewTab() {
         delegate?.urlBarDidPressNewTab(self, button: newTabButton)
     }
-    
+
     override func applyTheme(_ themeName: String) {
         super.applyTheme(themeName)
         
         if let theme = URLBarViewUX.Themes[themeName] {
             self.antitrackingButton.setTitleColor(theme.textColor, for: .normal)
         }
-        
     }
+
 }
