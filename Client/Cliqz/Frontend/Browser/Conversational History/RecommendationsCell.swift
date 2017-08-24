@@ -68,7 +68,7 @@ class RecommendationsCell: UICollectionViewCell {
     
     let textLabel = UILabel()
     let timeLabel = UILabel()
-    let dateLabel = UILabel()
+    let headerLabel = UILabel()
     let pictureView = UIImageView()
     let headerView: CustomHeaderView
     let cellTypeImageView = UIImageView()
@@ -105,7 +105,7 @@ class RecommendationsCell: UICollectionViewCell {
     }
     
     func setUpComponents() {
-        headerView.addSubview(dateLabel)
+        headerView.addSubview(headerLabel)
         containerTop.addSubview(pictureView)
         containerTop.addSubview(timeLabel)
         containerBottom.addSubview(textLabel)
@@ -129,7 +129,7 @@ class RecommendationsCell: UICollectionViewCell {
         containerTop.backgroundColor = .clear
         containerBottom.backgroundColor = .clear
         pictureView.backgroundColor = .clear
-        backView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        backView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         circle.backgroundColor = customRed
         cellTypeImageView.backgroundColor = .clear
         deleteButton.backgroundColor = .clear
@@ -146,9 +146,9 @@ class RecommendationsCell: UICollectionViewCell {
         
         deleteButton.setImage(UIImage(named: "whiteTabClose"), for: .normal)
         
-        dateLabel.textAlignment = .center
-        dateLabel.font = UIFont.systemFont(ofSize: 14)
-        dateLabel.textColor = .white
+        headerLabel.textAlignment = .center
+        headerLabel.font = UIFont.systemFont(ofSize: 15, weight: 100)
+        headerLabel.textColor = .white
         
         timeLabel.textColor = .white
         timeLabel.font = UIFont.boldSystemFont(ofSize: 44)
@@ -175,7 +175,7 @@ class RecommendationsCell: UICollectionViewCell {
             make.height.equalTo(headerHeight)
         }
         
-        dateLabel.snp.makeConstraints { (make) in
+        headerLabel.snp.makeConstraints { (make) in
             make.left.equalTo(circle.snp.right)
             make.right.equalTo(deleteButton.snp.left)
             make.centerY.equalTo(headerView)
@@ -190,7 +190,7 @@ class RecommendationsCell: UICollectionViewCell {
         circle.snp.makeConstraints { (make) in
             make.height.width.equalTo(circleRadius)
             make.top.equalTo(contentView)
-            make.left.equalTo(headerView).offset(8)
+            make.left.equalTo(headerView).offset(6)
         }
         
         cellTypeImageView.snp.makeConstraints { (make) in

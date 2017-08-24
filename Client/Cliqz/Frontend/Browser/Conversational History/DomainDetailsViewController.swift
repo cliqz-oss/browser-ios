@@ -97,7 +97,7 @@ final class DomainDetailsViewController: UIViewController {
         
         self.historyTableView.snp.remakeConstraints { (make) in
             make.left.right.bottom.equalTo(self.view)
-            make.top.equalTo(self.recommendationsCollection.snp.bottom)
+            make.top.equalTo(self.recommendationsCollection.snp.bottom).offset(10)
         }
     }
 	
