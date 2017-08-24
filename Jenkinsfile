@@ -23,7 +23,10 @@ node('ios-osx') {
             brew install xctool
             brew install carthage
             pod --version
-            echo A |./bootstrap.sh
+        '''
+        // load/restore carthage build directory
+        sh '''#!/bin/bash -l -x
+            CART_CACHE=/tmp/carthage_cache_`md5 -q Cartfile`.tar; tar -xf $CART_CACHE ; echo A |./bootstrap.sh && tar -cf $CART_CACHE Carthage Cartfile.resolved
         '''
         sh '''#!/bin/bash -l -x
             npm install
