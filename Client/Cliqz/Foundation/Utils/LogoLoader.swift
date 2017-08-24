@@ -12,8 +12,6 @@ import SnapKit
 import WebImage
 
 
-
-
 class LogoLoader {
     
 	static let logoVersionUpdatedDateKey: String = "logoVersionUpdatedDate"
@@ -90,7 +88,7 @@ class LogoLoader {
 		}
         l.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
 		v.addSubview(l)
-		l.snp_makeConstraints({ (make) in
+		l.snp.makeConstraints({ (make) in
 			make.center.equalTo(v)
 		})
 		return v
