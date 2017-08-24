@@ -6,6 +6,8 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
+import WebImage
+
 class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     var baseUrl: String
@@ -28,12 +30,19 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
         return recommendations[indexPath.row].text
     }
     
-    func date(indexPath: IndexPath) -> String {
-        return ""
+    func headerTitle(indexPath: IndexPath) -> String {
+        return recommendations[indexPath.row].title
     }
     
-    func picture(indexPath: IndexPath) -> UIImage? {
-        return nil
+    func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void) {
+        let url_str = recommendations[indexPath.row].picture_url
+        if let url = URL(string: url_str) {
+            SDWebImageManager.shared().downloadImage(with: url, options: .highPriority, progress: { (receivedSize, expectedSize) in
+                //
+            }, completed: { (image, error, cacheType, finished, url) in
+                completion(image)
+            })
+        }
     }
     
     func time(indexPath: IndexPath) -> String {

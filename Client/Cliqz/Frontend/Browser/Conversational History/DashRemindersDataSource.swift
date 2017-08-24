@@ -10,6 +10,8 @@ import UIKit
 
 class DashRemindersDataSource: ExpandableViewProtocol {
     
+
+    
     static let identifier = "DashRemindersDataSource"
     
     func maxNumCells() -> Int {
@@ -28,8 +30,8 @@ class DashRemindersDataSource: ExpandableViewProtocol {
         return "www.test.com"
     }
     
-    func picture(indexPath: IndexPath) -> UIImage? {
-        return nil
+    func picture(indexPath: IndexPath, completionBlock: @escaping (UIImage?) -> Void) {
+        completionBlock(nil)
     }
     
     func cellPressed(indexPath: IndexPath) {

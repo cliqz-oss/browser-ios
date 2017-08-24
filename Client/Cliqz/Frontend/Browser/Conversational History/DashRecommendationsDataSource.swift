@@ -37,8 +37,16 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
         return recommendations[indexPath.row].url
     }
     
-    func picture(indexPath: IndexPath) -> UIImage? {
-        return nil
+    func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void) {
+        LogoLoader.loadLogoImageOrFakeLogo(self.url(indexPath: indexPath), completed: { (image, fakeLogo, error) in
+            if let img = image{
+                completionBlock(img)
+            }
+            else{
+                //completionBlock(result: UIImage(named: "coolLogo") ?? UIImage())
+                completionBlock(nil)
+            }
+        })
     }
     
     func cellPressed(indexPath: IndexPath) {

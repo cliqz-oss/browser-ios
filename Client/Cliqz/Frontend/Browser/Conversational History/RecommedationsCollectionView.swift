@@ -17,8 +17,8 @@ protocol RecommendationsCollectionProtocol {
     func numberOfItems() -> Int
     func cellType(indexPath: IndexPath) -> RecommendationsCellType
     func text(indexPath: IndexPath) -> String
-    func date(indexPath: IndexPath) -> String
-    func picture(indexPath: IndexPath) -> UIImage?
+    func headerTitle(indexPath: IndexPath) -> String
+    func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void)
     func time(indexPath: IndexPath) -> String
 }
 
@@ -53,9 +53,14 @@ extension RecommedationsCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! RecommendationsCell
+        cell.tag = indexPath.item
         cell.textLabel.text = customDataSource?.text(indexPath: indexPath)
-        cell.dateLabel.text = customDataSource?.date(indexPath: indexPath)
-        cell.pictureView.image = customDataSource?.picture(indexPath: indexPath)
+        cell.headerLabel.text = customDataSource?.headerTitle(indexPath: indexPath)
+        customDataSource?.picture(indexPath: indexPath, completion: { (image) in
+            if cell.tag == indexPath.item {
+                cell.pictureView.image = image
+            }
+        })
         cell.timeLabel.text = customDataSource?.time(indexPath: indexPath)
         cell.cellType = customDataSource?.cellType(indexPath: indexPath) ?? .Recommendation
         cell.updateState(indexPath: indexPath)
