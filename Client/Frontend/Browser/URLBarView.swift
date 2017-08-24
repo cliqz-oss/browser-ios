@@ -105,7 +105,7 @@ class URLBarView: UIView {
         didSet {
             if !inOverlayMode {
                 locationContainer.layer.borderColor = locationBorderColor.cgColor
-            }
+			}
         }
     }
     dynamic var locationActiveBorderColor: UIColor = URLBarViewUX.TextFieldActiveBorderColor {
@@ -677,7 +677,7 @@ class URLBarView: UIView {
         locationTextField?.enforceResignFirstResponder()
         animateToOverlayState(overlayMode: false, didCancel: cancel)
         delegate?.urlBarDidLeaveOverlayMode(self)
-        
+
         // Cliqz: return back the current theme of the URLBar
         self.applyTheme(currentTheme)
     }
@@ -946,7 +946,7 @@ extension URLBarView {
 }
 
 extension URLBarView: Themeable {
-    
+
     func applyTheme(_ themeName: String) {
         locationView.applyTheme(themeName)
         locationTextField?.applyTheme(themeName)

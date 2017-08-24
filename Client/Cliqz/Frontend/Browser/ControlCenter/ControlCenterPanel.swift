@@ -163,6 +163,7 @@ class ControlCenterPanel: UIViewController {
         let duration = Int(Date.getCurrentMillis() - openTime)
         logTelemetrySignal("hide", target: nil, customData: ["show_duration": duration])
     }
+
     func setupConstraints() {
         
         let panelLayout = OrientationUtil.controlPanelLayout()

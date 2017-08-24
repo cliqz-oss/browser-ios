@@ -109,8 +109,10 @@ class LogoLoader {
 	}
 
 	private class func isMatchingLogoRule(_ urlDetails: URLDetails, _ rule: String) -> Bool {
-		if let ix = urlDetails.host.range(of: urlDetails.name, options: .backwards, range: nil, locale: nil) {
-			let newHost = urlDetails.host.replacingCharacters(in: ix, with: "$")
+		if let host = urlDetails.host,
+			let name = urlDetails.name,
+			let ix = host.range(of: name, options: .backwards, range: nil, locale: nil) {
+			let newHost = host.replacingCharacters(in: ix, with: "$")
 			return newHost.contains(rule)
 		}
 		return false
