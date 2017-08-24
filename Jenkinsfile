@@ -22,6 +22,7 @@ node('ios-osx') {
             brew update
             brew install xctool
             brew install carthage
+            brew install yarn
             pod --version
         '''
         // load/restore carthage build directory
@@ -29,7 +30,7 @@ node('ios-osx') {
             CART_CACHE=/tmp/carthage_cache_`md5 -q Cartfile`.tar; tar -xf $CART_CACHE ; echo A |./bootstrap.sh && tar -cf $CART_CACHE Carthage Cartfile.resolved
         '''
         sh '''#!/bin/bash -l -x
-            npm install
+            yarn install
             pod install
             npm run dev-bundle
         '''
