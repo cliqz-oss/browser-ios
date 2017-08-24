@@ -46,7 +46,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 		self.historyTableView.register(DomainsCell.self, forCellReuseIdentifier: historyCellID)
 		self.historyTableView.tableFooterView = UIView()
 		self.historyTableView.separatorStyle = .singleLine
-		self.historyTableView.separatorColor = UIColor.lightGray
+		self.historyTableView.separatorColor = UIColor.darkGray
         self.historyTableView.backgroundColor = UIColor.clear
         
         NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NewsManager.notification_updated, object: nil)

@@ -64,8 +64,8 @@ class DomainsCell: UITableViewCell {
         self.logoButton.snp.remakeConstraints { (make) in
             make.left.equalTo(self.contentView).offset(10)
             make.centerY.equalTo(self.contentView)
-            make.width.equalTo(44)
-            make.height.equalTo(44)
+            make.width.equalTo(50)
+            make.height.equalTo(50)
         }
         self.URLLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(self.contentView).offset(15)
