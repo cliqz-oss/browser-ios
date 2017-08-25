@@ -315,7 +315,7 @@ class TabManager : NSObject {
         tab.navigationDelegate = self.navDelegate
 
         if let request = request {
-            tab.loadRequest(request)
+            _ = tab.loadRequest(request)
         } else {
             let newTabChoice = NewTabAccessors.getNewTabPage(prefs)
             switch newTabChoice {
@@ -323,7 +323,7 @@ class TabManager : NSObject {
                 // We definitely have a homepage if we've got here 
                 // (so we can safely dereference it).
                 let url = HomePageAccessors.getHomePage(prefs)!
-                tab.loadRequest(URLRequest(url: url))
+                _ = tab.loadRequest(URLRequest(url: url))
             case .BlankPage:
                 // Do nothing: we're already seeing a blank page.
                 break
@@ -331,7 +331,7 @@ class TabManager : NSObject {
                 // The common case, where the NewTabPage enum defines
                 // one of the about:home pages.
                 if let url = newTabChoice.url {
-                    tab.loadRequest(PrivilegedRequest(url: url) as URLRequest)
+                    _ = tab.loadRequest(PrivilegedRequest(url: url) as URLRequest)
                 }
             }
         }

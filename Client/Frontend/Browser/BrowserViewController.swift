@@ -1324,9 +1324,9 @@ class BrowserViewController: UIViewController {
         }
         if #available(iOS 9, *) {
             switchToPrivacyMode(isPrivate: isPrivate)
-            tabManager.addTabAndSelect(request, isPrivate: isPrivate)
+            _ = tabManager.addTabAndSelect(request, isPrivate: isPrivate)
         } else {
-            tabManager.addTabAndSelect(request)
+            _ = tabManager.addTabAndSelect(request)
         }
     }
 
