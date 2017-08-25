@@ -2,43 +2,91 @@
 
 @Library('cliqz-shared-library@vagrant') _
 
-node('ios-osx') {
+node('mac-vm-host') {
 
     writeFile file: 'Vagrantfile', text: '''
       Vagrant.configure("2") do |config|
 
-        config.vm.box = "browser-f_mac10.11.4_34"
+        config.vm.box = "browser-ios-v112"
         config.vm.network "public_network"
+        config.vm.boot_timeout = 900
 
         config.vm.provider "vmware_fusion" do |v|
+          v.whitelist_verified = true
           v.gui = false
           v.memory = ENV["NODE_MEMORY"]
           v.cpus = ENV["NODE_CPU_COUNT"]
+          v.cpu_mode = "host-passthrough"
           v.vmx["remotedisplay.vnc.enabled"] = "TRUE"
           v.vmx["RemoteDisplay.vnc.port"] = ENV["NODE_VNC_PORT"]
+          v.vmx["ethernet0.pcislotnumber"] = "33"
         end
 
         config.vm.provision "shell", privileged: false, run: "always", inline: <<-SHELL
           rm -f slave.jar
-          wget #{ENV['JENKINS_URL']}/jnlpJars/slave.jar
+          curl #{ENV['JENKINS_URL']}/jnlpJars/slave.jar --output slave.jar
           nohup java -jar slave.jar -jnlpUrl #{ENV['JENKINS_URL']}/computer/#{ENV['NODE_ID']}/slave-agent.jnlp -secret #{ENV["NODE_SECRET"]} &
         SHELL
       end
     '''
 
     vagrant.inside(
-        "artifacts/${VAGRANTFILE}",
-        "/jenkins",
+        'Vagrantfile',
+        '/jenkins',
         4, // CPU
-        4000, // MEMOERY
+        8000, // MEMORY
         12000, // VNC port
         false, // rebuild image
     ) { nodeId ->
         node(nodeId) {
-            stage("Checkout") {
-                checkout scm
+            stage('Checkout') {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    extensions: scm.extensions + [
+                        [$class: 'CheckoutOption', timeout: 30],
+                        [$class: 'CloneOption', depth: 0, noTags: true, reference: '', shallow: true, timeout: 30, honorRefspec: true],
+                    ],
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ])
+            }
+
+            stage('Prepare') {
+                sh '''#!/bin/bash -l
+                    set -e
+                    set -x
+                    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+                    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+                    brew update
+                    brew install cocoapods
+                    brew install xctool
+                    brew install carthage
+                    brew install yarn
+                '''
+
+                // load/restore carthage build directory
+                sh '''#!/bin/bash -l -x
+                    set -e
+                    set -x
+                    CART_CACHE=/tmp/carthage_cache_`md5 -q Cartfile`.tar; tar -xf $CART_CACHE ; echo A |./bootstrap.sh && tar -cf $CART_CACHE Carthage Cartfile.resolved
+                '''
+
+                sh '''#!/bin/bash -l -x
+                    set -e
+                    set -x
+                    yarn install
+                    pod install
+                    npm run dev-bundle
+                '''
+            }
+
+            stage('Build') {
+                timeout(20) {
+                    sh '''#!/bin/bash -l -x
+                        xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build
+                    '''
+                }
             }
         }
     }
-
 }
