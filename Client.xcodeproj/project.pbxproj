@@ -4221,6 +4221,7 @@
 		AFA93A5D1F4AE6B0001425C4 /* URL Bar */ = {
 			isa = PBXGroup;
 			children = (
+				4FB895D41F44467800DC028E /* CIURLBar.swift */,
 				AF4541281F309F5900979B7D /* URLBarViewController.swift */,
 				AF45412A1F309F7200979B7D /* URLBarLogic.swift */,
 			);
@@ -4284,7 +4285,6 @@
 		AFC021B31F420990003B820C /* Conversational UI */ = {
 			isa = PBXGroup;
 			children = (
-				4FB895D41F44467800DC028E /* CIURLBar.swift */,
 				AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */,
 				AFA93A631F4B0D10001425C4 /* Router.swift */,
 				AFA93A601F4AE6EC001425C4 /* Managers and Modules */,
