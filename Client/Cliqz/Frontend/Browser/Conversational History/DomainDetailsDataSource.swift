@@ -8,76 +8,129 @@
 
 import UIKit
 
-class CliqzHistoryDetailsDataSource: DomainDetailsProtocol {
+class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewDataSource {
+    
+    
+    //group details by their date. 
+    //order the dates.
+    
+    struct SortedDomainDetail: Comparable {
+        let date: Date
+        let details: [DomainDetail]
+        
+        static func ==(x: SortedDomainDetail, y: SortedDomainDetail) -> Bool {
+            return x.date == y.date
+        }
+        static func <(x: SortedDomainDetail, y: SortedDomainDetail) -> Bool {
+            return x.date < y.date
+        }
+    }
+    
+    private let standardDateFormat = "dd-MM-yyyy"
+    
+    private let standardFormatter = DateFormatter()
 
     var img: UIImage?
-    var domainDetails: [DomainDetail]
+    
+    var sortedDetails: [SortedDomainDetail] = []
     
     init(image:UIImage?, domainDetails: [DomainDetail]) {
+        
+        standardFormatter.dateFormat = standardDateFormat
+        
         self.img = image
-        self.domainDetails = domainDetails.sorted(by: { (a, b) -> Bool in
-            if let date_a = a.date, let date_b = b.date {
-                return date_a > date_b
-            }
-            return false
-        })
+        self.sortedDetails = orderByDate(domainDict: groupByDate(domainDetails: domainDetails))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func image() -> UIImage? {
         return self.img
     }
     
-    func urlLabelText(indexPath: IndexPath) -> String {
+    func url(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.url.absoluteString ?? ""
     }
     
-    func titleLabelText(indexPath: IndexPath) -> String {
+    func title(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.title ?? ""
     }
     
-    func sectionTitle(section: Int) -> String {
-        return "Today"
+    func titleSectionHeader(section: Int) -> String {
+        guard sectionWithinBounds(section: section) else { return "" }
+        let date = sortedDetails[section].date
+        return standardFormatter.string(from: date)
     }
     
-    func timeLabelText(indexPath: IndexPath) -> String {
+    func time(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.date?.toRelativeTimeString() ?? ""
     }
     
     func numberOfSections() -> Int {
-        return 1
+        return sortedDetails.count
     }
     
-    func numberOfCells(section: Int) -> Int {
-        return domainDetails.count
+    func numberOfRows(section: Int) -> Int {
+        return sortedDetails[section].details.count
     }
     
     func baseUrl() -> String {
-        return domainDetails.first?.url.host ?? ""
+        return sortedDetails.first?.details.first?.url.host ?? ""
     }
     
     func isNews() -> Bool {
         return false
     }
     
-    func isQuery(indexPath: IndexPath) -> Bool {
-        if indexPath.row == 1 {
-            return true
-        }
+    func useRightCell(indexPath: IndexPath) -> Bool {
         return false
     }
     
     func detail(indexPath: IndexPath) -> DomainDetail? {
         if indexWithinBounds(indexPath: indexPath) {
-            return domainDetails[indexPath.row]
+            return sortedDetails[indexPath.section].details[indexPath.row]
         }
         return nil
     }
     
-    func indexWithinBounds(indexPath: IndexPath) -> Bool {
-        if indexPath.row < self.domainDetails.count{
+    func sectionWithinBounds(section: Int) -> Bool {
+        if section >= 0 && section < sortedDetails.count {
             return true
         }
         return false
     }
+    
+    func indexWithinBounds(indexPath: IndexPath) -> Bool {
+        guard sectionWithinBounds(section: indexPath.section) else { return false }
+        if indexPath.row >= 0 && indexPath.row < sortedDetails[indexPath.section].details.count {
+            return true
+        }
+        return false
+    }
+    
+    func groupByDate(domainDetails: [DomainDetail]) -> Dictionary<String, [DomainDetail]> {
+        return GeneralUtils.groupBy(array: domainDetails) { (domainDetail) -> String in
+            if let date = domainDetail.date {
+                let formatter = DateFormatter()
+                formatter.dateFormat = standardDateFormat
+                return formatter.string(from: date)
+            }
+            return "01-01-1970"
+        }
+    }
+    
+    //return a descending array
+    func orderByDate(domainDict: Dictionary<String, [DomainDetail]>) -> [SortedDomainDetail] {
+        
+        let unsortedArray = domainDict.keys.map { (key) -> SortedDomainDetail in
+            let domainDetails = domainDict[key]
+            return SortedDomainDetail(date: self.standardFormatter.date(from: key)!, details: domainDetails!)
+        }
+        
+        return unsortedArray.sorted().reversed()
+    }
+    
     
 }

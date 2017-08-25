@@ -49,7 +49,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 		self.historyTableView.separatorColor = UIColor.lightGray
         self.historyTableView.backgroundColor = UIColor.clear
         
-        NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NSNotification.Name(rawValue: NewsDataSource.sharedInstance.notification_ready_name), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NewsManager.notification_updated, object: nil)
 	}
     
     deinit {
@@ -57,7 +57,6 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
 	override func viewWillDisappear(_ animated: Bool) {
-        //dataSource.clean()
 		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
 	}
@@ -65,7 +64,6 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.isNavigationBarHidden = true
-//		self.backButton.hidden = true
         self.loadData()        
     }
     

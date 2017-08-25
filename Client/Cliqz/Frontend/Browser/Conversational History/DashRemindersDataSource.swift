@@ -10,12 +10,14 @@ import UIKit
 
 class DashRemindersDataSource: ExpandableViewProtocol {
     
+    static let identifier = "DashRemindersDataSource"
+    
     func maxNumCells() -> Int {
-        return 20
+        return 0
     }
     
     func minNumCells() -> Int {
-        return 2
+        return 0
     }
     
     func title(indexPath: IndexPath) -> String {

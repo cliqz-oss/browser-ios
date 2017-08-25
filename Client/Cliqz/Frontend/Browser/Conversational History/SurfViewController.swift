@@ -74,10 +74,10 @@ final class SurfViewController: UIViewController {
     }
     
     private func animate(view: UIView, position: Position) {
-        UIView.animate(withDuration: 0.3) {
+        UIViewPropertyAnimator.init(duration: 0.2, curve: .easeOut) {
             self.put(view: view, position: position)
             self.view.layoutIfNeeded()
-        }
+        }.startAnimation()
     }
     
     private func put(view: UIView, position: Position) {

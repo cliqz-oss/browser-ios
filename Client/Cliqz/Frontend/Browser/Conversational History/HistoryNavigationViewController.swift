@@ -41,33 +41,33 @@ final class HistoryNavigationViewController: UIViewController {
         conversationalHistory.view.backgroundColor = UIColor.clear
         conversationalHistory.delegate = self.browsing_delegate
         conversationalHistory.didPressCell = { (indexPath,image) in
-            if indexPath.row == 0 { //news
-                NewsDataSource.sharedInstance.setNewArticlesAsSeen()
-            }
+            
             let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
             
             UIView.animate(withDuration: 0.16, animations: {
                 self.conversationalHistory.view.alpha = 0.0
                 self.nc.pushViewController(conversationalHistoryDetails, animated: true)
-            }, completion: { (completed) in
-                //self.conversationalHistory.view.alpha = 1.0
             })
-            
         }
     }
     
     private func setUpConversationalHistoryDetails(indexPath:IndexPath, image: UIImage?) -> DomainDetailsViewController {
-        let conversationalHistoryDetails = DomainDetailsViewController()
-        conversationalHistoryDetails.delegate = self.browsing_delegate
-        conversationalHistoryDetails.didPressBack = {
+        
+        let headerAndTableDataSource = DomainDetailsDataSource(image: image, domainDetails: domainDetails(indexPath: indexPath))
+        
+        let baseUrl = headerAndTableDataSource.baseUrl()
+        
+        let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: RecommendationsDataSource(baseUrl: baseUrl), headerViewDataSource: headerAndTableDataSource, didPressBack: {
             self.showConversationalHistory()
+        }) { (url) in
+            Router.sharedInstance.historyDetailCellPressed(url: url)
         }
-        conversationalHistoryDetails.dataSource = detailsDataSource(indexPath: indexPath, image: image)
+        
         return conversationalHistoryDetails
     }
     
     private func showConversationalHistory() {
-        UIView.animate(withDuration: 0.16, animations: {
+        UIView.animate(withDuration: 0.2, animations: {
             self.conversationalHistory.view.alpha = 1.0
         }) { (completed) in
             self.nc.popToRootViewController(animated: true)
@@ -80,16 +80,6 @@ final class HistoryNavigationViewController: UIViewController {
     
     private func domainDetails(indexPath:IndexPath) -> [DomainDetail] {
         return conversationalHistory.dataSource.domains[indexPath.row].domainDetails
-    }
-    
-    private func detailsDataSource(indexPath:IndexPath, image:UIImage?) -> DomainDetailsProtocol? {
-        if indexPath.row == 0 {
-            return CliqzNewsDetailsDataSource(image:image, articles: NewsDataSource.sharedInstance.articles)
-        }
-        else if indexPath.row > 0 {
-            return CliqzHistoryDetailsDataSource(image: image, domainDetails: domainDetails(indexPath: indexPath))
-        }
-        return nil
     }
 
     override func didReceiveMemoryWarning() {

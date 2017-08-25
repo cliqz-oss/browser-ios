@@ -10,8 +10,8 @@ import UIKit
 
 class DashViewController: UIViewController {
     
-    let reminders       = ExpandableView(customDataSource: DashRemindersDataSource())
-    let recommendations = ExpandableView(customDataSource: DashRecommendationsDataSource())
+    var reminders: ExpandableView? = nil
+    var recommendations: ExpandableView? = nil
     
     let scrollView = UIScrollView()
     
@@ -20,10 +20,51 @@ class DashViewController: UIViewController {
     let remindersTopInset: CGFloat = 20.0
     let recommendationsTopInset: CGFloat = 30.0
     let bottomPaddingScroll: CGFloat = 30.0
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        reminders = ExpandableView(customDataSource: DashRemindersDataSource())
+        recommendations = ExpandableView(customDataSource: DashRecommendationsDataSource(delegate: self))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        self.scrollView.addSubview(reminders!)
+        self.scrollView.addSubview(recommendations!)
+        self.view.addSubview(scrollView)
+        
+        setUpComponent()
+        setStyles()
+        setConstraints()
+    }
+    
+    //what can change after the data changes in the datasource:
+    //1. contentSize
+    //2. visiblility for expandable views
+    //3. min max num elements
+    //4. contents of both expandable views (point 3 belongs to that)
+    
+    func updateRecommendations() {
+        recommendations!.reloadData()
+        updateUI()
+    }
+    
+    func updateReminders() {
+        reminders!.reloadData()
+        updateUI()
+    }
+    
+    func updateUI() {
         setUpComponent()
         setStyles()
         setConstraints()
@@ -31,17 +72,32 @@ class DashViewController: UIViewController {
     
     func setUpComponent() {
         
-        self.scrollView.addSubview(reminders)
-        self.scrollView.addSubview(recommendations)
-        self.view.addSubview(scrollView)
-        reminders.customDelegate = self
-        recommendations.customDelegate = self
+        reminders!.customDelegate = self
+        recommendations!.customDelegate = self
         
-        reminders.headerTitleText = "Reminders"
-        recommendations.headerTitleText = "Recommendations"
+        reminders!.headerTitleText = "Reminders"
+        recommendations!.headerTitleText = "Recommendations"
         
-        scrollView.contentSize.height = reminders.initialHeight() + recommendations.initialHeight() + remindersTopInset + recommendationsTopInset + bottomPaddingScroll
+        var reminders_initial_height = reminders!.initialHeight()
+        var recommendations_initial_height = recommendations!.initialHeight()
         
+        if recommendations!.customDataSource?.maxNumCells() == 0 {
+            recommendations!.isHidden = true
+            recommendations_initial_height = 0
+        }
+        else {
+            recommendations!.isHidden = false
+        }
+        
+        if reminders!.customDataSource?.maxNumCells() == 0 {
+            reminders!.isHidden = true
+            reminders_initial_height = 0
+        }
+        else {
+            reminders!.isHidden = false
+        }
+        
+        scrollView.contentSize.height = reminders_initial_height + recommendations_initial_height + remindersTopInset + recommendationsTopInset + bottomPaddingScroll
     }
     
     func setStyles() {
@@ -50,22 +106,29 @@ class DashViewController: UIViewController {
     }
     
     func setConstraints() {
+        
         scrollView.snp.makeConstraints { (make) in
             make.top.left.bottom.right.equalToSuperview()
         }
         
-        reminders.snp.makeConstraints { (make) in
+        reminders!.snp.remakeConstraints { (make) in
             make.top.equalToSuperview().inset(remindersTopInset)
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().dividedBy(1.1)
-            make.height.equalTo(reminders.initialHeight())
+            make.height.equalTo(reminders!.initialHeight())
         }
         
-        recommendations.snp.makeConstraints { (make) in
-            make.top.equalTo(reminders.snp.bottom).offset(recommendationsTopInset)
+        recommendations!.snp.remakeConstraints { (make) in
+            if reminders!.isHidden == false {
+                make.top.equalTo(reminders!.snp.bottom).offset(recommendationsTopInset)
+            }
+            else {
+                make.top.equalToSuperview().offset(remindersTopInset)
+            }
+            
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().dividedBy(1.1)
-            make.height.equalTo(recommendations.initialHeight())
+            make.height.equalTo(recommendations!.initialHeight())
         }
     }
 
@@ -73,7 +136,17 @@ class DashViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
 
+extension DashViewController: HasDataSource {
+    func dataSourceWasUpdated(identifier: String) {
+        if identifier == DashRecommendationsDataSource.identifier {
+            updateRecommendations()
+        }
+        else if identifier == DashRemindersDataSource.identifier {
+            updateReminders()
+        }
+    }
 }
 
 extension DashViewController: ExpandableViewDelegate {

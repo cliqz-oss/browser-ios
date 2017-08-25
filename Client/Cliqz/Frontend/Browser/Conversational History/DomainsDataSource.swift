@@ -12,8 +12,8 @@ import Foundation
 
 final class DomainsDataSource: NSObject, DomainsProtocol {
     
-    //Note: The mechanism is not robust enough to handle the failure of ConversationalHistoryAPI.getHistory
-    //TO DO: Work on that.
+    //This still needs work
+    //Loads every time this view is shown. This can be problematic with big history. Need to handle that.
     
     var domains: [Domain] = []
     
@@ -35,11 +35,11 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
             
             loading = true
             self.completionBlocks.append(completion)
+            domains = []
             
             if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
                 HistoryModule.getHistory(profile: profile, completion: { (result, error) in
                     DispatchQueue.main.async(execute: {
-                        self.domains = [Domain(domainName: "cliqz.com", domainDetails: [], date: nil)] //cliqz news.
                         if let domains = result {
                             self.domains.append(contentsOf: domains.sorted(by: { (a, b) -> Bool in
                                 if let date_a = a.date, let date_b = b.date {
@@ -73,23 +73,11 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func urlLabelText(indexPath:IndexPath) -> String {
-        if indexPath.row == 0{
-            return cliqzNews_header
-        }
-        else if indexWithinBounds(indexPath: indexPath){
-            return domains[indexPath.row].domainName
-        }
-        
-        return ""
+        return domains[indexPath.row].domainName
     }
     
     func titleLabelText(indexPath:IndexPath) -> String {
-        if indexPath.row == 0{
-            return cliqzNews_title
-        }
-        else{
-            return domains[indexPath.row].date?.toRelativeTimeString() ?? ""
-        }
+        return domains[indexPath.row].date?.toRelativeTimeString() ?? ""
     }
     
     func timeLabelText(indexPath:IndexPath) -> String {
@@ -97,13 +85,8 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func baseUrl(indexPath:IndexPath) -> String {
-        if indexPath.row == 0{
-            return "https://www.cliqz.com"
-        }
-        else{
-            let domainDetail = domains[indexPath.row].domainDetails
-            return domainDetail.first?.url.baseURL?.absoluteString ?? ""
-        }
+        let domainDetail = domains[indexPath.row].domainDetails
+        return domainDetail.first?.url.host ?? ""
     }
     
     func image(indexPath:IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void) {
@@ -119,14 +102,11 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func shouldShowNotification(indexPath:IndexPath) -> Bool {
-        if indexPath.row == 0 && NewsDataSource.sharedInstance.newArticlesAvailable() {
-            return true
-        }
         return false
     }
     
     func notificationNumber(indexPath:IndexPath) -> Int {
-        return NewsDataSource.sharedInstance.newArticleCount()
+        return NewsManager.sharedInstance.newArticleCount()
     }
     
     func indexWithinBounds(indexPath:IndexPath) -> Bool {

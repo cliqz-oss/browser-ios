@@ -1,10 +1,8 @@
 //
-//  ConversationalHistoryDetails.swift
+//  DomainDetailsViewController
 //  Client
 //
-//  Created by Sahakyan on 12/8/16.
-//  Copyright © 2016 Mozilla. All rights reserved.
-//
+//  Created by Tim Palade.
 
 import Foundation
 import UIKit
@@ -12,69 +10,76 @@ import SnapKit
 import Alamofire
 import QuartzCore
 
-protocol DomainDetailsProtocol: class {
-    func urlLabelText(indexPath: IndexPath) -> String
-    func titleLabelText(indexPath: IndexPath) -> String
-    func sectionTitle(section: Int) -> String
-    func timeLabelText(indexPath: IndexPath) -> String
-    func isQuery(indexPath: IndexPath) -> Bool
-    func numberOfSections() -> Int
-    func numberOfCells(section: Int) -> Int
-    func image() -> UIImage?
-    func isNews() -> Bool
-    func baseUrl() -> String
-}
-
 // This is the View Controller for the Domain Details View (What you see after you press on a certain domain)
 
-// Attention!!!!
-// To Do: Take out the table view into a separate component
-
-class DomainDetailsViewController: UIViewController {
+final class DomainDetailsViewController: UIViewController {
 	
 	var historyTableView: BubbleTableView!
-	var sortedURLs = [String]()
-    let headerView = DomainDetailsHeaderView()
+    var headerView: DomainDetailsHeaderView!
     let recommendationsCollection = RecommedationsCollectionView()
     
-    var dataSource: DomainDetailsProtocol? = nil
-
-	weak var delegate: BrowserNavigationDelegate?
+    var tableViewDataSource: BubbleTableViewDataSource
+    var recommendationsDataSource: RecommendationsCollectionProtocol
+    var headerViewDataSource: DomainDetailsHeaderViewProtocol
 	
-	private var urls: NSArray!
+    var didPressBack: () -> ()
+    var cellPressed: (String) -> Void
     
-    var didPressBack: () -> () = { _ in }
+    init(tableViewDataSource: BubbleTableViewDataSource, recommendationsDataSource: RecommendationsCollectionProtocol, headerViewDataSource: DomainDetailsHeaderViewProtocol, didPressBack: @escaping () -> (), cellPressed: @escaping (String) -> Void) {
+        
+        self.tableViewDataSource = tableViewDataSource
+        self.recommendationsDataSource = recommendationsDataSource
+        self.headerViewDataSource = headerViewDataSource
+        
+        self.didPressBack = didPressBack
+        self.cellPressed = cellPressed
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        historyTableView = BubbleTableView(customDataSource: self.tableViewDataSource, customDelegate: self)
+        recommendationsCollection.customDataSource = self.recommendationsDataSource
+        headerView = DomainDetailsHeaderView(dataSource: self.headerViewDataSource)
+        headerView.delegate = self
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
         componentSetUp()
-        
-        self.view.addSubview(headerView)
-        self.view.addSubview(recommendationsCollection)
-		self.view.addSubview(historyTableView)
-        
         setStyling()
-        setConstraints()
 	}
     
-    func componentSetUp() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        headerView.delegate = self
-        headerView.logo.setImage(dataSource?.image() ?? UIImage(named: "coolLogo"), for: .normal)
-        headerView.title.text = dataSource?.baseUrl() ?? "www.test.com"
+        self.navigationController?.isNavigationBarHidden = true
         
-        recommendationsCollection.recomDataSource = RecommendationsDataSource()
+        if recommendationsDataSource.numberOfItems() == 0 {
+            recommendationsCollection.isHidden = true
+        }
+        else {
+            recommendationsCollection.isHidden = false
+        }
         
-        self.historyTableView = BubbleTableView(customDataSource: self, customDelegate: self)
-        
+        setConstraints()
     }
     
-    func setStyling() {
+    private func componentSetUp() {
+        self.view.addSubview(headerView)
+        self.view.addSubview(recommendationsCollection)
+        self.view.addSubview(historyTableView)
+    }
+    
+    private func setStyling() {
         self.view.backgroundColor = UIColor.clear
     }
     
-    func setConstraints() {
+    private func setConstraints() {
         
         self.headerView.snp.remakeConstraints { (make) in
             make.top.left.right.equalTo(self.view)
@@ -82,9 +87,12 @@ class DomainDetailsViewController: UIViewController {
         }
         
         self.recommendationsCollection.snp.makeConstraints { (make) in
+            
+            let height = recommendationsDataSource.numberOfItems() == 0 ? 0 : 204
+            
             make.left.right.equalTo(self.view)
             make.top.equalTo(self.headerView.snp.bottom)
-            make.height.equalTo(204)
+            make.height.equalTo(height)
         }
         
         self.historyTableView.snp.remakeConstraints { (make) in
@@ -92,54 +100,15 @@ class DomainDetailsViewController: UIViewController {
             make.top.equalTo(self.recommendationsCollection.snp.bottom)
         }
     }
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		self.navigationController?.isNavigationBarHidden = true
-	}
 	
 	@objc private func logoPressed() {
-		if let baseURL = dataSource?.baseUrl(), let url = NSURL(string: baseURL) {
-            self.navigationController?.popViewController(animated: false)
-			self.delegate?.navigateToURL(url as URL)
-		}
 
 	}
-}
-
-extension DomainDetailsViewController: BubbleTableViewDataSource {
-    func numberOfSections() -> Int {
-        return dataSource?.numberOfSections() ?? 0
-    }
-    
-    func numberOfRows(section: Int) -> Int {
-        return dataSource?.numberOfCells(section: section) ?? 0
-    }
-    
-    func titleSectionHeader(section: Int) -> String {
-        return dataSource?.sectionTitle(section:section) ?? ""
-    }
-    
-    func title(indexPath: IndexPath) -> String {
-        return dataSource?.titleLabelText(indexPath: indexPath) ?? ""
-    }
-    
-    func url(indexPath: IndexPath) -> String {
-        return dataSource?.urlLabelText(indexPath: indexPath) ?? ""
-    }
-    
-    func time(indexPath: IndexPath) -> String {
-        return dataSource?.timeLabelText(indexPath: indexPath) ?? ""
-    }
-    
-    func useRightCell(indexPath: IndexPath) -> Bool {
-        return dataSource?.isQuery(indexPath: indexPath) ?? false
-    }
 }
 
 extension DomainDetailsViewController: BubbleTableViewDelegate {
     func cellPressed(indexPath: IndexPath) {
-        
+        self.cellPressed(tableViewDataSource.url(indexPath: indexPath))
     }
 }
 
