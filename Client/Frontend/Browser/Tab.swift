@@ -415,7 +415,7 @@ class Tab: NSObject {
                 webView?.customUserAgent = userAgent
 
                 // Reload the initial URL to avoid UA specific redirection
-                loadRequest(URLRequest(url: currentItem.initialURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60))
+                _ = loadRequest(URLRequest(url: currentItem.initialURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60))
                 return
             }
         }
@@ -526,7 +526,7 @@ class Tab: NSObject {
 //		guard let webView = object as? WKWebView where webView == self.webView,
         guard let webView = object as? CliqzWebView, webView == self.webView,
             let path = keyPath, path == "URL" else {
-            return assertionFailure("Unhandled KVO key: \(keyPath)")
+            return assertionFailure("Unhandled KVO key: \(String(describing: keyPath))")
         }
 
         updateAppState()
