@@ -30,7 +30,7 @@ final class URLBarViewController: UIViewController {
 
 		self.URLBar.snp.makeConstraints { (make) in
 			make.left.right.bottom.equalTo(self.view)
-			make.top.equalTo(self.view).inset(20)
+			make.top.equalTo(self.view)
 		}
     }
 

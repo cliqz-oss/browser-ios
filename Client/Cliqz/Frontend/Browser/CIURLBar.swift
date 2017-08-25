@@ -47,6 +47,7 @@ struct CIURLBarUX {
 	static let TextFieldCornerRadius: CGFloat = 3
 	static let ProgressTintColor = UIColor(red:1, green:0.32, blue:0, alpha:1)
 	static let TextFieldHeight = 28
+	static let TextFieldTopOffset = 20
 	static let URLBarButtonOffset: CGFloat = 5
 
 	// TODO: Review themes
@@ -361,10 +362,7 @@ extension CIURLBar {
 	private func expandLocationContainer() -> [Transition] {
 		let transition = Transition(endState: {
 			self.locationContainer.snp.remakeConstraints({ make in
-				make.trailing.equalTo(self)
-				make.leading.equalTo(self)
-				make.height.equalTo(self)
-				make.centerY.equalTo(self)
+				make.trailing.leading.height.top.equalTo(self)
 			})
 			self.locationContainer.layer.cornerRadius = 0
 		}, beforeTransition: {
@@ -386,7 +384,7 @@ extension CIURLBar {
 					make.trailing.equalTo(self).offset(-CIURLBarUX.TextFieldPadding)
 				}
 				make.height.equalTo(CIURLBarUX.TextFieldHeight)
-				make.centerY.equalTo(self)
+				make.top.equalTo(self).offset(CIURLBarUX.TextFieldTopOffset)
 			})
 			self.locationContainer.layer.cornerRadius = CIURLBarUX.TextFieldCornerRadius
 		}, beforeTransition: {
