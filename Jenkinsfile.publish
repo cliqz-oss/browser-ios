@@ -1,0 +1,44 @@
+#!/bin/env groovy
+
+@Library('cliqz-shared-library@vagrant') _
+
+node('ios-osx') {
+
+    writeFile file: 'Vagrantfile', text: '''
+      Vagrant.configure("2") do |config|
+
+        config.vm.box = "browser-f_mac10.11.4_34"
+        config.vm.network "public_network"
+
+        config.vm.provider "vmware_fusion" do |v|
+          v.gui = false
+          v.memory = ENV["NODE_MEMORY"]
+          v.cpus = ENV["NODE_CPU_COUNT"]
+          v.vmx["remotedisplay.vnc.enabled"] = "TRUE"
+          v.vmx["RemoteDisplay.vnc.port"] = ENV["NODE_VNC_PORT"]
+        end
+
+        config.vm.provision "shell", privileged: false, run: "always", inline: <<-SHELL
+          rm -f slave.jar
+          wget #{ENV['JENKINS_URL']}/jnlpJars/slave.jar
+          nohup java -jar slave.jar -jnlpUrl #{ENV['JENKINS_URL']}/computer/#{ENV['NODE_ID']}/slave-agent.jnlp -secret #{ENV["NODE_SECRET"]} &
+        SHELL
+      end
+    '''
+
+    vagrant.inside(
+        "artifacts/${VAGRANTFILE}",
+        "/jenkins",
+        4, // CPU
+        4000, // MEMOERY
+        12000, // VNC port
+        false, // rebuild image
+    ) { nodeId ->
+        node(nodeId) {
+            stage("Checkout") {
+                checkout scm
+            }
+        }
+    }
+
+}
