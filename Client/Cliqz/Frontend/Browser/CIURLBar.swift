@@ -397,13 +397,13 @@ extension CIURLBar {
 	}
 	
 	private func expandLocationTextField() -> [Transition] {
-		self.locationTextField.snp.makeConstraints { make in
-			make.edges.equalTo(self.locationView)
-		}
-
 		let transition = Transition(endState: {
 			self.locationTextField.applyTheme(self.theme)
 		}, beforeTransition: {
+			self.locationTextField.snp.makeConstraints { make in
+				make.edges.equalTo(self.locationView)
+			}
+			self.layoutIfNeeded()
 		}, afterTransition: {
 			self.locationTextField.becomeFirstResponder()
 		})
