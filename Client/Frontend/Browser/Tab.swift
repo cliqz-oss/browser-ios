@@ -234,7 +234,7 @@ class Tab: NSObject {
         } else if let request = lastRequest {
             webView.loadRequest(request)
         } else {
-            log.error("creating webview with no lastRequest and no session data: \(self.url)")
+            log.error("creating webview with no lastRequest and no session data: \(String(describing: self.url))")
         }
     }
     private func getEscapedJSON(_ jsonDict: [String: Any]) -> String?{
