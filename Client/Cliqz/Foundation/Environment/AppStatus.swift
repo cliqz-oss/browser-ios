@@ -257,10 +257,14 @@ class AppStatus {
         
         return prefs
     }
+    
     fileprivate func getAppLanguage() -> String {
-        let languageCode = (Locale.current as NSLocale).object(forKey: .countryCode)
-        let countryCode = (Locale.current as NSLocale).object(forKey: .countryCode)
-        return "\(languageCode!)-\(countryCode!)"
+        
+        if let languageCode = Locale.current.languageCode, let regionCode = Locale.current.regionCode {
+            return "\(languageCode)-\(regionCode)"
+        }
+        
+        return ""
     }
     
     fileprivate func getHistoryDays(_ profile: Profile) -> Int {
