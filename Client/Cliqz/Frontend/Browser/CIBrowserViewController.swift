@@ -11,6 +11,9 @@ import UIKit
 final class CIBrowserViewController: UIViewController {
     
     private let label = UILabel()
+    
+    var navigationStep: Int = 0
+    var backNavigationStep: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,16 +42,48 @@ final class CIBrowserViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+extension CIBrowserViewController: TabManagerDelegate {
+    
+    func tabManager(_ tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?) {
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
+        
+    }
+    
+    func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
+        
+    }
+    
+    func tabManagerDidAddTabs(_ tabManager: TabManager) {
+        
+    }
+    
+    func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
+    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

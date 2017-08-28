@@ -21,10 +21,10 @@ typealias SearchLoader = _SearchLoader<AnyObject, AnyObject>
  */
 class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewController> {
     fileprivate let profile: Profile
-    fileprivate let urlBar: URLBarView
+    fileprivate var urlBar: URLBarView? = nil
     fileprivate var inProgress: Cancellable? = nil
 
-    init(profile: Profile, urlBar: URLBarView) {
+    init(profile: Profile, urlBar: URLBarView? = nil) {
         self.profile = profile
         self.urlBar = urlBar
         super.init()

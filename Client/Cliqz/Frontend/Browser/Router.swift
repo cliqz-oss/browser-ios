@@ -6,6 +6,9 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
+//Router: The purpose of the class is to eliminate the need to have too many delegates. 
+//If position in the hierarchy between two classes is more than or equal to two levels, then use the Router for communication. 
+
 import UIKit
 
 class Router {
@@ -14,7 +17,7 @@ class Router {
         case contentNavigation
     }
     
-    private weak var ContentNavVC: ContentNavigationViewController?
+    fileprivate weak var ContentNavVC: ContentNavigationViewController?
     
     static let sharedInstance = Router()
     
@@ -27,9 +30,29 @@ class Router {
         }
         
     }
+}
+
+
+//History Details
+extension Router: ExternalHistoryHandler {
     
     func historyDetailCellPressed(url: String?) {
-        ContentNavVC?.navigateToBrowser()
+        ContentNavVC?.historyDetailWasPressed(url: url)
+    }
+}
+
+//Url Bar
+extension Router: ExternalURLBarHandler {
+    
+    func textChangedInUrlBar(text: String) {
+        ContentNavVC?.textInUrlBarChanged(text: text)
     }
     
+    func textClearedInUrlBar() {
+        ContentNavVC?.textIUrlBarCleared()
+    }
+    
+    func backPressedUrlBar() {
+        ContentNavVC?.backPressedUrlBar()
+    }
 }

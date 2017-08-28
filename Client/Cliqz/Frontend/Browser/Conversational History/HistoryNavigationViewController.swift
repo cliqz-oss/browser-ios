@@ -8,17 +8,17 @@
 
 import UIKit
 
+protocol ExternalHistoryHandler: class {
+    func historyDetailCellPressed(url: String?)
+}
+
 final class HistoryNavigationViewController: UIViewController {
     
     var conversationalHistory: DomainsViewController = DomainsViewController()
     var searchController: CliqzSearchViewController?
     var nc: UINavigationController = UINavigationController()
-    weak var browsing_delegate: BrowserNavigationDelegate?
-    weak var searching_delegate: SearchViewDelegate?
-    weak var search_loader: SearchLoader?
-    weak var profile: Profile?
     
-    var resetNavigationSteps: () -> () = { _ in }
+    weak var externalDelegate: ExternalHistoryHandler? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ final class HistoryNavigationViewController: UIViewController {
     
     private func setupConversationalHistory() {
         conversationalHistory.view.backgroundColor = UIColor.clear
-        conversationalHistory.delegate = self.browsing_delegate
+        //conversationalHistory.delegate = self.browsing_delegate
         conversationalHistory.didPressCell = { (indexPath,image) in
             
             let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
@@ -86,56 +86,5 @@ final class HistoryNavigationViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    //----------------------------------------------------------------------
-    //DEPRECATED
-    
-    private func showSearchController(text: String?) {
-        if searchController == nil{
-            setUpSearchController()
-        }
-        
-        searchController?.view.isHidden = false
-        searchController?.didMove(toParentViewController: self)
-        
-        searchController?.searchQuery = text
-        //searchController?.sendUrlBarFocusEvent()
-        
-        resetNavigationSteps()
-    }
-    
-    private func hideSearchController() {
-        searchController?.view.isHidden = true
-    }
-    
-    private func setUpSearchController() {
-        if let pf = self.profile, let searchLoader = self.search_loader{
-            searchController = CliqzSearchViewController(profile: pf)
-            searchController?.delegate = self.searching_delegate
-            searchLoader.addListener(searchController!)
-            self.view.addSubview(searchController!.view)
-            self.addChildViewController(searchController!)
-            searchController!.view.snp.remakeConstraints({ (make) in
-                make.top.left.right.equalTo(self.view)
-                make.height.equalTo(UIScreen.main.bounds.height)
-            })
-        }
-    }
-    
-    //    func changeState(to state: ConversationalState, text: String?) {
-    //
-    //        if state == .History {
-    //            self.hideSearchController()
-    //            self.showConversationalHistory()
-    //        }
-    //        else if state == .Search {
-    //            self.showSearchController(text: text)
-    //        }
-    //        else if state == .Browsing {
-    //            self.hideSearchController()
-    //            self.hideConversationalHistory()
-    //        }
-    //        
-    //    }
     
 }

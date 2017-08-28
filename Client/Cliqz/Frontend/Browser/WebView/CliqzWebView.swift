@@ -495,7 +495,7 @@ extension CliqzWebView: UIWebViewDelegate {
 				let startIndex = absoluteStr.characters.index(absoluteStr.startIndex, offsetBy: (url.scheme?.characters.count)! + 1)
 				let newURL = Foundation.URL(string: absoluteStr.substring(from: startIndex))!
 				let newRequest = URLRequest(url: newURL)
-				delegate.webView!(globalContainerWebView, createWebViewWith: WKWebViewConfiguration(), for: LegacyNavigationAction(type: WKNavigationType(rawValue: navigationType.rawValue)!, request: newRequest), windowFeatures: WKWindowFeatures())
+				_ = delegate.webView!(globalContainerWebView, createWebViewWith: WKWebViewConfiguration(), for: LegacyNavigationAction(type: WKNavigationType(rawValue: navigationType.rawValue)!, request: newRequest), windowFeatures: WKWindowFeatures())
 			}
 			return false
 		}

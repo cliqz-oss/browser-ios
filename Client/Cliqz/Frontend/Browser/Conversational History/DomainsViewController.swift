@@ -32,7 +32,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     var didPressCell:(_ indexPath:IndexPath, _ image: UIImage?) -> () = { _ in }
 
-	weak var delegate: BrowserNavigationDelegate?
+	//weak var delegate: BrowserNavigationDelegate?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -141,11 +141,14 @@ extension DomainsViewController: HistoryActionDelegate {
             //pressed on the cliqz news logo
         }
         else{
-            let indexPath = IndexPath(row: index, section: 0)
-            let url = dataSource.baseUrl(indexPath: indexPath)
-            if let url = URL(string: url){
-                self.delegate?.navigateToURL(url)
-            }
+            
+            //Use the Router API Instead 
+            
+//            let indexPath = IndexPath(row: index, section: 0)
+//            let url = dataSource.baseUrl(indexPath: indexPath)
+//            if let url = URL(string: url){
+//                self.delegate?.navigateToURL(url)
+//            }
         }
 	}
 }

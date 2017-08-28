@@ -25,6 +25,28 @@ class MainContainerViewController: UIViewController {
     private let URLBarVC = URLBarViewController()
     private let ContentNavVC = ContentNavigationViewController()
     private let ToolbarVC = ToolbarViewController()
+    
+    let searchLoader: SearchLoader
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let profile = appDelegate.profile
+        
+        searchLoader = SearchLoader(profile: profile!)
+        
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        ContentNavVC.search_loader = searchLoader
+        ContentNavVC.profile = profile
+        
+        URLBarVC.search_loader = searchLoader
+        URLBarVC.externalDelegate = Router.sharedInstance
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +56,7 @@ class MainContainerViewController: UIViewController {
     }
     
     private func setUpComponent() {
+        
         self.view.addSubview(backgroundImage)
         
         self.addChildViewController(URLBarVC)

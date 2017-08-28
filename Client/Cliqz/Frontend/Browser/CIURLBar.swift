@@ -336,7 +336,7 @@ class CIURLBar: UIView {
 //I will start with the expandable view: 2 States: 1. Expanded 2. Contracted
 //I will define states as functions.
 
-//TO DO: Take the animation code into another module and write a small doc.
+//TO DO: Take the animation code into another module and write a small doc. - Done
 
 extension CIURLBar {
 

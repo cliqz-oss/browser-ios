@@ -9,13 +9,29 @@
 import UIKit
 
 class PageNavigationViewController: UIViewController {
+
     
     let pageControl = CustomDots(numberOfPages: 2)
-    let surfViewController = SurfViewController(viewControllers: [HistoryNavigationViewController(), DashViewController()])
+    let surfViewController: SurfViewController
     
     
     //styling
     let pageControlHeight: CGFloat = 24.0
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        
+        let historyNavigation = HistoryNavigationViewController()
+        historyNavigation.externalDelegate = Router.sharedInstance
+        
+        surfViewController = SurfViewController(viewControllers: [historyNavigation, DashViewController()])
+        
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
