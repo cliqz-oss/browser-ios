@@ -2877,7 +2877,6 @@
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
 				1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */,
 				1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */,
-				1E79DCCB1D4FB2C5006BEB4A /* CliqzSearchViewController.swift */,
 				1E79DCCC1D4FB2C5006BEB4A /* FooterActivityItemProvider.swift */,
 				1E79DCCE1D4FB2C5006BEB4A /* JavaScriptBridge.swift */,
 				1E79DCCF1D4FB2C5006BEB4A /* LayerViewController.swift */,
@@ -4224,6 +4223,7 @@
 				4FB895D41F44467800DC028E /* CIURLBar.swift */,
 				AF4541281F309F5900979B7D /* URLBarViewController.swift */,
 				AF45412A1F309F7200979B7D /* URLBarLogic.swift */,
+				4FB895D41F44467800DC028E /* CIURLBar.swift */,
 			);
 			name = "URL Bar";
 			sourceTree = "<group>";
@@ -4262,6 +4262,7 @@
 		AFA93A611F4AE712001425C4 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				1E79DCCB1D4FB2C5006BEB4A /* CliqzSearchViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
