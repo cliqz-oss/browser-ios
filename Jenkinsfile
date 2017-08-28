@@ -30,7 +30,7 @@ node('ios-osx') {
             CART_CACHE=/tmp/carthage_cache_`md5 -q Cartfile`.tar; tar -xf $CART_CACHE ; echo A |./bootstrap.sh && tar -cf $CART_CACHE Carthage Cartfile.resolved
         '''
         sh '''#!/bin/bash -l -x
-            yarn install
+            yarn
             pod install
             npm run dev-bundle
         '''
