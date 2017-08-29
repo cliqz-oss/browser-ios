@@ -44,6 +44,8 @@ class MainContainerViewController: UIViewController {
         URLBarVC.externalDelegate = Router.sharedInstance
         
         Router.sharedInstance.registerController(viewController: self, as: .mainNavigation)
+        
+        prepareModules()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,6 +57,11 @@ class MainContainerViewController: UIViewController {
         setUpComponent()
         setStyling()
         setConstraints()
+    }
+    
+    private func prepareModules() {
+        _ = NewsManager.sharedInstance
+        _ = DomainsModule.sharedInstance
     }
     
     private func setUpComponent() {

@@ -11,6 +11,7 @@ import UIKit
 struct Recommendation {
     let title: String
     let url: String
+    let host: String
     let text: String
     let picture_url: String
 }
@@ -58,6 +59,7 @@ final class RecommendationsManager {
         var media_link = ""
         var description = ""
         var url = ""
+        var host = ""
         
         if let t = article["title"] as? String {
             title = t
@@ -73,9 +75,14 @@ final class RecommendationsManager {
         
         if let u = article["url"] as? String {
             url = u
+            if let some_url = URL(string: u) {
+                if let h = some_url.host {
+                    host = h
+                }
+            }
         }
         
-        return Recommendation(title: title, url: url, text: description, picture_url: media_link)
+        return Recommendation(title: title, url: url, host: host, text: description, picture_url: media_link)
         
     }
     
@@ -94,17 +101,18 @@ final class RecommendationsManager {
             }
             
             return recommendations.filter({ (recommendation) -> Bool in
-                if let url = URL(string: recommendation.url) {
-                    if let baseUrl_recommendation = url.host {
-                        return baseUrl == baseUrl_recommendation
-                    }
-                }
-                return false
+                return baseUrl == recommendation.host
             })
             
         }
         
         return recommendations
+    }
+    
+    func recommendationsWithoutHosts(hosts: Set<String>) -> [Recommendation] {
+        return recommendations.filter({ (reccomendation) -> Bool in
+            return !hosts.contains(reccomendation.host)
+        })
     }
     
     @objc

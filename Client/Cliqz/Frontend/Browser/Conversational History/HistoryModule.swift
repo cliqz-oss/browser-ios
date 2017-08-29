@@ -147,7 +147,7 @@ final class HistoryModule: NSObject {
             
             var array: [DomainDetail] = []
             
-            var group_by_url = groupBy(array: details) { (detail) -> NSURL in
+            var group_by_url = GeneralUtils.groupBy(array: details) { (detail) -> NSURL in
                 return detail.url
             }
             
@@ -166,7 +166,7 @@ final class HistoryModule: NSObject {
         
         let clean_details = removeDuplicates(details: details)
         
-        let groupedDetails_by_Domain = groupBy(array: clean_details) { (detail) -> String in
+        let groupedDetails_by_Domain = GeneralUtils.groupBy(array: clean_details) { (detail) -> String in
             return detail.url.host ?? ""
         }
         
@@ -180,38 +180,4 @@ final class HistoryModule: NSObject {
         return finalArray
         
     }
-    
-    private class func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
-        var dict: Dictionary<B, [A]> = [:]
-        
-        for elem in array {
-            let key = hashF(elem)
-            if var array = dict[key] {
-                array.append(elem)
-                dict[key] = array
-            }
-            else {
-                dict[key] = [elem]
-            }
-        }
-        
-        return dict
-    }
-    
-}
-
-
-extension Date {
-    static public func ==(lhs: Date, rhs: Date) -> Bool {
-        return lhs.compare(rhs) == .orderedSame
-    }
-    
-    static public func <(lhs: Date, rhs: Date) -> Bool {
-        return lhs.compare(rhs) == .orderedAscending
-    }
-    
-    static public func >(lhs: Date, rhs: Date) -> Bool {
-        return lhs.compare(rhs) == .orderedDescending
-    }
-    
 }

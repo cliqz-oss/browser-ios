@@ -60,6 +60,19 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
     private func updateRecommendations() {
-        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil)
+        recommendations = filterRecommendations(recommedations: RecommendationsManager.sharedInstance.recommendations(domain: nil))
+    }
+    
+    private func filterRecommendations(recommedations: [Recommendation]) -> [Recommendation] {
+        //filter rule: News with a domain that matches any domain in the history should be eliminated. Those news are presented in History Details.
+        
+        //get a list of all domains in the history 
+        let domains = DomainsModule.sharedInstance.domains.map { (domain_struct) -> String in
+            return domain_struct.domainName
+        }
+        
+        let host_set = Set.init(domains)
+        
+        return RecommendationsManager.sharedInstance.recommendationsWithoutHosts(hosts: host_set)
     }
 }

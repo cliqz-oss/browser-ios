@@ -652,6 +652,7 @@
 		AFD9F61E1F3E10E100215365 /* CustomDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61C1F3E10E100215365 /* CustomDots.swift */; };
 		AFD9F61F1F3E10E100215365 /* SurfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61D1F3E10E100215365 /* SurfViewController.swift */; };
 		AFD9F6211F3E10F700215365 /* PageNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */; };
+		AFEDF28B1F558F6A0053F209 /* DomainsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEDF28A1F558F6A0053F209 /* DomainsModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		AFF2B67A1EFA9F1000475971 /* CIReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */; };
 		AFF2B68A1EFAA8C500475971 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF2B6891EFAA8C500475971 /* UserNotifications.framework */; };
@@ -2126,6 +2127,7 @@
 		AFD9F61C1F3E10E100215365 /* CustomDots.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDots.swift; sourceTree = "<group>"; };
 		AFD9F61D1F3E10E100215365 /* SurfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfViewController.swift; sourceTree = "<group>"; };
 		AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageNavigationViewController.swift; sourceTree = "<group>"; };
+		AFEDF28A1F558F6A0053F209 /* DomainsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		AFF2B6791EFA9F1000475971 /* CIReminderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIReminderManager.swift; sourceTree = "<group>"; };
 		AFF2B6891EFAA8C500475971 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
@@ -4091,6 +4093,7 @@
 			isa = PBXGroup;
 			children = (
 				AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */,
+				AFEDF28A1F558F6A0053F209 /* DomainsModule.swift */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -4220,7 +4223,6 @@
 		AFA93A5D1F4AE6B0001425C4 /* URL Bar */ = {
 			isa = PBXGroup;
 			children = (
-				4FB895D41F44467800DC028E /* CIURLBar.swift */,
 				AF4541281F309F5900979B7D /* URLBarViewController.swift */,
 				AF45412A1F309F7200979B7D /* URLBarLogic.swift */,
 				4FB895D41F44467800DC028E /* CIURLBar.swift */,
@@ -6791,6 +6793,7 @@
 				7BA8D1C71BA037F500C8AE9E /* OpenInHelper.swift in Sources */,
 				E4B423BE1AB9FE6A007E66C8 /* ReaderModeCache.swift in Sources */,
 				1E79DD181D4FB2C5006BEB4A /* NetworkReachability.swift in Sources */,
+				AFEDF28B1F558F6A0053F209 /* DomainsModule.swift in Sources */,
 				74E36D781B71323500D69DA1 /* SettingsContentViewController.swift in Sources */,
 				1E79DD161D4FB2C5006BEB4A /* LocationManager.swift in Sources */,
 				C4EFEECF1CEBB6F2009762A4 /* BackForwardTableViewCell.swift in Sources */,

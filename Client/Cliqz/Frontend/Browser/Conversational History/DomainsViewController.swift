@@ -31,8 +31,15 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     var first_appear:Bool = true
     
     var didPressCell:(_ indexPath:IndexPath, _ image: UIImage?) -> () = { _ in }
-
-	//weak var delegate: BrowserNavigationDelegate?
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        dataSource.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -64,20 +71,12 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.isNavigationBarHidden = true
-        self.loadData()        
-    }
-    
-    func loadData() {
-        dataSource.loadData { (ready) in
-            self.historyTableView.reloadData()
-        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.numberOfCells()
     }
 
-	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
 		let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID) as! DomainsCell
@@ -169,15 +168,10 @@ extension DomainsViewController: KeyboardHelperDelegate {
 	
 }
 
-extension UIImage {
-    static func fromColor(color: UIColor, size: CGSize) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        UIGraphicsBeginImageContext(rect.size)
-        let context = UIGraphicsGetCurrentContext()
-        context!.setFillColor(color.cgColor)
-        context!.fill(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return img!
+extension DomainsViewController: HasDataSource {
+    func dataSourceWasUpdated(identifier: String) {
+        self.historyTableView.reloadData()
     }
 }
+
+
