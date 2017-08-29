@@ -11,34 +11,40 @@
 
 import UIKit
 
-enum UserActionType {
+enum ActionType {
     case searchTextChanged
     case searchTextCleared
     case urlPressed
+    case searchAutoSuggest
+    case searchDismissKeyboard
 }
 
-enum UserActionContext {
+enum ActionContext {
     case urlBarVC
     case historyNavVC
+    case contentNavVC
 }
 
-struct UserAction {
+struct Action {
     let data: [String: Any]?
-    let type: UserActionType
-    let context: UserActionContext
+    let type: ActionType
+    let context: ActionContext
 }
 
-protocol UserActionDelegate: class {
-    func userAction(action: UserAction)
+protocol ActionDelegate: class {
+    func action(action: Action)
 }
 
 class Router {
     
+    //Route actions to Navigations (Always!!!). The navigations are responsible for state, so they decide what to do with the input for subcomponents.
     enum Controller {
         case contentNavigation
+        case mainNavigation
     }
     
     fileprivate weak var ContentNavVC: ContentNavigationViewController?
+    fileprivate weak var MainNavVC: MainContainerViewController?
     
     static let sharedInstance = Router()
     
@@ -49,12 +55,18 @@ class Router {
                 ContentNavVC = controller
             }
         }
+        else if type == .mainNavigation {
+            if let controller = viewController as? MainContainerViewController {
+                MainNavVC = controller
+            }
+        }
         
     }
 }
 
-extension Router: UserActionDelegate {
-    func userAction(action: UserAction) {
+extension Router: ActionDelegate {
+    
+    func action(action: Action) {
         switch action.type {
         case .searchTextChanged:
             if let data = action.data as? [String: String], let text = data["text"] {
@@ -66,8 +78,13 @@ extension Router: UserActionDelegate {
             if let data = action.data as? [String: String], let url = data["url"] {
                 ContentNavVC?.historyDetailWasPressed(url: url)
             }
-            
+        case .searchAutoSuggest:
+            if let data = action.data as? [String: String], let text = data["text"] {
+                //Send this to main navigation. Main navigation is responsible for URL Bar.
+                MainNavVC?.autoSuggestURLBar(autoSuggestText: text)
+            }
+        case .searchDismissKeyboard:
+            MainNavVC?.dismissKeyboardForUrlBar()
         }
     }
 }
-

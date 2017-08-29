@@ -243,6 +243,8 @@ extension ContentNavigationViewController {
 
 extension ContentNavigationViewController: SearchViewDelegate {
     
+    //TO DO: Route these
+    
     func didSelectURL(_ url: URL, searchQuery: String?) {
         
     }
@@ -252,10 +254,10 @@ extension ContentNavigationViewController: SearchViewDelegate {
     }
     
     func autoCompeleteQuery(_ autoCompleteText: String) {
-        
+        Router.sharedInstance.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest, context: .contentNavVC))
     }
     
     func dismissKeyboard() {
-        
+        Router.sharedInstance.action(action: Action(data: nil, type: .searchDismissKeyboard, context: .contentNavVC))
     }
 }

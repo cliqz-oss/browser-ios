@@ -14,7 +14,7 @@ final class HistoryNavigationViewController: UIViewController {
     var searchController: CliqzSearchViewController?
     var nc: UINavigationController = UINavigationController()
     
-    weak var externalDelegate: UserActionDelegate? = nil
+    weak var externalDelegate: ActionDelegate? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ final class HistoryNavigationViewController: UIViewController {
         let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: RecommendationsDataSource(baseUrl: baseUrl), headerViewDataSource: headerAndTableDataSource, didPressBack: {
             self.showConversationalHistory()
         }) { (url) in
-            self.externalDelegate?.userAction(action: UserAction(data: ["url":url], type: .urlPressed, context: .historyNavVC))
+            self.externalDelegate?.action(action: Action(data: ["url":url], type: .urlPressed, context: .historyNavVC))
         }
         
         return conversationalHistoryDetails

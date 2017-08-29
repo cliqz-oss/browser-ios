@@ -16,7 +16,7 @@ final class URLBarViewController: UIViewController {
     
     weak var search_loader: SearchLoader? = nil
     
-    weak var externalDelegate: UserActionDelegate? = nil
+    weak var externalDelegate: ActionDelegate? = nil
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -56,6 +56,10 @@ final class URLBarViewController: UIViewController {
     
     deinit {
 //        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func setAutocompleteSuggestion(_ suggestion: String?) {
+        URLBar.setAutocompleteSuggestion(suggestion)
     }
     
 }
@@ -104,7 +108,7 @@ extension URLBarViewController: CIURLBarStateDelegate {
     
     func urlBar(_ urlBar: CIURLBar, didEnterText text: String) {
         search_loader?.query = text
-        externalDelegate?.userAction(action: UserAction(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
+        externalDelegate?.action(action: Action(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
     }
     
     func urlBar(_ urlBar: CIURLBar, didSubmitText text: String) {
@@ -113,7 +117,7 @@ extension URLBarViewController: CIURLBarStateDelegate {
     
     func urlBarDidClearSearchField(_ urlBar: CIURLBar, oldText: String?) {
         search_loader?.query = ""
-        externalDelegate?.userAction(action: UserAction(data: nil, type: .searchTextCleared, context: .urlBarVC))
+        externalDelegate?.action(action: Action(data: nil, type: .searchTextCleared, context: .urlBarVC))
     }
 }
 

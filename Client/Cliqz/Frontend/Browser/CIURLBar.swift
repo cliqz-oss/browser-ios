@@ -309,34 +309,12 @@ class CIURLBar: UIView {
 	@objc private func SELdidClickCancel() {
 		self.state = .collapsed
 	}
+    
+    func setAutocompleteSuggestion(_ suggestion: String?) {
+        locationTextField?.setAutocompleteSuggestion(suggestion)
+    }
 
 }
-
-// State change methods
-
-
-//work on some structure for clean animations.
-
-//To do. Think of how to compose animations. Read documentation
-//To solve this I can use a UIViewPropertyAnimator.
-//Using the addAnimation method I can concatenate animations.
-//To export my states as animations, the state functions should return function arrays of the form [() -> ()]
-//The order defines the order in which the animations are performed.
-//I can also attach to them a delay property, but this later.
-
-
-//The states of a component are dependent on the states of its subcomponents
-//The total number of states a component can have is given by: Num_states_comp_1 * Num_states_comp_2 * ...
-//I am only interested in a subset of these cases, therefore I will define explicitly each component state I am interested in.
-//Since this depends on the states of the subcomponents I will define explicitly all the states for each subcomponent, together with the particularities of each state (e.g "constraints").
-//One state of the component will be the composition of states of subcomponents.
-
-//I have 2 components now: The expandable view and the textField that changes height and width
-
-//I will start with the expandable view: 2 States: 1. Expanded 2. Contracted
-//I will define states as functions.
-
-//TO DO: Take the animation code into another module and write a small doc. - Done
 
 extension CIURLBar {
 

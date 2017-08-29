@@ -22,9 +22,9 @@ class MainContainerViewController: UIViewController {
     
     private let backgroundImage = UIImageView()
     
-    private let URLBarVC = URLBarViewController()
-    private let ContentNavVC = ContentNavigationViewController()
-    private let ToolbarVC = ToolbarViewController()
+    fileprivate let URLBarVC = URLBarViewController()
+    fileprivate let ContentNavVC = ContentNavigationViewController()
+    fileprivate let ToolbarVC = ToolbarViewController()
     
     let searchLoader: SearchLoader
     
@@ -42,6 +42,8 @@ class MainContainerViewController: UIViewController {
         
         URLBarVC.search_loader = searchLoader
         URLBarVC.externalDelegate = Router.sharedInstance
+        
+        Router.sharedInstance.registerController(viewController: self, as: .mainNavigation)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -117,3 +119,18 @@ class MainContainerViewController: UIViewController {
     */
 
 }
+
+//receive actions
+extension MainContainerViewController {
+    
+    //TO DO: Centralized decision place
+    
+    func autoSuggestURLBar(autoSuggestText: String) {
+        URLBarVC.setAutocompleteSuggestion(autoSuggestText)
+    }
+    
+    func dismissKeyboardForUrlBar() {
+        URLBarVC.resignFirstResponder()
+    }
+}
+
