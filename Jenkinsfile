@@ -22,7 +22,7 @@ node('ios-osx') {
             brew update
             brew install xctool
             brew install carthage
-            brew install yarn
+            npm install -g yarn
             pod --version
         '''
         // load/restore carthage build directory
