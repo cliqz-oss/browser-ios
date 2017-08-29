@@ -11,6 +11,27 @@
 
 import UIKit
 
+enum UserActionType {
+    case searchTextChanged
+    case searchTextCleared
+    case urlPressed
+}
+
+enum UserActionContext {
+    case urlBarVC
+    case historyNavVC
+}
+
+struct UserAction {
+    let data: [String: Any]?
+    let type: UserActionType
+    let context: UserActionContext
+}
+
+protocol UserActionDelegate: class {
+    func userAction(action: UserAction)
+}
+
 class Router {
     
     enum Controller {
@@ -32,27 +53,21 @@ class Router {
     }
 }
 
-
-//History Details
-extension Router: ExternalHistoryHandler {
-    
-    func historyDetailCellPressed(url: String?) {
-        ContentNavVC?.historyDetailWasPressed(url: url)
+extension Router: UserActionDelegate {
+    func userAction(action: UserAction) {
+        switch action.type {
+        case .searchTextChanged:
+            if let data = action.data as? [String: String], let text = data["text"] {
+                ContentNavVC?.textInUrlBarChanged(text: text)
+            }
+        case .searchTextCleared:
+             ContentNavVC?.textInUrlBarChanged(text: "")
+        case .urlPressed:
+            if let data = action.data as? [String: String], let url = data["url"] {
+                ContentNavVC?.historyDetailWasPressed(url: url)
+            }
+            
+        }
     }
 }
 
-//Url Bar
-extension Router: ExternalURLBarHandler {
-    
-    func textChangedInUrlBar(text: String) {
-        ContentNavVC?.textInUrlBarChanged(text: text)
-    }
-    
-    func textClearedInUrlBar() {
-        ContentNavVC?.textIUrlBarCleared()
-    }
-    
-    func backPressedUrlBar() {
-        ContentNavVC?.backPressedUrlBar()
-    }
-}

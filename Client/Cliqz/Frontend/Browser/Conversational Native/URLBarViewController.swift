@@ -8,12 +8,6 @@
 
 import UIKit
 
-protocol ExternalURLBarHandler: class {
-    func textChangedInUrlBar(text: String)
-    func textClearedInUrlBar()
-    func backPressedUrlBar()
-}
-
 final class URLBarViewController: UIViewController {
 	
     var URLBarHeight: CGFloat = 64.0
@@ -22,7 +16,7 @@ final class URLBarViewController: UIViewController {
     
     weak var search_loader: SearchLoader? = nil
     
-    weak var externalDelegate: ExternalURLBarHandler? = nil
+    weak var externalDelegate: UserActionDelegate? = nil
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -110,7 +104,7 @@ extension URLBarViewController: CIURLBarStateDelegate {
     
     func urlBar(_ urlBar: CIURLBar, didEnterText text: String) {
         search_loader?.query = text
-        Router.sharedInstance.textChangedInUrlBar(text: text)
+        externalDelegate?.userAction(action: UserAction(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
     }
     
     func urlBar(_ urlBar: CIURLBar, didSubmitText text: String) {
@@ -119,7 +113,7 @@ extension URLBarViewController: CIURLBarStateDelegate {
     
     func urlBarDidClearSearchField(_ urlBar: CIURLBar, oldText: String?) {
         search_loader?.query = ""
-        Router.sharedInstance.textClearedInUrlBar()
+        externalDelegate?.userAction(action: UserAction(data: nil, type: .searchTextCleared, context: .urlBarVC))
     }
 }
 
