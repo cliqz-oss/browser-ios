@@ -33,7 +33,7 @@ node('ios-osx') {
             rm -R ./node_modules
             yarn
             pod install
-            npm run dev-bundle
+            npm run bundle
         '''
     }
     try {
