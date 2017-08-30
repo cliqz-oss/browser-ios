@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/cliqz-oss/browser-ios#readme",
   "dependencies": {
-    "browser-core": "https://github.com/sammacbeth/browser-ios/releases/download/v8.0.3/browser-core-1.20.0.tgz",
+    "browser-core": "https://github.com/sammacbeth/browser-ios/releases/download/v8.0.4/browser-core-1.20.0.tgz",
     "pouchdb-adapter-react-native-sqlite": "1.0.3",
     "pouchdb-react-native": "6.1.26",
     "react": "16.0.0-alpha.12",
