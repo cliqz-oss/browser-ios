@@ -1453,8 +1453,6 @@
 		1E79DCBD1D4FB2C5006BEB4A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		1E79DCBE1D4FB2C5006BEB4A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		1E79DCBF1D4FB2C5006BEB4A /* XMLHttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLHttpRequest.swift; sourceTree = "<group>"; };
-		1E79DCC11D4FB2C5006BEB4A /* include.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = include.h; sourceTree = "<group>"; };
-		1E79DCC21D4FB2C5006BEB4A /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		1E79DCC41D4FB2C5006BEB4A /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		1E79DCC81D4FB2C5006BEB4A /* BrowserViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerExtension.swift; sourceTree = "<group>"; };
 		1E79DCCA1D4FB2C5006BEB4A /* CliqzSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzSearch.swift; sourceTree = "<group>"; };
@@ -2790,7 +2788,6 @@
 				1E79DCBB1D4FB2C5006BEB4A /* NSData+GZIP.swift */,
 				1E79DCBC1D4FB2C5006BEB4A /* Reachability */,
 				1E79DCBF1D4FB2C5006BEB4A /* XMLHttpRequest.swift */,
-				1E79DCC01D4FB2C5006BEB4A /* zlib */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -2802,15 +2799,6 @@
 				1E79DCBE1D4FB2C5006BEB4A /* Reachability.m */,
 			);
 			path = Reachability;
-			sourceTree = "<group>";
-		};
-		1E79DCC01D4FB2C5006BEB4A /* zlib */ = {
-			isa = PBXGroup;
-			children = (
-				1E79DCC11D4FB2C5006BEB4A /* include.h */,
-				1E79DCC21D4FB2C5006BEB4A /* module.modulemap */,
-			);
-			path = zlib;
 			sourceTree = "<group>";
 		};
 		1E79DCC31D4FB2C5006BEB4A /* Utils */ = {
@@ -7982,7 +7970,7 @@
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "c15ad72b-d864-4ed7-b628-b0f120960a15";
 				PROVISIONING_PROFILE_SPECIFIER = "CliqzBeta AppStore";
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8624,7 +8612,7 @@
 				PRODUCT_NAME = Client;
 				PROVISIONING_PROFILE = "fe1a483b-a38e-4fc0-b477-bcde8e8a70e6";
 				PROVISIONING_PROFILE_SPECIFIER = "CliqzBeta Dev";
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
