@@ -194,7 +194,7 @@ class OpenSearchParser {
         var searchTemplate: String!
         var suggestTemplate: String?
         for urlIndexer in urlIndexers {
-            let type = urlIndexer.element?.attributes["type"]
+            let type = urlIndexer.element?.attribute(by: "type")?.text
             if type == nil {
                 print("Url element requires a type attribute", terminator: "\n")
                 return nil
@@ -205,7 +205,7 @@ class OpenSearchParser {
                 continue
             }
 
-            var template = urlIndexer.element?.attributes["template"]
+            var template = urlIndexer.element?.attribute(by: "template")?.text
             if template == nil {
                 print("Url element requires a template attribute", terminator: "\n")
                 return nil
@@ -224,8 +224,8 @@ class OpenSearchParser {
                             firstAdded = true
                         }
 
-                        let name = paramIndexer.element?.attributes["name"]
-                        let value = paramIndexer.element?.attributes["value"]
+                        let name = paramIndexer.element?.attribute(by: "name")?.text
+                        let value = paramIndexer.element?.attribute(by: "value")?.text
                         if name == nil || value == nil {
                             print("Param element must have name and value attributes", terminator: "\n")
                             return nil
@@ -253,8 +253,8 @@ class OpenSearchParser {
 
         // TODO: For now, just use the largest icon.
         for imageIndexer in imageIndexers {
-            let imageWidth = Int(imageIndexer.element?.attributes["width"] ?? "")
-            let imageHeight = Int(imageIndexer.element?.attributes["height"] ?? "")
+            let imageWidth = Int(imageIndexer.element?.attribute(by: "width")?.text ?? "")
+            let imageHeight = Int(imageIndexer.element?.attribute(by: "height")?.text ?? "")
 
             // Only accept square images.
             if imageWidth != imageHeight {
@@ -274,7 +274,7 @@ class OpenSearchParser {
         let uiImage: UIImage
 
         if let imageElement = largestImageElement,
-               let imageURL = URL(string: imageElement.text!),
+               let imageURL = URL(string: imageElement.text),
                let imageData = try? Data(contentsOf: imageURL),
                let image = UIImage.imageFromDataThreadSafe(imageData) {
             uiImage = image
