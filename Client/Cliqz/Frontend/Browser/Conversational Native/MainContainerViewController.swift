@@ -46,7 +46,8 @@ class MainContainerViewController: UIViewController {
         URLBarVC.search_loader = searchLoader
         URLBarVC.externalDelegate = Router.sharedInstance
         
-        Router.sharedInstance.registerController(viewController: self, as: .mainNavigation)
+        Router.sharedInstance.registerController(viewController: ContentNavVC)
+        Router.sharedInstance.registerController(viewController: self)
         
         prepareModules()
     }

@@ -38,29 +38,20 @@ protocol ActionDelegate: class {
 class Router {
     
     //Route actions to Navigations (Always!!!). The navigations are responsible for state, so they decide what to do with the input for subcomponents.
-    enum Controller {
-        case contentNavigation
-        case mainNavigation
-    }
     
     fileprivate weak var ContentNavVC: ContentNavigationViewController?
     fileprivate weak var MainNavVC: MainContainerViewController?
     
     static let sharedInstance = Router()
     
-    func registerController(viewController: UIViewController, as type: Controller) {
+    func registerController(viewController: UIViewController) {
         
-        if type == .contentNavigation {
-            if let controller = viewController as? ContentNavigationViewController {
-                ContentNavVC = controller
-            }
+        if let controller = viewController as? ContentNavigationViewController {
+            ContentNavVC = controller
         }
-        else if type == .mainNavigation {
-            if let controller = viewController as? MainContainerViewController {
+        else if let controller = viewController as? MainContainerViewController {
                 MainNavVC = controller
-            }
         }
-        
     }
 }
 
