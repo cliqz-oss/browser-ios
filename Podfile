@@ -25,6 +25,3 @@ target 'Client' do
     project_pods
 end
 
-target 'CliqzUITests' do
-    project_pods
-end

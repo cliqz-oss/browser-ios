@@ -471,7 +471,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			writableRequest = request
 			super.init()
 		}
-		
+
 		override var request: URLRequest { get { return writableRequest} }
 		override var navigationType: WKNavigationType { get { return writableType } }
 		override var sourceFrame: WKFrameInfo {

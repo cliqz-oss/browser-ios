@@ -416,10 +416,10 @@ extension TabsViewController: TabManagerDelegate {
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
     }
-    
+
     func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
     }
-    
-    func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
-    }
+
+	func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
+	}
 }

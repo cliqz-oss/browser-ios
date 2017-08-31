@@ -158,9 +158,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        let viewController    = ConversationalContainer()
 
-        browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)
-        browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
-        browserViewController.restorationClass = AppDelegate.self as? UIViewControllerRestoration.Type
+//        browserViewController = BrowserViewController(profile: self.profile!, tabManager: self.tabManager)
+//        browserViewController.restorationIdentifier = NSStringFromClass(BrowserViewController.self)
+//        browserViewController.restorationClass = AppDelegate.self as? UIViewControllerRestoration.Type
 
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.delegate = self

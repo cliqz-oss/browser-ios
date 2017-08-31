@@ -23,23 +23,26 @@ class MainContainerViewController: UIViewController {
     private let backgroundImage = UIImageView()
     
     fileprivate let URLBarVC = URLBarViewController()
-    fileprivate let ContentNavVC = ContentNavigationViewController()
-    fileprivate let ToolbarVC = ToolbarViewController()
+    fileprivate let contentNavVC = ContentNavigationViewController()
+    fileprivate let toolbarVC = ToolbarViewController()
     
     let searchLoader: SearchLoader
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        
+		
+		// TODO: Refactor profile/tabManager creation and contentNavVC initialization
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let profile = appDelegate.profile
+		let tabManager = appDelegate.tabManager
         
         searchLoader = SearchLoader(profile: profile!)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        ContentNavVC.search_loader = searchLoader
-        ContentNavVC.profile = profile
-        
+        contentNavVC.search_loader = searchLoader
+        contentNavVC.profile = profile
+		contentNavVC.tabManager = tabManager
+
         URLBarVC.search_loader = searchLoader
         URLBarVC.externalDelegate = Router.sharedInstance
         
@@ -71,15 +74,15 @@ class MainContainerViewController: UIViewController {
         self.addChildViewController(URLBarVC)
         self.view.addSubview(URLBarVC.view)
         
-        self.addChildViewController(ToolbarVC)
-        self.view.addSubview(ToolbarVC.view)
+        self.addChildViewController(toolbarVC)
+        self.view.addSubview(toolbarVC.view)
         
-        self.addChildViewController(ContentNavVC)
-        self.view.addSubview(ContentNavVC.view)
+        self.addChildViewController(contentNavVC)
+        self.view.addSubview(contentNavVC.view)
         
-        Router.sharedInstance.registerController(viewController: ContentNavVC, as: .contentNavigation)
+        Router.sharedInstance.registerController(viewController: contentNavVC, as: .contentNavigation)
     }
-    
+
     private func setStyling() {
         self.view.backgroundColor = UIColor(colorString: "E9E9E9")
         backgroundImage.layer.zPosition = -100
@@ -97,15 +100,15 @@ class MainContainerViewController: UIViewController {
             make.height.equalTo(URLBarVC.URLBarHeight)
         }
         
-        ToolbarVC.view.snp.makeConstraints { (make) in
+        toolbarVC.view.snp.makeConstraints { (make) in
             make.height.equalTo(44)
             make.left.right.bottom.equalToSuperview()
         }
         
-        ContentNavVC.view.snp.makeConstraints { (make) in
+        contentNavVC.view.snp.makeConstraints { (make) in
             make.top.equalTo(URLBarVC.view.snp.bottom)
             make.left.right.equalTo(self.view)
-            make.bottom.equalTo(ToolbarVC.view.snp.top)
+            make.bottom.equalTo(toolbarVC.view.snp.top)
         }
     }
 

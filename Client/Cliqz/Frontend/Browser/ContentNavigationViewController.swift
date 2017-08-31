@@ -16,7 +16,8 @@ final class ContentNavigationViewController: UIViewController {
     
     weak var search_loader: SearchLoader?
     weak var profile: Profile?
-    
+	weak var tabManager: TabManager?
+	
     enum State {
         case pageNavigation
         case browser
@@ -58,7 +59,7 @@ extension ContentNavigationViewController {
     
     //TO DO: animation transitions should be defined for the state change.
     
-    func changeState(state: State, text: String = "") {
+    func changeState(state: State, text: String? = nil) {
         guard currentState != state else {
             return
         }
@@ -73,7 +74,7 @@ extension ContentNavigationViewController {
             hidePageNavigation()
             hideSearchController()
             
-            showBrowser()
+			showBrowser(url: text)
         }
         else if state == .search {
             hideBrowserViewController()
@@ -92,7 +93,7 @@ extension ContentNavigationViewController {
     //This will be refactored. States will be introduced and as well as a central place for the diplay logic.
     
     func historyDetailWasPressed(url: String?) {
-        changeState(state: .browser)
+		changeState(state: .browser, text: url)
     }
     
     func textInUrlBarChanged(text: String) {
@@ -152,13 +153,15 @@ extension ContentNavigationViewController {
 //BrowserViewController
 extension ContentNavigationViewController {
     
-    func showBrowser() {
+	func showBrowser(url : String?) {
         if browserVC == nil {
             setUpBrowserViewController()
         }
         
         browserVC?.view.isHidden = false
-        
+		if let u = url {
+			browserVC?.loadURL(u)
+		}
     }
     
     func hideBrowserViewController() {
@@ -166,16 +169,17 @@ extension ContentNavigationViewController {
     }
     
     func setUpBrowserViewController() {
-        
-        browserVC = CIBrowserViewController()
-        
-        self.addChildViewController(browserVC!)
-        view.addSubview(browserVC!.view)
-        
-        setStylingBrowserViewController()
-        setConstraintsBrowserViewController()
+        if let profile = self.profile,
+			let tabManager = self.tabManager {
+			browserVC = CIBrowserViewController(profile: profile, tabManager: tabManager)
+			self.addChildViewController(browserVC!)
+			view.addSubview(browserVC!.view)
+			
+			setStylingBrowserViewController()
+			setConstraintsBrowserViewController()
+		}
     }
-    
+	
     func setStylingBrowserViewController() {
         
     }
@@ -235,8 +239,8 @@ extension ContentNavigationViewController {
     }
     
     func resetNavigationSteps() {
-        browserVC?.navigationStep = 0
-        browserVC?.backNavigationStep = 0
+//        browserVC?.navigationStep = 0
+//        browserVC?.backNavigationStep = 0
     }
     
 }
