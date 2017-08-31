@@ -54,13 +54,15 @@ final class CIBrowserViewController: UIViewController {
         setConstraints()
     }
 
-	func loadURL(_ url: String) {
-		if let validURL = URL(string: url),
+	func loadURL(_ url: URL?) {
+		if let validURL = url,
 			let tab = tabManager.selectedTab,
 			let u = URL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(validURL.absoluteString.encodeURL())&q="),
 			let _ = tab.loadRequest(PrivilegedRequest(url: u) as URLRequest) {
 			// TODO: should be reviewed
 //				self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
+		} else {
+			// TODO: handle exceptional case
 		}
 	}
 

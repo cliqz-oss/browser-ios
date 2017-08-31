@@ -20,7 +20,9 @@ open class Engine {
     //MARK: - Init
     public init() {
         #if React_Debug
-            let jsCodeLocation = URL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
+			let jsCodeLocation = Bundle.main.url(forResource: "jsengine.bundle", withExtension: "js")
+
+//            let jsCodeLocation = URL(string: "http://localhost:8081/index.ios.bundle?platform=ios")
         #else
             let jsCodeLocation = Bundle.main.url(forResource: "jsengine.bundle", withExtension: "js")
         #endif

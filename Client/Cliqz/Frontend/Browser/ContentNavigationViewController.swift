@@ -56,14 +56,14 @@ final class ContentNavigationViewController: UIViewController {
 
 //All things related to state have to go through here
 extension ContentNavigationViewController {
-    
+
     //TO DO: animation transitions should be defined for the state change.
-    
+
     func changeState(state: State, text: String? = nil) {
         guard currentState != state else {
             return
         }
-        
+
         if state == .pageNavigation {
             hideSearchController()
             hideBrowserViewController()
@@ -92,7 +92,7 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
     //This will be refactored. States will be introduced and as well as a central place for the diplay logic.
     
-    func historyDetailWasPressed(url: String?) {
+    func browseURL(url: String?) {
 		changeState(state: .browser, text: url)
     }
     
@@ -160,7 +160,11 @@ extension ContentNavigationViewController {
         
         browserVC?.view.isHidden = false
 		if let u = url {
-			browserVC?.loadURL(u)
+			var validURL = URIFixup.getURL(u)
+			if validURL == nil {
+				validURL = self.profile?.searchEngines.defaultEngine.searchURLForQuery(u)
+			}
+			browserVC?.loadURL(validURL)
 		}
     }
     
@@ -258,10 +262,10 @@ extension ContentNavigationViewController: SearchViewDelegate {
     }
     
     func autoCompeleteQuery(_ autoCompleteText: String) {
-        Router.sharedInstance.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest, context: .contentNavVC))
+        Router.shared.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest, context: .contentNavVC))
     }
     
     func dismissKeyboard() {
-        Router.sharedInstance.action(action: Action(data: nil, type: .searchDismissKeyboard, context: .contentNavVC))
+        Router.shared.action(action: Action(data: nil, type: .searchDismissKeyboard, context: .contentNavVC))
     }
 }

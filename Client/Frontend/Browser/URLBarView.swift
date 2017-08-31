@@ -883,6 +883,7 @@ extension URLBarView: TabLocationViewDelegate {
 }
 
 extension URLBarView: AutocompleteTextFieldDelegate {
+
     func autocompleteTextFieldShouldReturn(_ autocompleteTextField: AutocompleteTextField) -> Bool {
         guard let text = locationTextField?.text else { return true }
         delegate?.urlBar(self, didSubmitText: text)

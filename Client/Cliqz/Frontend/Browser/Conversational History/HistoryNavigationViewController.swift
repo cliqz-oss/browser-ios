@@ -55,7 +55,7 @@ final class HistoryNavigationViewController: UIViewController {
         let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: RecommendationsDataSource(baseUrl: baseUrl), headerViewDataSource: headerAndTableDataSource, didPressBack: {
             self.showConversationalHistory()
         }) { (url) in
-            self.externalDelegate?.action(action: Action(data: ["url":url], type: .urlPressed, context: .historyNavVC))
+            self.externalDelegate?.action(action: Action(data: ["url":url], type: .urlSelected, context: .historyNavVC))
         }
         
         return conversationalHistoryDetails

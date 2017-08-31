@@ -55,7 +55,9 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
 	var searchQuery: String? {
 		didSet {
-			self.loadData(searchQuery!)
+			if let q = searchQuery {
+				self.loadData(q)
+			}
 		}
 	}
     

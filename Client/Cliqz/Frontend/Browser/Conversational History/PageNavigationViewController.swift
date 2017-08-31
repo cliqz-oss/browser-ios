@@ -21,7 +21,7 @@ class PageNavigationViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         
         let historyNavigation = HistoryNavigationViewController()
-        historyNavigation.externalDelegate = Router.sharedInstance
+        historyNavigation.externalDelegate = Router.shared
         
         surfViewController = SurfViewController(viewControllers: [historyNavigation, DashViewController()])
         

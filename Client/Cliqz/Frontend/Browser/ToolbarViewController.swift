@@ -12,18 +12,25 @@ class ToolbarViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(goHome(_:)))
+		self.view.addGestureRecognizer(tapGestureRecognizer)
+
         // Do any additional setup after loading the view.
         setUpComponent()
         setStyling()
         setConstraints()
     }
-    
+	
+	func goHome(_ gestureReconizer: UITapGestureRecognizer) {
+		Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .contentNavVC))
+	}
+
     func setUpComponent() {
         
     }
     
     func setStyling() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.55)
+        view.backgroundColor = UIColor.black
     }
     
     func setConstraints() {

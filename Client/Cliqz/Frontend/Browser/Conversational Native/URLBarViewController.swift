@@ -112,7 +112,7 @@ extension URLBarViewController: CIURLBarStateDelegate {
     }
     
     func urlBar(_ urlBar: CIURLBar, didSubmitText text: String) {
-        
+        externalDelegate?.action(action: Action(data: ["url": text], type: .urlSelected, context: .urlBarVC))
     }
     
     func urlBarDidClearSearchField(_ urlBar: CIURLBar, oldText: String?) {

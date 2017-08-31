@@ -44,11 +44,11 @@ class MainContainerViewController: UIViewController {
 		contentNavVC.tabManager = tabManager
 
         URLBarVC.search_loader = searchLoader
-        URLBarVC.externalDelegate = Router.sharedInstance
-        
-        Router.sharedInstance.registerController(viewController: ContentNavVC)
-        Router.sharedInstance.registerController(viewController: self)
-        
+        URLBarVC.externalDelegate = Router.shared
+
+        Router.shared.registerController(viewController: contentNavVC)
+        Router.shared.registerController(viewController: self)
+
         prepareModules()
     }
     
@@ -81,7 +81,7 @@ class MainContainerViewController: UIViewController {
         self.addChildViewController(contentNavVC)
         self.view.addSubview(contentNavVC.view)
         
-        Router.sharedInstance.registerController(viewController: contentNavVC, as: .contentNavigation)
+        Router.shared.registerController(viewController: contentNavVC)
     }
 
     private func setStyling() {
@@ -91,7 +91,7 @@ class MainContainerViewController: UIViewController {
     }
     
     private func setConstraints() {
-        
+
         backgroundImage.snp.makeConstraints { (make) in
             make.top.left.right.bottom.equalTo(self.view)
         }
@@ -117,7 +117,6 @@ class MainContainerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation
@@ -128,20 +127,24 @@ class MainContainerViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }
 
 //receive actions
 extension MainContainerViewController {
-    
+
     //TO DO: Centralized decision place
-    
+
     func autoSuggestURLBar(autoSuggestText: String) {
         URLBarVC.setAutocompleteSuggestion(autoSuggestText)
     }
-    
+
     func dismissKeyboardForUrlBar() {
         URLBarVC.resignFirstResponder()
     }
+
+	func navigateToHome() {
+		self.contentNavVC.changeState(state: .pageNavigation)
+		// update url
+	}
 }
 
