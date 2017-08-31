@@ -279,6 +279,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if webView == shareCardWebView {
             decisionHandler(.allow)
+            return
         }
         
 		if !navigationAction.request.url!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
