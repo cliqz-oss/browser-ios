@@ -22,11 +22,32 @@ protocol RecommendationsCollectionProtocol {
     func time(indexPath: IndexPath) -> String
 }
 
+class RecommedationsCollectionLayout: UICollectionViewFlowLayout {
+    
+    override init() {
+        super.init()
+        self.minimumInteritemSpacing = 20.0
+        self.minimumLineSpacing = 10.0
+        self.scrollDirection = .horizontal
+        self.sectionInset = UIEdgeInsetsMake(0, 10, 0, 10)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class RecommedationsCollectionView: UICollectionView {
     
     let cellReuseId = "recommedationsCell"
     let customLayout = RecommedationsCollectionLayout()
     var customDataSource: RecommendationsCollectionProtocol? = nil
+    
+    let minHeight: CGFloat = 0.0
+    let maxHeight: CGFloat = 204.0
+    var currentHeight: CGFloat = 204.0 //Initial
+    var prevHeight: CGFloat = 204.0
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: customLayout)
@@ -86,20 +107,134 @@ extension RecommedationsCollectionView: RecommendationsCellDelegate {
     }
 }
 
-
-class RecommedationsCollectionLayout: UICollectionViewFlowLayout {
-    
-    override init() {
-        super.init()
-        self.minimumInteritemSpacing = 20.0
-        self.minimumLineSpacing = 10.0
-        self.scrollDirection = .horizontal
-        self.sectionInset = UIEdgeInsetsMake(0, 10, 0, 10)
+extension RecommedationsCollectionView {
+    func height() -> CGFloat {
+        return (customDataSource?.numberOfItems() ?? 0) > 0 ? maxHeight : minHeight
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
+
+
+//scroll animation
+extension RecommedationsCollectionView {
+    
+    func canPerformChanges() -> Bool {
+        return customDataSource?.numberOfItems() ?? 0 > 0
+    }
+    
+    func adjustConstraints(offset: CGFloat) {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
+        let proposed_height = currentHeight - offset
+        let newHeight = min(max(minHeight, proposed_height), maxHeight)
+        
+        self.snp.updateConstraints { (make) in
+            make.height.equalTo(newHeight)
+        }
+        
+        setCurrentHeight(height: newHeight)
+        
+        self.layoutIfNeeded()
+    }
+    
+    func adjustOpacity() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
+        self.alpha = currentHeight / maxHeight
+    }
+    
+    func expand() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
+        setExpanded()
+        setVisible()
+    }
+    
+    func collapse() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
+        setCollapsed()
+        setInvisible()
+    }
+    
+    func percentageExpanded() -> CGFloat {
+        return currentHeight / maxHeight
+    }
+    
+    func finishTransition() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
+        if currentHeight > prevHeight {
+            setExpanded()
+            setVisible()
+        }
+        else if currentHeight < prevHeight {
+            setCollapsed()
+            setInvisible()
+        }
+    }
+    
+    private func setCurrentHeight(height: CGFloat) {
+        guard currentHeight != height else {
+            return
+        }
+        
+        prevHeight = currentHeight
+        currentHeight = height
+    }
+    
+    private func setExpanded() {
+        
+        setCurrentHeight(height: maxHeight)
+        
+        self.snp.updateConstraints { (make) in
+            make.height.equalTo(maxHeight)
+        }
+        
+        //self.layoutIfNeeded()
+    }
+    
+    private func setCollapsed() {
+        
+        setCurrentHeight(height: minHeight)
+        
+        self.snp.updateConstraints { (make) in
+            make.height.equalTo(minHeight)
+        }
+        
+        //self.layoutIfNeeded()
+    }
+    
+    private func setVisible() {
+        self.alpha = 1.0
+    }
+    
+    private func setInvisible() {
+        self.alpha = 0.0
+    }
+    
+    func timeFor(velocity: CGFloat) -> Double {
+        if velocity == 0.0 {
+            fatalError("division by 0 is undefined")
+        }
+        //compute the time v = delta x / t -> t = delta x / v , where t is in seconds.
+        let delta_x = Double(maxHeight - minHeight)
+        return (delta_x / Double(abs(velocity)))
+    }
+}
+
 
