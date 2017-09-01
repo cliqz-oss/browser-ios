@@ -170,7 +170,10 @@ extension DomainsViewController: KeyboardHelperDelegate {
 
 extension DomainsViewController: HasDataSource {
     func dataSourceWasUpdated(identifier: String) {
-        self.historyTableView.reloadData()
+        UIView.animate(withDuration: 0.2) { 
+            self.historyTableView.reloadData()
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
