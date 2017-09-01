@@ -61,7 +61,10 @@ final class URLBarViewController: UIViewController {
     func setAutocompleteSuggestion(_ suggestion: String?) {
         URLBar.setAutocompleteSuggestion(suggestion)
     }
-    
+
+	func updateURL(_ url: URL?) {
+		self.URLBar.currentURL = url
+	}
 }
 
 extension URLBarViewController: CIURLBarActionDelegate {
@@ -69,7 +72,7 @@ extension URLBarViewController: CIURLBarActionDelegate {
     func urlBarDidPressTabs(_ urlBar: CIURLBar) {
         
     }
-    
+
     func urlBarDidPressReaderMode(_ urlBar: CIURLBar) {
         
     }
@@ -97,24 +100,25 @@ extension URLBarViewController: CIURLBarActionDelegate {
 }
 
 extension URLBarViewController: CIURLBarStateDelegate {
-    
+
     func urlBarDidStartEditing(_ urlBar: CIURLBar) {
         
     }
-    
+
     func urlBarDidFinishEditing(_ urlBar: CIURLBar) {
         
     }
-    
+
     func urlBar(_ urlBar: CIURLBar, didEnterText text: String) {
         search_loader?.query = text
         externalDelegate?.action(action: Action(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
     }
-    
+
     func urlBar(_ urlBar: CIURLBar, didSubmitText text: String) {
         externalDelegate?.action(action: Action(data: ["url": text], type: .urlSelected, context: .urlBarVC))
+		urlBar.endEditing()
     }
-    
+
     func urlBarDidClearSearchField(_ urlBar: CIURLBar, oldText: String?) {
         search_loader?.query = ""
         externalDelegate?.action(action: Action(data: nil, type: .searchTextCleared, context: .urlBarVC))

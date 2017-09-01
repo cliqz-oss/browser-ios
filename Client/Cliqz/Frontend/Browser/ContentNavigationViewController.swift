@@ -124,6 +124,7 @@ extension ContentNavigationViewController {
     
     func showPageNavigation() {
         pageNavVC.view.isHidden = false
+		Router.shared.action(action: Action(data: nil, type: .urlIsModified, context: .urlBarVC))
     }
     
     func hidePageNavigation() {
@@ -154,17 +155,18 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
     
 	func showBrowser(url : String?) {
-        if browserVC == nil {
+        if self.browserVC == nil {
             setUpBrowserViewController()
         }
         
-        browserVC?.view.isHidden = false
+        self.browserVC?.view.isHidden = false
 		if let u = url {
 			var validURL = URIFixup.getURL(u)
 			if validURL == nil {
 				validURL = self.profile?.searchEngines.defaultEngine.searchURLForQuery(u)
 			}
-			browserVC?.loadURL(validURL)
+			self.browserVC?.loadURL(validURL)
+			Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
 		}
     }
     

@@ -18,6 +18,7 @@ enum ActionType {
     case searchAutoSuggest
     case searchDismissKeyboard
 	case homeButtonPressed
+	case urlIsModified
 }
 
 enum ActionContext {
@@ -42,16 +43,18 @@ class Router {
     
     fileprivate weak var contentNavVC: ContentNavigationViewController?
     fileprivate weak var mainNavVC: MainContainerViewController?
-    
+	fileprivate weak var urlBarVC: URLBarViewController?
+	
     static let shared = Router()
     
     func registerController(viewController: UIViewController) {
         
         if let controller = viewController as? ContentNavigationViewController {
             self.contentNavVC = controller
-        }
-        else if let controller = viewController as? MainContainerViewController {
+        } else if let controller = viewController as? MainContainerViewController {
 			self.mainNavVC = controller
+		} else if let controller = viewController as? URLBarViewController {
+			self.urlBarVC = controller
         }
     }
 }
@@ -79,6 +82,12 @@ extension Router: ActionDelegate {
             self.mainNavVC?.dismissKeyboardForUrlBar()
 		case .homeButtonPressed:
 			self.mainNavVC?.navigateToHome()
+		case .urlIsModified:
+			var url: URL? = nil
+			if let data = action.data as? [String: URL], let u = data["url"] {
+				url = u
+			}
+			self.urlBarVC?.updateURL(url)
 		}
 	}
 }

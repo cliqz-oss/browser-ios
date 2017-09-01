@@ -48,7 +48,8 @@ class MainContainerViewController: UIViewController {
 
         Router.shared.registerController(viewController: contentNavVC)
         Router.shared.registerController(viewController: self)
-
+		Router.shared.registerController(viewController: URLBarVC)
+		
         prepareModules()
     }
     
@@ -80,9 +81,7 @@ class MainContainerViewController: UIViewController {
         
         self.addChildViewController(contentNavVC)
         self.view.addSubview(contentNavVC.view)
-        
-        Router.shared.registerController(viewController: contentNavVC)
-    }
+	}
 
     private func setStyling() {
         self.view.backgroundColor = UIColor(colorString: "E9E9E9")
