@@ -174,7 +174,7 @@ extension DomainDetailsViewController {
         }
         
         if direction == .up {
-            if recommendationsCollection.currentHeight != recommendationsCollection.minHeight {
+            if recommendationsCollection.currentHeight != recommendationsCollection.minHeight && recommendationsCollection.canPerformChanges() {
                 self.historyTableView.setContentOffset(CGPoint(x: 0, y:0), animated: false)
             }
             

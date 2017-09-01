@@ -117,9 +117,15 @@ extension RecommedationsCollectionView {
 //scroll animation
 extension RecommedationsCollectionView {
     
-    
+    func canPerformChanges() -> Bool {
+        return customDataSource?.numberOfItems() ?? 0 > 0
+    }
     
     func adjustConstraints(offset: CGFloat) {
+        
+        guard canPerformChanges() else {
+            return
+        }
         
         let proposed_height = currentHeight - offset
         let newHeight = min(max(minHeight, proposed_height), maxHeight)
@@ -134,15 +140,30 @@ extension RecommedationsCollectionView {
     }
     
     func adjustOpacity() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
         self.alpha = currentHeight / maxHeight
     }
     
     func expand() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
         setExpanded()
         setVisible()
     }
     
     func collapse() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
         setCollapsed()
         setInvisible()
     }
@@ -152,6 +173,11 @@ extension RecommedationsCollectionView {
     }
     
     func finishTransition() {
+        
+        guard canPerformChanges() else {
+            return
+        }
+        
         if currentHeight > prevHeight {
             setExpanded()
             setVisible()
