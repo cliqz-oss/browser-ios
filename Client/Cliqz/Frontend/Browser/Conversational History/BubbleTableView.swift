@@ -22,6 +22,14 @@ protocol BubbleTableViewDelegate {
     func cellPressed(indexPath: IndexPath)
 }
 
+protocol CustomScrollDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
+}
+
 class BubbleTableView: UITableView {
     
     let bubble_left_id = "BubbleLeftCell"
@@ -29,6 +37,8 @@ class BubbleTableView: UITableView {
     
     let customDataSource: BubbleTableViewDataSource
     let customDelegate: BubbleTableViewDelegate?
+    
+    var scrollViewDelegate: CustomScrollDelegate? = nil
     
     init(frame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0), style: UITableViewStyle = .plain, customDataSource: BubbleTableViewDataSource, customDelegate: BubbleTableViewDelegate? = nil) {
         self.customDataSource = customDataSource
@@ -44,10 +54,6 @@ class BubbleTableView: UITableView {
         self.dataSource = self
         self.register(BubbleLeftCell.self, forCellReuseIdentifier: bubble_left_id)
         self.register(BubbleRightCell.self, forCellReuseIdentifier: bubble_right_id)
-        
-        if customDataSource.numberOfSections() == 0 {
-            self.isHidden = true
-        }
     }
     
     func setStyling() {
@@ -72,6 +78,13 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if customDataSource.numberOfSections() == 0 {
+            self.isHidden = true
+        }
+        else {
+            self.isHidden = false
+        }
+        
         return customDataSource.numberOfSections()
     }
     
@@ -141,6 +154,26 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         //To Do: Create a delegate
         self.customDelegate?.cellPressed(indexPath: indexPath)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewDidScroll(scrollView)
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewDidEndDecelerating(scrollView)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollViewDelegate?.scrollViewDidEndDragging(scrollView, willDecelerate: decelerate)
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewWillBeginDragging(scrollView)
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollViewDelegate?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
     }
     
 }

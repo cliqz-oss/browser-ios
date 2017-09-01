@@ -60,7 +60,7 @@ class BubbleLeftCell: UITableViewCell {
             make.top.equalTo(contentView).inset(10)
             make.bottom.equalTo(contentView)
             make.left.equalTo(contentView).offset(20)
-            make.width.equalTo(contentView.bounds.width * 0.94)
+            make.width.equalTo(contentView.bounds.width * 0.90)
         }
         
         titleLabel.snp.makeConstraints { (make) in
