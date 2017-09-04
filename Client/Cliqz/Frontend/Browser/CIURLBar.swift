@@ -138,14 +138,12 @@ class CIURLBar: UIView {
 		let locationView = TabLocationView()
 		locationView.readerModeState = ReaderModeState.Unavailable
 		locationView.delegate = self
-		locationView.backgroundColor = UIColor.white
 		return locationView
 	}()
 	
 	lazy var locationContainer: UIView = {
 		let locationContainer = UIView()
 		locationContainer.translatesAutoresizingMaskIntoConstraints = false
-		
 		locationContainer.clipsToBounds = true
 		locationContainer.layer.cornerRadius = CIURLBarUX.TextFieldCornerRadius
 		
@@ -263,7 +261,7 @@ class CIURLBar: UIView {
 
 		self.locationView.snp.makeConstraints { make in
 			make.top.right.bottom.equalTo(self.locationContainer)
-			make.left.equalTo(self.locationContainer).offset(30)
+			make.left.equalTo(self.locationContainer)
 		}
 
 		progressBar.snp.makeConstraints { make in
@@ -378,7 +376,8 @@ extension CIURLBar {
 			self.locationTextField.applyTheme(self.theme)
 		}, beforeTransition: {
 			self.locationTextField.snp.makeConstraints { make in
-				make.edges.equalTo(self.locationView)
+				make.top.right.bottom.equalTo(self.locationView)
+				make.left.equalTo(self.locationView).offset(30)
 			}
 			self.layoutIfNeeded()
 		}, afterTransition: {

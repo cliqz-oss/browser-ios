@@ -128,11 +128,11 @@ class TabLocationView: UIView {
         urlTextField.accessibilityActionsSource = self
         urlTextField.font = UIConstants.DefaultChromeFont
 		urlTextField.textAlignment = .left
-        
+
         return urlTextField
     }()
     
-    private var urlTextFieldWidth: CGFloat = 100.0
+    private var urlTextFieldWidth: CGFloat = 50.0
 
     fileprivate lazy var lockImageView: UIImageView = {
         let lockImageView = UIImageView(image: UIImage.templateImageNamed("lock_verified.png"))
@@ -182,17 +182,15 @@ class TabLocationView: UIView {
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         
-        urlTextField.snp_makeConstraints { make in
+        urlTextField.snp.makeConstraints { make in
             make.top.bottom.equalTo(self)
-            // Cliqz: changd the constraints of the urlTextField to make it centered
-            make.centerX.equalTo(self)
-            make.width.equalTo(self)
+            make.width.greaterThanOrEqualTo(urlTextFieldWidth)
+			make.left.equalTo(self).offset(30)
         }
         
         lockImageView.snp_makeConstraints { make in
             make.trailing.equalTo(urlTextField.snp_leading)
             make.centerY.equalTo(self)
-            // Cliqz: changd the width constraint of the lockImageView
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         
@@ -227,9 +225,15 @@ class TabLocationView: UIView {
     override func updateConstraints() {
 		
         // Cliqz: update the constrains of the urlTextField & readerModeButton
-//        urlTextField.snp_updateConstraints { make in
-//            make.width.equalTo(urlTextFieldWidth)
-//        }
+		urlTextField.snp.remakeConstraints { make in
+			make.top.bottom.equalTo(self)
+			if let _ = self.url {
+				make.centerX.equalTo(self)
+			} else {
+				make.left.equalTo(self).offset(30)
+			}
+			make.width.greaterThanOrEqualTo(urlTextFieldWidth)
+		}
 		
         readerModeButton.snp_remakeConstraints { make in
             
@@ -309,15 +313,15 @@ class TabLocationView: UIView {
         attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(value: TabLocationViewUX.HostPitch), range: nsRange)
         
         urlTextField.attributedText = attributedString
-        urlTextField.textAlignment = .left
+        urlTextField.textAlignment = .center
         urlTextFieldWidth = attributedString.size().width + 30
-        
+
         let maxUrlTextFieldWidth = getMaxUrlTextFieldWidth()
         if urlTextFieldWidth > maxUrlTextFieldWidth {
             urlTextFieldWidth = maxUrlTextFieldWidth
         }
     }
-    
+
     // Cliqz: get domain name of NSURL
     private func getDomainName(_ url: URL?) -> String {
         var domainName = ""

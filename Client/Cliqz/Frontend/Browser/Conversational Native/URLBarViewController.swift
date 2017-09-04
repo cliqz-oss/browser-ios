@@ -13,7 +13,7 @@ final class URLBarViewController: UIViewController {
     var URLBarHeight: CGFloat = 64.0
     
 	private var URLBar: CIURLBar = CIURLBar()
-    
+
     weak var search_loader: SearchLoader? = nil
     
     weak var externalDelegate: ActionDelegate? = nil

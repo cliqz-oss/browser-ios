@@ -48,6 +48,7 @@ final class CIBrowserViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		self.view.clipsToBounds = true
         // Do any additional setup after loading the view.
         setUpComponent()
         setStyling()

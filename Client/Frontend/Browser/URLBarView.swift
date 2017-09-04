@@ -1169,7 +1169,7 @@ class ToolbarTextField: AutocompleteTextField {
         
         return tintedImage!
     }
-    
+
     // Cliqz: take the responsibility of dismissing keyboard of locationTextField to fix the sublinks problem by eliminating the race between resizing and click events
     func enforceResignFirstResponder () {
         super.resignFirstResponder();
