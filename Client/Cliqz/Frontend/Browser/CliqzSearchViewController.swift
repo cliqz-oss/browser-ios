@@ -443,23 +443,41 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
     
     func presentShareCardActivityViewController(_ title:String, image: UIImage) {
-        
-        var activityItems = [AnyObject]()
-        activityItems.append(TitleActivityItemProvider(title: title))
-        activityItems.append(image)
-        
-        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        activityViewController.excludedActivityTypes = [.assignToContact]
-        
-        activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
-            if let target = activityType?.rawValue {
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+        guard let data:Data = UIImagePNGRepresentation(image) else {
+            return
+        }
+        let fileName = generateTempFileName(title)
+        let tempFile = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(fileName).png")
+        do {
+            try data.write(to: tempFile)
+            var activityItems = [AnyObject]()
+            activityItems.append(TitleActivityItemProvider(title: title))
+            activityItems.append(tempFile as AnyObject)
+            
+            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            activityViewController.excludedActivityTypes = [.assignToContact]
+            
+            activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+                if let target = activityType?.rawValue {
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+                }
+                try? FileManager.default.removeItem(at: tempFile)
             }
             
+            present(activityViewController, animated: true, completion: nil)
+        } catch _ {
+            
         }
-        present(activityViewController, animated: true, completion: nil)
-        
+    }
+    private func generateTempFileName(_ title: String) -> String {
+        var fileName = title
+        fileName = fileName.replace(" ", replacement: "_")
+        fileName = fileName.replace("...", replacement: "")
+        if fileName.contains("\n") {
+           fileName = fileName.components(separatedBy: "\n")[1]
+        }
+        return fileName
     }
 }
 
