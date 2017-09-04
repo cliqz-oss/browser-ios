@@ -45,31 +45,32 @@ struct CIURLBarUX {
 
 	static let TextFieldPadding: CGFloat = 10
 	static let TextFieldCornerRadius: CGFloat = 3
-	static let ProgressTintColor = UIColor(red:1, green:0.32, blue:0, alpha:1)
 	static let TextFieldHeight = 28
 	static let TextFieldTopOffset = 20
+
+	static let ProgressTintColor = UIConstants.CliqzThemeColor
+
 	static let URLBarButtonOffset: CGFloat = 5
 
 	// TODO: Review themes
 	static let Themes: [String: Theme] = {
 		var themes = [String: Theme]()
 		var theme = Theme()
-		theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
-
-		theme.borderColor = UIConstants.PrivateModeLocationBorderColor
-		theme.activeBorderColor = UIConstants.PrivateModePurple
-		theme.tintColor = UIColor.white
+		theme.backgroundColor = UIConstants.CliqzThemeColor
 		theme.textColor = UIConstants.PrivateModeTextColor
+		theme.tintColor = UIColor.white
 		theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
+
 		themes[Theme.PrivateMode] = theme
-		
+
 		theme = Theme()
-		theme.backgroundColor = UIColor.clear
-		theme.tintColor = ProgressTintColor
+		theme.backgroundColor = UIConstants.CliqzThemeColor
 		theme.textColor = UIConstants.NormalModeTextColor
-		theme.buttonTintColor = UIColor.black		
-		themes[Theme.NormalMode] = theme
-		
+		theme.tintColor = ProgressTintColor
+		theme.buttonTintColor = UIColor.black
+
+		themes[Theme.NormalMode] = theme 
+
 		return themes
 	}()
 
@@ -108,7 +109,7 @@ class CIURLBar: UIView {
 	weak var stateDelegate: CIURLBarStateDelegate?
 	weak var dataSource: CIURLBarDataSource?
 
-	fileprivate var theme: String = Theme.NormalMode
+	var theme: String = Theme.NormalMode
 
 	lazy var locationTextField: ToolbarTextField! = {
 		var textField = ToolbarTextField()
@@ -126,7 +127,7 @@ class CIURLBar: UIView {
 		textField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
 		textField.attributedPlaceholder = self.locationView.placeholder
 		self.locationContainer.addSubview(textField)
-		
+
 		let querySuggestionView = QuerySuggestionView.sharedInstance
 		querySuggestionView.delegate = self
 		textField.inputAccessoryView = querySuggestionView
@@ -458,7 +459,11 @@ extension CIURLBar: Themeable {
 			return
 		}
 		self.theme = themeName
-		self.backgroundColor = newTheme.backgroundColor
+		if let _ = self.currentURL {
+			self.backgroundColor = newTheme.backgroundColor
+		} else {
+			self.backgroundColor = UIColor.clear
+		}
 		self.locationContainer.layer.borderColor = newTheme.borderColor?.cgColor
 		// TODO: should be themable
 		self.locationContainer.backgroundColor = UIColor.white
