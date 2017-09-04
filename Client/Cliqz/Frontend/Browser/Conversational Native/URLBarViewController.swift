@@ -129,6 +129,8 @@ extension URLBarViewController: CIURLBarStateDelegate {
 extension URLBarViewController: CIURLBarDataSource {
     
     func urlBarDisplayTextForURL(_ url: URL?) -> String? {
-        return nil
+		// TODO: Test if this scenario is enough for URLBar display text in editing mode
+		
+        return url?.absoluteString
     }
 }
