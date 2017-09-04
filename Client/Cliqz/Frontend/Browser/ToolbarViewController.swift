@@ -8,49 +8,96 @@
 
 import UIKit
 
-class ToolbarViewController: UIViewController {
+final class ToolbarViewController: UIViewController {
+    
+    let toolBarView = CIToolBarView()
+    
+    //TO DO: states.
+    enum State {
+        case navigationAllowed
+        case navigationNotAllowed
+        case undefined
+    }
+    
+    var currentState: State = .undefined
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(goHome(_:)))
-		self.view.addGestureRecognizer(tapGestureRecognizer)
 
         // Do any additional setup after loading the view.
         setUpComponent()
         setStyling()
         setConstraints()
     }
-	
-	func goHome(_ gestureReconizer: UITapGestureRecognizer) {
-		Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .contentNavVC))
-	}
 
     func setUpComponent() {
+        toolBarView.delegate = self
+        view.addSubview(toolBarView)
         
+        changeState(state: .navigationNotAllowed) //initialState
     }
     
     func setStyling() {
-        view.backgroundColor = UIColor.black
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
     }
     
     func setConstraints() {
-        
+        toolBarView.snp.makeConstraints { (make) in
+            make.top.left.bottom.right.equalToSuperview()
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+
+//handle states
+extension ToolbarViewController {
+    func changeState(state: State) {
+        guard currentState != state else {
+            return
+        }
+        
+        if state == .navigationAllowed {
+            toolBarView.backButton.isEnabled = true
+            toolBarView.forwardButton.isEnabled = true
+            toolBarView.shareButton.isEnabled = true
+        }
+        else if state == .navigationNotAllowed {
+            toolBarView.backButton.isEnabled = false
+            toolBarView.forwardButton.isEnabled = false
+            toolBarView.shareButton.isEnabled = false
+        }
+        
+        currentState = state
+        
     }
-    */
+}
 
+extension ToolbarViewController: CIToolBarDelegate {
+    
+    func backPressed() {
+        
+    }
+    
+    func forwardPressed() {
+        
+    }
+    
+    func middlePressed() {
+        Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .contentNavVC))
+    }
+    
+    func sharePressed() {
+        
+    }
+    
+    func tabsPressed() {
+        
+    }
+    
 }

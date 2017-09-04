@@ -174,7 +174,7 @@ class BrowserProfileSyncDelegate: SyncDelegate {
  */
 protocol Profile: class {
 	// Cliqz: Added CliqzShareToDestination and CliqzSQLiteBookmarks protocols to extend bookmarks behaviour
-    var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> { get }
+    var bookmarks: BookmarksModelFactorySource & ShareToDestination & SyncableBookmarks & LocalItemSource & MirrorItemSource & CliqzShareToDestination & CliqzSQLiteBookmarks { get }
     
     // var favicons: Favicons { get }
     var prefs: Prefs { get }
@@ -183,11 +183,11 @@ protocol Profile: class {
     var files: FileAccessor { get }
     
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> { get }
+    var history: BrowserHistory & SyncableHistory & ResettableSyncStorage & ExtendedBrowserHistory { get }
     
     var favicons: Favicons { get }
     var readingList: ReadingListService? { get }
-    var logins: protocol<BrowserLogins, SyncableLogins, ResettableSyncStorage> { get }
+    var logins: BrowserLogins & SyncableLogins & ResettableSyncStorage { get }
     var certStore: CertStore { get }
     var recentlyClosedTabs: ClosedTabsStore { get }
 
@@ -324,7 +324,7 @@ public class BrowserProfile: Profile {
                 // We don't record a visit if no type was specified -- that means "ignore me".
                 let site = Site(url: url.absoluteString, title: title as String)
                 let visit = SiteVisit(site: site, date: Date.nowMicroseconds(), type: visitType)
-                history.addLocalVisit(visit)
+                let _ = history.addLocalVisit(visit)
             }
 
             history.setTopSitesNeedsInvalidation()
@@ -372,7 +372,7 @@ public class BrowserProfile: Profile {
      * that this is initialized first.
      */
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
-    private lazy var places: protocol<BrowserHistory, Favicons, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> = {
+    private lazy var places: BrowserHistory & Favicons & SyncableHistory & ResettableSyncStorage & ExtendedBrowserHistory = {
         return SQLiteHistory(db: self.db, prefs: self.prefs)
     }()
 
@@ -381,11 +381,11 @@ public class BrowserProfile: Profile {
     }
 
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
-    var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> {
+    var history: BrowserHistory & SyncableHistory & ResettableSyncStorage & ExtendedBrowserHistory {
         return self.places
     }
 
-    lazy var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> = {
+    lazy var bookmarks: BookmarksModelFactorySource & ShareToDestination & SyncableBookmarks & LocalItemSource & MirrorItemSource & CliqzShareToDestination & CliqzSQLiteBookmarks = {
         // Make sure the rest of our tables are initialized before we try to read them!
         // This expression is for side-effects only.
         withExtendedLifetime(self.places) {
@@ -393,7 +393,7 @@ public class BrowserProfile: Profile {
         }
     }()
 
-    lazy var mirrorBookmarks: protocol<BookmarkBufferStorage, BufferItemSource> = {
+    lazy var mirrorBookmarks: BookmarkBufferStorage & BufferItemSource = {
         // Yeah, this is lazy. Sorry.
         return self.bookmarks as! MergedSQLiteBookmarks
     }()
@@ -830,7 +830,7 @@ public class BrowserProfile: Profile {
             case "browser.db":
                 return self.locallyResetCollections(browserCollections)
             default:
-                log.debug("Unknown database \(name).")
+                log.debug("Unknown database \(String(describing: name)).")
                 return succeed()
             }
         }

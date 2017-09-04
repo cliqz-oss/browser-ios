@@ -645,6 +645,7 @@
 		AFB749951E6076DB00195004 /* AdblockingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB749941E6076DB00195004 /* AdblockingModule.swift */; };
 		AFC8E5541F41AF8E004822D5 /* BubbleTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC8E5531F41AF8E004822D5 /* BubbleTableView.swift */; };
 		AFC8E5571F41B9A2004822D5 /* DomainDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC8E5561F41B9A2004822D5 /* DomainDetailsHeaderView.swift */; };
+		AFCD36A31F5D933D004AE609 /* CIToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD36A21F5D933D004AE609 /* CIToolBarView.swift */; };
 		AFD9F5FD1F3DB07200215365 /* ExpandableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F5FB1F3DB07200215365 /* ExpandableView.swift */; };
 		AFD9F5FE1F3DB07200215365 /* ExpandableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F5FC1F3DB07200215365 /* ExpandableViewCell.swift */; };
 		AFD9F60E1F3DB47100215365 /* DashRemindersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F60D1F3DB47100215365 /* DashRemindersDataSource.swift */; };
@@ -2120,6 +2121,7 @@
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFC8E5531F41AF8E004822D5 /* BubbleTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTableView.swift; sourceTree = "<group>"; };
 		AFC8E5561F41B9A2004822D5 /* DomainDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsHeaderView.swift; sourceTree = "<group>"; };
+		AFCD36A21F5D933D004AE609 /* CIToolBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIToolBarView.swift; sourceTree = "<group>"; };
 		AFD9F5FB1F3DB07200215365 /* ExpandableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableView.swift; sourceTree = "<group>"; };
 		AFD9F5FC1F3DB07200215365 /* ExpandableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableViewCell.swift; sourceTree = "<group>"; };
 		AFD9F60D1F3DB47100215365 /* DashRemindersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashRemindersDataSource.swift; sourceTree = "<group>"; };
@@ -4234,6 +4236,7 @@
 			isa = PBXGroup;
 			children = (
 				AFA93A6B1F4B1068001425C4 /* ToolbarViewController.swift */,
+				AFCD36A21F5D933D004AE609 /* CIToolBarView.swift */,
 			);
 			name = "Tool Bar";
 			sourceTree = "<group>";
@@ -7017,6 +7020,7 @@
 				AF7ED4CA1F39B83B00E41737 /* DomainsCell.swift in Sources */,
 				59A68D66379CFA85C4EAF00B /* TwoLineCell.swift in Sources */,
 				1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */,
+				AFCD36A31F5D933D004AE609 /* CIToolBarView.swift in Sources */,
 				1E79DD4F1D4FB2F8006BEB4A /* AWSSNSResources.m in Sources */,
 				4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */,
 				E49943F51AE6879C00BF9DE4 /* IntroViewController.swift in Sources */,

@@ -45,9 +45,6 @@ class PageNavigationViewController: UIViewController {
     func setUpComponent() {
         addController(viewController: surfViewController)
         self.view.addSubview(pageControl)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        self.pageControl.addGestureRecognizer(tap)
     }
     
     func setStyling() {
@@ -67,8 +64,7 @@ class PageNavigationViewController: UIViewController {
         }
     }
     
-    @objc
-    func tapped(_ sender: UITapGestureRecognizer) {
+    func navigate() {
         if pageControl.currentPage == 0 {
             pageControl.changePage(page: 1)
             surfViewController.showNext()

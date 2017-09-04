@@ -201,7 +201,7 @@ extension SQLiteHistory: BrowserHistory {
             }
             let error = conn.executeChange(update, withArgs: updateArgs)
             if error != nil {
-                log.warning("Update failed with \(error?.localizedDescription)")
+                log.warning("Update failed with \(String(describing: error?.localizedDescription))")
                 return 0
             }
             return conn.numberOfRowsModified
@@ -257,8 +257,17 @@ extension SQLiteHistory: BrowserHistory {
     }
 
     public func addLocalVisit(_ visit: SiteVisit) -> Success {
-        return recordVisitedSite(visit.site)
-         >>> { self.addLocalVisitForExistingSite(visit) }
+        let success = recordVisitedSite(visit.site)
+            >>> { self.addLocalVisitForExistingSite(visit) }
+        
+        if success.value.isSuccess == true {
+            //Have a notification with the title and url and whether it is private or not.
+            
+            let date = visit.site.latestVisit?.date ?? Date.nowMicroseconds()//in microseconds
+            NotificationCenter.default.post(name: Notification.Name.init("NotificationSQLiteHistoryAddLocalVisit"), object: nil, userInfo: ["url": visit.site.url, "title": visit.site.title, "date": date])
+        }
+        
+        return success
     }
 
     public func getSitesByFrecencyWithHistoryLimit(_ limit: Int) -> Deferred<Maybe<Cursor<Site>>> {

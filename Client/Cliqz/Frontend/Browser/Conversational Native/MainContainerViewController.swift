@@ -141,9 +141,9 @@ extension MainContainerViewController {
         URLBarVC.resignFirstResponder()
     }
 
-	func navigateToHome() {
-		self.contentNavVC.changeState(state: .pageNavigation)
-		// update url
-	}
+//	func navigateToHome() {
+//		self.contentNavVC.changeState(state: .pageNavigation)
+//		// update url
+//	}
 }
 

@@ -81,7 +81,7 @@ extension Router: ActionDelegate {
         case .searchDismissKeyboard:
             self.mainNavVC?.dismissKeyboardForUrlBar()
 		case .homeButtonPressed:
-			self.mainNavVC?.navigateToHome()
+            self.contentNavVC?.homePressed()
 		case .urlIsModified:
 			var url: URL? = nil
 			if let data = action.data as? [String: URL], let u = data["url"] {

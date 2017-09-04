@@ -68,7 +68,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
         
         //get a list of all domains in the history 
         let domains = DomainsModule.sharedInstance.domains.map { (domain_struct) -> String in
-            return domain_struct.domainName
+            return domain_struct.host
         }
         
         let host_set = Set.init(domains)

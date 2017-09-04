@@ -37,7 +37,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func urlLabelText(indexPath:IndexPath) -> String {
-        return domains[indexPath.row].domainName
+        return domains[indexPath.row].host
     }
     
     func titleLabelText(indexPath:IndexPath) -> String {

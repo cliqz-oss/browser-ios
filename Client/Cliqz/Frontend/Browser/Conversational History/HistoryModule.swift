@@ -15,7 +15,7 @@ import React
 
 
 struct Domain {
-    let domainName: String
+    let host: String //this is the url.host string
     let domainDetails: [DomainDetail]
     let date: Date? //this should be the date of the most recently accessed DomainDetail.
 }
@@ -28,7 +28,6 @@ struct DomainDetail {
 
 @objc(HistoryModule)
 final class HistoryModule: NSObject {
-    
     
     //getHistoryWithLimit:(nonnull NSInteger *)limit startFrame:(nonnull NSInteger *)startFrame endFrame:(nonnull NSInteger *)endFrame
     @objc(query:startFrame:endFrame:domain:resolve:reject:)
@@ -92,7 +91,7 @@ final class HistoryModule: NSObject {
         //later there will be a mechanism in place to handle a variable limit and offset.
         //It will keep a window of results that updates as the user scrolls.
         let backgroundQueue = DispatchQueue.global(qos: .background)
-        profile.history.getHistoryVisits(0, limit: 1000).uponQueue(backgroundQueue) { (result) in
+        profile.history.getHistoryVisits(0, limit: 5000).uponQueue(backgroundQueue) { (result) in
             let rawDomainDetails = processRawDataResults(result: result)
             let domainList       = processDomainDetails(details: rawDomainDetails)
             completion(domainList, nil) //TODO: there should be a better error handling mechanism here
@@ -173,7 +172,7 @@ final class HistoryModule: NSObject {
         for domain in groupedDetails_by_Domain.keys {
             if let details = groupedDetails_by_Domain[domain] {
                 let most_recent_date = mostRecentDate(details: details)
-                finalArray.append(Domain(domainName: domain, domainDetails: details, date: most_recent_date))
+                finalArray.append(Domain(host: domain, domainDetails: details, date: most_recent_date))
             }
         }
         

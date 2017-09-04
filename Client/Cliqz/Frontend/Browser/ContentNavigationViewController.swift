@@ -117,6 +117,18 @@ extension ContentNavigationViewController {
     func backPressedUrlBar() {
         //
     }
+    
+    func homePressed() {
+        if currentState == .browser {
+            changeState(state: .pageNavigation)
+        }
+        else if currentState == .pageNavigation {
+            pageNavVC.navigate()
+        }
+        else if currentState == .search {
+            //I don't know what to do in this case
+        }
+    }
 }
 
 //PageNavigationViewController

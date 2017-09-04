@@ -24,6 +24,11 @@ class DomainsModule {
     
     init() {
         self.loadData(completion: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(visitInsertedInDB), name: Notification.Name.init("NotificationSQLiteHistoryAddLocalVisit"), object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func loadData(completion:((_ ready:Bool) -> Void)?) {
@@ -66,6 +71,66 @@ class DomainsModule {
         }
         else {
             self.completionBlocks.append(completion)
+        }
+    }
+    
+    @objc
+    func visitInsertedInDB(_ notification: Notification) {
+        if let info = notification.userInfo as? [String: Any] {
+            let title = info["title"] as? String ?? ""
+            let date = info["date"] as? UInt64 ?? Date.nowMicroseconds()
+            
+            if let url = info["url"] as? String {
+                //insert this entry in the domains list
+                let domainDetail = constructDomainDetail(url: url, title: title, date: date)
+                addDomainDetail(detail: domainDetail)
+                //when done send notification
+                NotificationCenter.default.post(name: DomainsModule.notification_updated, object: nil)
+            }
+        }
+    }
+    
+    func constructDomainDetail(url: String, title: String, date: UInt64) -> DomainDetail? {
+        if let nsUrl = NSURL(string: url) {
+            let adjustedDate = Date.init(timeIntervalSince1970: TimeInterval(date / 1000000))
+            return DomainDetail(title: title, url: nsUrl, date: adjustedDate)
+        }
+        return nil
+    }
+    
+    func addDomainDetail(detail: DomainDetail?) {
+        
+        guard let detail = detail else {
+            return
+        }
+        
+        if let detailHost = detail.url.host {
+            
+            var index = 0
+            
+            var domainFound = false
+            
+            for domain in domains {
+                if domain.host == detailHost {
+                    var domainDetails = domain.domainDetails
+                    domainDetails.append(detail)
+                    
+                    let updatedDomain = Domain(host: domain.host, domainDetails: domainDetails, date: detail.date)
+                    
+                    //this is the latest entry. The domain should become the first in the list.
+                    domains.remove(at: index)
+                    domains.insert(updatedDomain, at: 0)
+                    
+                    domainFound = true
+                    break
+                }
+                index += 1
+            }
+            
+            if domainFound == false {
+                let newDomain = Domain(host: detailHost, domainDetails: [detail], date: detail.date)
+                self.domains.insert(newDomain, at: 0)
+            }
         }
     }
     
