@@ -258,8 +258,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     fileprivate func search(_ query: String) {
-        let q = query.trimmingCharacters(in: CharacterSet.whitespaces)
-        var parameters = "'\(q.escape())'"
+        var parameters = "'\(query.escape())'"
         if let l = LocationManager.sharedInstance.getUserLocation() {
             parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
         }
