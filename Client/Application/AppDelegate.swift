@@ -646,7 +646,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         } else if let message = notification.alertBody, let url = notification.userInfo?["url"] as? String {
             if UIApplication.shared.applicationState == .active {
-                FeedbackUI.showToastMessage(message, messageType: .info, tabHandler: {[weak self] in
+                FeedbackUI.showToastMessage(message, messageType: .info, timeInterval: 4.0, tabHandler: {[weak self] in
                     self?.browserViewController.openURLInNewTab(URL(string: url))
                     TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
                 })
