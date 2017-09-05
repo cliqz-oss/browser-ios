@@ -17,6 +17,7 @@ final class ContentNavigationViewController: UIViewController {
     weak var search_loader: SearchLoader?
     weak var profile: Profile?
 	weak var tabManager: TabManager?
+    weak var stateDelegate: StateDelegate? = nil
 	
     enum State {
         case pageNavigation
@@ -84,6 +85,8 @@ extension ContentNavigationViewController {
         }
         
         currentState = state
+        
+        stateDelegate?.stateChanged(component: "ContentNav")
         
     }
 }

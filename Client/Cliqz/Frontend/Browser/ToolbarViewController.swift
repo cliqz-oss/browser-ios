@@ -14,8 +14,8 @@ final class ToolbarViewController: UIViewController {
     
     //TO DO: states.
     enum State {
-        case navigationAllowed
-        case navigationNotAllowed
+        case browsing
+        case notBrowsing
         case undefined
     }
     
@@ -34,7 +34,7 @@ final class ToolbarViewController: UIViewController {
         toolBarView.delegate = self
         view.addSubview(toolBarView)
         
-        changeState(state: .navigationNotAllowed) //initialState
+        changeState(state: .notBrowsing) //initialState
     }
     
     func setStyling() {
@@ -56,18 +56,21 @@ final class ToolbarViewController: UIViewController {
 
 
 //handle states
+//Here are the state rules: 
+//If not browsing: back, forward and share are disabled
+//If browsing back and forward should be enabled/disabled and the share should be enabled.
+
+
 extension ToolbarViewController {
     func changeState(state: State) {
         guard currentState != state else {
             return
         }
         
-        if state == .navigationAllowed {
-            toolBarView.backButton.isEnabled = true
-            toolBarView.forwardButton.isEnabled = true
+        if state == .browsing {
             toolBarView.shareButton.isEnabled = true
         }
-        else if state == .navigationNotAllowed {
+        else if state == .notBrowsing {
             toolBarView.backButton.isEnabled = false
             toolBarView.forwardButton.isEnabled = false
             toolBarView.shareButton.isEnabled = false
@@ -76,6 +79,41 @@ extension ToolbarViewController {
         currentState = state
         
     }
+    
+    func setBackEnabled() {
+        guard currentState == .browsing else {
+            return
+        }
+        
+        toolBarView.backButton.isEnabled = true
+        
+    }
+    
+    func setBackDisabled() {
+        guard currentState == .browsing else {
+            return
+        }
+        
+        toolBarView.backButton.isEnabled = false
+    }
+    
+    func setForwardEnabled() {
+        guard currentState == .browsing else {
+            return
+        }
+        
+        toolBarView.forwardButton.isEnabled = true
+        
+    }
+    
+    func setForwardDisabled() {
+        guard currentState == .browsing else {
+            return
+        }
+        
+        toolBarView.forwardButton.isEnabled = false
+    }
+    
 }
 
 extension ToolbarViewController: CIToolBarDelegate {

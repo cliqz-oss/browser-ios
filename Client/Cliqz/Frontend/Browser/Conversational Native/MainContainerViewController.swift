@@ -18,6 +18,10 @@ protocol HasDataSource: class {
     func dataSourceWasUpdated(identifier: String)
 }
 
+protocol StateDelegate: class {
+    func stateChanged(component: String)
+}
+
 class MainContainerViewController: UIViewController {
     
     private let backgroundImage = UIImageView()
@@ -42,6 +46,7 @@ class MainContainerViewController: UIViewController {
         contentNavVC.search_loader = searchLoader
         contentNavVC.profile = profile
 		contentNavVC.tabManager = tabManager
+        contentNavVC.stateDelegate = self
 
         URLBarVC.search_loader = searchLoader
         URLBarVC.externalDelegate = Router.shared
@@ -117,15 +122,6 @@ class MainContainerViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 }
 
 //receive actions
@@ -141,9 +137,18 @@ extension MainContainerViewController {
         URLBarVC.resignFirstResponder()
     }
 
-//	func navigateToHome() {
-//		self.contentNavVC.changeState(state: .pageNavigation)
-//		// update url
-//	}
+}
+
+extension MainContainerViewController: StateDelegate {
+    func stateChanged(component: String) {
+        if component == "ContentNav" {
+            if contentNavVC.currentState == .browser {
+                toolbarVC.changeState(state: .browsing)
+            }
+            else {
+                toolbarVC.changeState(state: .notBrowsing)
+            }
+        }
+    }
 }
 
