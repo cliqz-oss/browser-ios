@@ -939,7 +939,11 @@ extension URLBarView {
 			if inOverlayMode {
 				getApp().changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!, isNormalMode: true)
 			} else {
-				getApp().changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!, isNormalMode: true)
+				if let _ = self.currentURL {
+					getApp().changeStatusBarStyle(.lightContent,	backgroundColor: self.backgroundColor!, isNormalMode: true)
+				} else {
+					getApp().changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!, isNormalMode: true)
+				}
 			}
         case Theme.PrivateMode:
 			getApp().changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!, isNormalMode: false)
