@@ -29,7 +29,7 @@ class FeedbackUI: NSObject {
     ]
     
     //MARK:- Toast
-    class func showToastMessage(_ message: String, messageType: ToastMessageType, tabHandler: (() -> Void)? = nil) {
+    class func showToastMessage(_ message: String, messageType: ToastMessageType, timeInterval: TimeInterval? = nil, tabHandler: (() -> Void)? = nil) {
         var options : [AnyHashable: Any] = [kCRToastTextKey: message]
         
         switch messageType {
@@ -46,6 +46,10 @@ class FeedbackUI: NSObject {
             options[kCRToastBackgroundColorKey] = UIColor(colorString: "2CBA84")
             options[kCRToastImageKey] = UIImage(named:"toastCheckmark")!
             
+        }
+        
+        if let timeInterval = timeInterval {
+            options[kCRToastTimeIntervalKey] = [timeInterval]
         }
         
         if let tabHandler = tabHandler {
