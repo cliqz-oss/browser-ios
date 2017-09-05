@@ -4311,7 +4311,7 @@ extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
         urlBar.setAutocompleteSuggestion(autoCompleteText)
     }
 
-    func dismissKeyboard() {
+	func stopEditing() {
         urlBar.resignFirstResponder()
     }
 

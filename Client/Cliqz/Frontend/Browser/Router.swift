@@ -16,7 +16,7 @@ enum ActionType {
     case searchTextCleared
     case urlSelected
     case searchAutoSuggest
-    case searchDismissKeyboard
+    case searchStopEditing
 	case homeButtonPressed
 	case urlIsModified
 }
@@ -78,8 +78,8 @@ extension Router: ActionDelegate {
                 //Send this to main navigation. Main navigation is responsible for URL Bar.
                 self.mainNavVC?.autoSuggestURLBar(autoSuggestText: text)
             }
-        case .searchDismissKeyboard:
-            self.mainNavVC?.dismissKeyboardForUrlBar()
+        case .searchStopEditing:
+            self.mainNavVC?.stopEditing()
 		case .homeButtonPressed:
             self.contentNavVC?.homePressed()
 		case .urlIsModified:

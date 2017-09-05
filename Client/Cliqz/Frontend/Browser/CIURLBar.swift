@@ -202,7 +202,14 @@ class CIURLBar: UIView {
 //					NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationRefreshAntiTrackingButton), object: nil, userInfo: ["newURL":url])
 				}
 			}
+			self.currentQuery = nil
 			locationView.url = newURL
+		}
+	}
+
+	var currentQuery: String? {
+		didSet {
+			locationView.query = currentQuery
 		}
 	}
 
@@ -231,6 +238,11 @@ class CIURLBar: UIView {
 	}
 
 	func endEditing() {
+		self.state = .collapsed
+	}
+
+	func stopEditing() {
+		self.currentQuery = self.locationTextField.text
 		self.state = .collapsed
 	}
 
@@ -306,6 +318,7 @@ class CIURLBar: UIView {
 	}
 
 	@objc private func SELdidClickCancel() {
+		self.currentQuery = ""
 		self.state = .collapsed
 	}
     
@@ -366,7 +379,7 @@ extension CIURLBar {
 			self.locationContainer.layer.cornerRadius = CIURLBarUX.TextFieldCornerRadius
 		}, beforeTransition: {
 			// TODO: move to applytheme
-			self.locationContainer.backgroundColor = UIColor.white
+			self.applyTheme(self.theme)
 		})
 		return [transition]
 	}
@@ -458,7 +471,7 @@ extension CIURLBar: Themeable {
 			return
 		}
 		self.theme = themeName
-		if let _ = self.currentURL {
+		if let _ = self.currentURL, self.currentQuery == nil {
 			self.backgroundColor = newTheme.backgroundColor
 		} else {
 			self.backgroundColor = UIColor.clear
@@ -480,7 +493,7 @@ extension CIURLBar: TabLocationViewDelegate {
 	}
 
 	func tabLocationViewDidTapLocation(_ tabLocationView: TabLocationView) {
-		let locationText = self.dataSource?.urlBarDisplayTextForURL(locationView.url as URL?)
+		let locationText = locationView.query != nil ? locationView.query! : self.dataSource?.urlBarDisplayTextForURL(locationView.url as URL?)
 		self.startEditing(locationText)
 	}
 	

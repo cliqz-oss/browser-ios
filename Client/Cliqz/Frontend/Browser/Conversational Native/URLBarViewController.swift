@@ -63,8 +63,13 @@ final class URLBarViewController: UIViewController {
     }
 
 	func updateURL(_ url: URL?) {
+		self.URLBar.endEditing()
 		self.URLBar.currentURL = url
 		self.URLBar.applyTheme(self.URLBar.theme)
+	}
+
+	func stopEditing() {
+		self.URLBar.stopEditing()
 	}
 }
 

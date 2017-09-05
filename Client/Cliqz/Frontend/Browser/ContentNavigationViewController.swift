@@ -73,18 +73,16 @@ extension ContentNavigationViewController {
         else if state == .browser {
             hidePageNavigation()
             hideSearchController()
-            
+
 			showBrowser(url: text)
         }
         else if state == .search {
             hideBrowserViewController()
             hidePageNavigation()
-            
+
             showSearchController(text: text)
         }
-        
         currentState = state
-        
     }
 }
 
@@ -95,7 +93,7 @@ extension ContentNavigationViewController {
     func browseURL(url: String?) {
 		changeState(state: .browser, text: url)
     }
-    
+
     func textInUrlBarChanged(text: String) {
         searchController?.searchQuery = text
         
@@ -133,16 +131,17 @@ extension ContentNavigationViewController {
 
 //PageNavigationViewController
 extension ContentNavigationViewController {
-    
+
     func showPageNavigation() {
         pageNavVC.view.isHidden = false
-		Router.shared.action(action: Action(data: nil, type: .urlIsModified, context: .urlBarVC))
+		// TODO: What is the case when URL should be modified along with showing page navigation, this brakes some other logic
+//		Router.shared.action(action: Action(data: nil, type: .urlIsModified, context: .urlBarVC))
     }
-    
+
     func hidePageNavigation() {
         pageNavVC.view.isHidden = true
     }
-    
+
     func setUpPageNavigation() {
         
         addChildViewController(pageNavVC)
@@ -151,11 +150,10 @@ extension ContentNavigationViewController {
         setStylingPageNavigation()
         setConstraintsPageNavigation()
     }
-    
+
     func setStylingPageNavigation() {
-        
     }
-    
+
     func setConstraintsPageNavigation() {
         pageNavVC.view.snp.makeConstraints { (make) in
             make.top.left.right.bottom.equalToSuperview()
@@ -165,7 +163,7 @@ extension ContentNavigationViewController {
 
 //BrowserViewController
 extension ContentNavigationViewController {
-    
+
 	func showBrowser(url : String?) {
         if self.browserVC == nil {
             setUpBrowserViewController()
@@ -264,7 +262,7 @@ extension ContentNavigationViewController {
 }
 
 extension ContentNavigationViewController: SearchViewDelegate {
-    
+
     //TO DO: Route these
     
     func didSelectURL(_ url: URL, searchQuery: String?) {
@@ -272,14 +270,14 @@ extension ContentNavigationViewController: SearchViewDelegate {
     }
     
     func searchForQuery(_ query: String) {
-        
+
     }
-    
+
     func autoCompeleteQuery(_ autoCompleteText: String) {
         Router.shared.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest, context: .contentNavVC))
     }
     
-    func dismissKeyboard() {
-        Router.shared.action(action: Action(data: nil, type: .searchDismissKeyboard, context: .contentNavVC))
+    func stopEditing() {
+        Router.shared.action(action: Action(data: nil, type: .searchStopEditing, context: .contentNavVC))
     }
 }

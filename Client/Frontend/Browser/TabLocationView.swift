@@ -73,6 +73,14 @@ class TabLocationView: UIView {
         }
     }
 
+	var query: String? {
+		didSet {
+			lockImageView.isHidden = true
+			updateTextWithURL()
+			setNeedsUpdateConstraints()
+		}
+	}
+
     var readerModeState: ReaderModeState {
         get {
             return readerModeButton.readerModeState
@@ -294,7 +302,7 @@ class TabLocationView: UIView {
         */
         
         // Cliqz: disply only the domain name in the url TextField if possible
-        let urlText = getDomainName(url)
+		let urlText = self.query != nil ? self.query! : getDomainName(url)
         
         urlTextField.accessibilityLabel = url?.absoluteString
         urlTextField.accessibilityValue = url?.absoluteString
@@ -305,7 +313,12 @@ class TabLocationView: UIView {
             urlTextFieldWidth = getMaxUrlTextFieldWidth()
             return
         }
-        
+		
+		if self.query != nil {
+			urlTextField.textAlignment = .left
+		} else {
+			urlTextField.textAlignment = .center
+		}
         let attributedString = NSMutableAttributedString(string: urlText)
         let nsRange = NSMakeRange(0, urlText.characters.count)
         
@@ -313,7 +326,6 @@ class TabLocationView: UIView {
         attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(value: TabLocationViewUX.HostPitch), range: nsRange)
         
         urlTextField.attributedText = attributedString
-        urlTextField.textAlignment = .center
         urlTextFieldWidth = attributedString.size().width + 30
 
         let maxUrlTextFieldWidth = getMaxUrlTextFieldWidth()

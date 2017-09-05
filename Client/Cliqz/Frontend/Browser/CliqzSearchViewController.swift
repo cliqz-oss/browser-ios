@@ -16,7 +16,7 @@ protocol SearchViewDelegate: class {
     func didSelectURL(_ url: URL, searchQuery: String?)
     func searchForQuery(_ query: String)
     func autoCompeleteQuery(_ autoCompleteText: String)
-	func dismissKeyboard()
+	func stopEditing()
 }
 
 class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate  {
@@ -381,11 +381,11 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     func onLongPress(_ gestureRecognizer: UIGestureRecognizer) {
         inSelectionMode = true
-        delegate?.dismissKeyboard()
+        delegate?.stopEditing()
     }
     
     func onSwipeUp(_ gestureRecognizer: UIGestureRecognizer) {
-        delegate?.dismissKeyboard()
+        delegate?.stopEditing()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

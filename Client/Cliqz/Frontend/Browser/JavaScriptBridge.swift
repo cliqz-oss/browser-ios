@@ -130,11 +130,13 @@ class JavaScriptBridge {
             
         case "openLink":
             if let urlString = data as? String {
-                if let url = URL(string: urlString) {
-                    delegate?.didSelectUrl(url)
-                } else if let url = URL(string: urlString.escapeURL()) {
-                    delegate?.didSelectUrl(url)
-                }
+				// URL might be escaped before passing...
+				Router.shared.action(action: Action(data: ["url": urlString], type: .urlSelected, context: .contentNavVC))
+//                if let url = URL(string: urlString) {
+//                    delegate?.didSelectUrl(url)
+//                } else if let url = URL(string: urlString.escapeURL()) {
+//                    delegate?.didSelectUrl(url)
+//                }
             }
             
         case "notifyQuery":

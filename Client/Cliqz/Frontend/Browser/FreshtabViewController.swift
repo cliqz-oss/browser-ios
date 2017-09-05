@@ -471,7 +471,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		self.delegate?.dismissKeyboard()
+//		self.delegate?.dismissKeyboard()
 	}
 }
 

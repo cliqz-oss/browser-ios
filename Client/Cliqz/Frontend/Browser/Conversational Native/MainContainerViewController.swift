@@ -137,8 +137,8 @@ extension MainContainerViewController {
         URLBarVC.setAutocompleteSuggestion(autoSuggestText)
     }
 
-    func dismissKeyboardForUrlBar() {
-        URLBarVC.resignFirstResponder()
+    func stopEditing() {
+        URLBarVC.stopEditing()
     }
 
 //	func navigateToHome() {
