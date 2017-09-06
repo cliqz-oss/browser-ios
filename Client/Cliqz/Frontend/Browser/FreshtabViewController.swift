@@ -279,7 +279,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.equalTo(self.view).offset(21)
 				make.right.equalTo(self.view).offset(-21)
 				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(20)
+				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(15)
 			}
 			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
 			newsTableView?.separatorStyle = .singleLine
