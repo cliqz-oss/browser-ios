@@ -126,9 +126,10 @@ class SubscriptionsHandler: NSObject {
                 let timeStamp = userInfo["ts"] as? Int,
                 let message = userInfo["message"] as? String,
                 let url = userInfo["url"] as? String,
+                let provider = userInfo["provider"] as? String,
                 isSubscribedForSoccerNotification(league: leagueId, teams: teamIds, game: matchId, timeStamp: timeStamp) {
                 
-                publishLocalNotification(message, url: url)
+                publishLocalNotification(message, url: url, provider: provider)
                 completionHandler(.newData)
                 
             }
@@ -245,10 +246,7 @@ class SubscriptionsHandler: NSObject {
     
     
     private func isSubscribedForSoccerNotification(league: String, teams: [String], game: String, timeStamp: Int) -> Bool {
-//        guard timeStamp - Int(Date.getCurrentMillis()/1000) < 60 else {
-//            return false
-//        }
-        
+
         guard let soccerSubscription = self.currentSubscription["soccer"] else {
             return false
         }
@@ -272,11 +270,11 @@ class SubscriptionsHandler: NSObject {
         return false
     }
     
-    private func publishLocalNotification(_ message: String, url: String) {
+    private func publishLocalNotification(_ message: String, url: String, provider: String) {
         
         let notification = UILocalNotification()
         notification.fireDate = Date(timeIntervalSinceNow: 1)
-        notification.alertBody = message
+        notification.alertBody = "\(message)\n---\npowered by \(provider)"
         notification.soundName = UILocalNotificationDefaultSoundName
         notification.userInfo = ["url": url]
         UIApplication.shared.scheduleLocalNotification(notification)
