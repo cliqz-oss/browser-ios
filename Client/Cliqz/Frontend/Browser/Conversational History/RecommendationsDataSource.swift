@@ -15,7 +15,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     init(baseUrl: String) {
         self.baseUrl = baseUrl
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl))
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), type: .withHistoryDomains)
     }
     
     func numberOfItems() -> Int {
@@ -47,5 +47,9 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     func time(indexPath: IndexPath) -> String {
         return ""
+    }
+    
+    func url(indexPath: IndexPath) -> String {
+        return recommendations[indexPath.row].url
     }
 }

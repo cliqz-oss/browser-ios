@@ -12,19 +12,35 @@
 import UIKit
 
 enum ActionType {
+    //search
     case searchTextChanged
     case searchTextCleared
-    case urlSelected
     case searchAutoSuggest
     case searchStopEditing
+    case searchDismissKeyboard
+    //url
+    case urlSelected
+    case urlIsModified
+    //toolbar
 	case homeButtonPressed
-	case urlIsModified
+	case tabsPressed
+    case sharePressed
+    //activity
+    case remindersPressed
+    //tab
+    case tabSelected
 }
 
 enum ActionContext {
+    case mainContainer
     case urlBarVC
     case historyNavVC
+    case historyDetails
     case contentNavVC
+    case toolBarVC
+    case shareHelper
+    case dashRemindersDS
+    case dashRecommendationsDS
 }
 
 struct Action {
@@ -88,6 +104,16 @@ extension Router: ActionDelegate {
 				url = u
 			}
 			self.urlBarVC?.updateURL(url)
+        case .sharePressed:
+            ShareHelper.presentActivityViewController()
+        case .remindersPressed:
+            contentNavVC?.showReminder()
+        case .tabsPressed:
+            mainNavVC?.showTabOverView()
+        case .tabSelected:
+            if let data = action.data, let tab = data["tab"] as? Tab {
+                contentNavVC?.browseTab(tab: tab)
+            }
 		}
 	}
 }

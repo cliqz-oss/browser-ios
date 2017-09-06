@@ -113,7 +113,7 @@ class DomainsModule {
             for domain in domains {
                 if domain.host == detailHost {
                     var domainDetails = domain.domainDetails
-                    domainDetails.append(detail)
+                    domainDetails.insert(detail, at: 0)
                     
                     let updatedDomain = Domain(host: domain.host, domainDetails: domainDetails, date: detail.date)
                     

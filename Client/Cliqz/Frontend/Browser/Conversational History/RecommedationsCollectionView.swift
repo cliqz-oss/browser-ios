@@ -20,6 +20,12 @@ protocol RecommendationsCollectionProtocol {
     func headerTitle(indexPath: IndexPath) -> String
     func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void)
     func time(indexPath: IndexPath) -> String
+    func url(indexPath: IndexPath) -> String 
+}
+
+protocol RecommendationsCollectionDelegate: class {
+    func itemPressed(indexPath: IndexPath)
+    func deletePressed(indexPath: IndexPath)
 }
 
 class RecommedationsCollectionLayout: UICollectionViewFlowLayout {
@@ -48,6 +54,8 @@ class RecommedationsCollectionView: UICollectionView {
     let maxHeight: CGFloat = 204.0
     var currentHeight: CGFloat = 204.0 //Initial
     var prevHeight: CGFloat = 204.0
+    
+    weak var customDelegate: RecommendationsCollectionDelegate? = nil
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: customLayout)
@@ -96,14 +104,20 @@ extension RecommedationsCollectionView: UICollectionViewDataSource {
 }
 
 extension RecommedationsCollectionView: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 180, height: 188)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        customDelegate?.itemPressed(indexPath: indexPath)
     }
 }
 
 extension RecommedationsCollectionView: RecommendationsCellDelegate {
     func deletePressed(indexPath: IndexPath) {
         debugPrint("delete pressed")
+        customDelegate?.deletePressed(indexPath: indexPath)
     }
 }
 

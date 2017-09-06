@@ -24,11 +24,20 @@ protocol StateDelegate: class {
 
 class MainContainerViewController: UIViewController {
     
-    private let backgroundImage = UIImageView()
+    enum State {
+        case hidden
+        case visible
+    }
+    
+    fileprivate var currentState: State = .visible
+    
+    fileprivate let backgroundImage = UIImageView()
     
     fileprivate let URLBarVC = URLBarViewController()
     fileprivate let contentNavVC = ContentNavigationViewController()
     fileprivate let toolbarVC = ToolbarViewController()
+    
+    let tabManager: TabManager
     
     let searchLoader: SearchLoader
     
@@ -37,7 +46,7 @@ class MainContainerViewController: UIViewController {
 		// TODO: Refactor profile/tabManager creation and contentNavVC initialization
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let profile = appDelegate.profile
-		let tabManager = appDelegate.tabManager
+		self.tabManager = appDelegate.tabManager
         
         searchLoader = SearchLoader(profile: profile!)
         
@@ -124,6 +133,62 @@ class MainContainerViewController: UIViewController {
 
 }
 
+//state
+extension MainContainerViewController {
+    
+    func changeState(state: State, completion: (() -> ())?) {
+        
+        guard state != currentState else {
+            return
+        }
+        
+        currentState = state
+        
+        animateToState(state: currentState, completion: completion)
+    }
+    
+    fileprivate func visibleState(completion: (() -> ())?) -> [Transition] {
+        let transition = Transition(endState: {
+            
+            self.contentNavVC.view.alpha = 1.0
+            self.URLBarVC.view.alpha = 1.0
+            self.toolbarVC.view.alpha = 1.0
+            
+        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    fileprivate func hiddenState(completion: (() -> ())?) -> [Transition] {
+        let transition = Transition(endState: {
+            
+            self.contentNavVC.view.alpha = 0.0
+            self.URLBarVC.view.alpha = 0.0
+            self.toolbarVC.view.alpha = 0.0
+            
+        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    fileprivate func animateToState(state: State, completion: (() -> ())?) {
+        StateAnimator.animate(animators: generateAnimators(state: state, completion: completion))
+    }
+    
+    private func generateAnimators(state: State, completion: (() -> ())?) -> [Animator] {
+        return StateAnimator.generateAnimators(state: generateState(state: state, completion: completion), parentView: self.view)
+    }
+    
+    fileprivate func generateState(state: State, completion: (() -> ())?) -> [Transition] {
+        switch state {
+        case .visible:
+            return self.visibleState(completion: completion)
+        case .hidden:
+            return self.hiddenState(completion: completion)
+        }
+    }
+}
+
 //receive actions
 extension MainContainerViewController {
 
@@ -151,4 +216,96 @@ extension MainContainerViewController: StateDelegate {
         }
     }
 }
+
+//Tab Overview Show
+extension MainContainerViewController {
+    
+    func showTabOverView(){
+        changeState(state: .hidden, completion: {
+            
+            let tabsVC = TabsViewController(tabManager: self.tabManager)
+            tabsVC.delegate = self
+            tabsVC.view.backgroundColor = .clear
+            self.addChildViewController(tabsVC)
+            self.view.addSubview(tabsVC.view)
+            
+            let transition = Transition(endState: {
+                
+                //tabsVC.view.alpha = 1.0
+                
+                tabsVC.view.snp.remakeConstraints({ (make) in
+                    make.top.equalTo(self.view)
+                    make.width.equalToSuperview()
+                    make.height.equalToSuperview()
+                })
+            }, beforeTransition: {
+                
+                //tabsVC.view.alpha = 0.0
+                
+                tabsVC.view.snp.makeConstraints({ (make) in
+                    make.height.equalToSuperview()
+                    make.top.equalTo(self.view.snp.bottom)
+                    make.width.equalToSuperview()
+                })
+                
+                self.view.layoutIfNeeded()
+                
+            }, afterTransition: nil, animationDetails: AnimationDetails(duration: 0.2, curve: .easeOut, delayFactor: 0.0))
+            
+            let animators = StateAnimator.generateAnimators(state: [transition], parentView: self.view)
+            StateAnimator.animate(animators: animators)
+        })
+    }
+}
+
+extension MainContainerViewController: TabsViewControllerDelegate {
+    
+    func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath) {
+        if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
+            dismissTabOverview(tabsVC: tabsVC, completion: {
+                let tab = self.tabManager.tabs[indexPath.row]
+                Router.shared.action(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+            })
+        }
+    }
+    
+    func donePressed(tabsVC: TabsViewController?) {
+        dismissTabOverview(tabsVC: tabsVC, completion: nil)
+    }
+    
+    func dismissTabOverview(tabsVC: TabsViewController?, completion: (() -> ())?) {
+        
+        guard let vc = tabsVC else {
+            return
+        }
+        
+        let transition = Transition(endState: {
+            vc.view.snp.remakeConstraints({ (make) in
+                make.height.equalToSuperview()
+                make.top.equalTo(self.view.snp.bottom)
+                make.width.equalToSuperview()
+            })
+        }, afterTransition: {
+            vc.removeFromParentViewController()
+            vc.view.removeFromSuperview()
+            
+            self.changeState(state: .visible, completion: {
+                if let completion_block = completion {
+                    completion_block()
+                }
+            })
+            
+        }, animationDetails: AnimationDetails(duration: 0.2, curve: .easeIn, delayFactor: 0.0))
+        
+        let animators = StateAnimator.generateAnimators(state: [transition], parentView: self.view)
+        StateAnimator.animate(animators: animators)
+        
+    }
+}
+
+
+
+
+
+
 

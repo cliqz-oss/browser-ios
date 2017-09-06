@@ -96,6 +96,11 @@ extension ContentNavigationViewController {
 		changeState(state: .browser, text: url)
     }
 
+    func browseTab(tab: Tab) {
+        tabManager?.selectTab(tab)
+        changeState(state: .browser)
+    }
+
     func textInUrlBarChanged(text: String) {
         searchController?.searchQuery = text
         
@@ -281,5 +286,14 @@ extension ContentNavigationViewController: SearchViewDelegate {
     
     func stopEditing() {
         Router.shared.action(action: Action(data: nil, type: .searchStopEditing, context: .contentNavVC))
+    }
+}
+
+// reminders
+extension ContentNavigationViewController {
+    func showReminder() {
+        if currentState == .browser {
+            Reminders.show()
+        }
     }
 }

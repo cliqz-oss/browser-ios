@@ -23,7 +23,7 @@ class DashViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        reminders = ExpandableView(customDataSource: DashRemindersDataSource())
+        reminders = ExpandableView(customDataSource: DashRemindersDataSource(delegate: self))
         recommendations = ExpandableView(customDataSource: DashRecommendationsDataSource(delegate: self))
     }
     

@@ -284,7 +284,7 @@ class BrowserViewController: UIViewController {
             updateURLBarDisplayURL(tab)
             navigationToolbar.updateBackStatus(webView.canGoBack)
             navigationToolbar.updateForwardStatus(webView.canGoForward)
-            navigationToolbar.updateReloadStatus(tab.loading ?? false)
+            navigationToolbar.updateReloadStatus(tab.loading)
         }
     }
 
@@ -622,7 +622,7 @@ class BrowserViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(BrowserViewController.refreshReminderButton(_:)),
-                                               name: CIReminderManager.sharedInstance.RefreshReminderUI_Notification_Name,
+                                               name: CIReminderManager.notification_update,
                                                object: nil)
         
         NotificationCenter.default.addObserver(self,

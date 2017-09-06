@@ -9,6 +9,7 @@
 import UIKit
 
 class GeneralUtils {
+    
     class func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
         var dict: Dictionary<B, [A]> = [:]
         
@@ -24,6 +25,28 @@ class GeneralUtils {
         }
         
         return dict
+    }
+    
+    class func convert(seconds: Int) -> String {
+        
+        let days = seconds / (24 * 60 * 60)
+        if days != 0 {
+            let hours = (seconds % (24 * 60 * 60)) / 60
+            return String(days) + " days" + " " + String(hours) + " hours"
+        }
+        
+        let hours = seconds / (60 * 60)
+        if hours != 0 {
+            let minutes = (seconds % (60 * 60)) / 60
+            return String(hours) + " hours" + " " + String(minutes) + " minutes"
+        }
+        
+        let minutes = seconds / 60
+        if minutes != 0 {
+            return String(minutes) + " minutes"
+        }
+        
+        return String(seconds) + " seconds"
     }
 }
 

@@ -12,13 +12,14 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     
     static let identifier = "DashRecommendationsDataSource"
     
-    var recommendations: [Recommendation] = RecommendationsManager.sharedInstance.recommendations(domain: nil)
+    var recommendations: [Recommendation]
     
     weak var delegate: HasDataSource?
     
     init(delegate: HasDataSource) {
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, type: .withoutHistoryDomains)
         self.delegate = delegate
-        NotificationCenter.default.addObserver(self, selector: #selector(recommendationsReady), name: RecommendationsManager.notification_updated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
     }
     
     func maxNumCells() -> Int {
@@ -50,29 +51,18 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
     func cellPressed(indexPath: IndexPath) {
-        //handle press
+        Router.shared.action(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected, context: .dashRecommendationsDS))
     }
     
     @objc
-    private func recommendationsReady(_ sender: Notification) {
+    private func recommendationsUpdated(_ sender: Notification) {
         self.updateRecommendations()
         delegate?.dataSourceWasUpdated(identifier: DashRecommendationsDataSource.identifier)
     }
     
     private func updateRecommendations() {
-        recommendations = filterRecommendations(recommedations: RecommendationsManager.sharedInstance.recommendations(domain: nil))
+        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, type: .withoutHistoryDomains)
     }
     
-    private func filterRecommendations(recommedations: [Recommendation]) -> [Recommendation] {
-        //filter rule: News with a domain that matches any domain in the history should be eliminated. Those news are presented in History Details.
-        
-        //get a list of all domains in the history 
-        let domains = DomainsModule.sharedInstance.domains.map { (domain_struct) -> String in
-            return domain_struct.host
-        }
-        
-        let host_set = Set.init(domains)
-        
-        return RecommendationsManager.sharedInstance.recommendationsWithoutHosts(hosts: host_set)
-    }
+    
 }

@@ -23,7 +23,7 @@ final class CIReminderManager: NSObject {
     
     //Rules for Fired reminders
     //Add: When app opens and there are fired reminders
-    //Add: When app is active, reminder fireed, but it is not pressed (use reminder fired in combination with reminder pressed)
+    //Add: When app is active, reminder fired, but it is not pressed (use reminder fired in combination with reminder pressed)
     
     //I would like to get the fired reminders by host.
     
@@ -420,10 +420,10 @@ final class CIReminderManager: NSObject {
     }
     
     private func stateChanged() {
-        postUIRefreshNotification()
+        postRefreshNotification()
     }
     
-    private func postUIRefreshNotification() {
+    private func postRefreshNotification() {
         NotificationCenter.default.post(name: CIReminderManager.notification_update, object: nil)
     }
 }

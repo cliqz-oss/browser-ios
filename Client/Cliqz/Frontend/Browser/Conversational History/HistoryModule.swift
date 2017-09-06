@@ -171,8 +171,16 @@ final class HistoryModule: NSObject {
         
         for domain in groupedDetails_by_Domain.keys {
             if let details = groupedDetails_by_Domain[domain] {
+                //sort details
+                let sorted_details = details.sorted(by: { (a, b) -> Bool in
+                    if let date_a = a.date, let date_b = b.date {
+                        return date_a > date_b
+                    }
+                    return false
+                })
+                
                 let most_recent_date = mostRecentDate(details: details)
-                finalArray.append(Domain(host: domain, domainDetails: details, date: most_recent_date))
+                finalArray.append(Domain(host: domain, domainDetails: sorted_details, date: most_recent_date))
             }
         }
         

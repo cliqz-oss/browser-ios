@@ -5,7 +5,6 @@
 //  Created by Amornchai Kanokpullwad on 7/26/2558 BE.
 //  Copyright (c) 2558 zoonref. All rights reserved.
 //
-
 import UIKit
 import QuartzCore
 import SnapKit
@@ -116,7 +115,7 @@ class TabViewCell: UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-
+        
         displayView = UIView()
         gradientView = UIView(frame: displayView.bounds)
         
@@ -150,6 +149,7 @@ class TabViewCell: UICollectionViewCell {
         description_label.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
         description_label.text = ""
         description_label.numberOfLines = 0
+        description_label.layer.zPosition = 100
         displayView.addSubview(description_label)
         descriptionLabel = description_label
         
@@ -175,13 +175,13 @@ class TabViewCell: UICollectionViewCell {
         cliqz_imgView.contentMode = .scaleAspectFit
         bigLogoImageView.addSubview(cliqz_imgView)
         cliqzLogoImageView = cliqz_imgView
-
+        
         super.init(frame: frame)
         
         self.displayView.accessibilityLabel = "New Tab, Most visited sites and News"
         
-		self.deleteButton.addTarget(self, action: #selector(didPressDelete), for: .touchUpInside)
-		
+        self.deleteButton.addTarget(self, action: #selector(didPressDelete), for: .touchUpInside)
+        
         displayView.layer.frame = displayView.bounds
         //displayView.layer.shouldRasterize = true
         
@@ -202,17 +202,17 @@ class TabViewCell: UICollectionViewCell {
         
         // add motion effect
         let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "layer.transform",
-            type: .tiltAlongVerticalAxis)
+                                                               type: .tiltAlongVerticalAxis)
         
         var tranformMinRelative = CATransform3DIdentity
         tranformMinRelative = CATransform3DRotate(tranformMinRelative, CGFloat(Double.pi / 10), 1, 0, 0);
         
         var tranformMaxRelative = CATransform3DIdentity
-		tranformMaxRelative = CATransform3DRotate(tranformMaxRelative, CGFloat(-Double.pi / 10), 1, 0, 0);
-		
-		verticalMotionEffect.minimumRelativeValue = NSValue(caTransform3D: tranformMinRelative)
-		verticalMotionEffect.maximumRelativeValue = NSValue(caTransform3D: tranformMaxRelative)
-		
+        tranformMaxRelative = CATransform3DRotate(tranformMaxRelative, CGFloat(-Double.pi / 10), 1, 0, 0);
+        
+        verticalMotionEffect.minimumRelativeValue = NSValue(caTransform3D: tranformMinRelative)
+        verticalMotionEffect.maximumRelativeValue = NSValue(caTransform3D: tranformMaxRelative)
+        
         displayView.addMotionEffect(verticalMotionEffect)
         
         // add pan gesture
@@ -249,30 +249,31 @@ class TabViewCell: UICollectionViewCell {
         self.setConstraints()
     }
     
-	override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
-		super.apply(layoutAttributes)
-
+    override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+        super.apply(layoutAttributes)
+        
         if let attr = layoutAttributes as? TabSwitcherLayoutAttributes {
             displayView.layer.transform = attr.displayTransform
+            self.layer.zPosition = self.frame.origin.y
             currentTransform = attr.displayTransform
         }
         
     }
-
-	override func willTransition(from oldLayout: UICollectionViewLayout, to newLayout: UICollectionViewLayout) {
-		super.willTransition(from: oldLayout, to: newLayout)
+    
+    override func willTransition(from oldLayout: UICollectionViewLayout, to newLayout: UICollectionViewLayout) {
+        super.willTransition(from: oldLayout, to: newLayout)
         self.contentView.setNeedsLayout()
         displayView.layer.transform = CATransform3DIdentity
         currentTransform = CATransform3DIdentity
     }
-
+    
     func setConstraints() {
         
-		let screenSize = UIScreen.main.bounds.size
+        let screenSize = UIScreen.main.bounds.size
         let isPortrait = screenSize.height > screenSize.width
         
         if isPortrait {
-			self.displayView.snp.remakeConstraints { (make) in
+            self.displayView.snp.remakeConstraints { (make) in
                 self.showShadow(true)
                 make.centerX.top.equalTo(self.contentView)
                 make.width.equalTo(Knobs.cellWidth())
@@ -286,32 +287,38 @@ class TabViewCell: UICollectionViewCell {
                 make.width.height.equalTo(30)
             }
             
-			self.deleteButton.snp.remakeConstraints({ (make) in
+            self.deleteButton.snp.remakeConstraints({ (make) in
+                self.deleteButton.backgroundColor = UIColor.clear
                 make.top.equalTo(self.displayView)
                 make.right.equalTo(self.displayView)//.inset(10)
                 make.width.height.equalTo(44.0)
             })
             
             self.domainLabel.snp.remakeConstraints { (make) in
+                //self.domainLabel.isHidden = false
+                self.domainLabel.backgroundColor = UIColor.clear
+                self.domainLabel.textAlignment = .left
+                self.domainLabel.textColor = UIColor(colorString: "0086E0")
                 make.top.equalTo(self.displayView).inset(14)
                 make.left.equalTo(self.logoImageView).offset(40.0)
                 make.right.equalTo(self.deleteButton).inset(44.0)
                 make.height.equalTo(30.0)
             }
             
-			self.descriptionLabel.snp.remakeConstraints { (make) in
-                self.descriptionLabel.isHidden = false
+            self.descriptionLabel.snp.remakeConstraints { (make) in
+                self.descriptionLabel.numberOfLines = 0
                 make.top.equalTo(self.domainLabel.snp.bottom)
                 make.left.right.equalTo(self.displayView).inset(10.0)
                 make.height.equalTo(50.0)//54
             }
             
-			self.bigLogoImageView.snp.remakeConstraints { (make) in
+            self.bigLogoImageView.snp.remakeConstraints { (make) in
+                self.bigLogoImageView.layer.cornerRadius = 3
                 make.top.equalTo(self.descriptionLabel.snp.bottom)
                 make.left.right.bottom.equalTo(self.displayView).inset(10)
             }
             
-			self.smallCenterImageView.snp.remakeConstraints { (make) in
+            self.smallCenterImageView.snp.remakeConstraints { (make) in
                 make.center.equalTo(self.bigLogoImageView)
                 make.height.width.equalTo(80.0)//80
             }
@@ -321,42 +328,56 @@ class TabViewCell: UICollectionViewCell {
                 make.left.right.equalTo(self.bigLogoImageView).inset(50)
             })
         }
-        
+            
         else {
             self.displayView.snp.remakeConstraints { (make) in
                 self.showShadow(false)
                 make.left.right.top.bottom.equalTo(self.contentView)
             }
             
-			self.logoImageView.snp.remakeConstraints({ (make) in
-				self.logoImageView.isHidden = true
-			})
-			
-			self.deleteButton.snp.remakeConstraints({ (make) in
+            self.logoImageView.snp.remakeConstraints({ (make) in
+                self.logoImageView.isHidden = true
+            })
+            
+            self.deleteButton.snp.remakeConstraints({ (make) in
+                //self.deleteButton.backgroundColor = UIColor(colorString: "F6F6F6")
                 make.top.equalTo(self.displayView)
                 make.right.equalTo(self.displayView)//.inset(10)
-                make.width.height.equalTo(44.0)
+                make.width.height.equalTo(40.0)
             })
             
-			self.domainLabel.snp.remakeConstraints({ (make) in
+            self.domainLabel.snp.remakeConstraints({ (make) in
+                //self.domainLabel.isHidden = true
+                //self.domainLabel.backgroundColor = UIColor(colorString: "F6F6F6")
+                //self.domainLabel.textAlignment = .center
+                //self.domainLabel.textColor = UIColor.darkGray
                 make.top.equalTo(self.displayView)
-                make.left.equalTo(self.displayView).offset(10.0)
-                make.right.equalTo(self.deleteButton).inset(44.0)
-                make.height.equalTo(44.0)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.deleteButton).inset(40.0)
+                make.height.equalTo(40.0)
             })
             
-			self.descriptionLabel.snp.remakeConstraints({ (make) in
-				self.descriptionLabel.isHidden = true
-			})
-			
-			self.bigLogoImageView.snp.remakeConstraints { (make) in
+            self.descriptionLabel.snp.remakeConstraints({ (make) in
+                self.descriptionLabel.numberOfLines = 1
+                //self.descriptionLabel.backgroundColor = UIColor.white.withAlphaComponent(0.86)
                 make.top.equalTo(self.domainLabel.snp.bottom)
-                make.left.right.bottom.equalTo(self.displayView).inset(10)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
+                //make.right.equalTo(self.deleteButton).inset(44.0)
+                make.height.equalTo(26.0)
+            })
+            
+            self.bigLogoImageView.snp.remakeConstraints { (make) in
+                //self.bigLogoImageView.layer.cornerRadius = 0
+                make.top.equalTo(self.descriptionLabel.snp.bottom).offset(4)
+                make.left.equalTo(self.displayView).offset(6)
+                make.right.equalTo(self.displayView).inset(6)
+                make.bottom.equalTo(self.displayView).inset(6)
             }
             
-			self.smallCenterImageView.snp.remakeConstraints { (make) in
+            self.smallCenterImageView.snp.remakeConstraints { (make) in
                 make.center.equalTo(self.bigLogoImageView)
-                make.height.width.equalTo(40.0)//80
+                make.height.width.equalTo(44.0)//80
             }
             self.cliqzLogoImageView.snp.remakeConstraints({ (make) in
                 make.center.equalTo(self.bigLogoImageView)
@@ -367,16 +388,16 @@ class TabViewCell: UICollectionViewCell {
         
     }
     
- 
+    
     
     @objc
     func didPressDelete(sender: UIButton) {
-		self.delegate?.removeTab(cell: self, swipe: .None)
+        self.delegate?.removeTab(cell: self, swipe: .None)
     }
     
     func tapPressed(gestureRecognizer: UIGestureRecognizer) {
-		let touchLocation = gestureRecognizer.location(in: self.displayView)
-		
+        let touchLocation = gestureRecognizer.location(in: self.displayView)
+        
         if self.descriptionLabel.frame.contains(touchLocation) {
             clickedElement = "title"
         } else if self.domainLabel.frame.contains(touchLocation) {
@@ -397,17 +418,17 @@ class TabViewCell: UICollectionViewCell {
         
         switch recognizer.state {
         case .changed:
-			let translation = recognizer.translation(in: self.superview)
+            let translation = recognizer.translation(in: self.superview)
             let transform = displayView.layer.transform
             displayView.layer.transform = CATransform3DTranslate(transform, translation.x, 0, 0)
-			recognizer.setTranslation(CGPoint.zero, in: displayView)
-			
+            recognizer.setTranslation(CGPoint.zero, in: displayView)
+            
         case .cancelled, .ended:
             
-			let velocity = recognizer.velocity(in: self)
-			let aboveTreshold = abs(velocity.x) > self.velocityTreshold
-			
-			UIView.animate(withDuration: 0.3, animations: { () -> Void in
+            let velocity = recognizer.velocity(in: self)
+            let aboveTreshold = abs(velocity.x) > self.velocityTreshold
+            
+            UIView.animate(withDuration: 0.3, animations: { () -> Void in
                 if let transform = self.currentTransform {
                     let cellWidth = self.frame.width
                     if aboveTreshold {
@@ -419,10 +440,10 @@ class TabViewCell: UICollectionViewCell {
                         self.displayView.layer.transform = transform
                     }
                 }
-                }, completion: { finished in
-                    if finished && aboveTreshold {
-						self.delegate?.removeTab(cell: self, swipe: velocity.x > 0 ? .Right : .Left)
-                    }
+            }, completion: { finished in
+                if finished && aboveTreshold {
+                    self.delegate?.removeTab(cell: self, swipe: velocity.x > 0 ? .Right : .Left)
+                }
             })
             
         default: break
@@ -434,9 +455,9 @@ class TabViewCell: UICollectionViewCell {
 extension TabViewCell: UIGestureRecognizerDelegate {
     
     // fix hard to scroll vertically
-	override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
-			let velocity = pan.velocity(in: displayView)
+            let velocity = pan.velocity(in: displayView)
             return fabs(velocity.x) > fabs(velocity.y);
         }
         return true

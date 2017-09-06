@@ -12,13 +12,13 @@ class TabSwitcherLayoutAttributes: UICollectionViewLayoutAttributes {
     
     var displayTransform: CATransform3D = CATransform3DIdentity
     
-	override func copy(with zone: NSZone? = nil) -> Any {
-		let _copy = super.copy(with: zone) as! TabSwitcherLayoutAttributes
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let _copy = super.copy(with: zone) as! TabSwitcherLayoutAttributes
         _copy.displayTransform = displayTransform
         return _copy
     }
     
-	override func isEqual(_ object: Any?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         guard let attr = object as? TabSwitcherLayoutAttributes else { return false }
         return super.isEqual(object) && CATransform3DEqualToTransform(displayTransform, attr.displayTransform)
     }
@@ -42,7 +42,7 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         fatalError("init(coder:) has not been implemented")
     }
     
-	override class var layoutAttributesClass: AnyClass {
+    override class var layoutAttributesClass: AnyClass {
         return TabSwitcherLayoutAttributes.self
     }
     
@@ -55,19 +55,19 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         }
     }
     
-	override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-		guard let attrs = super.layoutAttributesForElements(in: rect) else {return nil}
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        guard let attrs = super.layoutAttributesForElements(in: rect) else {return nil}
         
         return attrs.map({ attr in
             return pimpedAttribute(attr)
         })
     }
-
+    
     func pimpedAttribute(_ attribute: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         
         if let attr = attribute.copy() as? TabSwitcherLayoutAttributes {
             
-            attr.zIndex = attr.indexPath.item
+            //attr.zIndex = attr.indexPath.item
             attr.displayTransform = currentTransform
             
             return attr
@@ -92,5 +92,5 @@ class PortraitFlowLayout: UICollectionViewFlowLayout {
         
         return t
     }
-
+    
 }

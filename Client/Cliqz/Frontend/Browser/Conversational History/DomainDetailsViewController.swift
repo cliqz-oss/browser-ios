@@ -50,6 +50,7 @@ final class DomainDetailsViewController: UIViewController {
         historyTableView = BubbleTableView(customDataSource: self.tableViewDataSource, customDelegate: self)
         historyTableView.scrollViewDelegate = self
         recommendationsCollection.customDataSource = self.recommendationsDataSource
+        recommendationsCollection.customDelegate = self
         headerView = DomainDetailsHeaderView(dataSource: self.headerViewDataSource)
         headerView.delegate = self
         
@@ -114,6 +115,17 @@ final class DomainDetailsViewController: UIViewController {
 	@objc private func logoPressed() {
 
 	}
+}
+
+extension DomainDetailsViewController: RecommendationsCollectionDelegate {
+    func itemPressed(indexPath: IndexPath) {
+        let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
+        Router.shared.action(action: Action(data: ["url": url], type: .urlSelected, context: .historyDetails))
+    }
+    
+    func deletePressed(indexPath: IndexPath) {
+        
+    }
 }
 
 extension DomainDetailsViewController: BubbleTableViewDelegate {

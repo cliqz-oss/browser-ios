@@ -18,6 +18,11 @@ struct Recommendation {
 
 final class RecommendationsManager {
     
+    enum RecommendationType {
+        case withHistoryDomains
+        case withoutHistoryDomains
+    }
+    
     static let sharedInstance = RecommendationsManager()
     
     static let notification_updated = NSNotification.Name(rawValue: "RecomandationsManagerUpdated")
@@ -26,6 +31,8 @@ final class RecommendationsManager {
     
     init() {
         self.loadRecommendations()
+        NotificationCenter.default.addObserver(self, selector: #selector(newsUpdated), name: NewsManager.notification_updated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
     }
     
     deinit {
@@ -39,9 +46,6 @@ final class RecommendationsManager {
             recommendations += news_recommendations
             
             NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
-        }
-        else {
-            NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NewsManager.notification_updated, object: nil)
         }
     }
     
@@ -87,7 +91,9 @@ final class RecommendationsManager {
     }
     
     //if domain is nil returns all recommendations
-    func recommendations(domain: URL?) -> [Recommendation] {
+    func recommendations(domain: URL?, type: RecommendationType) -> [Recommendation] {
+        
+        let local_recommendations = type == .withoutHistoryDomains ? recommendationsWithoutHistoryDomains(recommedations: self.recommendations) : self.recommendations
         
         if let domain = domain {
             
@@ -100,23 +106,43 @@ final class RecommendationsManager {
                 baseUrl = domain.host ?? ""
             }
             
-            return recommendations.filter({ (recommendation) -> Bool in
+            return local_recommendations.filter({ (recommendation) -> Bool in
                 return baseUrl == recommendation.host
             })
             
         }
         
-        return recommendations
+        return local_recommendations
     }
     
-    func recommendationsWithoutHosts(hosts: Set<String>) -> [Recommendation] {
+    private func recommendationsWithoutHistoryDomains(recommedations: [Recommendation]) -> [Recommendation] {
+        //filter rule: News with a domain that matches any domain in the history should be eliminated. Those news are presented in History Details.
+        
+        //get a list of all domains in the history
+        let domains = DomainsModule.sharedInstance.domains.map { (domain_struct) -> String in
+            return domain_struct.host
+        }
+        
+        let host_set = Set.init(domains)
+        
+        return self.recommendationsWithoutHosts(hosts: host_set)
+    }
+    
+    private func recommendationsWithoutHosts(hosts: Set<String>) -> [Recommendation] {
         return recommendations.filter({ (reccomendation) -> Bool in
             return !hosts.contains(reccomendation.host)
         })
     }
     
     @objc
-    private func newsReady(_ sender: Notification) {
+    private func newsUpdated(_ sender: Notification) {
         self.loadRecommendations()
     }
+    
+    @objc
+    private func domainsUpdated(_ sender: Notification) {
+        //Recommendations depend on the Domains. So when the domains change the list of recommendations without hosts changes. Thus we send a notification.
+         NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
+    }
+    
 }

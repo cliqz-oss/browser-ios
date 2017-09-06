@@ -5,11 +5,11 @@
 //  Created by Sahakyan on 8/12/16.
 //  Copyright © 2016 Mozilla. All rights reserved.
 //
-
 import Foundation
 import WebImage
 
 class Knobs {
+    
     class func minCellSpacing() -> Double {
         return Double((UIScreen.main.bounds.size.height - 200) / 4.0)
     }
@@ -42,7 +42,7 @@ class Knobs {
         return UIScreen.main.bounds.size.width / CGFloat(ratio)
     }
     class func landscapeSize() -> CGSize {
-        return CGSize(width: 200, height: 130)
+        return CGSize(width: 240, height: 160)
     }
     class func tiltAngle(count: Int) -> Double {
         return increasing(max: Knobs.maxTiltAngle(), min: Knobs.minTiltAngle(), factor: 0.85)(count)
@@ -64,65 +64,115 @@ class Knobs {
     }
 }
 
-class TabsViewController: UIViewController {
-	
+protocol TabsViewControllerDelegate: class {
+    func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath)
+    func donePressed(tabsVC: TabsViewController?)
+}
+
+final class TabsViewController: UIViewController {
+    
     fileprivate let emptyTabDefaultLogoUrl = "https://cliqz.com"
     
     var collectionView: UICollectionView!
-	private var addTabButton: UIButton!
-
-	let tabManager: TabManager!
-
-	fileprivate let tabCellIdentifier = "TabCell"
-
-	static let bottomToolbarHeight = 45
+    
+    fileprivate var addTabButton: UIButton = UIButton(type: .custom)
+    fileprivate let bottomView = UIView()
+    fileprivate let doneButton = UIButton()
+    
+    let tabManager: TabManager!
+    
+    weak var delegate: TabsViewControllerDelegate? = nil
+    
+    fileprivate let tabCellIdentifier = "TabCell"
+    
+    static let bottomToolbarHeight = 45
     
     var backgroundColorCache: [String:UIColor] = Dictionary()
     
     init(tabManager: TabManager) {
-		self.tabManager = tabManager
-		super.init(nibName: nil, bundle: nil)
-		self.tabManager.addDelegate(self)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		self.tabManager.removeDelegate(self)
-	}
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
+        self.tabManager = tabManager
+        super.init(nibName: nil, bundle: nil)
+        self.tabManager.addDelegate(self)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        self.tabManager.removeDelegate(self)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setUpComponent()
+        setStyling()
+    }
+    
+    func setUpComponent() {
         
         collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: PortraitFlowLayout())
         collectionView.register(TabViewCell.self, forCellWithReuseIdentifier: "Cell")
-        collectionView.backgroundColor = UIColor.clear
-        collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        self.view.addSubview(collectionView)
-		
-		addTabButton = UIButton(type: .custom)
-		addTabButton.setTitle("+", for: UIControlState())
-		addTabButton.setTitleColor(UIColor.black, for: UIControlState())
-		addTabButton.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-		addTabButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
-		addTabButton.backgroundColor =  UIColor.white
-		self.view.addSubview(addTabButton)
-		addTabButton.addTarget(self, action: #selector(addNewTab), for: .touchUpInside)
-
+        addTabButton.addTarget(self, action: #selector(addNewTab), for: .touchUpInside)
         let longPressGestureAddTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabsViewController.SELdidLongPressAddTab(_:)))
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
-
-		self.view.backgroundColor = UIConstants.AppBackgroundColor
-     
-	}
+        
+        bottomView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        bottomView.addSubview(addTabButton)
+        bottomView.addSubview(doneButton)
+        
+        doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
+        
+        self.view.addSubview(collectionView)
+        self.view.addSubview(bottomView)
+    }
     
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+    func setStyling() {
+        
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.showsVerticalScrollIndicator = false
+        
+        addTabButton.setTitle("+", for: UIControlState())
+        addTabButton.setTitleColor(UIColor.white, for: UIControlState())
+        addTabButton.titleLabel?.font = UIFont.systemFont(ofSize: 30)
+        addTabButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
+        addTabButton.backgroundColor =  UIColor.clear
+        
+        doneButton.setTitle("Done", for: UIControlState())
+        doneButton.setTitleColor(UIColor.white, for: UIControlState())
+    }
+    
+    fileprivate func setupConstraints() {
+        
+        collectionView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalTo(bottomView.snp.top)
+        }
+        
+        bottomView.snp.makeConstraints { (make) in
+            make.height.equalTo(TabsViewController.bottomToolbarHeight)
+            make.bottom.left.right.equalToSuperview()
+        }
+        
+        addTabButton.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.height.width.equalTo(TabsViewController.bottomToolbarHeight)
+        }
+        
+        doneButton.snp.makeConstraints { (make) in
+            make.top.bottom.equalToSuperview()
+            make.right.equalToSuperview().inset(10)
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         if UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height {
             self.collectionView.collectionViewLayout = LandscapeFlowLayout()
@@ -131,25 +181,25 @@ class TabsViewController: UIViewController {
             self.collectionView.collectionViewLayout = PortraitFlowLayout()
         }
         
-		self.collectionView.reloadData()
+        self.collectionView.reloadData()
         if self.collectionView.contentSize.height > self.collectionView.frame.size.height{
             self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
         }
-	}
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		self.setupConstraints()
-	}
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.setupConstraints()
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-	
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         self.collectionView.alpha = 0.0
@@ -175,14 +225,19 @@ class TabsViewController: UIViewController {
         }
         
     }
-
-	@objc private func addNewTab(sender: UIButton) {
-		self.openNewTab()
+    
+    @objc private func donePressed(_ button: UIButton) {
+        weak var weak_self: TabsViewController? = self
+        delegate?.donePressed(tabsVC: weak_self)
+   }
+    
+    @objc private func addNewTab(sender: UIButton) {
+        self.openNewTab()
         
         let customData: [String : AnyObject] = ["tab_count" : self.tabManager.tabs.count as AnyObject]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
-	}
-	
+    }
+    
     @objc func SELdidLongPressAddTab(_ recognizer: UILongPressGestureRecognizer) {
         let newTabHandler = { (action: UIAlertAction) in
             TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", nil))
@@ -197,41 +252,37 @@ class TabsViewController: UIViewController {
             return
         }
         
+        var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
+        let tabsCount = self.tabManager.tabs.count
+        if tabsCount > 1 {
+            closeAllTabsHandler = { (action: UIAlertAction) in
+                self.tabManager.removeAll()
+                TelemetryLogger.sharedInstance.logEvent(.DashBoard("close_all_tabs", "click", "new_forget_tab", nil))
+                self.navigationController?.popViewController(animated: false)
+            }
+        }
+        
         let cancelHandler = { (action: UIAlertAction) in
             // do no thing
             TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "cancel", nil))
         }
         
-        let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler)
+        let actionSheetController = UIAlertController.createNewTabActionSheetController(addTabButton, newTabHandler: newTabHandler, newForgetModeTabHandler: newForgetModeTabHandler, cancelHandler: cancelHandler, closeAllTabsHandler: closeAllTabsHandler)
         
         self.present(actionSheetController, animated: true, completion: nil)
         
         let customData: [String : Any] = ["count" : self.tabManager.tabs.count]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "longpress", "new_tab", customData))
     }
-
-	private func openNewTab(isPrivate: Bool = false) {
-		if isPrivate {
+    
+    private func openNewTab(isPrivate: Bool = false) {
+        if isPrivate {
             _ = self.tabManager.addTabAndSelect(nil, configuration: nil, isPrivate: true)
-		} else {
-			_ = self.tabManager.addTabAndSelect()
-		}
-		self.navigationController?.popViewController(animated: false)
-	}
-
-	fileprivate func setupConstraints() {
-		collectionView.snp.makeConstraints { make in
-			make.left.right.equalTo(self.view)
-			make.top.equalTo(self.view)
-			make.bottom.equalTo(addTabButton.snp.top)
-		}
-		addTabButton.snp.makeConstraints { make in
-			make.centerX.equalTo(self.view)
-			make.bottom.equalTo(self.view)
-			make.left.right.equalTo(self.view)
-			make.height.equalTo(TabsViewController.bottomToolbarHeight)
-		}
-	}
+        } else {
+            _ = self.tabManager.addTabAndSelect()
+        }
+        self.navigationController?.popViewController(animated: false)
+    }
 }
 
 extension TabsViewController: UICollectionViewDataSource {
@@ -265,20 +316,20 @@ extension TabsViewController: UICollectionViewDataSource {
             }
             
         }
-
+        
         cell.domainLabel.accessibilityLabel = cell.domainLabel.text
-
+        
         if tab.isPrivate {
             cell.makeCellPrivate()
         }
         else {
             cell.makeCellUnprivate()
         }
-
+        
         if let favIconString = tab.displayFavicon?.url, let favIconUrl = URL(string:favIconString) {
-
+            
             let options = [SDWebImageOptions.lowPriority]
-
+            
             SDWebImageManager.shared().downloadImage(with: favIconUrl, options: SDWebImageOptions(options), progress: nil, completed: { (image , error , cacheType, success , given_url) in
                 guard cell.tag == indexPath.row else { return }
                 if success {
@@ -290,25 +341,26 @@ extension TabsViewController: UICollectionViewDataSource {
         } else {
             cell.setSmallUpperLogo(UIImage(named: "favIconDefault"))
         }
-
+        
         if let url = tab.displayURL?.absoluteString {
             
-            LogoLoader.loadLogo(url, completionBlock: { (image, error) in
-                guard cell.tag == indexPath.row else { return }
-                
-                if image != nil {
-                    cell.setBigLogo(image: image, cliqzLogo: false)
-                }
-                else {
-                    let fakeLogo = LogoLoader.generateFakeLogo(url: url, fontSize: 44)
-                    cell.setBigLogoView(fakeLogo)
-                }
-            })
+//            LogoLoader.loadLogo(url, completionBlock: { (image, logoInfo, error) in
+//                guard cell.tag == indexPath.row else { return }
+//                
+//                if image != nil {
+//                    cell.setBigLogo(image: image, cliqzLogo: false)
+//                }
+//                else if var info = logoInfo {
+//                    info.fontSize = 44
+//                    let fakeLogo = LogoPlaceholder(logoInfo: info)
+//                    cell.setBigLogoView(fakeLogo)
+//                }
+//            })
         }
         else{
             cell.setBigLogo(image: UIImage(named: "cliqzTabLogo"), cliqzLogo: true)
         }
-
+        
         cell.accessibilityLabel = tab.displayURL?.absoluteString
         return cell
     }
@@ -318,13 +370,15 @@ extension TabsViewController: UICollectionViewDataSource {
 extension TabsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let tab = self.tabManager.tabs[indexPath.row]
-        self.tabManager.selectTab(tab)
-        self.navigationController?.popViewController(animated: false)
+//        let tab = self.tabManager.tabs[indexPath.row]
+//        self.tabManager.selectTab(tab)
+//        self.navigationController?.popViewController(animated: false)
         
-        if let currentCell = collectionView.cellForItem(at: indexPath) as? TabViewCell {
-            logTabClickSignal(currentCell: currentCell, indexPath: indexPath, count: self.tabManager.tabs.count, isForget: tab.isPrivate)
-        }
+//        if let currentCell = collectionView.cellForItem(at: indexPath) as? TabViewCell {
+//            logTabClickSignal(currentCell: currentCell, indexPath: indexPath, count: self.tabManager.tabs.count, isForget: tab.isPrivate)
+//        }
+        weak var weak_self: TabsViewController? = self
+        delegate?.itemPressed(tabsVC: weak_self, indexPath: indexPath)
     }
     
     func logTabClickSignal(currentCell : TabViewCell, indexPath: IndexPath, count: Int, isForget: Bool) {
@@ -336,7 +390,7 @@ extension TabsViewController: UICollectionViewDelegate {
         
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "tab", customData))
     }
-
+    
 }
 
 extension TabsViewController: UICollectionViewDelegateFlowLayout {
@@ -369,7 +423,7 @@ extension TabsViewController: TabViewCellDelegate {
         if let tabIndex = self.tabManager.getIndex(tab) {
             customData["index"] = tabIndex
         }
-		
+        
         var action = ""
         
         if swipe == .None {
@@ -416,10 +470,11 @@ extension TabsViewController: TabManagerDelegate {
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
     }
-
+    
     func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
     }
-
-	func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
-	}
+    
+    func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
+    }
 }
+

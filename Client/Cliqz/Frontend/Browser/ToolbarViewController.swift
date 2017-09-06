@@ -1,4 +1,4 @@
-//
+ //
 //  ToolbarViewController.swift
 //  Client
 //
@@ -127,15 +127,15 @@ extension ToolbarViewController: CIToolBarDelegate {
     }
     
     func middlePressed() {
-        Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .contentNavVC))
+        Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
     }
     
     func sharePressed() {
-        
+        Router.shared.action(action: Action(data: nil, type: .sharePressed, context: .toolBarVC))
     }
     
     func tabsPressed() {
-        
+        Router.shared.action(action: Action(data: nil, type: .tabsPressed, context: .toolBarVC))
     }
     
 }
