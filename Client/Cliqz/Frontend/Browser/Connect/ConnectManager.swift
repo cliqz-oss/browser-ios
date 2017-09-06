@@ -97,7 +97,7 @@ class ConnectManager: NSObject {
     }
     //MARK: - Private Helpers
     @objc private func updateConnections(notification: NSNotification) {
-        guard let args = notification.object as? [AnyObject], let pairingData = args[0] as? [String: AnyObject], let devices = pairingData["devices"] as? [[String: String]] else {
+        guard let pairingData = notification.object as? [String: AnyObject], let devices = pairingData["devices"] as? [[String: String]] else {
             return
         }
 
