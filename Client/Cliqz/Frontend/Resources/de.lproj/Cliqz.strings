@@ -331,7 +331,7 @@
 /* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
 "Would you like to subscribe to the {1}?" = "Möchtest du {1} abonnieren?";
 /* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
-"You will be notified about games, goals and important happenings of the #." = "Du wirst über wichtige Spielereignisse oder Vereinsereignisse benachrichtigt.";
+"You will be notified about games, goals and important happenings of the {1}." = "Du wirst über wichtige Spielereignisse oder Vereinsereignisse benachrichtigt.";
 /* [Subscriptions] soccer notification */
 "league" = "League";
 /* [Subscriptions] soccer notification */
@@ -342,10 +342,10 @@
 "Subscribe" = "Abonnieren";
 /* [Subscriptions] Alert title for asking to enable push notificaiton from the system
  [Subscriptions] Alert title when failing to subscribe to soccer notification */
-"Could not subscribe to {1}?" = "{1} konnte nicht abonniert werden.";
+"Could not subscribe to {1}." = "{1} konnte nicht abonniert werden.";
 /* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
 "Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Aktiviere Push-Benachrichtigungen, um diese Funktion zu nutzen. Gehe dazu in die Einstellungen und versuche es dann erneut.";
 /* [Subscriptions] Alert message when failing to subscribe to soccer notification */
 "Sorry, we encountered some technical difficulties. Please try again" = "Entschuldigung, leider gab es technische Probleme beim Abonnieren. Versuche es noch einmal.";
 /* [Subscriptions] Subscribing HUD */
-"Subscribe to {1}." = "{1} wird abonniert...";
+"Subscribing to {1}." = "{1} wird abonniert...";
