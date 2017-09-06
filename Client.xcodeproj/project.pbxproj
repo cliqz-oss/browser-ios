@@ -125,7 +125,6 @@
 		1E79DD381D4FB2C5006BEB4A /* OnePasswordExtension.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCF61D4FB2C5006BEB4A /* OnePasswordExtension.strings */; };
 		1E79DD391D4FB2C5006BEB4A /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFA1D4FB2C5006BEB4A /* Lato-Light.ttf */; };
 		1E79DD3A1D4FB2C5006BEB4A /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFB1D4FB2C5006BEB4A /* Lato-Medium.ttf */; };
-		1E79DD3B1D4FB2C5006BEB4A /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFC1D4FB2C5006BEB4A /* main.js */; };
 		1E79DD3C1D4FB2C5006BEB4A /* trampolineForward.html in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFD1D4FB2C5006BEB4A /* trampolineForward.html */; };
 		1E79DD3D1D4FB2C5006BEB4A /* viewport.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFE1D4FB2C5006BEB4A /* viewport.js */; };
 		1E79DD3E1D4FB2C5006BEB4A /* wikipediaUserScript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */; };
@@ -1489,7 +1488,6 @@
 		1E79DCF91D4FB2C5006BEB4A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/FairBlocking.html; sourceTree = "<group>"; };
 		1E79DCFA1D4FB2C5006BEB4A /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		1E79DCFB1D4FB2C5006BEB4A /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
-		1E79DCFC1D4FB2C5006BEB4A /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		1E79DCFD1D4FB2C5006BEB4A /* trampolineForward.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = trampolineForward.html; sourceTree = "<group>"; };
 		1E79DCFE1D4FB2C5006BEB4A /* viewport.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = viewport.js; sourceTree = "<group>"; };
 		1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = wikipediaUserScript.js; sourceTree = "<group>"; };
@@ -2878,7 +2876,6 @@
 				1E79DCF61D4FB2C5006BEB4A /* OnePasswordExtension.strings */,
 				1E79DCFA1D4FB2C5006BEB4A /* Lato-Light.ttf */,
 				1E79DCFB1D4FB2C5006BEB4A /* Lato-Medium.ttf */,
-				1E79DCFC1D4FB2C5006BEB4A /* main.js */,
 				1E79DCFD1D4FB2C5006BEB4A /* trampolineForward.html */,
 				1E79DCFE1D4FB2C5006BEB4A /* viewport.js */,
 				1E79DCFF1D4FB2C5006BEB4A /* wikipediaUserScript.js */,
@@ -5893,7 +5890,6 @@
 				E4ECCDAE1AB131770005E717 /* FiraSans-Medium.ttf in Resources */,
 				E4424B3C1AC71FB400F44C38 /* FiraSans-Book.ttf in Resources */,
 				1E79DD321D4FB2C5006BEB4A /* NewsPermissionSettings-4.png in Resources */,
-				1E79DD3B1D4FB2C5006BEB4A /* main.js in Resources */,
 				1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */,
 				0BF42D391A7C0E8900889E28 /* Favicons.js in Resources */,
 				1E79DDCE1D507D26006BEB4A /* HistoryPanel.strings in Resources */,

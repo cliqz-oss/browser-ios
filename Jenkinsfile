@@ -26,7 +26,7 @@ node('ios-osx') {
             brew update
             brew install xctool
             brew install carthage
-            brew install yarn
+            npm install -g yarn
             pod --version
         '''
 
@@ -40,9 +40,10 @@ node('ios-osx') {
         sh '''#!/bin/bash -l
             set -e
             set -x
-            yarn install
+            rm -R ./node_modules
+            yarn
             pod install
-            npm run dev-bundle
+            npm run bundle
         '''
     }
     try {
