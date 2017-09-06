@@ -1,6 +1,5 @@
 /* The text shown in the search field */
 "Search.placeholder" = "Cliqz Search";
-
 /* Error message title */
 "Sorry" = "Sorry";
 /* Error message when JS scripts for search can't be loaded */
@@ -144,16 +143,12 @@
 "Retrieving video information" = "Retrieving video information";
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Close All Tabs";
-
 /* Title to expand news stream */
 "MoreNews" = "Show More";
-
 /* Title to shrink news stream */
 "LessNews" = "Show Less";
-
 /* Title of news stream */
 "News" = "NEWS";
-
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "Forget Tab";
 /* Description on Freshtab for forget mode */
@@ -214,7 +209,6 @@
 
 /* [Settings] Search section title */
 "Search" = "Search";
-
 /* [Settings] Search Results for */
 "Search Results for" = "Search Results for";
 /* Localized String for specific region */
@@ -336,7 +330,7 @@
 "Download YouTube videos to your Smartphone." = "Download YouTube videos to your Smartphone.";
 /** Subscriptions **/
 /* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
-"Would you like to subscribe to the {1}?" = "Would you like to subscribe to the #?";
+"Would you like to subscribe to the {1}?" = "Would you like to subscribe to the {1}?";
 /* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
 "You will be notified about games, goals and important happenings of the #." = "You will be notified about games, goals and important happenings of the {1}.";
 /* [Subscriptions] soccer notification */
@@ -349,10 +343,10 @@
 "Subscribe" = "Subscribe";
 /* [Subscriptions] Alert title for asking to enable push notificaiton from the system
  [Subscriptions] Alert title when failing to subscribe to soccer notification */
-"Could not subscribe to {1}?" = "Could not subscribe to {1}?";
+"Could not subscribe to {1}?" = "Could not subscribe to {1}.";
 /* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
 "Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Activate push notification to use this feature. Go to settings to allow push notifications then retry.";
 /* [Subscriptions] Alert message when failing to subscribe to soccer notification */
 "Sorry, we encountered some technical difficulties. Please try again" = "Sorry, we encountered some technical difficulties. Please try again";
 /* [Subscriptions] Subscribing HUD */
-"Subscribe to {1}." = "Subscribe to {1}.";
+"Subscribe to {1}." = "Subscribing to {1}...";
