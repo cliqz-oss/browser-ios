@@ -77,7 +77,12 @@ node('ios-osx') {
                         cd external/autobots
                         chmod 0755 requirements.txt
                         sudo -H pip install -r requirements.txt
-                        python testRunner.py | true
+                        python testRunner.py
+                        ret=$?
+                        if [ $ret -ne 0 ]; then
+                            echo "Something Went Wrong."
+                            exit 1
+                        fi
                     '''
                 }
             }
