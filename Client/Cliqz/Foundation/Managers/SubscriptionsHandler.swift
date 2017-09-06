@@ -328,7 +328,7 @@ class SubscriptionsHandler: NSObject {
         
         if case let .subscriptoinNotification(_, subType, _) = subscriptionType {
             
-            let parameterizedTitle = NSLocalizedString("Could not subscribe to {1}?", tableName: "Cliqz", comment: "[Subscriptions] Alert title for asking to enable push notificaiton from the system")
+            let parameterizedTitle = NSLocalizedString("Could not subscribe to {1}.", tableName: "Cliqz", comment: "[Subscriptions] Alert title for asking to enable push notificaiton from the system")
             let localizedSubType = NSLocalizedString(subType, tableName: "Cliqz", comment: "[Subscriptions] soccer notification")
             
             let alertTitle = parameterizedTitle.replace("{1}", replacement: localizedSubType)
@@ -359,7 +359,7 @@ class SubscriptionsHandler: NSObject {
         
         if case let .subscriptoinNotification(_, subType, _) = subscriptionType {
             
-            let parameterizedTitle = NSLocalizedString("Could not subscribe to {1}?", tableName: "Cliqz", comment: "[Subscriptions] Alert title when failing to subscribe to soccer notification")
+            let parameterizedTitle = NSLocalizedString("Could not subscribe to {1}.", tableName: "Cliqz", comment: "[Subscriptions] Alert title when failing to subscribe to soccer notification")
             let localizedSubType = NSLocalizedString(subType, tableName: "Cliqz", comment: "[Subscriptions] soccer notification")
             
             let alertTitle = parameterizedTitle.replace("{1}", replacement: localizedSubType)
@@ -398,7 +398,7 @@ class SubscriptionsHandler: NSObject {
         
         if case let .subscriptoinNotification(_, subType, _) = subscriptionType {
             
-            let parameterizedMessage = NSLocalizedString("Subscribe to {1}.", tableName: "Cliqz", comment: "[Subscriptions] Subscribing HUD")
+            let parameterizedMessage = NSLocalizedString("Subscribing to {1}.", tableName: "Cliqz", comment: "[Subscriptions] Subscribing HUD")
             let localizedSubType = NSLocalizedString(subType, tableName: "Cliqz", comment: "[Subscriptions] soccer notification")
             let message = parameterizedMessage.replace("{1}", replacement: localizedSubType)
             FeedbackUI.showLoadingHUD(message)
