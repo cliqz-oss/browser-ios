@@ -68,13 +68,18 @@ class QuerySuggestionView: UIView {
     
     func showSuggestions(notification: NSNotification) {
         
-        if let suggestionsData = notification.object as? [String: AnyObject],
+        guard let suggestionsData = notification.object as? [String: AnyObject],
             let query = suggestionsData["query"] as? String,
-            let suggestions = suggestionsData["suggestions"] as? [String] {
-            clearSuggestions()
+            let suggestions = suggestionsData["suggestions"] as? [String] else {
+            return
+        }
+        
+        clearSuggestions()
+        if suggestions.count > 0 {
             self.isHidden = false
             displaySuggestions(query, suggestions: suggestions)
         }
+        
     }
     
     //MARK:- Helper methods
@@ -84,6 +89,7 @@ class QuerySuggestionView: UIView {
         for subView in subViews {
             subView.removeFromSuperview()
         }
+        self.isHidden = true
     }
     
     fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
