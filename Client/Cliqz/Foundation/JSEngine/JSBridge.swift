@@ -192,7 +192,7 @@ open class JSBridge : RCTEventEmitter {
     @objc(pushEvent:data:)
     func pushEvent(eventId: NSString, data: NSArray) {
         DispatchQueue.main.async() {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: eventId as String), object: data, userInfo: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: eventId as String), object: data[0], userInfo: nil)
         }
         
     }
