@@ -14,6 +14,7 @@ private let log = Logger.browserLogger
 
 protocol CIURLBarActionDelegate: class {
 
+	func urlBarDidPressBack(_ urlBar: CIURLBar)
 	func urlBarDidPressTabs(_ urlBar: CIURLBar)
 	func urlBarDidPressReaderMode(_ urlBar: CIURLBar)
 	/// - returns: whether the long-press was handled by the delegate; i.e. return `false` when the conditions for even starting handling long-press were not satisfied
@@ -22,7 +23,6 @@ protocol CIURLBarActionDelegate: class {
 	func urlBarDidPressAntitracking(_ urlBar: CIURLBar, trackersCount: Int, status: String)
 	func urlBarDidLongPressLocation(_ urlBar: CIURLBar)
 	func urlBarLocationAccessibilityActions(_ urlBar: CIURLBar) -> [UIAccessibilityCustomAction]?
-
 }
 
 protocol CIURLBarStateDelegate: class {
@@ -113,7 +113,7 @@ class CIURLBar: UIView {
 
 	lazy var locationTextField: ToolbarTextField! = {
 		var textField = ToolbarTextField()
-		
+
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.autocompleteDelegate = self
 		textField.keyboardType = .webSearch
@@ -318,8 +318,9 @@ class CIURLBar: UIView {
 	}
 
 	@objc private func SELdidClickCancel() {
-		self.currentQuery = ""
+		self.currentQuery = nil
 		self.state = .collapsed
+		self.actionDelegate?.urlBarDidPressBack(self)
 	}
     
     func setAutocompleteSuggestion(_ suggestion: String?) {

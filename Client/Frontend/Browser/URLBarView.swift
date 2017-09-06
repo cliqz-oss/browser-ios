@@ -973,8 +973,7 @@ extension URLBarView: Themeable {
 // Cliqz: override resignFirstResponder to dismiss the keyboard when it is called
 extension URLBarView {
     override func resignFirstResponder() -> Bool {
-        
-        locationTextField?.enforceResignFirstResponder()
+		locationTextField?.enforceResignFirstResponder()
         return super.resignFirstResponder()
     }
 }

@@ -9,21 +9,22 @@
 import UIKit
 
 final class ContentNavigationViewController: UIViewController {
-    
+
     let pageNavVC = PageNavigationViewController()
     var browserVC: CIBrowserViewController? = nil
     var searchController: CliqzSearchViewController? = nil
-    
+
     weak var search_loader: SearchLoader?
     weak var profile: Profile?
 	weak var tabManager: TabManager?
-	
+    weak var stateDelegate: StateDelegate? = nil
+
     enum State {
         case pageNavigation
         case browser
         case search
     }
-    
+
     var currentState: State = .pageNavigation //initial state
     
     override func viewDidLoad() {
@@ -83,6 +84,7 @@ extension ContentNavigationViewController {
             showSearchController(text: text)
         }
         currentState = state
+        stateDelegate?.stateChanged(component: "ContentNav")
     }
 }
 

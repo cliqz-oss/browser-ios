@@ -74,7 +74,10 @@ final class URLBarViewController: UIViewController {
 }
 
 extension URLBarViewController: CIURLBarActionDelegate {
-    
+
+	func urlBarDidPressBack(_ urlBar: CIURLBar) {
+	}
+
     func urlBarDidPressTabs(_ urlBar: CIURLBar) {
         
     }
@@ -86,23 +89,23 @@ extension URLBarViewController: CIURLBarActionDelegate {
     func urlBarDidLongPressReaderMode(_ urlBar: CIURLBar) -> Bool {
         return false
     }
-    
+
     func urlBarDidPressNewTab(_ urlBar: CIURLBar, button: UIButton) {
         
     }
-    
+
     func urlBarDidPressAntitracking(_ urlBar: CIURLBar, trackersCount: Int, status: String) {
         
     }
-    
+
     func urlBarDidLongPressLocation(_ urlBar: CIURLBar) {
         
     }
-    
+
     func urlBarLocationAccessibilityActions(_ urlBar: CIURLBar) -> [UIAccessibilityCustomAction]? {
         return nil
     }
-    
+
 }
 
 extension URLBarViewController: CIURLBarStateDelegate {

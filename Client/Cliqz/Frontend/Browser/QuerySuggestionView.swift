@@ -191,7 +191,6 @@ class QuerySuggestionView: UIView {
         let customData = ["index" : button.tag]
         TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("click", customData))
     }
-    
     @objc fileprivate func viewRotated() {
         guard QuerySuggestions.isEnabled() else {
             self.isHidden = true

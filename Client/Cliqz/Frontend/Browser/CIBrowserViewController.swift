@@ -222,9 +222,7 @@ extension CIBrowserViewController {
 		guard tab.url != nil && !tab.url!.absoluteString.contains("/cliqz/") else {
 			return
 		}
-		
-		updateURLBarDisplayURL(tab)
-		
+
 		if let url = tab.url {
 			if ReaderModeUtils.isReaderModeURL(url) {
 //				showReaderModeBar(animated: false)
@@ -241,9 +239,8 @@ extension CIBrowserViewController {
 	fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
 		// TODO: update URLbar and Status bar
 
-//		if (urlBar.currentURL != tab.displayURL){
-//			urlBar.currentURL = tab.displayURL
-//		}
+		Router.shared.action(action: Action(data: ["url": tab.displayURL], type: .urlIsModified, context: .urlBarVC))
+
 //		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
 		// Cliqz: update the toolbar only if the search controller is not visible
 //		if searchController?.view.isHidden == true {
@@ -588,6 +585,7 @@ extension CIBrowserViewController: WKNavigationDelegate {
 		tab.url = webView.url
 		
 		if tabManager.selectedTab === tab {
+			updateURLBarDisplayURL(tab)
 			updateUIForReaderHomeStateForTab(tab)
 			// TODO: Check if it's needed
 //			appDidUpdateState(getCurrentAppState())
