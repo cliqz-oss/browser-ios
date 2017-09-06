@@ -143,13 +143,10 @@
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 /* Title to expand news stream */
 "MoreNews" = "En afficher plus";
-
 /* Title to shrink news stream */
 "LessNews" = "En afficher moins";
-
 /* Title of news stream */
 "News" = "NEWS";
-
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
 /* Title on Freshtab for forget mode */
@@ -332,7 +329,7 @@
 "Download YouTube videos to your Smartphone." = "Téléchargez les vidéos YouTube vers votre smartphone.";
 /** Subscriptions **/
 /* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
-"Would you like to subscribe to the {1}?" = "Would you like to subscribe to the #?";
+"Would you like to subscribe to the {1}?" = "{1} : voulez-vous vous abonner ?";
 /* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
 "You will be notified about games, goals and important happenings of the #." = "You will be notified about games, goals and important happenings of the {1}.";
 /* [Subscriptions] soccer notification */
@@ -342,13 +339,13 @@
 /* [Subscriptions] soccer notification */
 "game" = "Game";
 /* [Subscriptions] Subscribe alert button */
-"Subscribe" = "Subscribe";
+"Subscribe" = "S'abonner";
 /* [Subscriptions] Alert title for asking to enable push notificaiton from the system
  [Subscriptions] Alert title when failing to subscribe to soccer notification */
-"Could not subscribe to {1}?" = "Could not subscribe to {1}?";
+"Could not subscribe to {1}?" = "L'abonnement à {1} a échoué.";
 /* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
-"Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Activate push notification to use this feature. Go to settings to allow push notifications then retry.";
+"Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Il faut activer les notifications push pour utiliser cette fonction. Cliquez sur Préférences pour les activer, puis réessayez.";
 /* [Subscriptions] Alert message when failing to subscribe to soccer notification */
-"Sorry, we encountered some technical difficulties. Please try again" = "Sorry, we encountered some technical difficulties. Please try again";
+"Sorry, we encountered some technical difficulties. Please try again" = "Désolé, il y a eu des problèmes techniques. Veuillez réessayer.";
 /* [Subscriptions] Subscribing HUD */
-"Subscribe to {1}." = "Subscribe to {1}.";
+"Subscribe to {1}." = "Abonnement en cours ...";
