@@ -21,7 +21,6 @@ enum ActionType {
     case urlSelected
     case urlIsModified
 	case urlBarCancelEditing
-
     //toolbar
 	case homeButtonPressed
 	case tabsPressed
@@ -31,7 +30,7 @@ enum ActionType {
     //activity
     case remindersPressed
     //tab
-//    case tabSelected
+    case tabSelected
 }
 
 enum ActionContext {
@@ -95,6 +94,7 @@ extension Router: ActionDelegate {
             }
         case .searchStopEditing:
             self.mainNavVC?.stopEditing()
+
 		case .homeButtonPressed:
 			self.mainNavVC?.homeButtonPressed()
 //            self.contentNavVC?.homePressed()
@@ -102,28 +102,31 @@ extension Router: ActionDelegate {
 			if let data = action.data as? [String: String], let url = data["url"] {
 				self.mainNavVC?.urlSelected(url: url)
 			}
+ //            if let data = action.data as? [String: String], let url = data["url"] {
+//                self.contentNavVC?.browseURL(url: url)
+//            }
 		case .urlIsModified:
 			var url: URL? = nil
 			if let data = action.data as? [String: URL], let u = data["url"] {
 				url = u
 			}
-			self.mainNavVC?.urlIsModified(url)
+            self.mainNavVC?.urlIsModified(url)
 		case .urlBarCancelEditing:
 			mainNavVC?.urlbCancelEditing()
+        case .tabsPressed:
+            mainNavVC?.showTabOverView()
         case .sharePressed:
             ShareHelper.presentActivityViewController()
         case .remindersPressed:
             contentNavVC?.showReminder()
-        case .tabsPressed:
-            mainNavVC?.showTabOverView()
-		case .backButtonPressed:
-			mainNavVC?.backButtonPressed()
-		case .forwardButtonPressed:
-			mainNavVC?.forwardButtonPressed()
-//        case .tabSelected:
-//            if let data = action.data, let tab = data["tab"] as? Tab {
-//                contentNavVC?.browseTab(tab: tab)
-//            }
-		}
+        case .backButtonPressed:
+            mainNavVC?.backButtonPressed()
+        case .forwardButtonPressed:
+            mainNavVC?.forwardButtonPressed()
+        case .tabSelected:
+            if let data = action.data, let tab = data["tab"] as? Tab {
+                contentNavVC?.browseTab(tab: tab)
+            }
+        }
 	}
 }

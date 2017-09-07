@@ -74,7 +74,7 @@ final class SurfViewController: UIViewController {
     }
     
     private func animate(view: UIView, position: Position) {
-        UIViewPropertyAnimator.init(duration: 0.2, curve: .easeOut) {
+        UIViewPropertyAnimator.init(duration: 0.24, curve: .easeInOut) {
             self.put(view: view, position: position)
             self.view.layoutIfNeeded()
         }.startAnimation()
@@ -82,6 +82,9 @@ final class SurfViewController: UIViewController {
     
     private func put(view: UIView, position: Position) {
         if position == .center {
+            
+            view.alpha = 1.0
+            
             view.snp.remakeConstraints({ (make) in
                 make.top.bottom.equalToSuperview()
                 make.width.equalToSuperview()
@@ -89,6 +92,9 @@ final class SurfViewController: UIViewController {
             })
         }
         else if position == .left {
+            
+            view.alpha = 0.0
+            
             view.snp.remakeConstraints({ (make) in
                 make.top.bottom.equalToSuperview()
                 make.width.equalToSuperview()
@@ -96,6 +102,9 @@ final class SurfViewController: UIViewController {
             })
         }
         else if position == .right {
+            
+            view.alpha = 0.0
+            
             view.snp.remakeConstraints({ (make) in
                 make.top.bottom.equalToSuperview()
                 make.width.equalToSuperview()

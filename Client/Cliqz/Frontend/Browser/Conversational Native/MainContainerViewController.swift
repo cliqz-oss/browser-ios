@@ -35,7 +35,7 @@ class MainContainerViewController: UIViewController {
     fileprivate let backgroundImage = UIImageView()
     
     fileprivate let URLBarVC = URLBarViewController()
-    fileprivate let contentNavVC = ContentNavigationViewController()
+    fileprivate let contentNavVC: ContentNavigationViewController
     fileprivate let toolbarVC = ToolbarViewController()
     
     let tabManager: TabManager
@@ -52,12 +52,10 @@ class MainContainerViewController: UIViewController {
 			_ = self.tabManager.addTabAndSelect()
 		}
         searchLoader = SearchLoader(profile: profile!)
+        contentNavVC = ContentNavigationViewController(profile: profile!, tabManager: tabManager, searchLoader: searchLoader)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        contentNavVC.search_loader = searchLoader
-        contentNavVC.profile = profile
-		contentNavVC.tabManager = tabManager
         contentNavVC.stateDelegate = self
 
         URLBarVC.search_loader = searchLoader
@@ -345,7 +343,7 @@ extension MainContainerViewController {
 			case .pageNavigation:
 				tabState = .home
 			case .search:
-				tabState = .search(self.contentNavVC.searchController?.searchQuery ?? "")
+				tabState = .search(self.contentNavVC.searchController.searchQuery ?? "")
 			default:
 				print("No need to log browser state")
 			}
