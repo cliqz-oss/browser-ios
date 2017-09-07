@@ -62,6 +62,7 @@ class QuerySuggestionView: UIView {
     func updateCurrentQuery(_ query: String) {
         currentQuery = query
         if query.isEmpty {
+            currentSuggestions.removeAll()
             clearSuggestions()
         }
     }
@@ -75,16 +76,12 @@ class QuerySuggestionView: UIView {
         }
         
         clearSuggestions()
-        if suggestions.count > 0 {
-            self.isHidden = false
-            displaySuggestions(query, suggestions: suggestions)
-        }
+        displaySuggestions(query, suggestions: suggestions)
         
     }
     
     //MARK:- Helper methods
     fileprivate func clearSuggestions() {
-        self.currentSuggestions.removeAll()
         let subViews = scrollView.subviews
         for subView in subViews {
             subView.removeFromSuperview()
@@ -93,10 +90,12 @@ class QuerySuggestionView: UIView {
     }
     
     fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
-        guard currentQuery == query else {
+        currentSuggestions = suggestions
+        
+        guard currentQuery == query && suggestions.count > 0 && OrientationUtil.isPortrait() else {
             return
         }
-        currentSuggestions = suggestions
+        self.isHidden = false
         
         var index = 0
         var x: CGFloat = margin
@@ -206,10 +205,7 @@ class QuerySuggestionView: UIView {
 
         clearSuggestions()
         if OrientationUtil.isPortrait() {
-            self.isHidden = false
             self.displaySuggestions(currentQuery, suggestions: currentSuggestions)
-        } else {
-            self.isHidden = true
         }
         
     }
