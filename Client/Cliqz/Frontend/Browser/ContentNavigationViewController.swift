@@ -98,14 +98,16 @@ extension ContentNavigationViewController {
 
     //TO DO: animation transitions should be defined for the state change.
     
-    func browserVisible(text: String?) -> [Transition] {
+    func browserVisible(text: String?, completion: (() -> ())?) -> [Transition] {
         let transition = Transition(endState: {
             self.browserVC.view.alpha = 1.0
         }, beforeTransition: {
             self.showBrowser(url: text)
             self.view.layoutIfNeeded()
         }, afterTransition: {
-            //
+            if let c = completion {
+                c()
+            }
         }, animationDetails: AnimationDetails(duration: 0.2, curve: .easeIn, delayFactor: 0.0))
         
         return [transition]
@@ -124,14 +126,16 @@ extension ContentNavigationViewController {
         return [transition]
     }
     
-    func pageNavVisible() -> [Transition] {
+    func pageNavVisible(completion: (() -> ())?) -> [Transition] {
         let transition = Transition(endState: {
             self.pageNavVC.view.alpha = 1.0
         }, beforeTransition: {
             self.pageNavVC.view.isHidden = false
             self.view.layoutIfNeeded()
         }, afterTransition: {
-            //
+            if let c = completion {
+                c()
+            }
         }, animationDetails: AnimationDetails(duration: 0.10, curve: .easeIn, delayFactor: 0.0))
         
         return [transition]
@@ -150,14 +154,16 @@ extension ContentNavigationViewController {
         return [transition]
     }
     
-    func searchVisible(text: String?) -> [Transition] {
+    func searchVisible(text: String?, completion: (() -> ())?) -> [Transition] {
         let transition = Transition(endState: {
             self.searchController.view.alpha = 1.0
         }, beforeTransition: {
             self.showSearchController(text: text)
             self.view.layoutIfNeeded()
         }, afterTransition: {
-            //
+            if let c = completion {
+                c()
+            }
         }, animationDetails: AnimationDetails(duration: 0.10, curve: .easeIn, delayFactor: 0.0))
         
         return [transition]
@@ -182,7 +188,15 @@ extension ContentNavigationViewController {
         }
         
         currentState = state
-        animateToState(state: currentState, text: text, completion: nil)
+        animateToState(state: currentState, text: text, completion: {
+            if self.currentState != .pageNavigation {
+                //reset page Navigation
+                self.pageNavVC.resetNavigation()
+            }
+        })
+        
+        
+        
         stateDelegate?.stateChanged(component: "ContentNav")
     }
     
@@ -197,11 +211,11 @@ extension ContentNavigationViewController {
     fileprivate func generateState(state: State, text: String?, completion: (() -> ())?) -> [Transition] {
         switch state {
         case .pageNavigation:
-            return self.browserHidden() + self.searchHidden() + self.pageNavVisible()
+            return self.browserHidden() + self.searchHidden() + self.pageNavVisible(completion: completion)
         case .browser:
-            return self.searchHidden() + self.pageNavHidden() + self.browserVisible(text: text)
+            return self.searchHidden() + self.pageNavHidden() + self.browserVisible(text: text, completion: completion)
         case .search:
-            return self.browserHidden() + self.pageNavHidden() + self.searchVisible(text: text)
+            return self.browserHidden() + self.pageNavHidden() + self.searchVisible(text: text, completion: completion)
         case .undefined:
             return []
         }

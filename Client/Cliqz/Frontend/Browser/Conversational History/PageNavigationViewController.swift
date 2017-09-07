@@ -14,16 +14,21 @@ class PageNavigationViewController: UIViewController {
     let pageControl = CustomDots(numberOfPages: 2)
     let surfViewController: SurfViewController
     
+    let historyNavigation: HistoryNavigationViewController
+    let dashboardVC: DashViewController
+    
     
     //styling
     let pageControlHeight: CGFloat = 24.0
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         
-        let historyNavigation = HistoryNavigationViewController()
+        historyNavigation = HistoryNavigationViewController()
         historyNavigation.externalDelegate = Router.shared
         
-        surfViewController = SurfViewController(viewControllers: [historyNavigation, DashViewController()])
+        dashboardVC = DashViewController()
+        
+        surfViewController = SurfViewController(viewControllers: [historyNavigation, dashboardVC])
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -62,6 +67,15 @@ class PageNavigationViewController: UIViewController {
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(pageControl.snp.top)
         }
+    }
+    
+    func resetNavigation() {
+        if pageControl.currentPage == 1 {
+            self.navigate() //go back to first screen (Domains)
+        }
+        
+        historyNavigation.nc.popToRootViewController(animated: false)
+        historyNavigation.conversationalHistory.view.alpha = 1.0
     }
     
     func navigate() {

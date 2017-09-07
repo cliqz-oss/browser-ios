@@ -93,14 +93,16 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         if customDataSource.useRightCell(indexPath: indexPath) == true {
             let cell =  self.dequeueReusableCell(withIdentifier: bubble_right_id) as! BubbleRightCell
             cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
-            cell.timeLabel.text = customDataSource.time(indexPath: indexPath)
+            cell.timeLabel.text  = customDataSource.time(indexPath: indexPath)
+            cell.selectionStyle  = .none
             return cell
         }
         
         let cell =  self.dequeueReusableCell(withIdentifier: bubble_left_id) as! BubbleLeftCell
         cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
-        cell.urlLabel.text = customDataSource.url(indexPath: indexPath)
+        cell.urlLabel.text  = customDataSource.url(indexPath: indexPath)
         cell.timeLabel.text = customDataSource.time(indexPath: indexPath)
+        cell.selectionStyle = .none
         return cell
         
     }

@@ -159,7 +159,7 @@ class RecommendationsCell: UICollectionViewCell {
         textLabel.textAlignment = .left
         
         pictureView.clipsToBounds = true
-        pictureView.contentMode = .center
+        pictureView.contentMode = .scaleAspectFill
         
     }
     
