@@ -306,7 +306,7 @@
 /* [Connect] Connection Failed alert title */
 "Connection Failed" = "La connexion a échouée";
 /* [Connect] Connection Failed alert message */
-"Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.\n";
+"Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.";
 /* [Connect] Retry button for Connection Failed alert */
 "Retry" = "Veuillez réessayer";
 /* [Settings -> Connect] remove connection */
