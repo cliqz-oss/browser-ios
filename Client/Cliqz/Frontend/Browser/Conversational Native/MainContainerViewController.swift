@@ -340,16 +340,15 @@ extension MainContainerViewController {
 
 	fileprivate func switchContentAndTabState(_ state: ContentNavigationViewController.State, stateData: String? = nil) {
 		if let tab = self.tabManager.selectedTab {
-			var tabState = TabNavigationState.home
 			switch self.contentNavVC.currentState {
 			case .pageNavigation:
-				tabState = .home
+				tab.navigateToState(.home)
 			case .search:
-				tabState = .search(self.contentNavVC.searchController?.searchQuery ?? "")
+				let navState = TabNavigationState.search(self.contentNavVC.searchController?.searchQuery ?? "")
+				tab.navigateToState(navState)
 			default:
 				print("No need to log browser state")
 			}
-			tab.navigateToState(tabState)
 			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
 			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
 		}
