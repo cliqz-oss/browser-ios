@@ -10,22 +10,41 @@ import UIKit
 
 final class ContentNavigationViewController: UIViewController {
 
-    let pageNavVC = PageNavigationViewController()
-    var browserVC: CIBrowserViewController? = nil
-    var searchController: CliqzSearchViewController? = nil
+    let pageNavVC: PageNavigationViewController
+    let browserVC: CIBrowserViewController
+    let searchController: CliqzSearchViewController
 
-    weak var search_loader: SearchLoader?
-    weak var profile: Profile?
-	weak var tabManager: TabManager?
+    var profile: Profile
+    var tabManager: TabManager
+    var searchLoader: SearchLoader
+    
     weak var stateDelegate: StateDelegate? = nil
 
     enum State {
         case pageNavigation
         case browser
         case search
+        case undefined
     }
 
-    var currentState: State = .pageNavigation //initial state
+    var currentState: State = .undefined
+    
+    init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil, profile: Profile, tabManager: TabManager, searchLoader: SearchLoader) {
+        
+        self.profile = profile
+        self.tabManager = tabManager
+        self.searchLoader = searchLoader
+        
+        pageNavVC = PageNavigationViewController()
+        browserVC = CIBrowserViewController(profile: profile, tabManager: tabManager)
+        searchController = CliqzSearchViewController(profile: profile)
+        
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +55,34 @@ final class ContentNavigationViewController: UIViewController {
     }
     
     private func setUpComponent() {
-        setUpPageNavigation()
+        
+        addChildViewController(pageNavVC)
+        view.addSubview(pageNavVC.view)
+        
+        self.addChildViewController(browserVC)
+        view.addSubview(browserVC.view)
+        
+        searchController.delegate = self
+        searchLoader.addListener(searchController)
+        
+        view.addSubview(searchController.view)
+        addChildViewController(searchController)
+        searchController.didMove(toParentViewController: self)
+        
+        self.changeState(state: .pageNavigation) //initialState
     }
     
     private func setStyling() {
         view.backgroundColor = UIColor.clear
+        setStylingPageNavigation()
+        setStylingBrowserViewController()
+        setStylingSearchViewController()
     }
     
     private func setConstraints() {
-        
+        setConstraintsPageNavigation()
+        setConstraintsBrowserViewController()
+        setConstraintsSearchViewController()
     }
     
     override func didReceiveMemoryWarning() {
@@ -59,32 +97,128 @@ final class ContentNavigationViewController: UIViewController {
 extension ContentNavigationViewController {
 
     //TO DO: animation transitions should be defined for the state change.
+    
+    func browserVisible(text: String?, completion: (() -> ())?) -> [Transition] {
+        let transition = Transition(endState: {
+            self.browserVC.view.alpha = 1.0
+        }, beforeTransition: {
+            self.showBrowser(url: text)
+            self.view.layoutIfNeeded()
+        }, afterTransition: {
+            if let c = completion {
+                c()
+            }
+        }, animationDetails: AnimationDetails(duration: 0.2, curve: .easeIn, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    func browserHidden() -> [Transition] {
+        let transition = Transition(endState: {
+            self.browserVC.view.alpha = 0.0
+        }, beforeTransition: {
+            //
+        }, afterTransition: {
+            self.browserVC.view.isHidden = true
+            self.view.layoutIfNeeded()
+        }, animationDetails: AnimationDetails(duration: 0.12, curve: .easeOut, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    func pageNavVisible(completion: (() -> ())?) -> [Transition] {
+        let transition = Transition(endState: {
+            self.pageNavVC.view.alpha = 1.0
+        }, beforeTransition: {
+            self.pageNavVC.view.isHidden = false
+            self.view.layoutIfNeeded()
+        }, afterTransition: {
+            if let c = completion {
+                c()
+            }
+        }, animationDetails: AnimationDetails(duration: 0.10, curve: .easeIn, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    func pageNavHidden() -> [Transition] {
+        let transition = Transition(endState: {
+            self.pageNavVC.view.alpha = 0.0
+        }, beforeTransition: {
+            //
+        }, afterTransition: {
+            self.pageNavVC.view.isHidden = true
+            self.view.layoutIfNeeded()
+        }, animationDetails: AnimationDetails(duration: 0.12, curve: .easeOut, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    func searchVisible(text: String?, completion: (() -> ())?) -> [Transition] {
+        let transition = Transition(endState: {
+            self.searchController.view.alpha = 1.0
+        }, beforeTransition: {
+            self.showSearchController(text: text)
+            self.view.layoutIfNeeded()
+        }, afterTransition: {
+            if let c = completion {
+                c()
+            }
+        }, animationDetails: AnimationDetails(duration: 0.10, curve: .easeIn, delayFactor: 0.0))
+        
+        return [transition]
+    }
+    
+    func searchHidden() -> [Transition] {
+        let transition = Transition(endState: {
+            self.searchController.view.alpha = 0.0
+        }, beforeTransition: {
+            //
+        }, afterTransition: {
+            self.searchController.view.isHidden = true
+            self.view.layoutIfNeeded()
+        }, animationDetails: AnimationDetails(duration: 0.12, curve: .easeOut, delayFactor: 0.0))
+        
+        return [transition]
+    }
 
     func changeState(state: State, text: String? = nil) {
         guard currentState != state else {
             return
         }
-
-        if state == .pageNavigation {
-            hideSearchController()
-            hideBrowserViewController()
-            
-            showPageNavigation()
-        }
-        else if state == .browser {
-            hidePageNavigation()
-            hideSearchController()
-
-			showBrowser(url: text)
-        }
-        else if state == .search {
-            hideBrowserViewController()
-            hidePageNavigation()
-
-            showSearchController(text: text)
-        }
+        
         currentState = state
+        animateToState(state: currentState, text: text, completion: {
+            if self.currentState != .pageNavigation {
+                //reset page Navigation
+                self.pageNavVC.resetNavigation()
+            }
+        })
+        
+        
+        
         stateDelegate?.stateChanged(component: "ContentNav")
+    }
+    
+    fileprivate func animateToState(state: State, text: String?, completion: (() -> ())?) {
+        StateAnimator.animate(animators: generateAnimators(state: state, text: text, completion: completion))
+    }
+    
+    private func generateAnimators(state: State, text: String?, completion: (() -> ())?) -> [Animator] {
+        return StateAnimator.generateAnimators(state: generateState(state: state, text: text, completion: completion), parentView: self.view)
+    }
+    
+    fileprivate func generateState(state: State, text: String?, completion: (() -> ())?) -> [Transition] {
+        switch state {
+        case .pageNavigation:
+            return self.browserHidden() + self.searchHidden() + self.pageNavVisible(completion: completion)
+        case .browser:
+            return self.searchHidden() + self.pageNavHidden() + self.browserVisible(text: text, completion: completion)
+        case .search:
+            return self.browserHidden() + self.pageNavHidden() + self.searchVisible(text: text, completion: completion)
+        case .undefined:
+            return []
+        }
     }
 }
 
@@ -97,12 +231,24 @@ extension ContentNavigationViewController {
     }
 
     func browseTab(tab: Tab) {
-        tabManager?.selectTab(tab)
+        tabManager.selectTab(tab)
         changeState(state: .browser)
     }
 
     func textInUrlBarChanged(text: String) {
-        searchController?.searchQuery = text
+
+        searchController.searchQuery = text
+        
+        if text != "" {
+            if currentState != .search {
+                changeState(state: .search)
+            }
+        }
+        else {
+            changeState(state: .pageNavigation)
+        }
+        
+
     }
     
     func textIUrlBarCleared() {
@@ -114,7 +260,15 @@ extension ContentNavigationViewController {
     }
     
     func homePressed() {
-		pageNavVC.navigate()
+        if currentState == .browser {
+            changeState(state: .pageNavigation)
+        }
+        else if currentState == .pageNavigation {
+            pageNavVC.navigate()
+        }
+        else if currentState == .search {
+            changeState(state: .pageNavigation)
+        }
     }
 }
 
@@ -131,15 +285,6 @@ extension ContentNavigationViewController {
         pageNavVC.view.isHidden = true
     }
 
-    func setUpPageNavigation() {
-        
-        addChildViewController(pageNavVC)
-        view.addSubview(pageNavVC.view)
-        
-        setStylingPageNavigation()
-        setConstraintsPageNavigation()
-    }
-
     func setStylingPageNavigation() {
     }
 
@@ -154,35 +299,20 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
 
 	func showBrowser(url : String?) {
-        if self.browserVC == nil {
-            setUpBrowserViewController()
-        }
         
-        self.browserVC?.view.isHidden = false
+        self.browserVC.view.isHidden = false
 		if let u = url {
 			var validURL = URIFixup.getURL(u)
 			if validURL == nil {
-				validURL = self.profile?.searchEngines.defaultEngine.searchURLForQuery(u)
+				validURL = self.profile.searchEngines.defaultEngine.searchURLForQuery(u)
 			}
-			self.browserVC?.loadURL(validURL)
+			self.browserVC.loadURL(validURL)
 			Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
 		}
     }
-
-    func hideBrowserViewController() {
-        browserVC?.view.isHidden = true
-    }
-
-    func setUpBrowserViewController() {
-        if let profile = self.profile,
-			let tabManager = self.tabManager {
-			browserVC = CIBrowserViewController(profile: profile, tabManager: tabManager)
-			self.addChildViewController(browserVC!)
-			view.addSubview(browserVC!.view)
-
-			setStylingBrowserViewController()
-			setConstraintsBrowserViewController()
-		}
+    
+    func hideBrowser() {
+        self.browserVC.view.isHidden = true
     }
 
     func setStylingBrowserViewController() {
@@ -190,7 +320,7 @@ extension ContentNavigationViewController {
     }
 
     func setConstraintsBrowserViewController() {
-        browserVC!.view.snp.makeConstraints { (make) in
+        browserVC.view.snp.makeConstraints { (make) in
             make.top.left.bottom.right.equalToSuperview()
         }
     }
@@ -200,37 +330,16 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
     
     func showSearchController(text: String?) {
-        if searchController == nil{
-            setUpSearchController()
-            
-        }
         
-        searchController?.view.isHidden = false
-        searchController?.searchQuery = text
+        searchController.view.isHidden = false
+        searchController.searchQuery = text
         //searchController?.sendUrlBarFocusEvent()
         
         resetNavigationSteps()
     }
     
     func hideSearchController() {
-        searchController?.view.isHidden = true
-    }
-    
-    func setUpSearchController() {
-        if let pf = self.profile, let searchLoader = self.search_loader {
-            
-            searchController = CliqzSearchViewController(profile: pf)
-            
-            searchController?.delegate = self
-            searchLoader.addListener(searchController!)
-            
-            view.addSubview(searchController!.view)
-            addChildViewController(searchController!)
-            searchController?.didMove(toParentViewController: self)
-            
-            setStylingSearchViewController()
-            setConstraintsSearchViewController()
-        }
+        searchController.view.isHidden = true
     }
     
     func setStylingSearchViewController() {
@@ -238,7 +347,7 @@ extension ContentNavigationViewController {
     }
     
     func setConstraintsSearchViewController() {
-        searchController!.view.snp.remakeConstraints({ (make) in
+        searchController.view.snp.remakeConstraints({ (make) in
             make.top.left.bottom.right.equalToSuperview()
         })
     }
