@@ -54,15 +54,14 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func image(indexPath:IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void) {
-        LogoLoader.loadLogoImageOrFakeLogo(self.baseUrl(indexPath: indexPath), completed: { (image, fakeLogo, error) in
-            if let img = image{
-                completionBlock(img)
-            }
-            else{
-                //completionBlock(result: UIImage(named: "coolLogo") ?? UIImage())
-                completionBlock(nil)
-            }
-        })
+		LogoLoader.loadLogo(self.baseUrl(indexPath: indexPath)) { (image, logoInfo, error) in
+			if let img = image {
+				completionBlock(img)
+			} else {
+				// TODO: Cell should support logo as a UIView corresponding to logoInfo
+				completionBlock(nil)
+			}
+		}
     }
     
     func shouldShowNotification(indexPath:IndexPath) -> Bool {

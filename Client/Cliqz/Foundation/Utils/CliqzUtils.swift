@@ -48,40 +48,6 @@ func getCurrentWebView() -> CliqzWebView? {
     return getApp().browserViewController.tabManager.selectedTab?.webView
 }
 
-func getHostComponents(forURL url: String) -> [String] {
-	var result = [String]()
-	var domainIndex = Int.max
-	let excludablePrefixes: Set<String> = ["www", "m", "mobile"]
-	if let url = URL(string: url) {
-        let proposed_host = url.host == nil ? url.absoluteString : url.host //if url.host == nil, it is possible that url.absoluteString is the host.
-        if let host = proposed_host {
-            let comps = host.components(separatedBy: ".")
-            domainIndex = comps.count - 1
-            if let lastComp = comps.last,
-                let firstLevel = LogoLoader.topDomains[lastComp], firstLevel == "cc" && comps.count > 2 {
-                if let _ = LogoLoader.topDomains[comps[comps.count - 2]] {
-                    domainIndex = comps.count - 2
-                }
-            }
-            let firstIndex = domainIndex - 1
-            var secondIndex = -1
-            if firstIndex > 0 {
-                secondIndex = firstIndex - 1
-            }
-            if secondIndex >= 0 && excludablePrefixes.contains(comps[secondIndex]) {
-                secondIndex = -1
-            }
-            if firstIndex > -1 {
-                result.append(comps[firstIndex])
-            }
-            if secondIndex > -1 && secondIndex < domainIndex {
-                result.append(comps[secondIndex])
-            }
-        }
-	}
-	return result
-}
-
 func isCliqzGoToURL(url: URL?) -> Bool {
     if let url = url, url.isLocal {
 		let absoluteString = url.absoluteString

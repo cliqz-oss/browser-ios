@@ -39,17 +39,16 @@ class DashRemindersDataSource: ExpandableViewProtocol {
     }
     
     func picture(indexPath: IndexPath, completionBlock: @escaping (UIImage?) -> Void) {
-        LogoLoader.loadLogoImageOrFakeLogo(self.url(indexPath: indexPath), completed: { (image, fakeLogo, error) in
-            if let img = image{
-                completionBlock(img)
-            }
-            else{
-                //completionBlock(result: UIImage(named: "coolLogo") ?? UIImage())
-                completionBlock(nil)
-            }
-        })
-    }
-    
+		LogoLoader.loadLogo(self.url(indexPath: indexPath)) { (image, logoInfo, error) in
+			if let img = image {
+				completionBlock(img)
+			} else {
+				// TODO: Cell should support logo as a UIView corresponding to logoInfo
+				completionBlock(nil)
+			}
+		}
+	}
+
     func cellPressed(indexPath: IndexPath) {
         Router.shared.action(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected, context: .dashRemindersDS))
     }
