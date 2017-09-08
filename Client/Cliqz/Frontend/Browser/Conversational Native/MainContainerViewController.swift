@@ -19,6 +19,7 @@ protocol HasDataSource: class {
 }
 
 protocol StateDelegate: class {
+
     func stateChanged(component: String)
 }
 
@@ -47,7 +48,9 @@ class MainContainerViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let profile = appDelegate.profile
 		self.tabManager = appDelegate.tabManager
-        
+		if self.tabManager.tabs.count == 0 {
+			_ = self.tabManager.addTabAndSelect()
+		}
         searchLoader = SearchLoader(profile: profile!)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -130,7 +133,6 @@ class MainContainerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 }
 
 //state
@@ -146,10 +148,9 @@ extension MainContainerViewController {
         
         animateToState(state: currentState, completion: completion)
     }
-    
+
     fileprivate func visibleState(completion: (() -> ())?) -> [Transition] {
         let transition = Transition(endState: {
-            
             self.contentNavVC.view.alpha = 1.0
             self.URLBarVC.view.alpha = 1.0
             self.toolbarVC.view.alpha = 1.0
@@ -158,10 +159,9 @@ extension MainContainerViewController {
         
         return [transition]
     }
-    
+
     fileprivate func hiddenState(completion: (() -> ())?) -> [Transition] {
         let transition = Transition(endState: {
-            
             self.contentNavVC.view.alpha = 0.0
             self.URLBarVC.view.alpha = 0.0
             self.toolbarVC.view.alpha = 0.0
@@ -205,6 +205,7 @@ extension MainContainerViewController {
 }
 
 extension MainContainerViewController: StateDelegate {
+
     func stateChanged(component: String) {
         if component == "ContentNav" {
             if contentNavVC.currentState == .browser {
@@ -219,7 +220,7 @@ extension MainContainerViewController: StateDelegate {
 
 //Tab Overview Show
 extension MainContainerViewController {
-    
+
     func showTabOverView(){
         changeState(state: .hidden, completion: {
             
@@ -259,26 +260,28 @@ extension MainContainerViewController {
 }
 
 extension MainContainerViewController: TabsViewControllerDelegate {
-    
+
+
     func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath) {
         if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
             dismissTabOverview(tabsVC: tabsVC, completion: {
-                let tab = self.tabManager.tabs[indexPath.row]
-                Router.shared.action(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+				let tab = self.tabManager.tabs[indexPath.row]
+				self.switchTab(tab)
+//                Router.shared.action(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
             })
         }
     }
-    
+
     func donePressed(tabsVC: TabsViewController?) {
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
     }
-    
+
     func dismissTabOverview(tabsVC: TabsViewController?, completion: (() -> ())?) {
-        
+
         guard let vc = tabsVC else {
             return
         }
-        
+
         let transition = Transition(endState: {
             vc.view.snp.remakeConstraints({ (make) in
                 make.height.equalToSuperview()
@@ -303,7 +306,131 @@ extension MainContainerViewController: TabsViewControllerDelegate {
     }
 }
 
+extension MainContainerViewController {
 
+	fileprivate func switchTab(_ tab: Tab) {
+		self.tabManager.selectTab(tab)
+		switchContentState(tab.currentNavigationState())
+	}
+
+	fileprivate func switchContentState(_ tabState: TabNavigationState) {
+		var data: String?
+		var state = ContentNavigationViewController.State.pageNavigation
+		var toolbarState = ToolbarViewController.State.notBrowsing
+		switch tabState {
+		case .web(let a):
+			state = .browser
+			data = a
+			toolbarState = .browsing
+		case .home:
+			state = .pageNavigation
+			self.URLBarVC.updateURL(nil)
+		case .search(let a):
+			state = .search
+			data = a
+			self.URLBarVC.startEditing(initialText: data, pasted: false)
+		}
+		self.toolbarVC.changeState(state: toolbarState)
+		if let tab = self.tabManager.selectedTab {
+			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+		}
+		self.contentNavVC.changeState(state: state, text: data)
+	}
+
+	fileprivate func switchContentAndTabState(_ state: ContentNavigationViewController.State, stateData: String? = nil) {
+		if let tab = self.tabManager.selectedTab {
+			var tabState = TabNavigationState.home
+			switch self.contentNavVC.currentState {
+			case .pageNavigation:
+				tabState = .home
+			case .search:
+				tabState = .search(self.contentNavVC.searchController?.searchQuery ?? "")
+			default:
+				print("No need to log browser state")
+			}
+			tab.navigateToState(tabState)
+			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+		}
+		self.contentNavVC.changeState(state: state, text: stateData)
+	}
+
+	func urlSelected(url: String) {
+		switchContentAndTabState(.browser, stateData: url)
+		self.toolbarVC.changeState(state: .browsing)
+		if let tab = self.tabManager.selectedTab {
+			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+		}
+	}
+
+	func urlIsModified(_ url: URL?) {
+		if self.contentNavVC.currentState == .browser {
+			self.URLBarVC.updateURL(url)
+			if let tab = self.tabManager.selectedTab {
+				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+			}
+		}
+	}
+
+	func urlbCancelEditing() {
+		if self.contentNavVC.currentState == .search {
+			if let tab = self.tabManager.selectedTab {
+				self.switchContentState(tab.currentNavigationState())
+				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+			}
+		}
+	}
+
+	func homeButtonPressed() {
+		if self.contentNavVC.currentState != .pageNavigation {
+			switchContentAndTabState(.pageNavigation)
+			self.toolbarVC.changeState(state: .notBrowsing)
+			self.URLBarVC.updateURL(nil)
+			if let tab = self.tabManager.selectedTab {
+				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+			}
+		} else {
+			self.contentNavVC.homePressed()
+		}
+	}
+
+	func backButtonPressed() {
+		if let tab = self.tabManager.selectedTab,
+			let newState = tab.goBack() {
+			switchContentState(newState)
+		}
+	}
+
+	func forwardButtonPressed() {
+		if let tab = self.tabManager.selectedTab,
+			let newState = tab.goForward() {
+			switchContentState(newState)
+		}
+	}
+
+	func textInUrlBarChanged(text: String) {
+		if self.contentNavVC.currentState != .search {
+			// TODO: should be called state change properly
+			switchContentAndTabState(.search, stateData: text)
+			if let tab = self.tabManager.selectedTab {
+				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+			}
+		}
+		self.contentNavVC.textInUrlBarChanged(text: text)
+	}
+
+//	func tabSelected() {
+////		if let data = action.data, let tab = data["tab"] as? Tab {
+//			contentNavVC?.browseTab(tab: tab)
+////		}
+//	}
+}
 
 
 

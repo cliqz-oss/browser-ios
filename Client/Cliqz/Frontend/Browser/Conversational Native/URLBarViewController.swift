@@ -24,7 +24,7 @@ final class URLBarViewController: UIViewController {
         URLBar.stateDelegate = self
         URLBar.dataSource = self
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -66,6 +66,10 @@ final class URLBarViewController: UIViewController {
 		self.URLBar.endEditing()
 		self.URLBar.currentURL = url
 		self.URLBar.applyTheme(self.URLBar.theme)
+	}
+	
+	func startEditing(initialText: String?, pasted: Bool) {
+		self.URLBar.startEditing(initialText, pasted: pasted)
 	}
 
 	func stopEditing() {
@@ -109,14 +113,18 @@ extension URLBarViewController: CIURLBarActionDelegate {
 }
 
 extension URLBarViewController: CIURLBarStateDelegate {
-
+	
     func urlBarDidStartEditing(_ urlBar: CIURLBar) {
-        
+//		externalDelegate?.action(action: Action(data: nil, type: .searchStart, context: .urlBarVC))
     }
 
     func urlBarDidFinishEditing(_ urlBar: CIURLBar) {
-        
+		
     }
+
+	func urlBarDidCancelEditing(_ urlBar: CIURLBar) {
+		externalDelegate?.action(action: Action(data: nil, type: .urlBarCancelEditing, context: .urlBarVC))
+	}
 
     func urlBar(_ urlBar: CIURLBar, didEnterText text: String) {
         search_loader?.query = text

@@ -103,16 +103,6 @@ extension ContentNavigationViewController {
 
     func textInUrlBarChanged(text: String) {
         searchController?.searchQuery = text
-        
-        if text != "" {
-            if currentState != .search {
-                changeState(state: .search)
-            }
-        }
-        else {
-            changeState(state: .pageNavigation)
-        }
-        
     }
     
     func textIUrlBarCleared() {
@@ -124,15 +114,7 @@ extension ContentNavigationViewController {
     }
     
     func homePressed() {
-        if currentState == .browser {
-            changeState(state: .pageNavigation)
-        }
-        else if currentState == .pageNavigation {
-            pageNavVC.navigate()
-        }
-        else if currentState == .search {
-            //I don't know what to do in this case
-        }
+		pageNavVC.navigate()
     }
 }
 
@@ -186,27 +168,27 @@ extension ContentNavigationViewController {
 			Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
 		}
     }
-    
+
     func hideBrowserViewController() {
         browserVC?.view.isHidden = true
     }
-    
+
     func setUpBrowserViewController() {
         if let profile = self.profile,
 			let tabManager = self.tabManager {
 			browserVC = CIBrowserViewController(profile: profile, tabManager: tabManager)
 			self.addChildViewController(browserVC!)
 			view.addSubview(browserVC!.view)
-			
+
 			setStylingBrowserViewController()
 			setConstraintsBrowserViewController()
 		}
     }
-	
+
     func setStylingBrowserViewController() {
         
     }
-    
+
     func setConstraintsBrowserViewController() {
         browserVC!.view.snp.makeConstraints { (make) in
             make.top.left.bottom.right.equalToSuperview()
@@ -291,6 +273,7 @@ extension ContentNavigationViewController: SearchViewDelegate {
 
 // reminders
 extension ContentNavigationViewController {
+
     func showReminder() {
         if currentState == .browser {
             Reminders.show()

@@ -17,18 +17,21 @@ enum ActionType {
     case searchTextCleared
     case searchAutoSuggest
     case searchStopEditing
-    case searchDismissKeyboard
     //url
     case urlSelected
     case urlIsModified
+	case urlBarCancelEditing
+
     //toolbar
 	case homeButtonPressed
 	case tabsPressed
     case sharePressed
+	case backButtonPressed
+	case forwardButtonPressed
     //activity
     case remindersPressed
     //tab
-    case tabSelected
+//    case tabSelected
 }
 
 enum ActionContext {
@@ -81,14 +84,10 @@ extension Router: ActionDelegate {
         switch action.type {
         case .searchTextChanged:
             if let data = action.data as? [String: String], let text = data["text"] {
-                self.contentNavVC?.textInUrlBarChanged(text: text)
+                self.mainNavVC?.textInUrlBarChanged(text: text)
             }
         case .searchTextCleared:
              self.contentNavVC?.textInUrlBarChanged(text: "")
-        case .urlSelected:
-            if let data = action.data as? [String: String], let url = data["url"] {
-                self.contentNavVC?.browseURL(url: url)
-            }
         case .searchAutoSuggest:
             if let data = action.data as? [String: String], let text = data["text"] {
                 //Send this to main navigation. Main navigation is responsible for URL Bar.
@@ -97,23 +96,34 @@ extension Router: ActionDelegate {
         case .searchStopEditing:
             self.mainNavVC?.stopEditing()
 		case .homeButtonPressed:
-            self.contentNavVC?.homePressed()
+			self.mainNavVC?.homeButtonPressed()
+//            self.contentNavVC?.homePressed()
+		case .urlSelected:
+			if let data = action.data as? [String: String], let url = data["url"] {
+				self.mainNavVC?.urlSelected(url: url)
+			}
 		case .urlIsModified:
 			var url: URL? = nil
 			if let data = action.data as? [String: URL], let u = data["url"] {
 				url = u
 			}
-			self.urlBarVC?.updateURL(url)
+			self.mainNavVC?.urlIsModified(url)
+		case .urlBarCancelEditing:
+			mainNavVC?.urlbCancelEditing()
         case .sharePressed:
             ShareHelper.presentActivityViewController()
         case .remindersPressed:
             contentNavVC?.showReminder()
         case .tabsPressed:
             mainNavVC?.showTabOverView()
-        case .tabSelected:
-            if let data = action.data, let tab = data["tab"] as? Tab {
-                contentNavVC?.browseTab(tab: tab)
-            }
+		case .backButtonPressed:
+			mainNavVC?.backButtonPressed()
+		case .forwardButtonPressed:
+			mainNavVC?.forwardButtonPressed()
+//        case .tabSelected:
+//            if let data = action.data, let tab = data["tab"] as? Tab {
+//                contentNavVC?.browseTab(tab: tab)
+//            }
 		}
 	}
 }

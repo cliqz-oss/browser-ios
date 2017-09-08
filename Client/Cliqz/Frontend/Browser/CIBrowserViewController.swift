@@ -23,7 +23,7 @@ final class CIBrowserViewController: UIViewController {
     private let label = UILabel()
 	
 	var currentResponseStatusCode = 0
-	
+
 	fileprivate let profile: Profile
 	fileprivate let tabManager: TabManager
 
@@ -37,9 +37,6 @@ final class CIBrowserViewController: UIViewController {
 		super.init(nibName: nil, bundle: nil)
 		self.tabManager.addDelegate(self)
 		self.tabManager.addNavigationDelegate(self)
-		if self.tabManager.tabs.count == 0 {
-			_ = self.tabManager.addTabAndSelect()
-		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -55,11 +52,18 @@ final class CIBrowserViewController: UIViewController {
         setConstraints()
     }
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if let tab = self.tabManager.selectedTab,
+			let view = tab.webView {
+			initWebView(view, ofTab: tab)
+		}
+	}
+
 	func loadURL(_ url: URL?) {
 		if let validURL = url,
 			let tab = tabManager.selectedTab,
-			let u = URL(string: "\(WebServer.sharedInstance.base)/cliqz/trampolineForward.html?url=\(validURL.absoluteString.encodeURL())&q="),
-			let _ = tab.loadRequest(PrivilegedRequest(url: u) as URLRequest) {
+			let _ = tab.loadRequest(PrivilegedRequest(url: validURL) as URLRequest) {
 			// TODO: should be reviewed
 //				self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
 		} else {
@@ -536,7 +540,7 @@ extension CIBrowserViewController: WKNavigationDelegate {
 			decisionHandler(WKNavigationActionPolicy.allow)
 			return
 		}
-		
+
 		// Default to calling openURL(). What this does depends on the iOS version. On iOS 8, it will just work without
 		// prompting. On iOS9, depending on the scheme, iOS will prompt: "Firefox" wants to open "Twitter". It will ask
 		// every time. There is no way around this prompt. (TODO Confirm this is true by adding them to the Info.plist)

@@ -71,46 +71,43 @@ extension ToolbarViewController {
             toolBarView.shareButton.isEnabled = true
         }
         else if state == .notBrowsing {
-            toolBarView.backButton.isEnabled = false
-            toolBarView.forwardButton.isEnabled = false
             toolBarView.shareButton.isEnabled = false
         }
         
         currentState = state
         
     }
-    
+
+	func setIsBackEnabled(_ enabled: Bool) {
+		if enabled {
+			self.setBackEnabled()
+		} else {
+			self.setBackDisabled()
+		}
+	}
+
     func setBackEnabled() {
-        guard currentState == .browsing else {
-            return
-        }
-        
         toolBarView.backButton.isEnabled = true
-        
     }
     
     func setBackDisabled() {
-        guard currentState == .browsing else {
-            return
-        }
-        
         toolBarView.backButton.isEnabled = false
     }
-    
+
+	func setIsForwardEnabled(_ enabled: Bool) {
+		if enabled {
+			self.setForwardEnabled()
+		} else {
+			self.setForwardDisabled()
+		}
+	}
+
     func setForwardEnabled() {
-        guard currentState == .browsing else {
-            return
-        }
-        
         toolBarView.forwardButton.isEnabled = true
         
     }
     
     func setForwardDisabled() {
-        guard currentState == .browsing else {
-            return
-        }
-        
         toolBarView.forwardButton.isEnabled = false
     }
     
@@ -119,13 +116,13 @@ extension ToolbarViewController {
 extension ToolbarViewController: CIToolBarDelegate {
     
     func backPressed() {
-        
+		Router.shared.action(action: Action(data: nil, type: .backButtonPressed, context: .toolBarVC))
     }
-    
+	
     func forwardPressed() {
-        
+		Router.shared.action(action: Action(data: nil, type: .forwardButtonPressed, context: .toolBarVC))
     }
-    
+	
     func middlePressed() {
         Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
     }

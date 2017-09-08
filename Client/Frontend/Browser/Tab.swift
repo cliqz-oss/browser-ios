@@ -57,6 +57,8 @@ class Tab: NSObject {
         }
     }
 
+	fileprivate let navigationHistory = TabNavigationHistory()
+
     var tabState: TabState {
         return TabState(isPrivate: _isPrivate, desktopSite: desktopSite, isBookmarked: isBookmarked, url: url, title: displayTitle, favicon: displayFavicon)
     }
@@ -72,7 +74,13 @@ class Tab: NSObject {
     private var lastRequest: URLRequest? = nil
     var restoring: Bool = false
     var pendingScreenshot = false
-    var url: URL?
+	var url: URL? {
+		didSet {
+			if let u = url {
+				self.navigateToState(.web(u.absoluteString))
+			}
+		}
+	}
     // Cliqz: save restoring url for the tab
     var restoringUrl: URL?
     var requestInProgress = false
@@ -359,22 +367,6 @@ class Tab: NSObject {
         return nil
     }
 
-    var canGoBack: Bool {
-        return webView?.canGoBack ?? false
-    }
-
-    var canGoForward: Bool {
-        return webView?.canGoForward ?? false
-    }
-
-    func goBack() {
-        webView?.goBack()
-    }
-
-    func goForward() {
-        webView?.goForward()
-    }
-
 #if CLIQZ
     func goToBackForwardListItem(item: LegacyBackForwardListItem) {
         webView?.goToBackForwardListItem(item: item)
@@ -605,6 +597,9 @@ extension Tab: CliqzWebViewDelegate {
     func didFinishLoadingRequest(request: NSURLRequest?) {
         //finished loading request
         self.url = request?.url
+		if let urlString = self.url?.absoluteString {
+			self.navigateToState(.web(urlString))
+		}
         self.tabDelegate?.urlChangedForTab?(self)
     }
 }
@@ -638,4 +633,51 @@ private class TabWebView: CliqzWebView, MenuHelperInterface {
 
         return super.hitTest(point, with: event)
     }
+}
+
+extension Tab {
+
+	func navigateToState(_ state: TabNavigationState) {
+		if !self.navigationHistory.isEmpty() && state == self.navigationHistory.currentState() {
+			return
+		}
+		self.navigationHistory.addState(state: state)
+	}
+
+	func currentNavigationState() -> TabNavigationState {
+		return self.navigationHistory.currentState()
+	}
+
+	var canGoBack: Bool {
+		return self.navigationHistory.canGoBack()
+	}
+	
+	var canGoForward: Bool {
+		return self.navigationHistory.canGoForward()
+	}
+	
+	func goBack() -> TabNavigationState? {
+		let current = self.navigationHistory.currentState()
+		let new = self.navigationHistory.goBack()
+		switch (current, new) {
+		case (.web(_), .web(_)):
+			self.webView?.goBack()
+			return nil
+		default:
+			return new
+		}
+	}
+	
+	func goForward() -> TabNavigationState? {
+		let current = self.navigationHistory.currentState()
+		let new = self.navigationHistory.goForward()
+		switch (current, new) {
+		case (.web(_), .web(_)):
+			self.webView?.goForward()
+			return nil
+		default:
+			return new
+		}
+	}
+
 }

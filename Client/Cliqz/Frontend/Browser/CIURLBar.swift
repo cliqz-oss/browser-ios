@@ -29,7 +29,8 @@ protocol CIURLBarStateDelegate: class {
 
 	func urlBarDidStartEditing(_ urlBar: CIURLBar)
 	func urlBarDidFinishEditing(_ urlBar: CIURLBar)
-	
+	func urlBarDidCancelEditing(_ urlBar: CIURLBar)
+
 	func urlBar(_ urlBar: CIURLBar, didEnterText text: String)
 	func urlBar(_ urlBar: CIURLBar, didSubmitText text: String)
 	
@@ -235,6 +236,7 @@ class CIURLBar: UIView {
 		} else {
 			self.locationTextField?.text = initialText
 		}
+		self.stateDelegate?.urlBarDidStartEditing(self)
 	}
 
 	func endEditing() {
@@ -321,6 +323,7 @@ class CIURLBar: UIView {
 		self.currentQuery = nil
 		self.state = .collapsed
 		self.actionDelegate?.urlBarDidPressBack(self)
+		self.stateDelegate?.urlBarDidCancelEditing(self)
 	}
     
     func setAutocompleteSuggestion(_ suggestion: String?) {

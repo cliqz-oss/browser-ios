@@ -106,22 +106,22 @@ protocol CliqzWebViewDelegate: class {
 }
 
 class CliqzWebView: UIWebView {
-	
+
 	weak var navigationDelegate: WKNavigationDelegate?
 	weak var UIDelegate: WKUIDelegate?
     weak var webViewDelegate: CliqzWebViewDelegate?
 
 	lazy var configuration: CliqzWebViewConfiguration = { return CliqzWebViewConfiguration(webView: self) }()
 	lazy var backForwardList: WebViewBackForwardList = { return WebViewBackForwardList(webView: self) } ()
-	
+
 	var progress: WebViewProgress?
-	
+
 	var allowsBackForwardNavigationGestures: Bool = false
 
     fileprivate let lockQueue = DispatchQueue(label: "com.cliqz.webView.lockQueue", attributes: [])
-    
+
 	fileprivate static var containerWebViewForCallbacks = { return ContainerWebView() }()
-    
+
     // This gets set as soon as it is available from the first UIWebVew created
     fileprivate static var webviewBuiltinUserAgent: String?
 
@@ -549,6 +549,7 @@ extension CliqzWebView: UIWebViewDelegate {
 			title = t
 		}
 		progress?.webViewDidFinishLoad(readyState)
+//		self.webViewDelegate?.didFinishLoadingRequest(request: nil)
         updateObservableAttributes()
         
 	}
