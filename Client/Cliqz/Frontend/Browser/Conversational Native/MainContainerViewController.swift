@@ -342,7 +342,7 @@ extension MainContainerViewController {
 			case .pageNavigation:
 				tab.navigateToState(.home)
 			case .search:
-				let navState = TabNavigationState.search(self.contentNavVC.searchController?.searchQuery ?? "")
+				let navState = TabNavigationState.search(self.contentNavVC.searchController.searchQuery ?? "")
 				tab.navigateToState(navState)
 			default:
 				print("No need to log browser state")

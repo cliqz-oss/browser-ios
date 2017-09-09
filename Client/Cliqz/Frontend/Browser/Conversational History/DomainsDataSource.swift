@@ -50,7 +50,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     
     func baseUrl(indexPath:IndexPath) -> String {
         let domainDetail = domains[indexPath.row].domainDetails
-        return domainDetail.first?.url.host ?? ""
+        return domainDetail.first?.url.absoluteString ?? ""
     }
     
     func image(indexPath:IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void) {
@@ -58,7 +58,10 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
 			if let img = image {
 				completionBlock(img)
 			} else {
-				// TODO: Cell should support logo as a UIView corresponding to logoInfo
+				if let info = logoInfo {
+					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
+					// TODO: Cell should support logo as a UIView to show placeholder
+				}
 				completionBlock(nil)
 			}
 		}
@@ -73,7 +76,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func indexWithinBounds(indexPath:IndexPath) -> Bool {
-        if indexPath.row < self.domains.count{
+        if indexPath.row < self.domains.count {
             return true
         }
         return false

@@ -96,11 +96,10 @@ final class HistoryModule: NSObject {
             let domainList       = processDomainDetails(details: rawDomainDetails)
             completion(domainList, nil) //TODO: there should be a better error handling mechanism here
         }
-        
+
         //getHistoryWithLimit(100, startFrame: 1494928155776220, endFrame: 1494928369784560, domain: NSString(string: "reuters.com"), resolve: { _ in}, reject: { _ in})
-        
-    }
-    
+	}
+
     class func processRawDataResults(result: Maybe<Cursor<Site>>) -> [DomainDetail] {
         var historyResults: [DomainDetail] = []
         
@@ -117,7 +116,6 @@ final class HistoryModule: NSObject {
                 }
             }
         }
-        
         return historyResults
     }
     

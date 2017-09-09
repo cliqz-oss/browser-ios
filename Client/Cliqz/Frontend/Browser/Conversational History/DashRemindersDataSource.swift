@@ -43,7 +43,10 @@ class DashRemindersDataSource: ExpandableViewProtocol {
 			if let img = image {
 				completionBlock(img)
 			} else {
-				// TODO: Cell should support logo as a UIView corresponding to logoInfo
+				if let info = logoInfo {
+					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
+					// TODO: Cell should support logo as a UIView to show placeholder
+				}
 				completionBlock(nil)
 			}
 		}
