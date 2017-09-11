@@ -38,7 +38,7 @@ node('ios-osx') {
         sh '''#!/bin/bash -l
             set -x
             set -e
-            rm -R ./node_modules
+            rm -rf ./node_modules
             yarn
             pod install
             npm run bundle
