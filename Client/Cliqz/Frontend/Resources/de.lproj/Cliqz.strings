@@ -333,11 +333,11 @@
 /* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
 "You will be notified about games, goals and important happenings of the {1}." = "Du wirst über wichtige Spielereignisse oder Vereinsereignisse benachrichtigt.";
 /* [Subscriptions] soccer notification */
-"league" = "League";
+"league" = "Liga";
 /* [Subscriptions] soccer notification */
-"team" = "Team";
+"team" = "Mannschaft";
 /* [Subscriptions] soccer notification */
-"game" = "Game";
+"game" = "Spiel";
 /* [Subscriptions] Subscribe alert button */
 "Subscribe" = "Abonnieren";
 /* [Subscriptions] Alert title for asking to enable push notificaiton from the system
