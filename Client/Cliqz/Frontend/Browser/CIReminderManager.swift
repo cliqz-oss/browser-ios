@@ -70,6 +70,7 @@ final class CIReminderManager: NSObject {
     private var firedReminders: FiredReminders = [:]
     
     //instead of a hashmap I could build a trie tree, where the first layer of nodes is host names, and then attached to them path components
+    //url_hash_map is a copy of the scheduled reminders. It is used to identify reminders that were fired while the app is inactive.
     private var url_hash_map: [Host : [Url]] = [:]
     
     static let sharedInstance = CIReminderManager()
@@ -112,7 +113,6 @@ final class CIReminderManager: NSObject {
         
         UIApplication.shared.scheduleLocalNotification(notification)
         
-        didRemindersChange = .True
         url_hash_map = addUrlToHashMap(map: url_hash_map, url_str: url)
         
     }
@@ -180,6 +180,7 @@ final class CIReminderManager: NSObject {
         }
 
         if let notifications = UIApplication.shared.scheduledLocalNotifications {
+            
             let reminders = notifications.map({ (notification) -> Reminder in
                 return notification.userInfo as! Reminder
             })
@@ -420,6 +421,7 @@ final class CIReminderManager: NSObject {
     }
     
     private func stateChanged() {
+        didRemindersChange = .True
         postRefreshNotification()
     }
     
