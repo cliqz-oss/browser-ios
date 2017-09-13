@@ -11,8 +11,8 @@
 class PersistentList<A: Equatable> {
     
     let id: String
-    private var list: [A] = []
-    private var dateList: [Date] = []
+    var list: [A] = []
+    var dateList: [Date] = []
     //here is where the date when that entry was added is put. The following should hold true: the date for the element at list[index] is at date[index]
     //there is a one to one index correspondece.
     
@@ -21,6 +21,12 @@ class PersistentList<A: Equatable> {
     init(identifier: String) {
         self.id = identifier
         self.loadList()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appEnteredBackground), name: .UIApplicationDidEnterBackground, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func add(element: A) {
@@ -28,18 +34,23 @@ class PersistentList<A: Equatable> {
         dateList.append(Date())
     }
     
+    //removes all occurences of element
     func remove(element: A) {
         
         var index = 0
         
         for entry in list {
             if entry == element {
-                list.remove(at: index)
-                dateList.remove(at: index)
+                removeAt(index: index)
             }
             
             index += 1
         }
+    }
+    
+    func removeAt(index: Int) {
+        list.remove(at: index)
+        dateList.remove(at: index)
     }
     
     func contains(element: A) -> Bool {
@@ -59,6 +70,10 @@ class PersistentList<A: Equatable> {
         let dict: [String : Any] = ["list": list, "dateList": dateList]
         defaults.set(dict, forKey: self.id)
         defaults.synchronize()
+    }
+    
+    @objc func appEnteredBackground(_ notification: Notification) {
+        self.saveList()
     }
     
 }

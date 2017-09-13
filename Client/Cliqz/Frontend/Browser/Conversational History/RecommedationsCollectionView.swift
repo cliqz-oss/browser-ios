@@ -20,7 +20,8 @@ protocol RecommendationsCollectionProtocol {
     func headerTitle(indexPath: IndexPath) -> String
     func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void)
     func time(indexPath: IndexPath) -> String
-    func url(indexPath: IndexPath) -> String 
+    func url(indexPath: IndexPath) -> String
+    func deletePressed(indexPath: IndexPath)
 }
 
 protocol RecommendationsCollectionDelegate: class {

@@ -124,7 +124,7 @@ extension DomainDetailsViewController: RecommendationsCollectionDelegate {
     }
     
     func deletePressed(indexPath: IndexPath) {
-        
+        recommendationsCollection.customDataSource?.deletePressed(indexPath: indexPath)
     }
 }
 

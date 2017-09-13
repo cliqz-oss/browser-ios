@@ -222,10 +222,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         sendCorePing()
+        
+        //NotificationCenter.default.addObserver(self, selector: #selector(allNotifications), name: nil, object: nil)
 		
         log.debug("Done with setting up the application.")
 
         return true
+    }
+    
+    @objc func allNotifications(_ notification: Notification) {
+        debugPrint(notification.name)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

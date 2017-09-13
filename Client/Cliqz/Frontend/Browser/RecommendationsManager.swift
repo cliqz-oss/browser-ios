@@ -8,7 +8,12 @@
 
 import UIKit
 
+enum RecommendationType {
+    case news
+}
+
 struct Recommendation {
+    let type: RecommendationType
     let title: String
     let url: String
     let host: String
@@ -29,6 +34,10 @@ final class RecommendationsManager {
     
     private var recommendations: [Recommendation] = []
     
+    static let newsIgnoreListID = "NewsIgnoreList"
+    
+    private var newsIgnoreList: NewsIgnoreList = NewsIgnoreList(identifier: RecommendationsManager.newsIgnoreListID)
+    
     init() {
         self.loadRecommendations()
         NotificationCenter.default.addObserver(self, selector: #selector(newsUpdated), name: NewsManager.notification_updated, object: nil)
@@ -45,11 +54,23 @@ final class RecommendationsManager {
             let news_recommendations = convertArticles2Recommendations(articles: news_articles)
             recommendations += news_recommendations
             
-            NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
+            stateChanged()
         }
     }
     
-    func convertArticles2Recommendations(articles: [[String: Any]]) -> [Recommendation] {
+    func removeRecommendation(recommendation: Recommendation) {
+        if recommendation.type == .news {
+            newsIgnoreList.add(element: recommendation.url)
+        }
+        
+        stateChanged()
+    }
+    
+    func stateChanged() {
+        NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
+    }
+    
+    private func convertArticles2Recommendations(articles: [[String: Any]]) -> [Recommendation] {
         var array: [Recommendation] = []
         for article in articles {
             array.append(article2Recommendation(article: article))
@@ -57,7 +78,7 @@ final class RecommendationsManager {
         return array
     }
     
-    func article2Recommendation(article: [String: Any]) -> Recommendation {
+    private func article2Recommendation(article: [String: Any]) -> Recommendation {
 
         var title = ""
         var media_link = ""
@@ -86,7 +107,7 @@ final class RecommendationsManager {
             }
         }
         
-        return Recommendation(title: title, url: url, host: host, text: description, picture_url: media_link)
+        return Recommendation(type: .news, title: title, url: url, host: host, text: description, picture_url: media_link)
         
     }
     
@@ -112,7 +133,7 @@ final class RecommendationsManager {
             
         }
         
-        return local_recommendations
+        return filterOutIgnoredRecommendations(recommendations: local_recommendations)
     }
     
     private func recommendationsWithoutHistoryDomains(recommedations: [Recommendation]) -> [Recommendation] {
@@ -131,6 +152,16 @@ final class RecommendationsManager {
     private func recommendationsWithoutHosts(hosts: Set<String>) -> [Recommendation] {
         return recommendations.filter({ (reccomendation) -> Bool in
             return !hosts.contains(reccomendation.host)
+        })
+    }
+    
+    private func filterOutIgnoredRecommendations(recommendations: [Recommendation]) -> [Recommendation] {
+        return recommendations.filter({ (recommendation) -> Bool in
+            if recommendation.type == .news {
+                return !newsIgnoreList.contains(element: recommendation.url)
+            }
+            
+            return true
         })
     }
     

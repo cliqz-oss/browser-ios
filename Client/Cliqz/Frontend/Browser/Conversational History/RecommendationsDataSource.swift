@@ -27,14 +27,27 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     }
     
     func text(indexPath: IndexPath) -> String {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            return ""
+        }
+        
         return recommendations[indexPath.row].text
     }
     
     func headerTitle(indexPath: IndexPath) -> String {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            return ""
+        }
+        
         return recommendations[indexPath.row].title
     }
     
     func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void) {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            completion(nil)
+            return
+        }
+        
         let url_str = recommendations[indexPath.row].picture_url
         if let url = URL(string: url_str) {
             SDWebImageManager.shared().downloadImage(with: url, options: .highPriority, progress: { (receivedSize, expectedSize) in
@@ -46,10 +59,30 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     }
     
     func time(indexPath: IndexPath) -> String {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            return ""
+        }
+        
         return ""
     }
     
     func url(indexPath: IndexPath) -> String {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            return ""
+        }
+        
         return recommendations[indexPath.row].url
+    }
+    
+    func deletePressed(indexPath: IndexPath) {
+        guard isIndexPathValid(indexPath: indexPath) else {
+            return
+        }
+        
+        RecommendationsManager.sharedInstance.removeRecommendation(recommendation: recommendations[indexPath.row])
+    }
+    
+    func isIndexPathValid(indexPath: IndexPath) -> Bool {
+        return indexPath.row >= 0 && indexPath.row < recommendations.count
     }
 }
