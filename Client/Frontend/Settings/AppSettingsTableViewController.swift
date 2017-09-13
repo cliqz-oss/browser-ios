@@ -70,6 +70,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let adBlockerSetting            = AdBlockerSetting(settings: self)
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
+        let resetSubscriptionsSetting   = ResetSubscriptionsSetting(settings: self)
         
         var browsingAndHistorySection = [Setting]()
         
@@ -77,7 +78,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
             browsingAndHistorySection += [connectSetting]
         }
         
-        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting, resetSubscriptionsSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]

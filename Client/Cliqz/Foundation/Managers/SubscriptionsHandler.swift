@@ -135,6 +135,14 @@ class SubscriptionsHandler: NSObject {
         }
     }
     
+    func hasSubscriptions() -> Bool {
+        return self.currentSubscription.count > 0
+    }
+    
+    func resetSubscriptions() {
+        self.currentSubscription = [String: [String: [String]]]()
+        saveCurrentSubscriptions()
+    }
     //MARK: - Private Helpers
     
     private func completeAwatingSubscription() {
@@ -242,8 +250,6 @@ class SubscriptionsHandler: NSObject {
         TelemetryLogger.sharedInstance.logEvent(.Subscription("show", "permission_alert", nil))
     }
 
-    
-    
     private func isSubscribedForSoccerNotification(league: String, teams: [String], game: String) -> Bool {
 
         guard let soccerSubscription = self.currentSubscription["soccer"] else {

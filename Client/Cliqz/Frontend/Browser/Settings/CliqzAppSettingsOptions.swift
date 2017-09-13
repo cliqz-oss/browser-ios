@@ -295,6 +295,62 @@ class RestoreTopSitesSetting: Setting {
     }
 }
 
+// Cliqz: setting to reset subscriptions
+class ResetSubscriptionsSetting: Setting {
+    
+    let profile: Profile
+    weak var settingsViewController: SettingsTableViewController?
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        self.settingsViewController = settings
+        var attributes: [String : AnyObject]?
+        if SubscriptionsHandler.sharedInstance.hasSubscriptions() {
+            attributes = [NSForegroundColorAttributeName: UIConstants.HighlightBlue]
+        } else {
+            attributes = [NSForegroundColorAttributeName: UIColor.lightGray]
+        }
+        
+        super.init(title: NSAttributedString(string: NSLocalizedString("Reset all subscriptions", tableName: "Cliqz", comment: "[Settings] Reset all subscriptions"), attributes: attributes))
+    }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        guard SubscriptionsHandler.sharedInstance.hasSubscriptions() else {
+            return
+        }
+        
+        let alertController = UIAlertController(
+            title: "",
+            message: NSLocalizedString("Would you like to reset all your subscriptions (e.g. to Bundesliga games)?", tableName: "Cliqz", comment: "[Settings] Text of the 'Reset all subscriptions' alert"),
+            preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        alertController.addAction(
+            UIAlertAction(title: NSLocalizedString("Cancel", tableName: "Cliqz", comment: "Cancel button in the 'Reset all subscriptions' alert"), style: .cancel) { (action) in
+                // log telemetry signal
+                let cancelSignal = TelemetryLogEventType.Settings("reset_subscriptions", "click", "cancel", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(cancelSignal)
+        })
+        alertController.addAction(
+            UIAlertAction(title: self.title?.string, style: .destructive) { (action) in
+                SubscriptionsHandler.sharedInstance.resetSubscriptions()
+                
+                self.settingsViewController?.reloadSettings()
+                
+                // log telemetry signal
+                let confirmSignal = TelemetryLogEventType.Settings("reset_subscriptions", "click", "confirm", nil, nil)
+                TelemetryLogger.sharedInstance.logEvent(confirmSignal)
+                
+        })
+        navigationController?.present(alertController, animated: true, completion: nil)
+        
+        // log telemetry signal
+        let restoreTopsitesSignal = TelemetryLogEventType.Settings("main", "click", "reset_subscriptions", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(restoreTopsitesSignal)
+    }
+}
+
+
+
 // Opens the search settings pane
 class RegionalSetting: Setting {
     let profile: Profile
