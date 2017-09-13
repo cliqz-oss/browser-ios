@@ -546,8 +546,10 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     func subscribeToNotifications(withType type: String, subType: String, id: String) {
         let notificationType = RemoteNotificationType.subscriptoinNotification(type, subType, id)
         SubscriptionsHandler.sharedInstance.subscribeForRemoteNotification(ofType: notificationType, completionHandler: { [weak self] () -> Void in
-            self?.updateExtensionPreferences()
-            self?.searchWithLastQuery()
+            DispatchQueue.main.async {
+                self?.updateExtensionPreferences()
+                self?.searchWithLastQuery()
+            }
         })
     }
     
