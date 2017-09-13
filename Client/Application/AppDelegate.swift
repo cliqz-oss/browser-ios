@@ -657,7 +657,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     })
                 }
                 
-                CIReminderManager.sharedInstance.didRemindersChange = .True
                 return
             }
         }
