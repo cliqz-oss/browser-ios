@@ -251,6 +251,10 @@
 "Restore Most Visited Websites" = "Meistbesuchte Seiten wiederherstellen";
 /* [Settings] Text of the 'Restore Most Visited Websites' alert */
 "All most visited websites will be shown again on the startpage." = "Alle meistbesuchten Seiten werden wieder auf der Startseite angezeigt.";
+/* [Settings] Reset all subscriptions */
+"Reset all subscriptions" = "Alle Abonnements zurücksetzen";
+/* [Settings] Text of the 'Reset all subscriptions' alert */
+"Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Möchtest du alle Abonnements (z.B. für Bundesliga Spiele) beenden?";
 /* [Settings] Help section header */
 "Help" = "Hilfe";
 /* [Settings] FAQs & Support */
