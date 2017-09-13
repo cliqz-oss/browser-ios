@@ -45,13 +45,15 @@ extension BrowserViewController: ControlCenterViewDelegate {
         FeedbackUI.showLoadingHUD(hudMessage)
         
         Engine.sharedInstance.findVideoLinks(url: url, callback: { [weak self] (videoLinks) in
-            var supportedVideoLinks = [[String: Any]]()
-            for videoLink in videoLinks {
-                if let isVideoAudio = videoLink["isVideoAudio"] as? Bool, isVideoAudio == true {
-                    supportedVideoLinks.append(videoLink)
+            DispatchQueue.main.async {
+                var supportedVideoLinks = [[String: Any]]()
+                for videoLink in videoLinks {
+                    if let isVideoAudio = videoLink["isVideoAudio"] as? Bool, isVideoAudio == true {
+                        supportedVideoLinks.append(videoLink)
+                    }
                 }
+                self?.downloadVideoOfSelectedFormat(supportedVideoLinks, sourceRect: sourceRect)
             }
-            self?.downloadVideoOfSelectedFormat(supportedVideoLinks, sourceRect: sourceRect)
         })
 	}
 	
