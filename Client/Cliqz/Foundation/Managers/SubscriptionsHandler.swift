@@ -123,11 +123,10 @@ class SubscriptionsHandler: NSObject {
             if let leagueId = userInfo["lid"] as? String,
                 let teamIds = userInfo["tids"] as? [String],
                 let matchId = userInfo["mid"] as? String,
-                let timeStamp = userInfo["ts"] as? Int,
                 let message = userInfo["message"] as? String,
                 let url = userInfo["url"] as? String,
                 let provider = userInfo["provider"] as? String,
-                isSubscribedForSoccerNotification(league: leagueId, teams: teamIds, game: matchId, timeStamp: timeStamp) {
+                isSubscribedForSoccerNotification(league: leagueId, teams: teamIds, game: matchId) {
                 
                 publishLocalNotification(message, url: url, provider: provider)
                 completionHandler(.newData)
@@ -245,7 +244,7 @@ class SubscriptionsHandler: NSObject {
 
     
     
-    private func isSubscribedForSoccerNotification(league: String, teams: [String], game: String, timeStamp: Int) -> Bool {
+    private func isSubscribedForSoccerNotification(league: String, teams: [String], game: String) -> Bool {
 
         guard let soccerSubscription = self.currentSubscription["soccer"] else {
             return false
