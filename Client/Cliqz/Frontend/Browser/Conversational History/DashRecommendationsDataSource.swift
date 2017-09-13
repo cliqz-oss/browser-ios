@@ -16,7 +16,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     
     weak var delegate: HasDataSource?
     
-    init(delegate: HasDataSource) {
+    init(delegate: HasDataSource? = nil) {
         self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, type: .withoutHistoryDomains)
         self.delegate = delegate
         NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)

@@ -16,7 +16,7 @@ class DashRemindersDataSource: ExpandableViewProtocol {
     
     var reminders: [CIReminderManager.Reminder]
     
-    init(delegate: HasDataSource) {
+    init(delegate: HasDataSource? = nil) {
         self.delegate = delegate
         self.reminders = CIReminderManager.sharedInstance.allValidReminders()
         NotificationCenter.default.addObserver(self, selector: #selector(remindersUpdated), name: CIReminderManager.notification_update, object: nil)
