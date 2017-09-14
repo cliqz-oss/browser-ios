@@ -14,12 +14,13 @@ class AWSSNSManager {
     private static let cognitoIdentityPoolID = "us-east-1:81faca92-4d48-437c-ad68-e28ca03411fe"
     
 #if BETA
-    // Note that we only subscribe for one topic and all notifications are sent to all users as a silent notification then will be filtered on the client side
-    private static let notificationTopic = "arn:aws:sns:us-east-1:141047255820:mobile_news_staging"
     
     // Debug
-//	private static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS_SANDBOX/Cliqz_Beta_for_iOS"
+//    private static let notificationTopic = "arn:aws:sns:us-east-1:141047255820:mobile_news_staging"
+//    private static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS_SANDBOX/Cliqz_Beta_for_iOS"
+
     // TestFlight
+    private static let notificationTopic = "arn:aws:sns:us-east-1:141047255820:mobile_news"
     private static let SNSAplicationArn = "arn:aws:sns:us-east-1:141047255820:app/APNS/Cliqz_Beta_Production_for_iOS"
 
 #else
