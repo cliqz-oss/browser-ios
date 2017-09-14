@@ -216,11 +216,8 @@ class TabManager : NSObject {
         assert(tab === selectedTab, "Expected tab is selected")
         selectedTab?.createWebview()
 
-        //TODO: temporary solution to avoid opening a url in a new tab and get the fresh tab instead as it call `didSelectedTabChange` before the url is loaded
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            for delegate in self.delegates {
-                delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
-            }
+        for delegate in self.delegates {
+            delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
         }
         
     }
