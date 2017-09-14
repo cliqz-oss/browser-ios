@@ -12,7 +12,7 @@ import Foundation
 /// Note that not all applications use the Subject. For example OmniFocus ignores it, so we need to do both.
 
 class TitleActivityItemProvider: UIActivityItemProvider {
-    static let activityTypesToIgnore = [UIActivityType.copyToPasteboard, UIActivityType.message, UIActivityType.mail]
+    static let activityTypesToIgnore = [UIActivityType.copyToPasteboard, UIActivityType.message, UIActivityType.mail, UIActivityType.init("com.apple.CloudDocsUI.AddToiCloudDrive")]
 
     init(title: String) {
         super.init(placeholderItem: title)

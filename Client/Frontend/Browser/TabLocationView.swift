@@ -345,7 +345,7 @@ class TabLocationView: UIView {
         
         // Cliqz: disply only the domain name in the url TextField if possible
         let urlText = getDomainName(url)
-        
+
         urlTextField.accessibilityLabel = url?.absoluteString
         urlTextField.accessibilityValue = url?.absoluteString
         
@@ -355,7 +355,7 @@ class TabLocationView: UIView {
             urlTextFieldWidth = getMaxUrlTextFieldWidth()
             return
         }
-        
+
         let attributedString = NSMutableAttributedString(string: urlText)
         let nsRange = NSMakeRange(0, urlText.characters.count)
         

@@ -94,4 +94,14 @@ open class Engine {
         self.getBridge().callAction("mobile-pairing:renameDevice", args: [peerId, newName])
     }
     
+    // MARK :- Youtube Downloader
+    func findVideoLinks(url: String, callback: @escaping ([[String: Any]]) -> ()) {
+        
+        let _ = self.getBridge().callAction("video-downloader:findVideoLinks", args: [url as AnyObject]) { (result) in
+            if let videoLinks = result["result"] as? [[String: Any]] {
+                callback(videoLinks)
+            }
+        }
+        
+    }
 }

@@ -62,35 +62,40 @@ class QuerySuggestionView: UIView {
     func updateCurrentQuery(_ query: String) {
         currentQuery = query
         if query.isEmpty {
+            currentSuggestions.removeAll()
             clearSuggestions()
         }
     }
     
     func showSuggestions(notification: NSNotification) {
         
-        if let suggestionsData = notification.object as? [String: AnyObject],
+        guard let suggestionsData = notification.object as? [String: AnyObject],
             let query = suggestionsData["query"] as? String,
-            let suggestions = suggestionsData["suggestions"] as? [String] {
-            clearSuggestions()
-            self.isHidden = false
-            displaySuggestions(query, suggestions: suggestions)
+            let suggestions = suggestionsData["suggestions"] as? [String] else {
+            return
         }
+        
+        clearSuggestions()
+        displaySuggestions(query, suggestions: suggestions)
+        
     }
     
     //MARK:- Helper methods
     fileprivate func clearSuggestions() {
-        self.currentSuggestions.removeAll()
         let subViews = scrollView.subviews
         for subView in subViews {
             subView.removeFromSuperview()
         }
+        self.isHidden = true
     }
     
     fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
-        guard currentQuery == query else {
+        currentSuggestions = suggestions
+        
+        guard currentQuery == query && suggestions.count > 0 && OrientationUtil.isPortrait() else {
             return
         }
-        currentSuggestions = suggestions
+        self.isHidden = false
         
         var index = 0
         var x: CGFloat = margin
@@ -200,10 +205,7 @@ class QuerySuggestionView: UIView {
 
         clearSuggestions()
         if OrientationUtil.isPortrait() {
-            self.isHidden = false
             self.displaySuggestions(currentQuery, suggestions: currentSuggestions)
-        } else {
-            self.isHidden = true
         }
         
     }

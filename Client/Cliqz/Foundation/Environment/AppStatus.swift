@@ -247,7 +247,7 @@ class AppStatus {
         prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
         if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
-                let data = try JSONSerialization.data(withJSONObject: abTests, options: .prettyPrinted)
+                let data = try JSONSerialization.data(withJSONObject: abTests, options: [])
                 let stringifiedAbTests = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                 prefs["ABTests"]   = stringifiedAbTests
             } catch let error as NSError {
@@ -257,10 +257,14 @@ class AppStatus {
         
         return prefs
     }
+    
     fileprivate func getAppLanguage() -> String {
-        let languageCode = (Locale.current as NSLocale).object(forKey: .countryCode)
-        let countryCode = (Locale.current as NSLocale).object(forKey: .countryCode)
-        return "\(languageCode!)-\(countryCode!)"
+        
+        if let languageCode = Locale.current.languageCode, let regionCode = Locale.current.regionCode {
+            return "\(languageCode)-\(regionCode)"
+        }
+        
+        return ""
     }
     
     fileprivate func getHistoryDays(_ profile: Profile) -> Int {

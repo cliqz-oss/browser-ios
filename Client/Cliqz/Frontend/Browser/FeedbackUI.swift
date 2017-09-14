@@ -29,7 +29,7 @@ class FeedbackUI: NSObject {
     ]
     
     //MARK:- Toast
-    class func showToastMessage(_ message: String, messageType: ToastMessageType) {
+    class func showToastMessage(_ message: String, messageType: ToastMessageType, timeInterval: TimeInterval? = nil, tabHandler: (() -> Void)? = nil) {
         var options : [AnyHashable: Any] = [kCRToastTextKey: message]
         
         switch messageType {
@@ -48,6 +48,16 @@ class FeedbackUI: NSObject {
             
         }
         
+        if let timeInterval = timeInterval {
+            options[kCRToastTimeIntervalKey] = [timeInterval]
+        }
+        
+        if let tabHandler = tabHandler {
+            let tapInteraction = CRToastInteractionResponder.init(interactionType: .tap, automaticallyDismiss: true) { (tap) in
+                tabHandler()
+            }
+            options[kCRToastInteractionRespondersKey] = [tapInteraction]
+        }
         
         // copy default options to the current options dictionary
         defaultOptions.forEach { options[$0] = $1 }

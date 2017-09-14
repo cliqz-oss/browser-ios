@@ -258,8 +258,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     fileprivate func search(_ query: String) {
-        let q = query.trimmingCharacters(in: CharacterSet.whitespaces)
-        var parameters = "'\(q.escape())'"
+        var parameters = "'\(query.escape())'"
         if let l = LocationManager.sharedInstance.getUserLocation() {
             parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
         }
@@ -279,6 +278,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if webView == shareCardWebView {
             decisionHandler(.allow)
+            return
         }
         
 		if !navigationAction.request.url!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
@@ -358,10 +358,12 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
 	fileprivate func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
+        let subscriptions = SubscriptionsHandler.sharedInstance.getSubscriptions()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode,
                       "backend_country" : self.getCountry(),
-                      "suggestionsEnabled"  : QuerySuggestions.isEnabled()] as [String : Any]
+                      "suggestionsEnabled"  : QuerySuggestions.isEnabled(),
+                      "subscriptions" : subscriptions] as [String : Any]
         
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
@@ -442,23 +444,41 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
     
     func presentShareCardActivityViewController(_ title:String, image: UIImage) {
-        
-        var activityItems = [AnyObject]()
-        activityItems.append(TitleActivityItemProvider(title: title))
-        activityItems.append(image)
-        
-        let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        activityViewController.excludedActivityTypes = [.assignToContact]
-        
-        activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
-            if let target = activityType?.rawValue {
-                TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+        guard let data:Data = UIImagePNGRepresentation(image) else {
+            return
+        }
+        let fileName = generateTempFileName(title)
+        let tempFile = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(fileName).png")
+        do {
+            try data.write(to: tempFile)
+            var activityItems = [AnyObject]()
+            activityItems.append(TitleActivityItemProvider(title: title))
+            activityItems.append(tempFile as AnyObject)
+            
+            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            activityViewController.excludedActivityTypes = [.assignToContact]
+            
+            activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+                if let target = activityType?.rawValue {
+                    TelemetryLogger.sharedInstance.logEvent(.ContextMenu(target, "card_sharing", ["is_success": completed]))
+                }
+                try? FileManager.default.removeItem(at: tempFile)
             }
             
+            present(activityViewController, animated: true, completion: nil)
+        } catch _ {
+            
         }
-        present(activityViewController, animated: true, completion: nil)
-        
+    }
+    private func generateTempFileName(_ title: String) -> String {
+        var fileName = title
+        fileName = fileName.replace(" ", replacement: "_")
+        fileName = fileName.replace("...", replacement: "")
+        if fileName.contains("\n") {
+           fileName = fileName.components(separatedBy: "\n")[1]
+        }
+        return fileName
     }
 }
 
@@ -512,7 +532,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
 	}
-
+    
     func shareCard(_ card: String, title: String, width: Int, height: Int) {
         let screenWidth = Int(UIScreen.main.bounds.width)
         if let url = ShareCardHelper.shareCardURL {
@@ -523,4 +543,21 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         }
     }
 
+    func subscribeToNotifications(withType type: String, subType: String, id: String) {
+        let notificationType = RemoteNotificationType.subscriptoinNotification(type, subType, id)
+        SubscriptionsHandler.sharedInstance.subscribeForRemoteNotification(ofType: notificationType, completionHandler: { [weak self] () -> Void in
+            DispatchQueue.main.async {
+                self?.updateExtensionPreferences()
+                self?.searchWithLastQuery()
+            }
+        })
+    }
+    
+    func unsubscribeToNotifications(withType type: String, subType: String, id: String) {
+        let notificationType = RemoteNotificationType.subscriptoinNotification(type, subType, id)
+        SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
+        self.updateExtensionPreferences()
+        self.searchWithLastQuery()
+    }
 }
+

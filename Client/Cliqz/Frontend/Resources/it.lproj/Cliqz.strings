@@ -1,6 +1,5 @@
 /* The text shown in the search field */
 "Search.placeholder" = "Cerca con Cliqz";
-
 /* Error message title */
 "Sorry" = "Ops";
 /* Error message when JS scripts for search can't be loaded */
@@ -146,13 +145,10 @@
 "Close All Tabs" = "Chiudi tutti i tab";
 /* Title to expand news stream */
 "MoreNews" = "Mostra di più";
-
 /* Title to shrink news stream */
 "LessNews" = "Mostra meno";
-
 /* Title of news stream */
 "News" = "NEWS";
-
 /* Title on Freshtab for forget mode */
 "Forget Tab" = "DimentiTab";
 /* Description on Freshtab for forget mode */
@@ -189,7 +185,7 @@
 /* AdBlocker panel subtitle in the control center when it is disabled globally from settigns. */
 "Ad-Blocking is turned off" = "Blocca Pubblicità non è attivo";
 /*Anti-Phishing panel description */
-"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "La tecnologia Anti-Phishing identifica e blocca prima ancora che tu possa visitarli i siti potenzialmente fraudolenti che cercano di carpire le tue password e i tuoi dati personali.\nAnti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site.";
+"Anti-Phishing technology identifies and blocks potentially deceptive websites that try to get your password or account data before you visit the site." = "La tecnologia Anti-Phishing identifica e blocca prima ancora che tu possa visitarli i siti potenzialmente fraudolenti che cercano di carpire le tue password e i tuoi dati personali.";
 /* Anti-Phishing panel title in the control center if the current website is safe. */
 "You are safe" = "Sei al sicuro";
 /* Anti-Phishing panel subtitle in the control center if the current website is safe. */
@@ -232,7 +228,7 @@
 /* [Settings] Human Web */
 "Human Web" = "Human Web";
 /* [Settings -> Human Web]Footer text for Fair Blocking section" */
-"Human Web footer" = "Cliqz rende anonimi tutti i dati sulle ricerche e le visite ai siti web generati dalla nostra comunità di utenti. Questi dati sono raccolti e usati per indicizzare il Web: abbiamo chiamato questa tecnologia \"Human Web\".";
+"Human Web footer" = "Cliqz rende anonimi tutti i dati sulle ricerche e le visite ai siti web generati dalla nostra comunità di utenti. Questi dati sono raccolti e usati per indicizzare il Web: abbiamo chiamato questa tecnologia \"Human Web\"";
 /* [Settings] Complementary Search */
 "Complementary Search" = "Motore di ricerca complementare";
 /* [Settings] Browsing & History section header */
@@ -256,6 +252,10 @@
 "Restore Most Visited Websites" = "Ripristina i siti più visitati";
 /* [Settings] Text of the 'Restore Most Visited Websites' alert */
 "All most visited websites will be shown again on the startpage." = "I siti più visitati appariranno di nuovo all'apertura.";
+/* [Settings] Reset all subscriptions */
+"Reset all subscriptions" = "Annullare tutte le iscrizioni";
+/* [Settings] Text of the 'Reset all subscriptions' alert */
+"Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Vuoi davvero annullare tutte le iscrizioni (per esempio, per le partite di Serie A)?";
 /* [Settings] Help section header */
 "Help" = "Supporto";
 /* [Settings] FAQ & Support */
@@ -283,7 +283,7 @@
 /* [Connect] No Wi-Fi connection alert title */
 "No Wi-Fi Connection" = "Nessuna connessione Wi-Fi";
 /* [Connect] No Wi-Fi connection alert message */
-"No Wi-Fi Connection message" = "Non sei conness* a una rete wi-fi e il download di video con dati mobili è disattivato. \nPer attivarlo, vai su Impostazioni > Limita consumo dati mobili\n";
+"No Wi-Fi Connection message" = "Non sei conness* a una rete wi-fi e il download di video con dati mobili è disattivato. \nPer attivarlo, vai su Impostazioni > Limita consumo dati mobili";
 /* [Connect] Dismiss No Wi-Fi connection alert */
 "Dismiss" = "Annulla";
 /* [Settings] Connect */
@@ -291,7 +291,7 @@
 /* [Settings -> Connect] Add Connection title */
 "Add Connection" = "Aggiungi connessione";
 /* [Settings -> Connect] Add Connection footer */
-"Add Connection footer" = "Connetti Cliqz sul tuo computer con Cliqz sul tuo dispositivo Android. Questo ti permetterà di mandare tab dal desktop allo smartphone. Puoi anche scaricare dei video direttamente dal computer sullo smartphone.";
+"Add Connection footer" = "Connetti Cliqz sul tuo computer con Cliqz sul tuo dispositivo Android. Questo ti permetterà di mandare tab dal desktop allo smartphone. Puoi anche scaricare dei video direttamente dal computer sullo smartphone";
 /* [Settings -> Connect] Online Connections Header */
 "Online Connections" = "Connessioni online";
 /* [Settings -> Connect] Offline Connections Header */
@@ -311,7 +311,7 @@
 /* [Connect] Connection Failed alert title */
 "Connection Failed" = "Connessione fallita";
 /* [Connect] Connection Failed alert message */
-"Sorry but devices could not be connected. Please try again." = "Purtroppo i dispositivi non possono essere connessi. Riprova più tardi.\n";
+"Sorry but devices could not be connected. Please try again." = "Purtroppo i dispositivi non possono essere connessi. Riprova più tardi.";
 /* [Connect] Retry button for Connection Failed alert */
 "Retry" = "Riprova";
 /* [Settings -> Connect] remove connection */
@@ -332,3 +332,25 @@
 "Video Downloader" = "Video Downloader";
 /* Video Downloader hint description */
 "Download YouTube videos to your Smartphone." = "Scarica i video di Youtube sul tuo smartphone.";
+/** Subscriptions **/
+/* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
+"Would you like to subscribe to the {1}?" = "{1}:vuoi ricevere le notifiche?";
+/* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
+"You will be notified about games, goals and important happenings of the {1}." = "{1}: riceverai notifiche sulle partite, i gol e gli avvenimenti importanti.";
+/* [Subscriptions] soccer notification */
+"league" = "Serie";
+/* [Subscriptions] soccer notification */
+"team" = "Squadra";
+/* [Subscriptions] soccer notification */
+"game" = "Partita";
+/* [Subscriptions] Subscribe alert button */
+"Subscribe" = "Iscriversi";
+/* [Subscriptions] Alert title for asking to enable push notificaiton from the system
+ [Subscriptions] Alert title when failing to subscribe to soccer notification */
+"Could not subscribe to {1}." = "Iscrizione a {1} non riuscita.";
+/* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
+"Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Attiva le notifiche push per questa funzione. Vai su Impostazioni per farlo e poi riprova.";
+/* [Subscriptions] Alert message when failing to subscribe to soccer notification */
+"Sorry, we encountered some technical difficulties. Please try again" = "Spiacenti, si è verificato un problema. Riprova";
+/* [Subscriptions] Subscribing HUD */
+"Subscribing to {1}." = "Iscrizione a {1} in corso.";

@@ -36,7 +36,16 @@ class ShareExtensionHelper: NSObject {
         if let title = selectedTab?.title {
             activityItems.append(TitleActivityItemProvider(title: title))
         }
-        activityItems.append(self)
+        
+        if #available(iOS 11, *) {
+            if let displayURL = selectedTab?.displayURL {
+                activityItems.append(displayURL as AnyObject)
+            } else {
+                activityItems.append(selectedURL as AnyObject)
+            }
+        } else {
+            activityItems.append(self)
+        }
 
         // Cliqz: Added footer to shared urls
         let footer = NSLocalizedString("Shared with CLIQZ for iOS", tableName: "Cliqz", comment: "Share footer")

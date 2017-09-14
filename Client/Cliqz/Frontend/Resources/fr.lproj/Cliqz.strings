@@ -143,13 +143,10 @@
 "Retrieving video information" = "Récupérer les informations de la vidéo";
 /* Title to expand news stream */
 "MoreNews" = "En afficher plus";
-
 /* Title to shrink news stream */
 "LessNews" = "En afficher moins";
-
 /* Title of news stream */
 "News" = "NEWS";
-
 /* Action sheet item for closing all opened tabs */
 "Close All Tabs" = "Fermer tous les onglets";
 /* Title on Freshtab for forget mode */
@@ -254,6 +251,10 @@
 "Restore Most Visited Websites" = "Restaurer les sites les plus visités";
 /* [Settings] Text of the 'Restore Most Visited Websites' alert */
 "All most visited websites will be shown again on the startpage." = "Tous les sites les plus visités seront affichés sur la page d'accueil.";
+/* [Settings] Reset all subscriptions */
+"Reset all subscriptions" = "Annuler tous les abonnements";
+/* [Settings] Text of the 'Reset all subscriptions' alert */
+"Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Voulez-vous annuler tous les abonnements (ex. pour les matchs de la Ligue 1) ?";
 /* [Settings] Help section header */
 "Help" = "Aide";
 /* [Settings] FAQs & Support */
@@ -309,7 +310,7 @@
 /* [Connect] Connection Failed alert title */
 "Connection Failed" = "La connexion a échouée";
 /* [Connect] Connection Failed alert message */
-"Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.\n";
+"Sorry but devices could not be connected. Please try again." = "Désolé, mais la connexion a échouée. Veuillez essayer à nouveau.";
 /* [Connect] Retry button for Connection Failed alert */
 "Retry" = "Veuillez réessayer";
 /* [Settings -> Connect] remove connection */
@@ -330,3 +331,25 @@
 "Video Downloader" = "Téléchargeur des vidéos";
 /* Video Downloader hint description */
 "Download YouTube videos to your Smartphone." = "Téléchargez les vidéos YouTube vers votre smartphone.";
+/** Subscriptions **/
+/* [Subscriptions] Alert title for asking to subscribe for soccer notificaiton */
+"Would you like to subscribe to the {1}?" = "{1} : voulez-vous vous abonner ?";
+/* [Subscriptions] Alert message for asking to subscribe for soccer notificaiton */
+"You will be notified about games, goals and important happenings of the {1}." = "{1}: vous recevirez des alertes sur les matchs, les buts et les info importantes.";
+/* [Subscriptions] soccer notification */
+"league" = "Ligue";
+/* [Subscriptions] soccer notification */
+"team" = "Équipe";
+/* [Subscriptions] soccer notification */
+"game" = "Match";
+/* [Subscriptions] Subscribe alert button */
+"Subscribe" = "S'abonner";
+/* [Subscriptions] Alert title for asking to enable push notificaiton from the system
+ [Subscriptions] Alert title when failing to subscribe to soccer notification */
+"Could not subscribe to {1}." = "L'abonnement à {1} a échoué.";
+/* [Subscriptions] Alert message  for asking to enable push notificaiton from the system */
+"Activate push notification to use this feature. Go to settings to allow push notifications then retry." = "Il faut activer les notifications push pour utiliser cette fonction. Cliquez sur Préférences pour les activer, puis réessayez.";
+/* [Subscriptions] Alert message when failing to subscribe to soccer notification */
+"Sorry, we encountered some technical difficulties. Please try again" = "Désolé, il y a eu des problèmes techniques. Veuillez réessayer.";
+/* [Subscriptions] Subscribing HUD */
+"Subscribing to {1}." = "Abonnement en cours ...";

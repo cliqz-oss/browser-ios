@@ -13,7 +13,6 @@ import Crashlytics
 class AdblockingModule: NSObject {
 
     //MARK: Constants    
-    fileprivate let adBlockABTestPrefName = "cliqz-adb-abtest"
     fileprivate let adBlockPrefName = "cliqz-adb"
     
     
@@ -31,7 +30,6 @@ class AdblockingModule: NSObject {
     
     func setAdblockEnabled(_ value: Bool, timeout: Int = 0) {
         Engine.sharedInstance.setPref(self.adBlockPrefName, prefValue: value ? 1 : 0)
-        Engine.sharedInstance.setPref(self.adBlockABTestPrefName, prefValue: value ? true : false)
     }
     
     func isAdblockEnabled() -> Bool {
@@ -77,7 +75,7 @@ class AdblockingModule: NSObject {
 
     //MARK: - Private Helpers
     func getAdBlockingInfo(_ tabId: Int) -> [AnyHashable: Any]! {
-        let response = Engine.sharedInstance.getBridge().callAction("adblocker:getAdBlockInfo2", args: [tabId])
+        let response = Engine.sharedInstance.getBridge().callAction("adblocker:getAdBlockInfoForTab", args: [tabId])
         if let result = response["result"] {
             return result as? Dictionary
         } else {
