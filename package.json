@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/cliqz-oss/browser-ios#readme",
   "dependencies": {
-    "browser-core": "https://github.com/sammacbeth/browser-ios/releases/download/v8.0.4/browser-core-1.20.0.tgz",
+    "browser-core": "http://cdn2.cliqz.com/update/react-native_beta/1.21.0/latest.tgz",
     "buffer": "5.0.7",
     "https-browserify": "1.0.0",
     "path-browserify": "0.0.0",
