@@ -651,7 +651,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
                 })
             } else {
-                browserViewController.openURLInNewTab(URL(string: url))
+                browserViewController.initialURL = url
                 TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
             }
             
