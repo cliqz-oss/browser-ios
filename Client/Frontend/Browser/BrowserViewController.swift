@@ -1250,6 +1250,10 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
+        guard tab.displayURL != nil else {
+            return
+        }
+        
         if (urlBar.currentURL != tab.displayURL){
             urlBar.currentURL = tab.displayURL
         }
@@ -2932,6 +2936,10 @@ extension BrowserViewController: WKNavigationDelegate {
             // the currently loaded page can be turned into reading mode or if the page already is in reading mode. We
             // ignore the result because we are being called back asynchronous when the readermode status changes.
             webView.evaluateJavaScript("_firefox_ReaderMode.checkReadability()", completionHandler: nil)
+            
+            // Cliqz: update the url bar and home panel to fix the problem of opening url fron either notification of widget while the app is not running
+            updateURLBarDisplayURL(tab)
+            updateInContentHomePanel(tab.url as URL?)
         }
 
         if tab === tabManager.selectedTab {

@@ -14,10 +14,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
 		   let url = URL(string: urlString) {
-			self.navigateToURL(url)
-            if let tab = tabManager.selectedTab {
-                tab.url = url
-            }
+			self.openURLInNewTab(url)
 			self.initialURL = nil
 		}
 	}
