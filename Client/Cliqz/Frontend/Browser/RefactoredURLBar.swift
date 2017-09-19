@@ -82,8 +82,16 @@ class RefactoredURLBar: UIView {
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldTextChanged), for: UIControlEvents.editingChanged)
         
-        textField.placeholder = "Search"
-        domainLabel.text = "cliqz.com"
+        textField.placeholder = "  Search"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.keyboardType = .webSearch
+        textField.autocorrectionType = UITextAutocorrectionType.no
+        textField.autocapitalizationType = UITextAutocapitalizationType.none
+        textField.returnKeyType = UIReturnKeyType.go
+        textField.enablesReturnKeyAutomatically = true
+        textField.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
+        textField.accessibilityIdentifier = "address"
+        textField.accessibilityLabel = NSLocalizedString("Address and Search", comment: "Accessibility label for address and search field, both words (Address, Search) are therefore nouns.")
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
         textFieldBGView.addGestureRecognizer(tap)
@@ -99,6 +107,7 @@ class RefactoredURLBar: UIView {
         textFieldContainer.backgroundColor = UIColor.clear
         textField.backgroundColor = UIColor.white
         textFieldBGView.backgroundColor = UIColor.white
+        
         self.backgroundColor = .clear
     }
     
