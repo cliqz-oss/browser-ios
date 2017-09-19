@@ -15,6 +15,13 @@ final class HistoryNavigationViewController: UIViewController {
     var nc: UINavigationController = UINavigationController()
     
     weak var externalDelegate: ActionDelegate? = nil
+    
+    enum State {
+        case Domains
+        case Details
+    }
+    
+    var currentState: State = .Domains
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +44,13 @@ final class HistoryNavigationViewController: UIViewController {
         conversationalHistory.view.backgroundColor = UIColor.clear
         conversationalHistory.didPressCell = { (indexPath,image) in
             
-            let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
+            var data: [String: Any] = ["indexPath": indexPath]
             
-            UIView.animate(withDuration: 0.16, animations: {
-                self.conversationalHistory.view.alpha = 0.0
-                self.nc.pushViewController(conversationalHistoryDetails, animated: true)
-            })
+            if let img = image {
+                data["image"] = img
+            }
+            
+            StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed, context: .historyNavVC))
         }
     }
     
@@ -52,21 +60,41 @@ final class HistoryNavigationViewController: UIViewController {
         
         let baseUrl = headerAndTableDataSource.baseUrl()
         
-        let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: RecommendationsDataSource(baseUrl: baseUrl), headerViewDataSource: headerAndTableDataSource, didPressBack: {
-            self.showConversationalHistory()
+        let recommendationsDataSource = RecommendationsDataSource(baseUrl: baseUrl)
+        
+        let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: recommendationsDataSource, headerViewDataSource: headerAndTableDataSource, didPressBack: {
+            //self.showHistory()
+            StateManager.shared.handleAction(action: Action(data: nil, type: .detailBackPressed, context: .historyNavVC))
+            
         }) { (url) in
-            self.externalDelegate?.action(action: Action(data: ["url":url], type: .urlSelected, context: .historyNavVC))
+            StateManager.shared.handleAction(action: Action(data: ["url":url], type: .urlSelected, context: .historyNavVC))
         }
+        
+        recommendationsDataSource.delegate = conversationalHistoryDetails
         
         return conversationalHistoryDetails
     }
     
-    private func showConversationalHistory() {
+    func showHistory() {
+        
+        self.currentState = .Domains
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.conversationalHistory.view.alpha = 1.0
         }) { (completed) in
             self.nc.popToRootViewController(animated: true)
         }
+    }
+    
+    func showDetails(indexPath: IndexPath, image: UIImage?) {
+        self.currentState = .Details
+        
+        let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
+        
+        UIView.animate(withDuration: 0.16, animations: {
+            self.conversationalHistory.view.alpha = 0.0
+            self.nc.pushViewController(conversationalHistoryDetails, animated: true)
+        })
     }
     
     private func hideConversationalHistory() {

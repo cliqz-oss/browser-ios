@@ -13,14 +13,17 @@ import UIKit
 
 enum ActionType {
     //search
-    case searchTextChanged
-    case searchTextCleared
+//    case searchTextChanged
+//    case searchTextCleared
     case searchAutoSuggest
     case searchStopEditing
     //url
     case urlSelected
     case urlIsModified
-	case urlBarCancelEditing
+    case urlBackPressed
+    case urlClearPressed
+    case urlSearchPressed
+    case urlSearchTextChanged
     //toolbar
 	case homeButtonPressed
 	case tabsPressed
@@ -31,6 +34,12 @@ enum ActionType {
     case remindersPressed
     //tab
     case tabSelected
+    
+    //missing
+    //case didChangeOrientation
+    case detailBackPressed
+    case domainPressed
+    //case tabsDismissed
 }
 
 enum ActionContext {
@@ -48,7 +57,13 @@ enum ActionContext {
 struct Action {
     let data: [String: Any]?
     let type: ActionType
-    let context: ActionContext
+    let context: ActionContext?
+    
+    init(data: [String: Any]? = nil, type: ActionType, context: ActionContext? = nil) {
+        self.data = data
+        self.type = type
+        self.context = context
+    }
 }
 
 protocol ActionDelegate: class {
@@ -81,12 +96,12 @@ extension Router: ActionDelegate {
     
     func action(action: Action) {
         switch action.type {
-        case .searchTextChanged:
-            if let data = action.data as? [String: String], let text = data["text"] {
-                self.mainNavVC?.textInUrlBarChanged(text: text)
-            }
-        case .searchTextCleared:
-             self.contentNavVC?.textInUrlBarChanged(text: "")
+//        case .searchTextChanged:
+//            if let data = action.data as? [String: String], let text = data["text"] {
+//                self.mainNavVC?.textInUrlBarChanged(text: text)
+//            }
+//        case .searchTextCleared:
+//             self.contentNavVC?.textInUrlBarChanged(text: "")
         case .searchAutoSuggest:
             if let data = action.data as? [String: String], let text = data["text"] {
                 //Send this to main navigation. Main navigation is responsible for URL Bar.
@@ -96,8 +111,8 @@ extension Router: ActionDelegate {
             self.mainNavVC?.stopEditing()
 
 		case .homeButtonPressed:
-			self.mainNavVC?.homeButtonPressed()
-//            self.contentNavVC?.homePressed()
+//			self.mainNavVC?.homeButtonPressed()
+            self.contentNavVC?.homePressed()
 		case .urlSelected:
 			if let data = action.data as? [String: String], let url = data["url"] {
 				self.mainNavVC?.urlSelected(url: url)
@@ -111,8 +126,8 @@ extension Router: ActionDelegate {
 				url = u
 			}
             self.mainNavVC?.urlIsModified(url)
-		case .urlBarCancelEditing:
-			mainNavVC?.urlbCancelEditing()
+//		case .urlBarCancelEditing:
+//			mainNavVC?.urlbCancelEditing()
         case .tabsPressed:
             mainNavVC?.showTabOverView()
         case .sharePressed:
@@ -127,6 +142,12 @@ extension Router: ActionDelegate {
             if let data = action.data, let tab = data["tab"] as? Tab {
                 contentNavVC?.browseTab(tab: tab)
             }
+        case .detailBackPressed:
+            debugPrint()
+        case .domainPressed:
+            debugPrint()
+        default:
+            debugPrint()
         }
 	}
 }

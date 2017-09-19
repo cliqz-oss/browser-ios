@@ -70,8 +70,8 @@ struct CIURLBarUX {
 		theme.tintColor = ProgressTintColor
 		theme.buttonTintColor = UIColor.black
 
-		themes[Theme.NormalMode] = theme 
-
+		themes[Theme.NormalMode] = theme
+        
 		return themes
 	}()
 
@@ -363,6 +363,7 @@ extension CIURLBar {
 			self.bringSubview(toFront: self.locationContainer)
 			// TODO: move to applytheme
 			self.locationContainer.backgroundColor = UIColor.white
+            self.layoutIfNeeded()
 		})
 		return [transition]
 	}
@@ -384,6 +385,7 @@ extension CIURLBar {
 		}, beforeTransition: {
 			// TODO: move to applytheme
 			self.applyTheme(self.theme)
+            self.layoutIfNeeded()
 		})
 		return [transition]
 	}
@@ -409,6 +411,7 @@ extension CIURLBar {
 			self.locationTextField?.enforceResignFirstResponder()
 			self.locationTextField?.removeFromSuperview()
 			self.locationTextField = nil
+            self.layoutIfNeeded()
 		})
 		return [transition]
 	}
@@ -448,6 +451,7 @@ extension CIURLBar {
 			self.shareButton.isHidden = !self.toolbarIsShowing
 			self.newTabButton.isHidden = !self.toolbarIsShowing
 			self.tabsButton.isHidden = !self.toolbarIsShowing
+            self.layoutIfNeeded()
 		})
 		return [transition]
 	}
@@ -498,6 +502,7 @@ extension CIURLBar: TabLocationViewDelegate {
 
 	func tabLocationViewDidTapLocation(_ tabLocationView: TabLocationView) {
 		let locationText = locationView.query != nil ? locationView.query! : self.dataSource?.urlBarDisplayTextForURL(locationView.url as URL?)
+        //bad
 		self.startEditing(locationText)
 	}
 	

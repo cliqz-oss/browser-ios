@@ -1,4 +1,4 @@
-//
+ //
 //  CIBrowserViewController.swift
 //  Client
 //
@@ -243,7 +243,7 @@ extension CIBrowserViewController {
 	fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
 		// TODO: update URLbar and Status bar
 
-		Router.shared.action(action: Action(data: ["url": tab.displayURL], type: .urlIsModified, context: .urlBarVC))
+		StateManager.shared.handleAction(action: Action(data: ["url": tab.displayURL?.absoluteString ?? ""], type: .urlIsModified, context: .urlBarVC))
 
 //		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
 		// Cliqz: update the toolbar only if the search controller is not visible

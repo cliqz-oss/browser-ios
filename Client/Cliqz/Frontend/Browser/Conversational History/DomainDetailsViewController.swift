@@ -28,7 +28,7 @@ final class DomainDetailsViewController: UIViewController {
     //scroll
     var finger_on_screen: Bool = true
     var prev_offset: CGFloat = 0.0
-    var animating: Bool = false
+    //var animating: Bool = false
     
     enum ScrollDirection {
         case up
@@ -76,8 +76,6 @@ final class DomainDetailsViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
         
         setConstraints()
-        
-        animating = false
     }
     
     private func componentSetUp() {
@@ -90,7 +88,7 @@ final class DomainDetailsViewController: UIViewController {
         self.view.backgroundColor = UIColor.clear
     }
     
-    private func setConstraints() {
+    fileprivate func setConstraints() {
         
         self.headerView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self.view)
@@ -120,7 +118,7 @@ final class DomainDetailsViewController: UIViewController {
 extension DomainDetailsViewController: RecommendationsCollectionDelegate {
     func itemPressed(indexPath: IndexPath) {
         let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
-        Router.shared.action(action: Action(data: ["url": url], type: .urlSelected, context: .historyDetails))
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected, context: .historyDetails))
     }
     
     func deletePressed(indexPath: IndexPath) {
@@ -164,6 +162,16 @@ extension DomainDetailsViewController: CustomScrollDelegate {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         finger_on_screen = false
+    }
+}
+
+extension DomainDetailsViewController: HasDataSource {
+    func dataSourceWasUpdated(identifier: String) {
+        UIView.animate(withDuration: 0.2) {
+            self.recommendationsCollection.reloadData()
+            self.setConstraints()
+            self.view.layoutIfNeeded()
+        }
     }
 }
 

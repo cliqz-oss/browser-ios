@@ -10,11 +10,24 @@ import WebImage
 
 class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
+    static let identifier = "RecommendationsDataSource"
+    
     var baseUrl: String
     var recommendations: [Recommendation]
     
+    weak var delegate: HasDataSource? = nil
+    
     init(baseUrl: String) {
         self.baseUrl = baseUrl
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), type: .withHistoryDomains)
+        NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func loadRecommendations() {
         self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), type: .withHistoryDomains)
     }
     
@@ -84,5 +97,10 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     func isIndexPathValid(indexPath: IndexPath) -> Bool {
         return indexPath.row >= 0 && indexPath.row < recommendations.count
+    }
+    
+    @objc func recommendationsUpdated(_ notification: Notification) {
+        loadRecommendations()
+        delegate?.dataSourceWasUpdated(identifier: RecommendationsDataSource.identifier)
     }
 }

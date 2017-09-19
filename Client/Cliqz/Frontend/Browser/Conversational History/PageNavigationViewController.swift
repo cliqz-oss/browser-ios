@@ -17,6 +17,12 @@ class PageNavigationViewController: UIViewController {
     let historyNavigation: HistoryNavigationViewController
     let dashboardVC: DashViewController
     
+    enum State {
+        case History
+        case DashBoard
+    }
+    
+    var currentState: State = .History
     
     //styling
     let pageControlHeight: CGFloat = 24.0
@@ -76,17 +82,53 @@ class PageNavigationViewController: UIViewController {
         
         historyNavigation.nc.popToRootViewController(animated: false)
         historyNavigation.conversationalHistory.view.alpha = 1.0
+        
+        currentState = .History
+    }
+    
+    func showDashBoard() {
+        if pageControl.currentPage == 0 {
+            pageControl.changePage(page: 1)
+            surfViewController.showNext()
+            currentState = .DashBoard
+        }
+    }
+    
+    func showDomains() {
+        if pageControl.currentPage == 1 {
+            pageControl.changePage(page: 0)
+            surfViewController.showPrev()
+            currentState = .History
+        }
     }
     
     func navigate() {
         if pageControl.currentPage == 0 {
             pageControl.changePage(page: 1)
             surfViewController.showNext()
+            currentState = .DashBoard
         }
         else {
             pageControl.changePage(page: 0)
             surfViewController.showPrev()
+            currentState = .History
         }
+    }
+    
+    func showDots() {
+        pageControl.alpha = 1.0
+        pageControl.snp.updateConstraints { (make) in
+            make.height.equalTo(pageControlHeight)
+        }
+        self.view.layoutIfNeeded()
+    }
+    
+    func hideDots() {
+        pageControl.alpha = 0.0
+        pageControl.snp.updateConstraints { (make) in
+            make.height.equalTo(0)
+        }
+        self.view.layoutIfNeeded()
     }
 
     override func didReceiveMemoryWarning() {

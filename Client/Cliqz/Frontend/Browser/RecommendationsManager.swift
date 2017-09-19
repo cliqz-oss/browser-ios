@@ -127,9 +127,13 @@ final class RecommendationsManager {
                 baseUrl = domain.host ?? ""
             }
             
-            return local_recommendations.filter({ (recommendation) -> Bool in
+            let domain_recommendations =  local_recommendations.filter({ (recommendation) -> Bool in
                 return baseUrl == recommendation.host
             })
+            
+            let filtered_recommendations = filterOutIgnoredRecommendations(recommendations: domain_recommendations)
+            
+            return filtered_recommendations
             
         }
         

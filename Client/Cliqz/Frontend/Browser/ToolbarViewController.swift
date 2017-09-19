@@ -124,7 +124,8 @@ extension ToolbarViewController: CIToolBarDelegate {
     }
 	
     func middlePressed() {
-        Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
+        //Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
+        StateManager.shared.handleAction(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
     }
     
     func sharePressed() {

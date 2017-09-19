@@ -59,11 +59,15 @@ class MainContainerViewController: UIViewController {
         contentNavVC.stateDelegate = self
 
         URLBarVC.search_loader = searchLoader
-        URLBarVC.externalDelegate = Router.shared
 
         Router.shared.registerController(viewController: contentNavVC)
         Router.shared.registerController(viewController: self)
 		Router.shared.registerController(viewController: URLBarVC)
+        
+        StateManager.shared.mainCont = self
+        StateManager.shared.contentNav = contentNavVC
+        StateManager.shared.urlBar = URLBarVC
+        StateManager.shared.toolBar = toolbarVC
 		
         prepareModules()
     }
@@ -193,11 +197,11 @@ extension MainContainerViewController {
     //TO DO: Centralized decision place
 
     func autoSuggestURLBar(autoSuggestText: String) {
-        URLBarVC.setAutocompleteSuggestion(autoSuggestText)
+        //URLBarVC.setAutocompleteSuggestion(autoSuggestText)
     }
 
     func stopEditing() {
-        URLBarVC.stopEditing()
+        //URLBarVC.stopEditing()
     }
 
 }
@@ -255,31 +259,13 @@ extension MainContainerViewController {
             StateAnimator.animate(animators: animators)
         })
     }
-}
-
-extension MainContainerViewController: TabsViewControllerDelegate {
-
-
-    func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath) {
-        if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
-            dismissTabOverview(tabsVC: tabsVC, completion: {
-				let tab = self.tabManager.tabs[indexPath.row]
-				self.switchTab(tab)
-//                Router.shared.action(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
-            })
-        }
-    }
-
-    func donePressed(tabsVC: TabsViewController?) {
-        dismissTabOverview(tabsVC: tabsVC, completion: nil)
-    }
-
+    
     func dismissTabOverview(tabsVC: TabsViewController?, completion: (() -> ())?) {
-
+        
         guard let vc = tabsVC else {
             return
         }
-
+        
         let transition = Transition(endState: {
             vc.view.snp.remakeConstraints({ (make) in
                 make.height.equalToSuperview()
@@ -304,6 +290,24 @@ extension MainContainerViewController: TabsViewControllerDelegate {
     }
 }
 
+extension MainContainerViewController: TabsViewControllerDelegate {
+
+    func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath) {
+        if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
+            dismissTabOverview(tabsVC: tabsVC, completion: {
+				let tab = self.tabManager.tabs[indexPath.row]
+				self.switchTab(tab)
+                StateManager.shared.handleAction(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+            })
+        }
+    }
+
+    func donePressed(tabsVC: TabsViewController?) {
+        //pass this through the State Manager -- after
+        dismissTabOverview(tabsVC: tabsVC, completion: nil)
+    }
+}
+
 extension MainContainerViewController {
 
 	fileprivate func switchTab(_ tab: Tab) {
@@ -322,11 +326,11 @@ extension MainContainerViewController {
 			toolbarState = .browsing
 		case .home:
 			state = .pageNavigation
-			self.URLBarVC.updateURL(nil)
+			//self.URLBarVC.updateURL(nil)
 		case .search(let a):
 			state = .search
 			data = a
-			self.URLBarVC.startEditing(initialText: data, pasted: false)
+			//self.URLBarVC.startEditing(initialText: data, pasted: false)
 		}
 		self.toolbarVC.changeState(state: toolbarState)
 		if let tab = self.tabManager.selectedTab {
@@ -354,17 +358,19 @@ extension MainContainerViewController {
 	}
 
 	func urlSelected(url: String) {
-		switchContentAndTabState(.browser, stateData: url)
-		self.toolbarVC.changeState(state: .browsing)
-		if let tab = self.tabManager.selectedTab {
-			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
-			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
-		}
+//		switchContentAndTabState(.browser, stateData: url)
+//		self.toolbarVC.changeState(state: .browsing)
+//		if let tab = self.tabManager.selectedTab {
+//			self.toolbarVC.setIsBackEnabled(tab.canGoBack)
+//			self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
+//		}
+        
+        StateManager.shared.handleAction(action: Action(data: ["url":url], type: .urlSelected))
 	}
 
 	func urlIsModified(_ url: URL?) {
 		if self.contentNavVC.currentState == .browser {
-			self.URLBarVC.updateURL(url)
+			//self.URLBarVC.updateURL(url)
 			if let tab = self.tabManager.selectedTab {
 				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
 				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)
@@ -386,7 +392,7 @@ extension MainContainerViewController {
 		if self.contentNavVC.currentState != .pageNavigation {
 			switchContentAndTabState(.pageNavigation)
 			self.toolbarVC.changeState(state: .notBrowsing)
-			self.URLBarVC.updateURL(nil)
+			//self.URLBarVC.updateURL(nil)
 			if let tab = self.tabManager.selectedTab {
 				self.toolbarVC.setIsBackEnabled(tab.canGoBack)
 				self.toolbarVC.setIsForwardEnabled(tab.canGoForward)

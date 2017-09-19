@@ -195,8 +195,6 @@ extension ContentNavigationViewController {
             }
         })
         
-        
-        
         stateDelegate?.stateChanged(component: "ContentNav")
     }
     
@@ -226,6 +224,17 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
     //This will be refactored. States will be introduced and as well as a central place for the diplay logic.
     
+    func browse(url: String?, tab: Tab?) {
+
+        if let url = url {
+            browseURL(url: url)
+        }
+        else if let tab = tab {
+            browseTab(tab: tab)
+        }
+        
+    }
+    
     func browseURL(url: String?) {
 		changeState(state: .browser, text: url)
     }
@@ -234,7 +243,36 @@ extension ContentNavigationViewController {
         tabManager.selectTab(tab)
         changeState(state: .browser)
     }
-
+    
+    func search(query: String?) {
+        changeState(state: .search, text: query)
+        searchController.searchQuery = query ?? ""
+    }
+    
+    func domains(currentState: ContentState) {
+        pageNavVC.showDots()
+        changeState(state: .pageNavigation)
+        if currentState == .dash {
+            pageNavVC.showDomains()
+        }
+        else if currentState == .details {
+            pageNavVC.historyNavigation.showHistory()
+        }
+    }
+    
+    func details(indexPath: IndexPath?, image: UIImage?) {
+        pageNavVC.hideDots()
+        if let indexPath = indexPath {
+            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, image: image)
+        }
+    }
+    
+    func dash() {
+        changeState(state: .pageNavigation)
+        pageNavVC.showDots()
+        pageNavVC.showDashBoard()
+    }
+    
     func textInUrlBarChanged(text: String) {
 
         searchController.searchQuery = text
@@ -247,8 +285,6 @@ extension ContentNavigationViewController {
         else {
             changeState(state: .pageNavigation)
         }
-        
-
     }
     
     func textIUrlBarCleared() {
@@ -264,7 +300,17 @@ extension ContentNavigationViewController {
             changeState(state: .pageNavigation)
         }
         else if currentState == .pageNavigation {
-            pageNavVC.navigate()
+            if pageNavVC.currentState == .History {
+                if pageNavVC.historyNavigation.currentState == .Domains {
+                    pageNavVC.navigate()
+                }
+                else if pageNavVC.historyNavigation.currentState == .Details {
+                    pageNavVC.historyNavigation.showHistory()
+                }
+            }
+            else if pageNavVC.currentState == .DashBoard {
+                pageNavVC.navigate()
+            }
         }
         else if currentState == .search {
             changeState(state: .pageNavigation)
@@ -307,7 +353,7 @@ extension ContentNavigationViewController {
 				validURL = self.profile.searchEngines.defaultEngine.searchURLForQuery(u)
 			}
 			self.browserVC.loadURL(validURL)
-			Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
+			//Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
 		}
     }
     
@@ -364,7 +410,7 @@ extension ContentNavigationViewController: SearchViewDelegate {
     //TO DO: Route these
     
     func didSelectURL(_ url: URL, searchQuery: String?) {
-        
+        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlSelected, context: .contentNavVC))
     }
     
     func searchForQuery(_ query: String) {
@@ -376,7 +422,7 @@ extension ContentNavigationViewController: SearchViewDelegate {
     }
     
     func stopEditing() {
-        Router.shared.action(action: Action(data: nil, type: .searchStopEditing, context: .contentNavVC))
+        StateManager.shared.handleAction(action: Action(data: nil, type: .searchStopEditing, context: .contentNavVC))
     }
 }
 

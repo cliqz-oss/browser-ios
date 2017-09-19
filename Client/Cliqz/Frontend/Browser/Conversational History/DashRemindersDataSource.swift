@@ -53,7 +53,7 @@ class DashRemindersDataSource: ExpandableViewProtocol {
 	}
 
     func cellPressed(indexPath: IndexPath) {
-        Router.shared.action(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected, context: .dashRemindersDS))
+        StateManager.shared.handleAction(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected, context: .dashRemindersDS))
     }
     
     @objc

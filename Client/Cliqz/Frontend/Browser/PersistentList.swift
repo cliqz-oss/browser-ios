@@ -30,6 +30,11 @@ class PersistentList<A: Equatable> {
     }
     
     func add(element: A) {
+        
+        guard !contains(element: element) else {
+            return
+        }
+        
         list.append(element)
         dateList.append(Date())
     }

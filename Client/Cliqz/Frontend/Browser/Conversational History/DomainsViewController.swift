@@ -136,19 +136,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 
 extension DomainsViewController: HistoryActionDelegate {
 	func didSelectLogo(atIndex index: Int) {
-        if index == 0{
-            //pressed on the cliqz news logo
-        }
-        else{
-            
-            //Use the Router API Instead 
-            
-//            let indexPath = IndexPath(row: index, section: 0)
-//            let url = dataSource.baseUrl(indexPath: indexPath)
-//            if let url = URL(string: url){
-//                self.delegate?.navigateToURL(url)
-//            }
-        }
+
 	}
 }
 

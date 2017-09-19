@@ -12,17 +12,17 @@ final class URLBarViewController: UIViewController {
 	
     var URLBarHeight: CGFloat = 64.0
     
-	private var URLBar: CIURLBar = CIURLBar()
+	fileprivate var URLBar: RefactoredURLBar = RefactoredURLBar()
 
     weak var search_loader: SearchLoader? = nil
     
-    weak var externalDelegate: ActionDelegate? = nil
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        URLBar.actionDelegate = self
-        URLBar.stateDelegate = self
-        URLBar.dataSource = self
+        //URLBar.actionDelegate = self
+        //URLBar.stateDelegate = self
+        //URLBar.dataSource = self
+        
+        URLBar.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -38,14 +38,13 @@ final class URLBarViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.URLBar.applyTheme(Theme.NormalMode)
+		//self.URLBar.applyTheme(Theme.TransparentMode)
 	}
 
     func setConstraints() {
 
 		self.URLBar.snp.makeConstraints { (make) in
-			make.left.right.bottom.equalTo(self.view)
-			make.top.equalTo(self.view)
+			make.left.top.right.bottom.equalTo(self.view)
 		}
     }
 
@@ -58,23 +57,125 @@ final class URLBarViewController: UIViewController {
 //        NotificationCenter.default.removeObserver(self)
     }
     
-    func setAutocompleteSuggestion(_ suggestion: String?) {
-        URLBar.setAutocompleteSuggestion(suggestion)
+//    func setAutocompleteSuggestion(_ suggestion: String?) {
+//        URLBar.setAutocompleteSuggestion(suggestion)
+//    }
+//
+//	func updateURL(_ url: URL?) {
+//		self.URLBar.endEditing()
+//		self.URLBar.currentURL = url
+//		self.URLBar.applyTheme(self.URLBar.theme)
+//	}
+//	
+//	func startEditing(initialText: String?, pasted: Bool) {
+//		self.URLBar.startEditing(initialText, pasted: pasted)
+//	}
+//
+//	func stopEditing() {
+//		self.URLBar.stopEditing()
+//	}
+    
+    //Actions I want - these 4 completely describe what can happen in the URLBar
+    //URLBackPressed
+    //URLClearPressed
+    //URLSearchPressed
+    //URLSearchTextChanged
+    
+    func collapsedEmptyTransparent() {
+        URLBar.backgroundColor = UIColor.clear
+        URLBar.changeState(state: .collapsedSearch)
+        URLBar.textField.text = nil
+        URLBar.textField.resignFirstResponder()
+    }
+    
+    func collapsedTextTransparent(text: String?) {
+        URLBar.backgroundColor = UIColor.clear
+        URLBar.changeState(state: .collapsedSearch)
+        URLBar.textField.text = text
+        URLBar.textField.resignFirstResponder()
+    }
+    
+    func collapsedQueryBlue(text: String?) {
+        URLBar.backgroundColor = UIConstants.CliqzThemeColor
+        URLBar.changeState(state: .collapsedSearch)
+        URLBar.textField.text = text
+        URLBar.textField.resignFirstResponder()
+    }
+    
+    func collapsedDomainBlue(urlStr: String?) {
+        URLBar.backgroundColor = UIConstants.CliqzThemeColor
+        URLBar.changeState(state: .collapsedBrowse)
+        URLBar.domainLabel.text = processUrl(urlStr: urlStr)
+        URLBar.textField.resignFirstResponder()
     }
 
-	func updateURL(_ url: URL?) {
-		self.URLBar.endEditing()
-		self.URLBar.currentURL = url
-		self.URLBar.applyTheme(self.URLBar.theme)
-	}
-	
-	func startEditing(initialText: String?, pasted: Bool) {
-		self.URLBar.startEditing(initialText, pasted: pasted)
-	}
+    func expandedEmptyWhite() {
+        URLBar.changeState(state: .expandedEmpty)
+        URLBar.textField.text = nil
+        search_loader?.query = ""
+    }
 
-	func stopEditing() {
-		self.URLBar.stopEditing()
-	}
+    func expandedTextWhite(text: String?) {
+        URLBar.changeState(state: .expandedText)
+        URLBar.textField.text = text
+        if let t = text {
+            search_loader?.query = t
+        }
+    }
+    
+    func processUrl(urlStr:String?) -> String? {
+        guard let urlStr = urlStr else {
+            return nil
+        }
+        
+        guard let url = URL(string: urlStr) else {
+            return "Invalid URL"
+        }
+        
+        if let host = url.host {
+            return host
+        }
+        
+        return url.absoluteString
+        
+    }
+}
+
+//TO DO: Fill in the actions here.
+extension URLBarViewController: RefactoredURLProtocol {
+    func urlBackPressed() {
+        StateManager.shared.handleAction(action: Action(type: .urlBackPressed))
+    }
+    
+    func urlClearPressed() {
+        StateManager.shared.handleAction(action: Action(type: .urlClearPressed))
+    }
+    
+    func urlSearchPressed() {
+        StateManager.shared.handleAction(action: Action(type: .urlSearchPressed))
+    }
+    
+    func urlSearchTextChanged() {
+        
+        var data: [String: Any]? = nil
+        
+        if let t = URLBar.textField.text {
+            data = ["text": t]
+        }
+        
+        StateManager.shared.handleAction(action: Action(data: data, type: .urlSearchTextChanged))
+    }
+    
+    func urlReturnPressed() {
+        
+        var data: [String: Any]? = nil
+        
+        if let t = URLBar.textField.text {
+            data = ["url": t]
+        }
+        
+        StateManager.shared.handleAction(action: Action(data: data, type: .urlSelected))
+    }
 }
 
 extension URLBarViewController: CIURLBarActionDelegate {
@@ -123,22 +224,23 @@ extension URLBarViewController: CIURLBarStateDelegate {
     }
 
 	func urlBarDidCancelEditing(_ urlBar: CIURLBar) {
-		externalDelegate?.action(action: Action(data: nil, type: .urlBarCancelEditing, context: .urlBarVC))
+		//externalDelegate?.action(action: Action(data: nil, type: .urlBarCancelEditing, context: .urlBarVC))
 	}
 
     func urlBar(_ urlBar: CIURLBar, didEnterText text: String) {
         search_loader?.query = text
-        externalDelegate?.action(action: Action(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
+        //externalDelegate?.action(action: Action(data: ["text": text], type: .searchTextChanged, context: .urlBarVC))
     }
 
     func urlBar(_ urlBar: CIURLBar, didSubmitText text: String) {
-        externalDelegate?.action(action: Action(data: ["url": text], type: .urlSelected, context: .urlBarVC))
+        //externalDelegate?.action(action: Action(data: ["url": text], type: .urlSelected, context: .urlBarVC))
+        //bad
 		urlBar.endEditing()
     }
 
     func urlBarDidClearSearchField(_ urlBar: CIURLBar, oldText: String?) {
         search_loader?.query = ""
-        externalDelegate?.action(action: Action(data: nil, type: .searchTextCleared, context: .urlBarVC))
+        //externalDelegate?.action(action: Action(data: nil, type: .searchTextCleared, context: .urlBarVC))
     }
 }
 
