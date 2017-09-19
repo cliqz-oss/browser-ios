@@ -71,25 +71,6 @@ enum ToolBarShareState {
     case prevState
 }
 
-//struct ContentStateAndData: Equatable {
-//    let state: ContentState
-//    let data : [String: Any]?
-//    
-//    static func == (lhs: ContentStateAndData, rhs: ContentStateAndData) -> Bool {
-//        return lhs.state == rhs.state
-//    }
-//}
-
-//struct URLBarStateAndData {
-//    let state: URLBarState
-//    let data : [String: Any]?
-//    
-//    static func == (lhs: URLBarStateAndData, rhs: URLBarStateAndData) -> Bool {
-//        return lhs.state == rhs.state
-//    }
-//}
-
-
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
 struct StateData {
     let query: String?
@@ -192,6 +173,8 @@ final class StateManager {
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
         //TO DO: Call the toolbar change to state
         //---
+        toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState)
+        toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState)
         
         //there is not point in changing the previous state if the currentstate does not change. 
         
@@ -250,7 +233,8 @@ final class StateManager {
         case .domains:
             contentNav?.domains(currentState: currentState)
         case .details:
-            contentNav?.details(indexPath: nextStateData.indexPath, image: nextStateData.image)
+            let animated: Bool = currentState == .domains
+            contentNav?.details(indexPath: nextStateData.indexPath, image: nextStateData.image, animated: animated)
         case .dash:
             contentNav?.dash()
         case .prevState:
@@ -278,7 +262,7 @@ final class StateManager {
         }
     }
     
-    func toolBarChangeToState(currentState: ToolBarState, nextState: ToolBarState, data: [String: Any]?) {
+    func toolBarChangeToState(currentState: ToolBarState, nextState: ToolBarState) {
         
         guard currentState != nextState else {
             return
@@ -294,39 +278,39 @@ final class StateManager {
         }
     }
     
-    func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState, data: [String: Any]?) {
+    func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState) {
         
-        guard currentState != nextState else {
-            return
-        }
+//        guard currentState != nextState else {
+//            return
+//        }
         
         switch nextState {
         case .enabled:
-            debugPrint()
+            toolBar?.setBackEnabled()
         case .disabled:
-            debugPrint()
+            toolBar?.setBackDisabled()
         case .prevState:
             raisePrevStateException()
         }
     }
     
-    func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState, data: [String: Any]?) {
+    func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState) {
         
-        guard currentState != nextState else {
-            return
-        }
+//        guard currentState != nextState else {
+//            return
+//        }
         
         switch nextState {
         case .enabled:
-            debugPrint()
+            toolBar?.setForwardEnabled()
         case .disabled:
-            debugPrint()
+            toolBar?.setForwardDisabled()
         case .prevState:
             raisePrevStateException()
         }
     }
     
-    func toolShareChangeToState(currentState: ToolBarShareState, nextState: ToolBarShareState, data: [String: Any]?) {
+    func toolShareChangeToState(currentState: ToolBarShareState, nextState: ToolBarShareState) {
         
         guard currentState != nextState else {
             return

@@ -86,15 +86,21 @@ final class HistoryNavigationViewController: UIViewController {
         }
     }
     
-    func showDetails(indexPath: IndexPath, image: UIImage?) {
+    func showDetails(indexPath: IndexPath, image: UIImage?, animated: Bool) {
         self.currentState = .Details
         
         let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
         
-        UIView.animate(withDuration: 0.16, animations: {
+        if animated {
+            UIView.animate(withDuration: 0.16, animations: {
+                self.conversationalHistory.view.alpha = 0.0
+                self.nc.pushViewController(conversationalHistoryDetails, animated: true)
+            })
+        }
+        else {
             self.conversationalHistory.view.alpha = 0.0
-            self.nc.pushViewController(conversationalHistoryDetails, animated: true)
-        })
+            self.nc.pushViewController(conversationalHistoryDetails, animated: false)
+        }
     }
     
     private func hideConversationalHistory() {

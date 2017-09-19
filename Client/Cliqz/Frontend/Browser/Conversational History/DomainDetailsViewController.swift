@@ -134,7 +134,8 @@ extension DomainDetailsViewController: BubbleTableViewDelegate {
 
 extension DomainDetailsViewController: DomainDetailsHeaderViewDelegate {
     func headerLogoPressed() {
-        
+        let url = self.headerView.dataSource.baseUrl()
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
     }
     
     func headerGoBackPressed() {

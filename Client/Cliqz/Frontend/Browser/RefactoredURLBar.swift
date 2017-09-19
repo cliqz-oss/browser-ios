@@ -246,7 +246,7 @@ extension RefactoredURLBar {
                 make.height.equalTo(self.textFieldCollapsedHeight)
             })
             
-        } ,animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
+        } ,animationDetails:AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -296,17 +296,29 @@ extension RefactoredURLBar {
                 make.top.right.bottom.left.equalTo(self.textField)
             })
             
-        }, animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
+        }, animationDetails:AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
     
     func textFieldBGViewCollapsedBrowse() -> [Transition] {
-        return textFieldBGViewCollapsedSearch()
+        let transition = Transition(endState: {
+            
+            self.textFieldBGView.layer.cornerRadius = self.textFieldCornerRadius
+            
+            self.textFieldBGView.snp.remakeConstraints({ (make) in
+                make.top.right.bottom.left.equalTo(self.textField)
+            })
+            
+        }, animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
+        
+        return [transition]
     }
 
     func domainLabelVisible() -> [Transition] {
         let transition = Transition(endState: {
+            
+            self.domainLabel.isHidden = false
             
             self.domainLabel.alpha = 1.0
             
@@ -322,12 +334,14 @@ extension RefactoredURLBar {
     func domainLabelInvisible() -> [Transition] {
         let transition = Transition(endState: {
             
+            self.domainLabel.isHidden = true
+            
             self.domainLabel.alpha = 0.0
             
             self.domainLabel.snp.remakeConstraints({ (make) in
                 make.center.equalToSuperview()
             })
-        }, animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
+        }, animationDetails:AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }

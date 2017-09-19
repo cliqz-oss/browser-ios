@@ -108,7 +108,7 @@ extension ContentNavigationViewController {
             if let c = completion {
                 c()
             }
-        }, animationDetails: AnimationDetails(duration: 0.2, curve: .easeIn, delayFactor: 0.0))
+        }, animationDetails: AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -136,7 +136,7 @@ extension ContentNavigationViewController {
             if let c = completion {
                 c()
             }
-        }, animationDetails: AnimationDetails(duration: 0.10, curve: .easeIn, delayFactor: 0.0))
+        }, animationDetails: AnimationDetails(duration: 0.10, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -226,11 +226,11 @@ extension ContentNavigationViewController {
     
     func browse(url: String?, tab: Tab?) {
 
-        if let url = url {
-            browseURL(url: url)
-        }
-        else if let tab = tab {
+        if let tab = tab {
             browseTab(tab: tab)
+        }
+        else if let url = url {
+            browseURL(url: url)
         }
         
     }
@@ -260,10 +260,11 @@ extension ContentNavigationViewController {
         }
     }
     
-    func details(indexPath: IndexPath?, image: UIImage?) {
+    func details(indexPath: IndexPath?, image: UIImage?, animated: Bool) {
         pageNavVC.hideDots()
+        changeState(state: .pageNavigation)
         if let indexPath = indexPath {
-            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, image: image)
+            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, image: image, animated: animated)
         }
     }
     
@@ -271,50 +272,6 @@ extension ContentNavigationViewController {
         changeState(state: .pageNavigation)
         pageNavVC.showDots()
         pageNavVC.showDashBoard()
-    }
-    
-    func textInUrlBarChanged(text: String) {
-
-        searchController.searchQuery = text
-        
-        if text != "" {
-            if currentState != .search {
-                changeState(state: .search)
-            }
-        }
-        else {
-            changeState(state: .pageNavigation)
-        }
-    }
-    
-    func textIUrlBarCleared() {
-        textInUrlBarChanged(text: "")
-    }
-    
-    func backPressedUrlBar() {
-        //
-    }
-    
-    func homePressed() {
-        if currentState == .browser {
-            changeState(state: .pageNavigation)
-        }
-        else if currentState == .pageNavigation {
-            if pageNavVC.currentState == .History {
-                if pageNavVC.historyNavigation.currentState == .Domains {
-                    pageNavVC.navigate()
-                }
-                else if pageNavVC.historyNavigation.currentState == .Details {
-                    pageNavVC.historyNavigation.showHistory()
-                }
-            }
-            else if pageNavVC.currentState == .DashBoard {
-                pageNavVC.navigate()
-            }
-        }
-        else if currentState == .search {
-            changeState(state: .pageNavigation)
-        }
     }
 }
 

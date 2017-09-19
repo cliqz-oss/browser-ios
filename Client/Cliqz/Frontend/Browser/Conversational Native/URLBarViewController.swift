@@ -57,9 +57,10 @@ final class URLBarViewController: UIViewController {
 //        NotificationCenter.default.removeObserver(self)
     }
     
-//    func setAutocompleteSuggestion(_ suggestion: String?) {
-//        URLBar.setAutocompleteSuggestion(suggestion)
-//    }
+    func setAutocompleteSuggestion(_ suggestion: String?) {
+        //URLBar.setAutocompleteSuggestion(suggestion)
+        debugPrint(suggestion ?? "No suggestion")
+    }
 //
 //	func updateURL(_ url: URL?) {
 //		self.URLBar.endEditing()

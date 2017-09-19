@@ -128,20 +128,26 @@ class ActionStateTransformer {
         
         var toolShareNextState = toolBarShareTransform(currentState: currentState.toolShareState, actionType: actionType)
         
-        var alteredStateData = nextStateData
+        //The idea is that state data changes only when modified. If a url is not modified, then it remains like that. It is considered the last visited url.
+        //The part about state data should be refactored.
+        var alteredStateData = StateData.merge(lhs: nextStateData, rhs: currentState.stateData)
         
         if mainNextState == .prevState {
             mainNextState = previousState.mainState
         }
         
         if contentNextState == .prevState {
-            contentNextState = previousState.contentState
+            //never go back to details.
+            //if previousState.contentState == .details {
+                //contentNextState = .domains
+            //}
+            //else {
+                contentNextState = previousState.contentState
+            //}
         }
         
         if urlBarNextState == .prevState {
             urlBarNextState = previousState.urlBarState
-            //This is how the data is modified. I am not sure this is the right approach
-            alteredStateData = previousState.stateData
         }
         else if urlBarNextState == .collapsedTextTransparent {
             alteredStateData = currentState.stateData
