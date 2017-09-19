@@ -298,6 +298,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
     // MARK: - Connect
     
     func openTabViaConnect(notification: NSNotification) {
+        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
         guard let data = notification.object as? [String: String], let urlString = data["url"] else {
             return
         }
