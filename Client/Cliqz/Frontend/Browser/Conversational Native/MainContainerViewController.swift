@@ -168,7 +168,7 @@ extension MainContainerViewController {
             self.URLBarVC.view.alpha = 0.0
             self.toolbarVC.view.alpha = 0.0
             
-        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
+        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.04, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -253,7 +253,7 @@ extension MainContainerViewController {
                 
                 self.view.layoutIfNeeded()
                 
-            }, afterTransition: nil, animationDetails: AnimationDetails(duration: 0.2, curve: .easeOut, delayFactor: 0.0))
+            }, afterTransition: nil, animationDetails: AnimationDetails(duration: 0.16, curve: .linear, delayFactor: 0.0))
             
             let animators = StateAnimator.generateAnimators(state: [transition], parentView: self.view)
             StateAnimator.animate(animators: animators)
