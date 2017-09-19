@@ -37,6 +37,8 @@ private struct BrowserViewControllerUX {
     fileprivate static let BookmarkStarAnimationOffset: CGFloat = 80
 }
 
+let ShowBrowserViewControllerNotification = NSNotification.Name(rawValue: "ShowBrowserViewControllerNotification")
+
 class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
 //    var homePanelController: CliqzSearchViewController?
