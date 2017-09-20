@@ -294,9 +294,12 @@ extension MainContainerViewController: TabsViewControllerDelegate {
 
     func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath) {
         if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
+            
+            let tab = self.tabManager.tabs[indexPath.row]
+            StateManager.shared.handleAction(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+            
             dismissTabOverview(tabsVC: tabsVC, completion: {
-				let tab = self.tabManager.tabs[indexPath.row]
-                StateManager.shared.handleAction(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+				
             })
         }
     }

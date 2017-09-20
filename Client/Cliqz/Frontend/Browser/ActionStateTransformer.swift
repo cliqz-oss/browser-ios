@@ -41,28 +41,51 @@ let mainTransformDict: [ActionType : [MainState: MainState]] = [
 
 //the rule it this: If I ignore an action it means that the action does not affect the state of this component
 //if I only define nextStates for subset of the states, then the action leaves the currentState as it is for the states that are not covered.
-let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
-    .urlBackPressed : [.search: .prevState],
-    .urlClearPressed : [.search: .search],
-    .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
-    .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
-//    .searchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
-//    .searchTextCleared : [.search : .prevState],
-    //searchAutoSuggest
-    //searchStopEditing
-    .urlSelected : [.search : .browse, .domains: .browse, .details: .browse, .dash: .browse],
-    //urlIsModified
-//    .urlBarCancelEditing : [.search: .prevState],
-    .homeButtonPressed : [.browse : .domains, .search: .domains, .domains: .dash, .details: .domains, .dash: .domains],
-    //.tabsPressed
-    //.sharePressed
-    //.backButtonPressed
-    //.forwardButtonPressed
-    //.remindersPressed
-    .tabSelected : [.search : .browse, .domains: .browse, .details: .browse, .dash: .browse],
-    .detailBackPressed : [.details: .domains],
-    .domainPressed : [.domains: .details]
-]
+
+func contentNextState(actionType: ActionType, previousState: ContentState, currentState: ContentState, nextStateData: StateData) -> ContentState? {
+    
+    //this is for selecting an empty tab
+    //think of a better way
+    //maybe the tab should have a property isEmpty, and determine using that.
+    var specialState: ContentState = .browse
+    
+    if let url = nextStateData.url {
+        if url.contains("localhost") {
+            specialState = .domains
+        }
+    }
+    
+    let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
+        .urlBackPressed : [.search: .prevState],
+        .urlClearPressed : [.search: .search],
+        .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
+        .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
+        //    .searchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
+        //    .searchTextCleared : [.search : .prevState],
+        //searchAutoSuggest
+        //searchStopEditing
+        .urlSelected : [.search : .browse, .domains: .browse, .details: .browse, .dash: .browse],
+        //urlIsModified
+        //    .urlBarCancelEditing : [.search: .prevState],
+        .homeButtonPressed : [.browse : .domains, .search: .domains, .domains: .dash, .details: .domains, .dash: .domains],
+        //.tabsPressed
+        //.sharePressed
+        //.backButtonPressed
+        //.forwardButtonPressed
+        //.remindersPressed
+        .tabSelected : [.search : specialState, .domains: specialState, .details: specialState, .dash: specialState, .browse: specialState],
+        .detailBackPressed : [.details: .domains],
+        .domainPressed : [.domains: .details]
+    ]
+    
+    if let actionDict = contentTransformDict[actionType], let nextState = actionDict[currentState] {
+        return nextState
+    }
+
+    return nil
+}
+
+
 
 func urlBarNextState(actionType: ActionType, previousState: URLBarState, currentState: URLBarState, nextStateData: StateData) -> URLBarState? {
     
@@ -73,6 +96,15 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     let expandedTextIsPrev: Bool = previousState == .expandedTextWhite
     
     let specialState: URLBarState = expandedTextIsPrev ? .prevState : .expandedEmptyWhite
+    
+    //this is for selecting an empty tab
+    var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
+    
+    if let url = nextStateData.url {
+        if url.contains("localhost") {
+            tabSelectedSpecialState = .collapsedEmptyTransparent
+        }
+    }
     
     //When I go back to search, if the previous state is also search, take the data from there (so that the text remains).
     
@@ -95,7 +127,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
         //.backButtonPressed: [:],
         //.forwardButtonPressed: [:],
         //.remindersPressed: [:],
-        .tabSelected: [ .collapsedEmptyTransparent: .collapsedDomainBlue, .collapsedTextTransparent: .collapsedDomainBlue, .expandedEmptyWhite: .collapsedDomainBlue, .expandedTextWhite: .collapsedDomainBlue],
+        .tabSelected: [ .collapsedEmptyTransparent: tabSelectedSpecialState, .collapsedTextTransparent: tabSelectedSpecialState, .collapsedDomainBlue: tabSelectedSpecialState, .collapsedTextBlue: tabSelectedSpecialState, .expandedEmptyWhite: tabSelectedSpecialState, .expandedTextWhite: tabSelectedSpecialState],
         .detailBackPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         .domainPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent]
     ]
@@ -117,7 +149,7 @@ class ActionStateTransformer {
     class func transform(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
         
         var mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
-        var contentNextState = contentNavTransform(currentState: currentState.contentState, actionType: actionType)
+        var contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)
         var urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, actionType: actionType, nextStateData: nextStateData)
         var toolBarNextState = toolBarTransform(currentState: currentState.toolBarState, actionType: actionType)
         
@@ -137,13 +169,7 @@ class ActionStateTransformer {
         }
         
         if contentNextState == .prevState {
-            //never go back to details.
-            //if previousState.contentState == .details {
-                //contentNextState = .domains
-            //}
-            //else {
-                contentNextState = previousState.contentState
-            //}
+            contentNextState = previousState.contentState
         }
         
         if urlBarNextState == .prevState {
@@ -187,11 +213,11 @@ class ActionStateTransformer {
         return nextState
     }
     
-    class func contentNavTransform(currentState: ContentState, actionType: ActionType) -> ContentState {
+    class func contentNavTransform(previousState: ContentState, currentState: ContentState, actionType: ActionType, nextStateData: StateData) -> ContentState {
         
         var nextState = currentState
         
-        if let actionDict = contentTransformDict[actionType], let newState = actionDict[currentState] {
+        if let newState = contentNextState(actionType: actionType, previousState: previousState, currentState: currentState, nextStateData: nextStateData) {
             nextState = newState
         }
         

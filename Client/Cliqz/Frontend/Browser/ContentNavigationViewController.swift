@@ -224,9 +224,13 @@ extension ContentNavigationViewController {
 extension ContentNavigationViewController {
     //This will be refactored. States will be introduced and as well as a central place for the diplay logic.
     
+    //it would be better to decide outside of this, and here just say if the url is nil then try the tab.
     func browse(url: String?, tab: Tab?) {
-
-        if let tab = tab {
+        
+        if let url = url, let tab = tab {
+            NSException.init(name: NSExceptionName(rawValue: "Wrong use of browse(url: String?, tab: Tab?)"), reason: "one of the arguments should be nil", userInfo: nil).raise()
+        }
+        else if let tab = tab {
             browseTab(tab: tab)
         }
         else if let url = url {
@@ -304,14 +308,10 @@ extension ContentNavigationViewController {
 	func showBrowser(url : String?) {
         
         self.browserVC.view.isHidden = false
-		if let u = url {
-			var validURL = URIFixup.getURL(u)
-			if validURL == nil {
-				validURL = self.profile.searchEngines.defaultEngine.searchURLForQuery(u)
-			}
-			self.browserVC.loadURL(validURL)
-			//Router.shared.action(action: Action(data: (validURL != nil ? ["url": validURL!] : nil), type: .urlIsModified, context: .urlBarVC))
-		}
+        if let url = url, let validURL = URL(string: url) {
+            self.browserVC.loadURL(validURL)
+        }
+		
     }
     
     func hideBrowser() {

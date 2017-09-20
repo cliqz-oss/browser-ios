@@ -73,7 +73,7 @@ enum ToolBarShareState {
 
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
 struct StateData {
-    let query: String?
+    let query: String? 
     let url: String?
     let tab: Tab?
     let indexPath: IndexPath?
@@ -164,12 +164,12 @@ final class StateManager {
         
         let nextState = ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessActionData(data: action.data))
         //there will be some more state changes added here, to take care of back and forward. 
-        changeToState(nextState: nextState)
+        changeToState(nextState: nextState, action: action)
     }
     
-    func changeToState(nextState: State) {
+    func changeToState(nextState: State, action: Action) {
         mainContChangeToState(currentState: currentState.mainState, nextState: nextState.mainState)
-        contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData)
+        contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData, action: action)
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
         //TO DO: Call the toolbar change to state
         //---
@@ -223,11 +223,16 @@ final class StateManager {
         }
     }
     
-    func contentNavChangeToState(currentState: ContentState, nextState: ContentState, nextStateData: StateData) {
+    func contentNavChangeToState(currentState: ContentState, nextState: ContentState, nextStateData: StateData, action: Action) {
     
         switch nextState {
         case .browse:
-            contentNav?.browse(url: nextStateData.url, tab: nextStateData.tab)
+            if action.type == .tabSelected {
+                contentNav?.browse(url: nil, tab: nextStateData.tab)
+            }
+            else {
+                contentNav?.browse(url: nextStateData.url, tab: nil)
+            }
         case .search:
             contentNav?.search(query: nextStateData.query)
         case .domains:
