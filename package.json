@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/cliqz-oss/browser-ios#readme",
   "dependencies": {
-    "browser-core": "http://cdn2.cliqz.com/update/react-native/1.20.0.tgz",
+    "browser-core": "http://cdn2.cliqz.com/update/react-native/1.20.1.tgz",
     "buffer": "5.0.7",
     "https-browserify": "1.0.0",
     "path-browserify": "0.0.0",
