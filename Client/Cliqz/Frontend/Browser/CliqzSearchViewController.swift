@@ -452,7 +452,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         do {
             try data.write(to: tempFile)
             var activityItems = [AnyObject]()
-            activityItems.append(TitleActivityItemProvider(title: title))
+            activityItems.append(TitleActivityItemProvider(title: title, activitiesToIgnore: [UIActivityType.init("net.whatsapp.WhatsApp.ShareExtension")]))
             activityItems.append(tempFile as AnyObject)
             
             let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
