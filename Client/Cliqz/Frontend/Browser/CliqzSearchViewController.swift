@@ -447,7 +447,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         guard let data:Data = UIImagePNGRepresentation(image) else {
             return
         }
-        let fileName = generateTempFileName(title)
+        let fileName = String(Date.getCurrentMillis())
         let tempFile = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(fileName).png")
         do {
             try data.write(to: tempFile)
@@ -471,15 +471,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
             
         }
     }
-    private func generateTempFileName(_ title: String) -> String {
-        var fileName = title
-        fileName = fileName.replace(" ", replacement: "_")
-        fileName = fileName.replace("...", replacement: "")
-        if fileName.contains("\n") {
-           fileName = fileName.components(separatedBy: "\n")[1]
-        }
-        return fileName
-    }
+    
 }
 
 // Handling communications with JavaScript
