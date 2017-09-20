@@ -53,7 +53,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	}
     deinit {
         // Removed observers for Connect features
-        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: ShowBrowserViewControllerNotification, object: nil)
     }
 
 	required init?(coder aDecoder: NSCoder) {
@@ -90,7 +90,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
         
         viewOpenTime = Date.getCurrentMillis()
         // Add observers for Connection features
-        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: ShowBrowserViewControllerNotification, object: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -118,7 +118,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
     }
     
     // Called when send tab notification sent from Connect while dashboard is presented
-    func newTabOpened() {
+    func dismissView() {
         self.navigationController?.popViewController(animated: false)
     }
     

@@ -14,10 +14,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
 		   let url = URL(string: urlString) {
-			self.navigateToURL(url)
-            if let tab = tabManager.selectedTab {
-                tab.url = url
-            }
+			self.openURLInNewTab(url)
 			self.initialURL = nil
 		}
 	}
@@ -301,6 +298,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
     // MARK: - Connect
     
     func openTabViaConnect(notification: NSNotification) {
+        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
         guard let data = notification.object as? [String: String], let urlString = data["url"] else {
             return
         }

@@ -647,11 +647,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else if let message = notification.alertBody, let url = notification.userInfo?["url"] as? String {
             if UIApplication.shared.applicationState == .active {
                 FeedbackUI.showToastMessage(message, messageType: .info, timeInterval: 4.0, tabHandler: {[weak self] in
+                    NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
                     self?.browserViewController.openURLInNewTab(URL(string: url))
                     TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
                 })
             } else {
-                browserViewController.openURLInNewTab(URL(string: url))
+                NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
+                browserViewController.initialURL = url
                 TelemetryLogger.sharedInstance.logEvent(.Notification("click", "subscription"))
             }
             
