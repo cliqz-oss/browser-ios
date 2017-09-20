@@ -13,14 +13,19 @@ import Foundation
 
 class TitleActivityItemProvider: UIActivityItemProvider {
     static let activityTypesToIgnore = [UIActivityType.copyToPasteboard, UIActivityType.message, UIActivityType.mail, UIActivityType.init("com.apple.CloudDocsUI.AddToiCloudDrive")]
-
-    init(title: String) {
+    var extraActivityTypesToIgnore : [UIActivityType]
+    
+    init(title: String, activitiesToIgnore: [UIActivityType] = [UIActivityType]()) {
+        extraActivityTypesToIgnore = activitiesToIgnore
         super.init(placeholderItem: title)
     }
 
     override var item : Any {
         if let activityType = activityType {
             if TitleActivityItemProvider.activityTypesToIgnore.contains(activityType) {
+                return NSNull()
+            }
+            if extraActivityTypesToIgnore.contains(activityType) {
                 return NSNull()
             }
         }
