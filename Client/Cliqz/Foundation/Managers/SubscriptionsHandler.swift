@@ -82,9 +82,11 @@ class SubscriptionsHandler: NSObject {
     }
     
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: String) {
-        
-        guard isRemoteNotificationEnabled() else {
-            return
+        print("[subscriptions]didRegisterForRemoteNotifications:\(isRemoteNotificationEnabled())")
+        if #available(iOS 10, *) {
+            guard isRemoteNotificationEnabled() else {
+                return
+            }
         }
         
         showSubscribeHUD()
