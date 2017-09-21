@@ -126,7 +126,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
 		self.topSitesCollection?.snp.updateConstraints({ (make) in
-			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && DeviceInfo.getDeviceType() != .iPhone5 {
+			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
 				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
 			} else {
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
@@ -425,7 +425,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
-			self.isNewsExpanded ? min(self.news.count, (DeviceInfo.getDeviceType() == .iPhone5 ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
+			self.isNewsExpanded ? min(self.news.count, (UIDevice.current.isSmallIphoneDevice() ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
 		FreshtabViewUX.MinNewsCellsCount
 	}
 	
@@ -553,7 +553,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if DeviceInfo.getDeviceType() == .iPhone5 {
+        if UIDevice.current.isSmallIphoneDevice() {
             return FreshtabViewUX.TopSitesCountOnRow
         }
 		return self.topSites.count > FreshtabViewUX.TopSitesCountOnRow ? 2 * FreshtabViewUX.TopSitesCountOnRow : FreshtabViewUX.TopSitesCountOnRow
