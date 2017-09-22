@@ -49,7 +49,7 @@ class FeedbackUI: NSObject {
         }
         
         if let timeInterval = timeInterval {
-            options[kCRToastTimeIntervalKey] = [timeInterval]
+            options[kCRToastTimeIntervalKey] = timeInterval
         }
         
         if let tabHandler = tabHandler {

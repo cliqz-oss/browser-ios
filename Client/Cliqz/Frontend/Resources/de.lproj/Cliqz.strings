@@ -353,3 +353,5 @@
 "Sorry, we encountered some technical difficulties. Please try again" = "Entschuldigung, leider gab es technische Probleme beim Abonnieren. Versuche es noch einmal.";
 /* [Subscriptions] Subscribing HUD */
 "Subscribing to {1}." = "{1} wird abonniert...";
+/* [Subscriptions] Subscribing Toast */
+"Currently, push notifications are only received if Cliqz is active." = "Im Moment werden Push-Benachrichtigungen nur empfangen, wenn Cliqz aktiv ist.";

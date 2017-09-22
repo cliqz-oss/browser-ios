@@ -94,6 +94,7 @@ class SubscriptionsHandler: NSObject {
                                              completionHandler:  { [weak self] (success) -> Void in
             
             FeedbackUI.dismissHUD()
+            self?.showSubscribeToast()
             if success {
                 self?.completeAwatingSubscription()
             } else {
@@ -413,5 +414,11 @@ class SubscriptionsHandler: NSObject {
             FeedbackUI.showLoadingHUD(message)
         }
         
+    }
+    
+    private func showSubscribeToast() {
+        let message = NSLocalizedString("Currently, push notifications are only received if Cliqz is active.", tableName: "Cliqz", comment: "[Subscriptions] Subscribing Toast")
+        FeedbackUI.showToastMessage(message, messageType: .info, timeInterval: 4.0)
+
     }
 }

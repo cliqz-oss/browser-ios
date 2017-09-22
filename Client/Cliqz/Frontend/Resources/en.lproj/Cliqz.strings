@@ -354,3 +354,5 @@
 "Sorry, we encountered some technical difficulties. Please try again" = "Sorry, we encountered some technical difficulties. Please try again";
 /* [Subscriptions] Subscribing HUD */
 "Subscribing to {1}." = "Subscribing to {1}...";
+/* [Subscriptions] Subscribing Toast */
+"Currently, push notifications are only received if Cliqz is active." = "Currently, push notifications are only received if Cliqz is active.";
