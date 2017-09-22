@@ -2867,6 +2867,8 @@ extension BrowserViewController: TabManagerDelegate {
     }
 
     func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
+        tab.tabDelegate = self
+        tab.appStateDelegate = self
     }
 
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {

@@ -27,6 +27,12 @@ class GeneralUtils {
         return dict
     }
     
+    class func removeElementsAfter<A>(index: Int, array: [A]) -> [A] {
+        var arrayCopy = array
+        arrayCopy.removeLast(array.count - index - 1)
+        return arrayCopy
+    }
+    
     class func convert(seconds: Int) -> String {
         
         let days = seconds / (24 * 60 * 60)

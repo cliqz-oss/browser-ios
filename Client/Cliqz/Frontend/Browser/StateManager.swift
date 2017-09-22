@@ -72,12 +72,13 @@ enum ToolBarShareState {
 }
 
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
-struct StateData {
+struct StateData: Equatable {
     let query: String? 
     let url: String?
     let tab: Tab?
     let indexPath: IndexPath?
     let image: UIImage?
+    let redirect: Bool?
     //maybe indexpath as well or tab?
     
     static func merge(lhs: StateData, rhs: StateData) -> StateData {
@@ -88,25 +89,39 @@ struct StateData {
         let tab   = lhs.tab != nil ? lhs.tab : rhs.tab
         let indexPath = lhs.indexPath != nil ? lhs.indexPath : rhs.indexPath
         let image = lhs.image != nil ? lhs.image : rhs.image
+        let redirect = lhs.redirect != nil ? lhs.redirect : rhs.redirect
         
-        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image)
+        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image, redirect: redirect)
+    }
+    
+    static func == (lhs: StateData, rhs: StateData) -> Bool {
+        //I don't care about the indexPath and image. They can be different.
+        //If I care about them, I can have identical states in the BackForwardNavigation that differ only because of this.
+        //Case to see this: browse -> domains -> details -> domains...there will be 2 domains registered with different indexPaths
+        return lhs.query == rhs.query && lhs.url == rhs.url && lhs.tab == rhs.tab //&& lhs.indexPath == rhs.indexPath && lhs.image == rhs.image
     }
     
 }
 
+
+//Careful about this. There are 2 equality rules. One when all the states are the same but the state data is different (==). The other when everything is identical including the stateData (equalWithTheSameData).
 struct State: Equatable {
     let mainState: MainState
     let contentState: ContentState
     let urlBarState: URLBarState
     let toolBarState: ToolBarState
-    let toolBackState: ToolBarBackState
-    let toolForwardState: ToolBarForwardState
+    var toolBackState: ToolBarBackState
+    var toolForwardState: ToolBarForwardState
     let toolShareState: ToolBarShareState
     
     let stateData: StateData
     
     static func == (lhs: State, rhs: State) -> Bool {
-        return lhs.mainState == rhs.mainState && lhs.contentState == rhs.contentState && lhs.urlBarState == rhs.urlBarState && lhs.toolBarState == rhs.toolBarState && lhs.toolBackState == rhs.toolBackState && lhs.toolForwardState == rhs.toolForwardState && lhs.toolShareState == rhs.toolShareState
+        return lhs.mainState == rhs.mainState && lhs.contentState == rhs.contentState && lhs.urlBarState == rhs.urlBarState && lhs.toolBarState == rhs.toolBarState //&& lhs.toolBackState == rhs.toolBackState && lhs.toolForwardState == rhs.toolForwardState && lhs.toolShareState == rhs.toolShareState
+    }
+    
+    static func equalWithTheSameData (lhs: State, rhs: State) -> Bool {
+        return lhs == rhs && lhs.stateData == rhs.stateData
     }
 }
 
@@ -121,21 +136,14 @@ final class StateManager {
 
     
     //initial state
-    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
-    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
+    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil))
+    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil))
     
-    //Rules for stateMetaData
-    //Keys: 
-    //1. url
-    //2. tab
-    //3. query
-    //action data modifies the last entry.
-    //var stateMetaData : [String : Any] = [:] //here I can have the query strings
     
     func preprocessActionData(data: [String: Any]?) -> StateData {
         
         guard let data = data else {
-            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil)
+            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil)
         }
         
         let text = data["text"] as? String
@@ -143,10 +151,12 @@ final class StateManager {
         let indexPath = data["indexPath"] as? IndexPath
         let image = data["image"] as? UIImage
         var url  = data["url"] as? String
+        let redirect = data["redirect"] as? Bool ?? false
         
-        if let t = tab {
-            url = t.url?.absoluteString
-        }
+        //careful about this. Think about it. Maybe you want to navigate to a url, that is not already set as the url of the tab...
+//        if let t = tab {
+//            url = t.url?.absoluteString ?? "localhost"
+//        }
         
         if let u = url, let appDelegate = UIApplication.shared.delegate as? AppDelegate, let profile = appDelegate.profile {
             var validURL = URIFixup.getURL(u)
@@ -157,13 +167,34 @@ final class StateManager {
         }
         
         
-        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image)
+        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image, redirect: redirect)
     }
+    
+    //func areUrlSameExcept
     
     func handleAction(action: Action) {
         
-        let nextState = ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessActionData(data: action.data))
+        let preprocessedData = preprocessActionData(data: action.data)
+        
+        //there is an infinite loop when the url is modified and the only thing that differs are the arguments
+        let nextURL = URL(string: preprocessedData.url ?? "")
+        let currentURL = URL(string: currentState.stateData.url ?? "")
+        
+        //let specialCond = nextURL?.absoluteURL.host == currentURL?.absoluteURL.host && nextURL?.absoluteURL.relativePath == currentURL?.absoluteURL.relativePath
+         //.urlIsModified is called even when the url is the same. Ignore. I should fix this.
+        if (preprocessedData.url == currentState.stateData.url /*||  specialCond*/) && action.type == .urlIsModified {
+            return
+        }
+        
+        //a tab should always be selected.
+        if action.type == .tabSelected, let tab = preprocessedData.tab, let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+            //tab Manager has to become a singleton. There cannot be 2 tab managers.
+            tabManager.selectTab(tab)
+        }
+        
+        let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessedData)
         //there will be some more state changes added here, to take care of back and forward. 
+
         changeToState(nextState: nextState, action: action)
     }
     
@@ -227,11 +258,14 @@ final class StateManager {
     
         switch nextState {
         case .browse:
-            if action.type == .tabSelected {
-                contentNav?.browse(url: nil, tab: nextStateData.tab)
-            }
-            else {
-                contentNav?.browse(url: nextStateData.url, tab: nil)
+            //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
+            if action.type != .urlIsModified {
+                if action.type == .tabSelected {
+                    contentNav?.browse(url: nil, tab: nextStateData.tab)
+                }
+                else {
+                    contentNav?.browse(url: nextStateData.url, tab: nil)
+                }
             }
         case .search:
             contentNav?.search(query: nextStateData.query)

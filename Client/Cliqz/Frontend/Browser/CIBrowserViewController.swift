@@ -19,6 +19,10 @@ private let KVOCanGoForward = "canGoForward"
 private let KVOContentSize = "contentSize"
 
 final class CIBrowserViewController: UIViewController {
+    
+    var commitedURL: URL? = nil
+    var alreadyCommited: Bool = false
+    var redirect: Bool = false
 	
     private let label = UILabel()
 	
@@ -240,10 +244,13 @@ extension CIBrowserViewController {
 
 	/// Updates the URL bar text and button states.
 	/// Call this whenever the page URL changes.
-	fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
+    fileprivate func updateURLBarDisplayURL(_ tab: Tab, redirect: Bool) {
 		// TODO: update URLbar and Status bar
 
-		StateManager.shared.handleAction(action: Action(data: ["url": tab.displayURL?.absoluteString ?? ""], type: .urlIsModified, context: .urlBarVC))
+        if tab.url?.absoluteString.contains("localhost") == false {
+            StateManager.shared.handleAction(action: Action(data: ["url": tab.url?.absoluteString ?? "", "redirect": redirect], type: .urlIsModified, context: .urlBarVC))
+        }
+		
 
 //		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
 		// Cliqz: update the toolbar only if the search controller is not visible
@@ -337,10 +344,16 @@ extension CIBrowserViewController {
 		// TODO: check for missing reader mode logic
 		
 		let favicons = FaviconManager(tab: tab, profile: profile)
-		tab.addHelper(favicons, name: FaviconManager.name())
+        
+        if tab.getHelper(FaviconManager.name()) == nil { //this avoids the crash from share -> mail -> cancel -> erase message
+            tab.addHelper(favicons, name: FaviconManager.name())
+        }
+		
 		
 		let errorHelper = ErrorPageHelper()
-		tab.addHelper(errorHelper, name: ErrorPageHelper.name())
+        if tab.getHelper(ErrorPageHelper.name()) == nil {
+            tab.addHelper(errorHelper, name: ErrorPageHelper.name())
+        }
 		
 		// TODO: Review helpers logic and enable if neccesary
 		if #available(iOS 9, *) {} else {
@@ -406,7 +419,7 @@ extension CIBrowserViewController: TabManagerDelegate {
     }
 	
     func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
-		
+		tab.tabDelegate = self
     }
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {
@@ -580,6 +593,8 @@ extension CIBrowserViewController: WKNavigationDelegate {
 			}
 		}
 	}
+    
+    
 
 	func webView(_ _webView: WKWebView, didCommit navigation: WKNavigation!) {
 		guard let container = _webView as? ContainerWebView else { return }
@@ -587,22 +602,44 @@ extension CIBrowserViewController: WKNavigationDelegate {
 		guard let tab = tabManager.tabForWebView(webView) else { return }
 		
 		tab.url = webView.url
+        
+        if let url = webView.url {
+            if alreadyCommited == false {
+                commitedURL = url
+                alreadyCommited = true
+            }
+            else {
+                if commitedURL?.absoluteString != url.absoluteString {
+                    //redirect
+                    redirect = true
+                }
+                
+                if tabManager.selectedTab === tab {
+                    
+                    tab.url = webView.url
+                    
+                    updateURLBarDisplayURL(tab, redirect: false)
+                    updateUIForReaderHomeStateForTab(tab)
+                    // TODO: Check if it's needed
+                    //			appDidUpdateState(getCurrentAppState())
+                }
+            }
+        }
+        
 		
-		if tabManager.selectedTab === tab {
-			updateURLBarDisplayURL(tab)
-			updateUIForReaderHomeStateForTab(tab)
-			// TODO: Check if it's needed
-//			appDidUpdateState(getCurrentAppState())
-		}
 	}
 
 	func webView(_ _webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        alreadyCommited = false
+        redirect = false
+        
 		guard let container = _webView as? ContainerWebView else { return }
 		guard let webView = container.legacyWebView else { return }
 		guard let tab = tabManager.tabForWebView(webView) else { return }
-
+        
 		tabManager.expireSnackbars()
-		
+        
 		if let url = webView.url, !ErrorPageHelper.isErrorPageURL(url) && !AboutUtils.isAboutHomeURL(url) {
 			tab.lastExecutedTime = Date.now()
 			
@@ -650,11 +687,14 @@ extension CIBrowserViewController: WKNavigationDelegate {
 	}
 
 	func webView(_ _webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        
+        alreadyCommited = false
+        redirect = false
 		
 		guard let container = _webView as? ContainerWebView else { return }
 		guard let webView = container.legacyWebView else { return }
 		guard let tab = tabManager.tabForWebView(webView) else { return }
-		
+        
 		// Ignore the "Frame load interrupted" error that is triggered when we cancel a request
 		// to open an external application and hand it over to UIApplication.openURL(). The result
 		// will be that we switch to the external app, for example the app store, while keeping the

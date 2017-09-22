@@ -252,6 +252,7 @@ class Tab: NSObject {
     }
     deinit {
         if let webView = webView {
+            //tabDelegate is nil for the last tab
             tabDelegate?.tab?(self, willDeleteWebView: webView)
             webView.removeObserver(self, forKeyPath: "URL")
         }

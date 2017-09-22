@@ -246,7 +246,7 @@ extension RefactoredURLBar {
                 make.height.equalTo(self.textFieldCollapsedHeight)
             })
             
-        } ,animationDetails:AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
+        } ,animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -296,7 +296,7 @@ extension RefactoredURLBar {
                 make.top.right.bottom.left.equalTo(self.textField)
             })
             
-        }, animationDetails:AnimationDetails(duration: 0.1, curve: .linear, delayFactor: 0.0))
+        }, animationDetails:AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }

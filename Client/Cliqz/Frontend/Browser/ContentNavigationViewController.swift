@@ -136,7 +136,7 @@ extension ContentNavigationViewController {
             if let c = completion {
                 c()
             }
-        }, animationDetails: AnimationDetails(duration: 0.10, curve: .linear, delayFactor: 0.0))
+        }, animationDetails: AnimationDetails(duration: 0.2, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -183,9 +183,9 @@ extension ContentNavigationViewController {
     }
 
     func changeState(state: State, text: String? = nil) {
-        guard currentState != state else {
-            return
-        }
+//        guard currentState != state else {
+//            return
+//        }
         
         currentState = state
         animateToState(state: currentState, text: text, completion: {
@@ -227,7 +227,7 @@ extension ContentNavigationViewController {
     //it would be better to decide outside of this, and here just say if the url is nil then try the tab.
     func browse(url: String?, tab: Tab?) {
         
-        if let url = url, let tab = tab {
+        if let _ = url, let _ = tab {
             NSException.init(name: NSExceptionName(rawValue: "Wrong use of browse(url: String?, tab: Tab?)"), reason: "one of the arguments should be nil", userInfo: nil).raise()
         }
         else if let tab = tab {
@@ -244,7 +244,7 @@ extension ContentNavigationViewController {
     }
 
     func browseTab(tab: Tab) {
-        tabManager.selectTab(tab)
+        //tabManager.selectTab(tab)
         changeState(state: .browser)
     }
     

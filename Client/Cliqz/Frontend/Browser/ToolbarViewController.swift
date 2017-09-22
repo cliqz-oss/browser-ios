@@ -34,6 +34,9 @@ final class ToolbarViewController: UIViewController {
         toolBarView.delegate = self
         view.addSubview(toolBarView)
         
+        setBackDisabled()
+        setForwardDisabled()
+        
         changeState(state: .notBrowsing) //initialState
     }
     
@@ -116,11 +119,11 @@ extension ToolbarViewController {
 extension ToolbarViewController: CIToolBarDelegate {
     
     func backPressed() {
-		Router.shared.action(action: Action(data: nil, type: .backButtonPressed, context: .toolBarVC))
+		StateManager.shared.handleAction(action: Action(data: nil, type: .backButtonPressed, context: .toolBarVC))
     }
 	
     func forwardPressed() {
-		Router.shared.action(action: Action(data: nil, type: .forwardButtonPressed, context: .toolBarVC))
+		StateManager.shared.handleAction(action: Action(data: nil, type: .forwardButtonPressed, context: .toolBarVC))
     }
 	
     func middlePressed() {

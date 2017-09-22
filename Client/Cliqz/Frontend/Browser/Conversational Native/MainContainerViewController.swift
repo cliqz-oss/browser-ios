@@ -168,7 +168,7 @@ extension MainContainerViewController {
             self.URLBarVC.view.alpha = 0.0
             self.toolbarVC.view.alpha = 0.0
             
-        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.04, curve: .linear, delayFactor: 0.0))
+        }, afterTransition: completion, animationDetails: AnimationDetails(duration: 0.01, curve: .linear, delayFactor: 0.0))
         
         return [transition]
     }
@@ -296,7 +296,10 @@ extension MainContainerViewController: TabsViewControllerDelegate {
         if indexPath.row >= 0 && indexPath.row < self.tabManager.tabs.count {
             
             let tab = self.tabManager.tabs[indexPath.row]
-            StateManager.shared.handleAction(action: Action(data: ["tab": tab], type: .tabSelected, context: .mainContainer))
+            //think about how tab selection should happen. If the tab is not navigated to, it is not selected even if pressed (because browseTab is not called). I think selection should not happen there.
+            //selection should happen in StateManager. TabManager should be a singleton and therefore I can use it.
+            //tabManager.selectTab(tab)
+            StateManager.shared.handleAction(action: Action(data: ["tab": tab, "url": tab.url?.absoluteString], type: .tabSelected, context: .mainContainer))
             
             dismissTabOverview(tabsVC: tabsVC, completion: {
 				
@@ -307,6 +310,16 @@ extension MainContainerViewController: TabsViewControllerDelegate {
     func donePressed(tabsVC: TabsViewController?) {
         //pass this through the State Manager -- after
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
+    }
+    
+    //
+    func plusPressed(tabsVC: TabsViewController?) {
+        //tab is already selected by this point
+        let tab = tabManager.tabs[tabManager.tabs.count - 1]
+        StateManager.shared.handleAction(action: Action(data: ["tab": tab, "url": tab.url?.absoluteString], type: .tabSelected))
+        //dismissal should come from StateManager
+        dismissTabOverview(tabsVC: tabsVC, completion: nil)
+        
     }
 }
 

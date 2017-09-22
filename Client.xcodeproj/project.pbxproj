@@ -628,6 +628,7 @@
 		AF5C4A7E1E5F3F3100EE19ED /* CliqzWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */; };
 		AF5F767E1F6A62EC00E1495E /* ActionStateTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5F767D1F6A62EC00E1495E /* ActionStateTransformer.swift */; };
 		AF6741091F619F9B008BE919 /* NewsIgnoreList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */; };
+		AF6B5E9B1F73B72E004FEE00 /* BackForwardNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6B5E9A1F73B72E004FEE00 /* BackForwardNavigation.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
 		AF7E7B9B1F6FC87B00669DC6 /* RefactoredURLBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7E7B9A1F6FC87B00669DC6 /* RefactoredURLBar.swift */; };
@@ -2119,6 +2120,7 @@
 		AF5C4A7D1E5F3F3100EE19ED /* CliqzWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzWebView.swift; sourceTree = "<group>"; };
 		AF5F767D1F6A62EC00E1495E /* ActionStateTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionStateTransformer.swift; sourceTree = "<group>"; };
 		AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsIgnoreList.swift; sourceTree = "<group>"; };
+		AF6B5E9A1F73B72E004FEE00 /* BackForwardNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardNavigation.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		AF7E7B9A1F6FC87B00669DC6 /* RefactoredURLBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefactoredURLBar.swift; sourceTree = "<group>"; };
@@ -4310,6 +4312,7 @@
 			children = (
 				AF4E53B81F6A9EDD007171C9 /* StateManager.swift */,
 				AF5F767D1F6A62EC00E1495E /* ActionStateTransformer.swift */,
+				AF6B5E9A1F73B72E004FEE00 /* BackForwardNavigation.swift */,
 				AFCD36C51F5EE8B5004AE609 /* Share */,
 				AF0E13CB1F4C593600651728 /* History */,
 				AF0E13CA1F4C592300651728 /* Animation */,
@@ -6967,6 +6970,7 @@
 				E47616C71AB74CA600E7DD25 /* ReaderModeBarView.swift in Sources */,
 				2F44FCC51A9E85E900FD20CC /* SettingsTableViewController.swift in Sources */,
 				AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */,
+				AF6B5E9B1F73B72E004FEE00 /* BackForwardNavigation.swift in Sources */,
 				1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */,
 				AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */,
 				A9072B801D07B34100459960 /* NoImageModeHelper.swift in Sources */,

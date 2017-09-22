@@ -670,19 +670,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func specialOpenUrl(url:String) {
-        if let _url = URL(string: url) {
-            if self.browserViewController.visible == false {
-                self.rootViewController.pushViewController(self.browserViewController, animated: false)
-                self.browserViewController.visible = true
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
-                self.browserViewController.openURLInNewTab(_url)
-            })
-            
-            //notification pressed
-            CIReminderManager.sharedInstance.reminderPressed(url_str: url)
-        }
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
+        //notification pressed
+        CIReminderManager.sharedInstance.reminderPressed(url_str: url)
     }
     
     func presentReminderAlert(title:String, body: String, url: String) {

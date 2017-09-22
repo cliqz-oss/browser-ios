@@ -67,6 +67,7 @@ class Knobs {
 protocol TabsViewControllerDelegate: class {
     func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath)
     func donePressed(tabsVC: TabsViewController?)
+    func plusPressed(tabsVC: TabsViewController?)
 }
 
 final class TabsViewController: UIViewController {
@@ -236,6 +237,9 @@ final class TabsViewController: UIViewController {
         
         let customData: [String : AnyObject] = ["tab_count" : self.tabManager.tabs.count as AnyObject]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
+        
+        weak var weak_self: TabsViewController? = self
+        delegate?.plusPressed(tabsVC: weak_self)
     }
     
     @objc func SELdidLongPressAddTab(_ recognizer: UILongPressGestureRecognizer) {
@@ -451,6 +455,7 @@ extension TabsViewController: TabManagerDelegate {
     }
     
     func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
+        
     }
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {

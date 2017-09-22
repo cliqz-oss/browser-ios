@@ -27,8 +27,10 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     }
     
     private let standardDateFormat = "dd-MM-yyyy"
+    private let standardTimeFormat = "HH:mm"
     
-    private let standardFormatter = DateFormatter()
+    private let standardDateFormatter = DateFormatter()
+    private let standardTimeFormatter = DateFormatter()
 
     var img: UIImage?
     
@@ -36,7 +38,8 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     
     init(image:UIImage?, domainDetails: [DomainDetail]) {
         
-        standardFormatter.dateFormat = standardDateFormat
+        standardDateFormatter.dateFormat = standardDateFormat
+        standardTimeFormatter.dateFormat = standardTimeFormat
         
         self.img = image
         self.sortedDetails = orderByDate(domainDict: groupByDate(domainDetails: domainDetails))
@@ -61,11 +64,14 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     func titleSectionHeader(section: Int) -> String {
         guard sectionWithinBounds(section: section) else { return "" }
         let date = sortedDetails[section].date
-        return standardFormatter.string(from: date)
+        return standardDateFormatter.string(from: date)
     }
     
     func time(indexPath: IndexPath) -> String {
-        return detail(indexPath: indexPath)?.date?.toRelativeTimeString() ?? ""
+        if let date = detail(indexPath: indexPath)?.date {
+            return standardTimeFormatter.string(from: date)
+        }
+        return ""
     }
     
     func numberOfSections() -> Int {
@@ -113,9 +119,7 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     func groupByDate(domainDetails: [DomainDetail]) -> Dictionary<String, [DomainDetail]> {
         return GeneralUtils.groupBy(array: domainDetails) { (domainDetail) -> String in
             if let date = domainDetail.date {
-                let formatter = DateFormatter()
-                formatter.dateFormat = standardDateFormat
-                return formatter.string(from: date)
+                return standardDateFormatter.string(from: date)
             }
             return "01-01-1970"
         }
@@ -126,7 +130,7 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
         
         let unsortedArray = domainDict.keys.map { (key) -> SortedDomainDetail in
             let domainDetails = domainDict[key]
-            return SortedDomainDetail(date: self.standardFormatter.date(from: key)!, details: domainDetails!)
+            return SortedDomainDetail(date: self.standardDateFormatter.date(from: key)!, details: domainDetails!)
         }
         
         return unsortedArray.sorted().reversed()
