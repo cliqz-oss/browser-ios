@@ -82,7 +82,7 @@ class SubscriptionsHandler: NSObject {
     }
     
     func didRegisterForRemoteNotifications(withDeviceToken deviceToken: String) {
-        print("[subscriptions]didRegisterForRemoteNotifications:\(isRemoteNotificationEnabled())")
+
         if #available(iOS 10, *) {
             guard isRemoteNotificationEnabled() else {
                 return
@@ -113,7 +113,9 @@ class SubscriptionsHandler: NSObject {
     }
     
     func didReceiveRemoteNotification(_ userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("didReceiveRemoteNotification: \(userInfo)")
+
+        TelemetryLogger.sharedInstance.logEvent(.Notification("silent_receive", "subscription"))
+        
         guard let type = userInfo["type"] as? Int, let subscriptionType = SubscriptionType.init(rawValue: type)
             else {
             completionHandler(.failed)
