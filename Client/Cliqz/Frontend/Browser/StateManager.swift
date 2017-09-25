@@ -78,7 +78,6 @@ struct StateData: Equatable {
     let tab: Tab?
     let indexPath: IndexPath?
     let image: UIImage?
-    let redirect: Bool?
     //maybe indexpath as well or tab?
     
     static func merge(lhs: StateData, rhs: StateData) -> StateData {
@@ -89,9 +88,8 @@ struct StateData: Equatable {
         let tab   = lhs.tab != nil ? lhs.tab : rhs.tab
         let indexPath = lhs.indexPath != nil ? lhs.indexPath : rhs.indexPath
         let image = lhs.image != nil ? lhs.image : rhs.image
-        let redirect = lhs.redirect != nil ? lhs.redirect : rhs.redirect
         
-        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image, redirect: redirect)
+        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image)
     }
     
     static func == (lhs: StateData, rhs: StateData) -> Bool {
@@ -136,14 +134,14 @@ final class StateManager {
 
     
     //initial state
-    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil))
-    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil))
+    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
+    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
     
     
     func preprocessActionData(data: [String: Any]?) -> StateData {
         
         guard let data = data else {
-            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, redirect: nil)
+            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil)
         }
         
         let text = data["text"] as? String
@@ -151,7 +149,6 @@ final class StateManager {
         let indexPath = data["indexPath"] as? IndexPath
         let image = data["image"] as? UIImage
         var url  = data["url"] as? String
-        let redirect = data["redirect"] as? Bool ?? false
         
         //careful about this. Think about it. Maybe you want to navigate to a url, that is not already set as the url of the tab...
 //        if let t = tab {
@@ -167,7 +164,7 @@ final class StateManager {
         }
         
         
-        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image, redirect: redirect)
+        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image)
     }
     
     //func areUrlSameExcept
@@ -177,8 +174,8 @@ final class StateManager {
         let preprocessedData = preprocessActionData(data: action.data)
         
         //there is an infinite loop when the url is modified and the only thing that differs are the arguments
-        let nextURL = URL(string: preprocessedData.url ?? "")
-        let currentURL = URL(string: currentState.stateData.url ?? "")
+        //let nextURL = URL(string: preprocessedData.url ?? "")
+        //let currentURL = URL(string: currentState.stateData.url ?? "")
         
         //let specialCond = nextURL?.absoluteURL.host == currentURL?.absoluteURL.host && nextURL?.absoluteURL.relativePath == currentURL?.absoluteURL.relativePath
          //.urlIsModified is called even when the url is the same. Ignore. I should fix this.
@@ -259,7 +256,7 @@ final class StateManager {
         switch nextState {
         case .browse:
             //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
-            if action.type != .urlIsModified {
+            if action.type != .urlIsModified && action.type != .visitAddedInDB {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }

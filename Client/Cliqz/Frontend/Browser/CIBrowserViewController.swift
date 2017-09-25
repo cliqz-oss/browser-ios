@@ -19,10 +19,6 @@ private let KVOCanGoForward = "canGoForward"
 private let KVOContentSize = "contentSize"
 
 final class CIBrowserViewController: UIViewController {
-    
-    var commitedURL: URL? = nil
-    var alreadyCommited: Bool = false
-    var redirect: Bool = false
 	
     private let label = UILabel()
 	
@@ -244,11 +240,11 @@ extension CIBrowserViewController {
 
 	/// Updates the URL bar text and button states.
 	/// Call this whenever the page URL changes.
-    fileprivate func updateURLBarDisplayURL(_ tab: Tab, redirect: Bool) {
+    fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
 		// TODO: update URLbar and Status bar
 
         if tab.url?.absoluteString.contains("localhost") == false {
-            StateManager.shared.handleAction(action: Action(data: ["url": tab.url?.absoluteString ?? "", "redirect": redirect], type: .urlIsModified, context: .urlBarVC))
+            StateManager.shared.handleAction(action: Action(data: ["url": tab.url?.absoluteString ?? ""], type: .urlIsModified, context: .urlBarVC))
         }
 		
 
@@ -603,36 +599,17 @@ extension CIBrowserViewController: WKNavigationDelegate {
 		
 		tab.url = webView.url
         
-        if let url = webView.url {
-            if alreadyCommited == false {
-                commitedURL = url
-                alreadyCommited = true
-            }
-            else {
-                if commitedURL?.absoluteString != url.absoluteString {
-                    //redirect
-                    redirect = true
-                }
-                
-                if tabManager.selectedTab === tab {
-                    
-                    tab.url = webView.url
-                    
-                    updateURLBarDisplayURL(tab, redirect: false)
-                    updateUIForReaderHomeStateForTab(tab)
-                    // TODO: Check if it's needed
-                    //			appDidUpdateState(getCurrentAppState())
-                }
-            }
+        if tabManager.selectedTab === tab {
+            
+            updateURLBarDisplayURL(tab)
+            updateUIForReaderHomeStateForTab(tab)
+            // TODO: Check if it's needed
+            //			appDidUpdateState(getCurrentAppState())
         }
-        
 		
 	}
 
 	func webView(_ _webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        alreadyCommited = false
-        redirect = false
         
 		guard let container = _webView as? ContainerWebView else { return }
 		guard let webView = container.legacyWebView else { return }
@@ -687,9 +664,6 @@ extension CIBrowserViewController: WKNavigationDelegate {
 	}
 
 	func webView(_ _webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        
-        alreadyCommited = false
-        redirect = false
 		
 		guard let container = _webView as? ContainerWebView else { return }
 		guard let webView = container.legacyWebView else { return }

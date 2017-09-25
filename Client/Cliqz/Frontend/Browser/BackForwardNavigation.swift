@@ -78,36 +78,36 @@ class BrowseAddRule {
     
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard newState.contentState == .browse else {
+        guard actionType == .visitAddedInDB else {
             return false
         }
         
-        guard BrowseAddRule.shouldReplaceCurrent(newState: newState, tab: tab, actionType: actionType) == false else {
-            return false //one cannot add when one needs to replace
+        guard newState.contentState == .browse else {
+            return false
         }
         
         return true
         
     }
     
-    class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
-        
-        guard newState.contentState == .browse else {
-            return false
-        }
-        
-        guard newState.stateData.redirect == true else {
-            return false
-        }
-        
-        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == .browse {
-                return true
-            }
-        }
-        
-        return false
-    }
+//    class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
+//        
+//        guard actionType == .visitAddedInDB else {
+//            return false
+//        }
+//        
+//        guard newState.contentState == .browse else {
+//            return false
+//        }
+//        
+//        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
+//            if currentState.contentState == .browse {
+//                return true
+//            }
+//        }
+//        
+//        return false
+//    }
     
 }
 

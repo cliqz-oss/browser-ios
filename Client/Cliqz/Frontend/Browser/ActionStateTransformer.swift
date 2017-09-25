@@ -33,6 +33,7 @@ let mainTransformDict: [ActionType : [MainState: MainState]] = [
     .forwardButtonPressed: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .remindersPressed: [.other: .reminderVisible, .actionSheetVisible: .reminderVisible, .tabsVisible: .reminderVisible],
     .tabSelected: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other]
+    //.visitAddedInDB - nothing should happen for this one
 ]
 
 
@@ -79,6 +80,7 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
         .tabSelected : [.search : specialState, .domains: specialState, .details: specialState, .dash: specialState, .browse: specialState],
         .detailBackPressed : [.details: .domains],
         .domainPressed : [.domains: .details]
+        //.visitAddedInDB - nothing should happen for this one
     ]
     
     if let actionDict = contentTransformDict[actionType], let nextState = actionDict[currentState] {
@@ -136,6 +138,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
         .tabSelected: [ .collapsedEmptyTransparent: tabSelectedSpecialState, .collapsedTextTransparent: tabSelectedSpecialState, .collapsedDomainBlue: tabSelectedSpecialState, .collapsedTextBlue: tabSelectedSpecialState, .expandedEmptyWhite: tabSelectedSpecialState, .expandedTextWhite: tabSelectedSpecialState],
         .detailBackPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         .domainPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent]
+        //.visitAddedInDB - nothing should happen for this one
     ]
     
     if let actionDict = urlBarTransformDict[actionType], let newState = actionDict[currentState] {
@@ -190,11 +193,9 @@ final class ActionStateTransformer {
         if let tab = state.stateData.tab {
             
             //Register rules
-            //If urlIsModified then I should replace the last browse with this one. 
-            if BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state)
-            }
-            else if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+            //No need for replacement for Browse. Add when there is a new entry in the DB.
+            //If urlIsModified then I should replace the last browse with this one.
+            if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
                 BackForwardNavigation.shared.addState(tab: tab, state: state)
             }
             else if SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
