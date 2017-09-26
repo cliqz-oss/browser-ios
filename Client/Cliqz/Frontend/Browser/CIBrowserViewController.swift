@@ -243,9 +243,9 @@ extension CIBrowserViewController {
     fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
 		// TODO: update URLbar and Status bar
 
-        if tab.url?.absoluteString.contains("localhost") == false {
-            StateManager.shared.handleAction(action: Action(data: ["url": tab.url?.absoluteString ?? ""], type: .urlIsModified, context: .urlBarVC))
-        }
+        //if tab.url?.absoluteString.contains("localhost") == false {
+        StateManager.shared.handleAction(action: Action(data: ["url": tab.url?.absoluteString ?? ""], type: .urlIsModified, context: .urlBarVC))
+        //}
 		
 
 //		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)

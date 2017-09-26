@@ -15,6 +15,7 @@
 //The following dicts define the nextState for each currentState and ActionTyoe
 
 let mainTransformDict: [ActionType : [MainState: MainState]] = [
+    .initialization : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlBackPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlClearPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlSearchPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
@@ -60,6 +61,7 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
     }
     
     let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
+        .initialization : [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains],
         .urlBackPressed : [.search: .prevState],
         .urlClearPressed : [.search: .search],
         .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
@@ -119,6 +121,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     //Problem - how is decision made to go either to collapsedTextBlue or collapsedDomainBlue?
     
     let urlBarTransformDict: [ActionType: [URLBarState: URLBarState]] = [
+        .initialization : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         //[ .collapsedEmptyTransparent: , .collapsedTextTransparent: , .collapsedTextBlue: , .expandedEmptyWhite: , .expandedTextWhite: ]
         .urlBackPressed : [ .collapsedEmptyTransparent: .prevState, .collapsedTextTransparent: .prevState, .collapsedTextBlue: .prevState, .collapsedDomainBlue: .prevState, .expandedEmptyWhite: .prevState, .expandedTextWhite: .prevState],
         .urlClearPressed : [.expandedTextWhite: .expandedEmptyWhite],
@@ -222,6 +225,15 @@ final class ActionStateTransformer {
         //The idea is that state data changes only when modified. If a url is not modified, then it remains like that. It is considered the last visited url.
         //The part about state data should be refactored.
         var alteredStateData = StateData.merge(lhs: nextStateData, rhs: currentState.stateData)
+        
+        //There should always be a tab selected. This makes sure that is true.
+        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+            if alteredStateData.tab == nil {
+                let tab = tabManager.addTabAndSelect()
+                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, image: nil)
+                alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
+            }
+        }
         
         var mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
         var contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)

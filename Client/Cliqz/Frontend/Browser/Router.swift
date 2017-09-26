@@ -12,6 +12,9 @@
 import UIKit
 
 enum ActionType {
+    //init
+    case initialization
+    
     //search
 //    case searchTextChanged
 //    case searchTextCleared

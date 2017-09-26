@@ -48,9 +48,6 @@ class MainContainerViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let profile = appDelegate.profile
 		self.tabManager = appDelegate.tabManager
-		if self.tabManager.tabs.count == 0 {
-			_ = self.tabManager.addTabAndSelect()
-		}
         searchLoader = SearchLoader(profile: profile!)
         contentNavVC = ContentNavigationViewController(profile: profile!, tabManager: tabManager, searchLoader: searchLoader)
         
@@ -68,8 +65,11 @@ class MainContainerViewController: UIViewController {
         StateManager.shared.contentNav = contentNavVC
         StateManager.shared.urlBar = URLBarVC
         StateManager.shared.toolBar = toolbarVC
-		
+        
         prepareModules()
+        
+        StateManager.shared.handleAction(action: Action(type: .initialization))
+		
     }
     
     required init?(coder aDecoder: NSCoder) {

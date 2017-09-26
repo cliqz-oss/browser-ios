@@ -183,14 +183,16 @@ final class StateManager {
             return
         }
         
-        //a tab should always be selected.
-        if action.type == .tabSelected, let tab = preprocessedData.tab, let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
-            //tab Manager has to become a singleton. There cannot be 2 tab managers.
-            tabManager.selectTab(tab)
-        }
-        
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessedData)
         //there will be some more state changes added here, to take care of back and forward. 
+        
+        //a tab should always be selected.
+        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+            //tab Manager has to become a singleton. There cannot be 2 tab managers.
+            if action.type == .tabSelected, let tab = nextState.stateData.tab {
+                tabManager.selectTab(tab)
+            }
+        }
 
         changeToState(nextState: nextState, action: action)
     }
