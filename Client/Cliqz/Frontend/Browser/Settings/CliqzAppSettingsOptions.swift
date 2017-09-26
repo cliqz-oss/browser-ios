@@ -118,8 +118,14 @@ class RateUsSetting: Setting {
     }
     
     override func onClick(_ navigationController: UINavigationController?) {
+        var urlString: String!
+        if #available(iOS 11.0, *) {
+            urlString = "itms-apps://itunes.apple.com/app/id\(AppId)"
+        } else {
+            urlString = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
+        }
         
-        if let url = URL(string: "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8") {
+        if let url = URL(string: urlString) {
             UIApplication.shared.openURL(url)
         }
     }
