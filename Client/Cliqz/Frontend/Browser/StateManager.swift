@@ -137,10 +137,13 @@ final class StateManager {
     var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
     var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
     
+    var currentAction: Action = Action(type: .initialization)
+    var previousAction: Action = Action(type: .initialization)
     
-    func preprocessActionData(data: [String: Any]?) -> StateData {
+    
+    func preprocessAction(action: Action) -> StateData {
         
-        guard let data = data else {
+        guard let data = action.data else {
             return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil)
         }
         
@@ -171,7 +174,7 @@ final class StateManager {
     
     func handleAction(action: Action) {
         
-        let preprocessedData = preprocessActionData(data: action.data)
+        let preprocessedData = preprocessAction(action: action)
         
         //there is an infinite loop when the url is modified and the only thing that differs are the arguments
         //let nextURL = URL(string: preprocessedData.url ?? "")
@@ -183,12 +186,27 @@ final class StateManager {
             return
         }
         
+        if action.type == .visitAddedInDB && currentState.contentState != .browse {
+            return
+        }
+        
+        if (preprocessedData.url == previousState.stateData.url || preprocessedData.url == currentState.stateData.url) && action.type == .visitAddedInDB && (previousAction.type == .backButtonPressed || previousAction.type == .forwardButtonPressed) {
+            return
+        }
+        
+//        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+//            if preprocessedData.url != currentState.stateData.url && (action.type == .urlSelected || action.type == .visitAddedInDB) {
+//                tabManager.selectedTab?.webView?.stopLoading()
+//            }
+//        }
+        
+        
 //        if (preprocessedData.url == currentState.stateData.url /*||  specialCond*/) && action.type == .visitAddedInDB {
 //            return
 //        }
         
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessedData)
-        //there will be some more state changes added here, to take care of back and forward. 
+        //there will be some more state changes added here, to take care of back and forward.
         
         //a tab should always be selected.
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
@@ -199,6 +217,14 @@ final class StateManager {
         }
 
         changeToState(nextState: nextState, action: action)
+        
+        
+        if currentAction != action {
+            previousAction = currentAction
+        }
+        
+        currentAction = action
+        
     }
     
     func changeToState(nextState: State, action: Action) {

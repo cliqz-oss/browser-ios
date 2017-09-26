@@ -86,6 +86,10 @@ class BrowseAddRule {
             return false
         }
         
+        guard newState.stateData.url?.contains("localhost") == false else {
+            return false
+        }
+        
         return true
         
     }

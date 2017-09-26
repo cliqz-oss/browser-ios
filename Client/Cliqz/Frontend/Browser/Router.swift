@@ -59,7 +59,7 @@ enum ActionContext {
     case dashRecommendationsDS
 }
 
-struct Action {
+struct Action: Equatable {
     let data: [String: Any]?
     let type: ActionType
     let context: ActionContext?
@@ -68,6 +68,14 @@ struct Action {
         self.data = data
         self.type = type
         self.context = context
+    }
+    
+    static func == (lhs: Action, rhs: Action) -> Bool {
+        return lhs.type == rhs.type
+    }
+    
+    static func != (lhs: Action, rhs: Action) -> Bool {
+        return lhs.type != rhs.type
     }
 }
 
