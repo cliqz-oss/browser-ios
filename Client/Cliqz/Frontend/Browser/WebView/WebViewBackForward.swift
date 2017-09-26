@@ -99,6 +99,11 @@ class WebViewBackForwardList {
             }
             i += 1
         }
+        if  backForwardList.count > 0 {
+            let lastUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
+            StateManager.shared.handleAction(action: Action(data: ["url" : lastUrlStr], type: .visitAddedInDB))
+        }
+        
         if !foundCurrent {
             currentIndex = 0
         }

@@ -183,6 +183,10 @@ final class StateManager {
             return
         }
         
+//        if (preprocessedData.url == currentState.stateData.url /*||  specialCond*/) && action.type == .visitAddedInDB {
+//            return
+//        }
+        
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessedData)
         //there will be some more state changes added here, to take care of back and forward. 
         

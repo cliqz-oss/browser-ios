@@ -86,7 +86,6 @@ class DomainsModule {
                 addDomainDetail(detail: domainDetail)
                 //when done send notification
                 NotificationCenter.default.post(name: DomainsModule.notification_updated, object: nil)
-                StateManager.shared.handleAction(action: Action(data: ["url" : url], type: .visitAddedInDB))
             }
         }
     }
