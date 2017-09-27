@@ -51,7 +51,7 @@ final class URLBarViewController: UIViewController {
         self.progressBar.snp.makeConstraints { (make) in
             make.top.equalTo(self.URLBar.snp.bottom)
             make.left.right.equalToSuperview()
-            make.height.equalTo(4)
+            make.height.equalTo(3)
         }
         
     }
