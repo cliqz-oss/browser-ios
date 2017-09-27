@@ -92,14 +92,14 @@ class MainContainerViewController: UIViewController {
         
         self.view.addSubview(backgroundImage)
         
+        self.addChildViewController(contentNavVC)
+        self.view.addSubview(contentNavVC.view)
+        
         self.addChildViewController(URLBarVC)
         self.view.addSubview(URLBarVC.view)
         
         self.addChildViewController(toolbarVC)
         self.view.addSubview(toolbarVC.view)
-        
-        self.addChildViewController(contentNavVC)
-        self.view.addSubview(contentNavVC.view)
 	}
 
     private func setStyling() {

@@ -27,6 +27,7 @@ enum ActionType {
     case urlClearPressed
     case urlSearchPressed
     case urlSearchTextChanged
+    case urlProgressChanged
     //toolbar
 	case homeButtonPressed
 	case tabsPressed

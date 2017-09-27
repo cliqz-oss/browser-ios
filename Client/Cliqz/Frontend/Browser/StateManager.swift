@@ -71,6 +71,7 @@ struct StateData: Equatable {
     let tab: Tab?
     let indexPath: IndexPath?
     let image: UIImage?
+    let loadingProgress: Float?
     //maybe indexpath as well or tab?
     
     static func merge(lhs: StateData, rhs: StateData) -> StateData {
@@ -81,8 +82,9 @@ struct StateData: Equatable {
         let tab   = lhs.tab != nil ? lhs.tab : rhs.tab
         let indexPath = lhs.indexPath != nil ? lhs.indexPath : rhs.indexPath
         let image = lhs.image != nil ? lhs.image : rhs.image
+        let loadingProgress = lhs.loadingProgress != nil ? lhs.loadingProgress : rhs.loadingProgress
         
-        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image)
+        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image, loadingProgress: loadingProgress)
     }
     
     static func == (lhs: StateData, rhs: StateData) -> Bool {
@@ -127,8 +129,8 @@ final class StateManager {
 
     
     //initial state
-    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
-    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil))
+    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil))
+    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil))
     
     var currentAction: Action = Action(type: .initialization)
     var previousAction: Action = Action(type: .initialization)
@@ -137,7 +139,7 @@ final class StateManager {
     func preprocessAction(action: Action) -> StateData {
         
         guard let data = action.data else {
-            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil)
+            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil)
         }
         
         let text = data["text"] as? String
@@ -145,6 +147,7 @@ final class StateManager {
         let indexPath = data["indexPath"] as? IndexPath
         let image = data["image"] as? UIImage
         var url  = data["url"] as? String
+        let loadingProgress = data["progress"] as? Float
         
         //careful about this. Think about it. Maybe you want to navigate to a url, that is not already set as the url of the tab...
 //        if let t = tab {
@@ -160,7 +163,7 @@ final class StateManager {
         }
         
         
-        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image)
+        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image, loadingProgress: loadingProgress)
     }
     
     //func areUrlSameExcept
@@ -180,6 +183,11 @@ final class StateManager {
         }
         
         if action.type == .visitAddedInDB && currentState.contentState != .browse {
+            return
+        }
+        
+        //should only change the progress bar in this state
+        if action.type == .urlProgressChanged && currentState.urlBarState != .collapsedDomainBlue {
             return
         }
         
@@ -232,16 +240,16 @@ final class StateManager {
         //there is not point in changing the previous state if the currentstate does not change. 
         
         //Attention: note that currentState == nextState even if the data of the nextState is different from the data of currentState
-        debugPrint("------------------------------------")
-        debugPrint("PREV STATE")
-        debugPrint(previousState.urlBarState)
-        debugPrint(previousState.stateData)
-        debugPrint("CURRENT STATE")
-        debugPrint(currentState.urlBarState)
-        debugPrint(currentState.stateData)
-        debugPrint("NEXT STATE")
-        debugPrint(nextState.urlBarState)
-        debugPrint(nextState.stateData)
+//        debugPrint("------------------------------------")
+//        debugPrint("PREV STATE")
+//        debugPrint(previousState.urlBarState)
+//        debugPrint(previousState.stateData)
+//        debugPrint("CURRENT STATE")
+//        debugPrint(currentState.urlBarState)
+//        debugPrint(currentState.stateData)
+//        debugPrint("NEXT STATE")
+//        debugPrint(nextState.urlBarState)
+//        debugPrint(nextState.stateData)
         
         
         if currentState != nextState {
@@ -279,7 +287,7 @@ final class StateManager {
         switch nextState {
         case .browse:
             //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
-            if action.type != .urlIsModified && action.type != .visitAddedInDB {
+            if action.type != .urlIsModified && action.type != .visitAddedInDB && action.type != .urlProgressChanged {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }
@@ -309,7 +317,7 @@ final class StateManager {
         case .collapsedTextBlue:
             urlBar?.collapsedQueryBlue(text: nextStateData.query)
         case .collapsedDomainBlue:
-            urlBar?.collapsedDomainBlue(urlStr: nextStateData.url)
+            urlBar?.collapsedDomainBlue(urlStr: nextStateData.url, progress: nextStateData.loadingProgress)
         case .expandedEmptyWhite:
             urlBar?.expandedEmptyWhite()
         case .expandedTextWhite:

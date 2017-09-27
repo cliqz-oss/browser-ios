@@ -13,6 +13,7 @@ final class URLBarViewController: UIViewController {
     var URLBarHeight: CGFloat = 64.0
     
 	fileprivate var URLBar: RefactoredURLBar = RefactoredURLBar()
+    fileprivate let progressBar: ProgressBar = ProgressBar()
 
     weak var search_loader: SearchLoader? = nil
     
@@ -32,7 +33,7 @@ final class URLBarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		self.view.addSubview(self.URLBar)
-
+        self.view.addSubview(self.progressBar)
         setConstraints()
     }
 	
@@ -46,6 +47,13 @@ final class URLBarViewController: UIViewController {
 		self.URLBar.snp.makeConstraints { (make) in
 			make.left.top.right.bottom.equalTo(self.view)
 		}
+        
+        self.progressBar.snp.makeConstraints { (make) in
+            make.top.equalTo(self.URLBar.snp.bottom)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(4)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,6 +95,8 @@ final class URLBarViewController: UIViewController {
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = nil
         URLBar.textField.resignFirstResponder()
+        progressBar.setProgress(progress: 0.0)
+        progressBar.isHidden = true
     }
     
     func collapsedTextTransparent(text: String?) {
@@ -94,6 +104,8 @@ final class URLBarViewController: UIViewController {
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = text
         URLBar.textField.resignFirstResponder()
+        progressBar.setProgress(progress: 0.0)
+        progressBar.isHidden = true
     }
     
     func collapsedQueryBlue(text: String?) {
@@ -101,19 +113,51 @@ final class URLBarViewController: UIViewController {
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = text
         URLBar.textField.resignFirstResponder()
+        progressBar.setProgress(progress: 0.0)
+        progressBar.isHidden = true
     }
     
-    func collapsedDomainBlue(urlStr: String?) {
+    func collapsedDomainBlue(urlStr: String?, progress: Float?) {
         URLBar.backgroundColor = UIConstants.CliqzThemeColor
         URLBar.changeState(state: .collapsedBrowse)
         URLBar.domainLabel.text = processUrl(urlStr: urlStr)
         URLBar.textField.resignFirstResponder()
+        if let p = progress {
+            
+            //I will refactor this. Use transitions
+            
+            if p == 1.0 {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.progressBar.alpha = 0.0
+                    self.view.layoutIfNeeded()
+                }, completion: { (finished) in
+                    if finished {
+                        self.progressBar.isHidden = true
+                    }
+                })
+                
+            }
+//            else if p == 0.0 {
+//                progressBar.isHidden = true
+//                progressBar.setProgress(progress: 0.0)
+//            }
+            else {
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.progressBar.isHidden = false
+                    self.progressBar.alpha = 1.0
+                    self.progressBar.setProgress(progress: p)
+                    self.view.layoutIfNeeded()
+                })
+            }
+        }
     }
 
     func expandedEmptyWhite() {
         URLBar.changeState(state: .expandedEmpty)
         URLBar.textField.text = nil
         search_loader?.query = ""
+        progressBar.setProgress(progress: 0.0)
+        progressBar.isHidden = true
     }
 
     func expandedTextWhite(text: String?) {
@@ -122,6 +166,8 @@ final class URLBarViewController: UIViewController {
         if let t = text {
             search_loader?.query = t
         }
+        progressBar.setProgress(progress: 0.0)
+        progressBar.isHidden = true
     }
     
     func processUrl(urlStr:String?) -> String? {
@@ -251,5 +297,55 @@ extension URLBarViewController: CIURLBarDataSource {
 		// TODO: Test if this scenario is enough for URLBar display text in editing mode
 		
         return url?.absoluteString
+    }
+}
+
+final class ProgressBar: UIView {
+    
+    private let colorView = UIView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpComponent()
+        setConstraints()
+        setStyling()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setUpComponent() {
+        self.addSubview(colorView)
+    }
+    
+    private func setStyling() {
+        colorView.backgroundColor = UIColor(colorString: "930194")
+    }
+    
+    private func setConstraints() {
+        colorView.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalToSuperview()
+        }
+    }
+    
+    func setProgress(progress: Float) {
+        guard isProgressValid(progress: progress) else {
+            return
+        }
+        
+        colorView.snp.remakeConstraints { (make) in
+            make.top.bottom.equalToSuperview()
+            make.left.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(progress)
+        }
+    }
+    
+    func isProgressValid(progress: Float) -> Bool {
+        if progress >= 0.0 && progress <= 1.0 {
+            return true
+        }
+        
+        return false
     }
 }
