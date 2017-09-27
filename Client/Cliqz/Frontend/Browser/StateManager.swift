@@ -25,7 +25,6 @@ enum MainState {
     case reminderVisible
     case actionSheetVisible
     case other
-    case prevState
 }
 
 enum ContentState {
@@ -34,7 +33,6 @@ enum ContentState {
     case domains
     case details
     case dash
-    case prevState
 }
 
 enum URLBarState {
@@ -44,31 +42,26 @@ enum URLBarState {
     case collapsedDomainBlue //displays domain
     case expandedEmptyWhite
     case expandedTextWhite
-    case prevState
 }
 
 enum ToolBarState {
     case invisible
     case visible
-    case prevState
 }
 
 enum ToolBarBackState {
     case enabled
     case disabled
-    case prevState
 }
 
 enum ToolBarForwardState {
     case enabled
     case disabled
-    case prevState
 }
 
 enum ToolBarShareState {
     case enabled
     case disabled
-    case prevState
 }
 
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
@@ -278,8 +271,6 @@ final class StateManager {
             debugPrint()
         case .other:
             debugPrint()
-        case .prevState:
-            raisePrevStateException()
         }
     }
     
@@ -305,8 +296,6 @@ final class StateManager {
             contentNav?.details(indexPath: nextStateData.indexPath, image: nextStateData.image, animated: animated)
         case .dash:
             contentNav?.dash()
-        case .prevState:
-            raisePrevStateException()
         }
     }
     
@@ -325,8 +314,6 @@ final class StateManager {
             urlBar?.expandedEmptyWhite()
         case .expandedTextWhite:
             urlBar?.expandedTextWhite(text: nextStateData.query)
-        case .prevState:
-           raisePrevStateException()
         }
     }
     
@@ -341,8 +328,6 @@ final class StateManager {
             debugPrint()
         case .visible:
             debugPrint()
-        case .prevState:
-            raisePrevStateException()
         }
     }
     
@@ -357,8 +342,6 @@ final class StateManager {
             toolBar?.setBackEnabled()
         case .disabled:
             toolBar?.setBackDisabled()
-        case .prevState:
-            raisePrevStateException()
         }
     }
     
@@ -373,8 +356,6 @@ final class StateManager {
             toolBar?.setForwardEnabled()
         case .disabled:
             toolBar?.setForwardDisabled()
-        case .prevState:
-            raisePrevStateException()
         }
     }
     
@@ -389,13 +370,6 @@ final class StateManager {
             debugPrint()
         case .disabled:
             debugPrint()
-        case .prevState:
-            raisePrevStateException()
         }
     }
-    
-    private func raisePrevStateException() {
-         NSException(name: NSExceptionName(rawValue: "Bad State Management"), reason: "prevState should never occur. It should always be handled before this.", userInfo: nil).raise()
-    }
-
 }

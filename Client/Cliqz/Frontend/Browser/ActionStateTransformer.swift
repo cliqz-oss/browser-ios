@@ -27,6 +27,7 @@ let mainTransformDict: [ActionType : [MainState: MainState]] = [
     .urlSelected: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlIsModified: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
 //    .urlBarCancelEditing: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
+    //.urlProgressChanged
     .homeButtonPressed: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .tabsPressed: [.other: .tabsVisible, .reminderVisible: .tabsVisible, .actionSheetVisible: .tabsVisible],
     .sharePressed: [.other: .actionSheetVisible, .reminderVisible: .actionSheetVisible, .tabsVisible: .actionSheetVisible],
@@ -62,7 +63,7 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
     
     let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
         .initialization : [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains],
-        .urlBackPressed : [.search: .prevState],
+        .urlBackPressed : [.search: previousState],
         .urlClearPressed : [.search: .search],
         .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
         .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
@@ -73,6 +74,7 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
         .urlSelected : [.search : .browse, .domains: .browse, .details: .browse, .dash: .browse],
         //urlIsModified
         //    .urlBarCancelEditing : [.search: .prevState],
+        //.urlProgressChanged
         .homeButtonPressed : [.browse : .domains, .search: .domains, .domains: .dash, .details: .domains, .dash: .domains],
         //.tabsPressed
         //.sharePressed
@@ -102,7 +104,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     
     let expandedTextIsPrev: Bool = previousState == .expandedTextWhite
     
-    let specialState: URLBarState = expandedTextIsPrev ? .prevState : .expandedEmptyWhite
+    let specialState: URLBarState = expandedTextIsPrev ? previousState : .expandedEmptyWhite
     
     //this is for selecting an empty tab
     var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
@@ -123,7 +125,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     let urlBarTransformDict: [ActionType: [URLBarState: URLBarState]] = [
         .initialization : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         //[ .collapsedEmptyTransparent: , .collapsedTextTransparent: , .collapsedTextBlue: , .expandedEmptyWhite: , .expandedTextWhite: ]
-        .urlBackPressed : [ .collapsedEmptyTransparent: .prevState, .collapsedTextTransparent: .prevState, .collapsedTextBlue: .prevState, .collapsedDomainBlue: .prevState, .expandedEmptyWhite: .prevState, .expandedTextWhite: .prevState],
+        .urlBackPressed : [ .collapsedEmptyTransparent: previousState, .collapsedTextTransparent: previousState, .collapsedTextBlue: previousState, .collapsedDomainBlue: previousState, .expandedEmptyWhite: previousState, .expandedTextWhite: previousState],
         .urlClearPressed : [.expandedTextWhite: .expandedEmptyWhite],
         .urlSearchPressed : [ .collapsedEmptyTransparent: specialState, .collapsedTextTransparent: specialState, .collapsedTextBlue: specialState, .collapsedDomainBlue: specialState],
         .urlSearchTextChanged : [.expandedTextWhite: queryEmpty ? .expandedEmptyWhite : .expandedTextWhite, .expandedEmptyWhite : .expandedTextWhite],
@@ -132,6 +134,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
         .searchStopEditing: [ .expandedEmptyWhite: .collapsedTextTransparent, .expandedTextWhite: .collapsedTextTransparent],
         .urlSelected: [ .collapsedEmptyTransparent: .collapsedDomainBlue, .collapsedTextTransparent: .collapsedDomainBlue, .expandedEmptyWhite: .collapsedDomainBlue, .expandedTextWhite: .collapsedDomainBlue],
         .urlIsModified: [.collapsedDomainBlue: .collapsedDomainBlue],
+        //.urlProgressChanged
         .homeButtonPressed: [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         //.tabsPressed: [:],
         //.sharePressed: [:],
@@ -230,56 +233,20 @@ final class ActionStateTransformer {
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
             if alteredStateData.tab == nil {
                 let tab = tabManager.addTabAndSelect()
-                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, image: nil)
+                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, image: nil, loadingProgress: nil)
                 alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
             }
         }
         
-        var mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
-        var contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)
-        var urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, actionType: actionType, nextStateData: nextStateData)
-        var toolBarNextState = toolBarTransform(currentState: currentState.toolBarState, actionType: actionType)
+        let mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
+        let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)
+        let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, actionType: actionType, nextStateData: nextStateData)
+        let toolBarNextState = toolBarTransform(currentState: currentState.toolBarState, actionType: actionType)
         
-        var toolBackNextState: ToolBarBackState = .disabled
-        var toolForwardNextState: ToolBarForwardState = .disabled
+        let toolBackNextState: ToolBarBackState = .disabled
+        let toolForwardNextState: ToolBarForwardState = .disabled
         
-        
-        var toolShareNextState = toolBarShareTransform(currentState: currentState.toolShareState, actionType: actionType)
-        
-        if mainNextState == .prevState {
-            mainNextState = previousState.mainState
-        }
-        
-        if contentNextState == .prevState {
-            contentNextState = previousState.contentState
-        }
-        
-        if urlBarNextState == .prevState {
-            urlBarNextState = previousState.urlBarState
-        }
-        else if urlBarNextState == .collapsedTextTransparent {
-            alteredStateData = currentState.stateData
-        }
-        
-        if toolBarNextState == .prevState {
-            toolBarNextState = previousState.toolBarState
-        }
-        
-        if toolBackNextState == .prevState {
-            toolBackNextState = previousState.toolBackState
-        }
-        
-        if toolBackNextState == .prevState {
-            toolBackNextState = previousState.toolBackState
-        }
-        
-        if toolForwardNextState == .prevState {
-            toolForwardNextState = previousState.toolForwardState
-        }
-        
-        if toolShareNextState == .prevState {
-            toolShareNextState = previousState.toolShareState
-        }
+        let toolShareNextState = toolBarShareTransform(currentState: currentState.toolShareState, actionType: actionType)
         
         return State(mainState: mainNextState, contentState: contentNextState, urlBarState: urlBarNextState, toolBarState: toolBarNextState, toolBackState: toolBackNextState, toolForwardState: toolForwardNextState, toolShareState: toolShareNextState, stateData: alteredStateData)
         
