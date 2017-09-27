@@ -367,7 +367,7 @@ extension ContentNavigationViewController: SearchViewDelegate {
     //TO DO: Route these
     
     func didSelectURL(_ url: URL, searchQuery: String?) {
-        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlSelected, context: .contentNavVC))
+        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlSelected))
     }
     
     func searchForQuery(_ query: String) {
@@ -375,11 +375,11 @@ extension ContentNavigationViewController: SearchViewDelegate {
     }
 
     func autoCompeleteQuery(_ autoCompleteText: String) {
-        Router.shared.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest, context: .contentNavVC))
+        Router.shared.action(action: Action(data: ["text": autoCompleteText], type: .searchAutoSuggest))
     }
     
     func stopEditing() {
-        StateManager.shared.handleAction(action: Action(data: nil, type: .searchStopEditing, context: .contentNavVC))
+        StateManager.shared.handleAction(action: Action(data: nil, type: .searchStopEditing))
     }
 }
 

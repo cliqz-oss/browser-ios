@@ -36,7 +36,7 @@ class ShareHelper: NSObject {
 //        activities.append(settingsActivity)
         
         let reminderActivity = ReminderActivity() {
-            Router.shared.action(action: Action(data: nil, type: .remindersPressed, context: .shareHelper))
+            Router.shared.action(action: Action(data: nil, type: .remindersPressed))
         }
         
         activities.append(reminderActivity)

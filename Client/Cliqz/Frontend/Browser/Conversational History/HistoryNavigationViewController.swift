@@ -50,7 +50,7 @@ final class HistoryNavigationViewController: UIViewController {
                 data["image"] = img
             }
             
-            StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed, context: .historyNavVC))
+            StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed))
         }
     }
     
@@ -64,10 +64,10 @@ final class HistoryNavigationViewController: UIViewController {
         
         let conversationalHistoryDetails = DomainDetailsViewController(tableViewDataSource: headerAndTableDataSource, recommendationsDataSource: recommendationsDataSource, headerViewDataSource: headerAndTableDataSource, didPressBack: {
             //self.showHistory()
-            StateManager.shared.handleAction(action: Action(data: nil, type: .detailBackPressed, context: .historyNavVC))
+            StateManager.shared.handleAction(action: Action(data: nil, type: .detailBackPressed))
             
         }) { (url) in
-            StateManager.shared.handleAction(action: Action(data: ["url":url], type: .urlSelected, context: .historyNavVC))
+            StateManager.shared.handleAction(action: Action(data: ["url":url], type: .urlSelected))
         }
         
         recommendationsDataSource.delegate = conversationalHistoryDetails

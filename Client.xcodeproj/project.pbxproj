@@ -590,17 +590,13 @@
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
 		AF0E13C71F4C58F800651728 /* RecommendationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */; };
 		AF0E13CE1F4DC39700651728 /* GeneralUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */; };
-		AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */; };
-		AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */; };
 		AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */; };
 		AF2C3DF61EEFDEF1005DD628 /* DomainDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE71EEFDEF1005DD628 /* DomainDetailsDataSource.swift */; };
 		AF2C3DF81EEFDEF1005DD628 /* HistoryNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE91EEFDEF1005DD628 /* HistoryNavigationViewController.swift */; };
 		AF2C3DF91EEFDEF1005DD628 /* DomainsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEA1EEFDEF1005DD628 /* DomainsViewController.swift */; };
-		AF2C3DFA1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */; };
 		AF2C3DFB1EEFDEF1005DD628 /* DomainDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEC1EEFDEF1005DD628 /* DomainDetailsViewController.swift */; };
 		AF2C3DFC1EEFDEF1005DD628 /* DomainsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DED1EEFDEF1005DD628 /* DomainsDataSource.swift */; };
 		AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */; };
-		AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */; };
 		AF2C3DFF1EEFDEF1005DD628 /* NewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */; };
 		AF2C3E001EEFDEF1005DD628 /* ReadNewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */; };
 		AF2C3E151EEFED79005DD628 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3E141EEFED79005DD628 /* History.swift */; };
@@ -2082,17 +2078,13 @@
 		AC51CC4D525D25940DC5DDFD /* Pods-CliqzUITests.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.fennec.xcconfig"; sourceTree = "<group>"; };
 		AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsManager.swift; sourceTree = "<group>"; };
 		AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralUtils.swift; sourceTree = "<group>"; };
-		AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrowserActions.m; path = "Conversational History/BrowserActions.m"; sourceTree = "<group>"; };
-		AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrowserActions.swift; path = "Conversational History/BrowserActions.swift"; sourceTree = "<group>"; };
 		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
 		AF2C3DE71EEFDEF1005DD628 /* DomainDetailsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DE91EEFDEF1005DD628 /* HistoryNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryNavigationViewController.swift; sourceTree = "<group>"; };
 		AF2C3DEA1EEFDEF1005DD628 /* DomainsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsViewController.swift; sourceTree = "<group>"; };
-		AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationalHistoryAPI.swift; path = "Conversational History/ConversationalHistoryAPI.swift"; sourceTree = "<group>"; };
 		AF2C3DEC1EEFDEF1005DD628 /* DomainDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsViewController.swift; sourceTree = "<group>"; };
 		AF2C3DED1EEFDEF1005DD628 /* DomainsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsDataSource.swift; sourceTree = "<group>"; };
 		AF2C3DEE1EEFDEF1005DD628 /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HistoryModule.swift; path = "Conversational History/HistoryModule.swift"; sourceTree = "<group>"; };
-		AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryModuleBridge.m; path = "Conversational History/HistoryModuleBridge.m"; sourceTree = "<group>"; };
 		AF2C3DF01EEFDEF1005DD628 /* NewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewsManager.swift; path = "Conversational History/NewsManager.swift"; sourceTree = "<group>"; };
 		AF2C3DF11EEFDEF1005DD628 /* ReadNewsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReadNewsManager.swift; path = "Conversational History/ReadNewsManager.swift"; sourceTree = "<group>"; };
 		AF2C3E141EEFED79005DD628 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = JSEngine/History.swift; sourceTree = "<group>"; };
@@ -4156,17 +4148,6 @@
 			name = History;
 			sourceTree = "<group>";
 		};
-		AF0E13CC1F4C594400651728 /* React Actions and Stuff */ = {
-			isa = PBXGroup;
-			children = (
-				AF2C3DE31EEFDEF1005DD628 /* BrowserActions.m */,
-				AF2C3DE41EEFDEF1005DD628 /* BrowserActions.swift */,
-				AF2C3DEF1EEFDEF1005DD628 /* HistoryModuleBridge.m */,
-				AF2C3DEB1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift */,
-			);
-			name = "React Actions and Stuff";
-			sourceTree = "<group>";
-		};
 		AF3BF5B81F3C7A6400097346 /* RecommendationsCollection */ = {
 			isa = PBXGroup;
 			children = (
@@ -4317,7 +4298,6 @@
 				AF0E13CB1F4C593600651728 /* History */,
 				AF0E13CA1F4C592300651728 /* Animation */,
 				AF0E13C91F4C591100651728 /* News */,
-				AF0E13CC1F4C594400651728 /* React Actions and Stuff */,
 				AFCD36BC1F5EA297004AE609 /* Reminders */,
 				AF0E13C81F4C58FF00651728 /* Recommendations */,
 			);
@@ -6856,11 +6836,9 @@
 				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
-				AF2C3DF31EEFDEF1005DD628 /* BrowserActions.swift in Sources */,
 				E660BE061BB0666D009AC090 /* InnerStrokedView.swift in Sources */,
 				0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */,
 				1E79DD211D4FB2C5006BEB4A /* CliqzSearchViewController.swift in Sources */,
-				AF2C3DFA1EEFDEF1005DD628 /* ConversationalHistoryAPI.swift in Sources */,
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,
 				1E79DEA61D508368006BEB4A /* AWSUICKeyChainStore.m in Sources */,
 				AF2C3DFD1EEFDEF1005DD628 /* HistoryModule.swift in Sources */,
@@ -6969,7 +6947,6 @@
 				0B5142CC1AE1BAF50014D0B3 /* UIViewExtensions.swift in Sources */,
 				E47616C71AB74CA600E7DD25 /* ReaderModeBarView.swift in Sources */,
 				2F44FCC51A9E85E900FD20CC /* SettingsTableViewController.swift in Sources */,
-				AF2C3DFE1EEFDEF1005DD628 /* HistoryModuleBridge.m in Sources */,
 				AF6B5E9B1F73B72E004FEE00 /* BackForwardNavigation.swift in Sources */,
 				1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */,
 				AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */,
@@ -7054,7 +7031,6 @@
 				1E79DE971D508368006BEB4A /* AWSURLSessionManager.m in Sources */,
 				1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */,
 				1E79DD501D4FB2F8006BEB4A /* AWSSNSService.m in Sources */,
-				AF2C3DF21EEFDEF1005DD628 /* BrowserActions.m in Sources */,
 				1E79DE9E1D508368006BEB4A /* AWSClientContext.m in Sources */,
 				1E79DE871D508368006BEB4A /* AWSGZIP.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,

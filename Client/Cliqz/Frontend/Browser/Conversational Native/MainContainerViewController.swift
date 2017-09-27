@@ -299,7 +299,7 @@ extension MainContainerViewController: TabsViewControllerDelegate {
             //think about how tab selection should happen. If the tab is not navigated to, it is not selected even if pressed (because browseTab is not called). I think selection should not happen there.
             //selection should happen in StateManager. TabManager should be a singleton and therefore I can use it.
             //tabManager.selectTab(tab)
-            StateManager.shared.handleAction(action: Action(data: ["tab": tab, "url": tab.url?.absoluteString], type: .tabSelected, context: .mainContainer))
+            StateManager.shared.handleAction(action: Action(data: ["tab": tab, "url": tab.url?.absoluteString], type: .tabSelected))
             
             dismissTabOverview(tabsVC: tabsVC, completion: {
 				

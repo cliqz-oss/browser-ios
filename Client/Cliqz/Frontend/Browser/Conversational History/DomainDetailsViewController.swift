@@ -118,7 +118,7 @@ final class DomainDetailsViewController: UIViewController {
 extension DomainDetailsViewController: RecommendationsCollectionDelegate {
     func itemPressed(indexPath: IndexPath) {
         let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
-        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected, context: .historyDetails))
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
     }
     
     func deletePressed(indexPath: IndexPath) {

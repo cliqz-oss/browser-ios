@@ -63,12 +63,10 @@ enum ActionContext {
 struct Action: Equatable {
     let data: [String: Any]?
     let type: ActionType
-    let context: ActionContext?
-    
-    init(data: [String: Any]? = nil, type: ActionType, context: ActionContext? = nil) {
+	
+    init(data: [String: Any]? = nil, type: ActionType) {
         self.data = data
         self.type = type
-        self.context = context
     }
     
     static func == (lhs: Action, rhs: Action) -> Bool {

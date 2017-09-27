@@ -194,7 +194,7 @@ final class StateManager {
         if (preprocessedData.url == previousState.stateData.url || preprocessedData.url == currentState.stateData.url) && action.type == .visitAddedInDB && (previousAction.type == .backButtonPressed || previousAction.type == .forwardButtonPressed) {
             return
         }
-        
+
 //        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
 //            if preprocessedData.url != currentState.stateData.url && (action.type == .urlSelected || action.type == .visitAddedInDB) {
 //                tabManager.selectedTab?.webView?.stopLoading()
@@ -218,8 +218,7 @@ final class StateManager {
         }
 
         changeToState(nextState: nextState, action: action)
-        
-        
+		
         if currentAction != action {
             previousAction = currentAction
         }

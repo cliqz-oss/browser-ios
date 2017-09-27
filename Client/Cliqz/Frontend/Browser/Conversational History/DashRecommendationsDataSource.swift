@@ -53,7 +53,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
     func cellPressed(indexPath: IndexPath) {
-        StateManager.shared.handleAction(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected, context: .dashRecommendationsDS))
+        StateManager.shared.handleAction(action: Action(data: ["url": self.url(indexPath: indexPath)], type: .urlSelected))
     }
     
     @objc

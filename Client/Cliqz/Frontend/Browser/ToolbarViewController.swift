@@ -119,24 +119,24 @@ extension ToolbarViewController {
 extension ToolbarViewController: CIToolBarDelegate {
     
     func backPressed() {
-		StateManager.shared.handleAction(action: Action(data: nil, type: .backButtonPressed, context: .toolBarVC))
+		StateManager.shared.handleAction(action: Action(data: nil, type: .backButtonPressed))
     }
 	
     func forwardPressed() {
-		StateManager.shared.handleAction(action: Action(data: nil, type: .forwardButtonPressed, context: .toolBarVC))
+		StateManager.shared.handleAction(action: Action(data: nil, type: .forwardButtonPressed))
     }
 	
     func middlePressed() {
         //Router.shared.action(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
-        StateManager.shared.handleAction(action: Action(data: nil, type: .homeButtonPressed, context: .toolBarVC))
+        StateManager.shared.handleAction(action: Action(data: nil, type: .homeButtonPressed))
     }
     
     func sharePressed() {
-        Router.shared.action(action: Action(data: nil, type: .sharePressed, context: .toolBarVC))
+        Router.shared.action(action: Action(data: nil, type: .sharePressed))
     }
     
     func tabsPressed() {
-        Router.shared.action(action: Action(data: nil, type: .tabsPressed, context: .toolBarVC))
+        Router.shared.action(action: Action(data: nil, type: .tabsPressed))
     }
     
 }

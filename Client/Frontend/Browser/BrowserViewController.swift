@@ -1776,7 +1776,6 @@ extension BrowserViewController: URLBarDelegate {
 	func urlBarDidPressHome(urlBar: URLBarView) {
 //		self.navigationController?.popViewController(animated: false)
         self.needsNewTab = false
-        ConversationalHistoryAPI.homePressed()
         self.navigateToHome()
 	}
 
@@ -4512,7 +4511,6 @@ extension BrowserViewController {
         //self.needsNewTab = true
         visible = false
         self.navigationController?.popViewController(animated: false)
-        ConversationalHistoryAPI.homePressed()
     }
     
     func navigateToTab(_ tabID: Int) {
