@@ -31,28 +31,28 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     func loadDomains() {
         domains = DomainsModule.sharedInstance.domains
     }
-    
+
     func numberOfCells() -> Int {
         return self.domains.count
     }
-    
+
     func urlLabelText(indexPath:IndexPath) -> String {
         return domains[indexPath.row].host
     }
-    
+
     func titleLabelText(indexPath:IndexPath) -> String {
         return domains[indexPath.row].date?.toRelativeTimeString() ?? ""
     }
-    
+
     func timeLabelText(indexPath:IndexPath) -> String {
         return ""
     }
-    
+
     func baseUrl(indexPath:IndexPath) -> String {
         let domainDetail = domains[indexPath.row].domainDetails
         return domainDetail.first?.url.absoluteString ?? ""
     }
-    
+
     func image(indexPath:IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void) {
 		LogoLoader.loadLogo(self.baseUrl(indexPath: indexPath)) { (image, logoInfo, error) in
 			if let img = image {
@@ -87,4 +87,12 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         loadDomains()
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
+
+	// Fake deletion for user testing.
+	func removeDomain(at index: Int) {
+		if index < self.domains.count {
+			self.domains.remove(at: index)
+			self.delegate?.dataSourceWasUpdated(identifier: "")
+		}
+	}
 }

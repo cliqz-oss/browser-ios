@@ -91,7 +91,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
                 cell.logoButton.setImage(result, for: .normal)
             }
         }
-        
+
         if dataSource.shouldShowNotification(indexPath: indexPath) {
             cell.notificationView.isHidden = false
             cell.notificationView.numberLabel.text = String(dataSource.notificationNumber(indexPath: indexPath))
@@ -117,11 +117,12 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return false//true
+        return true
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
+			self.dataSource.removeDomain(at: indexPath.row)
             // handle delete (by removing the data from your array and updating the tableview)
         }
     }

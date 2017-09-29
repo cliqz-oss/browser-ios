@@ -134,5 +134,5 @@ class DomainsModule {
             }
         }
     }
-    
+
 }
