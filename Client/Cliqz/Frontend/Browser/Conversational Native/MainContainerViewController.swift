@@ -39,17 +39,19 @@ class MainContainerViewController: UIViewController {
     fileprivate let toolbarVC = ToolbarViewController()
     
     let tabManager: TabManager
-    
+	let profile: Profile?
+	
     let searchLoader: SearchLoader
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		
 		// TODO: Refactor profile/tabManager creation and contentNavVC initialization
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let profile = appDelegate.profile
+        self.profile = appDelegate.profile
 		self.tabManager = appDelegate.tabManager
-        searchLoader = SearchLoader(profile: profile!)
-        contentNavVC = ContentNavigationViewController(profile: profile!, tabManager: tabManager, searchLoader: searchLoader)
+		
+        searchLoader = SearchLoader(profile: self.profile!)
+        contentNavVC = ContentNavigationViewController(profile: self.profile!, tabManager: tabManager, searchLoader: searchLoader)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
@@ -82,7 +84,21 @@ class MainContainerViewController: UIViewController {
         setStyling()
         setConstraints()
     }
-    
+
+	override var canBecomeFirstResponder: Bool {
+		get {
+			return true
+		}
+	}
+
+	override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+		if motion == .motionShake,
+			let profile = self.profile {
+			// TODO: update UI after
+			let _ = HistoryClearable(profile: profile).clear()
+		}
+	}
+
     private func prepareModules() {
         _ = NewsManager.sharedInstance
         _ = DomainsModule.sharedInstance

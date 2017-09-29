@@ -336,7 +336,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let notification = launchOptions?[UIApplicationLaunchOptionsKey.localNotification] as? UILocalNotification {
             handleLocalNotification(notification: notification, startUp: true)
         }
-
+		application.applicationSupportsShakeToEdit = true
         return shouldPerformAdditionalDelegateHandling
     }
 
