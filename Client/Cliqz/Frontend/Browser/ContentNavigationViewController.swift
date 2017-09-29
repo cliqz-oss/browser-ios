@@ -271,7 +271,7 @@ extension ContentNavigationViewController {
             pageNavVC.historyNavigation.showDetails(indexPath: indexPath, image: image, animated: animated)
         }
     }
-    
+
     func dash() {
         changeState(state: .pageNavigation)
         pageNavVC.showDots()

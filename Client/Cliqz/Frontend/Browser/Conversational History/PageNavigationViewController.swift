@@ -56,8 +56,14 @@ class PageNavigationViewController: UIViewController {
     func setUpComponent() {
         addController(viewController: surfViewController)
         self.view.addSubview(pageControl)
+		let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
+		leftSwipe.direction = .left
+		self.view.addGestureRecognizer(leftSwipe)
+		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
+		rightSwipe.direction = .right
+		self.view.addGestureRecognizer(rightSwipe)
     }
-    
+
     func setStyling() {
         self.view.backgroundColor = .clear
         self.pageControl.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -146,7 +152,16 @@ class PageNavigationViewController: UIViewController {
         viewController.view.removeFromSuperview()
         viewController.removeFromParentViewController()
     }
-    
+
+	@objc private func swipeView(_ gestureRecognizer: UISwipeGestureRecognizer) {
+		if gestureRecognizer.direction == .right && self.pageControl.currentPage == 1 {
+			self.navigate()
+		}
+		if gestureRecognizer.direction == .left && self.pageControl.currentPage == 0 {
+			self.navigate()
+		}
+	}
+
 
     /*
     // MARK: - Navigation

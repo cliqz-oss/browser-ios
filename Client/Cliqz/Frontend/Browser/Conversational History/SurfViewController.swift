@@ -118,12 +118,12 @@ final class SurfViewController: UIViewController {
         self.view.addSubview(viewController.view)
         viewController.didMove(toParentViewController: self)
     }
-    
+
     private func removeController(viewController: UIViewController) {
         viewController.view.removeFromSuperview()
         viewController.removeFromParentViewController()
     }
-    
+
     private func isWithinBounds(number: Int)-> Bool {
         if number < controllers.count && number >= 0 {
             return true
