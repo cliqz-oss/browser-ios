@@ -97,7 +97,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         startTime = Date.getCurrentMillis()
-
+        self.updateViewConstraints()
+        
         isLoadCompleted = false
         region = SettingsPrefs.getRegionPref()
 		updateView()
@@ -125,15 +126,53 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
-		self.topSitesCollection?.snp.updateConstraints({ (make) in
-			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
-				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
-			} else {
-				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
-			}
-		})
-	}
+        // topsites hint
+        if !SettingsPrefs.getShowTopSitesPref() {
+            self.emptyTopSitesHint.removeFromSuperview()
+        }
 
+        // topsites collection
+        let topSitesHeight = getTopSitesHeight()
+        self.topSitesCollection?.snp.updateConstraints({ (make) in
+            make.height.equalTo(topSitesHeight)
+        })
+        
+        // news table
+        let newsHeight = getNewsHeight()
+        self.newsTableView?.snp.updateConstraints({ (make) in
+            make.height.equalTo(newsHeight)
+        })
+		
+	}
+    
+    private func getTopSitesHeight() -> Double {
+        guard SettingsPrefs.getShowTopSitesPref() else {
+            return 0.0
+        }
+        
+        if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
+            return FreshtabViewUX.TopSitesMaxHeight
+            
+        } else {
+            return FreshtabViewUX.TopSitesMinHeight
+        }
+    }
+    
+    private func getNewsHeight() -> CGFloat {
+        guard SettingsPrefs.getShowNewsPref() && self.news.count != 0 else {
+            return 0.0
+        }
+        
+        if self.isNewsExpanded {
+            return (FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
+            
+        } else {
+            return FreshtabViewUX.NewsViewMinHeight
+        }
+    }
+    
+    
+    
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
 			let location = touch.location(in: self.topSitesCollection)
@@ -298,12 +337,16 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.forgetModeView?.isHidden = true
 		}
 		if !isForgetMode {
-			self.loadNews()
-			self.loadTopsites()
+            self.loadNews()
+            self.loadTopsites()
 		}
 	}
 
 	@objc fileprivate func loadTopsites() {
+        guard SettingsPrefs.getShowTopSitesPref() else {
+            return
+        }
+        
 		let _ = self.loadTopSitesWithLimit(15)
         //self.topSitesCollection?.reloadData()
 	}
@@ -330,7 +373,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     }
 
 	fileprivate func loadNews() {
-		self.news.removeAll()
+        guard SettingsPrefs.getShowNewsPref() else {
+            return
+        }
+        
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
@@ -346,6 +392,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						let extra = snippet["extra"] as? [String: Any],
 						let articles = extra["articles"] as? [[String: Any]]
 						{
+                            // remove old news
+                            self.news.removeAll()
 							// Temporary filter to avoid reuters crashing UIWebview on iOS 10.3.2/10.3.3
 							self.news = articles.filter({ (article) -> Bool in
 								print(article)
@@ -355,6 +403,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 								return true
 							})
 							self.newsTableView?.reloadData()
+                            self.updateViewConstraints()
                             if !self.isLoadCompleted {
                                 self.isLoadCompleted = true
                                 self.logShowSignal()
@@ -384,7 +433,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 					}
 				}
 			}
-			if self.topSites.count == 0 {
+			if self.topSites.count == 0 && SettingsPrefs.getShowTopSitesPref() {
 				self.normalModeView.addSubview(self.emptyTopSitesHint)
 				self.emptyTopSitesHint.snp.makeConstraints({ (make) in
 					make.top.equalTo(self.normalModeView).offset(8)
@@ -408,15 +457,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	private func updateNewsView() {
-		if self.isNewsExpanded {
-			self.newsTableView?.snp.updateConstraints { (make) in
-				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
-			}
-		} else {
-			self.newsTableView?.snp.updateConstraints { (make) in
-				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-			}
-		}
+        self.updateViewConstraints()
 		self.newsTableView?.reloadData()
 	}
 }

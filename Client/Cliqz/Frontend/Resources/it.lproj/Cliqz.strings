@@ -256,6 +256,12 @@
 "Reset all subscriptions" = "Annullare tutte le iscrizioni";
 /* [Settings] Text of the 'Reset all subscriptions' alert */
 "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Vuoi davvero annullare tutte le iscrizioni (per esempio, per le partite di Serie A)?";
+/* [Settings] Cliqz Tab section header */
+"Cliqz Tab" = "CliqzTab";
+/* [Settings] Show most visited websites */
+"Show most visited websites" = "Mostra i siti più visitati";
+/* [Settings] Show News */
+"Show News" = "Mostra le news";
 /* [Settings] Help section header */
 "Help" = "Supporto";
 /* [Settings] FAQ & Support */

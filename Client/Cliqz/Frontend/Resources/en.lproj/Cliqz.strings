@@ -256,6 +256,12 @@
 "Reset all subscriptions" = "Reset All Subscriptions";
 /* [Settings] Text of the 'Reset all subscriptions' alert */
 "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?";
+/* [Settings] Cliqz Tab section header */
+"Cliqz Tab" = "Cliqz Tab";
+/* [Settings] Show most visited websites */
+"Show most visited websites" = "Show most visited websites";
+/* [Settings] Show News */
+"Show News" = "Show News";
 /* [Settings] Help section header */
 "Help" = "Help";
 /* [Settings] FAQ & Support */
