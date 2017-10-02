@@ -34,10 +34,10 @@ class RefactoredURLBar: UIView {
     let textFieldBGView = UIView() //this expands
     let textFieldContainer = UIView() //this is only to help me position the textfield
     let domainLabel = UILabel()
-    
+
     let backButton = UIButton()
     let clearButton = UIButton()
-    
+
     let textFieldCornerRadius: CGFloat = 5.0
     let textFieldCollapsedHeight: CGFloat = 30.0
     let textFieldExpandedHeight: CGFloat = 44.0
@@ -49,13 +49,23 @@ class RefactoredURLBar: UIView {
         case collapsedBrowse
     }
     
-    var currentState: State = .collapsedSearch
-    
+	var currentState: State = .collapsedSearch {
+		didSet {
+			switch(currentState) {
+				case .expandedEmpty, .expandedText, .collapsedBrowse:
+					UIApplication.shared.statusBarStyle = .default
+				case .collapsedSearch:
+					UIApplication.shared.statusBarStyle = .lightContent
+			}
+		}
+	}
+
     weak var delegate: RefactoredURLProtocol? = nil
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+		UIApplication.shared.statusBarStyle = .lightContent
+
         //Initial state
         setUpComponent()
         setStyling()

@@ -42,11 +42,11 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
         
         self.sortedDetails = orderByDate(domainDict: groupByDate(domainDetails: domainDetails))
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 	func logo(completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
         LogoLoader.loadLogo(self.sortedDetails.first?.details.first?.url.absoluteString ?? "") { (image, logoInfo, error) in
 			if let img = image {
