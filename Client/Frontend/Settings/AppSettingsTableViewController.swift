@@ -87,6 +87,11 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
 //				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications"))
 
+        // Cliqz Tab section
+        let showTopSitesSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.ShowTopSitesPrefKey, defaultValue: true, titleText: NSLocalizedString("Show most visited websites", tableName: "Cliqz", comment: "[Settings] Show most visited websites"))
+        let showNewsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.ShowNewsPrefKey, defaultValue: true, titleText: NSLocalizedString("Show News", tableName: "Cliqz", comment: "[Settings] Show News"))
+        let cliqzTabSection = [showTopSitesSetting, showNewsSetting]
+        
         
         // Help Section
         let supportSetting          = SupportSetting(delegate: settingsDelegate)
@@ -106,6 +111,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         var settings = [
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Search", tableName: "Cliqz", comment: "[Settings] Search section title")), children: searchSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Browsing & History", tableName: "Cliqz", comment: "[Settings] Browsing & History section header")), children: browsingAndHistorySection),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Cliqz Tab", tableName: "Cliqz", comment: "[Settings] Cliqz Tab section header")), children: cliqzTabSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Help", tableName: "Cliqz", comment: "[Settings] Help section header")), children: helpSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About Cliqz", tableName: "Cliqz", comment: "[Settings] About Cliqz section header")), children: AboutCliqzSection)
                         ]

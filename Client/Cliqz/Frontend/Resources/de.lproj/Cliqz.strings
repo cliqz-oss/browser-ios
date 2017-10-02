@@ -255,6 +255,12 @@
 "Reset all subscriptions" = "Alle Abonnements zurücksetzen";
 /* [Settings] Text of the 'Reset all subscriptions' alert */
 "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Möchtest du alle Abonnements (z.B. für Bundesliga Spiele) beenden?";
+/* [Settings] Cliqz Tab section header */
+"Cliqz Tab" = "CliqzTab";
+/* [Settings] Show most visited websites */
+"Show most visited websites" = "Meistbesuchte Seiten anzeigen";
+/* [Settings] Show News */
+"Show News" = "News anzeigen";
 /* [Settings] Help section header */
 "Help" = "Hilfe";
 /* [Settings] FAQs & Support */
