@@ -55,9 +55,9 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
         return recommendations[indexPath.row].title
     }
     
-    func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void) {
+    func picture(indexPath: IndexPath, completion: @escaping (UIImage?, UIView?) -> Void) {
         guard isIndexPathValid(indexPath: indexPath) else {
-            completion(nil)
+            completion(nil, nil)
             return
         }
         
@@ -66,7 +66,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
             SDWebImageManager.shared().downloadImage(with: url, options: .highPriority, progress: { (receivedSize, expectedSize) in
                 //
             }, completed: { (image, error, cacheType, finished, url) in
-                completion(image)
+                completion(image, nil)
             })
         }
     }

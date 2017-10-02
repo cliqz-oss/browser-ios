@@ -264,11 +264,11 @@ extension ContentNavigationViewController {
         }
     }
     
-    func details(indexPath: IndexPath?, image: UIImage?, animated: Bool) {
+    func details(indexPath: IndexPath?, animated: Bool) {
         pageNavVC.hideDots()
         changeState(state: .pageNavigation)
         if let indexPath = indexPath {
-            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, image: image, animated: animated)
+            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, animated: animated)
         }
     }
 

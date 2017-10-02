@@ -18,7 +18,7 @@ protocol RecommendationsCollectionProtocol {
     func cellType(indexPath: IndexPath) -> RecommendationsCellType
     func text(indexPath: IndexPath) -> String
     func headerTitle(indexPath: IndexPath) -> String
-    func picture(indexPath: IndexPath, completion: @escaping (UIImage?) -> Void)
+    func picture(indexPath: IndexPath, completion: @escaping (UIImage?, UIView?) -> Void)
     func time(indexPath: IndexPath) -> String
     func url(indexPath: IndexPath) -> String
     func deletePressed(indexPath: IndexPath)
@@ -86,7 +86,7 @@ extension RecommedationsCollectionView: UICollectionViewDataSource {
         cell.tag = indexPath.item
         cell.textLabel.text = customDataSource?.text(indexPath: indexPath)
         cell.headerLabel.text = customDataSource?.headerTitle(indexPath: indexPath)
-        customDataSource?.picture(indexPath: indexPath, completion: { (image) in
+        customDataSource?.picture(indexPath: indexPath, completion: { (image, view) in
             if cell.tag == indexPath.item {
                 cell.pictureView.image = image
             }

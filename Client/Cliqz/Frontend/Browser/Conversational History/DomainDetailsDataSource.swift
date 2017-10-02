@@ -32,16 +32,14 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     private let standardDateFormatter = DateFormatter()
     private let standardTimeFormatter = DateFormatter()
 
-    var img: UIImage?
-    
+	
     var sortedDetails: [SortedDomainDetail] = []
     
-    init(image:UIImage?, domainDetails: [DomainDetail]) {
+    init(domainDetails: [DomainDetail]) {
         
         standardDateFormatter.dateFormat = standardDateFormat
         standardTimeFormatter.dateFormat = standardTimeFormat
         
-        self.img = image
         self.sortedDetails = orderByDate(domainDict: groupByDate(domainDetails: domainDetails))
     }
     
@@ -49,10 +47,19 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
         fatalError("init(coder:) has not been implemented")
     }
     
-    func image() -> UIImage? {
-        return self.img
+	func logo(completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
+        LogoLoader.loadLogo(self.sortedDetails.first?.details.first?.url.absoluteString ?? "") { (image, logoInfo, error) in
+			if let img = image {
+				completionBlock(img, nil)
+			} else if let info = logoInfo {
+				let view = LogoPlaceholder(logoInfo: info)
+				completionBlock(nil, view)
+			} else {
+				completionBlock(nil, nil)
+			}
+		}
     }
-    
+
     func url(indexPath: IndexPath) -> String {
         return detail(indexPath: indexPath)?.url.absoluteString ?? ""
     }

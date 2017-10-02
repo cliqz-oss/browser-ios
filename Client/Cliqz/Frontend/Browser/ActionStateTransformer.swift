@@ -94,30 +94,29 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
     return nil
 }
 
-
-
 func urlBarNextState(actionType: ActionType, previousState: URLBarState, currentState: URLBarState, nextStateData: StateData) -> URLBarState? {
     
     let query = nextStateData.query ?? ""
-    
+
     let queryEmpty: Bool = query == "" ? true : false
-    
+
     let expandedTextIsPrev: Bool = previousState == .expandedTextWhite
-    
+
     let specialState: URLBarState = expandedTextIsPrev ? previousState : .expandedEmptyWhite
-    
+
     //this is for selecting an empty tab
     var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
-    
+
     if let url = nextStateData.url {
         if url.contains("localhost") {
             tabSelectedSpecialState = .collapsedEmptyTransparent
         }
     }
+
     else {
         tabSelectedSpecialState = .collapsedEmptyTransparent
     }
-    
+
     //When I go back to search, if the previous state is also search, take the data from there (so that the text remains).
     
     //Problem - how is decision made to go either to collapsedTextBlue or collapsedDomainBlue?
@@ -233,7 +232,7 @@ final class ActionStateTransformer {
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
             if alteredStateData.tab == nil {
                 let tab = tabManager.addTabAndSelect()
-                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, image: nil, loadingProgress: nil)
+                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, loadingProgress: nil)
                 alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
             }
         }

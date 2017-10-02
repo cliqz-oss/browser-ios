@@ -42,21 +42,17 @@ final class HistoryNavigationViewController: UIViewController {
     
     private func setupConversationalHistory() {
         conversationalHistory.view.backgroundColor = UIColor.clear
-        conversationalHistory.didPressCell = { (indexPath,image) in
+        conversationalHistory.didPressCell = { (indexPath) in
             
-            var data: [String: Any] = ["indexPath": indexPath]
-            
-            if let img = image {
-                data["image"] = img
-            }
+            let data: [String: Any] = ["indexPath": indexPath]
             
             StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed))
         }
     }
     
-    private func setUpConversationalHistoryDetails(indexPath:IndexPath, image: UIImage?) -> DomainDetailsViewController {
+    private func setUpConversationalHistoryDetails(indexPath:IndexPath) -> DomainDetailsViewController {
         
-        let headerAndTableDataSource = DomainDetailsDataSource(image: image, domainDetails: domainDetails(indexPath: indexPath))
+        let headerAndTableDataSource = DomainDetailsDataSource(domainDetails: domainDetails(indexPath: indexPath))
         
         let baseUrl = headerAndTableDataSource.baseUrl()
         
@@ -86,10 +82,10 @@ final class HistoryNavigationViewController: UIViewController {
         }
     }
     
-    func showDetails(indexPath: IndexPath, image: UIImage?, animated: Bool) {
+    func showDetails(indexPath: IndexPath, animated: Bool) {
         self.currentState = .Details
         
-        let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath, image: image)
+        let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath)
         
         if animated {
             UIView.animate(withDuration: 0.16, animations: {

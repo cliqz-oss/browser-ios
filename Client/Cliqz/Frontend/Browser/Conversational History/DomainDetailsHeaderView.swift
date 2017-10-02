@@ -14,7 +14,7 @@ protocol DomainDetailsHeaderViewDelegate {
 }
 
 protocol DomainDetailsHeaderViewProtocol {
-    func image() -> UIImage?
+    func logo(completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void)
     func baseUrl() -> String
 }
 
@@ -22,7 +22,7 @@ final class DomainDetailsHeaderView: UIView {
     
     let backBtn = UIButton(type: .custom)
     let title = UILabel()
-    let logo = UIButton(type: .custom)
+    let logo = CustomButton()
     let sep = UIView()
     
     var delegate: DomainDetailsHeaderViewDelegate?
@@ -51,9 +51,14 @@ final class DomainDetailsHeaderView: UIView {
         self.addSubview(sep)
         
         backBtn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-        logo.addTarget(self, action: #selector(logoPressed), for: .touchUpInside)
-        
-        logo.setImage(dataSource.image(), for: .normal) //?? UIImage(named: "coolLogo")
+		logo.action = logoPressed
+		dataSource.logo() { (image, customView) in
+			if let img = image {
+				self.logo.setImage(img)
+			} else if let view = customView {
+				self.logo.setView(view)
+			}
+		}
         title.text = dataSource.baseUrl()
     }
     
@@ -109,7 +114,7 @@ final class DomainDetailsHeaderView: UIView {
     }
     
     @objc
-    private func logoPressed(_ sender: UIButton) {
+    private func logoPressed() {
         self.delegate?.headerLogoPressed()
     }
     

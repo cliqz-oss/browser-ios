@@ -16,7 +16,7 @@ class DomainsCell: UITableViewCell {
     
     let titleLabel = UILabel()
     let URLLabel = UILabel()
-    let logoButton = UIButton()
+    let logoButton = CustomButton()
     let defaultImage = UIImage.fromColor(color: UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1), size: CGSize(width: 60, height: 60))
     
     let notificationView: CellNotificationView
@@ -42,8 +42,8 @@ class DomainsCell: UITableViewCell {
         self.contentView.addSubview(logoButton)
         logoButton.layer.cornerRadius = 6
         logoButton.clipsToBounds = true
-        self.logoButton.addTarget(self, action: #selector(logoPressed), for: .touchUpInside)
-        logoButton.setImage(defaultImage, for: .normal)
+		self.logoButton.action = logoPressed
+        logoButton.setImage(defaultImage)
         self.contentView.addSubview(notificationView)
         
         
@@ -56,7 +56,7 @@ class DomainsCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.logoButton.setImage(defaultImage, for: .normal)
+        self.logoButton.setImage(defaultImage)
     }
     
     override func layoutSubviews() {

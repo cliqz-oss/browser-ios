@@ -38,16 +38,17 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
         return recommendations[indexPath.row].url
     }
     
-    func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage? ) -> Void) {
+	func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?, _ customView: UIView?) -> Void) {
 		LogoLoader.loadLogo(self.url(indexPath: indexPath)) { (image, logoInfo, error) in
 			if let img = image {
-				completionBlock(img)
+				completionBlock(img, nil)
 			} else {
 				if let info = logoInfo {
 					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
-					// TODO: Cell should support logo as a UIView to show placeholder
+					completionBlock(nil, logoPlaceholder)
+				} else {
+					completionBlock(nil, nil)
 				}
-				completionBlock(nil)
 			}
 		}
     }

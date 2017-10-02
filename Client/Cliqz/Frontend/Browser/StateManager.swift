@@ -70,7 +70,6 @@ struct StateData: Equatable {
     let url: String?
     let tab: Tab?
     let indexPath: IndexPath?
-    let image: UIImage?
     let loadingProgress: Float?
     //maybe indexpath as well or tab?
     
@@ -81,10 +80,9 @@ struct StateData: Equatable {
         let url   = lhs.url != nil ? lhs.url : rhs.url
         let tab   = lhs.tab != nil ? lhs.tab : rhs.tab
         let indexPath = lhs.indexPath != nil ? lhs.indexPath : rhs.indexPath
-        let image = lhs.image != nil ? lhs.image : rhs.image
         let loadingProgress = lhs.loadingProgress != nil ? lhs.loadingProgress : rhs.loadingProgress
         
-        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, image: image, loadingProgress: loadingProgress)
+        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, loadingProgress: loadingProgress)
     }
     
     static func == (lhs: StateData, rhs: StateData) -> Bool {
@@ -129,8 +127,8 @@ final class StateManager {
 
     
     //initial state
-    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil))
-    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil))
+    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil))
+    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil))
     
     var currentAction: Action = Action(type: .initialization)
     var previousAction: Action = Action(type: .initialization)
@@ -139,13 +137,12 @@ final class StateManager {
     func preprocessAction(action: Action) -> StateData {
         
         guard let data = action.data else {
-            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, image: nil, loadingProgress: nil)
+            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil)
         }
         
         let text = data["text"] as? String
         let tab  = data["tab"] as? Tab
         let indexPath = data["indexPath"] as? IndexPath
-        let image = data["image"] as? UIImage
         var url  = data["url"] as? String
         let loadingProgress = data["progress"] as? Float
         
@@ -163,7 +160,7 @@ final class StateManager {
         }
         
         
-        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, image: image, loadingProgress: loadingProgress)
+        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, loadingProgress: loadingProgress)
     }
     
     //func areUrlSameExcept
@@ -300,7 +297,7 @@ final class StateManager {
             contentNav?.domains(currentState: currentState)
         case .details:
             let animated: Bool = currentState == .domains
-            contentNav?.details(indexPath: nextStateData.indexPath, image: nextStateData.image, animated: animated)
+            contentNav?.details(indexPath: nextStateData.indexPath, animated: animated)
         case .dash:
             contentNav?.dash()
         }

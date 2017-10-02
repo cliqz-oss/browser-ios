@@ -13,7 +13,7 @@ protocol ExpandableViewProtocol {
     func minNumCells() -> Int
     func title(indexPath: IndexPath) -> String
     func url(indexPath: IndexPath) -> String
-    func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void)
+	func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?, _ customView: UIView?) -> Void)
     func cellPressed(indexPath: IndexPath)
 }
 
@@ -147,9 +147,13 @@ extension ExpandableView: UITableViewDataSource {
         cell.tag = indexPath.row
         cell.titleLabel.text = customDataSource?.title(indexPath: indexPath)
         cell.URLLabel.text = customDataSource?.url(indexPath: indexPath)
-        customDataSource?.picture(indexPath: indexPath, completionBlock: { (image) in
+        customDataSource?.picture(indexPath: indexPath, completionBlock: { (image, view) in
             if cell.tag == indexPath.row {
-                cell.logoImageView.image = image
+				if let img = image {
+					cell.setLogoImage(img)
+				} else if let v = view {
+					cell.setCustomLogo(v)
+				}
             }
         })
         return cell

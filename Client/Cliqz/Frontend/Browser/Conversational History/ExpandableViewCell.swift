@@ -15,7 +15,7 @@ class ExpandableViewCell: UITableViewCell {
     let URLLabel = UILabel()
     
     lazy var logoContainerView = UIView()
-    let logoImageView = UIImageView()
+    let logoImageView = UIView()
     var fakeLogoView: UIView?
     
     let cardView = UIView()
@@ -142,7 +142,9 @@ class ExpandableViewCell: UITableViewCell {
     override func prepareForReuse() {
         self.cardView.transform = CGAffineTransform.identity
         self.cardView.alpha = 1
-        self.logoImageView.image = nil
+		for v in self.logoImageView.subviews {
+			v.removeFromSuperview()
+		}
         self.fakeLogoView?.removeFromSuperview()
         self.fakeLogoView = nil
         clickedElement = ""
@@ -161,4 +163,18 @@ class ExpandableViewCell: UITableViewCell {
         
     }
 
+	func setLogoImage(_ image: UIImage) {
+		let imgView = UIImageView(image: image)
+		self.logoImageView.addSubview(imgView)
+		imgView.snp.makeConstraints { (make) in
+			make.edges.equalTo(self.logoImageView)
+		}
+	}
+
+	func setCustomLogo(_ customView: UIView) {
+		self.logoImageView.addSubview(customView)
+		customView.snp.makeConstraints { (make) in
+			make.edges.equalTo(self.logoImageView)
+		}
+	}
 }

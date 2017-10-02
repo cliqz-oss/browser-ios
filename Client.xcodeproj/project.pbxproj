@@ -455,6 +455,7 @@
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
 		4FA8E53C1F61339E0055EC39 /* TabHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E53B1F61339E0055EC39 /* TabHistory.swift */; };
+		4FB654C41F82648600C0CE6F /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB654C31F82648600C0CE6F /* CustomButton.swift */; };
 		4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */; };
 		4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C661E39F3620008E5CC /* NewsViewCell.swift */; };
 		4FB895D51F44467800DC028E /* CIURLBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB895D41F44467800DC028E /* CIURLBar.swift */; };
@@ -1957,6 +1958,7 @@
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		4FA8E53B1F61339E0055EC39 /* TabHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabHistory.swift; sourceTree = "<group>"; };
+		4FB654C31F82648600C0CE6F /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSiteViewCell.swift; sourceTree = "<group>"; };
 		4FB77C661E39F3620008E5CC /* NewsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsViewCell.swift; sourceTree = "<group>"; };
 		4FB895D41F44467800DC028E /* CIURLBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIURLBar.swift; sourceTree = "<group>"; };
@@ -4350,6 +4352,7 @@
 				AFD9F61C1F3E10E100215365 /* CustomDots.swift */,
 				AFD9F61D1F3E10E100215365 /* SurfViewController.swift */,
 				AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */,
+				4FB654C31F82648600C0CE6F /* CustomButton.swift */,
 			);
 			name = "Reusable Components";
 			path = "Conversational History";
@@ -6970,6 +6973,7 @@
 				1E47068A1EB0952000516BA5 /* RegionalSettingsTableViewController.swift in Sources */,
 				1E79DD111D4FB2C5006BEB4A /* SearchBarTelemetryHelper.swift in Sources */,
 				7BC68D241CC153630043562A /* AppMenuToolbarItem.swift in Sources */,
+				4FB654C41F82648600C0CE6F /* CustomButton.swift in Sources */,
 				D3C03E471C3C7C1500A07D5C /* MenuHelper.swift in Sources */,
 				D3FEC38D1AC4B42F00494F45 /* AutocompleteTextField.swift in Sources */,
 				1E79DEA31D508368006BEB4A /* AWSTMCache.m in Sources */,

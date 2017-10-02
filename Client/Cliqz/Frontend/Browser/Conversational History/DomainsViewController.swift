@@ -17,7 +17,8 @@ protocol DomainsProtocol: class{
     func titleLabelText(indexPath:IndexPath) -> String
     func timeLabelText(indexPath:IndexPath) -> String
     func baseUrl(indexPath:IndexPath) -> String
-    func image(indexPath:IndexPath, completionBlock: @escaping (_ result:UIImage?) -> Void)
+	// TODO: change the name, it isn't exactly an image
+	func image(indexPath:IndexPath, completionBlock: @escaping (_ image: UIImage?, _ view: UIView?) -> Void)
     func shouldShowNotification(indexPath:IndexPath) -> Bool
     func notificationNumber(indexPath:IndexPath) -> Int
 }
@@ -30,7 +31,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     var dataSource: DomainsDataSource = DomainsDataSource()
     var first_appear:Bool = true
     
-    var didPressCell:(_ indexPath:IndexPath, _ image: UIImage?) -> () = { _ in }
+    var didPressCell:(_ indexPath:IndexPath) -> () = { _ in }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -86,9 +87,13 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
         let articleLink = dataSource.urlLabelText(indexPath: indexPath)
         cell.URLLabel.text   = articleLink
         cell.titleLabel.text = dataSource.titleLabelText(indexPath: indexPath)
-        dataSource.image(indexPath: indexPath) { (result) in
-            if cell.tag == indexPath.row && result != nil{
-                cell.logoButton.setImage(result, for: .normal)
+        dataSource.image(indexPath: indexPath) { (image, customView) in
+			if cell.tag == indexPath.row {
+				if let img = image {
+					cell.logoButton.setImage(img)
+				} else if let view = customView {
+					cell.logoButton.setView(view)
+				}
             }
         }
 
@@ -112,8 +117,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! DomainsCell
-        let image = cell.logoButton.imageView?.image
-        didPressCell(indexPath, image)
+        didPressCell(indexPath)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
