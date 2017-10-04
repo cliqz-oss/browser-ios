@@ -32,7 +32,6 @@ node('ios-osx') {
         // load/restore carthage build directory
         sh '''#!/bin/bash -l
             set -x
-            set -e
             CART_CACHE=/tmp/carthage_cache_`md5 -q Cartfile`.tar; tar -xf $CART_CACHE ; echo A |./bootstrap.sh && tar -cf $CART_CACHE Carthage Cartfile.resolved
         '''
         sh '''#!/bin/bash -l
