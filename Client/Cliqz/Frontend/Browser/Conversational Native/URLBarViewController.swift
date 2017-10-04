@@ -134,7 +134,7 @@ final class URLBarViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }, completion: { (finished) in
                 if p == 1.0 {
-                    UIView.animate(withDuration: 0.2, animations: {
+                    UIView.animate(withDuration: 0.8, animations: {
                         self.progressBar.alpha = 0.0
                         self.view.layoutIfNeeded()
                     })
