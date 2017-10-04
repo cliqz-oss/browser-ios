@@ -96,7 +96,7 @@ final class URLBarViewController: UIViewController {
         URLBar.textField.text = nil
         URLBar.textField.resignFirstResponder()
         progressBar.setProgress(progress: 0.0)
-        progressBar.isHidden = true
+        progressBar.alpha = 0.0
     }
     
     func collapsedTextTransparent(text: String?) {
@@ -105,7 +105,7 @@ final class URLBarViewController: UIViewController {
         URLBar.textField.text = text
         URLBar.textField.resignFirstResponder()
         progressBar.setProgress(progress: 0.0)
-        progressBar.isHidden = true
+        progressBar.alpha = 0.0
     }
     
     func collapsedQueryBlue(text: String?) {
@@ -114,7 +114,7 @@ final class URLBarViewController: UIViewController {
         URLBar.textField.text = text
         URLBar.textField.resignFirstResponder()
         progressBar.setProgress(progress: 0.0)
-        progressBar.isHidden = true
+        progressBar.alpha = 0.0
     }
     
     func collapsedDomainBlue(urlStr: String?, progress: Float?) {
@@ -123,32 +123,24 @@ final class URLBarViewController: UIViewController {
         URLBar.domainLabel.text = processUrl(urlStr: urlStr)
         URLBar.textField.resignFirstResponder()
         if let p = progress {
-            
             //I will refactor this. Use transitions
-            
-            if p == 1.0 {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.progressBar.alpha = 0.0
-                    self.view.layoutIfNeeded()
-                }, completion: { (finished) in
-                    if finished {
-                        self.progressBar.isHidden = true
-                    }
-                })
-                
-            }
-//            else if p == 0.0 {
-//                progressBar.isHidden = true
-//                progressBar.setProgress(progress: 0.0)
-//            }
-            else {
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.progressBar.isHidden = false
+            UIView.animate(withDuration: 0.1, animations: {
+                //self.progressBar.isHidden = false
+                if p != 1.0 {
                     self.progressBar.alpha = 1.0
-                    self.progressBar.setProgress(progress: p)
-                    self.view.layoutIfNeeded()
-                })
-            }
+                }
+                
+                self.progressBar.setProgress(progress: p)
+                self.view.layoutIfNeeded()
+            }, completion: { (finished) in
+                if p == 1.0 {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.progressBar.alpha = 0.0
+                        self.view.layoutIfNeeded()
+                    })
+                }
+            })
+    
         }
     }
 
@@ -157,7 +149,7 @@ final class URLBarViewController: UIViewController {
         URLBar.textField.text = nil
         search_loader?.query = ""
         progressBar.setProgress(progress: 0.0)
-        progressBar.isHidden = true
+        progressBar.alpha = 0.0
     }
 
     func expandedTextWhite(text: String?) {
@@ -167,7 +159,7 @@ final class URLBarViewController: UIViewController {
             search_loader?.query = t
         }
         progressBar.setProgress(progress: 0.0)
-        progressBar.isHidden = true
+        progressBar.alpha = 0.0
     }
     
     func processUrl(urlStr:String?) -> String? {
