@@ -27,9 +27,11 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 	
 	var historyTableView: UITableView!
 	let historyCellID = "DomainsCell"
-    
+
     var dataSource: DomainsDataSource = DomainsDataSource()
     var first_appear:Bool = true
+    
+    let emptyStateLabel = UILabel()
     
     var didPressCell:(_ indexPath:IndexPath) -> () = { _ in }
     
@@ -56,6 +58,15 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 		self.historyTableView.separatorStyle = .singleLine
 		self.historyTableView.separatorColor = UIColor.darkGray
         self.historyTableView.backgroundColor = UIColor.clear
+        
+        self.emptyStateLabel.text = "Your History will appear here."
+        self.emptyStateLabel.textColor = UIColor.init(red: 0.98, green: 0.98, blue: 0.98, alpha: 1.0)
+        self.view.addSubview(self.emptyStateLabel)
+        self.emptyStateLabel.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        
+        self.updateEmptyStateLabel()
         
         NotificationCenter.default.addObserver(self, selector: #selector(newsReady), name: NewsManager.notification_updated, object: nil)
 	}
@@ -136,6 +147,15 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 //        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
 //        self.historyTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
     }
+    
+    func updateEmptyStateLabel() {
+        if self.dataSource.numberOfCells() > 0 {
+            self.emptyStateLabel.isHidden = true
+        }
+        else {
+            self.emptyStateLabel.isHidden = false
+        }
+    }
 	
 }
 
@@ -163,6 +183,7 @@ extension DomainsViewController: KeyboardHelperDelegate {
 
 extension DomainsViewController: HasDataSource {
     func dataSourceWasUpdated(identifier: String) {
+        self.updateEmptyStateLabel()
         UIView.animate(withDuration: 0.2) { 
             self.historyTableView.reloadData()
             self.view.layoutIfNeeded()
