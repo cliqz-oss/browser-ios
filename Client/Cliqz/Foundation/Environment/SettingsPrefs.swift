@@ -22,6 +22,7 @@ class SettingsPrefs {
     static let querySuggestionPrefKey = "QuerySuggestion"
     static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
     static let AutoForgetTabPrefKey = "AutoForgetTab"
+    static let LogTelemetryPrefKey = "showTelemetry"
 
 	static let SearchBackendOptions = ["DE", "US", "FR"]
 
@@ -180,6 +181,10 @@ class SettingsPrefs {
             BloomFilterManager.sharedInstance.turnOff()
         }
         
+    }
+    
+    class func getLogTelemetryPref() -> Bool {
+        return SettingsPrefs.getBoolPref(LogTelemetryPrefKey) ?? false
     }
     
     // MARK: - Private helper metods
