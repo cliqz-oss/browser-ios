@@ -78,11 +78,15 @@ class BrowseAddRule {
     
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType == .visitAddedInDB else {
+        guard newState.contentState == .browse else {
             return false
         }
         
-        guard newState.contentState == .browse else {
+        guard BrowseAddRule.shouldReplaceCurrent(newState: newState, tab: tab, actionType: actionType) == false else {
+            return false
+        }
+        
+        guard (actionType == .visitAddedInDB || actionType == .urlSelected) else {
             return false
         }
         
@@ -94,24 +98,24 @@ class BrowseAddRule {
         
     }
     
-//    class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
-//        
-//        guard actionType == .visitAddedInDB else {
-//            return false
-//        }
-//        
-//        guard newState.contentState == .browse else {
-//            return false
-//        }
-//        
-//        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-//            if currentState.contentState == .browse {
-//                return true
-//            }
-//        }
-//        
-//        return false
-//    }
+    class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
+        
+        guard newState.contentState == .browse else {
+            return false
+        }
+        
+        guard BackForwardNavigation.shared.currentActionType == .urlSelected else {
+            return false
+        }
+        
+        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
+            if currentState.contentState == .browse {
+                return true
+            }
+        }
+        
+        return false
+    }
     
 }
 
@@ -126,9 +130,11 @@ final class BackForwardNavigation {
         var currentIndex: Int
     }
     
+    var currentActionType: ActionType = .initialization
+    
     /*private*/ var tabStateChains: [Tab: StateChain] = [:]
     
-    func addState(tab: Tab, state: State) {
+    func addState(tab: Tab, state: State, actionType: ActionType) {
         
         //Tab exists in the dict 
         //Subcases:
@@ -175,9 +181,11 @@ final class BackForwardNavigation {
             tabStateChains[tab] = StateChain(states: [state], currentIndex: 0)
         }
         
+        currentActionType = actionType
+        
     }
     
-    func replaceCurrentState(tab: Tab, newState: State) {
+    func replaceCurrentState(tab: Tab, newState: State, actionType: ActionType) {
         if var stateChain = tabStateChains[tab] {
             //assumption is that the currentIndex is within bounds
             let currentIndex = stateChain.currentIndex
@@ -187,6 +195,7 @@ final class BackForwardNavigation {
                 states[currentIndex] = newState
                 stateChain.states = states
                 tabStateChains[tab] = stateChain
+                currentActionType = actionType
             }
             else {
                 //current state has to exist!!!

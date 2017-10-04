@@ -200,17 +200,20 @@ final class ActionStateTransformer {
             //Register rules
             //No need for replacement for Browse. Add when there is a new entry in the DB.
             //If urlIsModified then I should replace the last browse with this one.
-            if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state)
+            if BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
+                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state, actionType: actionType)
+            }
+            else if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
             }
             else if SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state)
+                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state, actionType: actionType)
             }
             else if SearchAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state)
+                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
             }
             else if DomainsAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state)
+                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
             }
             
             //update since something might have been added.
