@@ -36,7 +36,7 @@ public enum TelemetryLogEventType {
     case Connect (String, [String: Any]?)
     case Subscription (String, String?, [String: Any]?)
     case Notification (String, String)
-    
+    case Rotation (String, String)
 }
 
 
@@ -183,8 +183,12 @@ class TelemetryLogger : EventsLogger {
                 
             case .Notification (let action, let view):
                 event = self.createNotificationEvent(action, view: view)
-            }
             
+            case .Rotation (let state, let view):
+                event = self.createRotationEvent(state, view: view)
+                
+            }
+        
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
                 return
             }
@@ -642,4 +646,18 @@ class TelemetryLogger : EventsLogger {
 
         return event
     }
+    
+    
+    private func createRotationEvent(_ state: String, view: String) -> [String: Any] {
+        var event = createBasicEvent()
+        
+        event["type"] = "activity"
+        event["action"] = "rotate"
+        event["state"] = state
+        event["view"] = view
+        
+        return event
+    }
+    
+    
 }

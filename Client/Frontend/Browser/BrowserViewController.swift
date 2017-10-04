@@ -370,6 +370,8 @@ class BrowserViewController: UIViewController {
 
         // Re-show toolbar which might have been hidden during scrolling (prior to app moving into the background)
         scrollController.showToolbars(false)
+        //Cliqz send rotate telemetry signal for warm start
+        logOrientationSignal()
     }
 
     deinit {
@@ -382,6 +384,8 @@ class BrowserViewController: UIViewController {
         // Cliqz: removed observers for Connect features
         NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
+        // Cliqz: removed observer for device orientation
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
     }
 
     override func viewDidLoad() {
@@ -397,7 +401,13 @@ class BrowserViewController: UIViewController {
         // Cliqz: Add observers for Connection features
         NotificationCenter.default.addObserver(self, selector: #selector(openTabViaConnect), name: SendTabNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(downloadVideoViaConnect), name: DownloadVideoNotification, object: nil)
-
+        
+        // Cliqz: Add observer for device orientation
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(BrowserViewController.logOrientationSignal),
+                                               name: Notification.Name.UIApplicationDidChangeStatusBarOrientation,
+                                               object: nil)
+        
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         log.debug("BVC adding footer and header…")
@@ -499,7 +509,9 @@ class BrowserViewController: UIViewController {
             // Cliqz:  setup back and forward swipe
             historySwiper.setup(self.view, webViewContainer: self.webViewContainer)            
         #endif
-
+        
+        //Cliqz send rotate telemetry signal for cold start
+        logOrientationSignal()
     }
 
     fileprivate func setupConstraints() {
@@ -610,18 +622,19 @@ class BrowserViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.openSettings),
-                                                         name: NSNotification.Name(rawValue: NotificationStatusNotificationTapped),
+                                                         name: Notification.Name(rawValue: NotificationStatusNotificationTapped),
                                                          object: nil)
         
         // Cliqz: add observer for keyboard actions for Telemetry signals
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.keyboardWillShow(_:)),
-                                                         name: NSNotification.Name.UIKeyboardWillShow,
+                                                         name: Notification.Name.UIKeyboardWillShow,
                                                          object: nil)
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.keyboardWillHide(_:)),
-                                                         name: NSNotification.Name.UIKeyboardWillHide,
+                                                         name: Notification.Name.UIKeyboardWillHide,
                                                          object: nil)
+        
 		if let tab = self.tabManager.selectedTab {
 			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 		}
@@ -723,11 +736,11 @@ class BrowserViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationStatusNotificationTapped), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: NotificationStatusNotificationTapped), object: nil)
         
         // Cliqz: remove keyboard obervers
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillHide, object: nil)
     }
 
     func resetBrowserChrome() {
@@ -4283,14 +4296,18 @@ extension BrowserViewController {
     // Cliqz: Added to get the current view for telemetry signals
     func getCurrentView() -> String? {
         var currentView: String?
-        
-        if let _ = self.urlBar.currentURL, self.searchController?.view.isHidden == true {
+        if self.presentedViewController != nil {
+            currentView = "settings"
+        } else if self.navigationController?.topViewController == dashboard {
+            currentView = "overview"
+        } else if self.searchController?.view.isHidden == false {
+            currentView = "cards"
+        } else if let _ = self.urlBar.currentURL {
             currentView = "web"
         } else {
             currentView = "home"
         }
         return currentView
-        
     }
 }
 

@@ -276,6 +276,16 @@ extension BrowserViewController: ControlCenterViewDelegate {
         }
     }
     
+    func logOrientationSignal() {
+        guard let view = getCurrentView() else {
+            return
+        }
+        
+        let orientation = UIApplication.shared.statusBarOrientation
+        let state = UIInterfaceOrientationIsLandscape(orientation) ? "Landscape" : "Portrait"
+        TelemetryLogger.sharedInstance.logEvent(.Rotation(state, view))
+        
+    }
     //MARK - WebMenu signals
     func logWebMenuSignal(_ action: String, target: String) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate {
