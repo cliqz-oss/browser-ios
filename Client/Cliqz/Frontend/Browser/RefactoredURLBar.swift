@@ -92,7 +92,7 @@ class RefactoredURLBar: UIView {
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldTextChanged), for: UIControlEvents.editingChanged)
         
-        textField.placeholder = "  Search"
+        textField.placeholder = " " + NSLocalizedString("Search", tableName: "Cliqz", comment: "The text shown in the search field")
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.keyboardType = .webSearch
         textField.autocorrectionType = UITextAutocorrectionType.no

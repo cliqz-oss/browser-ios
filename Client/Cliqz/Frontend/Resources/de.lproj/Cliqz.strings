@@ -1,5 +1,15 @@
 /* The text shown in the search field */
 "Search" = "Suche";
+/* Text for more button */
+"More" = "Mehr";
+/* Text for less button */
+"Less" = "Weniger";
+/* Text for recommendations title */
+"Recommendations" = "Empfehlungen";
+/* Text for reminders title */
+"Reminders" = "Reminders";
+/* Text for empty history state */
+"Your History will appear here" = "Hier wird dein Verlauf angezeigt";
 /* Error message title */
 "Sorry" = "Entschuldigung";
 /* Error message when JS scripts for search can't be loaded */
