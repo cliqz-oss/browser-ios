@@ -207,8 +207,8 @@ final class ExpandableViewHeader: UIView {
     let l = UILabel()
     let btn = UIButton()
     
-    let buttonTitle_more = "More"
-    let buttonTitle_less = "Less"
+    let buttonTitle_more = NSLocalizedString("More", tableName: "Cliqz", comment: "Text for more button")
+    let buttonTitle_less = NSLocalizedString("Less", tableName: "Cliqz", comment: "Text for less button")
     
     var delegate: ExpandableViewHeaderDelegate? = nil
     var dataSource: ExpandableViewHeaderDataSource? = nil

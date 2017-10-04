@@ -59,7 +59,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 		self.historyTableView.separatorColor = UIColor.darkGray
         self.historyTableView.backgroundColor = UIColor.clear
         
-        self.emptyStateLabel.text = "Your History will appear here."
+        self.emptyStateLabel.text = NSLocalizedString("Your History will appear here", tableName: "Cliqz", comment: "Text for empty history state")
         self.emptyStateLabel.textColor = UIColor.init(red: 0.98, green: 0.98, blue: 0.98, alpha: 1.0)
         self.view.addSubview(self.emptyStateLabel)
         self.emptyStateLabel.snp.makeConstraints { (make) in
