@@ -79,10 +79,6 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
         
         browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting, resetSubscriptionsSetting]
-
-#if BETA
-        browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]
-#endif
         
 #if React_Debug
         browsingAndHistorySection += [TestReact(settings: self)]
@@ -107,13 +103,23 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let AboutCliqzSection: [Setting] = [rateSetting, aboutSetting]
         
         // Combine All sections together
-        let settings = [
+        var settings = [
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Search", tableName: "Cliqz", comment: "[Settings] Search section title")), children: searchSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Browsing & History", tableName: "Cliqz", comment: "[Settings] Browsing & History section header")), children: browsingAndHistorySection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Help", tableName: "Cliqz", comment: "[Settings] Help section header")), children: helpSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About Cliqz", tableName: "Cliqz", comment: "[Settings] About Cliqz section header")), children: AboutCliqzSection)
                         ]
 
+        
+        #if BETA
+            let betaSection = [BoolSetting(prefs: prefs, prefKey: SettingsPrefs.LogTelemetryPrefKey, defaultValue: false, titleText: "Log Telemetry Signals"),
+                                        ShowIntroductionSetting(settings: self),
+                                        ExportLocalDatabaseSetting(settings: self)]
+            
+            settings += [SettingSection(title: NSAttributedString(string: "Beta Settings"), children: betaSection)]
+        #endif
+        
+        
         return settings
     
     }
