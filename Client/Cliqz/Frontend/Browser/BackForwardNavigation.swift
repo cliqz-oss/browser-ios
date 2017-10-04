@@ -76,6 +76,10 @@ class SearchAddRule {
 
 class BrowseAddRule {
     
+    //Quick fix:
+    //We now register browse states on urlIsSelected and replace them when visitAddedInDB.
+    //This is not prefect since in the time between the load the user can navigate somewhere else.
+    
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
         guard newState.contentState == .browse else {
@@ -86,7 +90,7 @@ class BrowseAddRule {
             return false
         }
         
-        guard (actionType == .visitAddedInDB || actionType == .urlSelected) else {
+        guard actionType == .visitAddedInDB || (actionType == .urlSelected && BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .browse) else {
             return false
         }
         
@@ -104,12 +108,9 @@ class BrowseAddRule {
             return false
         }
         
-        guard BackForwardNavigation.shared.currentActionType == .urlSelected else {
-            return false
-        }
-        
         if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == .browse {
+            let currentAction = BackForwardNavigation.shared.currentActionType
+            if currentState.contentState == .browse && currentAction == .urlSelected {
                 return true
             }
         }
