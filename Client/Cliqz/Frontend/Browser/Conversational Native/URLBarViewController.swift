@@ -328,7 +328,7 @@ final class ProgressBar: UIView {
             make.top.left.right.bottom.equalToSuperview()
         }
     }
-    
+
     func setProgress(progress: Float) {
         guard isProgressValid(progress: progress) else {
             return

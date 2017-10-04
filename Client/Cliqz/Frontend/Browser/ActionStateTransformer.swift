@@ -236,7 +236,12 @@ final class ActionStateTransformer {
                 alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
             }
         }
-        
+	
+		if currentState.urlBarState == .collapsedEmptyTransparent && actionType == .urlSearchPressed {
+			let newStateData = StateData(query: "", url: nil, tab: nil, indexPath: nil, loadingProgress: nil)
+			alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
+		}
+
         let mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
         let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)
         let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, actionType: actionType, nextStateData: nextStateData)

@@ -110,9 +110,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: NSNotification.Name.UIDeviceOrientationDidChange, object: UIDevice.current)
         
         NotificationCenter.default.addObserver(self, selector: #selector(showOpenSettingsAlert(_:)), name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
-
-
     }
+
     func showOpenSettingsAlert(_ notification: Notification) {
         var message: String!
         var settingsAction: UIAlertAction!
@@ -146,7 +145,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         alertController.addAction(settingsAction)
         
         present(alertController, animated: true, completion: nil)
-        
     }
 
     func fixViewport() {
@@ -176,8 +174,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		if self.webView?.url == nil {
 			loadExtension()
 		}
-        
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(searchWithLastQuery), name: NSNotification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
 	}
 
@@ -239,16 +236,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     }
     
 	func loadData(_ query: String) {
-        guard query != lastQuery else {
-            return
-        }
-        if query == "" && lastQuery == nil {
-            return
-        }
+//        guard query != lastQuery else {
+//            return
+//        }
+//        if lastQuery == nil {
+//            return
+//        }
         
 		search(query)
 	}
-    
+
     fileprivate func search(_ query: String) {
         let q = query.trimmingCharacters(in: CharacterSet.whitespaces)
         var parameters = "'\(q.escape())'"
@@ -259,7 +256,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         
         lastQuery = query
     }
-    
+
     func updatePrivateMode(_ privateMode: Bool) {
         if privateMode != self.privateMode {
             self.privateMode = privateMode
