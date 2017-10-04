@@ -94,8 +94,15 @@ class MainContainerViewController: UIViewController {
 	override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
 		if motion == .motionShake,
 			let profile = self.profile {
-			// TODO: update UI after
-			let _ = HistoryClearable(profile: profile).clear()
+			let alert = UIAlertController(title: "Do you want to clear the history?", message: "", preferredStyle: .alert)
+			let dismiss = UIAlertAction(title: "Cancel", style: .cancel)
+			let open    = UIAlertAction(title: "Clean", style: .default) { (action) in
+				// TODO: update UI after
+				let _ = HistoryClearable(profile: profile).clear()
+			}
+			alert.addAction(dismiss)
+			alert.addAction(open)
+			self.present(alert, animated: true, completion: nil)
 		}
 	}
 
