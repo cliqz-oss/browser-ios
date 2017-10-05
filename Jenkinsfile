@@ -64,6 +64,7 @@ node('ios-osx') {
                 npm install -g appium
                 npm install wd
                 appium &
+                echo $! > appium.pid
             '''
         }
 
@@ -84,9 +85,9 @@ node('ios-osx') {
     }
     finally {
         stage('Upload Results') {
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'external/autobots/*.log'
-            junit "external/autobots/test-reports/*.xml"
             try {
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'external/autobots/*.log'
+                junit "external/autobots/test-reports/*.xml"
                 zip archive: true, dir: 'external/autobots/screenshots', glob: '', zipFile: 'external/autobots/screenshots.zip'
             } catch (e) {
                 // no screenshots, no problem
@@ -96,6 +97,8 @@ node('ios-osx') {
             sh '''#!/bin/bash -l
                 set -x
                 set -e
+                kill `cat appium.pid`
+                rm -f appium.pid
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
                 rm -rf JSEngine
                 rm -rf external/autobots
