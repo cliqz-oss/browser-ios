@@ -72,7 +72,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var startTime : Double = Date.getCurrentMillis()
     var isLoadCompleted = false
-
+    var scrollCount = 0
+    var isScrollable = false
+    
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
@@ -107,11 +109,13 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		self.isNewsExpanded = false
         
         self.updateViewConstraints()
+        scrollCount = 0
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         logHideSignal()
+        logScrollSignal()
     }
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -195,6 +199,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         if newsHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset}
         
         if freshTabHeight > viewHeight {
+            isScrollable = true
             return freshTabHeight - viewHeight
         } else {
             return 10.0
@@ -622,10 +627,10 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		return 27.0
 	}
-
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		self.delegate?.dismissKeyboard()
-	}
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.delegate?.dismissKeyboard()
+        scrollCount += 1
+    }
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -813,6 +818,16 @@ extension FreshtabViewController {
 
     private func logFreshTabSignal(_ action: String, target: String?, customData: [String: Any]?) {
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
+    }
+    
+    fileprivate func logScrollSignal() {
+        guard scrollCount > 0 else {
+            return
+        }
+        
+        let customData: [String: Any] = ["scroll_count": scrollCount, "is_scrollable" : isScrollable]
+        TelemetryLogger.sharedInstance.logEvent(.FreshTab("scroll", nil, customData))
+
     }
 
 }
