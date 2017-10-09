@@ -77,6 +77,7 @@ node('ios-osx') {
                         cd external/autobots
                         chmod 0755 requirements.txt
                         sudo -H pip install -r requirements.txt
+                        sleep 10
                         python testRunner.py
                     '''
                 }
@@ -102,6 +103,8 @@ node('ios-osx') {
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
                 rm -rf JSEngine
                 rm -rf external/autobots
+                npm uninstall -g appium
+                npm uninstall wd
             '''
         }
     }
