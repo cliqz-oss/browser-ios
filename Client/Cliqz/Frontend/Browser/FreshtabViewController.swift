@@ -15,8 +15,8 @@ import SwiftyJSON
 
 struct FreshtabViewUX {
 
-	static let TopSitesMinHeight = 95.0
-	static let TopSitesMaxHeight = 185.0
+    static let TopSitesMinHeight: CGFloat = 95.0
+    static let TopSitesMaxHeight: CGFloat = 185.0
 	static let TopSitesCellSize = CGSize(width: 76, height: 86)
 	static let TopSitesCountOnRow = 4
 	static let TopSitesOffset = 5.0
@@ -28,6 +28,7 @@ struct FreshtabViewUX {
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
 	static let MaxNewsCellsCount = 4
+    static let topOffset: CGFloat = 15.0
 }
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -53,6 +54,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		lbl.textAlignment = .center
 		return lbl
 	}()
+    fileprivate var scrollView: UIScrollView!
 	fileprivate var normalModeView: UIView!
 	fileprivate var forgetModeView: UIView!
 
@@ -97,12 +99,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         startTime = Date.getCurrentMillis()
-        self.updateViewConstraints()
+        
         
         isLoadCompleted = false
         region = SettingsPrefs.getRegionPref()
 		updateView()
 		self.isNewsExpanded = false
+        
+        self.updateViewConstraints()
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -113,6 +117,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.updateViewConstraints()
+        }
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -143,9 +150,18 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             make.height.equalTo(newsHeight)
         })
 		
+        // normalModeView height
+        let invisibleFreshTabHeight = getInvisibleFreshTabHeight(topSitesHeight: topSitesHeight, newsHeight: newsHeight)
+        let normalModeViewHeight = self.view.bounds.height + invisibleFreshTabHeight
+       
+        self.normalModeView.snp.remakeConstraints({ (make) in
+            make.top.left.bottom.right.equalTo(scrollView)
+            make.width.equalTo(self.view)
+            make.height.equalTo(normalModeViewHeight)
+        })
 	}
     
-    private func getTopSitesHeight() -> Double {
+    private func getTopSitesHeight() -> CGFloat {
         guard SettingsPrefs.getShowTopSitesPref() else {
             return 0.0
         }
@@ -171,7 +187,20 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
+    private func getInvisibleFreshTabHeight(topSitesHeight: CGFloat, newsHeight: CGFloat) -> CGFloat {
+
+        let viewHeight = self.view.bounds.height
+        var freshTabHeight = topSitesHeight + newsHeight + 10.0
+        if topSitesHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset }
+        if newsHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset}
+        
+        if freshTabHeight > viewHeight {
+            return freshTabHeight - viewHeight
+        } else {
+            return 10.0
+        }
+        
+    }
     
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
@@ -267,7 +296,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			description.textColor = UIColor(white: 1, alpha: 0.57)
 			description.textColor = FreshtabViewUX.ForgetModeTextColor
 			description.snp.makeConstraints({ (make) in
-				make.top.equalTo(title.snp.bottom).offset(15)
+				make.top.equalTo(title.snp.bottom).offset(FreshtabViewUX.topOffset)
 				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.ForgetModeOffset)
 				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.ForgetModeOffset)
 			})
@@ -276,16 +305,24 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	fileprivate func constructNormalModeView() {
 		if self.normalModeView == nil {
+            self.scrollView = UIScrollView()
+            self.scrollView.delegate = self
+            self.view.addSubview(self.scrollView)
+            self.scrollView.snp.makeConstraints({ (make) in
+                make.top.left.bottom.right.equalTo(self.view)
+            })
 			self.normalModeView = UIView()
-			self.normalModeView.backgroundColor = UIConstants.AppBackgroundColor
-			self.view.addSubview(self.normalModeView)
+			self.normalModeView.backgroundColor = UIColor.clear
+			self.scrollView.addSubview(self.normalModeView)
 			self.normalModeView.snp.makeConstraints({ (make) in
-				make.top.left.bottom.right.equalTo(self.view)
+				make.top.left.bottom.right.equalTo(scrollView)
+                make.height.width.equalTo(self.view)
 			})
 			let bgView = UIImageView(image: UIImage(named: "normalModeFreshtabBgImage"))
-			self.normalModeView.addSubview(bgView)
+			self.view.addSubview(bgView)
+            self.view.sendSubview(toBack: bgView)
 			bgView.snp.makeConstraints { (make) in
-				make.left.right.top.bottom.equalTo(self.normalModeView)
+				make.left.right.top.bottom.equalTo(self.view)
 			}
 		}
 		if self.topSitesCollection == nil {
@@ -297,7 +334,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.topSitesCollection?.isScrollEnabled = false
 			self.normalModeView.addSubview(self.topSitesCollection!)
 			self.topSitesCollection?.snp.makeConstraints { (make) in
-				make.top.equalTo(self.normalModeView).offset(11)
+				make.top.equalTo(self.normalModeView).offset(FreshtabViewUX.topOffset)
 				make.left.equalTo(self.normalModeView).offset(FreshtabViewUX.TopSitesOffset)
 				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
@@ -318,7 +355,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.equalTo(self.view).offset(21)
 				make.right.equalTo(self.view).offset(-21)
 				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(15)
+				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(FreshtabViewUX.topOffset)
 			}
 			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
 			newsTableView?.separatorStyle = .singleLine
@@ -462,7 +499,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 }
 
-extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
+extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
