@@ -624,6 +624,8 @@
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		AFF105541F25EE9D0093B73D /* AutoForgetTabTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF105531F25EE9D0093B73D /* AutoForgetTabTableViewController.swift */; };
 		B31A31B01E6719F100A9DA7B /* jsengine.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */; };
+		B34E1A471F8D24D200868AD8 /* UserAgentConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34E1A461F8D24D200868AD8 /* UserAgentConstants.swift */; };
+		B34E1A571F8D256B00868AD8 /* UserAgentConstantsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B34E1A561F8D256B00868AD8 /* UserAgentConstantsBridge.m */; };
 		B354B5BC1E5C5A06001B38A1 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BB1E5C5A06001B38A1 /* Engine.swift */; };
 		B354B5BE1E5C5AC8001B38A1 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */; };
 		B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */; };
@@ -2068,6 +2070,8 @@
 		AFF105531F25EE9D0093B73D /* AutoForgetTabTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoForgetTabTableViewController.swift; sourceTree = "<group>"; };
 		B3068568766D906E43CCFA48 /* Pods-CliqzUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B31A31AF1E6719F100A9DA7B /* jsengine.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jsengine.bundle.js; path = JSEngine/jsengine.bundle.js; sourceTree = SOURCE_ROOT; };
+		B34E1A461F8D24D200868AD8 /* UserAgentConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAgentConstants.swift; path = JSEngine/UserAgentConstants.swift; sourceTree = "<group>"; };
+		B34E1A561F8D256B00868AD8 /* UserAgentConstantsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserAgentConstantsBridge.m; path = JSEngine/UserAgentConstantsBridge.m; sourceTree = "<group>"; };
 		B354B5BB1E5C5A06001B38A1 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = JSEngine/Engine.swift; sourceTree = "<group>"; };
 		B354B5BD1E5C5AC8001B38A1 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = JSEngine/WebRequest.swift; sourceTree = "<group>"; };
 		B354B5DD1E5C7096001B38A1 /* WebRequestBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebRequestBridge.m; path = JSEngine/WebRequestBridge.m; sourceTree = "<group>"; };
@@ -4097,6 +4101,8 @@
 				B354B5E11E5C931D001B38A1 /* JSBridgeBridge.m */,
 				1E638EF81F1CEC84002194F6 /* Crypto.swift */,
 				1E638F091F1CECB3002194F6 /* CryptoBridge.m */,
+				B34E1A461F8D24D200868AD8 /* UserAgentConstants.swift */,
+				B34E1A561F8D256B00868AD8 /* UserAgentConstantsBridge.m */,
 			);
 			name = JSEngine;
 			sourceTree = "<group>";
@@ -6666,6 +6672,7 @@
 				4F59D5B71F02C7AA007D70B1 /* URLUtils.cpp in Sources */,
 				E47616C71AB74CA600E7DD25 /* ReaderModeBarView.swift in Sources */,
 				2F44FCC51A9E85E900FD20CC /* SettingsTableViewController.swift in Sources */,
+				B34E1A471F8D24D200868AD8 /* UserAgentConstants.swift in Sources */,
 				1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */,
 				AF4A65311E681EC5000278CD /* InterceptorURLProtocol.swift in Sources */,
 				A9072B801D07B34100459960 /* NoImageModeHelper.swift in Sources */,
@@ -6744,6 +6751,7 @@
 				1E79DD501D4FB2F8006BEB4A /* AWSSNSService.m in Sources */,
 				1E79DE9E1D508368006BEB4A /* AWSClientContext.m in Sources */,
 				1E79DE871D508368006BEB4A /* AWSGZIP.m in Sources */,
+				B34E1A571F8D256B00868AD8 /* UserAgentConstantsBridge.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,
 				1E79DD0C1D4FB2C5006BEB4A /* UIDeviceExtension.swift in Sources */,
 				AFAF9ADC1F14E95A0009E718 /* BloomFilter.swift in Sources */,
