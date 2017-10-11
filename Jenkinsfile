@@ -50,7 +50,7 @@ node('ios-osx') {
                     set -x
                     set -e
                     rvm use ruby-2.4.0
-                    xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=10.3.1,id=8F1A1F1B-4428-45F4-B282-DE628D9A54A1" ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test | xcpretty -tc && exit ${PIPESTATUS[0]}
+                    xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.0,id=15780AD9-53CE-4B27-AF6A-25CE008A31AD" ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test | xcpretty -tc && exit ${PIPESTATUS[0]}
                 '''
             }
         }
@@ -68,7 +68,7 @@ node('ios-osx') {
         }
 
         stage('Run Tests') {
-            withEnv(['platformName=ios', 'udid=8F1A1F1B-4428-45F4-B282-DE628D9A54A1', 'deviceName=iPhone 6', 'platformVersion=10.3.1']) {
+            withEnv(['platformName=ios', 'udid=15780AD9-53CE-4B27-AF6A-25CE008A31AD', 'deviceName=iPhone 6s', 'platformVersion=11.0']) {
                 timeout(45) {
                     sh '''#!/bin/bash -l
                         set -x
