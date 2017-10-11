@@ -61,7 +61,7 @@ node('ios-osx') {
                 set -e
                 brew list node &>/dev/null || brew install node
                 npm install -g appium
-                npm install wd
+                npm install -g wd
                 appium &
                 echo $! > appium.pid
             '''
@@ -97,7 +97,7 @@ node('ios-osx') {
             sh '''#!/bin/bash -l
                 set -x
                 set -e
-                kill `cat appium.pid`
+                kill `cat appium.pid` || true
                 rm -f appium.pid
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
                 xcrun simctl uninstall booted com.apple.test.WebDriverAgentRunner-Runner || true
@@ -105,7 +105,7 @@ node('ios-osx') {
                 rm -rf JSEngine
                 rm -rf external/autobots
                 npm uninstall -g appium
-                npm uninstall wd
+                npm uninstall -g wd
             '''
         }
     }
