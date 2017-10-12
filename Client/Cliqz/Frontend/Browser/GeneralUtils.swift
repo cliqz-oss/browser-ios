@@ -57,6 +57,17 @@ class GeneralUtils {
 }
 
 extension Date {
+    
+    public struct DayMonthYear: Equatable {
+        let day: Int
+        let month: Int
+        let year: Int
+        
+        static public func ==(lhs: DayMonthYear, rhs: DayMonthYear) -> Bool {
+            return lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year
+        }
+    }
+    
     static public func ==(lhs: Date, rhs: Date) -> Bool {
         return lhs.compare(rhs) == .orderedSame
     }
@@ -69,6 +80,34 @@ extension Date {
         return lhs.compare(rhs) == .orderedDescending
     }
     
+    public func isYoungerThanOneDay() -> Bool {
+        let currentDate = NSDate(timeIntervalSinceNow: 0)
+        let difference_seconds = currentDate.timeIntervalSince(self)
+        let oneDay_seconds     = Double(24 * 360)
+        if difference_seconds > 0 && difference_seconds < oneDay_seconds {
+            return true
+        }
+        return false
+    }
+    
+    public func dayMonthYear() -> DayMonthYear {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        
+        let components = dateFormatter.string(from: self).components(separatedBy: "-")
+        
+        if components.count != 3 {
+            //something went terribly wrong
+            NSException.init(name: NSExceptionName(rawValue: "ERROR: Date might be corrupted"), reason: "There should be exactly 3 components.", userInfo: nil).raise()
+        }
+        
+        //this conversion should never fail
+        let day = Int(components[0])
+        let month = Int(components[1])
+        let year = Int(components[2])
+        
+        return DayMonthYear(day: day!, month: month!, year: year!)
+    }
 }
 
 extension UIImage {

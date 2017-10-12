@@ -48,21 +48,11 @@ final class ReadNewsManager {
     private func youngerThanOneDayDict(dict: Dictionary<String,Date>) -> Dictionary<String,Date>{
         var returnDict: Dictionary<String,Date> = Dictionary()
         for key in dict.keys{
-            if let date = dict[key], isYoungerThanOneDay(date: date) {
+            if let date = dict[key], date.isYoungerThanOneDay() {
                 returnDict[key] = date
             }
         }
         return returnDict
-    }
-    
-    private func isYoungerThanOneDay(date:Date) -> Bool{
-        let currentDate = NSDate(timeIntervalSinceNow: 0)
-        let difference_seconds = currentDate.timeIntervalSince(date)
-        let oneDay_seconds     = Double(24 * 360)
-        if difference_seconds > 0 && difference_seconds < oneDay_seconds {
-            return true
-        }
-        return false
     }
     
 }

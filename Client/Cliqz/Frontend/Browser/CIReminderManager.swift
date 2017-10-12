@@ -28,7 +28,7 @@ final class CIReminderManager: NSObject {
     //I would like to get the fired reminders by host.
     
     //TO DO:
-    // 0. Write interface for read/write firedReminders and Copy.
+    // 0. Write interface for read/write firedReminders and Copy. - Done
     // 1. Test fired reminders - Done
     // 2. Make an api for it - Done
     // 3. Link with React - Done

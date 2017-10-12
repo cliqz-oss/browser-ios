@@ -10,6 +10,7 @@ import UIKit
 
 enum RecommendationType {
     case news
+    case reminder
 }
 
 struct Recommendation {
@@ -19,6 +20,7 @@ struct Recommendation {
     let host: String
     let text: String
     let picture_url: String
+    let date: Date?
 }
 
 final class RecommendationsManager {
@@ -42,6 +44,7 @@ final class RecommendationsManager {
         self.loadRecommendations()
         NotificationCenter.default.addObserver(self, selector: #selector(newsUpdated), name: NewsManager.notification_updated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(remindersUpdated), name: CIReminderManager.notification_update, object: nil)
     }
     
     deinit {
@@ -49,18 +52,30 @@ final class RecommendationsManager {
     }
     
     func loadRecommendations() {
+        
+        recommendations = []
+        
         if NewsManager.sharedInstance.ready {
             let news_articles = NewsManager.sharedInstance.articles
             let news_recommendations = convertArticles2Recommendations(articles: news_articles)
             recommendations += news_recommendations
-            
-            stateChanged()
         }
+        
+        let reminders = CIReminderManager.sharedInstance.allValidReminders()
+        let reminders_recommendations = convertReminders2Recommendations(reminders: reminders)
+        recommendations += reminders_recommendations
+        
+        stateChanged()
     }
     
     func removeRecommendation(recommendation: Recommendation) {
         if recommendation.type == .news {
             newsIgnoreList.add(element: recommendation.url)
+        }
+        else if recommendation.type == .reminder {
+            if let date = recommendation.date {
+                CIReminderManager.sharedInstance.unregisterReminder(url: recommendation.url, title: recommendation.title, date: date)
+            }
         }
         
         stateChanged()
@@ -107,8 +122,45 @@ final class RecommendationsManager {
             }
         }
         
-        return Recommendation(type: .news, title: title, url: url, host: host, text: description, picture_url: media_link)
+        return Recommendation(type: .news, title: title, url: url, host: host, text: description, picture_url: media_link, date: nil)
         
+    }
+    
+    private func convertReminders2Recommendations(reminders: [CIReminderManager.Reminder]) -> [Recommendation] {
+        var array: [Recommendation] = []
+        for reminder in reminders {
+            array.append(reminder2Recommendation(reminder: reminder))
+        }
+        return array
+    }
+    
+    private func reminder2Recommendation(reminder: CIReminderManager.Reminder) -> Recommendation {
+        
+        var title = ""
+        var media_link = ""
+        var description = ""
+        var url = ""
+        var host = ""
+        var date: Date? = nil
+        
+        if let t = reminder["title"] as? String {
+            title = t
+        }
+        
+        if let u = reminder["url"] as? String {
+            url = u
+            if let some_url = URL(string: u) {
+                if let h = some_url.host {
+                    host = h
+                }
+            }
+        }
+        
+        if let d = reminder["date"] as? Date {
+            date = d
+        }
+        
+        return Recommendation(type: .reminder, title: title, url: url, host: host, text: description, picture_url: media_link, date: date)
     }
     
     //if domain is nil returns all recommendations
@@ -127,7 +179,7 @@ final class RecommendationsManager {
                 baseUrl = domain.host ?? ""
             }
             
-            let domain_recommendations =  local_recommendations.filter({ (recommendation) -> Bool in
+            let domain_recommendations = local_recommendations.filter({ (recommendation) -> Bool in
                 return baseUrl == recommendation.host
             })
             
@@ -177,7 +229,12 @@ final class RecommendationsManager {
     @objc
     private func domainsUpdated(_ sender: Notification) {
         //Recommendations depend on the Domains. So when the domains change the list of recommendations without hosts changes. Thus we send a notification.
-         NotificationCenter.default.post(name: RecommendationsManager.notification_updated, object: nil)
+         stateChanged()
+    }
+    
+    @objc
+    private func remindersUpdated(_ notification: Notification) {
+        self.loadRecommendations()
     }
     
 }
