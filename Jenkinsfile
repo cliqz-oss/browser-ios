@@ -97,6 +97,8 @@ node('ios-osx') {
                 set -x
                 set -e
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
+                xcrun simctl uninstall booted com.apple.test.WebDriverAgentRunner-Runner || true
+                xcrun simctl uninstall booted com.apple.test.AppiumTests-Runner || true
                 rm -rf JSEngine
                 rm -rf external/autobots
             '''
