@@ -69,7 +69,7 @@ struct StateData: Equatable {
     let query: String? 
     let url: String?
     let tab: Tab?
-    let indexPath: IndexPath?
+    let detailsHost: String?
     let loadingProgress: Float?
     //maybe indexpath as well or tab?
     
@@ -79,10 +79,10 @@ struct StateData: Equatable {
         let query = lhs.query != nil ? lhs.query : rhs.query
         let url   = lhs.url != nil ? lhs.url : rhs.url
         let tab   = lhs.tab != nil ? lhs.tab : rhs.tab
-        let indexPath = lhs.indexPath != nil ? lhs.indexPath : rhs.indexPath
+        let detailsHost = lhs.detailsHost != nil ? lhs.detailsHost : rhs.detailsHost
         let loadingProgress = lhs.loadingProgress != nil ? lhs.loadingProgress : rhs.loadingProgress
         
-        return StateData(query: query, url: url, tab: tab, indexPath: indexPath, loadingProgress: loadingProgress)
+        return StateData(query: query, url: url, tab: tab, detailsHost: detailsHost, loadingProgress: loadingProgress)
     }
     
     static func == (lhs: StateData, rhs: StateData) -> Bool {
@@ -116,6 +116,12 @@ struct State: Equatable {
     }
 }
 
+extension State {
+    func sameStateWithNewData(newStateData: StateData) -> State {
+        return State(mainState: self.mainState, contentState: self.contentState, urlBarState: self.urlBarState, toolBarState: self.toolBarState, toolBackState: self.toolBackState, toolForwardState: self.toolForwardState, toolShareState: self.toolShareState, stateData: newStateData)
+    }
+}
+
 final class StateManager {
     
     static let shared = StateManager()
@@ -127,8 +133,8 @@ final class StateManager {
 
     
     //initial state
-    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil))
-    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil))
+    var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
+    var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
     
     var currentAction: Action = Action(type: .initialization)
     var previousAction: Action = Action(type: .initialization)
@@ -137,12 +143,12 @@ final class StateManager {
     func preprocessAction(action: Action) -> StateData {
         
         guard let data = action.data else {
-            return StateData(query: nil, url: nil, tab: nil, indexPath: nil, loadingProgress: nil)
+            return StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil)
         }
         
         let text = data["text"] as? String
         let tab  = data["tab"] as? Tab
-        let indexPath = data["indexPath"] as? IndexPath
+        let detailsHost = data["detailsHost"] as? String
         var url  = data["url"] as? String
         let loadingProgress = data["progress"] as? Float
         
@@ -160,7 +166,7 @@ final class StateManager {
         }
         
         
-        return StateData(query: text, url: url, tab: tab, indexPath: indexPath, loadingProgress: loadingProgress)
+        return StateData(query: text, url: url, tab: tab, detailsHost: detailsHost, loadingProgress: loadingProgress)
     }
     
     //func areUrlSameExcept
@@ -233,31 +239,30 @@ final class StateManager {
         toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState)
         toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState)
         
-        //there is not point in changing the previous state if the currentstate does not change. 
+        //there is not point in changing the previous state if the currentstate does not change.
         
-        //Attention: note that currentState == nextState even if the data of the nextState is different from the data of currentState
-//        debugPrint("------------------------------------")
-//        debugPrint("PREV STATE")
-//        debugPrint(previousState.urlBarState)
-//        debugPrint(previousState.stateData)
-//        debugPrint("CURRENT STATE")
-//        debugPrint(currentState.urlBarState)
-//        debugPrint(currentState.stateData)
-//        debugPrint("NEXT STATE")
-//        debugPrint(nextState.urlBarState)
-//        debugPrint(nextState.stateData)
-        
-        
-        if currentState != nextState {
-            if !((currentState.urlBarState == .expandedEmptyWhite || currentState.urlBarState == .expandedTextWhite) && (nextState.urlBarState == .expandedEmptyWhite || nextState.urlBarState == .expandedTextWhite)) {
+        if currentState.contentState != nextState.contentState {
+            //if !((currentState.urlBarState == .expandedEmptyWhite || currentState.urlBarState == .expandedTextWhite) && (nextState.urlBarState == .expandedEmptyWhite || nextState.urlBarState == .expandedTextWhite)) {
                 previousState = currentState
-            }
-            
+            //}
         }
         
         //if currentState == nextState, then the data of the currentState is updated.
         //else the nextState replaces the currentState
         currentState = nextState
+        
+        //Attention: note that currentState == nextState even if the data of the nextState is different from the data of currentState
+        debugPrint("------------------------------------")
+        debugPrint("PREV STATE")
+        debugPrint(previousState.contentState)
+        debugPrint(previousState.stateData)
+        debugPrint("CURRENT STATE")
+        debugPrint(currentState.contentState)
+        debugPrint(currentState.stateData)
+        debugPrint("NEXT STATE")
+        debugPrint(nextState.contentState)
+        debugPrint(nextState.stateData)
+        
     }
     
     func mainContChangeToState(currentState: MainState, nextState: MainState) {
@@ -283,7 +288,18 @@ final class StateManager {
         switch nextState {
         case .browse:
             //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
-            if action.type != .urlIsModified && action.type != .visitAddedInDB && action.type != .urlProgressChanged {
+            //these make sure there are no infinite cycles.
+            
+            if currentState == .browse { //back and forward navigation for the browse makes sense only when back/forw. buttons were pressed from a browse state.
+                if action.type == .backButtonPressed {
+                    contentNav?.browseBack()
+                }
+                else if action.type == .forwardButtonPressed {
+                    contentNav?.browseForward()
+                }
+            }
+            //action.type != .backButtonPressed && action.type != .forwardButtonPressed 
+            else if action.type != .urlIsModified && action.type != .visitAddedInDB && action.type != .urlProgressChanged {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }
@@ -297,9 +313,10 @@ final class StateManager {
             contentNav?.domains(currentState: currentState)
         case .details:
             let animated: Bool = currentState == .domains
-            contentNav?.details(indexPath: nextStateData.indexPath, animated: animated)
+            contentNav?.details(host: nextStateData.detailsHost, animated: animated)
         case .dash:
-            contentNav?.dash()
+            let animated: Bool = currentState == .domains
+            contentNav?.dash(animated: animated)
         }
     }
     

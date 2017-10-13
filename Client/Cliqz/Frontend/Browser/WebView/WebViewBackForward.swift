@@ -50,7 +50,6 @@ class WebViewBackForwardList {
         self.webView = webView
     }
     
-    
     private func isSpecial(_url: URL?) -> Bool {
         guard let url = _url else { return false }
         #if !TEST
@@ -66,12 +65,12 @@ class WebViewBackForwardList {
         let history = (obj as AnyObject).description
 //        let nsHistory = history as NSString
 		
-        guard let nsHistory = history as? NSString, !(cachedHistoryStringLength > 0 && cachedHistoryStringLength == nsHistory.length &&
+        guard let nsHistory = history as NSString?, !(cachedHistoryStringLength > 0 && cachedHistoryStringLength == nsHistory.length &&
             cachedHistoryStringPositionOfCurrentMarker > -1 &&
 			nsHistory.substring(with: NSMakeRange(cachedHistoryStringPositionOfCurrentMarker, currIndicator.characters.count)) == currIndicator) else {
             // the history is unchanged (based on this guesstimate)
             return
-        }
+        }  
         
         cachedHistoryStringLength = nsHistory.length
         
@@ -99,10 +98,18 @@ class WebViewBackForwardList {
             }
             i += 1
         }
+        
+        var latestUrlStr = ""
+        
 //        if  backForwardList.count > 0 {
-//            let lastUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
-//            StateManager.shared.handleAction(action: Action(data: ["url" : lastUrlStr], type: .visitAddedInDB))
+//            latestUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
 //        }
+        
+        //BackForwardListHelper.shared.update(count: backForwardList.count, latestUrlStr: latestUrlStr)
+        //        if  backForwardList.count > 0 {
+        //            let lastUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
+        //            StateManager.shared.handleAction(action: Action(data: ["url" : lastUrlStr], type: .visitAddedInDB))
+        //        }
         
         if !foundCurrent {
             currentIndex = 0

@@ -239,6 +239,16 @@ extension ContentNavigationViewController {
         
     }
     
+    func browseBack() {
+        changeState(state: .browser)
+        tabManager.selectedTab?.webView?.goBack()
+    }
+    
+    func browseForward() {
+        changeState(state: .browser)
+        tabManager.selectedTab?.webView?.goForward()
+    }
+    
     func browseURL(url: String?) {
 		changeState(state: .browser, text: url)
     }
@@ -264,18 +274,18 @@ extension ContentNavigationViewController {
         }
     }
     
-    func details(indexPath: IndexPath?, animated: Bool) {
-        pageNavVC.hideDots()
+    func details(host: String?, animated: Bool) {
         changeState(state: .pageNavigation)
-        if let indexPath = indexPath {
-            pageNavVC.historyNavigation.showDetails(indexPath: indexPath, animated: animated)
+        if let host = host {
+            pageNavVC.hideDots()
+            pageNavVC.historyNavigation.showDetails(host: host, animated: animated)
         }
     }
 
-    func dash() {
+    func dash(animated: Bool) {
         changeState(state: .pageNavigation)
         pageNavVC.showDots()
-        pageNavVC.showDashBoard()
+        pageNavVC.showDashBoard(animated: animated)
     }
 }
 

@@ -92,10 +92,10 @@ class PageNavigationViewController: UIViewController {
         currentState = .History
     }
     
-    func showDashBoard() {
+    func showDashBoard(animated: Bool) {
         if pageControl.currentPage == 0 {
             pageControl.changePage(page: 1)
-            surfViewController.showNext()
+            surfViewController.showNext(animated: animated)
             currentState = .DashBoard
         }
     }
@@ -103,7 +103,7 @@ class PageNavigationViewController: UIViewController {
     func showDomains() {
         if pageControl.currentPage == 1 {
             pageControl.changePage(page: 0)
-            surfViewController.showPrev()
+            surfViewController.showPrev(animated: true)
             currentState = .History
         }
     }
@@ -111,12 +111,12 @@ class PageNavigationViewController: UIViewController {
     func navigate() {
         if pageControl.currentPage == 0 {
             pageControl.changePage(page: 1)
-            surfViewController.showNext()
+            surfViewController.showNext(animated: true)
             currentState = .DashBoard
         }
         else {
             pageControl.changePage(page: 0)
-            surfViewController.showPrev()
+            surfViewController.showPrev(animated: true)
             currentState = .History
         }
     }

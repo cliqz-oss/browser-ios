@@ -102,7 +102,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
 
     let expandedTextIsPrev: Bool = previousState == .expandedTextWhite
 
-    let specialState: URLBarState = expandedTextIsPrev ? previousState : .expandedEmptyWhite
+    let specialState: URLBarState = query != "" ? .expandedTextWhite : .expandedEmptyWhite //expandedTextIsPrev && query != "" ? previousState : .expandedEmptyWhite
 
     //this is for selecting an empty tab
     var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
@@ -112,7 +112,6 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
             tabSelectedSpecialState = .collapsedEmptyTransparent
         }
     }
-
     else {
         tabSelectedSpecialState = .collapsedEmptyTransparent
     }
@@ -158,9 +157,32 @@ final class ActionStateTransformer {
     //define possible states
     //define the possible transformations
     
+    class func ruleOne(currentContentState: ContentState, currentURLBarState: URLBarState) -> Bool {
+        return currentContentState == .search && (currentURLBarState == .collapsedTextTransparent || currentURLBarState == .collapsedEmptyTransparent)
+    }
+    
+    class func ruleTwo(previousContentState: ContentState, currentContentState: ContentState, currentStateData: StateData) -> Bool {
+        return currentContentState == .browse && (previousContentState == .search || previousContentState == .details || previousContentState == .domains || previousContentState == .dash) && currentStateData.tab?.webView?.canGoBack == false
+    }
+    
     
     class func nextState(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
         //work with the currently selected tab.
+        
+        if actionType == .backButtonPressed {
+            if ruleOne(currentContentState: currentState.contentState, currentURLBarState: currentState.urlBarState) || ruleTwo(previousContentState: previousState.contentState, currentContentState: currentState.contentState, currentStateData: currentState.stateData) {
+                var state = previousState
+                state.toolBackState = .disabled
+                state.toolForwardState = .enabled
+                return state
+            }
+        }
+        else if actionType == .forwardButtonPressed {
+            if currentState.contentState != .browse {
+                return previousState
+            }
+        }
+        
         
         //2 types of actions: [back, forward] and the other.
         //if the action is either back or forward, then:
@@ -176,50 +198,73 @@ final class ActionStateTransformer {
         //TO DO: Refactor this - Think about how to encapsulate the add rules
         
         //there should always be a selected tab!!!
-        if let tab = currentState.stateData.tab {
-            
-            if actionType == .backButtonPressed, var state = BackForwardNavigation.shared.prevState(tab: tab) {
-                BackForwardNavigation.shared.decrementIndex(tab: tab)
-                state.toolBackState  = BackForwardNavigation.shared.hasPrevState(tab: tab) ? .enabled : .disabled
-                state.toolForwardState = BackForwardNavigation.shared.hasNextState(tab: tab) ? .enabled : .disabled
-                return state
-            }
-            else if actionType == .forwardButtonPressed, var state = BackForwardNavigation.shared.nextState(tab: tab) {
-                BackForwardNavigation.shared.incrementIndex(tab: tab)
-                state.toolBackState  = BackForwardNavigation.shared.hasPrevState(tab: tab) ? .enabled : .disabled
-                state.toolForwardState = BackForwardNavigation.shared.hasNextState(tab: tab) ? .enabled : .disabled
-                return state
-            }
-        }
+//        if let tab = currentState.stateData.tab {
+//
+//            if actionType == .backButtonPressed {
+//
+//                var state = BackForwardNavigation.shared.currentState(tab: tab)
+//
+//                if BackForwardNavigation.shared.shouldChangeToPrevState(tab: tab, currentState: currentState) {
+//                    state = BackForwardNavigation.shared.prevState(tab: tab)
+//                    BackForwardNavigation.shared.decrementIndex(tab: tab)
+//                }
+//
+//                //BackForwardUtil.shared.decrementCurrentIndex()
+//
+//                if var state = state {
+//                    state.toolBackState  = BackForwardNavigation.shared.canGoBack(tab: tab, currentState: currentState) ? .enabled : .disabled
+//                    state.toolForwardState = BackForwardNavigation.shared.canGoForward(tab: tab, currentState: currentState) ? .enabled : .disabled
+//                    return state
+//                }
+//
+//            }
+//            else if actionType == .forwardButtonPressed {
+//
+//                var state = BackForwardNavigation.shared.currentState(tab: tab)
+//
+//                if BackForwardNavigation.shared.shouldChangeToNextState(tab: tab, currentState: currentState) {
+//                    state = BackForwardNavigation.shared.nextState(tab: tab)
+//                    BackForwardNavigation.shared.incrementIndex(tab: tab)
+//                }
+//
+//                //BackForwardUtil.shared.incrementCurrentIndex()
+//
+//                if var state = state {
+//                    state.toolBackState  = BackForwardNavigation.shared.canGoBack(tab: tab, currentState: currentState) ? .enabled : .disabled
+//                    state.toolForwardState = BackForwardNavigation.shared.canGoForward(tab: tab, currentState: currentState) ? .enabled : .disabled
+//                    return state
+//                }
+//            }
+//        }
         
-        var state = ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: actionType, nextStateData: nextStateData)
+        /*var*/let state = ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: actionType, nextStateData: nextStateData)
         //register the new state
         
-        if let tab = state.stateData.tab {
-            
-            //Register rules
-            //No need for replacement for Browse. Add when there is a new entry in the DB.
-            //If urlIsModified then I should replace the last browse with this one.
-            if BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state, actionType: actionType)
-            }
-            else if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
-            }
-            else if SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state, actionType: actionType)
-            }
-            else if SearchAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
-            }
-            else if DomainsAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
-                BackForwardNavigation.shared.addState(tab: tab, state: state, actionType: actionType)
-            }
-            
-            //update since something might have been added.
-            state.toolBackState  = BackForwardNavigation.shared.hasPrevState(tab: tab) ? .enabled : .disabled
-            state.toolForwardState = BackForwardNavigation.shared.hasNextState(tab: tab) ? .enabled : .disabled
-        }
+//        if let tab = state.stateData.tab {
+//
+//            //Register rules
+//            //No need for replacement for Browse. Add when there is a new entry in the DB.
+//            //If urlIsModified then I should replace the last browse with this one.
+//            if BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
+//                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state)
+//            }
+//            else if BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+//                BackForwardNavigation.shared.addState(tab: tab, state: state)
+//            }
+//            else if SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
+//                BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: state)
+//            }
+//            else if SearchAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+//                BackForwardNavigation.shared.addState(tab: tab, state: state)
+//            }
+//            else if DomainsAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+//                BackForwardNavigation.shared.addState(tab: tab, state: state)
+//            }
+//
+//            //update since something might have been added.
+//            state.toolBackState  = BackForwardNavigation.shared.canGoBack(tab: tab, currentState: currentState) ? .enabled : .disabled
+//            state.toolForwardState = BackForwardNavigation.shared.canGoForward(tab: tab, currentState: currentState) ? .enabled : .disabled
+//        }
         
         return state
     }
@@ -235,23 +280,23 @@ final class ActionStateTransformer {
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
             if alteredStateData.tab == nil {
                 let tab = tabManager.addTabAndSelect()
-                let newStateData = StateData(query: nil, url: nil, tab: tab, indexPath: nil, loadingProgress: nil)
+                let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
                 alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
             }
         }
 	
 		if currentState.urlBarState == .collapsedEmptyTransparent && actionType == .urlSearchPressed {
-			let newStateData = StateData(query: "", url: nil, tab: nil, indexPath: nil, loadingProgress: nil)
+			let newStateData = StateData(query: "", url: nil, tab: nil, detailsHost: nil, loadingProgress: nil)
 			alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
 		}
 
         let mainNextState = mainContTransform(prevState: previousState.mainState, currentState: currentState.mainState, actionType: actionType)
-        let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, actionType: actionType, nextStateData: nextStateData)
-        let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, actionType: actionType, nextStateData: nextStateData)
+        let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, nextStateData: alteredStateData, actionType: actionType)
+        let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, nextStateData: alteredStateData, actionType: actionType)
         let toolBarNextState = toolBarTransform(currentState: currentState.toolBarState, actionType: actionType)
         
-        let toolBackNextState: ToolBarBackState = .disabled
-        let toolForwardNextState: ToolBarForwardState = .disabled
+        let toolBackNextState: ToolBarBackState = toolBarBackTransform(previousState: previousState, currentState: currentState, nextContentState: contentNextState, nextUrlBarState: urlBarNextState,nextStateData: alteredStateData, actionType: actionType)
+        let toolForwardNextState: ToolBarForwardState = toolBarForwardTransform(currentState: currentState, nextStateData: alteredStateData, actionType: actionType)
         
         let toolShareNextState = toolBarShareTransform(currentState: currentState.toolShareState, actionType: actionType)
         
@@ -269,7 +314,11 @@ final class ActionStateTransformer {
         return nextState
     }
     
-    private class func contentNavTransform(previousState: ContentState, currentState: ContentState, actionType: ActionType, nextStateData: StateData) -> ContentState {
+    private class func contentNavTransform(previousState: ContentState, currentState: ContentState, nextStateData: StateData, actionType: ActionType) -> ContentState {
+        
+        if actionType == .urlProgressChanged || actionType == .urlIsModified {
+            return currentState
+        }
         
         var nextState = currentState
         
@@ -280,7 +329,7 @@ final class ActionStateTransformer {
         return nextState
     }
     
-    private class func urlBarTransform(prevState: URLBarState, currentState: URLBarState, actionType: ActionType, nextStateData: StateData) -> URLBarState {
+    private class func urlBarTransform(prevState: URLBarState, currentState: URLBarState, nextStateData: StateData, actionType: ActionType) -> URLBarState {
         var nextState = currentState
         
         if let newState = urlBarNextState(actionType: actionType, previousState: prevState, currentState: currentState, nextStateData: nextStateData) {
@@ -295,14 +344,36 @@ final class ActionStateTransformer {
         return currentState
     }
     
-    //    class func toolBarBackTransform(prevState: ToolBarBackState, currentState: ToolBarBackState, action: ActionType) -> ToolBarBackState {
-    //        return currentState
-    //    }
-    //
-    //    class func toolBarForwardTransform(prevState: ToolBarForwardState, currentState: ToolBarForwardState, action: ActionType) -> ToolBarForwardState {
-    //        return currentState
-    //    }
+    private class func toolBarBackTransform(previousState: State, currentState: State, nextContentState: ContentState, nextUrlBarState: URLBarState, nextStateData: StateData, actionType: ActionType) -> ToolBarBackState {
+        
+//        if actionType == .urlProgressChanged || actionType == .urlIsModified {
+//            return currentState.toolBackState
+//        }
+        
+        if ruleOne(currentContentState: nextContentState, currentURLBarState: nextUrlBarState) || ruleTwo(previousContentState: previousState.contentState, currentContentState: currentState.contentState, currentStateData: currentState.stateData) {
+            return .enabled
+        }
+        
+        guard currentState.contentState == .browse else {
+            return currentState.toolBackState
+        }
+        
+        return nextStateData.tab?.webView?.canGoBack == true ? .enabled : .disabled
+    }
     
+    private class func toolBarForwardTransform(currentState: State, nextStateData: StateData, actionType: ActionType) -> ToolBarForwardState {
+        
+//        if actionType == .urlProgressChanged || actionType == .urlIsModified {
+//            return currentState.toolForwardState
+//        }
+        
+        guard currentState.contentState == .browse else {
+            return currentState.toolForwardState
+        }
+        
+        return nextStateData.tab?.webView?.canGoForward == true ? .enabled : .disabled
+    }
+
     private class func toolBarShareTransform(currentState: ToolBarShareState, actionType: ActionType) -> ToolBarShareState {
         return currentState
     }

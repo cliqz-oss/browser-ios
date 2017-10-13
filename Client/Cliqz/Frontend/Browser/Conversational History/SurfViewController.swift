@@ -51,33 +51,39 @@ final class SurfViewController: UIViewController {
         
     }
     
-    func showNext() {
+    func showNext(animated: Bool) {
         if isWithinBounds(number: current + 1) {
             if let currentView = controllers[current].view, let nextView = controllers[current + 1].view {
-                animate(view: currentView, position: .left)
-                animate(view: nextView, position: .center)
+                show(view: currentView, position: .left, animated: animated)
+                show(view: nextView, position: .center, animated: animated)
                 
                 current += 1
             }
         }
     }
     
-    func showPrev() {
+    func showPrev(animated: Bool) {
         if isWithinBounds(number: current - 1) {
             if let currentView = controllers[current].view, let prevView = controllers[current - 1].view {
-                animate(view: currentView, position: .right)
-                animate(view: prevView, position: .center)
+                show(view: currentView, position: .right, animated: animated)
+                show(view: prevView, position: .center, animated: animated)
                 
                 current -= 1
             }
         }
     }
     
-    private func animate(view: UIView, position: Position) {
-        UIViewPropertyAnimator.init(duration: 0.24, curve: .easeInOut) {
+    private func show(view: UIView, position: Position, animated: Bool) {
+        if animated {
+            UIViewPropertyAnimator.init(duration: 0.24, curve: .easeInOut) {
+                self.put(view: view, position: position)
+                self.view.layoutIfNeeded()
+            }.startAnimation()
+        }
+        else {
             self.put(view: view, position: position)
             self.view.layoutIfNeeded()
-        }.startAnimation()
+        }
     }
     
     private func put(view: UIView, position: Position) {

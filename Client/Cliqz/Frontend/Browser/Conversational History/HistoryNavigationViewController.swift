@@ -42,9 +42,9 @@ final class HistoryNavigationViewController: UIViewController {
     
     private func setupConversationalHistory() {
         conversationalHistory.view.backgroundColor = UIColor.clear
-        conversationalHistory.didPressCell = { (indexPath) in
+        conversationalHistory.didPressCell = { (indexPath, host) in
             
-            let data: [String: Any] = ["indexPath": indexPath]
+            let data: [String: Any] = ["detailsHost": host]
             
             StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed))
         }
@@ -83,8 +83,35 @@ final class HistoryNavigationViewController: UIViewController {
         }
     }
     
-    func showDetails(indexPath: IndexPath, animated: Bool) {
+    func indexPathFor(host:String) -> IndexPath? {
+        let hosts = conversationalHistory.dataSource.domains.map { a in a.host }
+        
+        for i in 0..<hosts.count {
+            if host == hosts[i] {
+                return IndexPath(row: i, section: 0)
+            }
+        }
+        
+        return nil
+    }
+    
+    func hostFor(indexPath: IndexPath) -> String? {
+        let row = indexPath.row
+        let domains = conversationalHistory.dataSource.domains
+        
+        if row >= 0 && row < domains.count {
+            return domains[row].host
+        }
+        
+        return nil
+    }
+    
+    func showDetails(host: String, animated: Bool) {
         self.currentState = .Details
+        
+        guard let indexPath = indexPathFor(host: host) else {
+            return
+        }
         
         let conversationalHistoryDetails = self.setUpConversationalHistoryDetails(indexPath: indexPath)
         
