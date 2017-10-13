@@ -100,6 +100,8 @@ node('ios-osx') {
                 kill `cat appium.pid`
                 rm -f appium.pid
                 xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
+                xcrun simctl uninstall booted com.apple.test.WebDriverAgentRunner-Runner || true
+                xcrun simctl uninstall booted com.apple.test.AppiumTests-Runner || true
                 rm -rf JSEngine
                 rm -rf external/autobots
                 npm uninstall -g appium
