@@ -438,7 +438,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
                             self.news.removeAll()
 							// Temporary filter to avoid reuters crashing UIWebview on iOS 10.3.2/10.3.3
 							self.news = articles.filter({ (article) -> Bool in
-								print(article)
 								if let domain = article["domain"] as? String {
 									return !domain.contains("reuters")
 								}

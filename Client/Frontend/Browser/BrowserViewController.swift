@@ -220,6 +220,7 @@ class BrowserViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         log.debug("BVC received memory warning")
+		self.tabManager.purgeInactiveTabs()
     }
 
     fileprivate func didInit() {
@@ -237,7 +238,6 @@ class BrowserViewController: UIViewController {
         return previousTraitCollection.verticalSizeClass != .compact &&
                previousTraitCollection.horizontalSizeClass != .regular
     }
-
 
     func toggleSnackBarVisibility(show: Bool) {
         if show {
