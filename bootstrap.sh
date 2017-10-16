@@ -34,6 +34,3 @@ if [ ! -f Carthage/Cartfile.resolved ]; then
 fi
 
 ./downloadExtension.sh
-
-# get jsengine for package.json and js bundle
-./downloadJSEngine.sh

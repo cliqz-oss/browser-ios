@@ -24,18 +24,18 @@ class AppSettingsTableViewController: SettingsTableViewController {
         tableView.accessibilityIdentifier = "AppSettingsTableViewController.tableView"
         
         // Cliqz: Add observers for Connection features
-        NotificationCenter.default.addObserver(self, selector: #selector(newTabOpened), name: SendTabNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: ShowBrowserViewControllerNotification, object: nil)
 
     }
     
     deinit {
         // Cliqz: removed observers for Connect features
-        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: ShowBrowserViewControllerNotification, object: nil)
         
     }
     
     // Called when send tab notification sent from Connect while dashboard is presented
-    func newTabOpened(notification: NSNotification) {
+    func dismissView() {
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -70,6 +70,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let adBlockerSetting            = AdBlockerSetting(settings: self)
         let clearPrivateDataSetting     = ClearPrivateDataSetting(settings: self)
         let restoreTopSitesSetting      = RestoreTopSitesSetting(settings: self)
+        let resetSubscriptionsSetting   = ResetSubscriptionsSetting(settings: self)
         
         var browsingAndHistorySection = [Setting]()
         
@@ -77,7 +78,7 @@ class AppSettingsTableViewController: SettingsTableViewController {
             browsingAndHistorySection += [connectSetting]
         }
         
-        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting]
+        browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting, resetSubscriptionsSetting]
 
 #if BETA
         browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]

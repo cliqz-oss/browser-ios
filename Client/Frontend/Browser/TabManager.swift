@@ -216,9 +216,10 @@ class TabManager : NSObject {
         assert(tab === selectedTab, "Expected tab is selected")
         selectedTab?.createWebview()
 
-        for delegate in delegates {
+        for delegate in self.delegates {
             delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
         }
+        
     }
 
     func expireSnackbars() {

@@ -14,10 +14,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
 	func loadInitialURL() {
 		if let urlString = self.initialURL,
 		   let url = URL(string: urlString) {
-			self.navigateToURL(url)
-            if let tab = tabManager.selectedTab {
-                tab.url = url
-            }
+			self.openURLInNewTab(url)
 			self.initialURL = nil
 		}
 	}
@@ -41,33 +38,24 @@ extension BrowserViewController: ControlCenterViewDelegate {
             return
         }
         
-		if let filepath = Bundle.main.path(forResource: "main", ofType: "js") {
-			do {
-                let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
-                FeedbackUI.showLoadingHUD(hudMessage)
-				let jsString = try NSString(contentsOfFile:filepath, encoding: String.Encoding.utf8.rawValue)
-				if let context = JSContext() {
-					let httpRequest = XMLHttpRequest()
-					httpRequest.extendJSContext(context)
-					context.exceptionHandler = { context, exception in
-						print("JS Error: \(exception)")
-					}
-					context.evaluateScript(jsString as String)
-					let callback: @convention(block)([AnyObject])->()  = { [weak self] (urls) in
-						self?.downloadVideoOfSelectedFormat(urls, sourceRect: sourceRect)
-					}
-					let callbackName = "URLReceived"
-					context.setObject(unsafeBitCast(callback, to: AnyObject.self), forKeyedSubscript: callbackName as (NSCopying & NSObjectProtocol)!)
-					context.evaluateScript("window.ytdownloader.getUrls('\(url)', \(callbackName))")
-				}
-			} catch {
-				debugPrint("Couldn't load file")
-			}
-		}
+        let hudMessage = NSLocalizedString("Retrieving video information", tableName: "Cliqz", comment: "HUD message displayed while youtube downloader grabing the download URLs of the video")
+        FeedbackUI.showLoadingHUD(hudMessage)
+        
+        Engine.sharedInstance.findVideoLinks(url: url, callback: { [weak self] (videoLinks) in
+            DispatchQueue.main.async {
+                var supportedVideoLinks = [[String: Any]]()
+                for videoLink in videoLinks {
+                    if let isVideoAudio = videoLink["isVideoAudio"] as? Bool, isVideoAudio == true {
+                        supportedVideoLinks.append(videoLink)
+                    }
+                }
+                self?.downloadVideoOfSelectedFormat(supportedVideoLinks, sourceRect: sourceRect)
+            }
+        })
 	}
 	
-	func downloadVideoOfSelectedFormat(_ urls: [AnyObject], sourceRect: CGRect) {
-		if urls.count > 0 {
+	func downloadVideoOfSelectedFormat(_ videoLinks: [[String: Any]], sourceRect: CGRect) {
+		if videoLinks.count > 0 {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": true]))
 		} else {
 			TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("page_load", ["is_downloadable": false]))
@@ -76,11 +64,11 @@ extension BrowserViewController: ControlCenterViewDelegate {
         let title = NSLocalizedString("Video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet title")
         let message = NSLocalizedString("Please select video quality", tableName: "Cliqz", comment: "Youtube downloader action sheet message")
  		let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-		for url in urls {
-			if let f = url["label"] as? String, let u = url["url"] as? String {
-				actionSheet.addAction(UIAlertAction(title: f, style: .default, handler: { _ in
-					YoutubeVideoDownloader.downloadFromURL(u)
-                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": f.replace(" ", replacement: "_")]))
+		for videoLink in videoLinks {
+			if let name = videoLink["name"] as? String, let url = videoLink["url"] as? String {
+				actionSheet.addAction(UIAlertAction(title: name, style: .default, handler: { _ in
+					YoutubeVideoDownloader.downloadFromURL(url)
+                    TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", ["target": name.replace(" ", replacement: "_")]))
 				}))
 			}
 		}
@@ -310,6 +298,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
     // MARK: - Connect
     
     func openTabViaConnect(notification: NSNotification) {
+        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
         guard let data = notification.object as? [String: String], let urlString = data["url"] else {
             return
         }
@@ -359,6 +348,12 @@ extension BrowserViewController: ControlCenterViewDelegate {
         alertController.addAction(dismissAction)
         
         self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension BrowserViewController: RemoteNotificationDelegate {
+    func presentViewController(_ viewControllerToPresent: UIViewController, animated flag: Bool) {
+        self.present(viewControllerToPresent, animated: flag, completion: nil)
     }
 }
 

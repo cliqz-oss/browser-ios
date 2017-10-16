@@ -1,0 +1,40 @@
+{
+  "name": "browser-ios",
+  "version": "1.6.0",
+  "description": "",
+  "scripts": {
+    "dev-server": "node node_modules/react-native/local-cli/cli.js start",
+    "dev-bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform ios --entry-file index.ios.js --bundle-output ./JSEngine/jsengine.bundle.js --assets-dest ./JSEngine/ && cp -R ./node_modules/browser-core/build/assets/ ./JSEngine/assets/",
+    "bundle": "node node_modules/react-native/local-cli/cli.js bundle --platform ios --entry-file index.ios.js --bundle-output ./JSEngine/jsengine.bundle.js --assets-dest ./JSEngine/ --dev false && cp -R ./node_modules/browser-core/build/assets/ ./JSEngine/assets/",
+    "postinstall": "sed -i '' 's/#import <RCTAnimation\\/RCTValueAnimatedNode.h>/#import \"RCTValueAnimatedNode.h\"/' ./node_modules/react-native/Libraries/NativeAnimation/RCTNativeAnimatedNodesManager.h || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cliqz-oss/browser-ios.git"
+  },
+  "author": "Cliqz GmbH",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/cliqz-oss/browser-ios/issues"
+  },
+  "homepage": "https://github.com/cliqz-oss/browser-ios#readme",
+  "dependencies": {
+    "browser-core": "http://cdn2.cliqz.com/update/react-native/1.20.1.tgz",
+    "buffer": "5.0.7",
+    "https-browserify": "1.0.0",
+    "path-browserify": "0.0.0",
+    "pouchdb-adapter-react-native-sqlite": "1.0.3",
+    "pouchdb-react-native": "6.1.26",
+    "react": "16.0.0-alpha.12",
+    "react-native": "0.46.4",
+    "react-native-collapsible": "0.8.1",
+    "react-native-device-info": "0.10.2",
+    "react-native-fs": "2.3.3",
+    "react-native-sqlite-2": "1.4.0",
+    "react-native-webrtc": "https://github.com/cliqz-oss/react-native-webrtc/releases/download/1.58.2/react-native-webrtc-1.58.1.tgz",
+    "react-navigation": "1.0.0-beta.12",
+    "stream-browserify": "2.0.1",
+    "stream-http": "2.7.2",
+    "url": "^0.11.0"
+  }
+}

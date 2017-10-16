@@ -25,6 +25,8 @@ import Storage
     @objc optional func autoCompeleteQuery(_ autoCompleteText: String)
     @objc optional func isReady()
     @objc optional func shareCard(_ card: String, title: String, width: Int, height: Int)
+    @objc optional func subscribeToNotifications(withType type: String, subType: String, id: String)
+    @objc optional func unsubscribeToNotifications(withType type: String, subType: String, id: String)
 }
 
 class JavaScriptBridge {
@@ -220,6 +222,23 @@ class JavaScriptBridge {
             if let suggestionsData = data as? [String: AnyObject] {
                 NotificationCenter.default.post(name: QuerySuggestions.ShowSuggestionsNotification, object: suggestionsData)
             }
+            
+        case "subscribeToNotifications":
+            if let cardData = data as? [String: String],
+                let type = cardData["type"],
+                let subType = cardData["subtype"],
+                let id = cardData["id"]{
+                delegate?.subscribeToNotifications?(withType: type, subType: subType, id: id)
+            }
+            
+        case "unsubscribeToNotifications":
+            if let cardData = data as? [String: String],
+                let type = cardData["type"],
+                let subType = cardData["subtype"],
+                let id = cardData["id"]{
+                delegate?.unsubscribeToNotifications?(withType: type, subType: subType, id: id)
+            }
+            
         default:
 			debugPrint("Unhandles JS action")
         }

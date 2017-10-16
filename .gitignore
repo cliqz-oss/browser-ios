@@ -79,8 +79,8 @@ Extension/*
 !Extension/.gitkeep
 
 # React native
+node_modules/
 JSEngine/*
-!JSEngine/.gitkeep
 Pods/
 Podfile.lock
 artifacts/

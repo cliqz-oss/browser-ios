@@ -126,7 +126,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
 		self.topSitesCollection?.snp.updateConstraints({ (make) in
-			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow {
+			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
 				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
 			} else {
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
@@ -279,7 +279,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.equalTo(self.view).offset(21)
 				make.right.equalTo(self.view).offset(-21)
 				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(20)
+				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(15)
 			}
 			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
 			newsTableView?.separatorStyle = .singleLine
@@ -425,7 +425,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
-			self.isNewsExpanded ? min(self.news.count, (DeviceInfo.getDeviceType() == .iPhone5 ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
+			self.isNewsExpanded ? min(self.news.count, (UIDevice.current.isSmallIphoneDevice() ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
 		FreshtabViewUX.MinNewsCellsCount
 	}
 	
@@ -553,6 +553,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if UIDevice.current.isSmallIphoneDevice() {
+            return FreshtabViewUX.TopSitesCountOnRow
+        }
 		return self.topSites.count > FreshtabViewUX.TopSitesCountOnRow ? 2 * FreshtabViewUX.TopSitesCountOnRow : FreshtabViewUX.TopSitesCountOnRow
 	}
 	

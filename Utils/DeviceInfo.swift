@@ -82,7 +82,7 @@ open class DeviceInfo {
         // Thus, testing has to take place on actual devices.
         return !lowGraphicsQualityModels.contains(specificModelName)
     }
-
+    //TODO: deprecated - should be removed and use UIDeviceExtension instead
 	open class func getDeviceType() -> DeviceType {
 		var deviceSuffix: DeviceType
 		
