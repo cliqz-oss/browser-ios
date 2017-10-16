@@ -68,7 +68,7 @@ node('ios-osx') {
         }
 
         stage('Run Tests') {
-            withEnv(['platformName=ios', 'udid=16404244-D9D7-48BC-B160-E275E9E53239', 'deviceName=iPhone 6', 'platformVersion=11.0']) {
+            withEnv(['platformName=ios', 'udid=16404244-D9D7-48BC-B160-E275E9E53239', 'deviceName=iPhone 6', 'platformVersion=11.0', 'bundleID=com.cliqz']) {
                 timeout(45) {
                     sh '''#!/bin/bash -l
                         set -x
@@ -96,7 +96,7 @@ node('ios-osx') {
             sh '''#!/bin/bash -l
                 set -x
                 set -e
-                xcrun simctl uninstall booted cliqz.ios.CliqzBeta || true
+                xcrun simctl uninstall booted com.cliqz || true
                 xcrun simctl uninstall booted com.apple.test.WebDriverAgentRunner-Runner || true
                 xcrun simctl uninstall booted com.apple.test.AppiumTests-Runner || true
                 rm -rf JSEngine
