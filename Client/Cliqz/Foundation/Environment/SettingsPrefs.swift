@@ -199,23 +199,24 @@ class SettingsPrefs {
     
     // MARK: - Private helper metods
 	class fileprivate func getBoolPref(_ forKey: String) -> Bool? {
-		let appDelegate = UIApplication.shared.delegate as! AppDelegate
-		if let profile = appDelegate.profile {
+		
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let profile = appDelegate.profile {
 			return profile.prefs.boolForKey(forKey)
 		}
 		return nil
 	}
 	
 	class fileprivate func updatePref(_ forKey: String, value: AnyObject) {
-		let appDelegate = UIApplication.shared.delegate as! AppDelegate
-		if let profile = appDelegate.profile {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let profile = appDelegate.profile {
 			profile.prefs.setObject(value, forKey: forKey)
 		}
 	}
     
     class fileprivate func getStringPref(_ forKey: String) -> String? {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        if let profile = appDelegate.profile {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+            let profile = appDelegate.profile {
             return profile.prefs.stringForKey(forKey)
         }
         return nil
