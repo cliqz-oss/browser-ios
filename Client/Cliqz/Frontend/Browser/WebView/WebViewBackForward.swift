@@ -99,17 +99,7 @@ class WebViewBackForwardList {
             i += 1
         }
         
-        var latestUrlStr = ""
-        
-//        if  backForwardList.count > 0 {
-//            latestUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
-//        }
-        
-        //BackForwardListHelper.shared.update(count: backForwardList.count, latestUrlStr: latestUrlStr)
-        //        if  backForwardList.count > 0 {
-        //            let lastUrlStr = backForwardList[backForwardList.count - 1].url.absoluteString
-        //            StateManager.shared.handleAction(action: Action(data: ["url" : lastUrlStr], type: .visitAddedInDB))
-        //        }
+        BackForwardListWatch.shared.update(list: backForwardList.map({a in a.url.absoluteString}))
         
         if !foundCurrent {
             currentIndex = 0

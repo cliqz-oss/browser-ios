@@ -8,33 +8,50 @@
 
 import UIKit
 
-class DomainsAddRule {
-    
+final class PageNavAddRule {
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
             return false
         }
         
-        guard newState.contentState == .domains else {
+        guard newState.contentState == .domains || newState.contentState == .details || newState.contentState == .dash else {
+            return false
+        }
+        
+        guard PageNavAddRule.shouldReplaceCurrent(newState: newState, tab: tab, actionType: actionType) == false else {
+            return false
+        }
+        
+        return true
+        
+    }
+    
+    class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
+        
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
+            return false
+        }
+        
+        guard newState.contentState == .domains || newState.contentState == .details || newState.contentState == .dash else {
             return false
         }
         
         if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == newState.contentState && currentState.urlBarState == newState.urlBarState {
-                return false
+            if currentState.contentState == newState.contentState {
+                return true
             }
         }
         
-        return true
+        return false
     }
 }
 
-class SearchAddRule {
+final class SearchAddRule {
     
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
             return false
         }
         
@@ -58,7 +75,7 @@ class SearchAddRule {
     
     class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
             return false
         }
         
@@ -76,7 +93,7 @@ class SearchAddRule {
     }
 }
 
-class BrowseAddRule {
+final class BrowseAddRule {
     
     //Quick fix:
     //We now register browse states on urlIsSelected and replace them when visitAddedInDB.
@@ -89,53 +106,45 @@ class BrowseAddRule {
             return false
         }
         
-        guard actionType == .urlSelected else {
+        guard actionType == .urlSelected || actionType == .newVisit else {
             return false
         }
-//
-//        guard actionType != .urlIsModified else {
-//            return false
-//        }
-//
-//        guard BrowseAddRule.shouldReplaceCurrent(newState: newState, tab: tab, actionType: actionType) == false else {
-//            return false
-//        }
-//
-//        guard actionType == .visitAddedInDB || (actionType == .urlSelected && BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .browse) else {
-//            return false
-//        }
-//
-//        guard newState.stateData.url?.contains("localhost") == false else {
-//            return false
-//        }
-//
-//        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-//            if currentState.contentState != .browse {
-//                return true
-//            }
-//        }
+        
+        guard BrowseAddRule.shouldReplaceCurrent(newState: newState, tab: tab, actionType: actionType) == false else {
+            return false
+        }
         
         return true
         
     }
     
     class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
-        
-//        guard actionType != .urlIsModified else {
-//            return false
-//        }
-//
-//        guard newState.contentState == .browse else {
-//            return false
-//        }
-//
-//        if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-//            if currentState.contentState == .browse {
-//                return true
-//            }
-//        }
-//
         return false
+    }
+}
+
+
+final class BackForwardAddRule {
+    
+    enum AddOrReplace {
+        case add
+        case replace
+        case none
+    }
+    
+    class func addOrReplace(state: State, tab: Tab, actionType: ActionType) -> AddOrReplace {
+        
+        if actionType != .urlProgressChanged && actionType != .urlIsModified {
+            
+            if PageNavAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) || SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) || BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
+                return .replace
+            }
+            else if PageNavAddRule.canAdd(newState: state, tab: tab, actionType: actionType) || SearchAddRule.canAdd(newState: state, tab: tab, actionType: actionType) || BrowseAddRule.canAdd(newState: state, tab: tab, actionType: actionType) {
+                return .add
+            }
+        }
+        
+        return .none
     }
 }
 
@@ -152,38 +161,22 @@ final class BackForwardNavigation {
         navigationStore = NavigationStore()
     }
     
-    func canGoBack(tab: Tab, currentState: State) -> Bool {
-//        if currentState.contentState == .browse && BackForwardUtil.shared.previousEntry() == .history {
-//            return true
-//        }
-//
-//        return navigationStore.hasPrevState(tab: tab)
-        
+    func canGoBack(tab: Tab) -> Bool {
+        if let _ = prevState(tab: tab) {
+            return true
+        }
         return false
     }
     
-    func canGoForward(tab: Tab, currentState: State) -> Bool {
-//        if currentState.contentState == .browse && BackForwardUtil.shared.nextEntry() == .history {
-//            return true
-//        }
-//
-//        return navigationStore.hasNextState(tab: tab)
-        
+    func canGoForward(tab: Tab) -> Bool {
+        if let _ = nextState(tab: tab) {
+            return true
+        }
         return false
     }
     
     func addState(tab: Tab, state: State) {
         navigationStore.addState(tab: tab, state: state)
-//        if state.contentState == .search {
-//            BackForwardUtil.shared.addEntry(entry: .search)
-//        }
-//        else if state.contentState == .domains {
-//            BackForwardUtil.shared.addEntry(entry: .domains)
-//        }
-//        else if state.contentState == .browse {
-//            BackForwardUtil.shared.addEntry(entry: .browse(state.stateData.url ?? ""))
-//        }
-        
     }
     
     func updateCurrentStateData(tab: Tab, newStateData: StateData) {
@@ -201,7 +194,6 @@ final class BackForwardNavigation {
         navigationStore.removeTab(tab: tab)
     }
     
-    
     //This represents the currentState in the Store.
     func currentState(tab: Tab) -> State? {
         return navigationStore.currentState(tab: tab)
@@ -213,32 +205,6 @@ final class BackForwardNavigation {
     
     func nextState(tab: Tab) -> State? {
         return navigationStore.nextState(tab:tab)
-    }
-    
-    func shouldChangeToPrevState(tab: Tab, currentState: State) -> Bool {
-        
-//        if BackForwardUtil.shared.previousEntry() != BackForwardUtil.shared.currentEntry() {
-//            return true
-//        }
-        
-//        if currentState.contentState == .browse, tab.webView?.canGoBack == true {
-//            return false
-//        }
-        
-        return false
-    }
-    
-    func shouldChangeToNextState(tab: Tab, currentState: State) -> Bool {
-        
-//        if BackForwardUtil.shared.nextEntry() != BackForwardUtil.shared.currentEntry() {
-//            return true
-//        }
-        
-//        if currentState.contentState == .browse, tab.webView?.canGoForward == true {
-//            return false
-//        }
-        
-        return false
     }
     
     func incrementIndex(tab: Tab) {

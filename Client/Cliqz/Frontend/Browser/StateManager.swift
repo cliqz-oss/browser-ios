@@ -101,8 +101,8 @@ struct State: Equatable {
     let contentState: ContentState
     let urlBarState: URLBarState
     let toolBarState: ToolBarState
-    var toolBackState: ToolBarBackState
-    var toolForwardState: ToolBarForwardState
+    let toolBackState: ToolBarBackState
+    let toolForwardState: ToolBarForwardState
     let toolShareState: ToolBarShareState
     
     let stateData: StateData
@@ -118,7 +118,34 @@ struct State: Equatable {
 
 extension State {
     func sameStateWithNewData(newStateData: StateData) -> State {
-        return State(mainState: self.mainState, contentState: self.contentState, urlBarState: self.urlBarState, toolBarState: self.toolBarState, toolBackState: self.toolBackState, toolForwardState: self.toolForwardState, toolShareState: self.toolShareState, stateData: newStateData)
+        return sameStateWith(info: ["stateData": newStateData])
+    }
+    
+    func sameStateWithNewBackForwardState(newBackState: ToolBarBackState, newForwardState: ToolBarForwardState) -> State {
+        return sameStateWith(info: ["toolBackState": newBackState, "toolForwardState": newForwardState])
+    }
+    
+    func sameStateWith(info: [String: Any]) -> State {
+        let new_mainState: MainState? = info["mainState"] as? MainState
+        let new_contentState: ContentState? = info["contentState"] as? ContentState
+        let new_urlBarState: URLBarState? = info["urlBarState"] as? URLBarState
+        let new_toolBarState: ToolBarState? = info["toolBarState"] as? ToolBarState
+        let new_toolBackState: ToolBarBackState? = info["toolBackState"] as? ToolBarBackState
+        let new_toolForwardState: ToolBarForwardState? = info["toolForwardState"] as? ToolBarForwardState
+        let new_toolShareState: ToolBarShareState? = info["toolShareState"] as? ToolBarShareState
+        let new_stateData: StateData? = info["stateData"] as? StateData
+        
+        let mainState: MainState = new_mainState != nil ? new_mainState! : self.mainState
+        let contentState: ContentState = new_contentState != nil ? new_contentState! : self.contentState
+        let urlBarState: URLBarState = new_urlBarState != nil ? new_urlBarState! : self.urlBarState
+        let toolBarState: ToolBarState = new_toolBarState != nil ? new_toolBarState! : self.toolBarState
+        let toolBackState: ToolBarBackState = new_toolBackState != nil ? new_toolBackState! : self.toolBackState
+        let toolForwardState: ToolBarForwardState = new_toolForwardState != nil ? new_toolForwardState! : self.toolForwardState
+        let toolShareState: ToolBarShareState = new_toolShareState != nil ? new_toolShareState! : self.toolShareState
+        let stateData: StateData = new_stateData != nil ? new_stateData! : self.stateData
+        
+        return State(mainState: mainState, contentState: contentState, urlBarState: urlBarState, toolBarState: toolBarState, toolBackState: toolBackState, toolForwardState: toolForwardState, toolShareState: toolShareState, stateData: stateData)
+        
     }
 }
 
@@ -136,8 +163,9 @@ final class StateManager {
     var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
     var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
     
-    var currentAction: Action = Action(type: .initialization)
-    var previousAction: Action = Action(type: .initialization)
+//    var currentAction: Action = Action(type: .initialization)
+//    var previousAction: Action = Action(type: .initialization)
+    var lastAction: Action = Action(type: .initialization)
     
     
     func preprocessAction(action: Action) -> StateData {
@@ -152,11 +180,6 @@ final class StateManager {
         var url  = data["url"] as? String
         let loadingProgress = data["progress"] as? Float
         
-        //careful about this. Think about it. Maybe you want to navigate to a url, that is not already set as the url of the tab...
-//        if let t = tab {
-//            url = t.url?.absoluteString ?? "localhost"
-//        }
-        
         if let u = url, let appDelegate = UIApplication.shared.delegate as? AppDelegate, let profile = appDelegate.profile {
             var validURL = URIFixup.getURL(u)
             if validURL == nil {
@@ -164,8 +187,7 @@ final class StateManager {
             }
             url = validURL?.absoluteString
         }
-        
-        
+    
         return StateData(query: text, url: url, tab: tab, detailsHost: detailsHost, loadingProgress: loadingProgress)
     }
     
@@ -185,18 +207,18 @@ final class StateManager {
             return
         }
         
-        if action.type == .visitAddedInDB && currentState.contentState != .browse {
-            return
-        }
+//        if action.type == .visitAddedInDB && currentState.contentState != .browse {
+//            return
+//        }
         
         //should only change the progress bar in this state
         if action.type == .urlProgressChanged && currentState.urlBarState != .collapsedDomainBlue {
             return
         }
         
-        if (preprocessedData.url == previousState.stateData.url || preprocessedData.url == currentState.stateData.url) && action.type == .visitAddedInDB && (previousAction.type == .backButtonPressed || previousAction.type == .forwardButtonPressed) {
-            return
-        }
+//        if (preprocessedData.url == previousState.stateData.url || preprocessedData.url == currentState.stateData.url) /*&& action.type == .visitAddedInDB*/ && (previousAction.type == .backButtonPressed || previousAction.type == .forwardButtonPressed) {
+//            return
+//        }
 
 //        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
 //            if preprocessedData.url != currentState.stateData.url && (action.type == .urlSelected || action.type == .visitAddedInDB) {
@@ -221,13 +243,10 @@ final class StateManager {
         }
 
         changeToState(nextState: nextState, action: action)
-		
-        if currentAction != action {
-            previousAction = currentAction
+        
+        if action.type == .backButtonPressed || action.type == .forwardButtonPressed {
+            lastAction = action
         }
-        
-        currentAction = action
-        
     }
     
     func changeToState(nextState: State, action: Action) {
@@ -283,29 +302,60 @@ final class StateManager {
         }
     }
     
+    private var webViewDidGoBack: Bool = false
+    private var webViewDidGoForw: Bool = false
+    
     func contentNavChangeToState(currentState: ContentState, nextState: ContentState, nextStateData: StateData, action: Action) {
+        
+        let special_cond_1 = lastAction.type == .backButtonPressed && action.type == .forwardButtonPressed && webViewDidGoBack == true && previousState.contentState == .browse
+        let special_cont_2 = lastAction.type == .forwardButtonPressed && action.type == .backButtonPressed && webViewDidGoForw == true && previousState.contentState == .browse
+        
+        if (currentState == .browse || special_cond_1 || special_cont_2) && (action.type == .backButtonPressed || action.type == .forwardButtonPressed) && action.type != .urlIsModified && action.type != .urlProgressChanged {
+            if action.type == .backButtonPressed {
+                if nextStateData.tab?.webView?.canGoBack == true {
+                    contentNav?.prevPage()
+                    webViewDidGoBack = true
+                }
+                else {
+                    webViewDidGoBack = false
+                }
+            }
+            else if action.type == .forwardButtonPressed {
+                if nextStateData.tab?.webView?.canGoForward == true {
+                    contentNav?.nextPage()
+                    webViewDidGoForw = true
+                }
+                else {
+                    webViewDidGoForw = false
+                }
+            }
+        }
     
         switch nextState {
         case .browse:
             //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
             //these make sure there are no infinite cycles.
             
-            if currentState == .browse { //back and forward navigation for the browse makes sense only when back/forw. buttons were pressed from a browse state.
-                if action.type == .backButtonPressed {
-                    contentNav?.browseBack()
-                }
-                else if action.type == .forwardButtonPressed {
-                    contentNav?.browseForward()
-                }
+            guard action.type != .urlIsModified && action.type != .urlProgressChanged else {
+                return
             }
-            //action.type != .backButtonPressed && action.type != .forwardButtonPressed 
-            else if action.type != .urlIsModified && action.type != .visitAddedInDB && action.type != .urlProgressChanged {
+            
+            if action.type == .backButtonPressed {
+                contentNav?.browseBack()
+            }
+            else if action.type == .forwardButtonPressed {
+                contentNav?.browseForward()
+            }
+            else if action.type != .newVisit /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }
                 else {
                     contentNav?.browse(url: nextStateData.url, tab: nil)
                 }
+            }
+            else {
+                contentNav?.browse(url: nil, tab: nil)
             }
         case .search:
             contentNav?.search(query: nextStateData.query)

@@ -236,17 +236,26 @@ extension ContentNavigationViewController {
         else if let url = url {
             browseURL(url: url)
         }
+        else {
+            changeState(state: .browser)
+        }
         
+    }
+    
+    func prevPage() {
+        tabManager.selectedTab?.webView?.goBack()
     }
     
     func browseBack() {
         changeState(state: .browser)
-        tabManager.selectedTab?.webView?.goBack()
+    }
+    
+    func nextPage() {
+        tabManager.selectedTab?.webView?.goForward()
     }
     
     func browseForward() {
         changeState(state: .browser)
-        tabManager.selectedTab?.webView?.goForward()
     }
     
     func browseURL(url: String?) {

@@ -37,6 +37,7 @@ final class NavigationStore {
             var currentIndex = stateChain.currentIndex
             
             //If a state is completely identical to the current one (including state data), then ignore it.
+            //No duplicates
             if let currentState = self.state(tab: tab, index: currentIndex) {
                 if State.equalWithTheSameData(lhs: currentState, rhs: state) {
                     return
@@ -46,7 +47,6 @@ final class NavigationStore {
                 NSException.init(name: NSExceptionName(rawValue: "CurrentState must exist"), reason: "Current state cannot be nil here. Something is wrong.", userInfo: nil).raise()
             }
             
-        
             if hasNextState(tab: tab) { //I need to discard all states after the current one and then add this new one at the end
                 //remove elements after currentIndex
                 states = GeneralUtils.removeElementsAfter(index: currentIndex, array: states)

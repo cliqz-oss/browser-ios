@@ -45,7 +45,8 @@ enum ActionType {
     case domainPressed
     //case tabsDismissed
     //history
-    case visitAddedInDB
+    //case visitAddedInDB
+    case newVisit
 }
 
 enum ActionContext {
