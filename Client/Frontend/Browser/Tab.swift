@@ -551,9 +551,7 @@ class Tab: NSObject {
 	}
 
 	func generateSessionData() -> SessionData? {
-		let currentItem: LegacyBackForwardListItem! = self.webView?.backForwardList.currentItem
-		
-		if currentItem != nil {
+		if let currentItem = self.webView?.backForwardList.currentItem {
 			let backList = self.webView?.backForwardList.backList ?? []
 			let forwardList = self.webView?.backForwardList.forwardList ?? []
 			let urls = (backList + [currentItem] + forwardList).map { $0.url }
