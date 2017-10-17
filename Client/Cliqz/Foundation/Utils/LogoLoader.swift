@@ -76,7 +76,7 @@ class LogoLoader {
 		   let hostName = urlDetails.name,
 		   let details = self.logoDB?["domains"][hostName] {
 			logoDetails.hostName = hostName
-			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: 2)).capitalized
+			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: min(2, hostName.characters.count))).capitalized
 			if let list = details.array,
 				list.count > 0 {
 				for info in list {
