@@ -1265,9 +1265,6 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
-        guard tab.displayURL != nil else {
-            return
-        }
         
         if (urlBar.currentURL != tab.displayURL){
             urlBar.currentURL = tab.displayURL
@@ -2007,9 +2004,8 @@ extension BrowserViewController: URLBarDelegate {
             let isPage = tab.displayURL?.isWebPage() ?? false
             navigationToolbar.updatePageStatus(isPage)
         }
-		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
-        updateInContentHomePanel(urlBar.currentURL as URL?)
-//		updateInContentHomePanel(tabManager.selectedTab?.url)
+        
+        updateInContentHomePanel(tabManager.selectedTab?.url)
         //self.urlBar.hideReaderModeButton(hidden: false)
     }
     
