@@ -99,7 +99,7 @@ class WebViewBackForwardList {
             i += 1
         }
         
-        BackForwardListWatch.shared.update(list: backForwardList.map({a in a.url.absoluteString}))
+        //BackForwardListWatch.shared.update(list: backForwardList.map({a in a.url.absoluteString}))
         
         if !foundCurrent {
             currentIndex = 0

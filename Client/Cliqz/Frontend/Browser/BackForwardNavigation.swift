@@ -158,6 +158,7 @@ final class BackForwardNavigation {
     
 
     init() {
+        _ = CurrentWebViewMonitor.shared
         navigationStore = NavigationStore()
     }
     
@@ -188,6 +189,10 @@ final class BackForwardNavigation {
     
     func replaceCurrentState(tab: Tab, newState: State) {
         navigationStore.replaceCurrentState(tab: tab, newState: newState)
+    }
+    
+    func removeState(tab: Tab, index: Int) {
+        navigationStore.removeState(tab: tab, index: index)
     }
     
     func removeTab(tab: Tab) {

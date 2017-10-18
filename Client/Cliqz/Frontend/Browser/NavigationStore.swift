@@ -85,6 +85,17 @@ final class NavigationStore {
         }
     }
     
+    func removeState(tab: Tab, index: Int) {
+        if let stateChain = tabStateChains[tab] {
+            if index >= 0 && index < stateChain.states.count {
+                var states = stateChain.states
+                let currentIndex = stateChain.currentIndex - 1
+                states.remove(at: index)
+                tabStateChains[tab] = StateChain(states: states, currentIndex: currentIndex)
+            }
+        }
+    }
+    
     func removeTab(tab: Tab) {
         tabStateChains.removeValue(forKey: tab)
     }
