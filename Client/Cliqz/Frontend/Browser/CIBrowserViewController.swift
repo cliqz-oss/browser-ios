@@ -130,13 +130,13 @@ final class CIBrowserViewController: UIViewController {
 			guard webView == tabManager.selectedTab?.webView,
 				let canGoBack = change?[NSKeyValueChangeKey.newKey] as? Bool else { break }
                 //BackForwardUtil.shared.canGoBackChanged(next_canGoBack: canGoBack)
-                //debugPrint("can go back")
+                debugPrint("can go back -- \(canGoBack)")
             // TODO
 //			navigationToolbar.updateBackStatus(canGoBack)
 		case KVOCanGoForward:
 			guard webView == tabManager.selectedTab?.webView,
 				let canGoForward = change?[NSKeyValueChangeKey.newKey] as? Bool else { break }
-                //debugPrint("can go forw")
+                debugPrint("can go forw -- \(canGoForward)")
             
 			// TODO
 //			navigationToolbar.updateForwardStatus(canGoForward)

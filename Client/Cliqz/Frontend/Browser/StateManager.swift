@@ -195,7 +195,7 @@ final class StateManager {
     
     func handleAction(action: Action) {
         
-        let preprocessedData = preprocessAction(action: action)
+        var preprocessedData = preprocessAction(action: action)
         
         //there is an infinite loop when the url is modified and the only thing that differs are the arguments
         //let nextURL = URL(string: preprocessedData.url ?? "")
@@ -231,6 +231,30 @@ final class StateManager {
 //            return
 //        }
         
+        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+            if action.type == .urlSelected && (tabManager.selectedTab?.webView?.url != nil || tabManager.tabs.count == 0) {
+                
+                var currentState_currentTab: State? = nil
+                
+                if let currentTab = tabManager.selectedTab {
+                    currentState_currentTab = BackForwardNavigation.shared.currentState(tab: currentTab)
+                }
+                
+                let tab = tabManager.addTabAndSelect()
+                let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
+                preprocessedData = StateData.merge(lhs: newStateData , rhs: preprocessedData)
+                if var state = currentState_currentTab {
+                    let stateData = state.stateData
+                    var newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
+                    newStateData = StateData.merge(lhs: newStateData, rhs: stateData)
+                    state = state.sameStateWithNewData(newStateData: newStateData)
+                    state = state.sameStateWithNewBackForwardState(newBackState: .disabled, newForwardState: .enabled)
+                    BackForwardNavigation.shared.addState(tab: tab, state: state)
+                }
+            }
+        }
+        
+
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: preprocessedData)
         //there will be some more state changes added here, to take care of back and forward.
         
@@ -241,7 +265,7 @@ final class StateManager {
                 tabManager.selectTab(tab)
             }
         }
-
+        
         changeToState(nextState: nextState, action: action)
         
         if action.type == .backButtonPressed || action.type == .forwardButtonPressed {
@@ -255,8 +279,8 @@ final class StateManager {
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
         //TO DO: Call the toolbar change to state
         //---
-        toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState)
-        toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState)
+        toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState, tab: nextState.stateData.tab)
+        toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState, tab: nextState.stateData.tab)
         
         //there is not point in changing the previous state if the currentstate does not change.
         
@@ -310,23 +334,25 @@ final class StateManager {
         let special_cond_1 = lastAction.type == .backButtonPressed && action.type == .forwardButtonPressed && webViewDidGoBack == true && previousState.contentState == .browse
         let special_cont_2 = lastAction.type == .forwardButtonPressed && action.type == .backButtonPressed && webViewDidGoForw == true && previousState.contentState == .browse
         
-        if (currentState == .browse || special_cond_1 || special_cont_2) && (action.type == .backButtonPressed || action.type == .forwardButtonPressed) && action.type != .urlIsModified && action.type != .urlProgressChanged {
-            if action.type == .backButtonPressed {
-                if nextStateData.tab?.webView?.canGoBack == true {
-                    contentNav?.prevPage()
-                    webViewDidGoBack = true
+        if (currentState == .browse || special_cond_1 || special_cont_2) && (action.type == .backButtonPressed || action.type == .forwardButtonPressed) && action.type != .urlIsModified && action.type != .urlProgressChanged && action.type != .webNavigationUpdate {
+            if let tab = nextStateData.tab {
+                if action.type == .backButtonPressed {
+                    if BackForwardNavigation.shared.canWebViewGoBack(tab: tab) == true {
+                        contentNav?.prevPage()
+                        webViewDidGoBack = true
+                    }
+                    else {
+                        webViewDidGoBack = false
+                    }
                 }
-                else {
-                    webViewDidGoBack = false
-                }
-            }
-            else if action.type == .forwardButtonPressed {
-                if nextStateData.tab?.webView?.canGoForward == true {
-                    contentNav?.nextPage()
-                    webViewDidGoForw = true
-                }
-                else {
-                    webViewDidGoForw = false
+                else if action.type == .forwardButtonPressed {
+                    if BackForwardNavigation.shared.canWebViewGoForward(tab: tab) == true {
+                        contentNav?.nextPage()
+                        webViewDidGoForw = true
+                    }
+                    else {
+                        webViewDidGoForw = false
+                    }
                 }
             }
         }
@@ -336,7 +362,7 @@ final class StateManager {
             //if url is modified in browsing mode then the webview is already navigating there. no need to tell it to navigate there again. 
             //these make sure there are no infinite cycles.
             
-            guard action.type != .urlIsModified && action.type != .urlProgressChanged else {
+            guard action.type != .urlIsModified && action.type != .urlProgressChanged && action.type != .webNavigationUpdate else {
                 return
             }
             
@@ -346,7 +372,7 @@ final class StateManager {
             else if action.type == .forwardButtonPressed {
                 contentNav?.browseForward()
             }
-            else if action.type != .newVisit /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
+            else if action.type != .newVisit && action.type != .webNavigationUpdate /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }
@@ -402,32 +428,53 @@ final class StateManager {
         }
     }
     
-    func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState) {
+    func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState, tab: Tab?) {
         
 //        guard currentState != nextState else {
 //            return
 //        }
         
-        switch nextState {
-        case .enabled:
-            toolBar?.setBackEnabled()
-        case .disabled:
-            toolBar?.setBackDisabled()
+//        switch nextState {
+//        case .enabled:
+//            toolBar?.setBackEnabled()
+//        case .disabled:
+//            toolBar?.setBackDisabled()
+//        }
+        
+        if let tab = tab {
+            if BackForwardNavigation.shared.canGoBack(tab: tab) {
+                toolBar?.setBackEnabled()
+                return
+            }
         }
+        
+        
+        toolBar?.setBackDisabled()
+        
     }
     
-    func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState) {
+    func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState, tab: Tab?) {
         
 //        guard currentState != nextState else {
 //            return
 //        }
         
-        switch nextState {
-        case .enabled:
-            toolBar?.setForwardEnabled()
-        case .disabled:
-            toolBar?.setForwardDisabled()
+//        switch nextState {
+//        case .enabled:
+//            toolBar?.setForwardEnabled()
+//        case .disabled:
+//            toolBar?.setForwardDisabled()
+//        }
+        
+        if let tab = tab {
+            if BackForwardNavigation.shared.canGoForward(tab: tab) {
+                toolBar?.setForwardEnabled()
+                return
+            }
         }
+        
+        toolBar?.setForwardDisabled()
+        
     }
     
     func toolShareChangeToState(currentState: ToolBarShareState, nextState: ToolBarShareState) {

@@ -47,6 +47,7 @@ enum ActionType {
     //history
     //case visitAddedInDB
     case newVisit
+    case webNavigationUpdate
 }
 
 enum ActionContext {
@@ -76,6 +77,20 @@ struct Action: Equatable {
     
     static func != (lhs: Action, rhs: Action) -> Bool {
         return lhs.type != rhs.type
+    }
+    
+    func addData(newData: [String: Any]) -> Action {
+        if var current_data = self.data {
+            for key in newData.keys {
+                //if keys are the same just replace.
+                current_data[key] = newData[key]
+            }
+            
+            return Action(data: current_data, type: self.type)
+            
+        }
+        
+        return Action(data: data, type: self.type)
     }
 }
 

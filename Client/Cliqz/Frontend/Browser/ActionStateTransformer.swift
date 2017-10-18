@@ -159,9 +159,28 @@ final class ActionStateTransformer {
     
     class func nextState(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
         
+        
+        if actionType == .tabSelected {
+            if let tab = nextStateData.tab {
+                if let currentState_Tab = BackForwardNavigation.shared.currentState(tab: tab) {
+                    return currentState_Tab
+                }
+            }
+            else {
+                //there should always be a tab coming in with this action
+                NSException.init().raise()
+            }
+        }
+        
+        
         if let tab = currentState.stateData.tab {
+            
             if actionType == .backButtonPressed {
-                if var prevState = BackForwardNavigation.shared.prevState(tab: tab) {
+                if BackForwardNavigation.shared.canWebViewGoBack(tab: tab) && currentState.contentState == .browse {
+                    //if currentState.contentState == .browse, back and forward update correctly bacause of urlIsModified and urlProgressChanged
+                    return currentState
+                }
+                else if var prevState = BackForwardNavigation.shared.prevState(tab: tab) {
                     BackForwardNavigation.shared.decrementIndex(tab: tab)
                     let back = toolBarBackTransform(nextStateData: prevState.stateData)
                     let forw = toolBarForwardTransform(nextStateData: prevState.stateData)
@@ -175,7 +194,11 @@ final class ActionStateTransformer {
                 }
             }
             else if actionType == .forwardButtonPressed {
-                if var nextState = BackForwardNavigation.shared.nextState(tab: tab) {
+                if BackForwardNavigation.shared.canWebViewGoForward(tab: tab) && currentState.contentState == .browse {
+                    //if currentState.contentState == .browse, back and forward update correctly bacause of urlIsModified and urlProgressChanged
+                    return currentState
+                }
+                else if var nextState = BackForwardNavigation.shared.nextState(tab: tab) {
                     BackForwardNavigation.shared.incrementIndex(tab: tab)
                     let back = toolBarBackTransform(nextStateData: nextState.stateData)
                     let forw = toolBarForwardTransform(nextStateData: nextState.stateData)
@@ -189,7 +212,6 @@ final class ActionStateTransformer {
                 }
             }
         }
-        
         
         return ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: actionType, nextStateData: nextStateData)
     }
@@ -227,6 +249,10 @@ final class ActionStateTransformer {
         //the status of the back button can be decided after the state is constructed
         if let tab = state.stateData.tab {
             //the back button status is decided here
+            
+            if actionType == .urlBackPressed {
+                BackForwardNavigation.shared.decrementIndex(tab: tab)
+            }
             
             let addOrReplace = BackForwardAddRule.addOrReplace(state: state, tab: tab, actionType: actionType)
             

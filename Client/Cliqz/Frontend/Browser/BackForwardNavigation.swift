@@ -11,7 +11,7 @@ import UIKit
 final class PageNavAddRule {
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged && actionType != .webNavigationUpdate else {
             return false
         }
         
@@ -29,7 +29,7 @@ final class PageNavAddRule {
     
     class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged && actionType != .webNavigationUpdate else {
             return false
         }
         
@@ -51,7 +51,7 @@ final class SearchAddRule {
     
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged && actionType != .webNavigationUpdate else {
             return false
         }
         
@@ -75,7 +75,7 @@ final class SearchAddRule {
     
     class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
-        guard actionType != .urlIsModified && actionType != .urlProgressChanged else {
+        guard actionType != .urlIsModified && actionType != .urlProgressChanged && actionType != .webNavigationUpdate else {
             return false
         }
         
@@ -106,7 +106,7 @@ final class BrowseAddRule {
             return false
         }
         
-        guard actionType == .urlSelected || actionType == .newVisit else {
+        guard actionType == .urlSelected /*|| actionType == .newVisit*/ else {
             return false
         }
         
@@ -119,6 +119,15 @@ final class BrowseAddRule {
     }
     
     class func shouldReplaceCurrent(newState: State, tab: Tab, actionType: ActionType) -> Bool {
+        
+        guard newState.contentState == .browse else {
+            return false
+        }
+        
+        if actionType == .urlIsModified || actionType == .urlProgressChanged {
+            return true
+        }
+        
         return false
     }
 }
@@ -134,7 +143,7 @@ final class BackForwardAddRule {
     
     class func addOrReplace(state: State, tab: Tab, actionType: ActionType) -> AddOrReplace {
         
-        if actionType != .urlProgressChanged && actionType != .urlIsModified {
+        if /*actionType != .urlProgressChanged && actionType != .urlIsModified*/ actionType != .webNavigationUpdate {
             
             if PageNavAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) || SearchAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) || BrowseAddRule.shouldReplaceCurrent(newState: state, tab: tab, actionType: actionType) {
                 return .replace
@@ -143,7 +152,7 @@ final class BackForwardAddRule {
                 return .add
             }
         }
-        
+    
         return .none
     }
 }
@@ -163,17 +172,34 @@ final class BackForwardNavigation {
     }
     
     func canGoBack(tab: Tab) -> Bool {
-        if let _ = prevState(tab: tab) {
+        if prevState(tab: tab) != nil || canWebViewGoBack(tab: tab) {
             return true
         }
         return false
     }
     
+    func canWebViewGoBack(tab: Tab) -> Bool {
+//        if let currentIndex = tab.webView?.backForwardList.currentIndex {
+//            return currentIndex > 0
+//        }
+//        return false
+        
+        return tab.webView?.canGoBack ?? false
+    }
+    
     func canGoForward(tab: Tab) -> Bool {
-        if let _ = nextState(tab: tab) {
+        if nextState(tab: tab) != nil || canWebViewGoForward(tab: tab) {
             return true
         }
         return false
+    }
+    
+    func canWebViewGoForward(tab: Tab) -> Bool {
+//        if let currentIndex = tab.webView?.backForwardList.currentIndex, let count = tab.webView?.backForwardList.backForwardList.count {
+//            return currentIndex >= 0 && currentIndex < count - 1
+//        }
+//        return false
+        return tab.webView?.canGoForward ?? false
     }
     
     func addState(tab: Tab, state: State) {
