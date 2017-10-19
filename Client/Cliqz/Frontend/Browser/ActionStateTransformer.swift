@@ -31,7 +31,6 @@ let mainTransformDict: [ActionType : [MainState: MainState]] = [
     .tabSelected: [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other]
 ]
 
-
 //Attention: Actions are missing.
 //New actions should always be included in the dicts here.
 
@@ -292,6 +291,7 @@ final class ActionStateTransformer {
     }
 
     private class func toolBarShareTransform(currentState: ToolBarShareState, actionType: ActionType) -> ToolBarShareState {
+        //this is currently handled by MainContainer.
         return currentState
     }
     
