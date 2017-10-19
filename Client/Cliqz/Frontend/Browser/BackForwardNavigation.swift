@@ -95,10 +95,6 @@ final class SearchAddRule {
 
 final class BrowseAddRule {
     
-    //Quick fix:
-    //We now register browse states on urlIsSelected and replace them when visitAddedInDB.
-    //This is not prefect since in the time between the load the user can navigate somewhere else.
-    
     class func canAdd(newState: State, tab: Tab, actionType: ActionType) -> Bool {
         
 
@@ -179,11 +175,6 @@ final class BackForwardNavigation {
     }
     
     func canWebViewGoBack(tab: Tab) -> Bool {
-//        if let currentIndex = tab.webView?.backForwardList.currentIndex {
-//            return currentIndex > 0
-//        }
-//        return false
-        
         return tab.webView?.canGoBack ?? false
     }
     
@@ -195,10 +186,6 @@ final class BackForwardNavigation {
     }
     
     func canWebViewGoForward(tab: Tab) -> Bool {
-//        if let currentIndex = tab.webView?.backForwardList.currentIndex, let count = tab.webView?.backForwardList.backForwardList.count {
-//            return currentIndex >= 0 && currentIndex < count - 1
-//        }
-//        return false
         return tab.webView?.canGoForward ?? false
     }
     

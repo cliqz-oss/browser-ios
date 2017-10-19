@@ -163,9 +163,7 @@ final class StateManager {
     var currentState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
     var previousState: State = State(mainState: .other, contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData(query: nil, url: nil, tab: nil, detailsHost: nil, loadingProgress: nil))
     
-//    var currentAction: Action = Action(type: .initialization)
-//    var previousAction: Action = Action(type: .initialization)
-    var lastAction: Action = Action(type: .initialization)
+    var lastBackForwAction: Action = Action(type: .initialization)
     
     
     func preprocessAction(action: Action) -> StateData {
@@ -191,46 +189,21 @@ final class StateManager {
         return StateData(query: text, url: url, tab: tab, detailsHost: detailsHost, loadingProgress: loadingProgress)
     }
     
-    //func areUrlSameExcept
     
     func handleAction(action: Action) {
         
         var preprocessedData = preprocessAction(action: action)
-        
-        //there is an infinite loop when the url is modified and the only thing that differs are the arguments
-        //let nextURL = URL(string: preprocessedData.url ?? "")
-        //let currentURL = URL(string: currentState.stateData.url ?? "")
-        
-        //let specialCond = nextURL?.absoluteURL.host == currentURL?.absoluteURL.host && nextURL?.absoluteURL.relativePath == currentURL?.absoluteURL.relativePath
          //.urlIsModified is called even when the url is the same. Ignore. I should fix this.
         if (preprocessedData.url == currentState.stateData.url /*||  specialCond*/) && action.type == .urlIsModified {
             return
         }
-        
-//        if action.type == .visitAddedInDB && currentState.contentState != .browse {
-//            return
-//        }
         
         //should only change the progress bar in this state
         if action.type == .urlProgressChanged && currentState.urlBarState != .collapsedDomainBlue {
             return
         }
         
-//        if (preprocessedData.url == previousState.stateData.url || preprocessedData.url == currentState.stateData.url) /*&& action.type == .visitAddedInDB*/ && (previousAction.type == .backButtonPressed || previousAction.type == .forwardButtonPressed) {
-//            return
-//        }
-
-//        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
-//            if preprocessedData.url != currentState.stateData.url && (action.type == .urlSelected || action.type == .visitAddedInDB) {
-//                tabManager.selectedTab?.webView?.stopLoading()
-//            }
-//        }
-        
-        
-//        if (preprocessedData.url == currentState.stateData.url /*||  specialCond*/) && action.type == .visitAddedInDB {
-//            return
-//        }
-        
+        //the logic for adding a tab is handled here
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
             if action.type == .urlSelected && (tabManager.selectedTab?.webView?.url != nil || tabManager.tabs.count == 0) {
                 
@@ -269,7 +242,7 @@ final class StateManager {
         changeToState(nextState: nextState, action: action)
         
         if action.type == .backButtonPressed || action.type == .forwardButtonPressed {
-            lastAction = action
+            lastBackForwAction = action
         }
     }
     
@@ -277,35 +250,17 @@ final class StateManager {
         mainContChangeToState(currentState: currentState.mainState, nextState: nextState.mainState)
         contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData, action: action)
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
-        //TO DO: Call the toolbar change to state
-        //---
+        toolBarChangeToState(currentState: currentState.toolBarState, nextState: nextState.toolBarState)
         toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState, tab: nextState.stateData.tab)
         toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState, tab: nextState.stateData.tab)
-        
+        toolShareChangeToState(currentState: currentState.toolShareState, nextState: nextState.toolShareState)
         //there is not point in changing the previous state if the currentstate does not change.
         
         if currentState.contentState != nextState.contentState {
-            //if !((currentState.urlBarState == .expandedEmptyWhite || currentState.urlBarState == .expandedTextWhite) && (nextState.urlBarState == .expandedEmptyWhite || nextState.urlBarState == .expandedTextWhite)) {
-                previousState = currentState
-            //}
+            previousState = currentState
         }
         
-        //if currentState == nextState, then the data of the currentState is updated.
-        //else the nextState replaces the currentState
         currentState = nextState
-        
-        //Attention: note that currentState == nextState even if the data of the nextState is different from the data of currentState
-        debugPrint("------------------------------------")
-        debugPrint("PREV STATE")
-        debugPrint(previousState.contentState)
-        debugPrint(previousState.stateData)
-        debugPrint("CURRENT STATE")
-        debugPrint(currentState.contentState)
-        debugPrint(currentState.stateData)
-        debugPrint("NEXT STATE")
-        debugPrint(nextState.contentState)
-        debugPrint(nextState.stateData)
-        
     }
     
     func mainContChangeToState(currentState: MainState, nextState: MainState) {
@@ -331,8 +286,8 @@ final class StateManager {
     
     func contentNavChangeToState(currentState: ContentState, nextState: ContentState, nextStateData: StateData, action: Action) {
         
-        let special_cond_1 = lastAction.type == .backButtonPressed && action.type == .forwardButtonPressed && webViewDidGoBack == true && previousState.contentState == .browse
-        let special_cont_2 = lastAction.type == .forwardButtonPressed && action.type == .backButtonPressed && webViewDidGoForw == true && previousState.contentState == .browse
+        let special_cond_1 = lastBackForwAction.type == .backButtonPressed && action.type == .forwardButtonPressed && webViewDidGoBack == true && previousState.contentState == .browse
+        let special_cont_2 = lastBackForwAction.type == .forwardButtonPressed && action.type == .backButtonPressed && webViewDidGoForw == true && previousState.contentState == .browse
         
         if (currentState == .browse || special_cond_1 || special_cont_2) && (action.type == .backButtonPressed || action.type == .forwardButtonPressed) && action.type != .urlIsModified && action.type != .urlProgressChanged && action.type != .webNavigationUpdate {
             if let tab = nextStateData.tab {
@@ -430,17 +385,6 @@ final class StateManager {
     
     func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState, tab: Tab?) {
         
-//        guard currentState != nextState else {
-//            return
-//        }
-        
-//        switch nextState {
-//        case .enabled:
-//            toolBar?.setBackEnabled()
-//        case .disabled:
-//            toolBar?.setBackDisabled()
-//        }
-        
         if let tab = tab {
             if BackForwardNavigation.shared.canGoBack(tab: tab) {
                 toolBar?.setBackEnabled()
@@ -448,23 +392,11 @@ final class StateManager {
             }
         }
         
-        
         toolBar?.setBackDisabled()
         
     }
     
     func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState, tab: Tab?) {
-        
-//        guard currentState != nextState else {
-//            return
-//        }
-        
-//        switch nextState {
-//        case .enabled:
-//            toolBar?.setForwardEnabled()
-//        case .disabled:
-//            toolBar?.setForwardDisabled()
-//        }
         
         if let tab = tab {
             if BackForwardNavigation.shared.canGoForward(tab: tab) {
