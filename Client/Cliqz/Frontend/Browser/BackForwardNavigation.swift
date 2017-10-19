@@ -38,7 +38,7 @@ final class PageNavAddRule {
         }
         
         if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == newState.contentState {
+            if currentState.contentState == .domains || currentState.contentState == .details || currentState.contentState == .dash {
                 return true
             }
         }
@@ -172,7 +172,7 @@ final class BackForwardNavigation {
     }
     
     func canGoBack(tab: Tab) -> Bool {
-        if prevState(tab: tab) != nil || canWebViewGoBack(tab: tab) {
+        if prevState(tab: tab) != nil || (canWebViewGoBack(tab: tab) && currentState(tab: tab)?.contentState == .browse) {
             return true
         }
         return false
@@ -188,7 +188,7 @@ final class BackForwardNavigation {
     }
     
     func canGoForward(tab: Tab) -> Bool {
-        if nextState(tab: tab) != nil || canWebViewGoForward(tab: tab) {
+        if nextState(tab: tab) != nil || (canWebViewGoForward(tab: tab) && currentState(tab: tab)?.contentState == .browse) {
             return true
         }
         return false

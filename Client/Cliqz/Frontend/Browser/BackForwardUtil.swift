@@ -16,7 +16,7 @@ final class CurrentWebViewMonitor {
     var timer: Timer = Timer()
 
     init() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(update), userInfo: nil, repeats: true)//Timer(timeInterval: 0.1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(update), userInfo: nil, repeats: true)//Timer(timeInterval: 0.1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         timer.fire()
     }
 
