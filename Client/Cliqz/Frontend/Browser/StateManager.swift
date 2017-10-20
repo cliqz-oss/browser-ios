@@ -322,7 +322,7 @@ final class StateManager {
             else if action.type == .forwardButtonPressed {
                 contentNav?.browseForward()
             }
-            else if action.type != .newVisit && action.type != .webNavigationUpdate /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
+            else if action.type != .newVisit && action.type != .webNavigationUpdate && action.type != .tabDonePressed /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }

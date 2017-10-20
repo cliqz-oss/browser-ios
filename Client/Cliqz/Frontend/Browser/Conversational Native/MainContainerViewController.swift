@@ -333,6 +333,7 @@ extension MainContainerViewController: TabsViewControllerDelegate {
     func donePressed(tabsVC: TabsViewController?) {
         //pass this through the State Manager -- after
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
+        StateManager.shared.handleAction(action: Action(type: .tabDonePressed))
     }
     
     //

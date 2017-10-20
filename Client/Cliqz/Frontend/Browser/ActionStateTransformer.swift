@@ -41,10 +41,18 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
     //this is for selecting an empty tab
     //think of a better way
     //maybe the tab should have a property isEmpty, and determine using that.
-    var specialState: ContentState = .browse
+    var tabSelectedSpecialState: ContentState = .browse
     
     if nextStateData.tab?.url == nil {
-        specialState = .domains
+        tabSelectedSpecialState = .domains
+    }
+    
+    var tabDonePressedSpecialState: ContentState = currentState
+    
+    if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+        if currentState == .browse && tabManager.tabs.count == 0 {
+            tabDonePressedSpecialState = .domains
+        }
     }
     
     let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
@@ -55,9 +63,10 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
         .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
         .urlSelected : [.search : .browse, .domains: .browse, .details: .browse, .dash: .browse],
         .homeButtonPressed : [.browse : .domains, .search: .domains, .domains: .dash, .details: .domains, .dash: .domains],
-        .tabSelected : [.search : specialState, .domains: specialState, .details: specialState, .dash: specialState, .browse: specialState],
+        .tabSelected : [.search : tabSelectedSpecialState, .domains: tabSelectedSpecialState, .details: tabSelectedSpecialState, .dash: tabSelectedSpecialState, .browse: tabSelectedSpecialState],
         .detailBackPressed : [.details: .domains],
-        .domainPressed : [.domains: .details]
+        .domainPressed : [.domains: .details],
+        .tabDonePressed : [.browse : tabDonePressedSpecialState, .search: tabDonePressedSpecialState, .domains: tabDonePressedSpecialState, .details: tabDonePressedSpecialState, .dash: tabDonePressedSpecialState]
     ]
     
     if let actionDict = contentTransformDict[actionType], let nextState = actionDict[currentState] {
@@ -82,6 +91,14 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
         tabSelectedSpecialState = .collapsedEmptyTransparent
     }
     
+    var tabDonePressedSpecialState: URLBarState = currentState //The state does not change when the tabs are shown. So the state before opening the tabs is the current state
+    
+    if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+        if currentState == .collapsedDomainBlue && tabManager.tabs.count == 0 {
+            tabDonePressedSpecialState = .collapsedEmptyTransparent
+        }
+    }
+    
     let urlBarTransformDict: [ActionType: [URLBarState: URLBarState]] = [
         .initialization : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         .urlBackPressed : [ .collapsedEmptyTransparent: previousState, .collapsedTextTransparent: previousState, .collapsedTextBlue: previousState, .collapsedDomainBlue: previousState, .expandedEmptyWhite: previousState, .expandedTextWhite: previousState],
@@ -96,7 +113,8 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
         .homeButtonPressed: [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
         .tabSelected: [ .collapsedEmptyTransparent: tabSelectedSpecialState, .collapsedTextTransparent: tabSelectedSpecialState, .collapsedDomainBlue: tabSelectedSpecialState, .collapsedTextBlue: tabSelectedSpecialState, .expandedEmptyWhite: tabSelectedSpecialState, .expandedTextWhite: tabSelectedSpecialState],
         .detailBackPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-        .domainPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent]
+        .domainPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
+        .tabDonePressed : [ .collapsedEmptyTransparent: tabDonePressedSpecialState, .collapsedTextTransparent: tabDonePressedSpecialState, .collapsedTextBlue: tabDonePressedSpecialState, .collapsedDomainBlue: tabDonePressedSpecialState, .expandedEmptyWhite: tabDonePressedSpecialState, .expandedTextWhite: tabDonePressedSpecialState]
     ]
     
     if let actionDict = urlBarTransformDict[actionType], let newState = actionDict[currentState] {

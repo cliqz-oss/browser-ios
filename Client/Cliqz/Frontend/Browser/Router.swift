@@ -33,9 +33,9 @@ enum ActionType {
 	case forwardButtonPressed
     //activity
     case remindersPressed
-    //tab
+    //tabs
     case tabSelected
-    
+    case tabDonePressed
     //missing
     //case didChangeOrientation
     case detailBackPressed

@@ -471,6 +471,8 @@ extension TabsViewController: TabManagerDelegate {
         }
         self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
         self.collectionView.collectionViewLayout.invalidateLayout()
+        
+        BackForwardNavigation.shared.removeTab(tab: tab)
     }
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
