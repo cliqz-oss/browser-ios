@@ -385,6 +385,9 @@ class TabManager : NSObject {
         // There's still some time between this and the webView being destroyed.
         // We don't want to pick up any stray events.
         tab.webView?.navigationDelegate = nil
+        
+        //remove from navigation
+        BackForwardNavigation.shared.removeTab(tab: tab)
 
         if notify {
             for delegate in delegates {
@@ -393,6 +396,8 @@ class TabManager : NSObject {
                 delegate.get()?.tabManager(self, didRemoveTab: tab, removeIndex: removeIndex)
             }
         }
+        
+        
 
         // Make sure we never reach 0 normal tabs
         if !tab.isPrivate && normalTabs.count == 0 {
