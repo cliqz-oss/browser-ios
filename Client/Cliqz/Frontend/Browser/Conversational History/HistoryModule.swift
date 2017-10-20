@@ -14,13 +14,18 @@ import React
 //This is the module that works with the History Database.
 
 
-struct Domain {
+struct DomainModel: Equatable {
+	let id: Int
     let host: String //this is the url.host string
-    let domainDetails: [DomainDetail]
+    var domainDetails: [DomainDetailModel]?
     let date: Date? //this should be the date of the most recently accessed DomainDetail.
+
+	static func == (lhs: DomainModel, rhs: DomainModel) -> Bool {
+		return lhs.id == rhs.id
+	}
 }
 
-struct DomainDetail {
+struct DomainDetailModel {
     var title: String
     let url: NSURL
     let date: Date?
@@ -50,7 +55,6 @@ final class HistoryModule: NSObject {
     }
     
     func processRawDataResults(result: Maybe<Cursor<Site>>, domain: NSString?) -> NSDictionary {
-        
         let v_key      = NSString(string: "places")
         let dom_key    = NSString(string: "domain")
         var returnDict: [NSString : AnyObject] = [dom_key : domain ?? "", v_key : NSArray()]
@@ -86,7 +90,10 @@ final class HistoryModule: NSObject {
         return NSDictionary(dictionary: returnDict)
     }
     
-    class func getHistory(profile: Profile, completion: @escaping (_ result:[Domain]?, _ error:NSError?) -> Void) {
+    class func getHistory(profile: Profile, completion: @escaping (_ result:[DomainModel]?, _ error:NSError?) -> Void) {
+		getDomains(profile: profile) { (domains, error) in
+		}
+		
         //limit is static for now.
         //later there will be a mechanism in place to handle a variable limit and offset.
         //It will keep a window of results that updates as the user scrolls.
@@ -95,13 +102,53 @@ final class HistoryModule: NSObject {
             let rawDomainDetails = processRawDataResults(result: result)
             let domainList       = processDomainDetails(details: rawDomainDetails)
             completion(domainList, nil) //TODO: there should be a better error handling mechanism here
-        }
+		}
 
         //getHistoryWithLimit(100, startFrame: 1494928155776220, endFrame: 1494928369784560, domain: NSString(string: "reuters.com"), resolve: { _ in}, reject: { _ in})
 	}
 
-    class func processRawDataResults(result: Maybe<Cursor<Site>>) -> [DomainDetail] {
-        var historyResults: [DomainDetail] = []
+	class func getDomains(profile: Profile, completion: @escaping (_ result:[DomainModel]?, _ error:NSError?) -> Void) {
+		let backgroundQueue = DispatchQueue.global(qos: .background)
+		profile.history.getHistoryDomains(limit: 0).uponQueue(backgroundQueue) {
+			(result) in
+			let domains = processDomainData(result: result)
+			completion(domains, nil)
+		}
+	}
+
+	class func removeDomain(profile: Profile, id: Int, completion: @escaping (_ success: Bool, _ error:NSError?) -> Void) {
+		if profile.history.removeDomain(id).value.isSuccess {
+			completion(true, nil)
+		} else {
+			completion(false, nil)
+		}
+	}
+
+	class func processDomainData(result: Maybe<Cursor<Domain>>) -> [DomainModel] {
+		var processedResults: [DomainModel] = []
+		guard let domains = result.successValue else {
+			return processedResults
+		}
+
+		for d in domains {
+			if let newID = d?.id,
+				let newHost = d?.name {
+				let new = DomainModel(id: newID, host: newHost, domainDetails: nil, date: Date.fromMicrosecondTimestamp(d?.lastVisit ?? 0))
+				processedResults.append(new)
+			}
+		}
+		return processedResults
+	}
+
+	class func getDomainVisits(profile: Profile, domainID: Int, completion: @escaping (_ result:[DomainDetailModel]?, _ error:NSError?) -> Void) {
+		profile.history.getHistoryVisits(forDomain: domainID).upon({ (result) in
+			let processedResult = self.processRawDataResults(result: result)
+			completion(processedResult, nil)
+		})
+	}
+
+    class func processRawDataResults(result: Maybe<Cursor<Site>>) -> [DomainDetailModel] {
+        var historyResults: [DomainDetailModel] = []
         
         if let sites = result.successValue {
             for site in sites {
@@ -109,9 +156,9 @@ final class HistoryModule: NSObject {
                     let title = domain.title
                     var date:Date?  = nil
                     if let latestDate = domain.latestVisit?.date {
-                        date = Date(timeIntervalSince1970: Double(latestDate) / 1000000.0) // second = microsecond * 10^-6
+                        date =  Date.fromMicrosecondTimestamp(latestDate)
                     }
-                    let d = DomainDetail(title: title, url: url, date: date)
+                    let d = DomainDetailModel(title: title, url: url, date: date)
                     historyResults.append(d)
                 }
             }
@@ -119,9 +166,9 @@ final class HistoryModule: NSObject {
         return historyResults
     }
     
-    class func processDomainDetails(details: [DomainDetail]) -> [Domain] {
+    class func processDomainDetails(details: [DomainDetailModel]) -> [DomainModel] {
         
-        func mostRecentDate(details:[DomainDetail]) -> Date? {
+        func mostRecentDate(details:[DomainDetailModel]) -> Date? {
             guard details.count > 0 else {
                 return nil
             }
@@ -137,12 +184,12 @@ final class HistoryModule: NSObject {
             return most_recent_date ?? nil
         }
         
-        func removeDuplicates(details: [DomainDetail]) -> [DomainDetail] {
+        func removeDuplicates(details: [DomainDetailModel]) -> [DomainDetailModel] {
             //duplicates can be identified by the title, or the url
             // I will take the url as the unique identifier
             
             
-            var array: [DomainDetail] = []
+            var array: [DomainDetailModel] = []
             
             var group_by_url = GeneralUtils.groupBy(array: details) { (detail) -> NSURL in
                 return detail.url
@@ -151,7 +198,7 @@ final class HistoryModule: NSObject {
             for url in group_by_url.keys {
                 if let details = group_by_url[url] {
                     let most_recent_date = mostRecentDate(details: details)
-                    array.append(DomainDetail(title: details.first?.title ?? "", url: url, date: most_recent_date))
+                    array.append(DomainDetailModel(title: details.first?.title ?? "", url: url, date: most_recent_date))
                 }
             }
             
@@ -159,7 +206,7 @@ final class HistoryModule: NSObject {
             
         }
         
-        var finalArray: [Domain] = []
+        var finalArray: [DomainModel] = []
         
         let clean_details = removeDuplicates(details: details)
         
@@ -178,7 +225,7 @@ final class HistoryModule: NSObject {
                 })
                 
                 let most_recent_date = mostRecentDate(details: details)
-                finalArray.append(Domain(host: domain, domainDetails: sorted_details, date: most_recent_date))
+				finalArray.append(DomainModel(id: 0, host: domain, domainDetails: sorted_details, date: most_recent_date))
             }
         }
         

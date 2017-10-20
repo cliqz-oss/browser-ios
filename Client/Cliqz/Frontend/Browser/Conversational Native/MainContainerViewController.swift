@@ -108,7 +108,7 @@ class MainContainerViewController: UIViewController {
 
     private func prepareModules() {
         _ = NewsManager.sharedInstance
-        _ = DomainsModule.sharedInstance
+        _ = DomainsModule.shared
     }
     
     private func setUpComponent() {

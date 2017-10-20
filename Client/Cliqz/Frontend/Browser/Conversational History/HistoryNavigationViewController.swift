@@ -52,7 +52,7 @@ final class HistoryNavigationViewController: UIViewController {
     
     private func setUpConversationalHistoryDetails(indexPath:IndexPath) -> DomainDetailsViewController {
         
-        let headerAndTableDataSource = DomainDetailsDataSource(domainDetails: domainDetails(indexPath: indexPath))
+        let headerAndTableDataSource = DomainDetailsDataSource(domain: domain(indexPath:  indexPath))
         
         let baseUrl = headerAndTableDataSource.baseUrl()
         
@@ -67,7 +67,8 @@ final class HistoryNavigationViewController: UIViewController {
         }
         
         recommendationsDataSource.delegate = conversationalHistoryDetails
-        
+        headerAndTableDataSource.delegate = conversationalHistoryDetails
+
         return conversationalHistoryDetails
     }
     
@@ -103,8 +104,8 @@ final class HistoryNavigationViewController: UIViewController {
         self.view.isHidden = true
     }
     
-    private func domainDetails(indexPath:IndexPath) -> [DomainDetail] {
-        return conversationalHistory.dataSource.domains[indexPath.row].domainDetails
+    private func domain(indexPath: IndexPath) -> DomainModel {
+        return conversationalHistory.dataSource.domains[indexPath.row]
     }
 
     override func didReceiveMemoryWarning() {

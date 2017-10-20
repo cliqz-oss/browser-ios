@@ -16,7 +16,7 @@
 #include "tlds.hpp"
 
 const std::regex urlRegex(""
-    "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?",
+    "^(([^:/?#]+)://)?(([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?",
     std::regex_constants::icase);
 
 const std::regex authorityRegex(""
@@ -118,7 +118,6 @@ namespace cliqz {
             } else {
                 name = isLocalHost ? "localhost" : "IP";
             }
-            
             const auto cleanHost = host.find("www.") == 0 ?
                 string(host, 4, host.size()) : host;
             

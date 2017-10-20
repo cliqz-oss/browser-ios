@@ -405,7 +405,6 @@
 		2FFC4D1B1ABE3C360081D675 /* FxAState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D1A1ABE3C360081D675 /* FxAState.swift */; };
 		2FFC4D381ABE3C420081D675 /* FxAStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFC4D371ABE3C420081D675 /* FxAStateTests.swift */; };
 		3905274C1C874D35007E0BB7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3905274B1C874D35007E0BB7 /* NotificationCenter.framework */; };
-		390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3905274A1C874D35007E0BB7 /* Today.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39098DC41CAD5ACB00AE87F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 391AEFD11C8F11ED00691F84 /* Images.xcassets */; };
 		392ED6B71D06E85E009D9B62 /* NewTabChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392ED6B61D06E85E009D9B62 /* NewTabChoiceViewController.swift */; };
 		392ED7E41D0AEF56009D9B62 /* NewTabAccessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392ED7E31D0AEF56009D9B62 /* NewTabAccessors.swift */; };
@@ -450,6 +449,7 @@
 		4F97573C1AFA6F37006ECC24 /* ReaderViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */; };
 		4F9A7B611D6DDAC6005F02CB /* CliqzExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */; };
 		4F9A7B751D6F2BFA005F02CB /* CliqzURLBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */; };
+		4FA050C01F8D078600A6B203 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA050BF1F8D078600A6B203 /* Domain.swift */; };
 		4FA29B251D64C0B100C59F5E /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */; };
 		4FA29B261D64C0B100C59F5E /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B221D64C0B100C59F5E /* TabsViewController.swift */; };
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
@@ -1367,7 +1367,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				390527561C874D35007E0BB7 /* Today.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1950,6 +1949,7 @@
 		4F97573A1AFA6F37006ECC24 /* ReaderViewUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderViewUITests.swift; sourceTree = "<group>"; };
 		4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzExtensionViewController.swift; sourceTree = "<group>"; };
 		4F9A7B741D6F2BFA005F02CB /* CliqzURLBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzURLBarView.swift; sourceTree = "<group>"; };
+		4FA050BF1F8D078600A6B203 /* Domain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		4FA29B221D64C0B100C59F5E /* TabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
@@ -2991,6 +2991,7 @@
 			children = (
 				1E79DD721D4FB58D006BEB4A /* CliqzShareItem.swift */,
 				1E79DD731D4FB58D006BEB4A /* ExtendedBrowserHistory.swift */,
+				4FA050BF1F8D078600A6B203 /* Domain.swift */,
 			);
 			path = Cliqz;
 			sourceTree = "<group>";
@@ -5679,6 +5680,7 @@
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -5704,6 +5706,7 @@
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0830;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -6482,6 +6485,7 @@
 				2FCAE26A1ABB531100877008 /* GenericTable.swift in Sources */,
 				285F2DC11AF80B4600211843 /* SQLiteBookmarksSyncing.swift in Sources */,
 				1E79DD7D1D4FB59D006BEB4A /* BrowserDBExtension.swift in Sources */,
+				4FA050C01F8D078600A6B203 /* Domain.swift in Sources */,
 				1E79DD7F1D4FB59D006BEB4A /* SQLiteBookmarksModelExtension.swift in Sources */,
 				28C4AB721AD42D4300D9ACE3 /* Clients.swift in Sources */,
 				28126F741C2F96F1006466CC /* SQLiteBookmarksResetting.swift in Sources */,
@@ -7983,7 +7987,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
@@ -8025,7 +8030,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "c15ad72b-d864-4ed7-b628-b0f120960a15";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = HackDay;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
@@ -8342,7 +8347,9 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8357,7 +8364,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -8369,7 +8376,9 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8384,7 +8393,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -8623,6 +8632,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
 				ENABLE_BITCODE = YES;
@@ -8668,7 +8679,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = hackDay.cliqz.com;
 				PRODUCT_MODULE_NAME = Client;
 				PRODUCT_NAME = Client;
-				PROVISIONING_PROFILE = "fe1a483b-a38e-4fc0-b477-bcde8e8a70e6";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";

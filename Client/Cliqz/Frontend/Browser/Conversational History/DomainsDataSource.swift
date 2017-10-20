@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 //The data source for the ConversationalHistory View. 
 
 final class DomainsDataSource: NSObject, DomainsProtocol {
@@ -15,7 +14,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     //This still needs work
     //Loads every time this view is shown. This can be problematic with big history. Need to handle that.
     
-    var domains: [Domain] = []
+    var domains: [DomainModel] = []
     
     let cliqzNews_header = "Cliqz News"
     let cliqzNews_title  = "Tap to Read"
@@ -29,14 +28,14 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func loadDomains() {
-        domains = DomainsModule.sharedInstance.domains
+        domains = DomainsModule.shared.domains
     }
 
     func numberOfCells() -> Int {
         return self.domains.count
     }
 
-    func urlLabelText(indexPath:IndexPath) -> String {
+    func urlLabelText(indexPath: IndexPath) -> String {
         return domains[indexPath.row].host
     }
 
@@ -44,16 +43,16 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         return domains[indexPath.row].date?.toRelativeTimeString() ?? ""
     }
 
-    func timeLabelText(indexPath:IndexPath) -> String {
+    func timeLabelText(indexPath: IndexPath) -> String {
         return ""
     }
 
-    func baseUrl(indexPath:IndexPath) -> String {
-        let domainDetail = domains[indexPath.row].domainDetails
-        return domainDetail.first?.url.absoluteString ?? ""
+    func baseUrl(indexPath: IndexPath) -> String {
+        let domain = domains[indexPath.row]
+		return domain.host
     }
 
-	func image(indexPath:IndexPath, completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
+	func image(indexPath: IndexPath, completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
 		LogoLoader.loadLogo(self.baseUrl(indexPath: indexPath)) { (image, logoInfo, error) in
 			if let img = image {
 				completionBlock(img, nil)
@@ -71,7 +70,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     func shouldShowNotification(indexPath:IndexPath) -> Bool {
         return false
     }
-    
+
     func notificationNumber(indexPath:IndexPath) -> Int {
         return NewsManager.sharedInstance.newArticleCount()
     }
@@ -89,11 +88,10 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
 
-	// Fake deletion for user testing.
 	func removeDomain(at index: Int) {
 		if index < self.domains.count {
 			self.domains.remove(at: index)
-			self.delegate?.dataSourceWasUpdated(identifier: "")
+			DomainsModule.shared.removeDomain(at: index)
 		}
 	}
 }

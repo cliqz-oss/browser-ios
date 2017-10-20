@@ -45,20 +45,18 @@ class DomainsCell: UITableViewCell {
 		self.logoButton.action = logoPressed
         logoButton.setImage(defaultImage)
         self.contentView.addSubview(notificationView)
-        
-        
         self.backgroundColor = UIColor.clear
-    }
-    
+	}
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         self.logoButton.setImage(defaultImage)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         self.logoButton.snp.remakeConstraints { (make) in

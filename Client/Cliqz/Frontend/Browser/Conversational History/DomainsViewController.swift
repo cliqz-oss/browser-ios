@@ -98,7 +98,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
         let articleLink = dataSource.urlLabelText(indexPath: indexPath)
         cell.URLLabel.text   = articleLink
         cell.titleLabel.text = dataSource.titleLabelText(indexPath: indexPath)
-        dataSource.image(indexPath: indexPath) { (image, customView) in
+        self.dataSource.image(indexPath: indexPath) { (image, customView) in
 			if cell.tag == indexPath.row {
 				if let img = image {
 					cell.logoButton.setImage(img)

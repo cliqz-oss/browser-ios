@@ -21,7 +21,9 @@ public protocol ExtendedBrowserHistory {
 
     // Cliqz: getting History
     func getHistoryVisits(_ offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>>
-    
+	func getHistoryDomains(limit: Int) -> Deferred<Maybe<Cursor<Domain>>>
+	func getHistoryVisits(forDomain domain: Int) -> Deferred<Maybe<Cursor<Site>>>
+
     // Cliqz: getting History for specific period
     func getHistoryVisits(domain:String, timeStampLowerLimit:Int?, timeStampUpperLimit:Int?, limit: Int?) -> Deferred<Maybe<Cursor<Site>>>
 
@@ -33,4 +35,7 @@ public protocol ExtendedBrowserHistory {
     
     // Cliqz: added to get hidden topsites count
     func getHiddenTopSitesCount() -> Int
+
+	// Cliqz: remove domain with specified ID and all related visits
+	func removeDomain(_ id: Int) -> Success
 }

@@ -8,15 +8,21 @@
 
 import UIKit
 
+let domainDetailsDataSourceID = "DomainDetailsDataSource"
+
 class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewDataSource {
     
     
     //group details by their date. 
     //order the dates.
-    
+	var domain: DomainModel
+	let details: [DomainDetailModel]? = nil
+
+	var delegate: HasDataSource?
+
     struct SortedDomainDetail: Comparable {
-        let date: Date
-        let details: [DomainDetail]
+        let date: String
+        var details: [DomainDetailModel]?
         
         static func ==(x: SortedDomainDetail, y: SortedDomainDetail) -> Bool {
             return x.date == y.date
@@ -35,20 +41,32 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
 	
     var sortedDetails: [SortedDomainDetail] = []
     
-    init(domainDetails: [DomainDetail]) {
-        
+    init(domain: DomainModel) {
+		self.domain = domain
         standardDateFormatter.dateFormat = standardDateFormat
         standardTimeFormatter.dateFormat = standardTimeFormat
-        
-        self.sortedDetails = orderByDate(domainDict: groupByDate(domainDetails: domainDetails))
+		if let details = domain.domainDetails {
+			self.sortedDetails = groupByDate(details)
+		} else {
+			loadDetails()
+		}
     }
+
+	private func loadDetails() {
+		DomainsModule.shared.loadDomainDetails(self.domain) {
+			(result) in
+			self.domain.domainDetails = result
+			self.sortedDetails = self.groupByDate(result)
+			self.delegate?.dataSourceWasUpdated(identifier: domainDetailsDataSourceID)
+		}
+	}
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
 	func logo(completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
-        LogoLoader.loadLogo(self.sortedDetails.first?.details.first?.url.absoluteString ?? "") { (image, logoInfo, error) in
+        LogoLoader.loadLogo(self.domain.host ?? "") { (image, logoInfo, error) in
 			if let img = image {
 				completionBlock(img, nil)
 			} else if let info = logoInfo {
@@ -70,8 +88,7 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     
     func titleSectionHeader(section: Int) -> String {
         guard sectionWithinBounds(section: section) else { return "" }
-        let date = sortedDetails[section].date
-        return standardDateFormatter.string(from: date)
+        return sortedDetails[section].date
     }
     
     func time(indexPath: IndexPath) -> String {
@@ -86,11 +103,11 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     }
     
     func numberOfRows(section: Int) -> Int {
-        return sortedDetails[section].details.count
+        return sortedDetails[section].details?.count ?? 0
     }
     
     func baseUrl() -> String {
-        return sortedDetails.first?.details.first?.url.host ?? ""
+		return self.domain.host
     }
     
     func isNews() -> Bool {
@@ -101,9 +118,9 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
         return false
     }
     
-    func detail(indexPath: IndexPath) -> DomainDetail? {
+    func detail(indexPath: IndexPath) -> DomainDetailModel? {
         if indexWithinBounds(indexPath: indexPath) {
-            return sortedDetails[indexPath.section].details[indexPath.row]
+            return sortedDetails[indexPath.section].details?[indexPath.row]
         }
         return nil
     }
@@ -117,31 +134,32 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     
     func indexWithinBounds(indexPath: IndexPath) -> Bool {
         guard sectionWithinBounds(section: indexPath.section) else { return false }
-        if indexPath.row >= 0 && indexPath.row < sortedDetails[indexPath.section].details.count {
+        if indexPath.row >= 0 && indexPath.row < sortedDetails[indexPath.section].details?.count ?? 0 {
             return true
         }
         return false
     }
     
-    func groupByDate(domainDetails: [DomainDetail]) -> Dictionary<String, [DomainDetail]> {
-        return GeneralUtils.groupBy(array: domainDetails) { (domainDetail) -> String in
-            if let date = domainDetail.date {
-                return standardDateFormatter.string(from: date)
-            }
-            return "01-01-1970"
-        }
+    func groupByDate(_ domainDetails: [DomainDetailModel]?) -> [SortedDomainDetail] {
+		var result  = [SortedDomainDetail]()
+		guard let data = domainDetails else {
+			return result
+		}
+		for d in data {
+			var date: String?
+			if let dd = d.date {
+				date = standardDateFormatter.string(from: dd)
+			} else {
+				date = "01-01-1970"
+			}
+			if result.count > 0 && result[result.count - 1].date == date {
+				result[result.count - 1].details?.append(d)
+			} else {
+				let x = SortedDomainDetail(date: date!, details:[d])
+				result.append(x)
+			}
+		}
+		return result
     }
-    
-    //return a descending array
-    func orderByDate(domainDict: Dictionary<String, [DomainDetail]>) -> [SortedDomainDetail] {
-        
-        let unsortedArray = domainDict.keys.map { (key) -> SortedDomainDetail in
-            let domainDetails = domainDict[key]
-            return SortedDomainDetail(date: self.standardDateFormatter.date(from: key)!, details: domainDetails!)
-        }
-        
-        return unsortedArray.sorted().reversed()
-    }
-    
-    
+
 }

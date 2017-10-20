@@ -48,7 +48,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
             self.favicons.getCleanupCommands(),
             ])
     }
-	
+
 	// TODO: check if possible to use FF's version of getHistory
     public func getHistoryVisits(_ offset:Int, limit: Int) -> Deferred<Maybe<Cursor<Site>>> {
         let args: Args?
@@ -121,6 +121,28 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)
     }
 
+	public func getHistoryDomains(limit: Int) -> Deferred<Maybe<Cursor<Domain>>> {
+		let historySQL =
+			"SELECT \(TableDomains).id, \(TableDomains).domain, \(TableVisits).date " +
+				"FROM \(TableDomains) " +
+				"INNER JOIN \(TableHistory) ON \(TableDomains).id = \(TableHistory).domain_id " +
+				"INNER JOIN \(TableVisits) ON \(TableHistory).id = \(TableVisits).siteID " +
+				"GROUP BY \(TableDomains).id " +
+				"ORDER BY \(TableVisits).date DESC "
+		return db.runQuery(historySQL, args: [Args](), factory: SQLiteHistory.historyDomainsFactory)
+	}
+
+	public func getHistoryVisits(forDomain domain: Int) -> Deferred<Maybe<Cursor<Site>>> {
+		let historySQL =
+			"SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
+				"FROM \(TableDomains) " +
+				"INNER JOIN \(TableHistory) ON \(TableDomains).id = \(TableHistory).domain_id " +
+		"INNER JOIN \(TableVisits) ON \(TableHistory).id = \(TableVisits).siteID " +
+		"WHERE \(TableDomains).id = \(domain) " +
+		"ORDER BY \(TableVisits).id DESC "
+		return db.runQuery(historySQL, args: [Args](), factory: SQLiteHistory.historyVisitsFactory)
+	}
+
 	public func hideTopSite(_ url: String) -> Success {
 		let insertSQL = "INSERT INTO \(TableHiddenTopSites) " +
 			"(url) " +
@@ -148,7 +170,17 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         }
         return count
     }
-    
+
+	public func removeDomain(_ id: Int) -> Success {
+		let query = [
+			("DELETE FROM \(TableVisits) WHERE \(TableVisits).id in (SELECT \(TableVisits).id FROM \(TableVisits) INNER JOIN \(TableHistory) ON \(TableHistory).id = \(TableVisits).siteID WHERE \(TableHistory).domain_id == \(id))", nil),
+			("DELETE FROM \(TableHistory) WHERE \(TableHistory).domain_id == \(id)", nil),
+			("DELETE FROM \(TableDomains) WHERE id == \(id)", nil),
+			self.favicons.getCleanupCommands(),
+			]
+		return self.db.run(query)
+	}
+	
     //MARK: - Factories
     fileprivate class func countFactory(_ row: SDRow) -> Int {
         let cout = row["rowCount"] as! Int
@@ -177,6 +209,13 @@ extension SQLiteHistory: ExtendedBrowserHistory {
 
         return site
     }
-    
+
+	internal class func historyDomainsFactory(_ row: SDRow) -> Domain {
+		let id = row["id"] as? Int
+		let domain = row["domain"] as? String
+		let visitDate = row.getTimestamp("date") ?? 0
+		let d = Domain(id: id, name: domain, lastVisit: visitDate)
+		return d
+	}
 
 }

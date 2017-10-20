@@ -96,7 +96,7 @@ final class DomainDetailsViewController: UIViewController {
         }
         
         self.recommendationsCollection.snp.remakeConstraints { (make) in
-            
+
             let height = recommendationsCollection.height()
             
             make.left.right.equalTo(self.view)
@@ -168,11 +168,16 @@ extension DomainDetailsViewController: CustomScrollDelegate {
 
 extension DomainDetailsViewController: HasDataSource {
     func dataSourceWasUpdated(identifier: String) {
-        UIView.animate(withDuration: 0.2) {
-            self.recommendationsCollection.reloadData()
-            self.setConstraints()
-            self.view.layoutIfNeeded()
-        }
+		if identifier == domainDetailsDataSourceID {
+			self.historyTableView.reloadData()
+			self.setConstraints()
+		} else {
+			UIView.animate(withDuration: 0.2) {
+				self.recommendationsCollection.reloadData()
+				self.setConstraints()
+				self.view.layoutIfNeeded()
+			}
+		}
     }
 }
 

@@ -12,11 +12,11 @@ class DomainsModule {
     
     //TO DO: I need to update the domains each time a new domain is added to the database. I need something smart here. I don't want to load everything every time.
     
-    static let sharedInstance = DomainsModule()
+    static let shared = DomainsModule()
     
     static let notification_updated = Notification.Name(rawValue: "DomainsModuleUpdated")
     
-    var domains: [Domain] = []
+    var domains: [DomainModel] = []
     
     private var loading: Bool = false
     //Note: CompletionBlocks is not thread safe: I copy it when I iterate over it.
@@ -31,16 +31,15 @@ class DomainsModule {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadData(completion:((_ ready:Bool) -> Void)?) {
+    func loadData(completion:((_ ready: Bool) -> Void)?) {
         
         if loading == false {
-            
             loading = true
             self.completionBlocks.append(completion)
             domains = []
             
             if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
-                HistoryModule.getHistory(profile: profile, completion: { (result, error) in
+                HistoryModule.getDomains(profile: profile, completion: { (result, error) in
                     DispatchQueue.main.async(execute: {
                         if let domains = result {
                             self.domains.append(contentsOf: domains.sorted(by: { (a, b) -> Bool in
@@ -76,6 +75,8 @@ class DomainsModule {
     
     @objc
     func visitInsertedInDB(_ notification: Notification) {
+		loadData(completion: nil)
+		/*
         if let info = notification.userInfo as? [String: Any] {
             let title = info["title"] as? String ?? ""
             let date = info["date"] as? UInt64 ?? Date.nowMicroseconds()
@@ -89,34 +90,56 @@ class DomainsModule {
                 StateManager.shared.handleAction(action: Action(data: ["url" : url], type: .visitAddedInDB))
             }
         }
+*/
     }
-    
-    func constructDomainDetail(url: String, title: String, date: UInt64) -> DomainDetail? {
+
+	func loadDomainDetails(_ domain: DomainModel, completion:(([DomainDetailModel]?) -> Void)?) {
+		if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
+			HistoryModule.getDomainVisits(profile: profile, domainID: domain.id, completion: { (results, error) in
+				if let details = results,
+					let i = self.domains.index(of: domain) {
+					var d = self.domains[i]
+					d.domainDetails = details
+					completion?(details)
+				}
+			})
+		}
+	}
+
+	func removeDomain(at index: Int) {
+		let domain = self.domains[index]
+		if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
+			HistoryModule.removeDomain(profile: profile, id: domain.id, completion: { (succeed, error) in
+				if succeed {
+					self.domains.remove(at: index)
+					NotificationCenter.default.post(name: DomainsModule.notification_updated, object: nil)
+				}
+			})
+		}
+	}
+
+    func constructDomainDetail(url: String, title: String, date: UInt64) -> DomainDetailModel? {
         if let nsUrl = NSURL(string: url) {
             let adjustedDate = Date.init(timeIntervalSince1970: TimeInterval(date / 1000000))
-            return DomainDetail(title: title, url: nsUrl, date: adjustedDate)
+            return DomainDetailModel(title: title, url: nsUrl, date: adjustedDate)
         }
         return nil
     }
     
-    func addDomainDetail(detail: DomainDetail?) {
-        
+    func addDomainDetail(detail: DomainDetailModel?) {
         guard let detail = detail else {
             return
         }
-        
         if let detailHost = detail.url.host {
-            
             var index = 0
-            
             var domainFound = false
-            
+
             for domain in domains {
                 if domain.host == detailHost {
                     var domainDetails = domain.domainDetails
-                    domainDetails.insert(detail, at: 0)
+                    domainDetails?.insert(detail, at: 0)
                     
-                    let updatedDomain = Domain(host: domain.host, domainDetails: domainDetails, date: detail.date)
+					let updatedDomain = DomainModel(id: 0, host: domain.host, domainDetails: domainDetails, date: detail.date)
                     
                     //this is the latest entry. The domain should become the first in the list.
                     domains.remove(at: index)
@@ -129,8 +152,8 @@ class DomainsModule {
             }
             
             if domainFound == false {
-                let newDomain = Domain(host: detailHost, domainDetails: [detail], date: detail.date)
-                self.domains.insert(newDomain, at: 0)
+				let domain = DomainModel(id: 0, host: detailHost, domainDetails: [detail], date: detail.date)
+                self.domains.insert(domain, at: 0)
             }
         }
     }

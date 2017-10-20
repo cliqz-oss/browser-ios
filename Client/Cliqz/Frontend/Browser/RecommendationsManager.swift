@@ -196,7 +196,7 @@ final class RecommendationsManager {
         //filter rule: News with a domain that matches any domain in the history should be eliminated. Those news are presented in History Details.
         
         //get a list of all domains in the history
-        let domains = DomainsModule.sharedInstance.domains.map { (domain_struct) -> String in
+        let domains = DomainsModule.shared.domains.map { (domain_struct) -> String in
             return domain_struct.host
         }
         
