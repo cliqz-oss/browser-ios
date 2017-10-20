@@ -23,6 +23,10 @@ final class PageNavAddRule {
             return false
         }
         
+        guard BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .browse else {
+            return false
+        }
+        
         return true
         
     }

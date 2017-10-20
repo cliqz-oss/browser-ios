@@ -207,23 +207,18 @@ final class StateManager {
         if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
             if action.type == .urlSelected && (tabManager.selectedTab?.webView?.url != nil || tabManager.tabs.count == 0) {
                 
-                var currentState_currentTab: State? = nil
-                
-                if let currentTab = tabManager.selectedTab {
-                    currentState_currentTab = BackForwardNavigation.shared.currentState(tab: currentTab)
-                }
-                
                 let tab = tabManager.addTabAndSelect()
-                let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
+                var newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
                 preprocessedData = StateData.merge(lhs: newStateData , rhs: preprocessedData)
-                if var state = currentState_currentTab {
-                    let stateData = state.stateData
-                    var newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
-                    newStateData = StateData.merge(lhs: newStateData, rhs: stateData)
-                    state = state.sameStateWithNewData(newStateData: newStateData)
-                    state = state.sameStateWithNewBackForwardState(newBackState: .disabled, newForwardState: .enabled)
-                    BackForwardNavigation.shared.addState(tab: tab, state: state)
-                }
+                
+                var state = currentState
+                let stateData = state.stateData
+                newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil, loadingProgress: nil)
+                newStateData = StateData.merge(lhs: newStateData, rhs: stateData)
+                state = state.sameStateWithNewData(newStateData: newStateData)
+                state = state.sameStateWithNewBackForwardState(newBackState: .disabled, newForwardState: .enabled)
+                BackForwardNavigation.shared.addState(tab: tab, state: state)
+                
             }
         }
         
@@ -251,8 +246,8 @@ final class StateManager {
         contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData, action: action)
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
         toolBarChangeToState(currentState: currentState.toolBarState, nextState: nextState.toolBarState)
-        toolBackChangeToState(currentState: currentState.toolBackState, nextState: nextState.toolBackState, tab: nextState.stateData.tab)
-        toolForwardChageToState(currentState: currentState.toolForwardState, nextState: nextState.toolForwardState, tab: nextState.stateData.tab)
+        toolBackChangeToState(nextState: nextState, tab: nextState.stateData.tab)
+        toolForwardChageToState(currentState: currentState, tab: nextState.stateData.tab)
         toolShareChangeToState(currentState: currentState.toolShareState, nextState: nextState.toolShareState)
         //there is not point in changing the previous state if the currentstate does not change.
         
@@ -383,10 +378,10 @@ final class StateManager {
         }
     }
     
-    func toolBackChangeToState(currentState: ToolBarBackState, nextState: ToolBarBackState, tab: Tab?) {
+    func toolBackChangeToState(nextState: State, tab: Tab?) {
         
         if let tab = tab {
-            if BackForwardNavigation.shared.canGoBack(tab: tab) {
+            if BackForwardNavigation.shared.canGoBack(tab: tab) && nextState.contentState != .domains {
                 toolBar?.setBackEnabled()
                 return
             }
@@ -396,7 +391,7 @@ final class StateManager {
         
     }
     
-    func toolForwardChageToState(currentState: ToolBarForwardState, nextState: ToolBarForwardState, tab: Tab?) {
+    func toolForwardChageToState(currentState: State, tab: Tab?) {
         
         if let tab = tab {
             if BackForwardNavigation.shared.canGoForward(tab: tab) {
