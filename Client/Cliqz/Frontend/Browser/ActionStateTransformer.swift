@@ -78,12 +78,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     //this is for selecting an empty tab
     var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
 
-    if let url = nextStateData.url {
-        if url.contains("localhost") {
-            tabSelectedSpecialState = .collapsedEmptyTransparent
-        }
-    }
-    else {
+    if nextStateData.tab?.url == nil {
         tabSelectedSpecialState = .collapsedEmptyTransparent
     }
     
@@ -118,10 +113,17 @@ final class ActionStateTransformer {
     
     class func nextState(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
         
-        
         if actionType == .tabSelected {
             if let tab = nextStateData.tab {
-                if let currentState_Tab = BackForwardNavigation.shared.currentState(tab: tab) {
+                if let (state, distance) = BackForwardNavigationHelper.firstBrowseStateBeforeCurrent(tab: tab) {
+                    BackForwardNavigation.shared.decrementIndexByDistance(tab: tab, distance: distance)
+                    return state
+                }
+                else if let (state, distance) = BackForwardNavigationHelper.firstBrowseStateAfterCurrent(tab: tab) {
+                    BackForwardNavigation.shared.incrementIndexByDistance(tab: tab, distance: distance)
+                    return state
+                }
+                else if let currentState_Tab = BackForwardNavigation.shared.currentState(tab: tab) {
                     return currentState_Tab
                 }
             }

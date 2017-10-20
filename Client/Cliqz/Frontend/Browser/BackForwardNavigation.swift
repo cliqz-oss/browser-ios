@@ -154,6 +154,41 @@ final class BackForwardAddRule {
 }
 
 
+final class BackForwardNavigationHelper {
+    //returns the first found browse state and the distance between the current index and the index of the browse state
+    class func firstBrowseStateBeforeCurrent(tab: Tab) -> (State, Int)? {
+        let nav = BackForwardNavigation.shared
+        if let currentIndex = nav.currentIndex(tab: tab) {
+            var internalIndex = currentIndex
+            while internalIndex >= 0 {
+                let state: State = nav.state(tab: tab, index: internalIndex)! //this must exist
+                if state.contentState == .browse {
+                    return (state, GeneralUtils.distance(point1: internalIndex, point2: currentIndex))
+                }
+                internalIndex -= 1
+            }
+        }
+        
+        return nil
+    }
+    
+    class func firstBrowseStateAfterCurrent(tab: Tab) -> (State, Int)? {
+        let nav = BackForwardNavigation.shared
+        if let currentIndex = nav.currentIndex(tab: tab), let maxIndex = nav.maxIndex(tab: tab) {
+            var internalIndex = currentIndex
+            while internalIndex >= 0 && internalIndex <= maxIndex {
+                let state: State = nav.state(tab: tab, index: internalIndex)! //this must exist
+                if state.contentState == .browse {
+                    return (state, GeneralUtils.distance(point1: internalIndex, point2: currentIndex))
+                }
+                internalIndex += 1
+            }
+        }
+        
+        return nil
+    }
+}
+
 
 final class BackForwardNavigation {
     
@@ -213,6 +248,10 @@ final class BackForwardNavigation {
     }
     
     //This represents the currentState in the Store.
+    func state(tab: Tab, index: Int) -> State? {
+        return navigationStore.state(tab: tab, index: index)
+    }
+    
     func currentState(tab: Tab) -> State? {
         return navigationStore.currentState(tab: tab)
     }
@@ -225,12 +264,35 @@ final class BackForwardNavigation {
         return navigationStore.nextState(tab:tab)
     }
     
+    func currentIndex(tab: Tab) -> Int? {
+        return navigationStore.currentIndex(tab: tab)
+    }
+    
+    func maxIndex(tab: Tab) -> Int? {
+        if let count = navigationStore.tabStateChains[tab]?.states.count {
+            return count - 1
+        }
+        return nil
+    }
+ 
     func incrementIndex(tab: Tab) {
         navigationStore.incrementIndex(tab: tab)
     }
     
+    func incrementIndexByDistance(tab:Tab, distance: Int) {
+        for _ in 0..<distance {
+            incrementIndex(tab: tab)
+        }
+    }
+    
     func decrementIndex(tab: Tab) {
         navigationStore.decrementIndex(tab: tab)
+    }
+    
+    func decrementIndexByDistance(tab: Tab, distance: Int) {
+        for _ in 0..<distance {
+            decrementIndex(tab: tab)
+        }
     }
     
 }
