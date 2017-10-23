@@ -30,7 +30,7 @@ struct URLBarViewUX {
     static let URLBarButtonOffset: CGFloat = 5
     // buffer so we dont see edges when animation overshoots with spring
     static let URLBarCurveBounceBuffer: CGFloat = 8
-    static let ProgressTintColor = UIColor(red:1, green:0.32, blue:0, alpha:1)
+    static let ProgressTintColor = UIColor(rgb: 0x2B5993)
 
     static let TabsButtonRotationOffset: CGFloat = 1.5
     static let TabsButtonHeight: CGFloat = 18.0
@@ -166,6 +166,7 @@ class URLBarView: UIView {
     fileprivate lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView()
         progressBar.progressTintColor = URLBarViewUX.ProgressTintColor
+		progressBar.trackTintColor = UIColor(rgb: 0xE7ECEE)
         progressBar.alpha = 0
         progressBar.isHidden = true
         return progressBar
@@ -967,7 +968,6 @@ extension URLBarView: Themeable {
         currentTheme = themeName
         locationBorderColor = theme.borderColor!
         locationActiveBorderColor = theme.activeBorderColor!
-        progressBarTint = UIConstants.CliqzThemeColor
         cancelTextColor = theme.textColor
         actionButtonTintColor = theme.buttonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
