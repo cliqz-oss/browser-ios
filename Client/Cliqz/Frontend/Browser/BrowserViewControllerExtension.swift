@@ -8,6 +8,7 @@
 
 import Foundation
 import JavaScriptCore
+import Shared
 
 extension BrowserViewController: ControlCenterViewDelegate {
 
@@ -358,6 +359,19 @@ extension BrowserViewController: ControlCenterViewDelegate {
         alertController.addAction(dismissAction)
         
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Favorites
+    func updateBookmarkStatus(notification: NSNotification) {
+        if let url = notification.object as? URL,
+            let tab = self.tabManager.getTabForURL(url) {
+            tab.isBookmarked = false
+            if !AppConstants.MOZ_MENU {
+                self.toolbar?.updateBookmarkStatus(false)
+                self.urlBar.updateBookmarkStatus(false)
+            }
+        }
+        
     }
 }
 

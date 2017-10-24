@@ -386,6 +386,9 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
         // Cliqz: removed observer for device orientation
         NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
+        // Cliqz: removed observer for favorites removed
+        NotificationCenter.default.removeObserver(self, name: FavoriteRemovedNotification, object: nil)
+
     }
 
     override func viewDidLoad() {
@@ -406,6 +409,12 @@ class BrowserViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(BrowserViewController.logOrientationSignal),
                                                name: Notification.Name.UIApplicationDidChangeStatusBarOrientation,
+                                               object: nil)
+        
+        // Cliqz: Add observer for favorites removed to refresh the bookmark status
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateBookmarkStatus),
+                                               name: FavoriteRemovedNotification,
                                                object: nil)
         
         KeyboardHelper.defaultHelper.addDelegate(self)
@@ -1802,6 +1811,7 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
+        dashboard.switchToTabsPanel()
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
@@ -2214,6 +2224,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.navigationController?.pushViewController(tabTrayController, animated: true)
          self.tabTrayController = tabTrayController
          */
+        dashboard.switchToTabsPanel()
         self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
