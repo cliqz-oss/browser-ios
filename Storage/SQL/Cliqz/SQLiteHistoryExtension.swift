@@ -54,11 +54,12 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         let args: Args?
         args = []
 		
+        // Cliqz: Sort history ASC not DESC
         let historySQL =
         "SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
             "FROM \(TableHistory) " +
             "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
-            "ORDER BY \(TableVisits).id DESC " +
+            "ORDER BY \(TableVisits).id ASC " +
         "LIMIT \(limit) OFFSET \(offset)"
         
         // TODO countFactory

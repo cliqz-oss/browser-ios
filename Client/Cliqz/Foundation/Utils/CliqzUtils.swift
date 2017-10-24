@@ -89,3 +89,20 @@ func isCliqzGoToURL(url: URL?) -> Bool {
     }
     return false
 }
+
+func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
+    var dict: Dictionary<B, [A]> = [:]
+    
+    for elem in array {
+        let key = hashF(elem)
+        if var array = dict[key] {
+            array.append(elem)
+            dict[key] = array
+        }
+        else {
+            dict[key] = [elem]
+        }
+    }
+    
+    return dict
+}

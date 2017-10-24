@@ -1,5 +1,5 @@
 //
-//  SearchHistoryViewController.swift
+//  HistoryViewController.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 11/25/15.
@@ -9,86 +9,97 @@
 import UIKit
 import Shared
 
-protocol HistoryDelegate: class {
-    
-    func didSelectURL(_ url: URL)
-    func didSelectQuery(_ query: String)
+
+protocol HasDataSource: class {
+    func dataSourceWasUpdated()
 }
 
-class HistoryViewController: CliqzExtensionViewController {
+class HistoryViewController: UIViewController {
 
-    weak var delegate: HistoryDelegate?
-	
-	override init(profile: Profile) {
-		super.init(profile: profile, viewType: "history")
+    weak var delegate: BrowsingDelegate?
+    var historyTableView: BubbleTableView!
+    var tableViewDataSource: HistoryDataSource!
+    
+    init(profile: Profile) {
+        super.init(nibName: nil, bundle: nil)
+        
+        tableViewDataSource = createDataSource(profile)
+        tableViewDataSource.delegate = self
 
-		NotificationCenter.default.addObserver(self, selector: #selector(clearQueries as (Notification) -> Void), name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
+        historyTableView = BubbleTableView(customDataSource: tableViewDataSource, customDelegate: self)
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
+    func createDataSource(_ profile: Profile) -> HistoryDataSource {
+        return HistoryDataSource(profile: profile)
     }
-	
-	override func mainRequestURL() -> String {
-		return NavigationExtension.historyURL
-	}
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        componentSetUp()
+        setStyling()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setConstraints()
+        self.tableViewDataSource.reloadHistory(completion: { [weak self] in
+            DispatchQueue.main.async {
+                self?.scrollToBottom()
+            }
+        })
+    }
+    
+    private func componentSetUp() {
+        self.view.addSubview(historyTableView)
+    }
+    
+    private func setStyling() {
+        self.view.backgroundColor = UIConstants.AppBackgroundColor
+        historyTableView.backgroundColor = UIColor.clear
+    }
+    
+    private func setConstraints() {
+        self.historyTableView.snp.makeConstraints { (make) in
+            make.left.right.top.bottom.equalTo(self.view)
+        }
+    }
+    
+    private func scrollToBottom() {
+        guard self.tableViewDataSource.numberOfSections() > 0 else { return }
+        
+        let lastSection = self.tableViewDataSource.numberOfSections() - 1
+        let lastRow = self.tableViewDataSource.numberOfRows(section: lastSection) - 1
+        let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
+        self.historyTableView.scrollToRow(at: lastIndexPath, at: .top, animated: false)
+    }
+
+}
+
+extension HistoryViewController: BubbleTableViewDelegate {
+    func cellPressed(indexPath: IndexPath) {
+        if tableViewDataSource.useRightCell(indexPath: indexPath) {
+            let query = tableViewDataSource.title(indexPath: indexPath)
+            self.delegate?.didSelectQuery(query)
+        } else if let url = tableViewDataSource.url(indexPath: indexPath) {
+            self.delegate?.didSelectURL(url)
+        }
+    }
+    
+    func deleteItem(at indexPath: IndexPath) {
+        tableViewDataSource.deleteItem(at: indexPath)
+    }
 }
 
 
-extension HistoryViewController {
-    
-    override func didSelectUrl(_ url: URL) {
-		self.delegate?.didSelectURL(url)
-    }
-
-    func searchForQuery(_ query: String) {
-		self.delegate?.didSelectQuery(query)
-    }
-
-    func getSearchHistory(_ offset:Int,limit:Int,callback: String?) {
-		if let c = callback {
-            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
-				if let sites = result.successValue {
-					var historyResults = [[String: Any]]()
-					for site in sites {
-						var d = [String: Any]()
-						d["id"] = site!.id
-						d["url"] = site!.url
-						d["title"] = site!.title
-						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-						historyResults.append(d)
-					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
-				}
-			}
-		}
-	}
-
-    override func isReady() {
-        super.isReady()
-    }
-
-    // MARK: - Clear History
-	@objc func clearQueries(notification notification: Notification) {
-        let includeFavorites: Bool = (notification.object as? Bool) ?? false
-		self.clearQueries(includeFavorites)
-	}
-
-	@objc func clearQueries(_ favorites: Bool) {
-        //Cliqz: [IB-946][WORKAROUND] call `jsAPI` directly instead of publishing events because the event is executed when the history is opened next time not immediately
-        //TODO: Queries will be stored in native side not in JavaScript
-        if favorites == true {
-//            self.javaScriptBridge.publishEvent("clear-favorites")
-            self.javaScriptBridge.callJSMethod("jsAPI.clearFavorites()", parameter: nil, completionHandler: nil)
-        } else {
-//            self.javaScriptBridge.publishEvent("clear-history")
-            self.javaScriptBridge.callJSMethod("jsAPI.clearHistory()", parameter: nil, completionHandler: nil)
+extension HistoryViewController: HasDataSource {
+    func dataSourceWasUpdated() {
+        DispatchQueue.main.async { [weak self] in
+            self?.historyTableView.reloadData()
         }
     }
-
 }
 
