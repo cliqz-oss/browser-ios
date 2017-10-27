@@ -68,8 +68,14 @@ class HistoryModule: NSObject {
                     if let latestDate = domain.latestVisit?.date {
                         date = Date(timeIntervalSince1970: Double(latestDate) / 1000000.0) // second = microsecond * 10^-6
                     }
-                    let result = HistoryUrlEntry(id: id, title: title, url: url, date: date)
-                    historyResults.append(result)
+                    
+                    if url.scheme == QueryScheme {
+                        let result = HistoryQueryEntry(id: id, title: title.unescape(), date: date)
+                        historyResults.append(result)
+                    } else {
+                        let result = HistoryUrlEntry(id: id, title: title, url: url, date: date)
+                        historyResults.append(result)
+                    }
                 }
             }
         }

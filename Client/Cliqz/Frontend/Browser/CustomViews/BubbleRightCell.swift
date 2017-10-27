@@ -42,17 +42,19 @@ class BubbleRightCell: UITableViewCell {
         self.backgroundColor = UIColor.clear
         contentView.backgroundColor = UIColor.clear
         
-        bubbleView.layer.cornerRadius = 10
-        bubbleView.backgroundColor = UIColor(colorString: "00B3EF")
+        bubbleView.layer.cornerRadius = 5
+        bubbleView.backgroundColor = UIColor(colorString: "c8e9ef")
         
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         timeLabel.font = UIFont.systemFont(ofSize: 12)
         
-        titleLabel.textColor = UIColor.white
-        timeLabel.textColor = UIColor.white
+        titleLabel.textColor = UIColor(colorString: "333333")
+        timeLabel.textColor = UIColor(colorString: "aaaaaa")
         
         titleLabel.numberOfLines = 2
         timeLabel.numberOfLines = 1
+        
+        timeLabel.textAlignment = .right
         
     }
     
@@ -65,13 +67,14 @@ class BubbleRightCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.bubbleView.snp.centerY).offset(9)
+            make.bottom.equalTo(self.bubbleView.snp.centerY).offset(5)
             make.left.equalTo(self.bubbleView).offset(10)
             make.right.equalTo(self.bubbleView).inset(10)
         }
         
         timeLabel.snp.makeConstraints { (make) in
             make.bottom.right.equalTo(self.bubbleView).inset(4)
+            make.width.equalTo(45)
         }
     }
 

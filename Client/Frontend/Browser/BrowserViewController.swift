@@ -1954,7 +1954,7 @@ extension BrowserViewController: URLBarDelegate {
 			urlBar.locationTextField?.enforceResignFirstResponder()
             self.showHint(.cliqzSearch(text.characters.count))
 		} else {
-
+            self.tabManager.selectedTab?.query = self.searchController?.searchQuery
 			var url = URIFixup.getURL(text)
 			
 			// If we can't make a valid URL, do a search query.
@@ -1966,7 +1966,7 @@ extension BrowserViewController: URLBarDelegate {
 				} else {
 					// If we still don't have a valid URL, something is broken. Give up.
 					log.error("Error handling URL entry: \"\(text)\".")
-		}
+                }
 			} else {
 				finishEditingAndSubmit(url!, visitType: VisitType.Typed)
 			}
@@ -3060,6 +3060,8 @@ extension BrowserViewController: WKNavigationDelegate {
     }
 
     fileprivate func postLocationChangeNotificationForTab(_ tab: Tab, navigation: WKNavigation?) {
+        guard let tabUrl = tab.displayURL, !isTrampolineURL(tabUrl) else { return }
+        
         let notificationCenter = NotificationCenter.default
         var info = [AnyHashable: Any]()
         info["url"] = tab.displayURL
@@ -3068,6 +3070,10 @@ extension BrowserViewController: WKNavigationDelegate {
             info["visitType"] = visitType
         }
         info["isPrivate"] = tab.isPrivate
+        if let query = tab.query {
+            info["query"] = query.trim().escape()
+            tab.query = nil
+        }
 		notificationCenter.post(name: NotificationOnLocationChange, object: self, userInfo: info)
     }
 }
@@ -4118,6 +4124,7 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
 extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 
     func didSelectURL(_ url: URL, searchQuery: String?) {
+        self.tabManager.selectedTab?.query = searchQuery
         navigateToUrl(url, searchQuery: searchQuery)
     }
 

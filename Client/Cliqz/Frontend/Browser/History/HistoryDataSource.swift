@@ -102,6 +102,9 @@ class HistoryDataSource: BubbleTableViewDataSource {
     }
     
     func useRightCell(indexPath: IndexPath) -> Bool {
+        if let _ = detail(indexPath: indexPath) as? HistoryQueryEntry {
+            return true
+        }
         return false
     }
     
