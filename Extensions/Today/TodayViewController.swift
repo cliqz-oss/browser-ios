@@ -102,7 +102,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
 #if CLIQZ
         // Cliqz: return correct scheme so that today's widget redirect to Cliqz app not firefox app
-        return "cliqz"
+        return "cliqzbeta"
 #else
         guard let string = Bundle.main.object(forInfoDictionaryKey: "MozInternalURLScheme") as? String else {
             // Something went wrong/weird, but we should fallback to the public one.
