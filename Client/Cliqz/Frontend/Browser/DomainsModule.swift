@@ -9,15 +9,15 @@
 import UIKit
 
 class DomainsModule {
-    
+
     //TO DO: I need to update the domains each time a new domain is added to the database. I need something smart here. I don't want to load everything every time.
-    
+
     static let shared = DomainsModule()
-    
+
     static let notification_updated = Notification.Name(rawValue: "DomainsModuleUpdated")
-    
+
     var domains: [DomainModel] = []
-    
+
     private var loading: Bool = false
     //Note: CompletionBlocks is not thread safe: I copy it when I iterate over it.
     var completionBlocks: [((_ ready:Bool) -> Void)?] = []
@@ -26,11 +26,11 @@ class DomainsModule {
         self.loadData(completion: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(visitInsertedInDB), name: Notification.Name.init("NotificationSQLiteHistoryAddLocalVisit"), object: nil)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     func loadData(completion:((_ ready: Bool) -> Void)?) {
         
         if loading == false {
@@ -72,7 +72,7 @@ class DomainsModule {
             self.completionBlocks.append(completion)
         }
     }
-    
+
     @objc
     func visitInsertedInDB(_ notification: Notification) {
 		loadData(completion: nil)

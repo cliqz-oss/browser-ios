@@ -109,7 +109,7 @@ class PageNavigationViewController: UIViewController {
     }
     
     func navigate() {
-        if pageControl.currentPage == 0 {
+        if pageControl.currentPage == 0 && self.historyNavigation.currentState == .Domains {
             pageControl.changePage(page: 1)
             surfViewController.showNext()
             currentState = .DashBoard
@@ -151,7 +151,7 @@ class PageNavigationViewController: UIViewController {
     private func removeController(viewController: UIViewController) {
         viewController.view.removeFromSuperview()
         viewController.removeFromParentViewController()
-    }
+	}
 
 	@objc private func swipeView(_ gestureRecognizer: UISwipeGestureRecognizer) {
 		if gestureRecognizer.direction == .right && self.pageControl.currentPage == 1 {
@@ -161,7 +161,6 @@ class PageNavigationViewController: UIViewController {
 			self.navigate()
 		}
 	}
-
 
     /*
     // MARK: - Navigation

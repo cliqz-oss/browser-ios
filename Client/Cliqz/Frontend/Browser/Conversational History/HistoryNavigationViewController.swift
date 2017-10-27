@@ -11,7 +11,6 @@ import UIKit
 final class HistoryNavigationViewController: UIViewController {
     
     var conversationalHistory: DomainsViewController = DomainsViewController()
-    var searchController: CliqzSearchViewController?
     var nc: UINavigationController = UINavigationController()
     
     weak var externalDelegate: ActionDelegate? = nil
