@@ -523,6 +523,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 		self.sendUrlBarFocusEvent()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
+        self.migrateQueries()
 	}
     
     func shareCard(_ card: String, title: String, width: Int, height: Int) {
@@ -550,6 +551,22 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
         self.updateExtensionPreferences()
         self.searchWithLastQuery()
+    }
+    
+    private func migrateQueries() {
+        let isQueriesMigratedKey = "Queries-Migrated"
+        guard LocalDataStore.objectForKey(isQueriesMigratedKey) == nil else {
+            return
+        }
+        
+        self.webView?.evaluateJavaScript("JSON.parse(localStorage.recentQueries || '[]')", completionHandler: { [weak self] (result, error) in
+            if let queriesMetaData = result as? [[String: Any]] {
+                self?.profile.insertPatchQueries(queriesMetaData)
+            }
+        })
+        
+        
+        LocalDataStore.setObject(true, forKey: isQueriesMigratedKey)
     }
 }
 
