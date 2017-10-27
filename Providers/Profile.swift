@@ -220,6 +220,9 @@ protocol Profile: class {
     func sendItems(_ items: [ShareItem], toClients clients: [RemoteClient])
 
     var syncManager: SyncManager { get }
+    
+    //Cliqz insert patch queries
+    func insertPatchQueries(_ queriesMetaData: [[String: Any]])
 }
 
 public class BrowserProfile: Profile {
@@ -341,11 +344,28 @@ public class BrowserProfile: Profile {
         }
     }
     
+    // Cliqz: get same url but with query scheme
     private func getQuerySchemeUrl(_ url: URL) -> URL? {
         guard let scheme = url.scheme else { return nil}
         
         let queryUrl = url.absoluteString.replace("\(scheme)://", replacement: "\(QueryScheme)://")
         return URL(string: queryUrl)
+    }
+    
+    //Cliqz insert patch queries
+    func insertPatchQueries(_ queriesMetaData: [[String: Any]]) {
+        DispatchQueue.global().async { [weak self] in
+            for queryMetaData in queriesMetaData {
+                if let query = queryMetaData["query"] as? String,
+                    let timestamp = queryMetaData["timestamp"] as? Int {
+                    let escapedQuery = query.trim().escape()
+                    let queryUrl = "\(QueryScheme)://cliqz.com?query=\(escapedQuery)"
+                    let site = Site(url: queryUrl, title: escapedQuery)
+                    let visit = SiteVisit(site: site, date: MicrosecondTimestamp(timestamp * 1000), type: .Link)
+                    self?.history.addLocalVisit(visit)
+                }
+            }
+        }
     }
     // These selectors run on which ever thread sent the notifications (not the main thread)
     @objc
