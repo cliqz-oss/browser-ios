@@ -120,7 +120,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if customDataSource.useRightCell(indexPath: indexPath) == true {
-            return 70
+            return 40
         }
         
         return 90

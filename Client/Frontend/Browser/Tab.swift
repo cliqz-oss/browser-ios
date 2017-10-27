@@ -79,7 +79,11 @@ class Tab: NSObject {
     var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
-
+    
+    //Cliqz: added query field so that we can save it before navigating to a url
+    var query: String?
+    
+    
     /// Whether or not the desktop site was requested with the last request, reload or navigation. Note that this property needs to
     /// be managed by the web view's navigation delegate.
     var desktopSite: Bool = false {

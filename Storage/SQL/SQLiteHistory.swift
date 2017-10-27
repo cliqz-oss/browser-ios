@@ -281,6 +281,7 @@ extension SQLiteHistory: BrowserHistory {
                                         "from \(TableVisits), \(TableHistory) " +
                                         "where \(TableVisits).date > (strftime('%s', date('now', '-6 months'))*1000000) " +
 												"and \(TableHistory).url NOT IN (SELECT url FROM \(TableHiddenTopSites)) " +
+                                                "and \(TableHistory).url NOT LIKE 'query:%' " + 
                                                 "and \(TableVisits).siteID == \(TableHistory).id " +
                                                 "and \(TableHistory).is_deleted == 0 " +
                                                 "and (\(TableVisits).type < 4  or \(TableVisits).type == 6)" +
@@ -595,9 +596,11 @@ extension SQLiteHistory: BrowserHistory {
             let perWordFragment = "((url LIKE ?) OR (title LIKE ?))"
             let perWordArgs: (String) -> Args = { ["%\($0)%" as Optional<AnyObject>, "%\($0)%" as Optional<AnyObject>] }
             let (filterFragment, filterArgs) = computeWhereFragmentWithFilter(filter, perWordFragment: perWordFragment, perWordArgs: perWordArgs)
-
+            // Cliqz: Exclude queries records when searching for history of specific query
+            let whereQuery = "url NOT LIKE 'query:%'"
+            
             // No deleted item has a URL, so there is no need to explicitly add that here.
-            whereClause = "WHERE (\(filterFragment))\(whereFragment)"
+            whereClause = "WHERE (\(filterFragment))\(whereFragment) AND (\(whereQuery))"
 
             if includeBookmarks {
                 // We'll need them twice: once to filter history, and once to filter bookmarks.
