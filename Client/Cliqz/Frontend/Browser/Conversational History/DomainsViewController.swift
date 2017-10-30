@@ -33,7 +33,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     let emptyStateLabel = UILabel()
     
-    var didPressCell:(_ indexPath:IndexPath) -> () = { _ in }
+    var didPressCell:(_ indexPath: IndexPath, _ host: String) -> () = { _ in }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -128,7 +128,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! DomainsCell
-        didPressCell(indexPath)
+        didPressCell(indexPath, dataSource.domains[indexPath.row].host)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

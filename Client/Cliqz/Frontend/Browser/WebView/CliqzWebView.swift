@@ -162,7 +162,7 @@ class CliqzWebView: UIWebView {
     var _canGoBack: Bool = false
     override internal dynamic var canGoBack: Bool {
         get {
-            return _canGoBack
+            return super.canGoBack
         }
         set {
             _canGoBack = newValue
@@ -172,7 +172,7 @@ class CliqzWebView: UIWebView {
     var _canGoForward: Bool = false
     override internal dynamic var canGoForward: Bool {
         get {
-            return _canGoForward
+            return super.canGoForward
         }
         set {
             _canGoForward = newValue

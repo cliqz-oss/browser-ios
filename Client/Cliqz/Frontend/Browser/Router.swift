@@ -14,10 +14,7 @@ import UIKit
 enum ActionType {
     //init
     case initialization
-    
     //search
-//    case searchTextChanged
-//    case searchTextCleared
     case searchAutoSuggest
     case searchStopEditing
     //url
@@ -36,16 +33,18 @@ enum ActionType {
 	case forwardButtonPressed
     //activity
     case remindersPressed
-    //tab
+    //tabs
     case tabSelected
-    
+    case tabDonePressed
     //missing
     //case didChangeOrientation
     case detailBackPressed
     case domainPressed
     //case tabsDismissed
     //history
-    case visitAddedInDB
+    //case visitAddedInDB
+    case newVisit
+    case webNavigationUpdate
 }
 
 enum ActionContext {
@@ -75,6 +74,20 @@ struct Action: Equatable {
     
     static func != (lhs: Action, rhs: Action) -> Bool {
         return lhs.type != rhs.type
+    }
+    
+    func addData(newData: [String: Any]) -> Action {
+        if var current_data = self.data {
+            for key in newData.keys {
+                //if keys are the same just replace.
+                current_data[key] = newData[key]
+            }
+            
+            return Action(data: current_data, type: self.type)
+            
+        }
+        
+        return Action(data: data, type: self.type)
     }
 }
 
@@ -108,56 +121,12 @@ extension Router: ActionDelegate {
     
     func action(action: Action) {
         switch action.type {
-//        case .searchTextChanged:
-//            if let data = action.data as? [String: String], let text = data["text"] {
-//                self.mainNavVC?.textInUrlBarChanged(text: text)
-//            }
-//        case .searchTextCleared:
-//             self.contentNavVC?.textInUrlBarChanged(text: "")
-//        case .searchAutoSuggest:
-//            if let data = action.data as? [String: String], let text = data["text"] {
-//                //Send this to main navigation. Main navigation is responsible for URL Bar.
-//                self.mainNavVC?.autoSuggestURLBar(autoSuggestText: text)
-//            }
-//        case .searchStopEditing:
-//            self.mainNavVC?.stopEditing()
-
-//		case .homeButtonPressed:
-////			self.mainNavVC?.homeButtonPressed()
-//            self.contentNavVC?.homePressed()
-//		case .urlSelected:
-//			if let data = action.data as? [String: String], let url = data["url"] {
-//				self.mainNavVC?.urlSelected(url: url)
-//			}
- //            if let data = action.data as? [String: String], let url = data["url"] {
-//                self.contentNavVC?.browseURL(url: url)
-//            }
-//		case .urlIsModified:
-//			var url: URL? = nil
-//			if let data = action.data as? [String: URL], let u = data["url"] {
-//				url = u
-//			}
-//            self.mainNavVC?.urlIsModified(url)
-//		case .urlBarCancelEditing:
-//			mainNavVC?.urlbCancelEditing()
         case .tabsPressed:
             mainNavVC?.showTabOverView()
         case .sharePressed:
             ShareHelper.presentActivityViewController()
         case .remindersPressed:
             contentNavVC?.showReminder()
-//        case .backButtonPressed:
-//            mainNavVC?.backButtonPressed()
-//        case .forwardButtonPressed:
-//            mainNavVC?.forwardButtonPressed()
-//        case .tabSelected:
-//            if let data = action.data, let tab = data["tab"] as? Tab {
-//                contentNavVC?.browseTab(tab: tab)
-//            }
-        case .detailBackPressed:
-            debugPrint()
-        case .domainPressed:
-            debugPrint()
         default:
             debugPrint()
         }

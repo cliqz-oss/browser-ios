@@ -584,7 +584,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SessionRestoreHandler.register(server)
 
         // Cliqz: Registered trampolineForward to be able to load it via URLRequest
-        server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
+        //server.registerMainBundleResource("trampolineForward.html", module: "cliqz")
         
         // Cliqz: starting the navigation extension
         NavigationExtension.start()

@@ -54,6 +54,11 @@ class GeneralUtils {
         
         return String(seconds) + " seconds"
     }
+    
+    class func distance(point1: Int, point2: Int) -> Int {
+        let diff = point1 - point2
+        return diff > 0 ? diff : -diff
+    }
 }
 
 extension Date {
