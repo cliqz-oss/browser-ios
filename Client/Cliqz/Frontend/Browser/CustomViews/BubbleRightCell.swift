@@ -45,13 +45,15 @@ class BubbleRightCell: UITableViewCell {
         bubbleView.layer.cornerRadius = 5
         bubbleView.backgroundColor = UIColor(colorString: "c8e9ef")
         
+        titleLabel.lineBreakMode = .byTruncatingTail
+        
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         timeLabel.font = UIFont.systemFont(ofSize: 12)
         
         titleLabel.textColor = UIColor(colorString: "333333")
         timeLabel.textColor = UIColor(colorString: "aaaaaa")
         
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = 1
         timeLabel.numberOfLines = 1
         
         timeLabel.textAlignment = .right
@@ -62,18 +64,19 @@ class BubbleRightCell: UITableViewCell {
         bubbleView.snp.makeConstraints { (make) in
             make.top.equalTo(self.contentView).inset(10)
             make.bottom.equalTo(self.contentView)
-            make.right.equalTo(self.contentView).inset(20)
-            make.width.equalTo(self.contentView.bounds.width * 0.7)
+            make.right.equalTo(timeLabel.snp.right).offset(5)
+            make.left.equalTo(titleLabel.snp.left).offset(-10)
         }
         
         titleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.bubbleView.snp.centerY).offset(5)
-            make.left.equalTo(self.bubbleView).offset(10)
-            make.right.equalTo(self.bubbleView).inset(10)
+            make.top.equalTo(self.contentView.snp.top).offset(15)
+            make.right.equalTo(self.timeLabel.snp.left).inset(10)
+            make.width.lessThanOrEqualTo(self.contentView.frame.width * 0.65)
         }
         
         timeLabel.snp.makeConstraints { (make) in
-            make.bottom.right.equalTo(self.bubbleView).inset(4)
+            make.right.equalTo(self.contentView).inset(30)
+            make.bottom.equalTo(self.contentView).inset(5)
             make.width.equalTo(45)
         }
     }
@@ -87,6 +90,19 @@ class BubbleRightCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.remakeConstraints()
+    }
+    
+    func remakeConstraints() {
+        titleLabel.snp.remakeConstraints { (make) in
+            make.top.equalTo(self.contentView.snp.top).offset(15)
+            make.right.equalTo(self.timeLabel.snp.left).inset(10)
+            make.width.lessThanOrEqualTo(self.contentView.frame.width * 0.65)
+        }
     }
 
 }

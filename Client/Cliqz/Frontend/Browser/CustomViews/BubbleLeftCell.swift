@@ -69,7 +69,7 @@ class BubbleLeftCell: UITableViewCell {
             make.top.equalTo(contentView).inset(7)
             make.bottom.equalTo(contentView).inset(7)
             make.left.equalTo(contentView).offset(20)
-            make.width.equalTo(contentView.bounds.width * 0.90)
+            make.width.equalTo(contentView.bounds.width * 0.75)
         }
         
         iconImageView.snp.makeConstraints { (make) in
@@ -143,6 +143,20 @@ class BubbleLeftCell: UITableViewCell {
         iconImageView.isHidden = true
         iconView.isHidden = true
         iconView.subviews.forEach { $0.removeFromSuperview() }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.remakeConstraints()
+    }
+    
+    func remakeConstraints() {
+        bubbleView.snp.remakeConstraints { (make) in
+            make.top.equalTo(contentView).inset(7)
+            make.bottom.equalTo(contentView).inset(7)
+            make.left.equalTo(contentView).offset(20)
+            make.width.equalTo(contentView.bounds.width * 0.75)
+        }
     }
     
 }
