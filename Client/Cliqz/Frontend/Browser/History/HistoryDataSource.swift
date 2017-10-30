@@ -25,7 +25,7 @@ class HistoryDataSource: BubbleTableViewDataSource {
         }
     }
     
-    private let standardDateFormat = "dd-MM-yyyy"
+    private let standardDateFormat = "dd.MM.yyyy"
     private let standardTimeFormat = "HH:mm"
     
     private let standardDateFormatter = DateFormatter()
