@@ -17,6 +17,7 @@ protocol BubbleTableViewDataSource {
     func time(indexPath: IndexPath) -> String
     func logo(indexPath: IndexPath, completionBlock: @escaping (_ url: URL, _ image: UIImage?, _ logoInfo: LogoInfo?) -> Void)
     func useRightCell(indexPath: IndexPath) -> Bool //default is left cell
+    func isEmpty() -> Bool
 }
 
 protocol BubbleTableViewDelegate {

@@ -108,6 +108,10 @@ class HistoryDataSource: BubbleTableViewDataSource {
         return false
     }
     
+    func isEmpty() -> Bool {
+        return !sectionWithinBounds(section: 0)
+    }
+    
     func detail(indexPath: IndexPath) -> HistoryEntry? {
         if indexWithinBounds(indexPath: indexPath) {
             return sortedDetails[indexPath.section].details[indexPath.row]

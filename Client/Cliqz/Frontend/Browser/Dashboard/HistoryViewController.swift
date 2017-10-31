@@ -19,6 +19,7 @@ class HistoryViewController: UIViewController {
     weak var delegate: BrowsingDelegate?
     var historyTableView: BubbleTableView!
     var tableViewDataSource: HistoryDataSource!
+    var emptyHistroyLabel = UILabel()
     
     init(profile: Profile) {
         super.init(nibName: nil, bundle: nil)
@@ -35,6 +36,10 @@ class HistoryViewController: UIViewController {
     
     func createDataSource(_ profile: Profile) -> HistoryDataSource {
         return HistoryDataSource(profile: profile)
+    }
+    
+    func emptyViewText() -> String {
+        return NSLocalizedString("Here you will find your history.\n\n\nYou haven't searched or visited any website so far.", tableName: "Cliqz", comment: "[History] Text for empty history")
     }
     
     override func viewDidLoad() {
@@ -54,6 +59,13 @@ class HistoryViewController: UIViewController {
     }
     
     private func componentSetUp() {
+        emptyHistroyLabel.text = emptyViewText()
+        emptyHistroyLabel.textAlignment = .center
+        emptyHistroyLabel.numberOfLines = 0
+        emptyHistroyLabel.isHidden = true
+        emptyHistroyLabel.textColor = UIColor(colorString: "AAAAAA")
+        self.view.addSubview(emptyHistroyLabel)
+        
         self.view.addSubview(historyTableView)
     }
     
@@ -65,6 +77,10 @@ class HistoryViewController: UIViewController {
     private func setConstraints() {
         self.historyTableView.snp.makeConstraints { (make) in
             make.left.right.top.bottom.equalTo(self.view)
+        }
+        self.emptyHistroyLabel.snp.makeConstraints { (make) in
+            make.left.right.equalTo(self.view).inset(25)
+            make.top.equalTo(self.view).inset(45)
         }
     }
     
@@ -98,7 +114,16 @@ extension HistoryViewController: BubbleTableViewDelegate {
 extension HistoryViewController: HasDataSource {
     func dataSourceWasUpdated() {
         DispatchQueue.main.async { [weak self] in
-            self?.historyTableView.reloadData()
+            
+            if let isEmpty = self?.tableViewDataSource?.isEmpty(), isEmpty == true {
+                self?.emptyHistroyLabel.isHidden = false
+                self?.historyTableView.isHidden = true
+            } else {
+                self?.emptyHistroyLabel.isHidden = true
+                self?.historyTableView.isHidden = false
+                self?.historyTableView.reloadData()
+            }
+            
         }
     }
 }
