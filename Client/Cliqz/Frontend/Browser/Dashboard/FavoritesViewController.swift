@@ -21,5 +21,10 @@ class FavoritesViewController: HistoryViewController {
     override func createDataSource(_ profile: Profile) -> HistoryDataSource {
         return FavoritesDataSource(profile: profile)
     }
+    
+    override func emptyViewText() -> String {
+        return NSLocalizedString("Here you will find your favorites.\n\n\nYou haven't created any favorites so far.", tableName: "Cliqz", comment: "[History] Text for empty favorites")
+    }
+    
 }
 

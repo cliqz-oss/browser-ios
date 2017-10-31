@@ -361,3 +361,9 @@
 "Subscribing to {1}." = "Abonnement en cours ...";
 /* [Subscriptions] Subscribing Toast */
 "Currently, push notifications are only received if Cliqz is active." = "Currently, push notifications are only received if Cliqz is active.";
+/* [History] Text for empty history */
+"Here you will find your history.\n\n\nYou haven't searched or visited any website so far." = "Retrouvez votre historique ici.\n\n\nVous n'avez pas encore recherché ou visité de site.";
+/* [History] Text for empty favorites */
+"Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Retrouvez vos sites favoris ici.\n\n\nVous n'avez pas encore enregistré de favoris.";
+/* [History] delete button title */
+"Delete" = "Supprimer";
