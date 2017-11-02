@@ -28,7 +28,7 @@ struct FreshtabViewUX {
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
 	static let MaxNewsCellsCount = 4
-    static let topOffset: CGFloat = 15.0
+    static let topOffset: CGFloat = 10.0
 }
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
