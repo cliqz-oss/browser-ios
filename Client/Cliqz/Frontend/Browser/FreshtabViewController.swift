@@ -757,27 +757,36 @@ extension FreshtabViewController: TopSiteCellDelegate {
 // extension for telemetry signals
 extension FreshtabViewController {
     fileprivate func logTopsiteSignal(action: String, index: Int) {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["topsite_count": topSites.count, "index": index]
         self.logFreshTabSignal(action, target: "topsite", customData: customData)
     }
     
     fileprivate func logDeleteTopsiteSignal(_ index: Int) {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["index": index]
         self.logFreshTabSignal("click", target: "delete_topsite", customData: customData)
     }
     
     fileprivate func logTopsiteEditModeSignal() {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
         self.logFreshTabSignal("click", target: nil, customData: customData)
     }
     
     fileprivate func logNewsSignal(_ target: String, element: String, index: Int) {
+        guard isForgetMode == false else { return }
         
         let customData: [String: Any] = ["element": element, "index": index]
         self.logFreshTabSignal("click", target: target, customData: customData)
     }
     
     fileprivate func logShowSignal() {
+        guard isForgetMode == false else { return }
+        
         let loadDuration = Int(Date.getCurrentMillis() - startTime)
         var customData: [String: Any] = ["topsite_count": topSites.count, "load_duration": loadDuration]
         if isLoadCompleted {
@@ -802,6 +811,8 @@ extension FreshtabViewController {
     }
     
     fileprivate func logHideSignal() {
+        guard isForgetMode == false else { return }
+        
         if !isLoadCompleted {
             logShowSignal()
         }
@@ -810,16 +821,22 @@ extension FreshtabViewController {
     }
 
 	fileprivate func logNewsViewModifiedSignal(isExpanded expanded: Bool) {
+        guard isForgetMode == false else { return }
+        
 		let target = expanded ? "show_more" : "show_less"
 		let customData: [String: Any] = ["view": "news"]
 		logFreshTabSignal("click", target: target, customData: customData)
 	}
 
     private func logFreshTabSignal(_ action: String, target: String?, customData: [String: Any]?) {
+        guard isForgetMode == false else { return }
+        
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
     }
     
     fileprivate func logScrollSignal() {
+        guard isForgetMode == false else { return }
+        
         guard scrollCount > 0 else {
             return
         }
