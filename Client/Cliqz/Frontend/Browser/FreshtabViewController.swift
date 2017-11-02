@@ -27,7 +27,6 @@ struct FreshtabViewUX {
 	static let NewsViewMinHeight: CGFloat = 162.0
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
-	static let MaxNewsCellsCount = 4
     static let topOffset: CGFloat = 10.0
 }
 
@@ -426,7 +425,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		] as [String : Any]
         let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
-        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
+        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask"
 
 		Alamofire.request(newsUrl + uri, method: .put, parameters: data, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
@@ -508,9 +507,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
-			self.isNewsExpanded ? min(self.news.count, (UIDevice.current.isSmallIphoneDevice() ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
-		FreshtabViewUX.MinNewsCellsCount
+        return self.isNewsExpanded ? self.news.count : FreshtabViewUX.MinNewsCellsCount
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
