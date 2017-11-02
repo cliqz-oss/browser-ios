@@ -56,6 +56,7 @@ class TabViewCell: UICollectionViewCell {
         self.displayView.backgroundColor = UIColor.darkGray
         self.deleteButton.imageView?.tintColor = UIColor.white
         self.descriptionLabel.textColor = UIConstants.PrivateModeTextColor
+        self.displayView.accessibilityLabel = "PrivateTab"
     }
     
     func makeCellUnprivate() {
@@ -63,6 +64,7 @@ class TabViewCell: UICollectionViewCell {
         self.displayView.backgroundColor = UIColor.white
         self.deleteButton.imageView?.tintColor = UIColor.darkGray
         self.descriptionLabel.textColor = UIConstants.NormalModeTextColor
+        self.displayView.accessibilityLabel = "NormalTab"
     }
     
     func isSmallUpperLogoNil() -> Bool {
@@ -178,8 +180,8 @@ class TabViewCell: UICollectionViewCell {
         cliqzLogoImageView = cliqz_imgView
 
         super.init(frame: frame)
-        
-        self.displayView.accessibilityLabel = "New Tab, Most visited sites and News"
+        // Cliqz: removed accessibility label of the displayView and modify it for normal and forget tabs in `makeCell*` methods
+//        self.displayView.accessibilityLabel = "New Tab, Most visited sites and News"
         
 		self.deleteButton.addTarget(self, action: #selector(didPressDelete), for: .touchUpInside)
 		
