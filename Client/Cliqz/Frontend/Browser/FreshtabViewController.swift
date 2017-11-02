@@ -796,8 +796,9 @@ extension FreshtabViewController {
             customData["topnews_count"] = 0
             customData["breakingnews_count"] = 0
         }
+        customData["is_topsites_on"] = SettingsPrefs.getShowTopSitesPref()
+        customData["is_news_on"] = SettingsPrefs.getShowNewsPref()
         logFreshTabSignal("show", target: nil, customData: customData)
-
     }
     
     fileprivate func logHideSignal() {
