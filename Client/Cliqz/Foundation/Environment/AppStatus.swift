@@ -246,6 +246,7 @@ class AppStatus {
         prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref() as AnyObject?
         prefs["human_web"] = SettingsPrefs.getHumanWebPref() as AnyObject?
         prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
+        prefs["location_access"] = LocationManager.sharedInstance.isLocationAcessEnabled() as AnyObject?
         if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
                 let data = try JSONSerialization.data(withJSONObject: abTests, options: [])
