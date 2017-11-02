@@ -154,15 +154,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             make.height.equalTo(newsHeight)
         })
 		
-        // normalModeView height
-        let invisibleFreshTabHeight = getInvisibleFreshTabHeight(topSitesHeight: topSitesHeight, newsHeight: newsHeight)
-        let normalModeViewHeight = self.view.bounds.height + invisibleFreshTabHeight
-       
-        self.normalModeView.snp.remakeConstraints({ (make) in
-            make.top.left.bottom.right.equalTo(scrollView)
-            make.width.equalTo(self.view)
-            make.height.equalTo(normalModeViewHeight)
-        })
+        if !isForgetMode {
+            // normalModeView height
+            let invisibleFreshTabHeight = getInvisibleFreshTabHeight(topSitesHeight: topSitesHeight, newsHeight: newsHeight)
+            let normalModeViewHeight = self.view.bounds.height + invisibleFreshTabHeight
+           
+            self.normalModeView.snp.remakeConstraints({ (make) in
+                make.top.left.bottom.right.equalTo(scrollView)
+                make.width.equalTo(self.view)
+                make.height.equalTo(normalModeViewHeight)
+            })
+        }
 	}
     
     private func getTopSitesHeight() -> CGFloat {
