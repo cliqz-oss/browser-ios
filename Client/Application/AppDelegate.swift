@@ -388,12 +388,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func launchFromURL(_ params: LaunchParams) {
-        let isPrivate = params.isPrivate ?? false
-        if let newURL = params.url {
-            self.browserViewController.switchToTabForURLOrOpen(newURL, isPrivate: isPrivate)
-        } else {
-            self.browserViewController.openBlankNewTabAndFocus(isPrivate: isPrivate)
-        }
+		StateManager.shared.handleAction(action: Action(data: ["url": params.url?.absoluteString], type: .urlSelected))
+//		let isPrivate = params.isPrivate ?? false
+//        if let newURL = params.url {
+//            self.browserViewController.switchToTabForURLOrOpen(newURL, isPrivate: isPrivate)
+//        } else {
+//            self.browserViewController.openBlankNewTabAndFocus(isPrivate: isPrivate)
+//        }
     }
 
     func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {

@@ -33,7 +33,7 @@
 			<string>org.cliqz.Client</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>cliqz</string>
+				<string>talktome</string>
 			</array>
 		</dict>
 	</array>
