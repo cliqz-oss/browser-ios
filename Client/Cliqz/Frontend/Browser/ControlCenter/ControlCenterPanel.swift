@@ -20,6 +20,7 @@ class ControlCenterPanel: UIViewController {
     let currentURL: URL!
     var openTime = Date.getCurrentMillis()
     var isAdditionalInfoVisible = false
+    var isFeatureEnabledForCurrentWebsite = true
 
     weak var delegate: BrowserNavigationDelegate? = nil
     weak var controlCenterPanelDelegate: ControlCenterPanelDelegate? = nil
@@ -48,6 +49,7 @@ class ControlCenterPanel: UIViewController {
     //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        evaluateIsFeatureEnabledForCurrentWebsite()
         
         let panelLayout = OrientationUtil.controlPanelLayout()
         
@@ -304,12 +306,12 @@ class ControlCenterPanel: UIViewController {
         return true
     }
     
-    func enableFeature() {
-        closePanel()
+    func evaluateIsFeatureEnabledForCurrentWebsite() {
+        
     }
     
-    func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return true
+    func enableFeature() {
+        closePanel()
     }
     
     func updateView() {
@@ -346,7 +348,7 @@ class ControlCenterPanel: UIViewController {
     
     func getThemeColor() -> UIColor {
         if isFeatureEnabled() {
-            if isFeatureEnabledForCurrentWebsite() {
+            if isFeatureEnabledForCurrentWebsite {
                 return enabledColor
             } else {
                 return partiallyDisabledColor
@@ -385,7 +387,7 @@ class ControlCenterPanel: UIViewController {
         logTelemetrySignal("click", target: "ok", customData: nil)
     }
     func logDomainSwitchTelemetrySignal() {
-        let state = isFeatureEnabledForCurrentWebsite() ? "on" : "off"
+        let state = isFeatureEnabledForCurrentWebsite ? "on" : "off"
         logTelemetrySignal("click", target: "domain_switch", customData: ["state": state as AnyObject])
     }
     func logTelemetrySignal(_ action: String, target: String?, customData: [String: Any]?) {
