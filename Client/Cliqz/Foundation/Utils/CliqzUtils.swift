@@ -44,8 +44,12 @@ func getApp() -> AppDelegate {
     return UIApplication.shared.delegate as! AppDelegate
 }
 
+func getCliqzWindow() -> CliqzMainWindow? {
+	return UIApplication.shared.delegate?.window as? CliqzMainWindow
+}
+
 func getCurrentWebView() -> CliqzWebView? {
-    return getApp().browserViewController.tabManager.selectedTab?.webView
+    return getApp().tabManager.selectedTab?.webView
 }
 
 func isCliqzGoToURL(url: URL?) -> Bool {

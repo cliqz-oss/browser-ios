@@ -37,6 +37,9 @@ final class ContentNavigationViewController: UIViewController {
         
         pageNavVC = PageNavigationViewController()
         browserVC = CIBrowserViewController(profile: profile, tabManager: tabManager)
+		if let window = getCliqzWindow() {
+			window.contextMenuHandler.delegate = browserVC
+		}
         searchController = CliqzSearchViewController(profile: profile)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

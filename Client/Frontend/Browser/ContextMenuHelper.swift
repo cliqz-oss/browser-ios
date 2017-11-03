@@ -17,10 +17,10 @@ class ContextMenuHelper: NSObject, TabHelper, UIGestureRecognizerDelegate {
     struct Elements {
         let link: URL?
         let image: URL?
-    }
+	}
 
-    class func name() -> String {
-        return "ContextMenuHelper"
+	class func name() -> String {
+		return "ContextMenuHelper"
     }
 
     /// Clicking an element with VoiceOver fires touchstart, but not touchend, causing the context
