@@ -10,6 +10,8 @@ import UIKit
 import Shared
 import Storage
 import Crashlytics
+import Photos
+import Alamofire
 
 private let KVOLoading = "loading"
 private let KVOEstimatedProgress = "estimatedProgress"
@@ -747,5 +749,200 @@ private extension WKNavigationAction {
 			return true
 		}
 		return !url.isWebPage() || !url.isLocal || request.isPrivileged
+	}
+}
+
+extension CIBrowserViewController: CliqzContextMenuDelegate {
+
+	// Cliqz: called from `CliqzContextMenu` when long press is detected
+	func showContextMenu(elements: ContextMenuHelper.Elements, touchPoint: CGPoint) {
+		let touchSize = CGSize(width: 0, height: 16)
+		
+		let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+		var dialogTitle: String?
+		
+		if let url = elements.link, let currentTab = tabManager.selectedTab {
+			dialogTitle = url.absoluteString
+			let isPrivate = currentTab.isPrivate
+			if !isPrivate {
+				let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
+				let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
+//					self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
+						self.tabManager.addTab(URLRequest(url: url as URL))
+//						TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
+//					})
+				}
+				actionSheetController.addAction(openNewTabAction)
+			}
+			
+			// Cliqz: Added Action handler for the long press to download Youtube videos
+//			if YoutubeVideoDownloader.isYoutubeURL(url) {
+//				let downloadVideoTitle = NSLocalizedString("Download youtube video", tableName: "Cliqz", comment: "Context menu item for opening a link in a new tab")
+//				let downloadVideo =  UIAlertAction(title: downloadVideoTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
+//					self.downloadVideoFromURL(dialogTitle!, sourceRect: CGRect(origin: touchPoint, size: touchSize))
+//					TelemetryLogger.sharedInstance.logEvent(.YoutubeVideoDownloader("click", "target_type", "download_link"))
+//				}
+//				actionSheetController.addAction(downloadVideo)
+//			}
+			let copyTitle = NSLocalizedString("Copy Link", comment: "Context menu item for copying a link URL to the clipboard")
+			let copyAction = UIAlertAction(title: copyTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+				let pasteBoard = UIPasteboard.general
+				pasteBoard.url = url as URL
+				TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "link"))
+			}
+			actionSheetController.addAction(copyAction)
+			
+			let shareTitle = NSLocalizedString("Share Link", comment: "Context menu item for sharing a link URL")
+			let shareAction = UIAlertAction(title: shareTitle, style: UIAlertActionStyle.default) { _ in
+				self.presentActivityViewController(url as URL, sourceView: self.view, sourceRect: CGRect(origin: touchPoint, size: touchSize), arrowDirection: .any)
+				TelemetryLogger.sharedInstance.logEvent(.ContextMenu("share", "link"))
+			}
+			actionSheetController.addAction(shareAction)
+		}
+		
+		if let url = elements.image {
+			if dialogTitle == nil {
+				dialogTitle = url.absoluteString
+			}
+			
+			let photoAuthorizeStatus = PHPhotoLibrary.authorizationStatus()
+			let saveImageTitle = NSLocalizedString("Save Image", comment: "Context menu item for saving an image")
+			let saveImageAction = UIAlertAction(title: saveImageTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+				if photoAuthorizeStatus == PHAuthorizationStatus.authorized || photoAuthorizeStatus == PHAuthorizationStatus.notDetermined {
+					self.getImage(url as URL) { UIImageWriteToSavedPhotosAlbum($0, nil, nil, nil) }
+				} else {
+					let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.alert)
+					let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.default, handler: nil)
+					accessDenied.addAction(dismissAction)
+					let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.default ) { (action: UIAlertAction!) -> Void in
+						UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+					}
+					accessDenied.addAction(settingsAction)
+					self.present(accessDenied, animated: true, completion: nil)
+					TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image"))
+					
+				}
+			}
+			actionSheetController.addAction(saveImageAction)
+			
+			let copyImageTitle = NSLocalizedString("Copy Image", comment: "Context menu item for copying an image to the clipboard")
+			let copyAction = UIAlertAction(title: copyImageTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+				// put the actual image on the clipboard
+				// do this asynchronously just in case we're in a low bandwidth situation
+				let pasteboard = UIPasteboard.general
+				pasteboard.url = url as URL
+				let changeCount = pasteboard.changeCount
+				let application = UIApplication.shared
+				var taskId: UIBackgroundTaskIdentifier = 0
+				taskId = application.beginBackgroundTask (expirationHandler: { _ in
+					application.endBackgroundTask(taskId)
+				})
+				
+				Alamofire.request(url, method: .get)
+					.validate(statusCode: 200..<300)
+					.response { response in
+						// Only set the image onto the pasteboard if the pasteboard hasn't changed since
+						// fetching the image; otherwise, in low-bandwidth situations,
+						// we might be overwriting something that the user has subsequently added.
+						if changeCount == pasteboard.changeCount, let imageData = response.data, response.error == nil {
+							pasteboard.addImageWithData(imageData, forURL: url)
+						}
+						
+						application.endBackgroundTask(taskId)
+				}
+				TelemetryLogger.sharedInstance.logEvent(.ContextMenu("copy", "image"))
+			}
+			actionSheetController.addAction(copyAction)
+		}
+		
+		// If we're showing an arrow popup, set the anchor to the long press location.
+		if let popoverPresentationController = actionSheetController.popoverPresentationController {
+			popoverPresentationController.sourceView = view
+			popoverPresentationController.sourceRect = CGRect(origin: touchPoint, size: touchSize)
+			popoverPresentationController.permittedArrowDirections = .any
+		}
+		
+		actionSheetController.title = dialogTitle?.ellipsize(maxLength: 120)
+		let cancelAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.cancel){ (action: UIAlertAction) -> Void in
+			let view = elements.link != nil ? "link" : "image"
+			TelemetryLogger.sharedInstance.logEvent(.ContextMenu("cancel", view))
+		}
+		actionSheetController.addAction(cancelAction)
+		self.present(actionSheetController, animated: true, completion: nil)
+	}
+	
+	fileprivate func presentActivityViewController(_ url: URL, tab: Tab? = nil, sourceView: UIView?, sourceRect: CGRect, arrowDirection: UIPopoverArrowDirection) {
+		var activities = [UIActivity]()
+		
+//		let findInPageActivity = FindInPageActivity() { [unowned self] in
+//			self.updateFindInPageVisibility(visible: true)
+//			// Cliqz: log telemetry signal for share menu
+//			TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "search_page"))
+//		}
+//		activities.append(findInPageActivity)
+
+		// Cliqz: Added settings activity to sharing menu
+//		let settingsActivity = SettingsActivity() {
+//			self.openSettings()
+//			// Cliqz: log telemetry signal for share menu
+//			TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "settings"))
+//		}
+//		//activities.append(settingsActivity)
+//
+//		activities.insert(settingsActivity, at: 0) //insert the settings activity at the beginning of the list. (Tim).
+		
+		let helper = ShareExtensionHelper(url: url, tab: tab, activities: activities)
+		
+		let controller = helper.createActivityViewController({ [unowned self] completed in
+//			// After dismissing, check to see if there were any prompts we queued up
+//			self.showQueuedAlertIfAvailable()
+//
+//			// Usually the popover delegate would handle nil'ing out the references we have to it
+//			// on the BVC when displaying as a popover but the delegate method doesn't seem to be
+//			// invoked on iOS 10. See Bug 1297768 for additional details.
+//			self.displayedPopoverController = nil
+//			self.updateDisplayedPopoverProperties = nil
+//
+//			if completed {
+//				// We don't know what share action the user has chosen so we simply always
+//				// update the toolbar and reader mode bar to reflect the latest status.
+//				if let tab = tab {
+//					self.updateURLBarDisplayURL(tab)
+//				}
+//				self.updateReaderModeBar()
+//			} else {
+//				// Cliqz: log telemetry signal for share menu
+//				TelemetryLogger.sharedInstance.logEvent(.ShareMenu("click", "cancel"))
+//			}
+		})
+//
+//		let setupPopover = { [unowned self] in
+//			if let popoverPresentationController = controller.popoverPresentationController {
+//				popoverPresentationController.sourceView = sourceView
+//				popoverPresentationController.sourceRect = sourceRect
+//				popoverPresentationController.permittedArrowDirections = arrowDirection
+//				popoverPresentationController.delegate = self
+//			}
+//		}
+//
+//		setupPopover()
+//
+		if controller.popoverPresentationController != nil {
+//			displayedPopoverController = controller
+//			updateDisplayedPopoverProperties = setupPopover
+		}
+		
+		self.present(controller, animated: true, completion: nil)
+	}
+
+	fileprivate func getImage(_ url: URL, success: @escaping (UIImage) -> ()) {
+		Alamofire.request(url, method: .get)
+			.validate(statusCode: 200..<300)
+			.response { response in
+				if let data = response.data,
+					let image = UIImage.dataIsGIF(data) ? UIImage.imageFromGIFDataThreadSafe(data) : UIImage.imageFromDataThreadSafe(data) {
+					success(image)
+				}
+		}
 	}
 }

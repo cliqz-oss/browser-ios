@@ -2,14 +2,20 @@
 
 // Using suggestions from: http://www.icab.de/blog/2010/07/11/customize-the-contextual-menu-of-uiwebview/
 
+protocol CliqzContextMenuDelegate: class {
+
+	func showContextMenu(elements: ContextMenuHelper.Elements, touchPoint: CGPoint)
+}
 
 class CliqzContextMenu {
+
+	var delegate: CliqzContextMenuDelegate?
     var tapLocation: CGPoint = CGPoint.zero
     var tappedElement: ContextMenuHelper.Elements?
-    
+
     var timer1_cancelDefaultMenu: Timer = Timer()
     var timer2_showMenuIfStillPressed: Timer = Timer()
-    
+
     static let initialDelayToCancelBuiltinMenu = 0.20 // seconds, must be <0.3 or built-in menu can't be cancelled
     static let totalDelayToShowContextMenu = 0.65 - initialDelayToCancelBuiltinMenu // 850 is copied from Safari
     
@@ -27,21 +33,7 @@ class CliqzContextMenu {
     }
     
     fileprivate func isBrowserTopmostAndNoPanelsOpen() ->  Bool {
-        let rootViewController = getApp().rootViewController
-        var navigationController: UINavigationController?
-        
-        if let notificatinoViewController =  rootViewController as? NotificationRootViewController {
-            navigationController = notificatinoViewController.rootViewController as? UINavigationController
-        } else {
-            navigationController = rootViewController as? UINavigationController
-        }
-        
-        
-        if let _ = navigationController?.visibleViewController as? BrowserViewController {
-            return true
-        } else {
-            return false
-        }
+		return StateManager.shared.currentState.contentState == .browse
     }
     
     func sendEvent(_ event: UIEvent, window: UIWindow) {
@@ -87,16 +79,11 @@ class CliqzContextMenu {
     
     @objc func showContextMenu() {
         func showContextMenuForElement(_ tappedElement:  ContextMenuHelper.Elements) {
-            guard let bvc = getApp().browserViewController else { return }
-            if bvc.urlBar.inOverlayMode {
-                return
-            }
-            bvc.showContextMenu(elements: tappedElement, touchPoint: tapLocation)
+            self.delegate?.showContextMenu(elements: tappedElement, touchPoint: tapLocation)
             resetTimer()
             return
         }
-        
-        
+
         if let tappedElement = tappedElement {
             showContextMenuForElement(tappedElement)
         }
@@ -125,7 +112,7 @@ class CliqzContextMenu {
             resetTimer()
             return
         }
-        
+
         tappedElement = ContextMenuHelper.Elements(link: hit!.url != nil ? URL(string: hit!.url!) : nil, image: hit!.image != nil ? URL(string: hit!.image!) : nil)
         
         func blockOtherGestures(_ views: [UIView]?) {
