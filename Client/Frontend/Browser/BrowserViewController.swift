@@ -1274,8 +1274,11 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
+        guard tab.displayURL?.host != "localhost" else {
+            return
+        }
         
-        if (urlBar.currentURL != tab.displayURL){
+        if (urlBar.currentURL != tab.displayURL) {
             urlBar.currentURL = tab.displayURL
         }
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
