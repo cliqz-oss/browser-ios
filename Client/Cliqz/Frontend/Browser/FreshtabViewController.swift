@@ -137,8 +137,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
         // topsites hint
-        if !SettingsPrefs.getShowTopSitesPref() {
-            self.emptyTopSitesHint.removeFromSuperview()
+        if self.topSites.count == 0 && SettingsPrefs.getShowTopSitesPref() {
+            self.emptyTopSitesHint.isHidden = false
+        } else {
+            self.emptyTopSitesHint.isHidden = true
         }
 
         // topsites collection
@@ -330,6 +332,13 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			bgView.snp.makeConstraints { (make) in
 				make.left.right.top.bottom.equalTo(self.view)
 			}
+            
+            self.normalModeView.addSubview(self.emptyTopSitesHint)
+            self.emptyTopSitesHint.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.normalModeView).offset(8)
+                make.left.right.equalTo(self.normalModeView)
+                make.height.equalTo(14)
+            })
 		}
 		if self.topSitesCollection == nil {
 			self.topSitesCollection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -474,16 +483,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						}
 					}
 				}
-			}
-			if self.topSites.count == 0 && SettingsPrefs.getShowTopSitesPref() {
-				self.normalModeView.addSubview(self.emptyTopSitesHint)
-				self.emptyTopSitesHint.snp.makeConstraints({ (make) in
-					make.top.equalTo(self.normalModeView).offset(8)
-					make.left.right.equalTo(self.normalModeView)
-					make.height.equalTo(14)
-				})
-			} else {
-				self.emptyTopSitesHint.removeFromSuperview()
 			}
 			self.updateViewConstraints()
             self.topSitesCollection?.reloadData()
