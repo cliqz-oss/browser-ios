@@ -12,7 +12,7 @@ import Shared
 class AntiPhishingDetector: NSObject {
     
     //MARK: - Singltone
-    static let antiPhisingAPIURL = "http://antiphishing.cliqz.com/api/bwlist?md5="
+    static let antiPhisingAPIURL = "https://antiphishing.cliqz.com/api/bwlist?md5="
     static var detectedPhishingURLs = [URL]()
     
     //MARK: - public APIs

@@ -57,7 +57,9 @@ open class UserAgent {
 
         let webView = UIWebView()
 
-        let appVersion = AppInfo.appVersion
+        //Always use Chrome's latest (if we are still using Chrome's User Agent...see below)
+        let appVersion = "62.0"//AppInfo.appVersion
+        
         let currentiOSVersion = UIDevice.current.systemVersion
         defaults.set(currentiOSVersion,forKey: "LastDeviceSystemVersionNumber")
         defaults.set(appVersion, forKey: "LastFirefoxVersionNumber")
@@ -84,7 +86,7 @@ open class UserAgent {
         }
 
         let mutableUA = NSMutableString(string: userAgent)
-        mutableUA.insert("FxiOS/\(appVersion) ", at: mobileRange.location)
+        mutableUA.insert("CriOS/\(appVersion) ", at: mobileRange.location)
 
         let firefoxUA = "\(mutableUA) Safari/\(webKitVersion)"
 
