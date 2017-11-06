@@ -89,17 +89,10 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     func highlightAll() {
-        if let text = text {
-            if !text.isEmpty {
-                let attributedString = NSMutableAttributedString(string: text)
-                attributedString.addAttribute(NSBackgroundColorAttributeName, value: highlightColor, range: NSMakeRange(0, (text).characters.count))
-                attributedText = attributedString
-                enteredText = ""
-                completionActive = true
-            }
-        }
-
-        selectedTextRange = textRange(from: beginningOfDocument, to: beginningOfDocument)
+        let text = self.text
+        self.text = ""
+        setAutocompleteSuggestion(text ?? "")
+        selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
     }
 
     fileprivate func normalizeString(_ string: String) -> String {
@@ -243,12 +236,19 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        removeHighlight()
         shouldApplyCompletion = completionActive
         if !completionActive {
             super.touchesBegan(touches, with: event)
         }
     }
-
+    
+    private func removeHighlight() {
+        if let text = attributedText?.string {
+            attributedText = NSAttributedString(string: text)
+            completionActive = false
+        }
+    }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if !completionActive {
             super.touchesMoved(touches, with: event)
