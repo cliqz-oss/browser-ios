@@ -234,8 +234,11 @@ extension BrowserViewController: ControlCenterViewDelegate {
     
     func isTrampolineURL(_ url: URL) -> Bool {
         let scheme = url.scheme, host = url.host, path = url.path
-        return scheme == "http" && host == "localhost" && path == "/cliqz/trampolineForward.html"
+        if (scheme == "http" && host == "localhost" && path == "/cliqz/trampolineForward.html") { return true }
+        if (scheme == "http" && host == "localhost" && path == "/cliqz/goto.html") { return true }
+        return false        
     }
+
     // MARK: - toolbar telemetry signals
     func logToolbarFocusSignal() {
         logToolbarSignal("focus", target: "search", customData: nil)

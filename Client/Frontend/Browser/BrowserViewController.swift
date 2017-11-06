@@ -967,7 +967,7 @@ class BrowserViewController: UIViewController {
         if !urlBar.inOverlayMode {
 
             // Cliqz: Added check to test if url is nul due to changing the method parameter to urlBar.url instead of selectedTab.url inside urlBarDidLeaveOverlayMode
-            if url == nil || AboutUtils.isAboutHomeURL(url) {
+            if url == nil || AboutUtils.isAboutHomeURL(url) || isTrampolineURL(url!) {
                 // Cliqz: always set showInline to true to show the bottom toolbar
 //                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
                 let showInline = true
