@@ -45,7 +45,7 @@ node('ios-osx') {
     }
     try {
         stage('Build') {
-            timeout(20) {
+            timeout(60) {
                 sh '''#!/bin/bash -l
                     set -x
                     set -e
@@ -69,7 +69,7 @@ node('ios-osx') {
 
         stage('Run Tests') {
             withEnv(['platformName=ios', 'udid=16404244-D9D7-48BC-B160-E275E9E53239', 'deviceName=iPhone 6', 'platformVersion=11.0']) {
-                timeout(45) {
+                timeout(60) {
                     sh '''#!/bin/bash -l
                         set -x
                         set -e
