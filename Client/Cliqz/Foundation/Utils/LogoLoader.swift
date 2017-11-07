@@ -36,6 +36,7 @@ extension String {
 class LogoLoader {
 
 	private static let dbVersion = "1502005705085"
+    private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
 
 	private static var _logoDB: JSON?
 	private static var logoDB: JSON? {
@@ -54,14 +55,20 @@ class LogoLoader {
 	}
 
 	class func loadLogo(_ url: String, completionBlock: @escaping (_ image: UIImage?, _ logoInfo: LogoInfo?,  _ error: Error?) -> Void) {
-		let details = LogoLoader.fetchLogoDetails(url)
-		if let u = details.url {
-			LogoLoader.downloadImage(u, completed: { (image, error) in
-				completionBlock(image, details, error)
-			})
-		} else {
-			completionBlock(nil, details, nil)
-		}
+        dispatchQueue.async {
+            let details = LogoLoader.fetchLogoDetails(url)
+            if let u = details.url {
+                LogoLoader.downloadImage(u, completed: { (image, error) in
+                    DispatchQueue.main.async {
+                        completionBlock(image, details, error)
+                    }
+                })
+            } else {
+                DispatchQueue.main.async {
+                    completionBlock(nil, details, nil)
+                }
+            }
+        }
 	}
 
 	class func clearDB() {
