@@ -108,6 +108,10 @@ class HistoryDataSource: BubbleTableViewDataSource {
         return false
     }
     
+    func useLeftExpandedCell() -> Bool {
+        return false
+    }
+    
     func isEmpty() -> Bool {
         return !sectionWithinBounds(section: 0)
     }

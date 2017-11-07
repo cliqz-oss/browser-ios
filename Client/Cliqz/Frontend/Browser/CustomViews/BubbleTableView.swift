@@ -17,6 +17,7 @@ protocol BubbleTableViewDataSource {
     func time(indexPath: IndexPath) -> String
     func logo(indexPath: IndexPath, completionBlock: @escaping (_ url: URL, _ image: UIImage?, _ logoInfo: LogoInfo?) -> Void)
     func useRightCell(indexPath: IndexPath) -> Bool //default is left cell
+    func useLeftExpandedCell() -> Bool //default is left cell
     func isEmpty() -> Bool
 }
 
@@ -36,6 +37,7 @@ protocol CustomScrollDelegate {
 class BubbleTableView: UITableView {
     
     let bubble_left_id = "BubbleLeftCell"
+    let bubble_left_expanded_id = "BubbleLeftExpandedCell"
     let bubble_right_id = "BubbleRightCell"
     
     let customDataSource: BubbleTableViewDataSource
@@ -56,6 +58,7 @@ class BubbleTableView: UITableView {
         self.delegate = self
         self.dataSource = self
         self.register(BubbleLeftCell.self, forCellReuseIdentifier: bubble_left_id)
+        self.register(BubbleLeftExpandedCell.self, forCellReuseIdentifier: bubble_left_expanded_id)
         self.register(BubbleRightCell.self, forCellReuseIdentifier: bubble_right_id)
     }
     
@@ -100,10 +103,12 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             cell.selectionStyle  = .none
             return cell
         }
+        var cell =  self.dequeueReusableCell(withIdentifier: bubble_left_id) as! BubbleLeftCell
+        if customDataSource.useLeftExpandedCell() == true {
+            cell =  self.dequeueReusableCell(withIdentifier: bubble_left_expanded_id) as! BubbleLeftExpandedCell
+        }
         
-        let cell =  self.dequeueReusableCell(withIdentifier: bubble_left_id) as! BubbleLeftCell
         cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
-//        cell.titleLabel.sizeToFit()
         cell.timeLabel.text = customDataSource.time(indexPath: indexPath)
         
         let cellUrl = customDataSource.url(indexPath: indexPath)
@@ -128,6 +133,9 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if customDataSource.useLeftExpandedCell() == true {
+            return 0
+        }
         return 40
     }
     

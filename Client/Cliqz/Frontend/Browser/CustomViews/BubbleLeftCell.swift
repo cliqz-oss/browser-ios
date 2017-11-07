@@ -15,8 +15,7 @@ class BubbleLeftCell: UITableViewCell {
     let timeLabel = UILabel()
     let iconImageView = UIImageView()
     let iconView = UIView()
-    
-    private let bubbleView = UIView()
+    let bubbleView = UIView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -64,13 +63,7 @@ class BubbleLeftCell: UITableViewCell {
     }
     
     func setConstraints() {
-        
-        bubbleView.snp.makeConstraints { (make) in
-            make.top.equalTo(contentView).inset(7)
-            make.bottom.equalTo(contentView).inset(7)
-            make.left.equalTo(contentView).offset(20)
-            make.width.equalTo(contentView.bounds.width * 0.75)
-        }
+        setBubbleViewConstraints()
         
         iconImageView.snp.makeConstraints { (make) in
             make.top.equalTo(self.bubbleView)
@@ -151,6 +144,10 @@ class BubbleLeftCell: UITableViewCell {
     }
     
     func remakeConstraints() {
+        setBubbleViewConstraints()
+    }
+    
+    func setBubbleViewConstraints() {
         bubbleView.snp.remakeConstraints { (make) in
             make.top.equalTo(contentView).inset(7)
             make.bottom.equalTo(contentView).inset(7)
