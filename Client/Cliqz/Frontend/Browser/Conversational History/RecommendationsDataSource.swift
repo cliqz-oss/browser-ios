@@ -25,7 +25,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     init(baseUrl: String) {
         self.baseUrl = baseUrl
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), type: .withHistoryDomains)
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeHistoryDomains: true)
         self.standardTimeFormatter.dateFormat = standardTimeFormat
         self.standardDateFormatter.dateFormat = standardDateFormat
         NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
@@ -36,7 +36,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     }
     
     func loadRecommendations() {
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), type: .withHistoryDomains) 
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeHistoryDomains: true)
     }
     
     func numberOfItems() -> Int {

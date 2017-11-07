@@ -25,11 +25,6 @@ struct Recommendation {
 
 final class RecommendationsManager {
     
-    enum RecommendationType {
-        case withHistoryDomains
-        case withoutHistoryDomains
-    }
-    
     static let sharedInstance = RecommendationsManager()
     
     static let notification_updated = NSNotification.Name(rawValue: "RecomandationsManagerUpdated")
@@ -164,9 +159,17 @@ final class RecommendationsManager {
     }
     
     //if domain is nil returns all recommendations
-    func recommendations(domain: URL?, type: RecommendationType) -> [Recommendation] {
+    func recommendations(domain: URL?, includeHistoryDomains: Bool, type: RecommendationType? = nil) -> [Recommendation] {
         
-        let local_recommendations = type == .withoutHistoryDomains ? recommendationsWithoutHistoryDomains(recommedations: self.recommendations) : self.recommendations
+        var recommendations = self.recommendations
+        
+        if let recType = type {
+            recommendations = recommendations.filter({ (recommendation) -> Bool in
+                return recommendation.type == recType
+            })
+        }
+        
+        let local_recommendations = includeHistoryDomains == false ? recommendationsWithoutHistoryDomains(recommedations: recommendations) : recommendations
         
         if let domain = domain {
             
