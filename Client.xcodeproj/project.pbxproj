@@ -5435,7 +5435,7 @@
 					4F18DD2A1F9F6A3800ADC6D0 = {
 						CreatedOnToolsVersion = 9.0;
 						DevelopmentTeam = 2UYYSSHVUH;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					7BEB64401C7345600092C02E = {
 						TestTargetID = F84B21BD1A090F8100AAB793;
@@ -5561,6 +5561,7 @@
 			projectRoot = "";
 			targets = (
 				F84B21BD1A090F8100AAB793 /* Client */,
+				4F18DD2A1F9F6A3800ADC6D0 /* CliqzShare */,
 				F84B225B1A09210A00AAB793 /* SendTo */,
 				F84B22481A0920C600AAB793 /* ShareTo */,
 				390527491C874D35007E0BB7 /* Today */,
@@ -5581,7 +5582,6 @@
 				7BEB64401C7345600092C02E /* L10nSnapshotTests */,
 				7BEB644F1C7345990092C02E /* MarketingUITests */,
 				1E48F2D01F8F62CD0038B257 /* AppiumTests */,
-				4F18DD2A1F9F6A3800ADC6D0 /* CliqzShare */,
 			);
 		};
 /* End PBXProject section */
@@ -7844,7 +7844,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
@@ -7872,6 +7872,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Cliqz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "daac57fd-b93a-40e3-a780-b2769afc6c92";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -7912,7 +7914,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 2UYYSSHVUH;
@@ -7933,6 +7935,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cliqz.ios.CliqzBeta.Cliqz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d4507b9a-9857-43ce-bf9f-57fc7043e760";
+				PROVISIONING_PROFILE_SPECIFIER = "UniversalBeta App Store";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
