@@ -22,7 +22,9 @@ class FavoritesDataSource: HistoryDataSource {
             }
         }
     }
-    
+    override func useLeftExpandedCell() -> Bool {
+        return true
+    }
     override func deleteItem(at indexPath: IndexPath) {
         if let favoritesEntry = detail(indexPath: indexPath) as? HistoryUrlEntry {
             HistoryModule.remoteFavoritesEntry(profile: profile, url: favoritesEntry.url, callback: { [weak self] in
