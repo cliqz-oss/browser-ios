@@ -28,8 +28,13 @@ final class ExpandableView: UITableView {
         case expanded
     }
     
-    var currentHeight: CGFloat = 0
+    //for external use
+    var height: CGFloat {
+        return height(state: currentState)
+    }
+    
     var currentState: ComponentState = .collapsed
+    var previousState: ComponentState = .collapsed
     var customDataSource: ExpandableViewProtocol? = nil
     var customDelegate: ExpandableViewDelegate? = nil
     
@@ -39,7 +44,7 @@ final class ExpandableView: UITableView {
     let cellIdentifier = "ExpandViewCell"
     
     var headerTitleText: String = ""
-
+    
     init(frame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0), style: UITableViewStyle = .plain, customDataSource: ExpandableViewProtocol) {
         super.init(frame: frame, style: style)
         self.customDataSource = customDataSource
@@ -49,7 +54,6 @@ final class ExpandableView: UITableView {
     }
     
     func setUpComponent() {
-        currentHeight = initialHeight()
         self.dataSource = self
         self.delegate = self
         self.register(ExpandableViewCell.self , forCellReuseIdentifier: cellIdentifier)
@@ -69,6 +73,7 @@ final class ExpandableView: UITableView {
             return
         }
         
+        previousState = currentState
         currentState = state
         
         self.reloadData()
@@ -103,14 +108,12 @@ final class ExpandableView: UITableView {
         return CGFloat(numCells(state: state)) * cellHeight + headerHeight
     }
     
-    func changeHeight(height: CGFloat) {
+    func changeHeight(newHeight: CGFloat, oldHeight: CGFloat) {
         self.snp.updateConstraints { (make) in
-            make.height.equalTo(height)
+            make.height.equalTo(newHeight)
         }
         
-        self.customDelegate?.heightChanged(newHeight: height, oldHeight: currentHeight)
-        
-        currentHeight = height
+        self.customDelegate?.heightChanged(newHeight: newHeight, oldHeight: oldHeight)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -133,7 +136,7 @@ extension ExpandableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //height changes with the number of rows.
-        changeHeight(height: height(state: currentState))
+        changeHeight(newHeight: height(state: currentState), oldHeight: height(state: previousState))
         
         if currentState == .expanded {
             return customDataSource?.maxNumCells() ?? 0

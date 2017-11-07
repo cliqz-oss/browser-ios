@@ -91,12 +91,12 @@ class DashViewController: UIViewController {
         reminders.headerTitleText = NSLocalizedString("Reminders", tableName: "Cliqz", comment: "Text for reminders title")
         recommendations.headerTitleText = NSLocalizedString("Recommendations", tableName: "Cliqz", comment: "Text for recommendations title")
         
-        var reminders_initial_height = reminders.initialHeight()
-        var recommendations_initial_height = recommendations.initialHeight()
+        var reminders_height = reminders.height
+        var recommendations_height = recommendations.height
         
         if recommendations.customDataSource?.maxNumCells() == 0 {
             recommendations.isHidden = true
-            recommendations_initial_height = 0
+            recommendations_height = 0
         }
         else {
             recommendations.isHidden = false
@@ -104,13 +104,13 @@ class DashViewController: UIViewController {
         
         if reminders.customDataSource?.maxNumCells() == 0 {
             reminders.isHidden = true
-            reminders_initial_height = 0
+            reminders_height = 0
         }
         else {
             reminders.isHidden = false
         }
         
-        scrollView.contentSize.height = reminders_initial_height + recommendations_initial_height + remindersTopInset + recommendationsTopInset + bottomPaddingScroll
+        scrollView.contentSize.height = reminders_height + recommendations_height + remindersTopInset + recommendationsTopInset + bottomPaddingScroll
     }
     
     func setStyles() {
@@ -128,7 +128,7 @@ class DashViewController: UIViewController {
             make.top.equalToSuperview().inset(remindersTopInset)
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().dividedBy(1.1)
-            make.height.equalTo(reminders.initialHeight())
+            make.height.equalTo(reminders.height)
         }
         
         recommendations.snp.remakeConstraints { (make) in
@@ -141,7 +141,7 @@ class DashViewController: UIViewController {
             
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().dividedBy(1.1)
-            make.height.equalTo(recommendations.initialHeight())
+            make.height.equalTo(recommendations.height)
         }
     }
 
