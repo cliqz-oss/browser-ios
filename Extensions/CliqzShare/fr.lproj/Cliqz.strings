@@ -7,10 +7,10 @@
 */
 
 /* Cancel button title */
-"Cancel" = "Cancel";
+"Cancel" = "Annuler";
 
 /* Open button title */
-"Open" = "Open";
+"Open" = "Ouvrir";
 
 /* Action sheet title */
-"Open Link" = "Open Link in Cliqz?";
+"Open Link" = " Ouvrir le lien dans Cliqz ?";

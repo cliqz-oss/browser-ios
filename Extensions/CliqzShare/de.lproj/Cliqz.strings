@@ -6,10 +6,10 @@
   Copyright © 2017 Mozilla. All rights reserved.
 */
 /* Cancel button title */
-"Cancel" = "Cancel";
+"Cancel" = "Abbrechen";
 
 /* Open button title */
-"Open" = "Open";
+"Open" = "Öffnen";
 
 /* Action sheet title */
-"Open Link" = "Open Link in Cliqz?";
+"Open Link" = "Link in Cliqz öffnen?";
