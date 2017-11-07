@@ -129,7 +129,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             return 45
         }
         
-        return 90
+        return 100
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -162,21 +162,21 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         
         //setup
         label.text = customDataSource.titleSectionHeader(section: section)
-//        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor(colorString: "666666")
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.white
         
         bubble.addSubview(label)
         container.addSubview(bubble)
         
         //styling
-        bubble.backgroundColor = UIColor.white
+        bubble.backgroundColor = UIConstants.CliqzThemeColor
         bubble.layer.cornerRadius = 5
         
         
         //constraints
         bubble.snp.makeConstraints { (make) in
             make.center.equalTo(container)
-            make.width.equalTo(label.snp.width).multipliedBy(1.5)
+            make.width.equalTo(label.snp.width).multipliedBy(1.2)
             make.height.equalTo(27)
         }
         

@@ -20,7 +20,14 @@ class BubbleLeftExpandedCell: BubbleLeftCell {
 
         // Configure the view for the selected state
     }
+    
+    override func setStyles() {
+        super.setStyles()
+        urlLabel.textColor = UIColor(colorString: "4A90E2")
+    }
+    
     override func setupComponents() {
+        super.setupComponents()
         timeLabel.isHidden = true
     }
     
