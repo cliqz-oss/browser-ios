@@ -23,9 +23,9 @@ final class PageNavAddRule {
             return false
         }
         
-        guard BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .browse else {
-            return false
-        }
+//        guard BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .browse else {
+//            return false
+//        }
         
         return true
         
@@ -160,13 +160,13 @@ final class BackForwardAddRule {
 
 final class BackForwardNavigationHelper {
     //returns the first found browse state and the distance between the current index and the index of the browse state
-    class func firstBrowseStateBeforeCurrent(tab: Tab) -> (State, Int)? {
+    class func firstContentStateBeforeCurrent(of type: ContentState, tab: Tab) -> (State, Int)? {
         let nav = BackForwardNavigation.shared
         if let currentIndex = nav.currentIndex(tab: tab) {
             var internalIndex = currentIndex
             while internalIndex >= 0 {
                 let state: State = nav.state(tab: tab, index: internalIndex)! //this must exist
-                if state.contentState == .browse {
+                if state.contentState == type {
                     return (state, GeneralUtils.distance(point1: internalIndex, point2: currentIndex))
                 }
                 internalIndex -= 1
@@ -176,13 +176,13 @@ final class BackForwardNavigationHelper {
         return nil
     }
     
-    class func firstBrowseStateAfterCurrent(tab: Tab) -> (State, Int)? {
+    class func firstContentStateAfterCurrent(of type: ContentState, tab: Tab) -> (State, Int)? {
         let nav = BackForwardNavigation.shared
         if let currentIndex = nav.currentIndex(tab: tab), let maxIndex = nav.maxIndex(tab: tab) {
             var internalIndex = currentIndex
             while internalIndex >= 0 && internalIndex <= maxIndex {
                 let state: State = nav.state(tab: tab, index: internalIndex)! //this must exist
-                if state.contentState == .browse {
+                if state.contentState == type {
                     return (state, GeneralUtils.distance(point1: internalIndex, point2: currentIndex))
                 }
                 internalIndex += 1
@@ -190,6 +190,29 @@ final class BackForwardNavigationHelper {
         }
         
         return nil
+    }
+    
+    class func browseAfterHomeBeforeCurrent(tab: Tab) -> Bool {
+        //browser state after home state?
+        //see if before the current state there is any sequence of the form: domains -> ... -> browse
+        
+        //Cases:
+        // 1. home and browse exist, return homeDistance > browserDistance
+        // 2. home exists, browse does not, return false
+        // 3. home does not exist, browse does, return true
+        // 4. In case neither exists, return false
+        
+        //Attention: This is distance not index!!!
+        if let (_, browseDistance) = BackForwardNavigationHelper.firstContentStateBeforeCurrent(of: .browse, tab: tab) {
+            if let (_, homeDistance) = BackForwardNavigationHelper.firstContentStateBeforeCurrent(of: .domains, tab: tab) {
+                return homeDistance > browseDistance
+            }
+            else {
+                return true
+            }
+        }
+        
+        return false
     }
 }
 

@@ -381,7 +381,7 @@ final class StateManager {
     func toolBackChangeToState(nextState: State, tab: Tab?) {
         
         if let tab = tab {
-            if BackForwardNavigation.shared.canGoBack(tab: tab) && nextState.contentState != .domains {
+            if BackForwardNavigation.shared.canGoBack(tab: tab) && !((nextState.contentState == .domains || nextState.contentState == .details || nextState.contentState == .dash) && BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .search) {
                 toolBar?.setBackEnabled()
                 return
             }

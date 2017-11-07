@@ -14,7 +14,7 @@
 
 let mainTransformDict: [ActionType : [MainState: MainState]] = [
     .initialization : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
-    .urlBackPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
+    //.urlBackPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlClearPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlSearchPressed : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
     .urlSearchTextChanged : [.reminderVisible: .other, .actionSheetVisible: .other, .tabsVisible: .other],
@@ -57,7 +57,7 @@ func contentNextState(actionType: ActionType, previousState: ContentState, curre
     
     let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
         .initialization : [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains],
-        .urlBackPressed : [.search: previousState],
+        //.urlBackPressed : [.search: previousState],
         .urlClearPressed : [.search: .search],
         .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
         .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
@@ -101,7 +101,7 @@ func urlBarNextState(actionType: ActionType, previousState: URLBarState, current
     
     let urlBarTransformDict: [ActionType: [URLBarState: URLBarState]] = [
         .initialization : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-        .urlBackPressed : [ .collapsedEmptyTransparent: previousState, .collapsedTextTransparent: previousState, .collapsedTextBlue: previousState, .collapsedDomainBlue: previousState, .expandedEmptyWhite: previousState, .expandedTextWhite: previousState],
+        //.urlBackPressed : [ .collapsedEmptyTransparent: previousState, .collapsedTextTransparent: previousState, .collapsedTextBlue: previousState, .collapsedDomainBlue: previousState, .expandedEmptyWhite: previousState, .expandedTextWhite: previousState],
         .urlClearPressed : [.expandedTextWhite: .expandedEmptyWhite],
         .urlSearchPressed : [ .collapsedEmptyTransparent: specialState, .collapsedTextTransparent: specialState, .collapsedTextBlue: specialState, .collapsedDomainBlue: specialState],
         .urlSearchTextChanged : [.expandedTextWhite: queryEmpty ? .expandedEmptyWhite : .expandedTextWhite, .expandedEmptyWhite : .expandedTextWhite],
@@ -131,13 +131,15 @@ final class ActionStateTransformer {
     
     class func nextState(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
         
+        
+        //this makes sure you see a website when you change to another tab, even if you left from a search state on that tab
         if actionType == .tabSelected {
             if let tab = nextStateData.tab {
-                if let (state, distance) = BackForwardNavigationHelper.firstBrowseStateBeforeCurrent(tab: tab) {
+                if let (state, distance) = BackForwardNavigationHelper.firstContentStateBeforeCurrent(of: .browse, tab: tab) {
                     BackForwardNavigation.shared.decrementIndexByDistance(tab: tab, distance: distance)
                     return state
                 }
-                else if let (state, distance) = BackForwardNavigationHelper.firstBrowseStateAfterCurrent(tab: tab) {
+                else if let (state, distance) = BackForwardNavigationHelper.firstContentStateAfterCurrent(of: .browse, tab: tab) {
                     BackForwardNavigation.shared.incrementIndexByDistance(tab: tab, distance: distance)
                     return state
                 }
@@ -190,7 +192,18 @@ final class ActionStateTransformer {
                     NSException.init().raise()
                 }
             }
+            else if actionType == .urlBackPressed {
+                if var prevState = BackForwardNavigation.shared.prevState(tab: tab) {
+                    BackForwardNavigation.shared.decrementIndex(tab: tab)
+                    let back = toolBarBackTransform(nextStateData: prevState.stateData)
+                    let forw = toolBarForwardTransform(nextStateData: prevState.stateData)
+                    prevState = prevState.sameStateWithNewBackForwardState(newBackState: back, newForwardState: forw)
+                    BackForwardNavigation.shared.replaceCurrentState(tab: tab, newState: prevState)
+                    return prevState
+                }
+            }
         }
+        
         
         return ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: actionType, nextStateData: nextStateData)
     }
