@@ -20,6 +20,7 @@ class HistoryViewController: UIViewController {
     var historyTableView: BubbleTableView!
     var tableViewDataSource: HistoryDataSource!
     var emptyHistroyLabel = UILabel()
+    fileprivate var lastContentOffset = CGPoint(x: 0, y: 0)
     
     init(profile: Profile) {
         super.init(nibName: nil, bundle: nil)
@@ -28,6 +29,7 @@ class HistoryViewController: UIViewController {
         tableViewDataSource.delegate = self
 
         historyTableView = BubbleTableView(customDataSource: tableViewDataSource, customDelegate: self)
+        historyTableView.scrollViewDelegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -40,6 +42,10 @@ class HistoryViewController: UIViewController {
     
     func emptyViewText() -> String {
         return NSLocalizedString("Here you will find your history.\n\n\nYou haven't searched or visited any website so far.", tableName: "Cliqz", comment: "[History] Text for empty history")
+    }
+    
+    func getViewName() -> String {
+        return "history"
     }
     
     override func viewDidLoad() {
@@ -96,20 +102,25 @@ class HistoryViewController: UIViewController {
 }
 
 extension HistoryViewController: BubbleTableViewDelegate {
-    func cellPressed(indexPath: IndexPath) {
+    func cellPressed(indexPath: IndexPath, clickedElement: String) {
+        
         if tableViewDataSource.useRightCell(indexPath: indexPath) {
             let query = tableViewDataSource.title(indexPath: indexPath)
             self.delegate?.didSelectQuery(query)
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "query", ["element" : clickedElement]))
         } else if let url = tableViewDataSource.url(indexPath: indexPath) {
             self.delegate?.didSelectURL(url)
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "site", ["element" : clickedElement]))
         }
     }
     
     func deleteItem(at indexPath: IndexPath) {
         tableViewDataSource.deleteItem(at: indexPath)
+        
+        let view = tableViewDataSource.useRightCell(indexPath: indexPath) ? "query" : "site"
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "delete", ["view" : view]))
     }
 }
-
 
 extension HistoryViewController: HasDataSource {
     func dataSourceWasUpdated() {
@@ -128,3 +139,28 @@ extension HistoryViewController: HasDataSource {
     }
 }
 
+extension HistoryViewController : CustomScrollDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y < lastContentOffset.y ) {
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "scroll_up", nil, nil))
+        } else if (scrollView.contentOffset.y > lastContentOffset.y) {
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "scroll_down", nil, nil))
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastContentOffset = scrollView.contentOffset;
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+
+    }
+}

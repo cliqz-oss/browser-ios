@@ -26,5 +26,10 @@ class FavoritesViewController: HistoryViewController {
         return NSLocalizedString("Here you will find your favorites.\n\n\nYou haven't created any favorites so far.", tableName: "Cliqz", comment: "[History] Text for empty favorites")
     }
     
+    override func getViewName() -> String {
+        return "favorites"
+    }
+    
+    
 }
 

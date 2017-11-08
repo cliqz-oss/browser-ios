@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NewsViewCell: UITableViewCell {
+class NewsViewCell: ClickableUITableViewCell {
 	
 	let titleLabel = UILabel()
 	let URLLabel = UILabel()
@@ -18,7 +18,6 @@ class NewsViewCell: UITableViewCell {
 	var fakeLogoView: UIView?
 
 	let cardView = UIView()
-    var clickedElement = ""
     
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -40,18 +39,13 @@ class NewsViewCell: UITableViewCell {
 		logoContainerView.addSubview(logoImageView)
         logoContainerView.layer.cornerRadius = 7
 		logoContainerView.layer.masksToBounds = true
-        // tab gesture recognizer
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(newsPressed(_:)))
-        tapGestureRecognizer.cancelsTouchesInView = false
-        tapGestureRecognizer.delegate = self
-        self.addGestureRecognizer(tapGestureRecognizer)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
     
-    func newsPressed(_ gestureRecognizer: UIGestureRecognizer) {
+    override func cellPressed(_ gestureRecognizer: UIGestureRecognizer) {
         let touchLocation = gestureRecognizer.location(in: self.cardView)
         
         if titleLabel.frame.contains(touchLocation) {
@@ -103,12 +97,12 @@ class NewsViewCell: UITableViewCell {
 	}
 	
 	override func prepareForReuse() {
+        super.prepareForReuse()
 		self.cardView.transform = CGAffineTransform.identity
 		self.cardView.alpha = 1
 		self.logoImageView.image = nil
 		self.fakeLogoView?.removeFromSuperview()
 		self.fakeLogoView = nil
-        clickedElement = ""
 	}
 	
 	fileprivate func textColor() -> UIColor {

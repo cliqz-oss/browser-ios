@@ -22,7 +22,7 @@ protocol BubbleTableViewDataSource {
 }
 
 protocol BubbleTableViewDelegate {
-    func cellPressed(indexPath: IndexPath)
+    func cellPressed(indexPath: IndexPath, clickedElement: String)
     func deleteItem(at: IndexPath)
 }
 
@@ -191,7 +191,9 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         //To Do: Create a delegate
-        self.customDelegate?.cellPressed(indexPath: indexPath)
+        if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell {
+            self.customDelegate?.cellPressed(indexPath: indexPath, clickedElement: currentCell.clickedElement)
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -221,4 +223,27 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         return action
     }
     
+}
+
+extension BubbleTableView : CustomScrollDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewDidScroll(scrollView)
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewDidEndDecelerating(scrollView)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollViewDelegate?.scrollViewDidEndDragging(scrollView, willDecelerate: decelerate)
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollViewDelegate?.scrollViewWillBeginDragging(scrollView)
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollViewDelegate?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
 }

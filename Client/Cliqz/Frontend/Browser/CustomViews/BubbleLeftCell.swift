@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BubbleLeftCell: UITableViewCell {
+class BubbleLeftCell: ClickableUITableViewCell {
 
     let titleLabel = UILabel()
     let urlLabel = UILabel()
@@ -16,6 +16,10 @@ class BubbleLeftCell: UITableViewCell {
     let iconImageView = UIImageView()
     let iconView = UIView()
     let bubbleView = UIView()
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,11 +36,24 @@ class BubbleLeftCell: UITableViewCell {
         
         setStyles()
         setConstraints()
-        
     }
     
     func setupComponents() {
         
+    }
+    
+    override func cellPressed(_ gestureRecognizer: UIGestureRecognizer) {
+        let touchLocation = gestureRecognizer.location(in: self.bubbleView)
+        
+        if titleLabel.frame.contains(touchLocation) {
+            clickedElement = "title"
+        } else if urlLabel.frame.contains(touchLocation) {
+            clickedElement = "url"
+        } else if timeLabel.frame.contains(touchLocation) {
+            clickedElement = "time"
+        } else if iconImageView.frame.contains(touchLocation) || iconView.frame.contains(touchLocation) {
+            clickedElement = "logo"
+        }
     }
     
     func setStyles() {
@@ -100,10 +117,6 @@ class BubbleLeftCell: UITableViewCell {
         // Initialization code
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -111,7 +124,6 @@ class BubbleLeftCell: UITableViewCell {
     }
     
     func updateIconView(_ image: UIImage?, logoInfo: LogoInfo?) {
-        
         
         if let image = image {
             iconImageView.image = image

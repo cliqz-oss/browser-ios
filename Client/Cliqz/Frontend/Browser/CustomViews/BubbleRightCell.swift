@@ -8,12 +8,16 @@
 
 import UIKit
 
-class BubbleRightCell: UITableViewCell {
+class BubbleRightCell: ClickableUITableViewCell {
     
     let titleLabel = UILabel()
     let timeLabel  = UILabel()
     
     private let bubbleView = UIView()
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,13 +32,18 @@ class BubbleRightCell: UITableViewCell {
         setConstraints()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
     func setupComponents() {
         
+    }
+    
+    override func cellPressed(_ gestureRecognizer: UIGestureRecognizer) {
+        let touchLocation = gestureRecognizer.location(in: self.bubbleView)
+        
+        if titleLabel.frame.contains(touchLocation) {
+            clickedElement = "title"
+        } else if timeLabel.frame.contains(touchLocation) {
+            clickedElement = "time"
+        }
     }
     
     func setStyles() {
