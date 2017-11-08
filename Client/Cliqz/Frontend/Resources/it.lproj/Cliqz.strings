@@ -368,3 +368,5 @@
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Qui puoi trovare i tuoi segnalibri.\n\n\nNon hai aggiunto nessun segnalibro finora.";
 /* [History] delete button title */
 "Delete" = "Elimina";
+/* [TabsOverview] Done button title */
+"Done" = "Fatto";

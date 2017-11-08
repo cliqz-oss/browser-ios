@@ -627,7 +627,6 @@ class BrowserViewController: UIViewController {
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
-        log.debug("BVC done.")
 
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.openSettings),
@@ -647,6 +646,7 @@ class BrowserViewController: UIViewController {
 		if let tab = self.tabManager.selectedTab {
 			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 		}
+        log.debug("BVC done.")
     }
 
     fileprivate func showRestoreTabsAlert() {
