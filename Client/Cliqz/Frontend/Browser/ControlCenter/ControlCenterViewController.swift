@@ -10,21 +10,21 @@ import UIKit
 
 //TODO: Localization & Telemetry
 protocol ControlCenterViewDelegate: class {
-    
+	
     func controlCenterViewWillClose(_ antitrackingView: UIView)
     func reloadCurrentPage()
 
 }
 
 class ControlCenterViewController: UIViewController {
-    
+	
     //MARK: - Constants
     fileprivate let controlCenterThemeColor = UIConstants.CliqzThemeColor
     fileprivate let urlBarHeight: CGFloat = 40.0
-    
+	
     //MARK: - Variables
     internal var visible = false
-    
+	
     //MARK: Views
     fileprivate var blurryBackgroundView: UIVisualEffectView!
     fileprivate var backgroundView: UIView!
@@ -32,30 +32,33 @@ class ControlCenterViewController: UIViewController {
     fileprivate var panelSegmentedSeparator = UIView()
     fileprivate var panelSegmentedContainerView = UIView()
     fileprivate var panelContainerView = UIView()
-    
+	
     //MARK: data
     fileprivate let trackedWebViewID: Int!
     fileprivate let isPrivateMode: Bool!
     fileprivate var currentURl: URL!
-    
+	
     
     //MARK: panels
     fileprivate lazy var antitrackingPanel: AntitrackingPanel = {
-        let antitrackingPanel = AntitrackingPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: self.isPrivateMode)
+		// Temporary changing forget mode design for Control Center
+        let antitrackingPanel = AntitrackingPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: false)
         antitrackingPanel.controlCenterPanelDelegate = self
         antitrackingPanel.delegate = self.delegate
         return antitrackingPanel
     }()
-    
+	
     fileprivate lazy var adBlockerPanel: AdBlockerPanel = {
-        let adBlockerPanel = AdBlockerPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: self.isPrivateMode)
+		// Temporary changing forget mode design for Control Center
+        let adBlockerPanel = AdBlockerPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: false)
         adBlockerPanel.controlCenterPanelDelegate = self
         adBlockerPanel.delegate = self.delegate
         return adBlockerPanel
     }()
-    
+	
     fileprivate lazy var antiPhishingPanel: AntiPhishingPanel = {
-        let antiPhishingPanel = AntiPhishingPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: self.isPrivateMode)
+		// Temporary changing forget mode design for Control Center
+        let antiPhishingPanel = AntiPhishingPanel(webViewID: self.trackedWebViewID, url: self.currentURl, privateMode: false)
         antiPhishingPanel.controlCenterPanelDelegate = self
         antiPhishingPanel.delegate = self.delegate
         return antiPhishingPanel
@@ -83,16 +86,22 @@ class ControlCenterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background
-        let blurEffect = UIBlurEffect(style: .light)
+		let blurEffect = UIBlurEffect(style: .light)
         self.blurryBackgroundView = UIVisualEffectView(effect: blurEffect)
-        self.view.insertSubview(blurryBackgroundView, at: 0)
-        
+		self.view.insertSubview(blurryBackgroundView, at: 0)
+		// Hack to change blurriness color of the background according to the design requirment. UIVisualEffectView doesn't provide API to change the color, it assigns default grey color, but we need white.
+		for i in self.blurryBackgroundView.subviews {
+			if i.backgroundColor != nil {
+				i.backgroundColor = self.backgroundColor().withAlphaComponent(0.7)
+			}
+		}
+
         self.backgroundView = UIView()
-        self.backgroundView.backgroundColor = self.backgroundColor().withAlphaComponent(0.8)
+        self.backgroundView.backgroundColor =  UIColor.clear
         self.view.addSubview(self.backgroundView)
-        
+
         // Segmented control
-        panelSegmentedContainerView.backgroundColor = UIConstants.AppBackgroundColor
+        panelSegmentedContainerView.backgroundColor = self.controlCenterThemeColor
         self.view.addSubview(panelSegmentedContainerView)
         
         let antiTrakcingTitle = NSLocalizedString("Anti-Tracking", tableName: "Cliqz", comment: "Anti-Trakcing panel name on control center.")
@@ -100,7 +109,8 @@ class ControlCenterViewController: UIViewController {
         let antiPhishingTitle = NSLocalizedString("Anti-Phishing", tableName: "Cliqz", comment: "Anti-Phishing panel name on control center.")
         
         panelSegmentedControl = UISegmentedControl(items: [antiTrakcingTitle, adBlockingTitle, antiPhishingTitle])
-        panelSegmentedControl.tintColor = self.controlCenterThemeColor
+        panelSegmentedControl.tintColor = UIColor.white
+		panelSegmentedControl.backgroundColor = self.controlCenterThemeColor
         panelSegmentedControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
         self.panelSegmentedControl.selectedSegmentIndex = 0
         
@@ -110,13 +120,15 @@ class ControlCenterViewController: UIViewController {
         panelSegmentedContainerView.addSubview(panelSegmentedSeparator)
 
         view.addSubview(panelContainerView)
-        
+		
+		// Temporary changing forget mode design for Control Center
+		/*
         if let privateMode = self.isPrivateMode, privateMode == true {
             panelSegmentedContainerView.backgroundColor = self.backgroundColor().withAlphaComponent(0.0)
-        }
-        
+        } */
+		
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isPrivateMode {
@@ -139,12 +151,12 @@ class ControlCenterViewController: UIViewController {
         
         
         let panelLayout = OrientationUtil.controlPanelLayout()
-        
+		blurryBackgroundView.snp.makeConstraints { (make) in
+			make.left.right.bottom.equalTo(self.view)
+			make.top.equalTo(self.view)
+		}
+
         if panelLayout != .landscapeRegularSize {
-            blurryBackgroundView.snp.makeConstraints { (make) in
-                make.left.right.bottom.equalTo(self.view)
-                make.top.equalTo(self.view)
-            }
             backgroundView.snp.makeConstraints { (make) in
                 make.left.right.bottom.equalTo(self.view)
                 make.top.equalTo(self.view)
@@ -175,8 +187,7 @@ class ControlCenterViewController: UIViewController {
         else
         {
             backgroundView.snp.makeConstraints { (make) in
-                make.left.right.bottom.equalTo(self.view)
-                make.top.equalTo(self.view)
+                make.top.left.right.bottom.equalTo(self.view)
             }
             
             panelSegmentedContainerView.snp.makeConstraints { make in
@@ -206,9 +217,10 @@ class ControlCenterViewController: UIViewController {
     
     fileprivate func backgroundColor() -> UIColor {
         if self.isPrivateMode == true {
-            return UIColor(rgb: 0x222222)
+			// Temporary changing forget mode design for Control Center
+            return UIColor.white //UIColor(rgb: 0x222222)
         }
-        return UIColor(rgb: 0xE8E8E8)
+        return UIColor.white
     }
 
     //MARK: Switching panels
@@ -286,7 +298,7 @@ extension ControlCenterViewController : ControlCenterPanelDelegate {
         
         
     }
-    
+	
     func reloadCurrentPage() {
         self.controlCenterDelegate?.reloadCurrentPage()
     }

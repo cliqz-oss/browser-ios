@@ -16,12 +16,12 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
 	static let EditModeBackgroundColor = UIColor.white
 	static let NonEditModeBackgroundColor = UIColor(rgb: 0x00AEF0)
-    static let LocationLeftPadding: CGFloat = 10
-    static let LocationHeight = 28
+    static let LocationLeftPadding: CGFloat = 9
+    static let LocationHeight = 36
     static let ButtonWidth = 42
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
-    static let TextFieldCornerRadius: CGFloat = 3
+    static let TextFieldCornerRadius: CGFloat = 9
     static let TextFieldBorderWidth: CGFloat = 1
     // offset from edge of tabs button
     static let URLBarCurveOffset: CGFloat = 14
@@ -42,7 +42,7 @@ struct URLBarViewUX {
         theme.borderColor = UIConstants.PrivateModeLocationBorderColor
         theme.activeBorderColor = UIConstants.PrivateModePurple
         theme.tintColor = UIColor.white
-        theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
+        theme.textColor = UIConstants.PrivateModeTextColor
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
@@ -56,7 +56,7 @@ struct URLBarViewUX {
         theme.tintColor = ProgressTintColor
         theme.textColor = UIConstants.NormalModeTextColor //UIColor.blackColor()
         // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
-        theme.buttonTintColor = UIColor.black
+        theme.buttonTintColor = UIColor.white
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIColor.white //UIConstants.AppBackgroundColor.withAlphaComponent(1)
 
@@ -167,8 +167,8 @@ class URLBarView: UIView {
         let progressBar = UIProgressView()
         progressBar.progressTintColor = URLBarViewUX.ProgressTintColor
 		progressBar.trackTintColor = UIColor(rgb: 0xE7ECEE)
-        progressBar.alpha = 0
-        progressBar.isHidden = true
+        progressBar.alpha = 1
+        progressBar.isHidden = false
         return progressBar
     }()
 
@@ -428,7 +428,7 @@ class URLBarView: UIView {
                     make.height.equalTo(URLBarViewUX.LocationHeight)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
-                make.centerY.equalTo(self)
+                make.centerY.equalTo(self).offset(-3)
             }
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
@@ -1117,7 +1117,7 @@ class ToolbarTextField: AutocompleteTextField {
         theme.textColor = UIColor.black
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
 		// Cliqz: Added Button tint color to Gray
-		theme.buttonTintColor = UIColor.gray
+		theme.buttonTintColor = UIColor.white
 
         themes[Theme.NormalMode] = theme
 
