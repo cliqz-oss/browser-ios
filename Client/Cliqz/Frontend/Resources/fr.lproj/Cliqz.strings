@@ -367,3 +367,5 @@
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Retrouvez vos sites favoris ici.\n\n\nVous n'avez pas encore enregistré de favoris.";
 /* [History] delete button title */
 "Delete" = "Supprimer";
+/* [TabsOverview] Done button title */
+"Done" = "Terminé";

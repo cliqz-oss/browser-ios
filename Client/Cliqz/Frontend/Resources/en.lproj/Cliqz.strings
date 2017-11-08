@@ -368,3 +368,6 @@
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Here you will find your favorites.\n\n\nYou haven't created any favorites so far.";
 /* [History] delete button title */
 "Delete" = "Delete";
+/* [TabsOverview] Done button title */
+"Done" = "Done";
+

@@ -70,6 +70,7 @@ class TabsViewController: UIViewController {
     
     var collectionView: UICollectionView!
 	private var addTabButton: UIButton!
+    private var doneButton: UIButton!
 
 	let tabManager: TabManager!
 
@@ -111,11 +112,20 @@ class TabsViewController: UIViewController {
 		addTabButton.titleLabel?.font = UIFont.systemFont(ofSize: 30)
 		addTabButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
 		addTabButton.backgroundColor =  UIColor.white
-		self.view.addSubview(addTabButton)
+        self.view.addSubview(addTabButton)
 		addTabButton.addTarget(self, action: #selector(addNewTab), for: .touchUpInside)
 
         let longPressGestureAddTabButton = UILongPressGestureRecognizer(target: self, action: #selector(TabsViewController.SELdidLongPressAddTab(_:)))
         addTabButton.addGestureRecognizer(longPressGestureAddTabButton)
+        
+        
+        doneButton = UIButton(type: .custom)
+        doneButton.setTitle(NSLocalizedString("Done", tableName: "Cliqz", comment: "[TabsOverview] Done button title"), for: UIControlState())
+        doneButton.setTitleColor(UIConstants.CliqzThemeColor, for: UIControlState())
+        doneButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        doneButton.backgroundColor =  UIColor.white
+        self.view.addSubview(doneButton)
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
 
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
     }
@@ -182,6 +192,11 @@ class TabsViewController: UIViewController {
         let customData: [String : AnyObject] = ["tab_count" : self.tabManager.tabs.count as AnyObject]
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "new_tab", customData))
 	}
+    
+    @objc private func doneButtonTapped(sender: UIButton) {
+        self.navigationController?.popViewController(animated: false)
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", "click", "done", nil))
+    }
 	
     @objc func SELdidLongPressAddTab(_ recognizer: UILongPressGestureRecognizer) {
         let newTabHandler = { (action: UIAlertAction) in
@@ -235,12 +250,19 @@ class TabsViewController: UIViewController {
 			make.top.equalTo(self.view)
 			make.bottom.equalTo(addTabButton.snp.top)
 		}
-		addTabButton.snp.makeConstraints { make in
-			make.centerX.equalTo(self.view)
-			make.bottom.equalTo(self.view)
-			make.left.right.equalTo(self.view)
-			make.height.equalTo(TabsViewController.bottomToolbarHeight)
-		}
+        
+        addTabButton.snp.makeConstraints { make in
+            make.bottom.equalTo(self.view)
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.height.equalTo(TabsViewController.bottomToolbarHeight)
+        }
+        
+        doneButton.snp.makeConstraints { (make) in
+            make.bottom.right.equalTo(self.view)
+            make.width.equalTo(70)
+            make.height.equalTo(TabsViewController.bottomToolbarHeight)
+        }
 	}
 }
 
