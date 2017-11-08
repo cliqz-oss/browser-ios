@@ -568,7 +568,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
             
-            if let currentCell = tableView.cellForRow(at: indexPath) as? NewsViewCell, let isBreakingNews = selectedNews["breaking"] as? Bool {
+            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell, let isBreakingNews = selectedNews["breaking"] as? Bool {
                 let target  = isBreakingNews ? "breakingnews" : "topnews"
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
             }

@@ -3,7 +3,7 @@
 //  Client
 //
 //  Created by Mahmoud Adam on 11/7/17.
-//  Copyright © 2017 Mozilla. All rights reserved.
+//  Copyright © 2017 Cliqz. All rights reserved.
 //
 
 import UIKit

@@ -63,6 +63,7 @@
 		1E2DECAB1E818C2D003D76B7 /* SessionRestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */; };
 		1E2DECAC1E818C2D003D76B7 /* SessionRestoreHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */; };
 		1E3747EC1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */; };
+		1E37480E1FB313B2006FA367 /* ClickableUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */; };
 		1E3F25041EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */; };
 		1E3F25151EC1CA3C00D9DC0F /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */; };
 		1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */; };
@@ -1434,6 +1435,7 @@
 		1E2DECA91E818C2D003D76B7 /* SessionRestoreHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHandler.swift; sourceTree = "<group>"; };
 		1E2DECAA1E818C2D003D76B7 /* SessionRestoreHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRestoreHelper.swift; sourceTree = "<group>"; };
 		1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleLeftExpandedCell.swift; sourceTree = "<group>"; };
+		1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableUITableViewCell.swift; sourceTree = "<group>"; };
 		1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimitMobileDataUsageTableViewController.swift; sourceTree = "<group>"; };
 		1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
 		1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -3813,6 +3815,7 @@
 			isa = PBXGroup;
 			children = (
 				4F5BBB621F0A9A71005AE002 /* LogoPlaceholder.swift */,
+				1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */,
 				1E6E5D0D1F94F92C00D23A1E /* BubbleLeftCell.swift */,
 				1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */,
 				1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */,
@@ -6548,6 +6551,7 @@
 				B354B5E21E5C931D001B38A1 /* JSBridgeBridge.m in Sources */,
 				1E79DD101D4FB2C5006BEB4A /* EventsLogger.swift in Sources */,
 				AFAF9ADD1F14E95A0009E718 /* Primitive Types.swift in Sources */,
+				1E37480E1FB313B2006FA367 /* ClickableUITableViewCell.swift in Sources */,
 				1E79DE771D508368006BEB4A /* AWSSignature.m in Sources */,
 				1E79DD1B1D4FB2C5006BEB4A /* XMLHttpRequest.swift in Sources */,
 				0BF0DB941A8545800039F300 /* URLBarView.swift in Sources */,
