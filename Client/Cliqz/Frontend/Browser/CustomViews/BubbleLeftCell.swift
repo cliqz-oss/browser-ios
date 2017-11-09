@@ -17,6 +17,10 @@ class BubbleLeftCell: ClickableUITableViewCell {
     let iconView = UIView()
     let bubbleView = UIView()
     
+    static var is24Hours : Bool = {
+        return isTime24HoursFormatted()
+    }()
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -108,7 +112,11 @@ class BubbleLeftCell: ClickableUITableViewCell {
         
         timeLabel.snp.makeConstraints { (make) in
             make.bottom.right.equalTo(bubbleView).inset(4)
-            make.width.equalTo(45)
+            if (BubbleRightCell.is24Hours) {
+                make.width.equalTo(35)
+            } else {
+                make.width.equalTo(55)
+            }
         }
     }
     

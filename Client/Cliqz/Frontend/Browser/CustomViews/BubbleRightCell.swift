@@ -12,6 +12,9 @@ class BubbleRightCell: ClickableUITableViewCell {
     
     let titleLabel = UILabel()
     let timeLabel  = UILabel()
+    static var is24Hours : Bool = {
+        return isTime24HoursFormatted()
+    }()
     
     private let bubbleView = UIView()
     
@@ -79,14 +82,18 @@ class BubbleRightCell: ClickableUITableViewCell {
         
         titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.contentView.snp.top).offset(15)
-            make.right.equalTo(self.timeLabel.snp.left).inset(10)
+            make.right.equalTo(self.timeLabel.snp.left)
             make.width.lessThanOrEqualTo(self.contentView.frame.width * 0.65)
         }
         
         timeLabel.snp.makeConstraints { (make) in
             make.right.equalTo(self.contentView).inset(30)
             make.bottom.equalTo(self.contentView).inset(5)
-            make.width.equalTo(45)
+            if (BubbleRightCell.is24Hours) {
+                make.width.equalTo(35)
+            } else {
+                make.width.equalTo(55)
+            }
         }
     }
 
@@ -109,7 +116,7 @@ class BubbleRightCell: ClickableUITableViewCell {
     func remakeConstraints() {
         titleLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(self.contentView.snp.top).offset(15)
-            make.right.equalTo(self.timeLabel.snp.left).inset(10)
+            make.right.equalTo(self.timeLabel.snp.left)
             make.width.lessThanOrEqualTo(self.contentView.frame.width * 0.65)
         }
     }
