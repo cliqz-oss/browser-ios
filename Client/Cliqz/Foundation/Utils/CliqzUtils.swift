@@ -106,3 +106,8 @@ func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
     
     return dict
 }
+
+func isTime24HoursFormatted() -> Bool {
+    let dateString : String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Locale.current)!
+    return !dateString.contains("a")
+}
