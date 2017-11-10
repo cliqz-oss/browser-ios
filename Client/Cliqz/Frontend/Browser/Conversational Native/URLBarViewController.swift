@@ -146,7 +146,7 @@ final class URLBarViewController: UIViewController {
 
     func expandedEmptyWhite() {
         URLBar.changeState(state: .expandedEmpty)
-        URLBar.textField.text = nil
+        URLBar.textField.text = ""
         search_loader?.query = ""
         progressBar.setProgress(progress: 0.0)
         progressBar.alpha = 0.0
