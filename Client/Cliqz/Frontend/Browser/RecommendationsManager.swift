@@ -183,7 +183,7 @@ final class RecommendationsManager {
             }
             
             let domain_recommendations = local_recommendations.filter({ (recommendation) -> Bool in
-                return baseUrl == recommendation.host
+                return ("www." + baseUrl) == recommendation.host
             })
             
             let filtered_recommendations = filterOutIgnoredRecommendations(recommendations: domain_recommendations)
