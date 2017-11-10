@@ -445,7 +445,8 @@ class TabViewCell: UICollectionViewCell {
                 }
                 }, completion: { finished in
                     if finished && aboveTreshold {
-						self.delegate?.removeTab(cell: self, swipe: velocity.x > 0 ? .Right : .Left)
+                        weak var weakSelf = self
+						self.delegate?.removeTab(cell: weakSelf!, swipe: velocity.x > 0 ? .Right : .Left)
                     }
             })
             
