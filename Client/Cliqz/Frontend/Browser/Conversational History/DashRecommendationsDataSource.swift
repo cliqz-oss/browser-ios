@@ -17,7 +17,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     weak var delegate: HasDataSource?
     
     init(delegate: HasDataSource? = nil) {
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeHistoryDomains: false, type: .news)
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: true, type: .news)
         self.delegate = delegate
         NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
     }
@@ -64,7 +64,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
     private func updateRecommendations() {
-        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeHistoryDomains: false, type: .news)
+        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: true, type: .news)
     }
     
     

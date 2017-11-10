@@ -159,17 +159,17 @@ final class RecommendationsManager {
     }
     
     //if domain is nil returns all recommendations
-    func recommendations(domain: URL?, includeHistoryDomains: Bool, type: RecommendationType? = nil) -> [Recommendation] {
+    func recommendations(domain: URL?, includeDomainsFromHistory: Bool, type: RecommendationType? = nil) -> [Recommendation] {
         
-        var recommendations = self.recommendations
+        var type_filtered_recommendations = self.recommendations
         
         if let recType = type {
-            recommendations = recommendations.filter({ (recommendation) -> Bool in
+            type_filtered_recommendations = recommendations.filter({ (recommendation) -> Bool in
                 return recommendation.type == recType
             })
         }
         
-        let local_recommendations = includeHistoryDomains == false ? recommendationsWithoutHistoryDomains(recommedations: recommendations) : recommendations
+        let local_recommendations = includeDomainsFromHistory == false ? recommendationsWithoutHistoryDomains(recommedations: type_filtered_recommendations) : type_filtered_recommendations
         
         if let domain = domain {
             
