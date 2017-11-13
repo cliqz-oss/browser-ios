@@ -54,7 +54,7 @@ struct URLBarViewUX {
         theme.borderColor = UIColor.clear
         theme.activeBorderColor = UIColor.clear
         theme.tintColor = ProgressTintColor
-        theme.textColor = UIConstants.NormalModeTextColor //UIColor.blackColor()
+        theme.textColor = UIConstants.NormalModeTextColor
         // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
         theme.buttonTintColor = UIColor.white
         // Cliqz: Set URLBar backgroundColor because of requirements
@@ -261,7 +261,7 @@ class URLBarView: UIView {
     }
 
     fileprivate func commonInit() {
-		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton, self.cancelButton]
+		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
 
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
 		// Cliqz: Commented extra curveView accroding to requirements.
@@ -934,6 +934,14 @@ extension URLBarView {
         }
     }
 
+	dynamic var actionButtonTextColor: UIColor? {
+		get { return helper?.buttonTextColor }
+		set {
+			guard let value = newValue else { return }
+			helper?.buttonTextColor = value
+		}
+	}
+
     fileprivate func applyThemeOnStatusBar(_ themeName: String) {
         switch(themeName) {
         case Theme.NormalMode:
@@ -959,6 +967,8 @@ extension URLBarView: Themeable {
     func applyTheme(_ themeName: String) {
         locationView.applyTheme(themeName)
         locationTextField?.applyTheme(themeName)
+		// Cliqz: used regular button instead of TabsButton
+		tabsButton.applyTheme(themeName)
 
         guard let theme = URLBarViewUX.Themes[themeName] else {
             log.error("Unable to apply unknown theme \(themeName)")
@@ -968,8 +978,10 @@ extension URLBarView: Themeable {
         currentTheme = themeName
         locationBorderColor = theme.borderColor!
         locationActiveBorderColor = theme.activeBorderColor!
-        cancelTextColor = theme.textColor
         actionButtonTintColor = theme.buttonTintColor
+		actionButtonTextColor = UIColor.white
+		cancelTextColor = theme.textColor
+		self.cancelButton.tintColor = theme.textColor
         // Cliqz: Set URLBar backgroundColor because of requirements
 		if self.inOverlayMode {
 			backgroundColor = theme.backgroundColor
@@ -980,11 +992,8 @@ extension URLBarView: Themeable {
 				self.backgroundColor = URLBarViewUX.NonEditModeBackgroundColor
 			}
 		}
-        // Cliqz: used regular button instead of TabsButton
-        tabsButton.applyTheme(themeName)
         // Cliqz: Adjust statusbar according to the current theme
         self.applyThemeOnStatusBar(themeName)
-        
     }
 }
 
