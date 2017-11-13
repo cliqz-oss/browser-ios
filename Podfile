@@ -15,7 +15,7 @@ def project_pods
     'RCTWebSocket',
     'RCTImage',
     ]
-    pod 'Yoga', :path => yoga_path
+    pod 'yoga', :path => yoga_path
     pod 'RNFS', :path => './node_modules/react-native-fs'
     pod 'react-native-webrtc', :path => './node_modules/react-native-webrtc'
     pod 'RNDeviceInfo', :path => './node_modules/react-native-device-info'
