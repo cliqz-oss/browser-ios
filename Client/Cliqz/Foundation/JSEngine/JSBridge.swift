@@ -46,8 +46,8 @@ open class JSBridge : RCTEventEmitter {
     override open func supportedEvents() -> [String]! {
         return ["callAction", "publishEvent"]
     }
-    
-    override open func constantsToExport() -> [String : Any]! {
+
+    override open func constantsToExport() -> [AnyHashable : Any]! {
         return ["events": ["openUrl", "mobile-pairing:openTab",
                            "mobile-pairing:downloadVideo",
                            "mobile-pairing:pushPairingData",

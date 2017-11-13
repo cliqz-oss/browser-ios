@@ -32,6 +32,6 @@ open class UserAgentConstants : RCTEventEmitter {
         return "UserAgentConstants"
     }
     
-    override open func constantsToExport() -> [String: Any]! { return ["channel": self.source, "appVersion": self.appVersion] }
+    override open func constantsToExport() -> [AnyHashable : Any]! { return ["channel": self.source, "appVersion": self.appVersion] }
     
 }
