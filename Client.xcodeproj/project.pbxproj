@@ -239,6 +239,7 @@
 		1E79DEAA1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6C1D508368006BEB4A /* AWSSynchronizedMutableDictionary.m */; };
 		1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE6F1D508368006BEB4A /* AWSXMLDictionary.m */; };
 		1E79DEAC1D508368006BEB4A /* AWSXMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DE721D508368006BEB4A /* AWSXMLWriter.m */; };
+		1E8046BD1FB4AD7F003701C5 /* BubbleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */; };
 		1E91FA601F334321003C8A03 /* SubscriptionsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */; };
 		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
@@ -1722,6 +1723,7 @@
 		1E79DE6F1D508368006BEB4A /* AWSXMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSXMLDictionary.m; sourceTree = "<group>"; };
 		1E79DE711D508368006BEB4A /* AWSXMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWSXMLWriter.h; sourceTree = "<group>"; };
 		1E79DE721D508368006BEB4A /* AWSXMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSXMLWriter.m; sourceTree = "<group>"; };
+		1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCell.swift; sourceTree = "<group>"; };
 		1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsHandler.swift; sourceTree = "<group>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
@@ -3816,6 +3818,7 @@
 			children = (
 				4F5BBB621F0A9A71005AE002 /* LogoPlaceholder.swift */,
 				1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */,
+				1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */,
 				1E6E5D0D1F94F92C00D23A1E /* BubbleLeftCell.swift */,
 				1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */,
 				1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */,
@@ -6822,6 +6825,7 @@
 				1E79DD121D4FB2C5006BEB4A /* TelemetryLogger.swift in Sources */,
 				1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */,
 				1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */,
+				1E8046BD1FB4AD7F003701C5 /* BubbleCell.swift in Sources */,
 				28FDFF0C1C1F725800840F86 /* SeparatorTableCell.swift in Sources */,
 				1E79DD4E1D4FB2F8006BEB4A /* AWSSNSModel.m in Sources */,
 				AFAF9ADF1F14E95A0009E718 /* SipHashable.swift in Sources */,

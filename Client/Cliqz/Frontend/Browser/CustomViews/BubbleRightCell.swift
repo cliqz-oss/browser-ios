@@ -8,34 +8,18 @@
 
 import UIKit
 
-class BubbleRightCell: ClickableUITableViewCell {
+class BubbleRightCell: BubbleCell {
     
+    let bubbleView = UIView()
     let titleLabel = UILabel()
     let timeLabel  = UILabel()
-    static var is24Hours : Bool = {
-        return isTime24HoursFormatted()
-    }()
     
-    private let bubbleView = UIView()
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        setupComponents()
+    override func setupComponents() {
+        super.setupComponents()
         
         bubbleView.addSubview(titleLabel)
         bubbleView.addSubview(timeLabel)
-        contentView.addSubview(bubbleView)
-        
-        setStyles()
-        setConstraints()
-    }
-    
-    func setupComponents() {
+        bubbleContainerView.addSubview(bubbleView)
         
     }
     
@@ -49,7 +33,8 @@ class BubbleRightCell: ClickableUITableViewCell {
         }
     }
     
-    func setStyles() {
+    override func setStyles() {
+        super.setStyles()
         
         self.backgroundColor = UIColor.clear
         contentView.backgroundColor = UIColor.clear
@@ -72,7 +57,9 @@ class BubbleRightCell: ClickableUITableViewCell {
         
     }
     
-    func setConstraints() {
+    override func setConstraints() {
+        super.setConstraints()
+        
         bubbleView.snp.makeConstraints { (make) in
             make.top.equalTo(self.contentView).inset(10)
             make.bottom.equalTo(self.contentView)
@@ -89,7 +76,7 @@ class BubbleRightCell: ClickableUITableViewCell {
         timeLabel.snp.makeConstraints { (make) in
             make.right.equalTo(self.contentView).inset(30)
             make.bottom.equalTo(self.contentView).inset(5)
-            if (BubbleRightCell.is24Hours) {
+            if (is24Hours) {
                 make.width.equalTo(35)
             } else {
                 make.width.equalTo(55)
@@ -97,23 +84,7 @@ class BubbleRightCell: ClickableUITableViewCell {
         }
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.remakeConstraints()
-    }
-    
-    func remakeConstraints() {
+    override func remakeConstraints() {
         titleLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(self.contentView.snp.top).offset(15)
             make.right.equalTo(self.timeLabel.snp.left)

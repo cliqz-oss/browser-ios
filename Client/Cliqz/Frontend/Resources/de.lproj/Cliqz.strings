@@ -365,7 +365,5 @@
 "Here you will find your history.\n\n\nYou haven't searched or visited any website so far." = "Hier findest du in Zukunft deine Suchen und besuchten Seiten.\n\n\nBisher hast du noch nicht gesucht und warst auf keinen Webseiten.";
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Hier findest du in Zukunft deine Favoriten.\n\n\nBisher hast du noch keine Favoriten angelegt.";
-/* [History] delete button title */
-"Delete" = "Löschen";
 /* [TabsOverview] Done button title */
 "Done" = "Fertig";

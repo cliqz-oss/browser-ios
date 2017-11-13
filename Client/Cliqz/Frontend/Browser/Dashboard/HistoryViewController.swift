@@ -59,6 +59,7 @@ class HistoryViewController: UIViewController {
         setConstraints()
         self.tableViewDataSource.reloadHistory(completion: { [weak self] in
             DispatchQueue.main.async {
+                self?.dataSourceWasUpdated()
                 self?.scrollToBottom()
             }
         })
@@ -114,27 +115,24 @@ extension HistoryViewController: BubbleTableViewDelegate {
         }
     }
     
-    func deleteItem(at indexPath: IndexPath) {
-        tableViewDataSource.deleteItem(at: indexPath)
+    func deleteItem(at indexPath: IndexPath, direction: SwipeDirection, completion: (() -> Void )?) {
+        tableViewDataSource.deleteItem(at: indexPath, completion: completion)
         
-        let view = tableViewDataSource.useRightCell(indexPath: indexPath) ? "query" : "site"
-        TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "delete", ["view" : view]))
+        let target = tableViewDataSource.useRightCell(indexPath: indexPath) ? "query" : "site"
+        let action = direction == .Right ? "swipe_right" : "swipe_left"
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), action, target, nil))
     }
 }
 
 extension HistoryViewController: HasDataSource {
     func dataSourceWasUpdated() {
-        DispatchQueue.main.async { [weak self] in
-            
-            if let isEmpty = self?.tableViewDataSource?.isEmpty(), isEmpty == true {
-                self?.emptyHistroyLabel.isHidden = false
-                self?.historyTableView.isHidden = true
-            } else {
-                self?.emptyHistroyLabel.isHidden = true
-                self?.historyTableView.isHidden = false
-                self?.historyTableView.reloadData()
-            }
-            
+        if let isEmpty = self.tableViewDataSource?.isEmpty(), isEmpty == true {
+            self.emptyHistroyLabel.isHidden = false
+            self.historyTableView.isHidden = true
+        } else {
+            self.emptyHistroyLabel.isHidden = true
+            self.historyTableView.isHidden = false
+            self.historyTableView.reloadData()
         }
     }
 }

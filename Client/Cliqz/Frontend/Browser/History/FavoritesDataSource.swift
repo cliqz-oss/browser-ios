@@ -17,21 +17,26 @@ class FavoritesDataSource: HistoryDataSource {
             if error == nil,
                 let orderedEntries = self?.groupByDate(historyEntries) {
                 self?.sortedDetails = orderedEntries
-                self?.delegate?.dataSourceWasUpdated()
                 completion?()
             }
         }
     }
+    
     override func useLeftExpandedCell() -> Bool {
         return true
     }
-    override func deleteItem(at indexPath: IndexPath) {
+    
+    override func deleteItem(at indexPath: IndexPath, completion: (() -> Void )?) {
         if let favoritesEntry = detail(indexPath: indexPath) as? HistoryUrlEntry {
-            HistoryModule.remoteFavoritesEntry(profile: profile, url: favoritesEntry.url, callback: { [weak self] in
-                DispatchQueue.main.async {
-                    self?.reloadHistory(completion: nil)
-                    NotificationCenter.default.post(name: FavoriteRemovedNotification, object: favoritesEntry.url)
-                }
+            HistoryModule.removeFavoritesEntry(profile: profile, url: favoritesEntry.url, callback: { [weak self] in
+                NotificationCenter.default.post(name: FavoriteRemovedNotification, object: favoritesEntry.url)
+                self?.reloadHistory(completion: {
+                    DispatchQueue.main.async {
+                        self?.delegate?.dataSourceWasUpdated()
+                    }
+                    completion?()
+                })
+                
             })
         }
     }
