@@ -12,10 +12,10 @@ import SnapKit
 import Shared
 
 protocol TabViewCellDelegate: class {
-    func removeTab(cell: TabViewCell, swipe: SwipeType)
+    func removeTab(cell: TabViewCell, swipe: SwipeDirection)
 }
 
-enum SwipeType {
+enum SwipeDirection {
     case None
     case Left
     case Right

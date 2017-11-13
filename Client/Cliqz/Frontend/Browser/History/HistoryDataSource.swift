@@ -51,7 +51,6 @@ class HistoryDataSource: BubbleTableViewDataSource {
             if error == nil,
                 let orderedEntries = self?.groupByDate(historyEntries) {
                 self?.sortedDetails = orderedEntries
-                self?.delegate?.dataSourceWasUpdated()
                 completion?()
             }
         }
@@ -158,10 +157,15 @@ class HistoryDataSource: BubbleTableViewDataSource {
         return result
     }
     
-    func deleteItem(at indexPath: IndexPath) {
+    func deleteItem(at indexPath: IndexPath, completion: (() -> Void )?) {
         if let historyEntry = detail(indexPath: indexPath) {
-            HistoryModule.remoteHistoryEntries(profile: profile, ids: [historyEntry.id])
-            reloadHistory(completion: nil)
+            HistoryModule.removeHistoryEntries(profile: profile, ids: [historyEntry.id])
+            self.reloadHistory(completion: {
+                DispatchQueue.main.async { [weak self] in
+                    self?.delegate?.dataSourceWasUpdated()
+                }
+                completion?()
+            })
         }
     }
 }

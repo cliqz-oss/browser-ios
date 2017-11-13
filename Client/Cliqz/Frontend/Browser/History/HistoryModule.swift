@@ -114,11 +114,11 @@ class HistoryModule: NSObject {
         return favoritesResults
     }
     
-    class func remoteHistoryEntries(profile: Profile, ids: [Int]) {
+    class func removeHistoryEntries(profile: Profile, ids: [Int]) {
         profile.history.removeHistory(ids)
     }
     
-    class func remoteFavoritesEntry(profile: Profile, url: URL, callback: @escaping () -> ()) {
+    class func removeFavoritesEntry(profile: Profile, url: URL, callback: @escaping () -> ()) {
         profile.bookmarks.modelFactory >>== {
             $0.removeByURL(url.absoluteString)
                 .uponQueue(DispatchQueue.main) { res in

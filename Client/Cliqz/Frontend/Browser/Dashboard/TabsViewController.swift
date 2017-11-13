@@ -392,7 +392,7 @@ extension TabsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension TabsViewController: TabViewCellDelegate {
-    func removeTab(cell: TabViewCell, swipe: SwipeType) {
+    func removeTab(cell: TabViewCell, swipe: SwipeDirection) {
         
         guard let indexPath = self.collectionView.indexPath(for: cell) else {return}
         

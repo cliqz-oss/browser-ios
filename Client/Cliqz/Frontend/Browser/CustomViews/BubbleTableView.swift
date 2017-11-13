@@ -23,7 +23,7 @@ protocol BubbleTableViewDataSource {
 
 protocol BubbleTableViewDelegate {
     func cellPressed(indexPath: IndexPath, clickedElement: String)
-    func deleteItem(at: IndexPath)
+    func deleteItem(at: IndexPath, direction: SwipeDirection, completion: (() -> Void )?)
 }
 
 protocol CustomScrollDelegate {
@@ -101,6 +101,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
             cell.timeLabel.text  = customDataSource.time(indexPath: indexPath)
             cell.selectionStyle  = .none
+            cell.swipeDelegate = self
             return cell
         }
         var cell =  self.dequeueReusableCell(withIdentifier: bubble_left_id) as! BubbleLeftCell
@@ -108,6 +109,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             cell =  self.dequeueReusableCell(withIdentifier: bubble_left_expanded_id) as! BubbleLeftExpandedCell
         }
         
+        cell.swipeDelegate = self
         cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
         cell.timeLabel.text = customDataSource.time(indexPath: indexPath)
         
@@ -197,32 +199,8 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        return false
     }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            self.customDelegate?.deleteItem(at: indexPath)
-        }
-    }
-    
-    @available (iOS 11.0, *)
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = self.contextualDeleteAction(forRowAtIndexPath: indexPath)
-        let swipeConfig = UISwipeActionsConfiguration(actions: [deleteAction])
-        return swipeConfig
-    }
-    
-    @available (iOS 11.0, *)
-    func contextualDeleteAction(forRowAtIndexPath indexPath: IndexPath) -> UIContextualAction {
-        let deleteTitle = NSLocalizedString("Delete", tableName: "Cliqz", comment: "[History] delete button title")
-        let action = UIContextualAction(style: .destructive, title: deleteTitle) { (contextAction: UIContextualAction, sourceView: UIView, completionHandler: (Bool) -> Void) in
-            self.customDelegate?.deleteItem(at: indexPath)
-            completionHandler(true)
-        }
-        return action
-    }
-    
 }
 
 extension BubbleTableView : CustomScrollDelegate {
@@ -245,5 +223,18 @@ extension BubbleTableView : CustomScrollDelegate {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         scrollViewDelegate?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+}
+
+extension BubbleTableView : BubbleCellSwipeDelegate {
+    func didSwipe(atCell cell: UITableViewCell, direction: SwipeDirection) {
+        if let indexPath = self.indexPath(for: cell){
+            self.customDelegate?.deleteItem(at: indexPath, direction: direction, completion: { [weak self] in
+                DispatchQueue.main.async {
+                    self?.reloadData()
+                }
+            })
+        }
+        
     }
 }

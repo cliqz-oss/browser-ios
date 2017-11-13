@@ -366,8 +366,6 @@
 "Here you will find your history.\n\n\nYou haven't searched or visited any website so far." = "Here you will find your history.\n\n\nYou haven't searched or visited any website so far.";
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Here you will find your favorites.\n\n\nYou haven't created any favorites so far.";
-/* [History] delete button title */
-"Delete" = "Delete";
 /* [TabsOverview] Done button title */
 "Done" = "Done";
 
