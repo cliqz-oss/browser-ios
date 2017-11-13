@@ -566,6 +566,8 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard SettingsPrefs.getShowNewsPref() else { return }
+        
 		if indexPath.row < self.news.count {
 			let selectedNews = self.news[indexPath.row]
 			let urlString = selectedNews["url"] as? String
@@ -694,6 +696,8 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard SettingsPrefs.getShowTopSitesPref() else { return }
+        
 		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row) {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
