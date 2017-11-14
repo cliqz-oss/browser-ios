@@ -6,4 +6,6 @@
 
 "NSPhotoLibraryUsageDescription" = "CLIQZ n'utilisera cet accès qu'afin de télécharger des vidéos sur votre appareil.";
 
+"NSPhotoLibraryAddUsageDescription" = "CLIQZ n'utilisera cet accès qu'afin de télécharger des vidéos sur votre appareil.";
+
 "NSMicrophoneUsageDescription" = "CLIQZ utilisera le microphone seulement si vous décidez d’enregistrer des vidéos à l’intérieur du navigateur.";

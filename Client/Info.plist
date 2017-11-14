@@ -77,6 +77,8 @@
 	<string>CLIQZ will only use this when you choose to record videos inside the browser.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CLIQZ will only use this access to download videos to your device.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>CLIQZ will only use this access to download videos to your device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>cliqz.ios.CliqzBeta.browsing</string>

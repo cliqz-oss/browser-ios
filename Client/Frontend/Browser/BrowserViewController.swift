@@ -3687,17 +3687,17 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             let saveImageAction = UIAlertAction(title: saveImageTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
                 if photoAuthorizeStatus == PHAuthorizationStatus.authorized || photoAuthorizeStatus == PHAuthorizationStatus.notDetermined {
                     self.getImage(url as URL) { UIImageWriteToSavedPhotosAlbum($0, nil, nil, nil) }
-                } else {
-                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.alert)
-                    let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.default, handler: nil)
-                    accessDenied.addAction(dismissAction)
-                    let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.default ) { (action: UIAlertAction!) -> Void in
-                        UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
-                    }
-                    accessDenied.addAction(settingsAction)
-                    self.present(accessDenied, animated: true, completion: nil)
                     TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image", nil))
-
+                } else {
+                    //TODO: provide our own wording if the app is not authorized to save photos to device
+//                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.alert)
+//                    let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.default, handler: nil)
+//                    accessDenied.addAction(dismissAction)
+//                    let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.default ) { (action: UIAlertAction!) -> Void in
+//                        UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+//                    }
+//                    accessDenied.addAction(settingsAction)
+//                    self.present(accessDenied, animated: true, completion: nil)
                 }
             }
             actionSheetController.addAction(saveImageAction)
