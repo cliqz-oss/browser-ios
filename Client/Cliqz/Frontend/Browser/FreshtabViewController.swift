@@ -40,6 +40,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     fileprivate let configUrl = "https://newbeta.cliqz.com/api/v1/config"
     fileprivate let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
+	fileprivate let breakingNewsKey = "breaking"
+	fileprivate let localNewsKey = "local_label"
 	
 	// TODO: Change topSitesCollection to optional
 	fileprivate var topSitesCollection: UICollectionView?
@@ -434,7 +436,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		] as [String : Any]
         let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
 		
-        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask"
+        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&platform=1"
+		if let coord = LocationManager.sharedInstance.getUserLocation() {
+			uri += "&loc=\(coord.coordinate.latitude),\(coord.coordinate.longitude)"
+		}
 
 		Alamofire.request(newsUrl + uri, method: .put, parameters: data, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
@@ -514,9 +519,11 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 		if indexPath.row < self.news.count {
 			var n = self.news[indexPath.row]
 			let title = NSMutableAttributedString()
-			if let b = n["breaking"] as? NSNumber,
+			if let b = n[breakingNewsKey] as? NSNumber,
 				let t = n["breaking_label"] as? String, b.boolValue == true {
 				title.append(NSAttributedString(string: t.uppercased() + ": ", attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0xE64C66)]))
+			} else if let local = n[localNewsKey] as? String {
+				title.append(NSAttributedString(string: local.uppercased() + ": ", attributes: [NSForegroundColorAttributeName: UIConstants.CliqzThemeColor]))
 			}
 			if let t = n["short_title"] as? String {
 				title.append(NSAttributedString(string: t))
@@ -567,11 +574,13 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 			} else if let url = URL(string: urlString!.escapeURL()) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
-            
-            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell, let isBreakingNews = selectedNews["breaking"] as? Bool {
-                let target  = isBreakingNews ? "breakingnews" : "topnews"
+            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell, let isBreakingNews = selectedNews[breakingNewsKey] as? Bool {
+                var target  = isBreakingNews ? "breakingnews" : "topnews"
+				if let _ = selectedNews[localNewsKey] as? String {
+					target = "localnews"
+				}
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
-            }
+			}
 		}
 	}
 
@@ -782,7 +791,27 @@ extension FreshtabViewController {
         let customData: [String: Any] = ["element": element, "index": index]
         self.logFreshTabSignal("click", target: target, customData: customData)
     }
-    
+
+	fileprivate func breakingNewsCount() -> Int {
+		let breakingNews = news.filter() {
+			if let breaking = ($0 as NSDictionary)[breakingNewsKey] as? Bool {
+				return breaking
+			}
+			return false
+		}
+		return breakingNews.count
+	}
+
+	fileprivate func localNewsCount() -> Int {
+		let localNews = news.filter() {
+			if let _ = ($0 as NSDictionary)[localNewsKey] as? String {
+				return true
+			}
+			return false
+		}
+		return localNews.count
+	}
+
     fileprivate func logShowSignal() {
         guard isForgetMode == false else { return }
         
@@ -790,19 +819,14 @@ extension FreshtabViewController {
         var customData: [String: Any] = ["topsite_count": topSites.count, "load_duration": loadDuration]
         if isLoadCompleted {
             customData["is_complete"] = true
-            let breakingNews = news.filter() {
-                if let breaking = ($0 as NSDictionary)["breaking"] as? Bool {
-                    return breaking
-                } else {
-                    return false
-                }
-            }
-            customData["topnews_count"] = news.count - breakingNews.count
-            customData["breakingnews_count"] = breakingNews.count
+            customData["topnews_count"] = news.count - self.breakingNewsCount() - self.localNewsCount()
+            customData["breakingnews_count"] = self.breakingNewsCount()
+			customData["localnews_count"] = self.localNewsCount()
         } else {
             customData["is_complete"] = false
             customData["topnews_count"] = 0
             customData["breakingnews_count"] = 0
+			customData["localnews_count"] = 0
         }
         customData["is_topsites_on"] = SettingsPrefs.getShowTopSitesPref()
         customData["is_news_on"] = SettingsPrefs.getShowNewsPref()
