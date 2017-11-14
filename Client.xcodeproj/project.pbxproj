@@ -633,6 +633,7 @@
 		AF671F7A1F7A51D2009F1473 /* BackForwardNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF671F791F7A51D2009F1473 /* BackForwardNavigation.swift */; };
 		AF671F8B1F7A7756009F1473 /* BackForwardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */; };
 		AF6741091F619F9B008BE919 /* NewsIgnoreList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */; };
+		AF7771AC1FBB08C700C18123 /* StateGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7771AB1FBB08C700C18123 /* StateGlobals.swift */; };
 		AF7BD6EA1E4B2EC100E24A1A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */; };
 		AF7BD6EC1E4B2FAF00E24A1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */; };
 		AF7E7B9B1F6FC87B00669DC6 /* RefactoredURLBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7E7B9A1F6FC87B00669DC6 /* RefactoredURLBar.swift */; };
@@ -2137,6 +2138,7 @@
 		AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardUtil.swift; sourceTree = "<group>"; };
 		AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsIgnoreList.swift; sourceTree = "<group>"; };
 		AF6B5E9A1F73B72E004FEE00 /* NavigationStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationStore.swift; sourceTree = "<group>"; };
+		AF7771AB1FBB08C700C18123 /* StateGlobals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateGlobals.swift; sourceTree = "<group>"; };
 		AF7BD6E91E4B2EC100E24A1A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Client/Application/LaunchScreen.xib; sourceTree = "<group>"; };
 		AF7BD6EB1E4B2FAF00E24A1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Client/Assets/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		AF7E7B9A1F6FC87B00669DC6 /* RefactoredURLBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefactoredURLBar.swift; sourceTree = "<group>"; };
@@ -4335,6 +4337,7 @@
 		AFA93A601F4AE6EC001425C4 /* Managers and Modules */ = {
 			isa = PBXGroup;
 			children = (
+				AF7771AB1FBB08C700C18123 /* StateGlobals.swift */,
 				AF4E53B81F6A9EDD007171C9 /* StateManager.swift */,
 				AF5F767D1F6A62EC00E1495E /* ActionStateTransformer.swift */,
 				AF671F891F7A51D9009F1473 /* BackForwardNavigation Don't Delete */,
@@ -7065,6 +7068,7 @@
 				4FB654C41F82648600C0CE6F /* CustomButton.swift in Sources */,
 				D3C03E471C3C7C1500A07D5C /* MenuHelper.swift in Sources */,
 				D3FEC38D1AC4B42F00494F45 /* AutocompleteTextField.swift in Sources */,
+				AF7771AC1FBB08C700C18123 /* StateGlobals.swift in Sources */,
 				1E79DEA31D508368006BEB4A /* AWSTMCache.m in Sources */,
 				AF2C3E251EEFEDB2005DD628 /* HistoryBridge.m in Sources */,
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,

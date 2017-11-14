@@ -59,6 +59,10 @@ class GeneralUtils {
         let diff = point1 - point2
         return diff > 0 ? diff : -diff
     }
+    
+    class func tabManager() -> TabManager {
+        return ((UIApplication.shared.delegate as? AppDelegate)?.tabManager)!
+    }
 }
 
 extension Date {

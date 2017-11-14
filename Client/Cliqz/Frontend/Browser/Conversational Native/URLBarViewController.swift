@@ -17,12 +17,19 @@ final class URLBarViewController: UIViewController {
 
     weak var search_loader: SearchLoader? = nil
     
+    enum ComponentState {
+        case collapsedEmptyTransparent
+        case collapsedTextTransparent
+        case collapsedQueryBlue
+        case collapsedDomainBlue
+        case expandedEmptyWhite
+        case expandedTextWhite
+    }
+    
+    private var currentState: ComponentState = .collapsedEmptyTransparent
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        //URLBar.actionDelegate = self
-        //URLBar.stateDelegate = self
-        //URLBar.dataSource = self
-        
         URLBar.delegate = self
     }
 
@@ -39,7 +46,6 @@ final class URLBarViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		//self.URLBar.applyTheme(Theme.TransparentMode)
 	}
 
     func setConstraints() {
@@ -69,28 +75,10 @@ final class URLBarViewController: UIViewController {
         //URLBar.setAutocompleteSuggestion(suggestion)
         debugPrint(suggestion ?? "No suggestion")
     }
-//
-//	func updateURL(_ url: URL?) {
-//		self.URLBar.endEditing()
-//		self.URLBar.currentURL = url
-//		self.URLBar.applyTheme(self.URLBar.theme)
-//	}
-//	
-//	func startEditing(initialText: String?, pasted: Bool) {
-//		self.URLBar.startEditing(initialText, pasted: pasted)
-//	}
-//
-//	func stopEditing() {
-//		self.URLBar.stopEditing()
-//	}
-    
-    //Actions I want - these 4 completely describe what can happen in the URLBar
-    //URLBackPressed
-    //URLClearPressed
-    //URLSearchPressed
-    //URLSearchTextChanged
+
     
     func collapsedEmptyTransparent() {
+        currentState = .collapsedEmptyTransparent
         URLBar.backgroundColor = UIColor.clear
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = nil
@@ -100,6 +88,7 @@ final class URLBarViewController: UIViewController {
     }
     
     func collapsedTextTransparent(text: String?) {
+        currentState = .collapsedTextTransparent
         URLBar.backgroundColor = UIColor.clear
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = text
@@ -109,6 +98,7 @@ final class URLBarViewController: UIViewController {
     }
     
     func collapsedQueryBlue(text: String?) {
+        currentState = .collapsedQueryBlue
         URLBar.backgroundColor = UIConstants.CliqzThemeColor
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = text
@@ -117,34 +107,16 @@ final class URLBarViewController: UIViewController {
         progressBar.alpha = 0.0
     }
     
-    func collapsedDomainBlue(urlStr: String?, progress: Float?) {
+    func collapsedDomainBlue(urlStr: String?) {
+        currentState = .collapsedDomainBlue
         URLBar.backgroundColor = UIConstants.CliqzThemeColor
         URLBar.changeState(state: .collapsedBrowse)
         URLBar.domainLabel.text = processUrl(urlStr: urlStr)
         URLBar.textField.resignFirstResponder()
-        if let p = progress {
-            //I will refactor this. Use transitions
-            UIView.animate(withDuration: 0.1, animations: {
-                //self.progressBar.isHidden = false
-                if p != 1.0 {
-                    self.progressBar.alpha = 1.0
-                }
-                
-                self.progressBar.setProgress(progress: p)
-                self.view.layoutIfNeeded()
-            }, completion: { (finished) in
-                if p == 1.0 {
-                    UIView.animate(withDuration: 0.8, animations: {
-                        self.progressBar.alpha = 0.0
-                        self.view.layoutIfNeeded()
-                    })
-                }
-            })
-    
-        }
     }
 
     func expandedEmptyWhite() {
+        currentState = .expandedEmptyWhite
         URLBar.changeState(state: .expandedEmpty)
         URLBar.textField.text = ""
         search_loader?.query = ""
@@ -153,6 +125,7 @@ final class URLBarViewController: UIViewController {
     }
 
     func expandedTextWhite(text: String?) {
+        currentState = .expandedTextWhite
         URLBar.changeState(state: .expandedText)
         URLBar.textField.text = text
         if let t = text {
@@ -160,6 +133,36 @@ final class URLBarViewController: UIViewController {
         }
         progressBar.setProgress(progress: 0.0)
         progressBar.alpha = 0.0
+    }
+    
+    func setProgress(progress: Float?) {
+        
+        guard currentState == .collapsedDomainBlue else {
+            return
+        }
+        
+        guard let p = progress else {
+            return
+        }
+        
+        //I will refactor this. Use transitions
+        UIView.animate(withDuration: 0.1, animations: {
+            //self.progressBar.isHidden = false
+            if p != 1.0 {
+                self.progressBar.alpha = 1.0
+            }
+            
+            self.progressBar.setProgress(progress: p)
+            self.view.layoutIfNeeded()
+        }, completion: { (finished) in
+            if p == 1.0 {
+                UIView.animate(withDuration: 0.8, animations: {
+                    self.progressBar.alpha = 0.0
+                    self.view.layoutIfNeeded()
+                })
+            }
+        })
+        
     }
     
     func processUrl(urlStr:String?) -> String? {

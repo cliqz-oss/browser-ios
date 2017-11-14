@@ -47,6 +47,8 @@ enum ActionType {
     case webNavigationUpdate
 }
 
+let RouterActions: [ActionType] = [.tabsPressed, .sharePressed, .remindersPressed, .urlProgressChanged]
+
 enum ActionContext {
     case mainContainer
     case urlBarVC
@@ -96,9 +98,7 @@ protocol ActionDelegate: class {
 }
 
 class Router {
-    
-    //Route actions to Navigations (Always!!!). The navigations are responsible for state, so they decide what to do with the input for subcomponents.
-    
+
     fileprivate weak var contentNavVC: ContentNavigationViewController?
     fileprivate weak var mainNavVC: MainContainerViewController?
 	fileprivate weak var urlBarVC: URLBarViewController?
@@ -120,6 +120,11 @@ class Router {
 extension Router: ActionDelegate {
     
     func action(action: Action) {
+        
+        guard RouterActions.contains(action.type) else {
+            return
+        }
+        
         switch action.type {
         case .tabsPressed:
             mainNavVC?.showTabOverView()
@@ -127,6 +132,10 @@ extension Router: ActionDelegate {
             ShareHelper.presentActivityViewController()
         case .remindersPressed:
             contentNavVC?.showReminder()
+        case .urlProgressChanged:
+            if let actionData = action.data, let progress = actionData["progress"] as? Float {
+                urlBarVC?.setProgress(progress: progress)
+            }
         default:
             debugPrint()
         }

@@ -99,7 +99,7 @@ final class CIBrowserViewController: UIViewController {
 		case KVOEstimatedProgress:
 			guard webView == tabManager.selectedTab?.webView,
 				let progress = change?[NSKeyValueChangeKey.newKey] as? Float else { break }
-                StateManager.shared.handleAction(action: Action(data: ["progress": progress], type: .urlProgressChanged))
+                Router.shared.action(action: Action(data: ["progress": progress], type: .urlProgressChanged))
 			// TODO
 //			urlBar.updateProgressBar(progress)
 		case KVOLoading:
