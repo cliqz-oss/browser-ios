@@ -6,7 +6,7 @@
 "Something went wrong, the script wasn't loaded." = "Qualcosa è andato storto, lo script non è stato caricato correttamente.";
 /* Button label to cancel entering a URL or search query
  Cancel */
-"Cancel" = "Cancel";
+"Cancel" = "Annulla";
 /* Button label on Alert view */
 "Retry" = "Retry";
 /* Search Recommendations and top visited sites title */
