@@ -40,20 +40,24 @@ final class StateManager {
     
     func handleAction(action: Action) {
         
-        var stateData = StateData.fromAction(action: action)
+        var actionStateData = StateData.fromAction(action: action)
         
-        guard canHandleAction(action: action, stateData: stateData) else {
+        guard canHandleAction(action: action, stateData: actionStateData) else {
             return
         }
         
         //Add tab: Rule - whenever a url is selected open a new tab (press on card, press on news, press on reminder, press on history entry)
         if action.type == .urlSelected && (GeneralUtils.tabManager().selectedTab?.webView?.url != nil || GeneralUtils.tabManager().tabs.count == 0) {
             let tab = GeneralUtils.tabManager().addTabAndSelect()
-            addTabTo(stateData: &stateData, tab: tab) //update the tab in the state data
+            addTabTo(stateData: &actionStateData, tab: tab) //update the tab in the state data
             addCurrentStateToNavigation(tab: tab) //add the current state to the navigation of the new tab
+            //remove current tab
+            if let currentTab = currentState.stateData.tab {
+                GeneralUtils.tabManager().removeTab(currentTab)
+            }
         }
 
-        let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: stateData)
+        let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: actionStateData)
         //tab could have changed since the last state. Make sure the latest is selected
         selectTabFor(nextState: nextState, action: action)
         changeToState(nextState: nextState, action: action)
