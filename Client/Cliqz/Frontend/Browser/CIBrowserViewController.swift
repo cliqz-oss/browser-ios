@@ -328,6 +328,11 @@ extension CIBrowserViewController {
 	fileprivate func initWebView(_ webView: CliqzWebView, ofTab tab: Tab) {
 		// Observers that live as long as the tab. Make sure these are all cleared
 		// in willDeleteWebView below!
+        
+        if self.cliqzWebView == webView {
+            return
+        }
+        
 		self.cliqzWebView = webView
 		self.view.addSubview(webView)
 		webView.snp.makeConstraints { (make) in
