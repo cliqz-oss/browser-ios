@@ -174,7 +174,7 @@ class ConnectTableViewController: SubSettingsTableViewController {
         
         // Show Connection successful Alert
         let alertTitle = NSLocalizedString("Connection successful", tableName: "Cliqz", comment: "[Connect] Connection successful alert title")
-        let alertMessage = NSLocalizedString(" You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device.", tableName: "Cliqz", comment: "[Connect] Connection Successful alert message")
+        let alertMessage = NSLocalizedString("You connected your first device!\n\nNow you are ready to send websites and YouTube videos from your computer to your mobile device.", tableName: "Cliqz", comment: "[Connect] Connection Successful alert message")
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Ok", tableName: "Cliqz", comment: "Ok"), style: .default, handler: nil))

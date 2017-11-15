@@ -365,5 +365,6 @@
 "Here you will find your history.\n\n\nYou haven't searched or visited any website so far." = "Retrouvez votre historique ici.\n\n\nVous n'avez pas encore recherché ou visité de site.";
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Retrouvez vos sites favoris ici.\n\n\nVous n'avez pas encore enregistré de favoris.";
-/* [TabsOverview] Done button title */
+/* [TabsOverview] Done button title
+  [Settings] Done button title */
 "Done" = "Terminé";
