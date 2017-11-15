@@ -30,26 +30,6 @@ enum URLBarState {
     case expandedTextWhite
 }
 
-enum ToolBarState {
-    case invisible
-    case visible
-}
-
-enum ToolBarBackState {
-    case enabled
-    case disabled
-}
-
-enum ToolBarForwardState {
-    case enabled
-    case disabled
-}
-
-enum ToolBarShareState {
-    case enabled
-    case disabled
-}
-
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
 struct StateData: Equatable {
     let query: String?
@@ -110,15 +90,11 @@ struct State: Equatable {
     //let mainState: MainState
     let contentState: ContentState
     let urlBarState: URLBarState
-    let toolBarState: ToolBarState
-    let toolBackState: ToolBarBackState
-    let toolForwardState: ToolBarForwardState
-    let toolShareState: ToolBarShareState
     
     let stateData: StateData
     
     static func == (lhs: State, rhs: State) -> Bool {
-        return lhs.contentState == rhs.contentState && lhs.urlBarState == rhs.urlBarState && lhs.toolBarState == rhs.toolBarState //&& lhs.toolBackState == rhs.toolBackState && lhs.toolForwardState == rhs.toolForwardState && lhs.toolShareState == rhs.toolShareState
+        return lhs.contentState == rhs.contentState && lhs.urlBarState == rhs.urlBarState
     }
     
     static func equalWithTheSameData (lhs: State, rhs: State) -> Bool {
@@ -126,7 +102,7 @@ struct State: Equatable {
     }
     
     static func initial() -> State {
-        return State(contentState: .domains, urlBarState: .collapsedEmptyTransparent, toolBarState: .visible, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: .disabled, stateData: StateData.empty())
+        return State(contentState: .domains, urlBarState: .collapsedEmptyTransparent, stateData: StateData.empty())
     }
 }
 
@@ -135,29 +111,17 @@ extension State {
         return sameStateWith(info: ["stateData": newStateData])
     }
     
-    func sameStateWithNewBackForwardState(newBackState: ToolBarBackState, newForwardState: ToolBarForwardState) -> State {
-        return sameStateWith(info: ["toolBackState": newBackState, "toolForwardState": newForwardState])
-    }
-    
     func sameStateWith(info: [String: Any]) -> State {
         
         let new_contentState: ContentState? = info["contentState"] as? ContentState
         let new_urlBarState: URLBarState? = info["urlBarState"] as? URLBarState
-        let new_toolBarState: ToolBarState? = info["toolBarState"] as? ToolBarState
-        let new_toolBackState: ToolBarBackState? = info["toolBackState"] as? ToolBarBackState
-        let new_toolForwardState: ToolBarForwardState? = info["toolForwardState"] as? ToolBarForwardState
-        let new_toolShareState: ToolBarShareState? = info["toolShareState"] as? ToolBarShareState
         let new_stateData: StateData? = info["stateData"] as? StateData
         
         let contentState: ContentState = new_contentState != nil ? new_contentState! : self.contentState
         let urlBarState: URLBarState = new_urlBarState != nil ? new_urlBarState! : self.urlBarState
-        let toolBarState: ToolBarState = new_toolBarState != nil ? new_toolBarState! : self.toolBarState
-        let toolBackState: ToolBarBackState = new_toolBackState != nil ? new_toolBackState! : self.toolBackState
-        let toolForwardState: ToolBarForwardState = new_toolForwardState != nil ? new_toolForwardState! : self.toolForwardState
-        let toolShareState: ToolBarShareState = new_toolShareState != nil ? new_toolShareState! : self.toolShareState
         let stateData: StateData = new_stateData != nil ? new_stateData! : self.stateData
         
-        return State(contentState: contentState, urlBarState: urlBarState, toolBarState: toolBarState, toolBackState: toolBackState, toolForwardState: toolForwardState, toolShareState: toolShareState, stateData: stateData)
+        return State(contentState: contentState, urlBarState: urlBarState, stateData: stateData)
         
     }
 }

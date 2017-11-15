@@ -66,10 +66,7 @@ final class StateManager {
     func changeToState(nextState: State, action: Action) {
         contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData, action: action)
         urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
-        toolBarChangeToState(currentState: currentState.toolBarState, nextState: nextState.toolBarState)
-        toolBackChangeToState(nextState: nextState, tab: nextState.stateData.tab)
-        toolForwardChageToState(currentState: currentState, tab: nextState.stateData.tab)
-        toolShareChangeToState(currentState: currentState.toolShareState, nextState: nextState.toolShareState)
+        updateToolBar(nextState: nextState, action: action)
         
         if currentState.contentState != nextState.contentState {
             previousState = currentState
@@ -165,57 +162,35 @@ final class StateManager {
         }
     }
     
-    func toolBarChangeToState(currentState: ToolBarState, nextState: ToolBarState) {
+    func updateToolBar(nextState: State, action: Action) {
         
-        guard currentState != nextState else {
-            return
-        }
-        
-        switch nextState {
-        case .invisible:
-            debugPrint()
-        case .visible:
-            debugPrint()
-        }
-    }
-    
-    func toolBackChangeToState(nextState: State, tab: Tab?) {
-        
-        if let tab = tab {
-            if BackForwardNavigation.shared.canGoBack(tab: tab) && !((nextState.contentState == .domains || nextState.contentState == .details || nextState.contentState == .dash) && BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .search) {
-                toolBar?.setBackEnabled()
-                return
-            }
-        }
-        
-        toolBar?.setBackDisabled()
-        
-    }
-    
-    func toolForwardChageToState(currentState: State, tab: Tab?) {
-        
-        if let tab = tab {
+        if let tab = nextState.stateData.tab {
+            
+            //Update Forward
             if BackForwardNavigation.shared.canGoForward(tab: tab) {
                 toolBar?.setForwardEnabled()
-                return
             }
-        }
-        
-        toolBar?.setForwardDisabled()
-        
-    }
-    
-    func toolShareChangeToState(currentState: ToolBarShareState, nextState: ToolBarShareState) {
-        
-        guard currentState != nextState else {
-            return
-        }
-        
-        switch nextState {
-        case .enabled:
-            debugPrint()
-        case .disabled:
-            debugPrint()
+            else {
+                toolBar?.setForwardDisabled()
+            }
+            
+            //Update Back
+            if BackForwardNavigation.shared.canGoBack(tab: tab) && !((nextState.contentState == .domains || nextState.contentState == .details || nextState.contentState == .dash) && BackForwardNavigation.shared.currentState(tab: tab)?.contentState != .search) {
+                toolBar?.setBackEnabled()
+            }
+            else {
+                toolBar?.setBackDisabled()
+            }
+            
+            //Update Tabs
+            let specialCond = GeneralUtils.tabManager().tabs.count == 1 && GeneralUtils.tabManager().tabs[0].url == nil && action.type != .urlSelected
+            
+            if GeneralUtils.tabManager().tabs.count == 0 || specialCond {
+                toolBar?.setTabsDisabled()
+            }
+            else {
+                toolBar?.setTabsEnabled()
+            }
         }
     }
 }

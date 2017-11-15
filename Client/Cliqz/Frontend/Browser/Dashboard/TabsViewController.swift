@@ -68,6 +68,7 @@ protocol TabsViewControllerDelegate: class {
     func itemPressed(tabsVC: TabsViewController?, indexPath: IndexPath)
     func donePressed(tabsVC: TabsViewController?)
     func plusPressed(tabsVC: TabsViewController?)
+    func lastTabDeleted(tabsVC: TabsViewController?)
 }
 
 final class TabsViewController: UIViewController {
@@ -471,6 +472,11 @@ extension TabsViewController: TabManagerDelegate {
         }
         self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
         self.collectionView.collectionViewLayout.invalidateLayout()
+        
+        if tabManager.tabs.count == 0 {
+            weak var weak_self: TabsViewController? = self
+            delegate?.lastTabDeleted(tabsVC: weak_self)
+        }
     }
     
     func tabManagerDidAddTabs(_ tabManager: TabManager) {

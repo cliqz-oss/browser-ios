@@ -114,6 +114,15 @@ extension ToolbarViewController {
         toolBarView.forwardButton.isEnabled = false
     }
     
+    func setTabsEnabled() {
+        toolBarView.tabsButton.isEnabled = true
+        
+    }
+    
+    func setTabsDisabled() {
+        toolBarView.tabsButton.isEnabled = false
+    }
+    
 }
 
 extension ToolbarViewController: CIToolBarDelegate {

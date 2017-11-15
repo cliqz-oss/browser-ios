@@ -348,4 +348,9 @@ extension MainContainerViewController: TabsViewControllerDelegate {
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
         
     }
+    
+    func lastTabDeleted(tabsVC: TabsViewController?) {
+        StateManager.shared.handleAction(action: Action(type: .initialization))
+        dismissTabOverview(tabsVC: tabsVC, completion: nil)
+    }
 }

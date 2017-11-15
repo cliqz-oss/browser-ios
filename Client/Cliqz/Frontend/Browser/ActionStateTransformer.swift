@@ -59,11 +59,9 @@ final class ActionStateTransformer {
 
         let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, nextStateData: nextStateData, actionType: actionType)
         let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, nextStateData: nextStateData, actionType: actionType)
-        let toolBarNextState = toolBarTransform(currentState: currentState.toolBarState, actionType: actionType)
-        let toolShareNextState = toolBarShareTransform(currentState: currentState.toolShareState, actionType: actionType)
         
         //right now the state of the back and forwward that I set here as disabled does not affect the ui
-        let state = State(contentState: contentNextState, urlBarState: urlBarNextState, toolBarState: toolBarNextState, toolBackState: .disabled, toolForwardState: .disabled, toolShareState: toolShareNextState, stateData: nextStateData)
+        let state = State(contentState: contentNextState, urlBarState: urlBarNextState, stateData: nextStateData)
         
         //Attention: A tab should exist at this point. Force unwrapping is intentional here
         let tab = state.stateData.tab!
@@ -108,16 +106,6 @@ final class ActionStateTransformer {
         }
         
         return nextState
-    }
-    
-    //the toolBar's state should be set by the action .didChangeOrientation, but we don't have it here yet.
-    private class func toolBarTransform(currentState: ToolBarState, actionType: ActionType) -> ToolBarState {
-        return currentState
-    }
-
-    private class func toolBarShareTransform(currentState: ToolBarShareState, actionType: ActionType) -> ToolBarShareState {
-        //this is currently handled by MainContainer.
-        return currentState
     }
     
 }
