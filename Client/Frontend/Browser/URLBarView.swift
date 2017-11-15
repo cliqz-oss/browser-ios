@@ -988,6 +988,10 @@ extension URLBarView: Themeable {
 		} else {
 			if self.currentURL == nil || self.currentURL!.absoluteString == "" {
 				self.backgroundColor = UIColor.clear
+				if currentTheme == Theme.NormalMode {
+					actionButtonTextColor = UIColor.black
+					actionButtonTintColor = UIColor.black
+				}
 			} else {
 				self.backgroundColor = URLBarViewUX.NonEditModeBackgroundColor
 			}
