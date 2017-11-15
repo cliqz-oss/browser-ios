@@ -296,7 +296,7 @@ final class BackForwardNavigation {
     }
     
     func maxIndex(tab: Tab) -> Int? {
-        if let count = navigationStore.tabStateChains[tab]?.states.count {
+        if let count = navigationStore.tabStateChains[Weak(value: tab)]?.states.count {
             return count - 1
         }
         return nil

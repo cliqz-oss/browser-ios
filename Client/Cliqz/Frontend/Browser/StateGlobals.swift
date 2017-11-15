@@ -54,7 +54,7 @@ enum ToolBarShareState {
 struct StateData: Equatable {
     let query: String?
     let url: String?
-    let tab: Tab?
+    weak var tab: Tab?
     let detailsHost: String?
     //maybe indexpath as well or tab?
     

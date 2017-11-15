@@ -4251,14 +4251,14 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		AF671F891F7A51D9009F1473 /* BackForwardNavigation Don't Delete */ = {
+		AF671F891F7A51D9009F1473 /* BackForwardNavigation */ = {
 			isa = PBXGroup;
 			children = (
 				AF671F791F7A51D2009F1473 /* BackForwardNavigation.swift */,
 				AF6B5E9A1F73B72E004FEE00 /* NavigationStore.swift */,
 				AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */,
 			);
-			name = "BackForwardNavigation Don't Delete";
+			name = BackForwardNavigation;
 			sourceTree = "<group>";
 		};
 		AF82661C1EB09FBA0023C77C /* Tab Redesign */ = {
@@ -4340,7 +4340,7 @@
 				AF7771AB1FBB08C700C18123 /* StateGlobals.swift */,
 				AF4E53B81F6A9EDD007171C9 /* StateManager.swift */,
 				AF5F767D1F6A62EC00E1495E /* ActionStateTransformer.swift */,
-				AF671F891F7A51D9009F1473 /* BackForwardNavigation Don't Delete */,
+				AF671F891F7A51D9009F1473 /* BackForwardNavigation */,
 				AFCD36C51F5EE8B5004AE609 /* Share */,
 				AF0E13CB1F4C593600651728 /* History */,
 				AF0E13CA1F4C592300651728 /* Animation */,

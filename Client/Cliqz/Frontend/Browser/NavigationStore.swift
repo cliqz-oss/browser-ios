@@ -6,17 +6,29 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
+class Weak<T: Tab>: Hashable {
+    weak var value : T?
+    init (value: T) {
+        self.value = value
+    }
+    
+    static func ==(lhs:Weak<T>, rhs: Weak<T>) -> Bool {
+        return lhs.value == rhs.value
+    }
+    
+    var hashValue: Int {
+        return value?.hashValue ?? -1
+    }
+}
 
 final class NavigationStore {
-    
-//    static let shared = BackForwardNavigation()
     
     struct StateChain {
         var states: [State]
         var currentIndex: Int
     }
     
-    /*private*/ var tabStateChains: [Tab: StateChain] = [:]
+    /*private*/ var tabStateChains: [Weak<Tab>: StateChain] = [:]
     
     func addState(tab: Tab, state: State) {
         
@@ -31,7 +43,7 @@ final class NavigationStore {
         //This works for search, where I am interested only in the last query
         //But it does not work for browse where I am interested in all browsed urls
         
-        if var stateChain = tabStateChains[tab] {
+        if var stateChain = tabStateChains[Weak(value: tab)] {
             
             var states = stateChain.states
             var currentIndex = stateChain.currentIndex
@@ -59,16 +71,16 @@ final class NavigationStore {
             stateChain.states = states
             stateChain.currentIndex = currentIndex
             
-            tabStateChains[tab] = stateChain
+            tabStateChains[Weak(value: tab)] = stateChain
         }
         else {
-            tabStateChains[tab] = StateChain(states: [state], currentIndex: 0)
+            tabStateChains[Weak(value: tab)] = StateChain(states: [state], currentIndex: 0)
         }
         
     }
     
     func replaceCurrentState(tab: Tab, newState: State) {
-        if var stateChain = tabStateChains[tab] {
+        if var stateChain = tabStateChains[Weak(value: tab)] {
             //assumption is that the currentIndex is within bounds
             let currentIndex = stateChain.currentIndex
             var states = stateChain.states
@@ -76,7 +88,7 @@ final class NavigationStore {
             if currentIndex >= 0 && currentIndex < stateChain.states.count {
                 states[currentIndex] = newState
                 stateChain.states = states
-                tabStateChains[tab] = stateChain
+                tabStateChains[Weak(value: tab)] = stateChain
             }
             else {
                 //current state has to exist!!!
@@ -86,22 +98,22 @@ final class NavigationStore {
     }
     
     func removeState(tab: Tab, index: Int) {
-        if let stateChain = tabStateChains[tab] {
+        if let stateChain = tabStateChains[Weak(value: tab)] {
             if index >= 0 && index < stateChain.states.count {
                 var states = stateChain.states
                 let currentIndex = stateChain.currentIndex - 1
                 states.remove(at: index)
-                tabStateChains[tab] = StateChain(states: states, currentIndex: currentIndex)
+                tabStateChains[Weak(value: tab)] = StateChain(states: states, currentIndex: currentIndex)
             }
         }
     }
     
     func removeTab(tab: Tab) {
-        tabStateChains.removeValue(forKey: tab)
+        tabStateChains.removeValue(forKey: Weak(value: tab))
     }
  
     func state(tab: Tab, index: Int) -> State? {
-        if let stateChain = tabStateChains[tab] {
+        if let stateChain = tabStateChains[Weak(value: tab)] {
             if index >= 0 && index < stateChain.states.count {
                 return stateChain.states[index]
             }
@@ -118,15 +130,15 @@ final class NavigationStore {
     }
     
     func currentIndex(tab: Tab) -> Int? {
-        return tabStateChains[tab]?.currentIndex
+        return tabStateChains[Weak(value: tab)]?.currentIndex
     }
     
     func incrementIndex(tab: Tab) {
-        if var stateChain = tabStateChains[tab] {
+        if var stateChain = tabStateChains[Weak(value: tab)] {
             let currentIndex = stateChain.currentIndex
             if currentIndex + 1 <= stateChain.states.count - 1 {
                 stateChain.currentIndex = currentIndex + 1
-                tabStateChains[tab] = stateChain
+                tabStateChains[Weak(value: tab)] = stateChain
             }
             else {
                 NSException.init(name: NSExceptionName(rawValue: "Incrementing out of bounds"), reason: "If you want to increment the current index, first add a state and then increment.", userInfo: nil).raise()
@@ -135,11 +147,11 @@ final class NavigationStore {
     }
     
     func decrementIndex(tab: Tab) {
-        if var stateChain = tabStateChains[tab] {
+        if var stateChain = tabStateChains[Weak(value: tab)] {
             let currentIndex = stateChain.currentIndex
             if currentIndex - 1 >= 0 {
                 stateChain.currentIndex = currentIndex - 1
-                tabStateChains[tab] = stateChain
+                tabStateChains[Weak(value: tab)] = stateChain
             }
             else {
                 NSException.init(name: NSExceptionName(rawValue: "Decrementing out of bounds"), reason: "Current Index has cannot be decremented below 0", userInfo: nil).raise()
@@ -149,7 +161,7 @@ final class NavigationStore {
     
     func hasNextState(tab: Tab) -> Bool {
         
-        if let stateChain = tabStateChains[tab] {
+        if let stateChain = tabStateChains[Weak(value: tab)] {
             return stateChain.currentIndex >= 0 && stateChain.currentIndex < stateChain.states.count - 1
         }
         
@@ -158,7 +170,7 @@ final class NavigationStore {
     
     func hasPrevState(tab: Tab) -> Bool {
         
-        if let stateChain = tabStateChains[tab] {
+        if let stateChain = tabStateChains[Weak(value: tab)] {
             return stateChain.currentIndex > 0 && stateChain.currentIndex < stateChain.states.count
         }
         
