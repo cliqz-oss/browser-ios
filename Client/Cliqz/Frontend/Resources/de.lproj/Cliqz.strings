@@ -82,7 +82,7 @@
 /* Dashboard navigation bar title */
 "Overview" = "Übersicht";
 /* Title on the tab view, when no URL is open on the tab */
-"Topsites" = "Meist-besuchte Seiten und Nachrichten";
+"Topsites" = "Meistbesuchte Seiten und Nachrichten";
 /* Antitracking UI top title */
 "Data is protected" = "Deine Daten sind geschützt";
 /* Antitracking UI subtitle */
@@ -126,7 +126,7 @@
 /* Control Center hint title */
 "Control Center" = "Control Center";
 /* Control Center hint description */
-"Customize the protection of your data to your needs." = "Passe den Schutz deiner Daten an  deine Bedürfnissen an.";
+"Customize the protection of your data to your needs." = "Passe den Schutz deiner Daten an deine Bedürfnissen an.";
 /* Control Center Option 1*/
 "Protection enabled" = "Schutz aktiv";
 /* Control Center Option 2*/
@@ -154,7 +154,7 @@
 /* Description on Freshtab for forget mode */
 "Forget Tab Description" = "Du surfst im Vergessen-Modus: Webseiten, die du in diesem Modus besuchst, werden nicht in deinem Verlauf auftauchen. Auch werden lokale Daten, Cookies mit eingeschlossen, nicht gespeichert.";
 /* Hint on Freshtab when there is no topsites */
-"Empty TopSites hint" = "Hier werden deine meist-besuchten Seiten erscheinen";
+"Empty TopSites hint" = "Hier werden deine meistbesuchten Seiten erscheinen";
 /* Anti-Trakcing panel name on control center. */
 "Anti-Tracking" = "Anti-Tracking";
 /* Ad-Blocking panel name on control center. */
