@@ -1,11 +1,6 @@
-"NSLocationWhenInUseUsageDescription" = "Ta localisation nous permet de te fournir de meilleurs résultats de recherche.";
-
+"NSLocationWhenInUseUsageDescription" = "Votre localisation nous permet de vous fournir de meilleurs résultats de recherche.";
 "ShortcutItemTitleNewPrivateTab" = "Nouvel onglet de navigation privée";
-
 "ShortcutItemTitleNewTab" = "Nouvel onglet";
-
-"NSPhotoLibraryUsageDescription" = "CLIQZ n'utilisera cet accès qu'afin de télécharger des vidéos sur votre appareil.";
-
-"NSPhotoLibraryAddUsageDescription" = "CLIQZ n'utilisera cet accès qu'afin de télécharger des vidéos sur votre appareil.";
-
-"NSMicrophoneUsageDescription" = "CLIQZ utilisera le microphone seulement si vous décidez d’enregistrer des vidéos à l’intérieur du navigateur.";
+"NSPhotoLibraryUsageDescription" = "Cliqz n'utilisera cet accès qu'afin de télécharger des vidéos et des photos sur votre appareil.";
+"NSPhotoLibraryAddUsageDescription" = "Cliqz n'utilisera cet accès qu'afin de télécharger des vidéos et des photos sur votre appareil.";
+"NSMicrophoneUsageDescription" = "Cliqz utilisera le microphone seulement si vous décidez d’enregistrer des vidéos à l’intérieur du navigateur.";

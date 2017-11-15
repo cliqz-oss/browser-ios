@@ -1,11 +1,6 @@
 "NSLocationWhenInUseUsageDescription" = "Your location is used to provide better search results.";
-
 "ShortcutItemTitleNewPrivateTab" = "New Private Tab";
-
 "ShortcutItemTitleNewTab" = "New Tab";
-
-"NSPhotoLibraryUsageDescription" = "CLIQZ will only use this access to download videos to your device.";
-
-"NSPhotoLibraryAddUsageDescription" = "CLIQZ will only use this access to download videos to your device.";
-
-"NSMicrophoneUsageDescription" = "CLIQZ will only use the microphone when you choose to record videos inside the browser.";
+"NSPhotoLibraryUsageDescription" = "Cliqz will only use this access to download videos and pictures to your device.";
+"NSPhotoLibraryAddUsageDescription" = "Cliqz will only use this access to download videos and pictures to your device.";
+"NSMicrophoneUsageDescription" = "Cliqz will only use the microphone when you choose to record videos inside the browser.";
