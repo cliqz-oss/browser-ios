@@ -64,8 +64,7 @@ open class JSBridge : RCTEventEmitter {
         }
         return nextId
     }
-    
-    
+
     /// Call an action over the JSBridge and return the result synchronously.
     ///
     /// - parameter functionName: String name of the function to call
