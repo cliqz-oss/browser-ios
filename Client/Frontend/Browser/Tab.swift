@@ -205,7 +205,7 @@ class Tab: NSObject {
             restore(webView)
 
             self.webView = webView
-            self.webView?.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
+            //self.webView?.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
             tabDelegate?.tab?(self, didCreateWebView: webView)
         }
     }
@@ -245,16 +245,18 @@ class Tab: NSObject {
             log.error("creating webview with no lastRequest and no session data: \(String(describing: self.url))")
         }
     }
+    
     private func getEscapedJSON(_ jsonDict: [String: Any]) -> String?{
         let jsonString = JSON(jsonDict).rawString(String.Encoding.utf8, options: [])
         let escapedJSON = jsonString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         return escapedJSON
     }
+    
     deinit {
         if let webView = webView {
             //tabDelegate is nil for the last tab
             tabDelegate?.tab?(self, willDeleteWebView: webView)
-            webView.removeObserver(self, forKeyPath: "URL")
+            //webView.removeObserver(self, forKeyPath: "URL")
         }
     }
 
