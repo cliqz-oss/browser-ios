@@ -60,6 +60,7 @@ class HistoryViewController: UIViewController {
         self.tableViewDataSource.reloadHistory(completion: { [weak self] in
             DispatchQueue.main.async {
                 self?.dataSourceWasUpdated()
+                self?.historyTableView.reloadData()
                 self?.scrollToBottom()
             }
         })
@@ -132,7 +133,6 @@ extension HistoryViewController: HasDataSource {
         } else {
             self.emptyHistroyLabel.isHidden = true
             self.historyTableView.isHidden = false
-            self.historyTableView.reloadData()
         }
     }
 }
