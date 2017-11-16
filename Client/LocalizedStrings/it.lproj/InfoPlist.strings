@@ -4,3 +4,4 @@
 "NSPhotoLibraryUsageDescription" = "Cliqz accederà solo per scaricare video o foto sul tuo telefono.";
 "NSPhotoLibraryAddUsageDescription" = "Cliqz accederà solo per scaricare video o foto sul tuo telefono.";
 "NSMicrophoneUsageDescription" = "Cliqz userà il microfono solo quando vorrai registrare dei video all'interno del browser.";
+"NSCameraUsageDescription" = "Used if user wants to send video feedback or bug report";
