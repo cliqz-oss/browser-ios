@@ -1130,7 +1130,7 @@ class ToolbarTextField: AutocompleteTextField {
         theme.textColor = UIColor.black
         theme.highlightColor = AutocompleteTextFieldUX.HighlightColor
 		// Cliqz: Added Button tint color to Gray
-		theme.buttonTintColor = UIColor.white
+		theme.buttonTintColor = UIColor.gray
 
         themes[Theme.NormalMode] = theme
 
