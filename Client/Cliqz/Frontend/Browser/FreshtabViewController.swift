@@ -539,8 +539,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
             
             cell.tag = indexPath.row
             
-			if let url = n["url"] as? String {
-                LogoLoader.loadLogo(url, completionBlock: { (image, logoInfo, error) in
+			if let domain = n["domain"] as? String {
+                let domainUrl = "http://www.\(domain)"
+                LogoLoader.loadLogo(domainUrl, completionBlock: { (image, logoInfo, error) in
 					if cell.tag == indexPath.row {
 						if let img = image {
 							cell.logoImageView.image = img
