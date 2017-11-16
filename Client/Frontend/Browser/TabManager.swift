@@ -112,6 +112,16 @@ class TabManager : NSObject {
             return []
         }
     }
+    
+    var nonEmptyTabs: [Tab] {
+        assert(Thread.isMainThread)
+        
+        if #available(iOS 9, *) {
+            return tabs.filter { $0.url != nil }
+        } else {
+            return []
+        }
+    }
 
     init(prefs: Prefs, imageStore: DiskImageStore?) {
         assert(Thread.isMainThread)
@@ -249,7 +259,7 @@ class TabManager : NSObject {
 
     // This method is duplicated to hide the flushToDisk option from consumers.
     func addTab(_ request: URLRequest! = nil, configuration: WKWebViewConfiguration! = nil) -> Tab {
-        return self.addTab(request, configuration: configuration, flushToDisk: true, zombie: false)
+        return self.addTab(request, configuration: configuration, flushToDisk: true, zombie: true)
     }
 
     func addTabsForURLs(_ urls: [URL], zombie: Bool) {
@@ -475,6 +485,14 @@ class TabManager : NSObject {
     
     func eraseUndoCache() {
         tempTabs?.removeAll()
+    }
+    
+    func removeEmptyTabs() {
+        let empty_tabs = self.tabs.filter { (tab) -> Bool in
+            return tab.url == nil
+        }
+        
+        removeTabs(empty_tabs)
     }
 
     func removeTabs(_ tabs: [Tab]) {

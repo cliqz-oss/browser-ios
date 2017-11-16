@@ -63,14 +63,16 @@ final class CIBrowserViewController: UIViewController {
 	}
 
 	func loadURL(_ url: URL?) {
+        
 		if let validURL = url,
 			let tab = tabManager.selectedTab,
-			let _ = tab.loadRequest(PrivilegedRequest(url: validURL) as URLRequest) {
+            let _ = tab.loadRequest(PrivilegedRequest(url: validURL) as URLRequest) {
 			// TODO: should be reviewed
 //				self.recordNavigationInTab(tab, navigation: nav, visitType: .Link)
 		} else {
 			// TODO: handle exceptional case
 		}
+    
 	}
 
     func setUpComponent() {
@@ -770,12 +772,16 @@ extension CIBrowserViewController: CliqzContextMenuDelegate {
 			dialogTitle = url.absoluteString
 			let isPrivate = currentTab.isPrivate
 			if !isPrivate {
-				let newTabTitle = NSLocalizedString("Open In New Tab", comment: "Context menu item for opening a link in a new tab")
+				let newTabTitle = NSLocalizedString("Open In Background", comment: "Context menu item for opening a link in the background")
 				let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
 //					self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
-						self.tabManager.addTab(URLRequest(url: url as URL))
+//						self.tabManager.addTab(URLRequest(url: url as URL))
 //						TelemetryLogger.sharedInstance.logEvent(.ContextMenu("new_tab", "link"))
 //					})
+                    DispatchQueue.main.async {
+                        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlInBackground))
+                    }
+                    
 				}
 				actionSheetController.addAction(openNewTabAction)
 			}

@@ -36,7 +36,6 @@ struct StateData: Equatable {
     let url: String?
     weak var tab: Tab?
     let detailsHost: String?
-    //maybe indexpath as well or tab?
     
     static func merge(lhs: StateData, rhs: StateData) -> StateData {
         //lhs takes precedence
@@ -82,6 +81,10 @@ struct StateData: Equatable {
         return StateData(query: text, url: url, tab: tab, detailsHost: detailsHost)
     }
     
+    mutating func addTab(tab: Tab) {
+        let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
+        self = StateData.merge(lhs: newStateData, rhs: self)
+    }
 }
 
 

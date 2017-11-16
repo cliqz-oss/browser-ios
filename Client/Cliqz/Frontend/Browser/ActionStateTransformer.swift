@@ -50,6 +50,19 @@ final class ActionStateTransformer {
                 return currentState_Tab
             }
         }
+        else if actionType == .urlInBackground {
+            //add a new tab
+            //add the current state to the new tab in the Navigation
+            if let url = processedStateData.url {
+                let newTab = GeneralUtils.tabManager().addTab()
+                var data = processedStateData
+                newTab.url = URL(string: url)
+                data.addTab(tab: newTab)
+                let newStateBackground = currentState.sameStateWithNewData(newStateData: data)
+                BackForwardNavigation.shared.addState(tab: newTab, state: newStateBackground)
+            }
+            return currentState
+        }
         
         return ActionStateTransformer.transform(previousState: previousState, currentState: currentState, actionType: actionType, nextStateData: processedStateData)
     }

@@ -282,6 +282,9 @@
 /* Context menu item for opening a link in a new tab */
 "Open In New Tab" = "In neuem Tab öffnen";
 
+/* Context menu item for opening a link in the background */
+"Open In Background" = "Im Hintergrund Öffnen";
+
 /* See http://mzl.la/1G7uHo7 */
 "Open Settings" = "Einstellungen öffnen";
 

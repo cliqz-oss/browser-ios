@@ -258,7 +258,7 @@ final class TabsViewController: UIViewController {
         }
         
         var closeAllTabsHandler: ((UIAlertAction) -> Void)? = nil
-        let tabsCount = self.tabManager.tabs.count
+        let tabsCount = self.tabManager.nonEmptyTabs.count
         if tabsCount > 1 {
             closeAllTabsHandler = { (action: UIAlertAction) in
                 self.tabManager.removeAll()
@@ -286,14 +286,13 @@ final class TabsViewController: UIViewController {
         } else {
             _ = self.tabManager.addTabAndSelect()
         }
-        self.navigationController?.popViewController(animated: false)
     }
 }
 
 extension TabsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.tabManager.tabs.count
+        return self.tabManager.nonEmptyTabs.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -301,7 +300,7 @@ extension TabsViewController: UICollectionViewDataSource {
         
         cell.tag = indexPath.row
         
-        let tab = self.tabManager.tabs[indexPath.row]
+        let tab = self.tabManager.nonEmptyTabs[indexPath.row]
         cell.delegate = self
         
         let freshtab = tab.displayURL?.absoluteString.contains("cliqz/goto.html") ?? false
@@ -375,7 +374,7 @@ extension TabsViewController: UICollectionViewDataSource {
 extension TabsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let tab = self.tabManager.tabs[indexPath.row]
+//        let tab = self.tabManager.nonEmptyTabs[indexPath.row]
 //        self.tabManager.selectTab(tab)
 //        self.navigationController?.popViewController(animated: false)
         
@@ -422,7 +421,7 @@ extension TabsViewController: TabViewCellDelegate {
         
         guard let indexPath = self.collectionView.indexPath(for: cell) else {return}
         
-        let tab = self.tabManager.tabs[indexPath.row]
+        let tab = self.tabManager.nonEmptyTabs[indexPath.row]
         
         var customData: [String : Any] = ["count" : self.tabManager.tabs.count, "is_forget" : tab.isPrivate, "element" : "close"]
         if let tabIndex = self.tabManager.getIndex(tab) {
@@ -440,12 +439,8 @@ extension TabsViewController: TabViewCellDelegate {
         else if swipe == .Left {
             action = "swipe_left"
         }
-        if self.tabManager.tabs.count == 1 {
-            self.tabManager.removeTab(tab)
-            self.navigationController?.popViewController(animated: false)
-        } else {
-            self.tabManager.removeTab(tab)
-        }
+
+        self.tabManager.removeTab(tab)
         
         TelemetryLogger.sharedInstance.logEvent(.DashBoard("open_tabs", action, "tab", customData))
     }
@@ -453,27 +448,37 @@ extension TabsViewController: TabViewCellDelegate {
 
 extension TabsViewController: TabManagerDelegate {
     func tabManager(_ tabManager: TabManager, didSelectedTabChange selected: Tab?, previous: Tab?) {
-    }
-    
-    func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
         
     }
     
+    func tabManager(_ tabManager: TabManager, didCreateTab tab: Tab) {
+        //the tab is empty. Empty tabs are not shown.
+        guard tab.url != nil else { return }
+    }
+    
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {
-        guard let index = tabManager.tabs.index(of: tab) else { return }
+        
+        //the tab is empty. Empty tabs are not shown.
+        guard tab.url != nil else { return }
+        guard let index = tabManager.nonEmptyTabs.index(of: tab) else { return }
         self.collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
+        
+        //the tab is empty. Empty tabs are not shown.
+        guard tab.url != nil else { return }
+        
         if self.collectionView.numberOfItems(inSection: 0) <= 2{
             UIView.animate(withDuration: 0.1, animations: {
                 self.collectionView.contentOffset = CGPoint(x: 0.0,y: 0.0)
             })
         }
+        
         self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
         self.collectionView.collectionViewLayout.invalidateLayout()
         
-        if tabManager.tabs.count == 0 {
+        if tabManager.nonEmptyTabs.count == 0 {
             weak var weak_self: TabsViewController? = self
             delegate?.lastTabDeleted(tabsVC: weak_self)
         }
@@ -483,9 +488,9 @@ extension TabsViewController: TabManagerDelegate {
     }
     
     func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
+        
     }
     
     func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
     }
 }
-

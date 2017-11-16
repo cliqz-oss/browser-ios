@@ -49,8 +49,8 @@ final class StateManager {
         //Add tab: Rule - whenever a url is selected open a new tab (press on card, press on news, press on reminder, press on history entry)
         if action.type == .urlSelected && (GeneralUtils.tabManager().selectedTab?.webView?.url != nil || GeneralUtils.tabManager().tabs.count == 0) {
             let tab = GeneralUtils.tabManager().addTabAndSelect()
-            addTabTo(stateData: &actionStateData, tab: tab) //update the tab in the state data
-            addCurrentStateToNavigation(tab: tab) //add the current state to the navigation of the new tab
+            actionStateData.addTab(tab: tab) //update the tab in the state data
+            addStateToNavigation(state: currentState, tab: tab) //add the current state to the navigation of the new tab
             //remove current tab
             if let currentTab = currentState.stateData.tab {
                 GeneralUtils.tabManager().removeTab(currentTab)
@@ -60,6 +60,11 @@ final class StateManager {
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: actionStateData)
         //tab could have changed since the last state. Make sure the latest is selected
         selectTabFor(nextState: nextState, action: action)
+        
+        if action.type == .tabSelected {
+            GeneralUtils.tabManager().removeEmptyTabs()
+        }
+        
         changeToState(nextState: nextState, action: action)
         
         if action.type == .backButtonPressed || action.type == .forwardButtonPressed {
@@ -124,7 +129,7 @@ final class StateManager {
             else if action.type == .forwardButtonPressed {
                 contentNav?.browseForward()
             }
-            else if action.type != .newVisit && action.type != .webNavigationUpdate && action.type != .tabDonePressed /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed  {
+            else if action.type != .newVisit && action.type != .webNavigationUpdate && action.type != .tabDonePressed /*&& action.type != .visitAddedInDB*/ && action.type != .backButtonPressed && action.type != .forwardButtonPressed && action.type != .urlInBackground {
                 if action.type == .tabSelected {
                     contentNav?.browse(url: nil, tab: nextStateData.tab)
                 }
@@ -195,6 +200,10 @@ final class StateManager {
             else {
                 toolBar?.setTabsEnabled()
             }
+            
+            if action.type == .urlInBackground {
+                toolBar?.tabsVisualFeedback()
+            }
         }
     }
 }
@@ -212,6 +221,10 @@ extension StateManager {
             return false
         }
         
+        if action.type == .searchStopEditing {
+            
+        }
+        
         return true
     }
     
@@ -224,16 +237,11 @@ extension StateManager {
         }
     }
     
-    func addTabTo(stateData: inout StateData, tab: Tab) {
-        let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
-        stateData = StateData.merge(lhs: newStateData , rhs: stateData)
-    }
-    
-    func addCurrentStateToNavigation(tab: Tab) {
+    func addStateToNavigation(state: State, tab: Tab) {
         //change the tab in the StateData and then register the state
-        var state = currentState
+        var state = state
         let tabData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
-        state = state.sameStateWithNewData(newStateData: StateData.merge(lhs: tabData, rhs: currentState.stateData))
+        state = state.sameStateWithNewData(newStateData: StateData.merge(lhs: tabData, rhs: state.stateData))
         BackForwardNavigation.shared.addState(tab: tab, state: state)
     }
 }

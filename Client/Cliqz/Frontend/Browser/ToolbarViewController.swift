@@ -123,6 +123,14 @@ extension ToolbarViewController {
         toolBarView.tabsButton.isEnabled = false
     }
     
+    func tabsVisualFeedback() {
+        toolBarView.tabsButton.setImage(UIImage(named: "tabsHighlighted") , for: .normal)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(800 * NSEC_PER_MSEC)) / Double(NSEC_PER_SEC)) {
+            self.toolBarView.tabsButton.setImage(UIImage(named: "tabs") , for: .normal)
+        }
+    }
+    
 }
 
 extension ToolbarViewController: CIToolBarDelegate {

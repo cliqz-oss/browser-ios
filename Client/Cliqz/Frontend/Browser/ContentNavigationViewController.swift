@@ -240,7 +240,9 @@ extension ContentNavigationViewController {
             browseURL(url: url)
         }
         else {
-            changeState(state: .browser)
+            if currentState != .browser {
+                changeState(state: .browser)
+            }
         }
         
     }
@@ -266,8 +268,7 @@ extension ContentNavigationViewController {
     }
 
     func browseTab(tab: Tab) {
-        //tabManager.selectTab(tab)
-        changeState(state: .browser)
+        changeState(state: .browser, text: tab.url?.absoluteString)
     }
     
     func search(query: String?) {

@@ -25,6 +25,7 @@ enum ActionType {
     case urlSearchPressed
     case urlSearchTextChanged
     case urlProgressChanged
+    case urlInBackground
     //toolbar
 	case homeButtonPressed
 	case tabsPressed
@@ -47,6 +48,7 @@ enum ActionType {
     case webNavigationUpdate
 }
 
+//Attention: Add actions that are supposed to be handled by the router here. They won't be handled if you don't add them.
 let RouterActions: [ActionType] = [.tabsPressed, .sharePressed, .remindersPressed, .urlProgressChanged]
 
 enum ActionContext {
