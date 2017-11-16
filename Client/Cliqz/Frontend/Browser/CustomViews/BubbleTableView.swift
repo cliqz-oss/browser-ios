@@ -229,12 +229,18 @@ extension BubbleTableView : CustomScrollDelegate {
 extension BubbleTableView : BubbleCellSwipeDelegate {
     func didSwipe(atCell cell: UITableViewCell, direction: SwipeDirection) {
         if let indexPath = self.indexPath(for: cell){
+            let oldSectionsCount = self.customDataSource.numberOfSections()
             self.customDelegate?.deleteItem(at: indexPath, direction: direction, completion: { [weak self] in
                 DispatchQueue.main.async {
-                    self?.reloadData()
+                    if let newSectionsCount = self?.customDataSource.numberOfSections() {
+                        if oldSectionsCount > newSectionsCount {
+                            self?.deleteSections(IndexSet([indexPath.section]), with: .none)
+                        } else {
+                            self?.deleteRows(at: [indexPath], with: .none)
+                        }
+                    }
                 }
             })
         }
-        
     }
 }
