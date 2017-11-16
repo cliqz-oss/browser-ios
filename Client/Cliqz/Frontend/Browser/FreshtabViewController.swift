@@ -577,16 +577,23 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 			} else if let url = URL(string: urlString!.escapeURL()) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
-            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell, let isBreakingNews = selectedNews[breakingNewsKey] as? Bool {
-                var target  = isBreakingNews ? "breakingnews" : "topnews"
-				if let _ = selectedNews[localNewsKey] as? String {
-					target = "localnews"
-				}
+            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell {
+                let target = getNewsTarget(selectedNews)
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
 			}
 		}
 	}
-
+    private func getNewsTarget(_ selectedNews: [String: Any]) -> String {
+        var target = "topnews"
+        if let isBreakingNews = selectedNews[breakingNewsKey] as? Bool, isBreakingNews == true {
+            target  = "breakingnews"
+        }
+        if let _ = selectedNews[localNewsKey] as? String {
+            target = "localnews"
+        }
+        return target
+    }
+    
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let v = UIView()
 //		v.backgroundColor = UIColor(colorString: "D1D1D2")
