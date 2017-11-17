@@ -35,7 +35,7 @@ extension String {
 
 class LogoLoader {
 
-	private static let dbVersion = "1502005705085"
+	private static let dbVersion = "1510675089509"
     private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
 
 	private static var _logoDB: JSON?
