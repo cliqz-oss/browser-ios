@@ -87,7 +87,13 @@ class HistoryDataSource: BubbleTableViewDataSource {
         }
         return ""
     }
-    
+    func accessibilityLabel(indexPath: IndexPath) -> String {
+        if useRightCell(indexPath: indexPath) {
+            return "query"
+        } else {
+            return "url"
+        }
+    }
     func numberOfSections() -> Int {
         return sortedDetails.count
     }

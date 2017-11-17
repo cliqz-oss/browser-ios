@@ -19,6 +19,7 @@ protocol BubbleTableViewDataSource {
     func useRightCell(indexPath: IndexPath) -> Bool //default is left cell
     func useLeftExpandedCell() -> Bool //default is left cell
     func isEmpty() -> Bool
+    func accessibilityLabel(indexPath: IndexPath) -> String
 }
 
 protocol BubbleTableViewDelegate {
@@ -100,6 +101,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             let cell =  self.dequeueReusableCell(withIdentifier: bubble_right_id) as! BubbleRightCell
             cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
             cell.timeLabel.text  = customDataSource.time(indexPath: indexPath)
+            cell.accessibilityLabel = customDataSource.accessibilityLabel(indexPath: indexPath)
             cell.selectionStyle  = .none
             cell.swipeDelegate = self
             return cell
@@ -110,6 +112,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         }
         
         cell.swipeDelegate = self
+        cell.accessibilityLabel = customDataSource.accessibilityLabel(indexPath: indexPath)
         cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
         cell.timeLabel.text = customDataSource.time(indexPath: indexPath)
         
@@ -169,6 +172,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         
         bubble.addSubview(label)
         container.addSubview(bubble)
+        container.accessibilityIdentifier = "date"
         
         //styling
         bubble.backgroundColor = UIConstants.CliqzThemeColor
