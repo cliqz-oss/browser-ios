@@ -141,7 +141,9 @@ final class StateManager {
                 contentNav?.browse(url: nil, tab: nil)
             }
         case .search:
-            contentNav?.search(query: nextStateData.query)
+            if action.type != .searchStopEditing {
+                contentNav?.search(query: nextStateData.query)
+            }
         case .domains:
             contentNav?.domains(currentState: currentState)
         case .details:
@@ -221,8 +223,8 @@ extension StateManager {
             return false
         }
         
-        if action.type == .searchStopEditing {
-            
+        if action.type == .searchStopEditing && currentState.urlBarState == .collapsedTextTransparent && currentState.contentState == .search {
+            return false
         }
         
         return true
