@@ -79,7 +79,12 @@ class LogoLoader {
 		var logoDetails = LogoInfo()
 		logoDetails.color = nil
 		logoDetails.fontSize = 16
-		if let urlDetails = URLParser.getURLDetails(url),
+		var fixedURL = url
+		// TODO: Remove this crazy hack, which is done for localNews. For the next release we should change url parsing lib to https://publicsuffix.org/learn/
+		if url.contains("tz.de") {
+			fixedURL = "http://tz.de"
+		}
+		if let urlDetails = URLParser.getURLDetails(fixedURL),
 		   let hostName = urlDetails.name,
 		   let details = self.logoDB?["domains"][hostName] {
 			logoDetails.hostName = hostName
