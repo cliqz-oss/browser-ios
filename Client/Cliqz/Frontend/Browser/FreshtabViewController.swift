@@ -59,11 +59,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	fileprivate var normalModeView: UIView!
 	fileprivate var forgetModeView: UIView!
 
-	var isNewsExpanded = false {
-		didSet {
-			self.updateNewsView()
-		}
-	}
+	var isNewsExpanded = false
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: Any]]()
@@ -103,12 +99,16 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		super.viewWillAppear(animated)
         startTime = Date.getCurrentMillis()
         
-        
         isLoadCompleted = false
         region = SettingsPrefs.getRegionPref()
 		updateView()
-		self.isNewsExpanded = false
+        isNewsExpanded = false
         
+        if !isForgetMode {
+            self.loadNews()
+            self.loadTopsites()
+        }
+		
         self.updateViewConstraints()
         scrollCount = 0
 	}
@@ -390,10 +390,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.normalModeView.isHidden = false
 			self.forgetModeView?.isHidden = true
 		}
-		if !isForgetMode {
-            self.loadNews()
-            self.loadTopsites()
-		}
 	}
 
 	@objc fileprivate func loadTopsites() {
@@ -496,16 +492,35 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	@objc fileprivate func modifyNewsView() {
+	@objc fileprivate func toggoleShowMoreNews() {
 		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
+        
+        self.updateViewConstraints()
+        if self.news.count > FreshtabViewUX.MinNewsCellsCount {
+            isNewsExpanded ? showMoreNews() : showLessNews()
+        }
+        
 		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
 	}
 
-	private func updateNewsView() {
-        self.updateViewConstraints()
-		self.newsTableView?.reloadData()
+	private func showMoreNews() {
+        let indexPaths = getExtraNewsIndexPaths()
+        self.newsTableView?.insertRows(at:indexPaths, with: .automatic)
 	}
+    
+    private func showLessNews() {
+        let indexPaths = getExtraNewsIndexPaths()
+        self.newsTableView?.deleteRows(at:indexPaths, with: .automatic)
+    }
+    
+    private func getExtraNewsIndexPaths() -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        for i in FreshtabViewUX.MinNewsCellsCount..<self.news.count {
+            indexPaths.append(IndexPath(row: i, section: 0))
+        }
+        return indexPaths
+    }
 }
 
 extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
@@ -626,7 +641,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 		btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
 		btn.titleLabel?.textAlignment = .right
 		btn.setTitleColor(UIColor.white, for: .normal)
-		btn.addTarget(self, action: #selector(modifyNewsView), for: .touchUpInside)
+		btn.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
 		return v
 	}
 
