@@ -297,7 +297,7 @@
 /* [Settings -> Connect] Add Connection title */
 "Add Connection" = "Aggiungi connessione";
 /* [Settings -> Connect] Add Connection footer */
-"Add Connection footer" = "Connetti Cliqz sul tuo computer con Cliqz sul tuo dispositivo Android. Questo ti permetterà di mandare tab dal desktop allo smartphone. Puoi anche scaricare dei video direttamente dal computer sullo smartphone";
+"Add Connection footer" = "Connetti Cliqz sul tuo computer con Cliqz sul tuo dispositivo iOS. Questo ti permetterà di mandare tab dal desktop allo smartphone. Puoi anche scaricare dei video direttamente dal computer sullo smartphone";
 /* [Settings -> Connect] Online Connections Header */
 "Online Connections" = "Connessioni online";
 /* [Settings -> Connect] Offline Connections Header */
@@ -367,5 +367,6 @@
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Qui puoi trovare i tuoi segnalibri.\n\n\nNon hai aggiunto nessun segnalibro finora.";
 /* [TabsOverview] Done button title
- [Settings] Done button title */
+ [Settings] Done button title
+ [Settings] Done button on left side of the Settings view controller title bar */
 "Done" = "Fatto";
