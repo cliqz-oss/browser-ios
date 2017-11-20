@@ -143,7 +143,7 @@ extension ActionStateTransformer {
         }
         
         //clean query
-        if currentState.urlBarState == .collapsedEmptyTransparent && actionType == .urlSearchPressed {
+        if (currentState.urlBarState == .collapsedEmptyTransparent && actionType == .urlSearchPressed) || actionType == .urlClearPressed {
             let newStateData = StateData(query: "", url: nil, tab: nil, detailsHost: nil)
             alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
         }
