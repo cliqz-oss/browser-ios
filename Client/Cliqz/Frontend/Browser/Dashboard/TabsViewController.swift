@@ -259,7 +259,8 @@ class TabsViewController: UIViewController {
         }
         
         doneButton.snp.makeConstraints { (make) in
-            make.bottom.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.right.equalTo(self.view).inset(5)
             make.width.equalTo(70)
             make.height.equalTo(TabsViewController.bottomToolbarHeight)
         }
