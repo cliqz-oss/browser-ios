@@ -70,15 +70,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Used if user wants to send video feedback or bug report</string>
+	<string>This lets you scan, take and upload videos or photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Websites you visit may request your location.</string>
+	<string>Your location is used to provide better search results.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>CLIQZ will only use this when you choose to record videos inside the browser.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>CLIQZ will only use this access to download videos to your device.</string>
+	<string>Cliqz will only use the microphone when you choose to record videos inside the browser.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>CLIQZ will only use this access to download videos to your device.</string>
+	<string>Cliqz will only use this access to download videos and pictures to your device.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Cliqz will only use this access to download videos and pictures to your device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>cliqz.ios.CliqzBeta.browsing</string>

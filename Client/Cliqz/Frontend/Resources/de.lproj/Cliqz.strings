@@ -366,5 +366,6 @@
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Hier findest du in Zukunft deine Favoriten.\n\n\nBisher hast du noch keine Favoriten angelegt.";
 /* [TabsOverview] Done button title
- [Settings] Done button title */
+ [Settings] Done button title
+ [Settings] Done button on left side of the Settings view controller title bar */
 "Done" = "Fertig";

@@ -296,7 +296,7 @@
 /* [Settings -> Connect] Add Connection title */
 "Add Connection" = "Ajouter une connexion";
 /* [Settings -> Connect] Add Connection footer */
-"Add Connection footer" = "Connectez Cliqz sur votre ordinateur avec Cliqz sur votre dispositif Android. Ainsi, vous pourrez envoyer des onglets depuis votre ordinateur vers votre smartphone ou tablette. Vous pourrez aussi télécharger des vidéos depuis votre ordinateur vers votre dispositif.";
+"Add Connection footer" = "Connectez Cliqz sur votre ordinateur avec Cliqz sur votre dispositif iOS. Ainsi, vous pourrez envoyer des onglets depuis votre ordinateur vers votre smartphone ou tablette. Vous pourrez aussi télécharger des vidéos depuis votre ordinateur vers votre dispositif.";
 /* [Settings -> Connect] Online Connections Header */
 "Online Connections" = "Connexions en ligne";
 /* [Settings -> Connect] Offline Connections Header */
@@ -366,5 +366,6 @@
 /* [History] Text for empty favorites */
 "Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Retrouvez vos sites favoris ici.\n\n\nVous n'avez pas encore enregistré de favoris.";
 /* [TabsOverview] Done button title
-  [Settings] Done button title */
+  [Settings] Done button title
+  [Settings] Done button on left side of the Settings view controller title bar */
 "Done" = "Terminé";
