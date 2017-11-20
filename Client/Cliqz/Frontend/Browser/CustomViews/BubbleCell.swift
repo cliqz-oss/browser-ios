@@ -13,8 +13,9 @@ protocol BubbleCellSwipeDelegate: class {
 
 class BubbleCell: ClickableUITableViewCell {
     let bubbleContainerView = UIView()
+    let bubbleView = UIView()
     
-    let is24Hours = isTime24HoursFormatted()
+    static let is24Hours = isTime24HoursFormatted()
     private let velocityTreshold = CGFloat(100.0)
     
     weak var swipeDelegate: BubbleCellSwipeDelegate?
@@ -43,6 +44,7 @@ class BubbleCell: ClickableUITableViewCell {
     
     func setupComponents() {
         self.contentView.addSubview(bubbleContainerView)
+        bubbleContainerView.addSubview(bubbleView)
         
         // add pan gesture
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -52,6 +54,7 @@ class BubbleCell: ClickableUITableViewCell {
     
     func setStyles() {
         
+        bubbleView.dropShadow(color: UIColor.black, opacity: 0.12, offSet: CGSize(width: 0, height: 2), radius: 4)
     }
     
     func setConstraints() {

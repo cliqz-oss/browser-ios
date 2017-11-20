@@ -10,7 +10,6 @@ import UIKit
 
 class BubbleLeftCell: BubbleCell {
 
-    let bubbleView = UIView()
     let titleLabel = UILabel()
     let urlLabel = UILabel()
     let timeLabel = UILabel()
@@ -25,7 +24,6 @@ class BubbleLeftCell: BubbleCell {
         bubbleView.addSubview(urlLabel)
         bubbleView.addSubview(titleLabel)
         bubbleView.addSubview(timeLabel)
-        bubbleContainerView.addSubview(bubbleView)
     }
     
     override func cellPressed(_ gestureRecognizer: UIGestureRecognizer) {
@@ -95,7 +93,7 @@ class BubbleLeftCell: BubbleCell {
         
         timeLabel.snp.makeConstraints { (make) in
             make.bottom.right.equalTo(bubbleView).inset(4)
-            if (is24Hours) {
+            if (BubbleCell.is24Hours) {
                 make.width.equalTo(35)
             } else {
                 make.width.equalTo(55)

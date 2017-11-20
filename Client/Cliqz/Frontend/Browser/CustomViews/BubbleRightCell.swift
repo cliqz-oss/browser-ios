@@ -10,7 +10,6 @@ import UIKit
 
 class BubbleRightCell: BubbleCell {
     
-    let bubbleView = UIView()
     let titleLabel = UILabel()
     let timeLabel  = UILabel()
     
@@ -19,7 +18,6 @@ class BubbleRightCell: BubbleCell {
         
         bubbleView.addSubview(titleLabel)
         bubbleView.addSubview(timeLabel)
-        bubbleContainerView.addSubview(bubbleView)
         
     }
     
@@ -76,7 +74,7 @@ class BubbleRightCell: BubbleCell {
         timeLabel.snp.makeConstraints { (make) in
             make.right.equalTo(self.contentView).inset(30)
             make.bottom.equalTo(self.contentView).inset(5)
-            if (is24Hours) {
+            if (BubbleCell.is24Hours) {
                 make.width.equalTo(35)
             } else {
                 make.width.equalTo(55)
