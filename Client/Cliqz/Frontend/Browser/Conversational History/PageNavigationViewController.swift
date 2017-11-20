@@ -56,12 +56,12 @@ class PageNavigationViewController: UIViewController {
     func setUpComponent() {
         addController(viewController: surfViewController)
         self.view.addSubview(pageControl)
-		let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
-		leftSwipe.direction = .left
-		self.view.addGestureRecognizer(leftSwipe)
-		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
+		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwipe(_:)))
 		rightSwipe.direction = .right
 		self.view.addGestureRecognizer(rightSwipe)
+		let leftSwipe = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(leftSwipe(_:)))//UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
+		leftSwipe.edges = UIRectEdge.right
+		self.view.addGestureRecognizer(leftSwipe)
     }
 
     func setStyling() {
@@ -153,14 +153,13 @@ class PageNavigationViewController: UIViewController {
         viewController.removeFromParentViewController()
 	}
 
-	@objc private func swipeView(_ gestureRecognizer: UISwipeGestureRecognizer) {
-		if gestureRecognizer.direction == .right && self.pageControl.currentPage == 1 {
-			self.navigate()
-		}
-		if gestureRecognizer.direction == .left && self.pageControl.currentPage == 0 {
-			self.navigate()
-		}
+	@objc private func rightSwipe(_ recognizer: UISwipeGestureRecognizer) {
+		StateManager.shared.handleAction(action: Action(type: .pageNavRightSwipe))
 	}
+    
+    @objc private func leftSwipe(_ recognizer: UIScreenEdgePanGestureRecognizer) {
+        StateManager.shared.handleAction(action: Action(type: .pageNavLeftSwipe))
+    }
 
     /*
     // MARK: - Navigation

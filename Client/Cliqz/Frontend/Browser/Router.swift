@@ -46,6 +46,9 @@ enum ActionType {
     //case visitAddedInDB
     case newVisit
     case webNavigationUpdate
+    //
+    case pageNavRightSwipe
+    case pageNavLeftSwipe
 }
 
 //Attention: Add actions that are supposed to be handled by the router here. They won't be handled if you don't add them.

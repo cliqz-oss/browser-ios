@@ -227,6 +227,10 @@ extension StateManager {
             return false
         }
         
+        if (action.type == .pageNavLeftSwipe || action.type == .pageNavRightSwipe) && currentState.contentState != .domains && currentState.contentState != .dash {
+            return false
+        }
+        
         return true
     }
     
