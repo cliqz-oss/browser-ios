@@ -131,21 +131,30 @@ extension ActionStateTransformer {
     
     class func processStateData(nextStateData: StateData, currentState: State, actionType: ActionType) -> StateData {
         //merges the new data with the old one
+
         var alteredStateData = StateData.merge(lhs: nextStateData, rhs: currentState.stateData)
         
+        //add newTab
+        if actionType == .newTab {
+            let tab = GeneralUtils.tabManager().addTabAndSelect()
+            alteredStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
+        }
+        
         //creates tab in case no tab is there.
-        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
-            if alteredStateData.tab == nil {
-                let tab = tabManager.addTabAndSelect()
-                let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
-                alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
-            }
+        if alteredStateData.tab == nil {
+            let tab = GeneralUtils.tabManager().addTabAndSelect()
+            let newStateData = StateData(query: nil, url: nil, tab: tab, detailsHost: nil)
+            alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
         }
         
         //clean query
-        if (currentState.urlBarState == .collapsedEmptyTransparent && actionType == .urlSearchPressed) || actionType == .urlClearPressed {
+        if (currentState.urlBarState == .collapsedTransparent && currentState.contentState != .search && actionType == .urlSearchPressed) || actionType == .urlClearPressed {
             let newStateData = StateData(query: "", url: nil, tab: nil, detailsHost: nil)
             alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
+        }
+        
+        if actionType == .initial {
+            return StateData(query: nil, url: nil, tab: alteredStateData.tab, detailsHost: nil)
         }
         
         return alteredStateData
@@ -233,7 +242,7 @@ extension ActionStateTransformer {
         }
         
         let contentTransformDict: [ActionType : [ContentState: ContentState]] = [
-            .initialization : [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains],
+            .initial : [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains],
             .urlClearPressed : [.search: .search],
             .urlSearchPressed : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
             .urlSearchTextChanged : [.browse: .search, .domains: .search, .details : .search, .dash: .search],
@@ -244,7 +253,8 @@ extension ActionStateTransformer {
             .domainPressed : [.domains: .details],
             .tabDonePressed : [.browse : tabDonePressedSpecialState, .search: tabDonePressedSpecialState, .domains: tabDonePressedSpecialState, .details: tabDonePressedSpecialState, .dash: tabDonePressedSpecialState],
             .pageNavRightSwipe : [.dash : .domains],
-            .pageNavLeftSwipe : [.domains : .dash]
+            .pageNavLeftSwipe : [.domains : .dash],
+            .newTab: [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains]
         ]
         
         if let actionDict = contentTransformDict[actionType], let nextState = actionDict[currentState] {
@@ -254,52 +264,44 @@ extension ActionStateTransformer {
         return nil
     }
     
+    
     class func urlBarNextState(actionType: ActionType, previousState: URLBarState, currentState: URLBarState, nextStateData: StateData) -> URLBarState? {
         
-        let query = nextStateData.query ?? ""
-        
-        let queryEmpty: Bool = query == "" ? true : false
-        
-        let specialState: URLBarState = query != "" ? .expandedTextWhite : .expandedEmptyWhite
-        
-        //this is for selecting an empty tab
-        var tabSelectedSpecialState: URLBarState = .collapsedDomainBlue
-        
-        if nextStateData.tab?.url == nil {
-            tabSelectedSpecialState = .collapsedEmptyTransparent
-        }
-        
-        var tabDonePressedSpecialState: URLBarState = currentState //The state does not change when the tabs are shown. So the state before opening the tabs is the current state
-        
-        if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
-            if currentState == .collapsedDomainBlue && tabManager.tabs.count == 0 {
-                tabDonePressedSpecialState = .collapsedEmptyTransparent
+        switch actionType {
+        case .initial:
+            return .collapsedTransparent
+        case .urlSearchPressed:
+            return .expandedWhite
+        case .urlSearchTextChanged:
+            return .expandedWhite
+        case .searchStopEditing:
+            return .collapsedTransparent
+        case .urlSelected:
+            return .collapsedBlue
+        case .homeButtonPressed:
+            return .collapsedTransparent
+        case .tabSelected:
+            return nextStateData.tab?.url == nil ? .collapsedTransparent : .collapsedBlue
+        case .detailBackPressed:
+            return .collapsedTransparent
+        case .domainPressed:
+            return .collapsedTransparent
+        case .tabDonePressed:
+            if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
+                if currentState == .collapsedBlue && tabManager.tabs.count == 0 {
+                    return .collapsedTransparent
+                }
             }
+            return .collapsedBlue
+        case .pageNavRightSwipe:
+            return .collapsedTransparent
+        case .pageNavLeftSwipe:
+            return .collapsedTransparent
+        case .newTab:
+            return .collapsedTransparent
+        default:
+            return nil
         }
         
-        let urlBarTransformDict: [ActionType: [URLBarState: URLBarState]] = [
-            .initialization : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-            .urlClearPressed : [.expandedTextWhite: .expandedEmptyWhite],
-            .urlSearchPressed : [ .collapsedEmptyTransparent: specialState, .collapsedTextTransparent: specialState, .collapsedTextBlue: specialState, .collapsedDomainBlue: specialState],
-            .urlSearchTextChanged : [.expandedTextWhite: queryEmpty ? .expandedEmptyWhite : .expandedTextWhite, .expandedEmptyWhite : .expandedTextWhite],
-            .searchAutoSuggest: [ .collapsedEmptyTransparent: .expandedTextWhite, .collapsedTextTransparent: .expandedTextWhite, .collapsedTextBlue: .expandedTextWhite, .collapsedDomainBlue: .expandedTextWhite, .expandedEmptyWhite: .expandedTextWhite],
-            //This is when user swipes up or down on the cards. I should change the state to collapsedSearch
-            .searchStopEditing: [ .expandedEmptyWhite: .collapsedTextTransparent, .expandedTextWhite: .collapsedTextTransparent],
-            .urlSelected: [ .collapsedEmptyTransparent: .collapsedDomainBlue, .collapsedTextTransparent: .collapsedDomainBlue, .expandedEmptyWhite: .collapsedDomainBlue, .expandedTextWhite: .collapsedDomainBlue],
-            .urlIsModified: [.collapsedDomainBlue: .collapsedDomainBlue],
-            .homeButtonPressed: [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-            .tabSelected: [ .collapsedEmptyTransparent: tabSelectedSpecialState, .collapsedTextTransparent: tabSelectedSpecialState, .collapsedDomainBlue: tabSelectedSpecialState, .collapsedTextBlue: tabSelectedSpecialState, .expandedEmptyWhite: tabSelectedSpecialState, .expandedTextWhite: tabSelectedSpecialState],
-            .detailBackPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-            .domainPressed : [.collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent ,.collapsedTextBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-            .tabDonePressed : [ .collapsedEmptyTransparent: tabDonePressedSpecialState, .collapsedTextTransparent: tabDonePressedSpecialState, .collapsedTextBlue: tabDonePressedSpecialState, .collapsedDomainBlue: tabDonePressedSpecialState, .expandedEmptyWhite: tabDonePressedSpecialState, .expandedTextWhite: tabDonePressedSpecialState],
-            .pageNavRightSwipe : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent],
-            .pageNavLeftSwipe : [ .collapsedEmptyTransparent: .collapsedEmptyTransparent, .collapsedTextTransparent: .collapsedEmptyTransparent, .collapsedTextBlue: .collapsedEmptyTransparent, .collapsedDomainBlue: .collapsedEmptyTransparent, .expandedEmptyWhite: .collapsedEmptyTransparent, .expandedTextWhite: .collapsedEmptyTransparent]
-        ]
-        
-        if let actionDict = urlBarTransformDict[actionType], let newState = actionDict[currentState] {
-            return newState
-        }
-        
-        return nil
     }
 }

@@ -18,15 +18,12 @@ final class URLBarViewController: UIViewController {
     weak var search_loader: SearchLoader? = nil
     
     enum ComponentState {
-        case collapsedEmptyTransparent
-        case collapsedTextTransparent
-        case collapsedQueryBlue
-        case collapsedDomainBlue
-        case expandedEmptyWhite
-        case expandedTextWhite
+        case collapsedTransparent
+        case collapsedBlue
+        case expandedWhite
     }
     
-    private var currentState: ComponentState = .collapsedEmptyTransparent
+    fileprivate var currentState: ComponentState = .collapsedTransparent
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -75,20 +72,9 @@ final class URLBarViewController: UIViewController {
         //URLBar.setAutocompleteSuggestion(suggestion)
         debugPrint(suggestion ?? "No suggestion")
     }
-
     
-    func collapsedEmptyTransparent() {
-        currentState = .collapsedEmptyTransparent
-        URLBar.backgroundColor = UIColor.clear
-        URLBar.changeState(state: .collapsedSearch)
-        URLBar.textField.text = nil
-        URLBar.textField.resignFirstResponder()
-        progressBar.setProgress(progress: 0.0)
-        progressBar.alpha = 0.0
-    }
-    
-    func collapsedTextTransparent(text: String?) {
-        currentState = .collapsedTextTransparent
+    func collapsedTransparent(text: String?) {
+        currentState = .collapsedTransparent
         URLBar.backgroundColor = UIColor.clear
         URLBar.changeState(state: .collapsedSearch)
         URLBar.textField.text = text
@@ -97,36 +83,26 @@ final class URLBarViewController: UIViewController {
         progressBar.alpha = 0.0
     }
     
-    func collapsedQueryBlue(text: String?) {
-        currentState = .collapsedQueryBlue
+    func collapsedBlue(text: String?, isQuery: Bool = true) {
+        currentState = .collapsedBlue
         URLBar.backgroundColor = UIConstants.CliqzThemeColor
-        URLBar.changeState(state: .collapsedSearch)
-        URLBar.textField.text = text
+        URLBar.changeState(state: isQuery ? .collapsedSearch : .collapsedBrowse)
+        if isQuery {
+            URLBar.textField.text = text
+        }
+        else {
+            URLBar.domainLabel.text = processUrl(urlStr: text)
+        }
         URLBar.textField.resignFirstResponder()
-        progressBar.setProgress(progress: 0.0)
-        progressBar.alpha = 0.0
-    }
-    
-    func collapsedDomainBlue(urlStr: String?) {
-        currentState = .collapsedDomainBlue
-        URLBar.backgroundColor = UIConstants.CliqzThemeColor
-        URLBar.changeState(state: .collapsedBrowse)
-        URLBar.domainLabel.text = processUrl(urlStr: urlStr)
-        URLBar.textField.resignFirstResponder()
+        if isQuery {
+            progressBar.alpha = 0.0
+            progressBar.setProgress(progress: 0.0)
+        }
     }
 
-    func expandedEmptyWhite() {
-        currentState = .expandedEmptyWhite
-        URLBar.changeState(state: .expandedEmpty)
-        URLBar.textField.text = ""
-        search_loader?.query = ""
-        progressBar.setProgress(progress: 0.0)
-        progressBar.alpha = 0.0
-    }
-
-    func expandedTextWhite(text: String?) {
-        currentState = .expandedTextWhite
-        URLBar.changeState(state: .expandedText)
+    func expandedWhite(text: String?) {
+        currentState = .expandedWhite
+        URLBar.changeState(state: (text != nil || text == "") ? .expandedText : .expandedEmpty)
         URLBar.textField.text = text
         if let t = text {
             search_loader?.query = t
@@ -137,7 +113,7 @@ final class URLBarViewController: UIViewController {
     
     func setProgress(progress: Float?) {
         
-        guard currentState == .collapsedDomainBlue else {
+        guard currentState == .collapsedBlue else {
             return
         }
         

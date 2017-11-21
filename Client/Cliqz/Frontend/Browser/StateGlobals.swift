@@ -22,12 +22,9 @@ enum ContentState {
 }
 
 enum URLBarState {
-    case collapsedEmptyTransparent
-    case collapsedTextTransparent
-    case collapsedTextBlue //displays query
-    case collapsedDomainBlue //displays domain
-    case expandedEmptyWhite
-    case expandedTextWhite
+    case collapsedTransparent
+    case collapsedBlue
+    case expandedWhite
 }
 
 //Have a place where you create the StateData from the action. Or even better, modify the action such that it will send state data.
@@ -105,7 +102,7 @@ struct State: Equatable {
     }
     
     static func initial() -> State {
-        return State(contentState: .domains, urlBarState: .collapsedEmptyTransparent, stateData: StateData.empty())
+        return State(contentState: .domains, urlBarState: .collapsedTransparent, stateData: StateData.empty())
     }
 }
 

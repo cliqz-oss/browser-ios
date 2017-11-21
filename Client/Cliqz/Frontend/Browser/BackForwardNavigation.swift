@@ -88,7 +88,7 @@ final class SearchAddRule {
         }
         
         if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == .search && (newState.urlBarState == .expandedTextWhite || newState.urlBarState == .expandedEmptyWhite) {
+            if currentState.contentState == .search && newState.urlBarState == .expandedWhite {
                 return true
             }
         }

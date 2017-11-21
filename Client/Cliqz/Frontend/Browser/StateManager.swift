@@ -36,7 +36,7 @@ final class StateManager {
     var currentState: State = State.initial()
     var previousState: State = State.initial()
     
-    var lastBackForwAction: Action = Action(type: .initialization)
+    var lastBackForwAction: Action = Action(type: .initial)
     
     func handleAction(action: Action) {
         
@@ -74,7 +74,7 @@ final class StateManager {
     
     func changeToState(nextState: State, action: Action) {
         contentNavChangeToState(currentState: currentState.contentState, nextState: nextState.contentState, nextStateData: nextState.stateData, action: action)
-        urlBarChangeToState(currentState: currentState.urlBarState, nextState: nextState.urlBarState, nextStateData: nextState.stateData)
+        urlBarChangeToState(currentState: currentState, nextState: nextState, nextStateData: nextState.stateData, actionType: action.type)
         updateToolBar(nextState: nextState, action: action)
         
         if currentState.contentState != nextState.contentState {
@@ -155,21 +155,28 @@ final class StateManager {
         }
     }
     
-    func urlBarChangeToState(currentState: URLBarState, nextState: URLBarState, nextStateData: StateData) {
+    func urlBarChangeToState(currentState: State, nextState: State, nextStateData: StateData, actionType: ActionType) {
         
-        switch nextState {
-        case .collapsedEmptyTransparent:
-            urlBar?.collapsedEmptyTransparent()
-        case .collapsedTextTransparent:
-            urlBar?.collapsedTextTransparent(text: nextStateData.query)
-        case .collapsedTextBlue:
-            urlBar?.collapsedQueryBlue(text: nextStateData.query)
-        case .collapsedDomainBlue:
-            urlBar?.collapsedDomainBlue(urlStr: nextStateData.url)
-        case .expandedEmptyWhite:
-            urlBar?.expandedEmptyWhite()
-        case .expandedTextWhite:
-            urlBar?.expandedTextWhite(text: nextStateData.query)
+        switch nextState.urlBarState {
+        case .collapsedTransparent:
+            if nextState.contentState != .search {
+                urlBar?.collapsedTransparent(text: nil)
+            }
+            else {
+                urlBar?.collapsedTransparent(text: nextStateData.query)
+            }
+        case .collapsedBlue:
+            urlBar?.collapsedBlue(text: nextStateData.url, isQuery: false)
+        case .expandedWhite:
+            if actionType == .urlClearPressed {
+                urlBar?.expandedWhite(text: nil)
+            }
+            else if (currentState.contentState == .search && actionType == .urlSearchTextChanged) || actionType == .backButtonPressed || actionType == .forwardButtonPressed {
+                urlBar?.expandedWhite(text: nextStateData.query)
+            }
+            else {
+                urlBar?.expandedWhite(text: nextStateData.url)
+            }
         }
     }
     
@@ -223,7 +230,7 @@ extension StateManager {
             return false
         }
         
-        if action.type == .searchStopEditing && currentState.urlBarState == .collapsedTextTransparent && currentState.contentState == .search {
+        if action.type == .searchStopEditing && currentState.urlBarState == .collapsedTransparent && currentState.contentState == .search {
             return false
         }
         

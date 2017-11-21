@@ -140,6 +140,7 @@ class RefactoredURLBar: UIView {
             make.width.height.equalTo(44.0)
         })
         
+        //set initial constraints
         for state in StateGenerator.generateStates(transitions: generateState(state: currentState)) {
             state()
         }

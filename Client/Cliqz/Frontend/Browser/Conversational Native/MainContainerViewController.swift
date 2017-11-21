@@ -70,7 +70,7 @@ class MainContainerViewController: UIViewController {
         
         prepareModules()
         
-        StateManager.shared.handleAction(action: Action(type: .initialization))
+        StateManager.shared.handleAction(action: Action(type: .initial))
 		
     }
     
@@ -342,15 +342,14 @@ extension MainContainerViewController: TabsViewControllerDelegate {
     //
     func plusPressed(tabsVC: TabsViewController?) {
         //tab is already selected by this point
-        let tab = tabManager.tabs[tabManager.tabs.count - 1]
-        StateManager.shared.handleAction(action: Action(data: ["tab": tab, "url": tab.url?.absoluteString as Any], type: .tabSelected))
+        StateManager.shared.handleAction(action: Action(type: .newTab))
         //dismissal should come from StateManager
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
         
     }
     
     func lastTabDeleted(tabsVC: TabsViewController?) {
-        StateManager.shared.handleAction(action: Action(type: .initialization))
+        StateManager.shared.handleAction(action: Action(type: .initial))
         dismissTabOverview(tabsVC: tabsVC, completion: nil)
     }
 }

@@ -13,7 +13,7 @@ import UIKit
 
 enum ActionType {
     //init
-    case initialization
+    case initial
     //search
     case searchAutoSuggest
     case searchStopEditing
@@ -35,6 +35,7 @@ enum ActionType {
     //activity
     case remindersPressed
     //tabs
+    case newTab
     case tabSelected
     case tabDonePressed
     //missing
