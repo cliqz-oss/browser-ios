@@ -60,6 +60,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	fileprivate var forgetModeView: UIView!
 
 	var isNewsExpanded = false
+    var expandNewsbutton = UIButton()
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: Any]]()
@@ -497,10 +498,13 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		self.isNewsExpanded = !self.isNewsExpanded
         
         self.updateViewConstraints()
-        if self.news.count > FreshtabViewUX.MinNewsCellsCount {
-            isNewsExpanded ? showMoreNews() : showLessNews()
-        }
+        isNewsExpanded ? showMoreNews() : showLessNews()
         
+        if isNewsExpanded {
+            expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        } else {
+            expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        }
 		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
 	}
 
@@ -624,24 +628,24 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 			make.height.equalTo(27)
 			make.right.equalTo(v)
 		}
-		let btn = UIButton()
-		v.addSubview(btn)
-		btn.contentHorizontalAlignment = .right
-		btn.snp.makeConstraints { (make) in
+		expandNewsbutton = UIButton()
+		v.addSubview(expandNewsbutton)
+		expandNewsbutton.contentHorizontalAlignment = .right
+		expandNewsbutton.snp.makeConstraints { (make) in
 			make.top.equalTo(v).offset(-2)
 			make.right.equalTo(v).offset(-9)
 			make.height.equalTo(30)
 			make.width.equalTo(v).dividedBy(2)
 		}
-		if self.isNewsExpanded {
-			btn.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
-		} else {
-			btn.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
-		}
-		btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-		btn.titleLabel?.textAlignment = .right
-		btn.setTitleColor(UIColor.white, for: .normal)
-		btn.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
+        if isNewsExpanded {
+            expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        } else {
+            expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        }
+		expandNewsbutton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+		expandNewsbutton.titleLabel?.textAlignment = .right
+		expandNewsbutton.setTitleColor(UIColor.white, for: .normal)
+		expandNewsbutton.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
 		return v
 	}
 
