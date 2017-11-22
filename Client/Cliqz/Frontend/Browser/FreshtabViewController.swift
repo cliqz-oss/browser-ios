@@ -102,9 +102,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         
         isLoadCompleted = false
         region = SettingsPrefs.getRegionPref()
-		updateView()
-        isNewsExpanded = false
         
+        restoreToInitialState()
+        updateView()
         if !isForgetMode {
             self.loadNews()
             self.loadTopsites()
@@ -134,7 +134,10 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	func restoreToInitialState() {
-		self.isNewsExpanded = false
+        if !isForgetMode {
+            isNewsExpanded = false
+            self.newsTableView?.reloadData()
+        }
 	}
 
 	override func updateViewConstraints() {
