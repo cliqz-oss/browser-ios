@@ -257,8 +257,8 @@ extension ActionStateTransformer {
             .detailBackPressed : [.details: .domains],
             .domainPressed : [.domains: .details],
             .tabDonePressed : [.browse : tabDonePressedSpecialState, .search: tabDonePressedSpecialState, .domains: tabDonePressedSpecialState, .details: tabDonePressedSpecialState, .dash: tabDonePressedSpecialState],
-            .pageNavRightSwipe : [.dash : .domains],
-            .pageNavLeftSwipe : [.domains : .dash],
+            .pageNavRightSwipe : [.domains : .dash],
+            .pageNavLeftSwipe : [.dash : .domains],
             .newTab: [.browse : .domains, .search: .domains, .domains: .domains, .details: .domains, .dash: .domains]
         ]
         

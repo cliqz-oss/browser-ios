@@ -23,10 +23,10 @@ final class CustomDots: UIView {
     private let selectedDotColor: UIColor = .white
     private let standardDotColor: UIColor = .lightGray
     
-    init(numberOfPages: Int) {
+    init(numberOfPages: Int, currentPage: Int = 0) {
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         self.numberOfPages = numberOfPages
-        
+        self.currentPage = currentPage
         setUpComponents()
         setStyling()
         setConstraints()

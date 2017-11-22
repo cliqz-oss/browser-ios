@@ -279,12 +279,15 @@ extension ContentNavigationViewController {
     func domains(currentState: ContentState) {
         pageNavVC.showDots()
         changeState(state: .pageNavigation)
-        if currentState == .dash {
+        
+        if pageNavVC.currentState == .DashBoard {
             pageNavVC.showDomains()
         }
-        else if currentState == .details {
+        
+        if currentState == .details {
             pageNavVC.historyNavigation.showHistory()
         }
+        
     }
     
     func details(host: String?, animated: Bool) {

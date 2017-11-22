@@ -19,9 +19,10 @@ final class SurfViewController: UIViewController {
         case left
     }
     
-    init(viewControllers: [UIViewController]) {
+    init(viewControllers: [UIViewController], initial: Int = 0) {
         super.init(nibName: nil, bundle: nil)
         self.controllers = viewControllers
+        self.current = initial
         setUpComponent()
         setStyling()
         setConstraints()
@@ -41,8 +42,11 @@ final class SurfViewController: UIViewController {
         
         for i in 0..<controllers.count {
             let controller = controllers[i]
-            if i == 0 {
+            if i == current{
                 put(view: controller.view, position: .center)
+            }
+            else if i < current {
+                put(view: controller.view, position: .left)
             }
             else {
                 put(view: controller.view, position: .right)

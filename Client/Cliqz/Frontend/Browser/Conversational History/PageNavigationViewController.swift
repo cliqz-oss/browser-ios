@@ -11,7 +11,7 @@ import UIKit
 class PageNavigationViewController: UIViewController {
 
     
-    let pageControl = CustomDots(numberOfPages: 2)
+    let pageControl: CustomDots
     let surfViewController: SurfViewController
     
     let historyNavigation: HistoryNavigationViewController
@@ -21,6 +21,8 @@ class PageNavigationViewController: UIViewController {
         case History
         case DashBoard
     }
+    
+    let stateIndex : [State : Int] = [.History: 1, .DashBoard: 0]
     
     var currentState: State = .History
     
@@ -34,7 +36,8 @@ class PageNavigationViewController: UIViewController {
         
         dashboardVC = DashViewController()
         
-        surfViewController = SurfViewController(viewControllers: [historyNavigation, dashboardVC])
+        surfViewController = SurfViewController(viewControllers: [dashboardVC, historyNavigation], initial: stateIndex[currentState]!)
+        pageControl = CustomDots(numberOfPages: 2, currentPage: stateIndex[currentState]!)
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -59,8 +62,8 @@ class PageNavigationViewController: UIViewController {
 		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwipe(_:)))
 		rightSwipe.direction = .right
 		self.view.addGestureRecognizer(rightSwipe)
-		let leftSwipe = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(leftSwipe(_:)))//UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
-		leftSwipe.edges = UIRectEdge.right
+		let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwipe(_:)))//UISwipeGestureRecognizer(target: self, action: #selector(swipeView(_:)))
+		leftSwipe.direction = .left
 		self.view.addGestureRecognizer(leftSwipe)
     }
 
@@ -82,42 +85,46 @@ class PageNavigationViewController: UIViewController {
     }
     
     func resetNavigation() {
-        if pageControl.currentPage == 1 {
+        if pageControl.currentPage == stateIndex[.DashBoard] {
             self.navigate() //go back to first screen (Domains)
         }
         
         historyNavigation.nc.popToRootViewController(animated: false)
         historyNavigation.conversationalHistory.view.alpha = 1.0
-        
-        currentState = .History
     }
     
     func showDashBoard(animated: Bool) {
-        if pageControl.currentPage == 0 {
-            pageControl.changePage(page: 1)
-            surfViewController.showNext(animated: animated)
+        if pageControl.currentPage == stateIndex[.History] {
+            pageControl.changePage(page: stateIndex[.DashBoard]!)
+            if stateIndex[.DashBoard]! > stateIndex[.History]! {
+                surfViewController.showNext(animated: animated)
+            }
+            else {
+                surfViewController.showPrev(animated: animated)
+            }
             currentState = .DashBoard
         }
     }
     
     func showDomains() {
-        if pageControl.currentPage == 1 {
-            pageControl.changePage(page: 0)
-            surfViewController.showPrev(animated: true)
+        if pageControl.currentPage == stateIndex[.DashBoard] {
+            pageControl.changePage(page: stateIndex[.History]!)
+            if stateIndex[.History]! > stateIndex[.DashBoard]! {
+                surfViewController.showNext(animated: true)
+            }
+            else {
+                surfViewController.showPrev(animated: true)
+            }
             currentState = .History
         }
     }
     
     func navigate() {
-        if pageControl.currentPage == 0 && self.historyNavigation.currentState == .Domains {
-            pageControl.changePage(page: 1)
-            surfViewController.showNext(animated: true)
-            currentState = .DashBoard
+        if currentState == .History {
+            showDashBoard(animated: true)
         }
-        else {
-            pageControl.changePage(page: 0)
-            surfViewController.showPrev(animated: true)
-            currentState = .History
+        else if currentState == .DashBoard {
+            showDomains()
         }
     }
     
