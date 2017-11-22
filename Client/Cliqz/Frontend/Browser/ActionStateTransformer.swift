@@ -35,9 +35,14 @@ final class ActionStateTransformer {
         }
         else if actionType == .urlBackPressed {
             //do not return the previousState that is passed in this method, because it does not always coincide with the one from store. This should be corrected.
+            if currentState.contentState == .search && previousState.contentState == .browse {
+                return previousState
+            }
+            
             if let prevState = previousStateFromStore(tab: tab) {
                 return prevState
             }
+            
             return previousState
         }
         else if actionType == .tabSelected {

@@ -68,7 +68,7 @@ final class SearchAddRule {
         }
         
         if let currentState = BackForwardNavigation.shared.currentState(tab: tab) {
-            if currentState.contentState == .search {
+            if currentState.contentState == .search || currentState.contentState == .browse {
                 return false
             }
         }
