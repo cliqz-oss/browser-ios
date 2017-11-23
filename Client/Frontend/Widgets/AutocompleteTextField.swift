@@ -89,9 +89,16 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
     }
 
     func highlightAll() {
-        let text = self.text
-        self.text = ""
-        setAutocompleteSuggestion(text ?? "")
+        if let text = text {
+            if !text.isEmpty {
+                let attributedString = NSMutableAttributedString(string: text)
+                attributedString.addAttribute(NSBackgroundColorAttributeName, value: highlightColor, range: NSMakeRange(0, (text).characters.count))
+                attributedText = attributedString
+                
+                enteredText = ""
+                completionActive = true
+            }
+        }
         selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
     }
 
