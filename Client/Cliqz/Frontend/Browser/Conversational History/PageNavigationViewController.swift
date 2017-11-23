@@ -84,11 +84,8 @@ class PageNavigationViewController: UIViewController {
         }
     }
     
-    func resetNavigation() {
-        if pageControl.currentPage == stateIndex[.DashBoard] {
-            self.navigate() //go back to first screen (Domains)
-        }
-        
+    func resetNavigation() {        
+        self.showDomains()
         historyNavigation.nc.popToRootViewController(animated: false)
         historyNavigation.conversationalHistory.view.alpha = 1.0
     }

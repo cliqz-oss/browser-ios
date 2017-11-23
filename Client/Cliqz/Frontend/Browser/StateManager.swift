@@ -168,14 +168,14 @@ final class StateManager {
         case .collapsedBlue:
             urlBar?.collapsedBlue(text: nextStateData.url, isQuery: false)
         case .expandedWhite:
-            if actionType == .urlClearPressed {
-                urlBar?.expandedWhite(text: nil)
-            }
-            else if (currentState.contentState == .search && actionType == .urlSearchTextChanged) || actionType == .backButtonPressed || actionType == .forwardButtonPressed {
-                urlBar?.expandedWhite(text: nextStateData.query)
+//            if (currentState.contentState == .search && actionType == .urlSearchTextChanged) || actionType == .backButtonPressed || actionType == .forwardButtonPressed {
+//                urlBar?.expandedWhite(text: nextStateData.query)
+//            }
+            if currentState.contentState == .browse && actionType != .urlSearchTextChanged && actionType != .backButtonPressed && actionType != .forwardButtonPressed {
+                urlBar?.expandedWhite(text: nextStateData.url)
             }
             else {
-                urlBar?.expandedWhite(text: nextStateData.url)
+                urlBar?.expandedWhite(text: nextStateData.query)
             }
         }
     }

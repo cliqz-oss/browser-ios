@@ -158,6 +158,12 @@ extension ActionStateTransformer {
             alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
         }
         
+        //the url becomes the query when selecting the urlbar from browse
+        if currentState.contentState == .browse && actionType == .urlSearchPressed {
+            let newStateData = StateData(query: alteredStateData.url, url: nil, tab: nil, detailsHost: nil)
+            alteredStateData = StateData.merge(lhs: newStateData, rhs: alteredStateData)
+        }
+        
         if actionType == .initial {
             return StateData(query: nil, url: nil, tab: alteredStateData.tab, detailsHost: nil)
         }

@@ -102,7 +102,7 @@ final class URLBarViewController: UIViewController {
 
     func expandedWhite(text: String?) {
         currentState = .expandedWhite
-        URLBar.changeState(state: (text != nil || text == "") ? .expandedText : .expandedEmpty)
+        URLBar.changeState(state: (text == "" || text == nil) ? .expandedEmpty : .expandedText)
         URLBar.textField.text = text
         if let t = text {
             search_loader?.query = t
