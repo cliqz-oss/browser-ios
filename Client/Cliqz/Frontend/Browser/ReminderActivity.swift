@@ -17,7 +17,7 @@ class ReminderActivity: UIActivity {
     }
     
     override var activityTitle : String? {
-        return "Reminders"//NSLocalizedString("Settings", tableName: "Cliqz", comment: "Sharing activity for opening Settings")
+        return NSLocalizedString("Set Reminder", tableName: "Cliqz", comment: "Text for set reminders title")
     }
     
     override var activityImage : UIImage? {

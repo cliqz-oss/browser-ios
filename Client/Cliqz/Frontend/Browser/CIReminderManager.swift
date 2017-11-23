@@ -194,6 +194,15 @@ final class CIReminderManager: NSObject {
 
     }
     
+    func allValidRemindersAscending() -> [Reminder] {
+        return self.allValidReminders().sorted(by: { (a, b) -> Bool in
+            if let date_a = a["date"] as? Date, let date_b = b["date"] as? Date {
+                return date_a < date_b
+            }
+            return false
+        })
+    }
+    
     func isUrlRegistered(url_str: Url) -> Bool {
         if let host = URL(string: url_str)?.host {
             if let array = url_hash_map[host] {

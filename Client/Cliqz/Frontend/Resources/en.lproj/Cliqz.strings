@@ -8,6 +8,10 @@
 "Recommendations" = "Recommendations";
 /* Text for reminders title */
 "Reminders" = "Reminders";
+/* Text for upcoming reminders title */
+"Upcoming Reminders" = "Upcoming Reminders";
+/* Text for set reminders title */
+"Set Reminder" = "Set Reminder";
 /* Text for empty history state */
 "Your History will appear here" = "Your History will appear here";
 /* Error message title */

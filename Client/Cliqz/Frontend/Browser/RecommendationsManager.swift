@@ -56,7 +56,7 @@ final class RecommendationsManager {
             recommendations += news_recommendations
         }
         
-        let reminders = CIReminderManager.sharedInstance.allValidReminders()
+        let reminders = CIReminderManager.sharedInstance.allValidRemindersAscending()
         let reminders_recommendations = convertReminders2Recommendations(reminders: reminders)
         recommendations += reminders_recommendations
         

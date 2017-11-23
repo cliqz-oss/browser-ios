@@ -88,7 +88,7 @@ class DashViewController: UIViewController {
         reminders.customDelegate = self
         recommendations.customDelegate = self
         
-        reminders.headerTitleText = NSLocalizedString("Reminders", tableName: "Cliqz", comment: "Text for reminders title")
+        reminders.headerTitleText = NSLocalizedString("Upcoming Reminders", tableName: "Cliqz", comment: "Text for upcoming reminders title")
         recommendations.headerTitleText = NSLocalizedString("Recommendations", tableName: "Cliqz", comment: "Text for recommendations title")
         
         var reminders_height = reminders.height
