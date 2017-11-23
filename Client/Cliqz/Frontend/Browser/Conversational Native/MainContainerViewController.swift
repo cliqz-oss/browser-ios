@@ -93,7 +93,7 @@ class MainContainerViewController: UIViewController {
 
 	override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
 		// Temporary disabling cleaning history on shake gesture to check if this is the reson disappearing history time after time.
-		/*
+        #if UserTest
 		if motion == .motionShake,
 			let profile = self.profile {
 			let alert = UIAlertController(title: "Do you want to clear the history?", message: "", preferredStyle: .alert)
@@ -106,7 +106,7 @@ class MainContainerViewController: UIViewController {
 			alert.addAction(open)
 			self.present(alert, animated: true, completion: nil)
 		}
-*/
+        #endif
 	}
 
     private func prepareModules() {
