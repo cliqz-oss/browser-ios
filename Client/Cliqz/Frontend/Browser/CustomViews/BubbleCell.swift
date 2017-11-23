@@ -39,7 +39,6 @@ class BubbleCell: ClickableUITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        bubbleContainerView.layer.transform = CATransform3DIdentity
     }
     
     func setupComponents() {
@@ -103,6 +102,7 @@ class BubbleCell: ClickableUITableViewCell {
 
             }, completion: { finished in
                 if finished && aboveTreshold {
+                    self.bubbleContainerView.layer.transform = CATransform3DIdentity
                     self.swipeDelegate?.didSwipe(atCell: self, direction: velocity.x > 0 ? .Right : .Left)
                 }
             })
