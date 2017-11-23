@@ -104,6 +104,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             cell.accessibilityLabel = customDataSource.accessibilityLabel(indexPath: indexPath)
             cell.selectionStyle  = .none
             cell.swipeDelegate = self
+             cell.tag = indexPath.row
             return cell
         }
         var cell =  self.dequeueReusableCell(withIdentifier: bubble_left_id) as! BubbleLeftCell
@@ -118,9 +119,10 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
         
         let cellUrl = customDataSource.url(indexPath: indexPath)
         cell.urlLabel.text  = cellUrl?.host?.replace("www.", replacement: "")
+        cell.tag = indexPath.row
         customDataSource.logo(indexPath: indexPath) { (url, image, logoInfo) in
             // as this block is called asynchronously, we want to make sure that we are rendering the same cell not another cell (user might scroll before the call back is called)
-            if url == cellUrl {
+            if indexPath.row == cell.tag {
                 cell.updateIconView(image, logoInfo: logoInfo)
             }
         }
@@ -233,16 +235,9 @@ extension BubbleTableView : CustomScrollDelegate {
 extension BubbleTableView : BubbleCellSwipeDelegate {
     func didSwipe(atCell cell: UITableViewCell, direction: SwipeDirection) {
         if let indexPath = self.indexPath(for: cell){
-            let oldSectionsCount = self.customDataSource.numberOfSections()
             self.customDelegate?.deleteItem(at: indexPath, direction: direction, completion: { [weak self] in
                 DispatchQueue.main.async {
-                    if let newSectionsCount = self?.customDataSource.numberOfSections() {
-                        if oldSectionsCount > newSectionsCount {
-                            self?.deleteSections(IndexSet([indexPath.section]), with: .none)
-                        } else {
-                            self?.deleteRows(at: [indexPath], with: .none)
-                        }
-                    }
+                    self?.reloadData()
                 }
             })
         }

@@ -127,13 +127,9 @@ extension HistoryViewController: BubbleTableViewDelegate {
 
 extension HistoryViewController: HasDataSource {
     func dataSourceWasUpdated() {
-        if let isEmpty = self.tableViewDataSource?.isEmpty(), isEmpty == true {
-            self.emptyHistroyLabel.isHidden = false
-            self.historyTableView.isHidden = true
-        } else {
-            self.emptyHistroyLabel.isHidden = true
-            self.historyTableView.isHidden = false
-        }
+        if let isEmpty = self.tableViewDataSource?.isEmpty() {
+            self.emptyHistroyLabel.isHidden = !isEmpty
+        } 
     }
 }
 
