@@ -851,13 +851,18 @@ extension FreshtabViewController {
 
         let loadDuration = Int(Date.getCurrentMillis() - startTime)
         var customData: [String: Any] = ["topsite_count": topSites.count, "load_duration": loadDuration]
+        let breakingNewsCount = self.breakingNewsCount()
+        let localNewsCount = self.localNewsCount()
+        
         if isLoadCompleted {
             customData["is_complete"] = true
-            customData["topnews_count"] = news.count - self.breakingNewsCount() - self.localNewsCount()
-            customData["breakingnews_count"] = self.breakingNewsCount()
-			customData["localnews_count"] = self.localNewsCount()
+            customData["topnews_available_count"] = news.count - breakingNewsCount - localNewsCount
+            customData["topnews_count"] = min(news.count, FreshtabViewUX.MinNewsCellsCount) - breakingNewsCount - localNewsCount
+            customData["breakingnews_count"] = breakingNewsCount
+			customData["localnews_count"] = localNewsCount
         } else {
             customData["is_complete"] = false
+            customData["topnews_available_count"] = 0
             customData["topnews_count"] = 0
             customData["breakingnews_count"] = 0
 			customData["localnews_count"] = 0
