@@ -48,13 +48,19 @@ final class StateManager {
         
         //Add tab: Rule - whenever a url is selected open a new tab (press on card, press on news, press on reminder, press on history entry)
         if action.type == .urlSelected && (GeneralUtils.tabManager().selectedTab?.webView?.url != nil || GeneralUtils.tabManager().tabs.count == 0) {
-            let tab = GeneralUtils.tabManager().addTabAndSelect()
-            actionStateData.addTab(tab: tab) //update the tab in the state data
-            addStateToNavigation(state: currentState, tab: tab) //add the current state to the navigation of the new tab
-            //remove current tab
-            if let currentTab = currentState.stateData.tab {
-                GeneralUtils.tabManager().removeTab(currentTab)
+            
+            //openNewTab adds the new tab to the stateData that is passed to it.
+            openNewTab(state: currentState, stateData: &actionStateData)
+            
+            //remove current tab, in case it is not a reminder
+            if action.actionFlag != .isReminder {
+                if let currentTab = currentState.stateData.tab {
+                    GeneralUtils.tabManager().removeTab(currentTab)
+                }
             }
+            
+        } else if action.actionFlag == .openNewTab {
+            openNewTab(state: currentState, stateData: &actionStateData)
         }
 
         let nextState = ActionStateTransformer.nextState(previousState: previousState, currentState: currentState, actionType: action.type, nextStateData: actionStateData)
@@ -239,6 +245,12 @@ extension StateManager {
         }
         
         return true
+    }
+    
+    func openNewTab(state: State, stateData: inout StateData) {
+        let tab = GeneralUtils.tabManager().addTabAndSelect()
+        stateData.addTab(tab: tab) //update the tab in the state data
+        addStateToNavigation(state: state, tab: tab) //add the current state to the navigation of the new tab
     }
     
     func selectTabFor(nextState: State, action: Action) {

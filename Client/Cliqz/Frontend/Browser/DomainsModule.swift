@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Shared
 
 class DomainsModule {
 
@@ -25,6 +26,7 @@ class DomainsModule {
     init() {
         self.loadData(completion: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(visitInsertedInDB), name: Notification.Name.init("NotificationSQLiteHistoryAddLocalVisit"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(domainsInHistoryDeleted), name: NotificationPrivateDataClearedHistory, object: nil)
     }
 
     deinit {
@@ -91,6 +93,11 @@ class DomainsModule {
             }
         }
 */
+    }
+    
+    @objc
+    func domainsInHistoryDeleted(_ notification: Notification) {
+        loadData(completion: nil)
     }
 
 	func loadDomainDetails(_ domain: DomainModel, completion:(([DomainDetailModel]?) -> Void)?) {

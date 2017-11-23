@@ -55,25 +55,20 @@ enum ActionType {
 //Attention: Add actions that are supposed to be handled by the router here. They won't be handled if you don't add them.
 let RouterActions: [ActionType] = [.tabsPressed, .sharePressed, .remindersPressed, .urlProgressChanged]
 
-enum ActionContext {
-    case mainContainer
-    case urlBarVC
-    case historyNavVC
-    case historyDetails
-    case contentNavVC
-    case toolBarVC
-    case shareHelper
-    case dashRemindersDS
-    case dashRecommendationsDS
+enum ActionFlag {
+    case openNewTab
+    case isReminder
 }
 
 struct Action: Equatable {
     let data: [String: Any]?
     let type: ActionType
+    let actionFlag: ActionFlag?
 	
-    init(data: [String: Any]? = nil, type: ActionType) {
+    init(data: [String: Any]? = nil, type: ActionType, actionFlag: ActionFlag? = nil) {
         self.data = data
         self.type = type
+        self.actionFlag = actionFlag
     }
     
     static func == (lhs: Action, rhs: Action) -> Bool {

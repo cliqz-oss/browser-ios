@@ -671,7 +671,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func specialOpenUrl(url:String) {
-        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected, actionFlag: .isReminder))
         //notification pressed
         CIReminderManager.sharedInstance.reminderPressed(url_str: url)
     }
