@@ -710,7 +710,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         options[kCRToastInteractionRespondersKey] = [tapInteraction]
         options[kCRToastImageKey] = UIImage(named:"notificationImg")!
         options[kCRToastTextColorKey] = UIColor.white
-        options[kCRToastTimeIntervalKey] = 15
+        options[kCRToastTimeIntervalKey] = 4
         
         // copy default options to the current options dictionary
         defaultOptions.forEach { options[$0] = $1 }

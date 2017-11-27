@@ -19,7 +19,7 @@ final class DomainDetailsViewController: UIViewController {
     let recommendationsCollection = RecommedationsCollectionView()
     
     var tableViewDataSource: BubbleTableViewDataSource
-    var recommendationsDataSource: RecommendationsCollectionProtocol
+    var recommendationsDataSource: RecommendationsCollectionProtocol & RecommendationsCollectionDelegate
     var headerViewDataSource: DomainDetailsHeaderViewProtocol
 	
     var didPressBack: () -> ()
@@ -36,7 +36,7 @@ final class DomainDetailsViewController: UIViewController {
         case undefined
     }
     
-    init(tableViewDataSource: BubbleTableViewDataSource, recommendationsDataSource: RecommendationsCollectionProtocol, headerViewDataSource: DomainDetailsHeaderViewProtocol, didPressBack: @escaping () -> (), cellPressed: @escaping (String) -> Void) {
+    init(tableViewDataSource: BubbleTableViewDataSource, recommendationsDataSource: RecommendationsCollectionProtocol & RecommendationsCollectionDelegate, headerViewDataSource: DomainDetailsHeaderViewProtocol, didPressBack: @escaping () -> (), cellPressed: @escaping (String) -> Void) {
         
         self.tableViewDataSource = tableViewDataSource
         self.recommendationsDataSource = recommendationsDataSource
@@ -50,7 +50,7 @@ final class DomainDetailsViewController: UIViewController {
         historyTableView = BubbleTableView(customDataSource: self.tableViewDataSource, customDelegate: self)
         historyTableView.scrollViewDelegate = self
         recommendationsCollection.customDataSource = self.recommendationsDataSource
-        recommendationsCollection.customDelegate = self
+        recommendationsCollection.customDelegate = self.recommendationsDataSource
         headerView = DomainDetailsHeaderView(dataSource: self.headerViewDataSource)
         headerView.delegate = self
         
@@ -115,16 +115,17 @@ final class DomainDetailsViewController: UIViewController {
 	}
 }
 
-extension DomainDetailsViewController: RecommendationsCollectionDelegate {
-    func itemPressed(indexPath: IndexPath) {
-        let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
-        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
-    }
-    
-    func deletePressed(indexPath: IndexPath) {
-        recommendationsCollection.customDataSource?.deletePressed(indexPath: indexPath)
-    }
-}
+//extension DomainDetailsViewController: RecommendationsCollectionDelegate {
+//    func itemPressed(indexPath: IndexPath) {
+//        let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
+//        CIReminderManager.sharedInstance
+//        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
+//    }
+//    
+//    func deletePressed(indexPath: IndexPath) {
+//        recommendationsCollection.customDataSource?.deletePressed(indexPath: indexPath)
+//    }
+//}
 
 extension DomainDetailsViewController: BubbleTableViewDelegate {
     func cellPressed(indexPath: IndexPath) {

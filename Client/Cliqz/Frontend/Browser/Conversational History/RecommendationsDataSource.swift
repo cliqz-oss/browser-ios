@@ -8,7 +8,7 @@
 
 import WebImage
 
-class RecommendationsDataSource: RecommendationsCollectionProtocol {
+class RecommendationsDataSource: RecommendationsCollectionProtocol, RecommendationsCollectionDelegate {
     
     static let identifier = "RecommendationsDataSource"
     
@@ -25,7 +25,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     
     init(baseUrl: String) {
         self.baseUrl = baseUrl
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeDomainsFromHistory: false)
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeDomainsFromHistory: true)
         self.standardTimeFormatter.dateFormat = standardTimeFormat
         self.standardDateFormatter.dateFormat = standardDateFormat
         NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
@@ -36,7 +36,7 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
     }
     
     func loadRecommendations() {
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeDomainsFromHistory: false)
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: URL(string: baseUrl), includeDomainsFromHistory: true)
     }
     
     func numberOfItems() -> Int {
@@ -133,6 +133,14 @@ class RecommendationsDataSource: RecommendationsCollectionProtocol {
         }
         
         return recommendations[indexPath.row].url
+    }
+    
+    func itemPressed(indexPath: IndexPath) {
+        let url = self.url(indexPath: indexPath)
+        if recommendations[indexPath.row].type == .reminder {
+            CIReminderManager.sharedInstance.reminderPressed(url_str: url)
+        }
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
     }
     
     func deletePressed(indexPath: IndexPath) {

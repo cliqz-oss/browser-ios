@@ -25,6 +25,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         super.init()
         loadDomains()
         NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reminderFired), name: CIReminderManager.notification_fired, object: nil)
     }
     
     func loadDomains() {
@@ -68,11 +69,14 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func shouldShowNotification(indexPath:IndexPath) -> Bool {
+        if ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath)) > 0 {
+            return true
+        }
         return false
     }
-
+ 
     func notificationNumber(indexPath:IndexPath) -> Int {
-        return NewsManager.sharedInstance.newArticleCount()
+        return ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath))
     }
     
     func indexWithinBounds(indexPath:IndexPath) -> Bool {
@@ -85,6 +89,11 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     @objc
     func domainsUpdated(_ notification: Notification) {
         loadDomains()
+        delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
+    }
+    
+    @objc
+    func reminderFired(_ notification: Notification) {
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
 

@@ -34,6 +34,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     let emptyStateLabel = UILabel()
     
     var didPressCell:(_ indexPath: IndexPath, _ host: String) -> () = { _ in }
+    var didDeleteCell:(_ indexPath: IndexPath, _ host: String) -> () = { _ in }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -139,7 +140,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
 			self.dataSource.removeDomain(at: indexPath.row)
-            // handle delete (by removing the data from your array and updating the tableview)
+            didDeleteCell(indexPath, dataSource.domains[indexPath.row].host)
         }
     }
     

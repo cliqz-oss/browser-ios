@@ -56,7 +56,7 @@ final class RecommendationsManager {
             recommendations += news_recommendations
         }
         
-        let reminders = CIReminderManager.sharedInstance.allValidRemindersAscending()
+        let reminders = CIReminderManager.sharedInstance.allReminders()
         let reminders_recommendations = convertReminders2Recommendations(reminders: reminders)
         recommendations += reminders_recommendations
         
@@ -183,7 +183,7 @@ final class RecommendationsManager {
             }
             
             let domain_recommendations = local_recommendations.filter({ (recommendation) -> Bool in
-                return ("www." + baseUrl) == recommendation.host
+                return baseUrl == recommendation.host || "www." + baseUrl == recommendation.host || "m." + baseUrl == recommendation.host || "mobile." + baseUrl == recommendation.host
             })
             
             let filtered_recommendations = filterOutIgnoredRecommendations(recommendations: domain_recommendations)
