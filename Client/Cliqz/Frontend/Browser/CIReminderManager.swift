@@ -34,6 +34,7 @@ final class CIReminderManager: NSObject {
     // 3. Link with React - Done
     
     static let notification_update = NSNotification.Name(rawValue: "NotificationRemindersChanged")
+    static let notification_fired = NSNotification.Name(rawValue: "NotificationReminderFired")
     
     enum RemindersChanged {
         case True
@@ -49,11 +50,16 @@ final class CIReminderManager: NSObject {
         var hashValue: Int {
             return url.hashValue ^ date.hashValue
         }
+        
         static func == (lhs: ReminderStruct, rhs: ReminderStruct) -> Bool {
             return lhs.url == rhs.url
         }
         
         func dict() -> [String: Any] {
+            return ["url":url, "date": date, "title": title]
+        }
+        
+        func reminder() -> Reminder {
             return ["url":url, "date": date, "title": title]
         }
     }
@@ -78,8 +84,22 @@ final class CIReminderManager: NSObject {
     private let copyKey = "CopyKey_1234"
     private let firedKey = "Fired_1234"
     
+    private var batchUpdate = false
+    
+    private func freezeStateUpdate() {
+        batchUpdate = true
+    }
+    
+    private func unfreezeStateUpdate() {
+        batchUpdate = false
+    }
+    
     override init() {
         super.init()
+        buildState()
+    }
+    
+    private func buildState() {
         url_hash_map = buildUrlHashMap(reminders: allValidReminders())
         firedReminders = loadFiredReminders()
         let new_fired_reminders = remindersFired()
@@ -93,7 +113,7 @@ final class CIReminderManager: NSObject {
     }
     
     func refresh() {
-        url_hash_map = buildUrlHashMap(reminders: allValidReminders())
+        buildState()
     }
     
     func saveState() {
@@ -113,7 +133,7 @@ final class CIReminderManager: NSObject {
         
         UIApplication.shared.scheduleLocalNotification(notification)
         
-        url_hash_map = addUrlToHashMap(map: url_hash_map, url_str: url)
+        addUrlToHashMap(map: &url_hash_map, url_str: url)
         
     }
     
@@ -136,11 +156,13 @@ final class CIReminderManager: NSObject {
         
         UIApplication.shared.cancelLocalNotification(reminder)
         if let url = reminder.userInfo?["url"] as? String {
-            url_hash_map = removeUrlFromHashMap(map: url_hash_map, url_str: url)
             //remove from Copy
+            self.freezeStateUpdate()
             removeFromFiredReminders(url: url)
+            self.unfreezeStateUpdate()
+            debugPrint("remove from url_hash_map")
+            removeUrlFromHashMap(map: &url_hash_map, url_str: url)
         }
-        
     }
     
     func remindersWith(url: String, title: String? = nil) -> [UILocalNotification] {
@@ -164,7 +186,6 @@ final class CIReminderManager: NSObject {
         
         return array
     }
-    
     
     func allValidReminders() -> [Reminder] {
         
@@ -195,12 +216,12 @@ final class CIReminderManager: NSObject {
     }
     
     func allValidRemindersAscending() -> [Reminder] {
-        return self.allValidReminders().sorted(by: { (a, b) -> Bool in
-            if let date_a = a["date"] as? Date, let date_b = b["date"] as? Date {
-                return date_a < date_b
-            }
-            return false
-        })
+        return sortRemindersAscending(reminders: self.allValidReminders())
+    }
+    
+    //valid reminders + fired reminders
+    func allReminders() -> [Reminder] {
+        return sortRemindersAscending(reminders: self.allValidReminders() + firedRemindersToArray())
     }
     
     func isUrlRegistered(url_str: Url) -> Bool {
@@ -215,13 +236,19 @@ final class CIReminderManager: NSObject {
     }
     
     func reminderFired(url_str: String, date: Date?, title: String?) {
-        url_hash_map = removeUrlFromHashMap(map: url_hash_map, url_str: url_str)
         //add to FiredReminders
+        self.freezeStateUpdate()
         addToFiredReminders(url: url_str, date: date ?? Date(), title: title ?? "")
+        self.unfreezeStateUpdate()
+        removeUrlFromHashMap(map: &url_hash_map, url_str: url_str)
+        
+        ReminderNotificationManager.shared.reminderFired(host: URL(string: url_str)?.host)
+        NotificationCenter.default.post(name: CIReminderManager.notification_fired, object: nil)
     }
     
     func reminderPressed(url_str: String) {
         //remove from FiredReminders
+        ReminderNotificationManager.shared.reminderPressed(host: URL(string: url_str)?.host)
         removeFromFiredReminders(url: url_str)
     }
     
@@ -234,12 +261,28 @@ final class CIReminderManager: NSObject {
     
     //Private Methods -----------------------------------------------------------------------------
     
+    private func sortRemindersAscending(reminders: [Reminder]) -> [Reminder] {
+        return reminders.sorted(by: { (a, b) -> Bool in
+            if let date_a = a["date"] as? Date, let date_b = b["date"] as? Date {
+                return date_a < date_b
+            }
+            return false
+        })
+    }
+    
+    private func firedRemindersToArray() -> [Reminder] {
+        return self.firedReminders.flatMap { (arg) -> [Reminder] in
+            let (_, value) = arg
+            return value.map({ $0.reminder() })
+        }
+    }
+    
     private func buildUrlHashMap(reminders: [Reminder]) -> [Host : [Url]] {
         
         var return_dict: [Host : [Url]] = [:]
         for reminder in reminders {
             let url_str = reminder["url"] as! String
-            return_dict = addUrlToHashMap(map: return_dict, url_str: url_str)
+            addUrlToHashMap(map: &return_dict, url_str: url_str)
         }
         
         return return_dict
@@ -252,12 +295,12 @@ final class CIReminderManager: NSObject {
         return nil
     }
     
-    private func addUrlToHashMap(map: [Host : [Url]], url_str: Url) -> [Host: [Url]] {
-        return addToHashMap(map: map, element: url_str, keyGenerator: keyGenerator_URL)
+    private func addUrlToHashMap(map: inout [Host : [Url]], url_str: Url) {
+        addToHashMap(map: &map, element: url_str, keyGenerator: keyGenerator_URL)
     }
     
-    private func removeUrlFromHashMap(map: [Host : [Url]], url_str: Url) -> [Host:[Url]] {
-        return removeFromHashMap(map: map, element: url_str, keyGenerator: keyGenerator_URL)
+    private func removeUrlFromHashMap(map: inout [Host : [Url]], url_str: Url) {
+        removeFromHashMap(map: &map, element: url_str, keyGenerator: keyGenerator_URL)
     }
     
     private func loadFiredReminders() -> FiredReminders {
@@ -285,12 +328,12 @@ final class CIReminderManager: NSObject {
     }
     
     private func addToFiredReminders(reminder: ReminderStruct) {
-        firedReminders = addToHashMap(map: firedReminders, element: reminder, keyGenerator: keyGenerator_ReminderStruct)
+        addToHashMap(map: &firedReminders, element: reminder, keyGenerator: keyGenerator_ReminderStruct)
     }
     
     private func removeFromFiredReminders(url: String) {
         //the url is the unique identifier. Only one reminder per url.
-        firedReminders = removeFromHashMap(map: firedReminders, element: ReminderStruct(url:url, date:Date(), title:""), keyGenerator: keyGenerator_ReminderStruct)
+        removeFromHashMap(map: &firedReminders, element: ReminderStruct(url:url, date:Date(), title:""), keyGenerator: keyGenerator_ReminderStruct)
     }
     
     private func remindersFired() -> Set<ReminderStruct> {
@@ -377,7 +420,7 @@ final class CIReminderManager: NSObject {
         return array
     }
     
-    private func addToHashMap<A>(map: [String: [A]], element: A, keyGenerator: ((A) -> String?)) -> [String: [A]] {
+    private func addToHashMap<A>(map: inout [String: [A]], element: A, keyGenerator: ((A) -> String?)) {
         var map_copy = map
         
         if let key = keyGenerator(element) {
@@ -390,15 +433,15 @@ final class CIReminderManager: NSObject {
             }
         }
         
-        stateChanged()
+        map = map_copy
         
-        return map_copy
+        stateChanged()
     }
     
-    private func removeFromHashMap<A:Equatable>(map: [String : [A]], element: A, keyGenerator:((A) -> String?)) -> [String: [A]] {
+    private func removeFromHashMap<A:Equatable>(map: inout [String : [A]], element: A, keyGenerator:((A) -> String?)) {
         
         var map_copy = map
-        
+    
         if let key = keyGenerator(element) {
             if var array = map_copy[key] {
                 for i in 0..<array.count {
@@ -414,7 +457,6 @@ final class CIReminderManager: NSObject {
                 else {
                     map_copy[key] = array
                 }
-                
             }
             else {
                 //Nothing to remove.
@@ -424,14 +466,16 @@ final class CIReminderManager: NSObject {
             //this is an invalid key
         }
         
-        stateChanged()
+        map = map_copy
         
-        return map_copy
+        stateChanged()
     }
     
     private func stateChanged() {
-        didRemindersChange = .True
-        postRefreshNotification()
+        if batchUpdate == false {
+            didRemindersChange = .True
+            postRefreshNotification()
+        }
     }
     
     private func postRefreshNotification() {

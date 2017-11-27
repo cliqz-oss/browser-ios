@@ -79,7 +79,7 @@ final class ActionStateTransformer {
     private class func transform(previousState: State, currentState: State, actionType: ActionType, nextStateData: StateData) -> State {
 
         let contentNextState = contentNavTransform(previousState: previousState.contentState, currentState: currentState.contentState, nextStateData: nextStateData, actionType: actionType)
-        let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState.urlBarState, nextStateData: nextStateData, actionType: actionType)
+        let urlBarNextState = urlBarTransform(prevState: previousState.urlBarState, currentState: currentState, nextStateData: nextStateData, actionType: actionType)
         
         //right now the state of the back and forwward that I set here as disabled does not affect the ui
         let state = State(contentState: contentNextState, urlBarState: urlBarNextState, stateData: nextStateData)
@@ -119,8 +119,8 @@ final class ActionStateTransformer {
         return nextState
     }
     
-    private class func urlBarTransform(prevState: URLBarState, currentState: URLBarState, nextStateData: StateData, actionType: ActionType) -> URLBarState {
-        var nextState = currentState
+    private class func urlBarTransform(prevState: URLBarState, currentState: State, nextStateData: StateData, actionType: ActionType) -> URLBarState {
+        var nextState = currentState.urlBarState
         
         if let newState = urlBarNextState(actionType: actionType, previousState: prevState, currentState: currentState, nextStateData: nextStateData) {
             nextState = newState
@@ -276,7 +276,7 @@ extension ActionStateTransformer {
     }
     
     
-    class func urlBarNextState(actionType: ActionType, previousState: URLBarState, currentState: URLBarState, nextStateData: StateData) -> URLBarState? {
+    class func urlBarNextState(actionType: ActionType, previousState: URLBarState, currentState: State, nextStateData: StateData) -> URLBarState? {
         
         switch actionType {
         case .initial:
@@ -299,7 +299,7 @@ extension ActionStateTransformer {
             return .collapsedTransparent
         case .tabDonePressed:
             if let appDel = UIApplication.shared.delegate as? AppDelegate, let tabManager = appDel.tabManager {
-                if currentState == .collapsedBlue && tabManager.tabs.count == 0 {
+                if currentState.contentState != .browse || tabManager.tabs.count == 0 { 
                     return .collapsedTransparent
                 }
             }
