@@ -50,8 +50,8 @@ class HistoryModule: NSObject {
         //It will keep a window of results that updates as the user scrolls.
         let backgroundQueue = DispatchQueue.global(qos: .background)
         profile.history.getHistoryVisits(0, limit: 500).uponQueue(backgroundQueue) { (result) in
-            let HistoryEntries = processHistoryResults(result: result)
-            completion(HistoryEntries, nil) //TODO: there should be a better error handling mechanism here
+            let historyEntries = processHistoryResults(result: result)
+            completion(historyEntries, nil) //TODO: there should be a better error handling mechanism here
         }
     }
     

@@ -59,7 +59,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
         "SELECT \(TableVisits).id, \(TableVisits).date, \(TableHistory).url, \(TableHistory).title " +
             "FROM \(TableHistory) " +
             "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
-            "ORDER BY \(TableVisits).date ASC " +
+            "ORDER BY \(TableVisits).date DESC " +
         "LIMIT \(limit) OFFSET \(offset)"
         
         // TODO countFactory
