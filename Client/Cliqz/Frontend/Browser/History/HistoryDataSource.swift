@@ -148,7 +148,9 @@ class HistoryDataSource: BubbleTableViewDataSource {
         guard let historyEntries = historyEntries else {
             return result
         }
-        for historyEntry in historyEntries {
+        
+        let ascendingHistoryEntries = historyEntries.reversed()
+        for historyEntry in ascendingHistoryEntries {
             var date = "01-01-1970"
             if let entryDate = historyEntry.date {
                 date = standardDateFormatter.string(from: entryDate)
