@@ -9,7 +9,7 @@
 import UIKit
 
 protocol HistoryActionDelegate: class {
-    func didSelectLogo(atIndex index: Int)
+    func didSelectLogo(atIndexPath: IndexPath?)
 }
 
 class DomainsCell: UITableViewCell {
@@ -21,6 +21,8 @@ class DomainsCell: UITableViewCell {
     
     let notificationView: CellNotificationView
     let notificationHeight: CGFloat = CGFloat(21)
+    
+    var indexPath: IndexPath? = nil
     
     weak var delegate: HistoryActionDelegate?
     
@@ -85,7 +87,7 @@ class DomainsCell: UITableViewCell {
     }
     
     @objc private func logoPressed() {
-        self.delegate?.didSelectLogo(atIndex: self.tag)
+        self.delegate?.didSelectLogo(atIndexPath: self.indexPath)
     }
     
     
