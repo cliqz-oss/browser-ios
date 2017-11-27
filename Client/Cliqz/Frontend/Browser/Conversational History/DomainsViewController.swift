@@ -96,6 +96,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 		let cell =  self.historyTableView.dequeueReusableCell(withIdentifier: self.historyCellID) as! DomainsCell
 		cell.delegate = self
         cell.tag = indexPath.row
+        cell.indexPath = indexPath
         
         let articleLink = dataSource.urlLabelText(indexPath: indexPath)
         cell.URLLabel.text   = articleLink
@@ -162,8 +163,10 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
 }
 
 extension DomainsViewController: HistoryActionDelegate {
-	func didSelectLogo(atIndex index: Int) {
-
+    func didSelectLogo(atIndexPath: IndexPath?) {
+        guard let indexPath = atIndexPath else { return }
+        let url = dataSource.baseUrl(indexPath: indexPath)
+        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
 	}
 }
 

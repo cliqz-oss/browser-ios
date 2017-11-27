@@ -28,6 +28,10 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         NotificationCenter.default.addObserver(self, selector: #selector(reminderFired), name: CIReminderManager.notification_fired, object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func loadDomains() {
         domains = DomainsModule.shared.domains
     }
