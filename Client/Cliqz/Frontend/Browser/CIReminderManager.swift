@@ -33,6 +33,13 @@ final class CIReminderManager: NSObject {
     // 2. Make an api for it - Done
     // 3. Link with React - Done
     
+    //Two types of reminders:
+    //1. Unfired reminders
+    //2. Fired reminders
+    
+    //Unfired reminders are kept by the system
+    //Fired reminders are kept in a persistent data structure
+    
     static let notification_update = NSNotification.Name(rawValue: "NotificationRemindersChanged")
     static let notification_fired = NSNotification.Name(rawValue: "NotificationReminderFired")
     
@@ -150,8 +157,12 @@ final class CIReminderManager: NSObject {
             }
         }
         
+        //it might be that this reminder is already fired.
+        removeFiredReminder(url_str: url)
+        
     }
     
+    //unregister for reminders that are not yet fired, since fired reminders are no longer UILocalNotifications.
     func unregisterReminder(reminder: UILocalNotification) {
         
         UIApplication.shared.cancelLocalNotification(reminder)
@@ -247,11 +258,9 @@ final class CIReminderManager: NSObject {
     }
     
     func reminderPressed(url_str: String) {
-        //remove from FiredReminders
-        ReminderNotificationManager.shared.reminderPressed(host: URL(string: url_str)?.host)
-        removeFromFiredReminders(url: url_str)
+        removeFiredReminder(url_str: url_str)
     }
-    
+
     func getFiredReminders(host: String) -> [[String: Any]] {
         if let array = firedReminders[host] {
             return transformRemindersStruct2Dict(reminders: array)
@@ -260,6 +269,11 @@ final class CIReminderManager: NSObject {
     }
     
     //Private Methods -----------------------------------------------------------------------------
+    
+    private func removeFiredReminder(url_str: String) {
+        ReminderNotificationManager.shared.reminderPressed(host: URL(string: url_str)?.host)
+        removeFromFiredReminders(url: url_str)
+    }
     
     private func sortRemindersAscending(reminders: [Reminder]) -> [Reminder] {
         return reminders.sorted(by: { (a, b) -> Bool in
