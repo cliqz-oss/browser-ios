@@ -33,7 +33,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func loadDomains() {
-        domains = DomainsModule.shared.domains
+        domains = processDomains(domains: DomainsModule.shared.domains)
     }
 
     func numberOfCells() -> Int {
@@ -92,12 +92,16 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
 
     @objc
     func domainsUpdated(_ notification: Notification) {
-        loadDomains()
-        delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
+        update()
     }
     
     @objc
     func reminderFired(_ notification: Notification) {
+        update()
+    }
+    
+    private func update() {
+        loadDomains()
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
 
@@ -107,4 +111,39 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
 			DomainsModule.shared.removeDomain(at: index)
 		}
 	}
+    
+    //-------------------------------------------------------
+    
+    private func processDomains(domains: [DomainModel]) -> [DomainModel] {
+        let domainsWithNotificationOnTop = putDomainsWithNotificationOnTop(domains: domains)
+        return domainsWithNotificationOnTop
+    }
+    
+    private func putDomainsWithNotificationOnTop(domains: [DomainModel]) -> [DomainModel] {
+        let (extracted, domains_wo_extracted) = extractElements(from: domains) { (domain) -> Bool in
+             return ReminderNotificationManager.shared.notificationsFor(host: domain.host) > 0
+        }
+        
+        return extracted + domains_wo_extracted
+    }
+    
+    //this method takes the elements that meet the predicate out of the list and returns two lists:
+    //one with the elements that meet the predicate
+    //the second is the initial list without the extracted elements
+    private func extractElements(from domains: [DomainModel], predicate: (DomainModel) -> Bool) -> ([DomainModel], [DomainModel]){
+        
+        var copy = domains
+        var extracted: [DomainModel] = []
+        
+        var index = 0
+        for element in domains {
+            if predicate(element) {
+                extracted.append(element)
+                copy.remove(at: index)
+            }
+            index += 1
+        }
+        
+        return (extracted, copy)
+    }
 }
