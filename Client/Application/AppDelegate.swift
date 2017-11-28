@@ -655,7 +655,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 if UIApplication.shared.applicationState == .active {
                     //presentReminderAlert(title: "Reminder", body: title, url: url)
-                    presentReminderToast(message: title, url: url)
+                    presentReminderToast(title: title, url: url)
                 }
                 else {
                     let extend = startUp ? 2.0 : 0.5
@@ -687,7 +687,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         presentContollerOnTop(controller: controller)
     }
     
-    func presentReminderToast(message: String, url: String) {
+    func presentReminderToast(title: String, url: String) {
         
         let defaultOptions : [AnyHashable: Any] = [
             kCRToastTextAlignmentKey : NSNumber(value: NSTextAlignment.left.rawValue),
@@ -704,7 +704,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.specialOpenUrl(url: url)
         }
         
-        var options : [AnyHashable: Any] = [kCRToastTextKey: "Reminder: " + message]
+        var options : [AnyHashable: Any] = [kCRToastTextKey: CIReminderManager.alertBody(url: url, title: title)]
         
         options[kCRToastBackgroundColorKey] = UIColor(colorString: "24262f")
         options[kCRToastInteractionRespondersKey] = [tapInteraction]

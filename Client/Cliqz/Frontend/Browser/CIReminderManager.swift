@@ -133,7 +133,7 @@ final class CIReminderManager: NSObject {
         let userInfo = ["url": url, "title": title, "date": date, "isReminder": true] as [String : Any]
         
         let notification = UILocalNotification()
-        notification.alertBody = "\(title) (Reminder)" // text that will be displayed in the notification
+        notification.alertBody = CIReminderManager.alertBody(url: url, title: title) // text that will be displayed in the notification
         notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
         notification.fireDate = date // todo item due date (when notification will be fired) notification.soundName = UILocalNotificationDefaultSoundName // play default sound
         notification.userInfo = userInfo // assign a unique identifier to the notification so that we can retrieve it later
@@ -495,5 +495,19 @@ final class CIReminderManager: NSObject {
     private func postRefreshNotification() {
         NotificationCenter.default.post(name: CIReminderManager.notification_update, object: nil)
     }
+}
+
+extension CIReminderManager {
+    
+    class func alertBody(url: String, title: String) -> String {
+        var host = ""
+        
+        if let h = URL(string: url)?.host {
+            host = h
+        }
+        
+        return host != "" ? "\u{1F514} Reminder (\(host)): \n\(title)" : "\(title) (Reminder)"
+    }
+    
 }
 
