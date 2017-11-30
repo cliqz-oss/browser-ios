@@ -9,6 +9,9 @@
 import Foundation
 import WebKit
 import Shared
+
+let kNotificationAllWebViewsDeallocated = "kNotificationAllWebViewsDeallocated"
+
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -227,7 +230,11 @@ class CliqzWebView: UIWebView {
 		commonInit()
 	}
     deinit {
-        
+        CliqzWebView.allocCounter -= 1
+        if (CliqzWebView.allocCounter == 0) {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: kNotificationAllWebViewsDeallocated), object: nil)
+            print("NO LIVE WEB VIEWS")
+        }
         WebViewToUAMapper.removeWebViewWithId(self.uniqueId)
         
         _ = Try(withTry: {
@@ -377,8 +384,11 @@ class CliqzWebView: UIWebView {
 	fileprivate class func isTopFrameRequest(_ request:URLRequest) -> Bool {
 		return request.url == request.mainDocumentURL
 	}
-	
+    static var allocCounter = 0
+
 	fileprivate func commonInit() {
+        
+        CliqzWebView.allocCounter += 1
 		delegate = self
         scalesPageToFit = true
         generateUniqueUserAgent()

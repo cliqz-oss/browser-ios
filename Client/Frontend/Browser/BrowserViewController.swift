@@ -220,7 +220,7 @@ class BrowserViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         log.debug("BVC received memory warning")
-		self.tabManager.purgeInactiveTabs()
+		self.tabManager.purgeTabs(includeSelectedTab: false)
     }
 
     fileprivate func didInit() {
