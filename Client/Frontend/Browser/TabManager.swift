@@ -207,6 +207,12 @@ class TabManager : NSObject {
 
         if let tab = tab {
             _selectedIndex = tabs.index(of: tab) ?? -1
+            if tab.isPrivate {
+                PrivateBrowsing.singleton.enter()
+            }
+            else {
+                PrivateBrowsing.singleton.exit()
+            }
         } else {
             _selectedIndex = -1
         }
@@ -214,10 +220,14 @@ class TabManager : NSObject {
         preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
-        selectedTab?.createWebview()
-
-        for delegate in delegates {
-            delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
+        // Delay creating the webview to make sure that the number of the webViews in memory will reach 0
+        // so that we can clean the cookies correctly when moving between private tabs and normal tabs
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.selectedTab?.createWebview()
+            
+            for delegate in self.delegates {
+                delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
+            }
         }
     }
 
@@ -535,9 +545,9 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
     }
 
-	func purgeInactiveTabs() {
+    func purgeTabs(includeSelectedTab: Bool) {
 		for tab in self.tabs {
-			if tab != self.selectedTab {
+			if includeSelectedTab || tab != self.selectedTab {
 				tab.purgeWebView()
 			}
 		}

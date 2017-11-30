@@ -78,6 +78,7 @@
 		1E638EF91F1CEC84002194F6 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E638EF81F1CEC84002194F6 /* Crypto.swift */; };
 		1E638F0A1F1CECB3002194F6 /* CryptoBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E638F091F1CECB3002194F6 /* CryptoBridge.m */; };
 		1E638F901F22080F002194F6 /* ShareCardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E638F8F1F22080F002194F6 /* ShareCardHelper.swift */; };
+		1E6597CE1FCDB96A0039AE5E /* PrivateBrowsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6597CD1FCDB96A0039AE5E /* PrivateBrowsing.swift */; };
 		1E6E5D0F1F94F92C00D23A1E /* BubbleRightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */; };
 		1E6E5D101F94F92C00D23A1E /* BubbleLeftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6E5D0D1F94F92C00D23A1E /* BubbleLeftCell.swift */; };
 		1E6E5D111F94F92C00D23A1E /* BubbleTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6E5D0E1F94F92C00D23A1E /* BubbleTableView.swift */; };
@@ -1453,6 +1454,7 @@
 		1E638EF81F1CEC84002194F6 /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Crypto.swift; path = JSEngine/Crypto.swift; sourceTree = "<group>"; };
 		1E638F091F1CECB3002194F6 /* CryptoBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CryptoBridge.m; path = JSEngine/CryptoBridge.m; sourceTree = "<group>"; };
 		1E638F8F1F22080F002194F6 /* ShareCardHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareCardHelper.swift; sourceTree = "<group>"; };
+		1E6597CD1FCDB96A0039AE5E /* PrivateBrowsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateBrowsing.swift; sourceTree = "<group>"; };
 		1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleRightCell.swift; sourceTree = "<group>"; };
 		1E6E5D0D1F94F92C00D23A1E /* BubbleLeftCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLeftCell.swift; sourceTree = "<group>"; };
 		1E6E5D0E1F94F92C00D23A1E /* BubbleTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTableView.swift; sourceTree = "<group>"; };
@@ -3870,6 +3872,7 @@
 				1E18650E1D5B2B360079B2CE /* LegacyJSContext.h */,
 				1E18650F1D5B2B580079B2CE /* LegacyJSContext.m */,
 				1E2DEC821E816516003D76B7 /* WebViewBackForward.swift */,
+				1E6597CD1FCDB96A0039AE5E /* PrivateBrowsing.swift */,
 			);
 			path = WebView;
 			sourceTree = "<group>";
@@ -6592,6 +6595,7 @@
 				4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */,
 				1E79DE941D508368006BEB4A /* NSValueTransformer+AWSMTLInversionAdditions.m in Sources */,
 				E4CD9E911A6897FB00318571 /* ReaderMode.swift in Sources */,
+				1E6597CE1FCDB96A0039AE5E /* PrivateBrowsing.swift in Sources */,
 				E68E7ADE1CAC208A00FDCA76 /* RemovePasscodeViewController.swift in Sources */,
 				E46C51C31B41ADD800EB349F /* Try.m in Sources */,
 				74C027451B2A348C001B1E88 /* SessionData.swift in Sources */,

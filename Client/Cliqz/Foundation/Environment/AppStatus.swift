@@ -85,6 +85,7 @@ class AppStatus {
     }
 
     internal func appDidFinishLaunching() {
+        PrivateBrowsing.singleton.startupCheckIfKilledWhileInPBMode()
         
         dispatchQueue.async {
             
