@@ -70,7 +70,7 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
         // Cliqz: Moved `blockPopups` to SettingsPrefs
 //        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.shared.getBlockPopupsPref()
         
         return configuration
     }()
@@ -82,7 +82,7 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
         // Cliqz: Moved `blockPopups` to SettingsPrefs
 //        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.shared.getBlockPopupsPref()
 
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
         return configuration

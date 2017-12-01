@@ -84,7 +84,7 @@ class EventsLogger: NSObject {
         }
         
         #if BETA
-        if SettingsPrefs.getLogTelemetryPref() {
+        if SettingsPrefs.shared.getLogTelemetryPref() {
             // Dump telemetry signals only in Beta for testing purposes
             NSLog("[Telemetry]: %@", event)
             print("[Telemetry]: \(event)")

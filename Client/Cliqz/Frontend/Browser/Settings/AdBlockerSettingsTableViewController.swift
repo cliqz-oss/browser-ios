@@ -21,7 +21,7 @@ class AdBlockerSettingsTableViewController: SubSettingsTableViewController {
     ]
     
     private lazy var toggles: [Bool] = {
-		return [SettingsPrefs.getAdBlockerPref(), SettingsPrefs.getFairBlockingPref()]
+		return [SettingsPrefs.shared.getAdBlockerPref(), SettingsPrefs.shared.getFairBlockingPref()]
     }()
 
     override func getSectionFooter(section: Int) -> String {
@@ -92,8 +92,8 @@ class AdBlockerSettingsTableViewController: SubSettingsTableViewController {
 	}
 
     private func saveToggles() {
-        SettingsPrefs.updateAdBlockerPref(self.toggles[0])
-		SettingsPrefs.updateFairBlockingPref(self.toggles[1])
+        SettingsPrefs.shared.updateAdBlockerPref(self.toggles[0])
+		SettingsPrefs.shared.updateFairBlockingPref(self.toggles[1])
 	}
 
 }

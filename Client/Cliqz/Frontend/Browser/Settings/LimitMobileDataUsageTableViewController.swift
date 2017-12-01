@@ -19,7 +19,7 @@ class LimitMobileDataUsageTableViewController: SubSettingsTableViewController {
     ]
     
     private lazy var toggles: [Bool] = {
-        return [SettingsPrefs.getLimitMobileDataUsagePref()]
+        return [SettingsPrefs.shared.getLimitMobileDataUsagePref()]
     }()
     
     override func getSectionFooter(section: Int) -> String {
@@ -75,6 +75,6 @@ class LimitMobileDataUsageTableViewController: SubSettingsTableViewController {
     }
     
     private func saveToggles() {
-        SettingsPrefs.updateLimitMobileDataUsagePref(self.toggles[0])
+        SettingsPrefs.shared.updateLimitMobileDataUsagePref(self.toggles[0])
     }
 }

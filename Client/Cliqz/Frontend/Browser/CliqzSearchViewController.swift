@@ -357,7 +357,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	fileprivate func updateExtensionPreferences() {
-		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
+		let isBlocked = SettingsPrefs.shared.getBlockExplicitContentPref()
         let subscriptions = SubscriptionsHandler.sharedInstance.getSubscriptions()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode,
@@ -368,10 +368,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
     fileprivate func getCountry() -> String {
-        if let country = SettingsPrefs.getRegionPref() {
+        if let country = SettingsPrefs.shared.getRegionPref() {
             return country
         }
-        return SettingsPrefs.getDefaultRegion()
+        return SettingsPrefs.shared.getDefaultRegion()
     }
 	
     //MARK: - Reset TopSites

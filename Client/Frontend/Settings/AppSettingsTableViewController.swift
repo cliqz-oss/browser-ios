@@ -46,9 +46,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
         
         // Search settings Section
         let regionalSetting                 = RegionalSetting(settings: self)
-        let querySuggestionSettings         = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(),
+        let querySuggestionSettings         = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.shared.getQuerySuggestionPref(),
                                                           titleText: NSLocalizedString("Search Query Suggestions", tableName: "Cliqz", comment: "[Settings] Search Query Suggestions"))
-        let blockExplicitContentSettings    = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(),
+        let blockExplicitContentSettings    = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.shared.getBlockExplicitContentPref(),
                                                           titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "[Settings] Block explicit content"))
         let humanWebSetting                 = HumanWebSetting(settings: self)
         let cliqzSearchSetting              = CliqzSearchSetting(settings: self)

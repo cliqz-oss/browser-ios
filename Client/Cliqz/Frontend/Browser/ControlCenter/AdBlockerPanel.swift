@@ -96,11 +96,11 @@ class AdBlockerPanel: AntitrackingPanel {
         return disabledColor
     }
     override func isFeatureEnabled() -> Bool {
-        return SettingsPrefs.getAdBlockerPref() //&& AdblockingModule.sharedInstance.isAdblockEnabled()
+        return SettingsPrefs.shared.getAdBlockerPref() //&& AdblockingModule.sharedInstance.isAdblockEnabled()
     }
     
     override func enableFeature() {
-        SettingsPrefs.updateAdBlockerPref(true)
+        SettingsPrefs.shared.updateAdBlockerPref(true)
         evaluateIsFeatureEnabledForCurrentWebsite()
         self.updateView()
         self.setupConstraints()

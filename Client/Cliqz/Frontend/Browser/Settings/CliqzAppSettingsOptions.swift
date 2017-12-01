@@ -64,7 +64,7 @@ class HumanWebSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
 
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
     }
 
     init(settings: SettingsTableViewController) {
@@ -160,7 +160,7 @@ class AdBlockerSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
     }
 
     init(settings: SettingsTableViewController) {
@@ -367,10 +367,10 @@ class RegionalSetting: Setting {
     
     override var status: NSAttributedString {
         var localizedRegionName: String?
-        if let region = SettingsPrefs.getRegionPref() {
+        if let region = SettingsPrefs.shared.getRegionPref() {
             localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
         } else {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.getDefaultRegion())
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.shared.getDefaultRegion())
             
         }
         return NSAttributedString(string: localizedRegionName!)
@@ -441,7 +441,7 @@ class LimitMobileDataUsageSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
     }
     
     init(settings: SettingsTableViewController) {
@@ -472,7 +472,7 @@ class AutoForgetTabSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getAutoForgetTabPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getAutoForgetTabPref() ? Setting.onStatus : Setting.offStatus)
     }
     
     init(settings: SettingsTableViewController) {
