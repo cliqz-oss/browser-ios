@@ -10,29 +10,6 @@ import UIKit
 
 class GeneralUtils {
     
-    class func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
-        var dict: Dictionary<B, [A]> = [:]
-        
-        for elem in array {
-            let key = hashF(elem)
-            if var array = dict[key] {
-                array.append(elem)
-                dict[key] = array
-            }
-            else {
-                dict[key] = [elem]
-            }
-        }
-        
-        return dict
-    }
-    
-    class func removeElementsAfter<A>(index: Int, array: [A]) -> [A] {
-        var arrayCopy = array
-        arrayCopy.removeLast(array.count - index - 1)
-        return arrayCopy
-    }
-    
     class func convert(seconds: Int) -> String {
         
         let days = seconds / (24 * 60 * 60)
@@ -62,6 +39,15 @@ class GeneralUtils {
     
     class func tabManager() -> TabManager {
         return ((UIApplication.shared.delegate as? AppDelegate)?.tabManager)!
+    }
+}
+
+
+extension Array {
+    public func removeElementsAfter(index: Int) -> [Element] {
+        var arrayCopy = self
+        arrayCopy.removeLast(self.count - index - 1)
+        return arrayCopy
     }
 }
 

@@ -61,7 +61,7 @@ final class NavigationStore {
             
             if hasNextState(tab: tab) { //I need to discard all states after the current one and then add this new one at the end
                 //remove elements after currentIndex
-                states = GeneralUtils.removeElementsAfter(index: currentIndex, array: states)
+                states = states.removeElementsAfter(index: currentIndex)
             }
             
             states.append(state)
