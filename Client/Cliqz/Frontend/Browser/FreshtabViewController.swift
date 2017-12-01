@@ -64,7 +64,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: Any]]()
-    var region = SettingsPrefs.getRegionPref()
+    var region = SettingsPrefs.shared.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
     
@@ -101,7 +101,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         startTime = Date.getCurrentMillis()
         
         isLoadCompleted = false
-        region = SettingsPrefs.getRegionPref()
+        region = SettingsPrefs.shared.getRegionPref()
         
         restoreToInitialState()
         updateView()
@@ -143,7 +143,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
         // topsites hint
-        if self.topSites.count == 0 && SettingsPrefs.getShowTopSitesPref() {
+        if self.topSites.count == 0 && SettingsPrefs.shared.getShowTopSitesPref() {
             self.emptyTopSitesHint.isHidden = false
         } else {
             self.emptyTopSitesHint.isHidden = true
@@ -175,7 +175,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     
     private func getTopSitesHeight() -> CGFloat {
-        guard SettingsPrefs.getShowTopSitesPref() else {
+        guard SettingsPrefs.shared.getShowTopSitesPref() else {
             return 0.0
         }
         
@@ -188,7 +188,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     private func getNewsHeight() -> CGFloat {
-        guard SettingsPrefs.getShowNewsPref() && self.news.count != 0 else {
+        guard SettingsPrefs.shared.getShowNewsPref() && self.news.count != 0 else {
             return 0.0
         }
         
@@ -397,7 +397,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	@objc fileprivate func loadTopsites() {
-        guard SettingsPrefs.getShowTopSitesPref() else {
+        guard SettingsPrefs.shared.getShowTopSitesPref() else {
             return
         }
         
@@ -418,23 +418,23 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						self.region = location.uppercased()
 						self.loadNews()
 					} else {
-						self.region = SettingsPrefs.getDefaultRegion()
+						self.region = SettingsPrefs.shared.getDefaultRegion()
 					}
-					SettingsPrefs.updateRegionPref(self.region!)
+					SettingsPrefs.shared.updateRegionPref(self.region!)
 				}
             }
         }
     }
 
 	fileprivate func loadNews() {
-        guard SettingsPrefs.getShowNewsPref() else {
+        guard SettingsPrefs.shared.getShowNewsPref() else {
             return
         }
         
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
-        let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
+        let userRegion = region != nil ? region : SettingsPrefs.shared.getDefaultRegion()
 		
         var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&platform=1"
 		if let coord = LocationManager.sharedInstance.getUserLocation() {
@@ -589,7 +589,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard SettingsPrefs.getShowNewsPref() else { return }
+        guard SettingsPrefs.shared.getShowNewsPref() else { return }
         
 		if indexPath.row < self.news.count {
 			let selectedNews = self.news[indexPath.row]
@@ -726,7 +726,7 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard SettingsPrefs.getShowTopSitesPref() else { return }
+        guard SettingsPrefs.shared.getShowTopSitesPref() else { return }
         
 		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row) {
 			let s = self.topSites[indexPath.row]
@@ -867,8 +867,8 @@ extension FreshtabViewController {
             customData["breakingnews_count"] = 0
 			customData["localnews_count"] = 0
         }
-        customData["is_topsites_on"] = SettingsPrefs.getShowTopSitesPref()
-        customData["is_news_on"] = SettingsPrefs.getShowNewsPref()
+        customData["is_topsites_on"] = SettingsPrefs.shared.getShowTopSitesPref()
+        customData["is_news_on"] = SettingsPrefs.shared.getShowNewsPref()
         logFreshTabSignal("show", target: nil, customData: customData)
     }
     

@@ -340,7 +340,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
     
     private func canDownloadYoutubeVideo() -> Bool {
-        let limitMobileDataUsage = SettingsPrefs.getLimitMobileDataUsagePref()
+        let limitMobileDataUsage = SettingsPrefs.shared.getLimitMobileDataUsagePref()
         
         if let networkReachabilityStatus = NetworkReachability.sharedInstance.networkReachabilityStatus, limitMobileDataUsage == true && networkReachabilityStatus != .reachableViaWiFi {
             showNoWifiConnectionAlert()

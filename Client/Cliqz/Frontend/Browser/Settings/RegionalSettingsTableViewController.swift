@@ -15,10 +15,10 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
     
     var selectedRegion: String {
         get{
-            if let region = SettingsPrefs.getRegionPref() {
+            if let region = SettingsPrefs.shared.getRegionPref() {
                 return region
             }
-            return SettingsPrefs.getDefaultRegion()
+            return SettingsPrefs.shared.getDefaultRegion()
         }
     }
     
@@ -58,7 +58,7 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let region = regions[indexPath.item]
-        SettingsPrefs.updateRegionPref(region)
+        SettingsPrefs.shared.updateRegionPref(region)
         
         let settingsBackSignal = TelemetryLogEventType.Settings(telemetrySignalViewName, "click", region, nil, nil)
         TelemetryLogger.sharedInstance.logEvent(settingsBackSignal)

@@ -21,30 +21,30 @@ enum HintType {
 class InteractiveIntro {
 
 	func shouldShowAntitrackingHint() -> Bool {
-		return SettingsPrefs.getShowAntitrackingHintPref() && OrientationUtil.isPortrait()
+		return SettingsPrefs.shared.getShowAntitrackingHintPref() && OrientationUtil.isPortrait()
 	}
     
 	func shouldShowCliqzSearchHint() -> Bool {
-        return SettingsPrefs.getShowCliqzSearchHintPref() && OrientationUtil.isPortrait()
+        return SettingsPrefs.shared.getShowCliqzSearchHintPref() && OrientationUtil.isPortrait()
 	}
     
     func shouldShowVideoDownloaderHint() -> Bool {
         guard !shouldShowAntitrackingHint() && !shouldShowCliqzSearchHint()  else {
             return false
         }
-        return SettingsPrefs.getShowVideoDownloaderHintPref() && OrientationUtil.isPortrait()
+        return SettingsPrefs.shared.getShowVideoDownloaderHintPref() && OrientationUtil.isPortrait()
     }
     
     func setShouldShowCliqzSearchHint(value: Bool) {
-        SettingsPrefs.updateShowCliqzSearchHintPref(value)
+        SettingsPrefs.shared.updateShowCliqzSearchHintPref(value)
     }
     
     func setShouldShowAntitrackingHint(value: Bool) {
-        SettingsPrefs.updateShowAntitrackingHintPref(value)
+        SettingsPrefs.shared.updateShowAntitrackingHintPref(value)
     }
     
     func setShouldShowVideoDownloaderHint(value: Bool) {
-        SettingsPrefs.updateShowVideoDownloaderHintPref(value)
+        SettingsPrefs.shared.updateShowVideoDownloaderHintPref(value)
     }
 
 	func updateHintPref(_ type: HintType, value: Bool) {

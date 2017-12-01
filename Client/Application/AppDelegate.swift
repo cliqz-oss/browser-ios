@@ -106,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.debug("Getting profile…")
         let profile = getProfile(application)
         appStateStore = AppStateStore(prefs: profile.prefs)
-
+		SettingsPrefs.shared.profile = profile
         log.debug("Initializing telemetry…")
         Telemetry.initWithPrefs(profile.prefs)
 

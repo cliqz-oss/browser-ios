@@ -240,12 +240,12 @@ class AppStatus {
 
     fileprivate func getEnvironmentPrefs(_ profile: Profile) -> [String: AnyObject] {
         var prefs = [String: AnyObject]()
-        prefs["block_popups"] = SettingsPrefs.getBlockPopupsPref() as AnyObject?
-        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref() as AnyObject?
-        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref() as AnyObject?
-        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref() as AnyObject?
-        prefs["human_web"] = SettingsPrefs.getHumanWebPref() as AnyObject?
-        prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
+        prefs["block_popups"] = SettingsPrefs.shared.getBlockPopupsPref() as AnyObject?
+        prefs["block_explicit"] = SettingsPrefs.shared.getBlockExplicitContentPref() as AnyObject?
+        prefs["block_ads"] = SettingsPrefs.shared.getAdBlockerPref() as AnyObject?
+        prefs["fair_blocking"] = SettingsPrefs.shared.getFairBlockingPref() as AnyObject?
+        prefs["human_web"] = SettingsPrefs.shared.getHumanWebPref() as AnyObject?
+        prefs["country"]   = SettingsPrefs.shared.getDefaultRegion() as AnyObject?
         prefs["location_access"] = LocationManager.sharedInstance.isLocationAcessEnabled() as AnyObject?
         if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
