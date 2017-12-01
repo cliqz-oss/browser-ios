@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import Shared
 
 final class CIReminderManager: NSObject {
     
@@ -236,7 +237,7 @@ final class CIReminderManager: NSObject {
     }
     
     func isUrlRegistered(url_str: Url) -> Bool {
-        if let host = URL(string: url_str)?.host {
+        if let host = URL(string: url_str)?.normalizedHost() {
             if let array = url_hash_map[host] {
                 if array.contains(url_str) {
                     return true
@@ -253,7 +254,7 @@ final class CIReminderManager: NSObject {
         self.unfreezeStateUpdate()
         removeUrlFromHashMap(map: &url_hash_map, url_str: url_str)
         
-        ReminderNotificationManager.shared.reminderFired(host: URL(string: url_str)?.host)
+        ReminderNotificationManager.shared.reminderFired(host: URL(string: url_str)?.normalizedHost())
         NotificationCenter.default.post(name: CIReminderManager.notification_fired, object: nil)
     }
     
@@ -271,7 +272,7 @@ final class CIReminderManager: NSObject {
     //Private Methods -----------------------------------------------------------------------------
     
     private func removeFiredReminder(url_str: String) {
-        ReminderNotificationManager.shared.reminderPressed(host: URL(string: url_str)?.host)
+        ReminderNotificationManager.shared.reminderPressed(host: URL(string: url_str)?.normalizedHost())
         removeFromFiredReminders(url: url_str)
     }
     
@@ -303,7 +304,7 @@ final class CIReminderManager: NSObject {
     }
     
     private func keyGenerator_URL(elem: String) -> String? {
-        if let url = URL(string: elem), let host = url.host {
+        if let url = URL(string: elem), let host = url.normalizedHost() {
             return host
         }
         return nil
@@ -502,7 +503,7 @@ extension CIReminderManager {
     class func alertBody(url: String, title: String) -> String {
         var host = ""
         
-        if let h = URL(string: url)?.host {
+        if let h = URL(string: url)?.normalizedHost() {
             host = h
         }
         

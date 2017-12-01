@@ -136,12 +136,17 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         var extracted: [DomainModel] = []
         
         var index = 0
+        var index_array:[Int] = []
         for element in domains {
             if predicate(element) {
                 extracted.append(element)
-                copy.remove(at: index)
+                index_array.append(index)
             }
             index += 1
+        }
+        
+        for i in index_array.sorted(by: >) {
+            copy.remove(at: i)
         }
         
         return (extracted, copy)
