@@ -225,14 +225,28 @@ final class StateAnimator {
         return (curveHash, duration!)
     }
     
-    private class func groupBy<A, B:Hashable>(array:[A], hashF:(A) -> B) -> Dictionary<B, [A]>{
-        var dict: Dictionary<B, [A]> = [:]
+    private class func groupByDurationAndCurve(array: [Transition]) -> Dictionary<String,[Transition]> {
         
-        for elem in array {
-            let key = hashF(elem)
-            if var array = dict[key] {
-                array.append(elem)
-                dict[key] = array
+        return array.groupBy(key: transitionHash)
+    }
+    
+    private class func groupByDelay(array: [Transition]) -> Dictionary<CGFloat,[Transition]> {
+        
+        return array.groupBy(key: {transition in transition.animationDetails.delayFactor})
+    }
+    
+}
+
+extension Array {
+    
+    public func groupBy<B:Hashable>(key: (Element) -> B) -> Dictionary<B, [Element]>{
+        var dict: Dictionary<B, [Element]> = [:]
+        
+        for elem in self {
+            let key = key(elem)
+            if var dict_array = dict[key] {
+                dict_array.append(elem)
+                dict[key] = dict_array
             }
             else {
                 dict[key] = [elem]
@@ -241,17 +255,4 @@ final class StateAnimator {
         
         return dict
     }
-    
-    private class func groupByDurationAndCurve(array: [Transition]) -> Dictionary<String,[Transition]> {
-        
-        return groupBy(array: array, hashF: transitionHash)
-        
-    }
-    
-    private class func groupByDelay(array: [Transition]) -> Dictionary<CGFloat,[Transition]> {
-        
-        return groupBy(array: array, hashF: {transition in transition.animationDetails.delayFactor})
-        
-    }
-    
 }
