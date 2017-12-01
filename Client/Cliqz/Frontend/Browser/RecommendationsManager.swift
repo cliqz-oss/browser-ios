@@ -111,7 +111,7 @@ final class RecommendationsManager {
         if let u = article["url"] as? String {
             url = u
             if let some_url = URL(string: u) {
-                if let h = some_url.host {
+                if let h = some_url.normalizedHost() {
                     host = h
                 }
             }
@@ -145,7 +145,7 @@ final class RecommendationsManager {
         if let u = reminder["url"] as? String {
             url = u
             if let some_url = URL(string: u) {
-                if let h = some_url.host {
+                if let h = some_url.normalizedHost() {
                     host = h
                 }
             }
@@ -179,7 +179,7 @@ final class RecommendationsManager {
                 baseUrl = domain.absoluteString
             }
             else {
-                baseUrl = domain.host ?? ""
+                baseUrl = domain.normalizedHost() ?? ""
             }
             
             let domain_recommendations = local_recommendations.filter({ (recommendation) -> Bool in

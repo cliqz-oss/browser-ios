@@ -191,7 +191,7 @@ final class HistoryModule: NSObject {
             
             var array: [DomainDetailModel] = []
             
-            var group_by_url = GeneralUtils.groupBy(array: details) { (detail) -> NSURL in
+            var group_by_url = details.groupBy { (detail) -> NSURL in
                 return detail.url
             }
             
@@ -210,7 +210,7 @@ final class HistoryModule: NSObject {
         
         let clean_details = removeDuplicates(details: details)
         
-        let groupedDetails_by_Domain = GeneralUtils.groupBy(array: clean_details) { (detail) -> String in
+        let groupedDetails_by_Domain = clean_details.groupBy { (detail) -> String in
             return detail.url.host ?? ""
         }
         
