@@ -33,7 +33,7 @@ public struct UIConstants {
     static let PrivateModeBackgroundColor = UIColor.black //UIColor(rgb: 0x333333)
     static let PrivateModeExpandBackgroundColor = UIColor.black // UIColor(rgb: 0x4a4a4a)
 
-    static let ToolbarHeight: CGFloat = 44
+    static let ToolbarHeight: CGFloat = 50
     static let DefaultRowHeight: CGFloat = 58
     static let DefaultPadding: CGFloat = 10
     static let SnackbarButtonHeight: CGFloat = 48

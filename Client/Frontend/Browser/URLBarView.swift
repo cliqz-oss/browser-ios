@@ -16,12 +16,12 @@ struct URLBarViewUX {
     static let TextFieldContentInset = UIOffsetMake(9, 5)
 	static let EditModeBackgroundColor = UIColor.white
 	static let NonEditModeBackgroundColor = UIColor(rgb: 0x00AEF0)
-    static let LocationLeftPadding: CGFloat = 10
-    static let LocationHeight = 28
+    static let LocationLeftPadding: CGFloat = 9
+    static let LocationHeight = 36
     static let ButtonWidth = 42
     static let ExpandedLocationHeight = 35
     static let LocationContentOffset: CGFloat = 8
-    static let TextFieldCornerRadius: CGFloat = 3
+    static let TextFieldCornerRadius: CGFloat = 9
     static let TextFieldBorderWidth: CGFloat = 1
     // offset from edge of tabs button
     static let URLBarCurveOffset: CGFloat = 14
@@ -30,7 +30,7 @@ struct URLBarViewUX {
     static let URLBarButtonOffset: CGFloat = 5
     // buffer so we dont see edges when animation overshoots with spring
     static let URLBarCurveBounceBuffer: CGFloat = 8
-    static let ProgressTintColor = UIColor(red:1, green:0.32, blue:0, alpha:1)
+    static let ProgressTintColor = UIColor(rgb: 0x2B5993)
 
     static let TabsButtonRotationOffset: CGFloat = 1.5
     static let TabsButtonHeight: CGFloat = 18.0
@@ -42,7 +42,7 @@ struct URLBarViewUX {
         theme.borderColor = UIConstants.PrivateModeLocationBorderColor
         theme.activeBorderColor = UIConstants.PrivateModePurple
         theme.tintColor = UIColor.white
-        theme.textColor = UIConstants.PrivateModeTextColor //UIColor.whiteColor()
+        theme.textColor = UIConstants.PrivateModeTextColor
         theme.buttonTintColor = UIConstants.PrivateModeActionButtonTintColor
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIConstants.PrivateModeBackgroundColor
@@ -54,9 +54,9 @@ struct URLBarViewUX {
         theme.borderColor = UIColor.clear
         theme.activeBorderColor = UIColor.clear
         theme.tintColor = ProgressTintColor
-        theme.textColor = UIConstants.NormalModeTextColor //UIColor.blackColor()
+        theme.textColor = UIConstants.NormalModeTextColor
         // Cliqz: Changed button tint color to black in the upper toolbar (URLBar)
-        theme.buttonTintColor = UIColor.black
+        theme.buttonTintColor = UIColor.white
         // Cliqz: Set URLBar backgroundColor because of requirements
         theme.backgroundColor = UIColor.white //UIConstants.AppBackgroundColor.withAlphaComponent(1)
 
@@ -166,8 +166,9 @@ class URLBarView: UIView {
     fileprivate lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView()
         progressBar.progressTintColor = URLBarViewUX.ProgressTintColor
-        progressBar.alpha = 0
-        progressBar.isHidden = true
+		progressBar.trackTintColor = UIColor(rgb: 0xE7ECEE)
+        progressBar.alpha = 1
+        progressBar.isHidden = false
         return progressBar
     }()
 
@@ -260,7 +261,7 @@ class URLBarView: UIView {
     }
 
     fileprivate func commonInit() {
-		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton, self.cancelButton]
+		self.actionButtons = AppConstants.MOZ_MENU ? [self.shareButton, self.menuButton, self.forwardButton, self.backButton, self.stopReloadButton, self.homePageButton] : [self.shareButton, self.bookmarkButton, self.forwardButton, self.backButton, self.tabsButton]
 
         backgroundColor = URLBarViewUX.backgroundColorWithAlpha(0)
 		// Cliqz: Commented extra curveView accroding to requirements.
@@ -427,7 +428,7 @@ class URLBarView: UIView {
                     make.height.equalTo(URLBarViewUX.LocationHeight)
                 }
                 make.height.equalTo(URLBarViewUX.LocationHeight)
-                make.centerY.equalTo(self)
+                make.centerY.equalTo(self).offset(-3)
             }
 			// Cliqz: Moved Tabs button to the left side of URLbar
 			tabsButton.snp_remakeConstraints { make in
@@ -933,6 +934,14 @@ extension URLBarView {
         }
     }
 
+	dynamic var actionButtonTextColor: UIColor? {
+		get { return helper?.buttonTextColor }
+		set {
+			guard let value = newValue else { return }
+			helper?.buttonTextColor = value
+		}
+	}
+
     fileprivate func applyThemeOnStatusBar(_ themeName: String) {
         switch(themeName) {
         case Theme.NormalMode:
@@ -958,6 +967,8 @@ extension URLBarView: Themeable {
     func applyTheme(_ themeName: String) {
         locationView.applyTheme(themeName)
         locationTextField?.applyTheme(themeName)
+		// Cliqz: used regular button instead of TabsButton
+		tabsButton.applyTheme(themeName)
 
         guard let theme = URLBarViewUX.Themes[themeName] else {
             log.error("Unable to apply unknown theme \(themeName)")
@@ -967,24 +978,26 @@ extension URLBarView: Themeable {
         currentTheme = themeName
         locationBorderColor = theme.borderColor!
         locationActiveBorderColor = theme.activeBorderColor!
-        progressBarTint = UIConstants.CliqzThemeColor
-        cancelTextColor = theme.textColor
         actionButtonTintColor = theme.buttonTintColor
+		actionButtonTextColor = UIColor.white
+		cancelTextColor = theme.textColor
+		self.cancelButton.tintColor = theme.textColor
         // Cliqz: Set URLBar backgroundColor because of requirements
 		if self.inOverlayMode {
 			backgroundColor = theme.backgroundColor
 		} else {
 			if self.currentURL == nil || self.currentURL!.absoluteString == "" {
 				self.backgroundColor = UIColor.clear
+				if currentTheme == Theme.NormalMode {
+					actionButtonTextColor = UIColor.black
+					actionButtonTintColor = UIColor.black
+				}
 			} else {
 				self.backgroundColor = URLBarViewUX.NonEditModeBackgroundColor
 			}
 		}
-        // Cliqz: used regular button instead of TabsButton
-        tabsButton.applyTheme(themeName)
         // Cliqz: Adjust statusbar according to the current theme
         self.applyThemeOnStatusBar(themeName)
-        
     }
 }
 

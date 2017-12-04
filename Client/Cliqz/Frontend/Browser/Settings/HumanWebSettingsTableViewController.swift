@@ -10,7 +10,7 @@ import UIKit
 
 class HumanWebSettingsTableViewController: SubSettingsTableViewController {
     
-	private lazy var toggle: Bool = SettingsPrefs.getHumanWebPref()
+	private lazy var toggle: Bool = SettingsPrefs.shared.getHumanWebPref()
     
     override func getSectionFooter(section: Int) -> String {
         return NSLocalizedString("Human Web footer", tableName: "Cliqz", comment: "[Settings -> Human Web]Footer text for Fair Blocking section")
@@ -46,7 +46,7 @@ class HumanWebSettingsTableViewController: SubSettingsTableViewController {
 	
 	@objc func switchValueChanged(_ toggle: UISwitch) {
 		self.toggle = toggle.isOn
-        SettingsPrefs.updateHumanWebPref(self.toggle)
+        SettingsPrefs.shared.updateHumanWebPref(self.toggle)
         
         // log telemetry signal
         let state = toggle.isOn == true ? "off" : "on" // we log old value

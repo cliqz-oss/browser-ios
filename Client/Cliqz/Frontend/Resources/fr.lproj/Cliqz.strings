@@ -255,6 +255,12 @@
 "Reset all subscriptions" = "Annuler tous les abonnements";
 /* [Settings] Text of the 'Reset all subscriptions' alert */
 "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?" = "Voulez-vous annuler tous les abonnements (ex. pour les matchs de la Ligue 1) ?";
+/* [Settings] Cliqz Tab section header */
+"Cliqz Tab" = "CliqzTab";
+/* [Settings] Show most visited websites */
+"Show most visited websites" = "Afficher les sites les plus visités";
+/* [Settings] Show News */
+"Show News" = "Afficher les actualités";
 /* [Settings] Help section header */
 "Help" = "Aide";
 /* [Settings] FAQs & Support */
@@ -290,7 +296,7 @@
 /* [Settings -> Connect] Add Connection title */
 "Add Connection" = "Ajouter une connexion";
 /* [Settings -> Connect] Add Connection footer */
-"Add Connection footer" = "Connectez Cliqz sur votre ordinateur avec Cliqz sur votre dispositif Android. Ainsi, vous pourrez envoyer des onglets depuis votre ordinateur vers votre smartphone ou tablette. Vous pourrez aussi télécharger des vidéos depuis votre ordinateur vers votre dispositif.";
+"Add Connection footer" = "Connectez Cliqz sur votre ordinateur avec Cliqz sur votre dispositif iOS. Ainsi, vous pourrez envoyer des onglets depuis votre ordinateur vers votre smartphone ou tablette. Vous pourrez aussi télécharger des vidéos depuis votre ordinateur vers votre dispositif.";
 /* [Settings -> Connect] Online Connections Header */
 "Online Connections" = "Connexions en ligne";
 /* [Settings -> Connect] Offline Connections Header */
@@ -355,3 +361,11 @@
 "Subscribing to {1}." = "Abonnement en cours ...";
 /* [Subscriptions] Subscribing Toast */
 "Currently, push notifications are only received if Cliqz is active." = "Currently, push notifications are only received if Cliqz is active.";
+/* [History] Text for empty history */
+"Here you will find your history.\n\n\nYou haven't searched or visited any website so far." = "Retrouvez votre historique ici.\n\n\nVous n'avez pas encore recherché ou visité de site.";
+/* [History] Text for empty favorites */
+"Here you will find your favorites.\n\n\nYou haven't created any favorites so far." = "Retrouvez vos sites favoris ici.\n\n\nVous n'avez pas encore enregistré de favoris.";
+/* [TabsOverview] Done button title
+  [Settings] Done button title
+  [Settings] Done button on left side of the Settings view controller title bar */
+"Done" = "Terminé";

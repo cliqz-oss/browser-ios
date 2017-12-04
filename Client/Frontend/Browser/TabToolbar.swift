@@ -66,6 +66,12 @@ open class TabToolbarHelper: NSObject {
         }
     }
 
+	var buttonTextColor = UIColor.black {
+		didSet {
+			setTextColor(buttonTextColor, forButtons: toolbar.actionButtons)
+		}
+	}
+
     var loading: Bool = false {
         didSet {
             if loading {
@@ -85,6 +91,10 @@ open class TabToolbarHelper: NSObject {
     fileprivate func setTintColor(_ color: UIColor, forButtons buttons: [UIButton]) {
         buttons.forEach { $0.tintColor = color }
     }
+
+	fileprivate func setTextColor(_ color: UIColor, forButtons buttons: [UIButton]) {
+		buttons.forEach { $0.setTitleColor(color, for: .normal) }
+	}
 
     init(toolbar: TabToolbarProtocol) {
         self.toolbar = toolbar

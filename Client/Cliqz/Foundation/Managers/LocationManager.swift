@@ -86,6 +86,11 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
             LocalDataStore.setObject(status.stringValue(), forKey: locationStatusKey)
         }
     }
+    
+    open func isLocationAcessEnabled() -> Bool {
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        return authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse
+    }
 
 }
 

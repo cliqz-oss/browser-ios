@@ -19,6 +19,7 @@ private let log = Logger.syncLogger
 public let NotificationProfileDidStartSyncing = "NotificationProfileDidStartSyncing"
 public let NotificationProfileDidFinishSyncing = Notification.Name("NotificationProfileDidFinishSyncing")
 public let ProfileRemoteTabsSyncDelay: TimeInterval = 0.1
+public let QueryScheme = "query"
 
 public enum SyncDisplayState {
     case inProgress
@@ -219,6 +220,9 @@ protocol Profile: class {
     func sendItems(_ items: [ShareItem], toClients clients: [RemoteClient])
 
     var syncManager: SyncManager { get }
+    
+    //Cliqz insert patch queries
+    func insertPatchQueries(_ queriesMetaData: [[String: Any]])
 }
 
 public class BrowserProfile: Profile {
@@ -321,6 +325,13 @@ public class BrowserProfile: Profile {
            let title = notification.userInfo!["title"] as? NSString {
             // Only record local vists if the change notification originated from a non-private tab
             if !(notification.userInfo!["isPrivate"] as? Bool ?? false) {
+                //Cliqz: Store queries first if exists
+                if let query = notification.userInfo!["query"] as? String,
+                    let queryUrl = getQuerySchemeUrl(url) {
+                    let querySite = Site(url: queryUrl.absoluteString, title: query)
+                    let queryVisit = SiteVisit(site: querySite, date: Date.nowMicroseconds(), type: visitType)
+                    history.addLocalVisit(queryVisit)
+                }
                 // We don't record a visit if no type was specified -- that means "ignore me".
                 let site = Site(url: url.absoluteString, title: title as String)
                 let visit = SiteVisit(site: site, date: Date.nowMicroseconds(), type: visitType)
@@ -332,7 +343,30 @@ public class BrowserProfile: Profile {
             log.debug("Ignoring navigation.")
         }
     }
-
+    
+    // Cliqz: get same url but with query scheme
+    private func getQuerySchemeUrl(_ url: URL) -> URL? {
+        guard let scheme = url.scheme else { return nil}
+        
+        let queryUrl = url.absoluteString.replace("\(scheme)://", replacement: "\(QueryScheme)://")
+        return URL(string: queryUrl)
+    }
+    
+    //Cliqz insert patch queries
+    func insertPatchQueries(_ queriesMetaData: [[String: Any]]) {
+        DispatchQueue.global().async { [weak self] in
+            for queryMetaData in queriesMetaData {
+                if let query = queryMetaData["query"] as? String,
+                    let timestamp = queryMetaData["timestamp"] as? Int {
+                    let escapedQuery = query.trim().escape()
+                    let queryUrl = "\(QueryScheme)://cliqz.com?query=\(escapedQuery)"
+                    let site = Site(url: queryUrl, title: escapedQuery)
+                    let visit = SiteVisit(site: site, date: MicrosecondTimestamp(timestamp * 1000), type: .Link)
+                    self?.history.addLocalVisit(visit)
+                }
+            }
+        }
+    }
     // These selectors run on which ever thread sent the notifications (not the main thread)
     @objc
     func onProfileDidFinishSyncing(notification: NSNotification) {

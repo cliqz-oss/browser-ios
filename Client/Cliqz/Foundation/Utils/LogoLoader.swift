@@ -35,7 +35,8 @@ extension String {
 
 class LogoLoader {
 
-	private static let dbVersion = "1502005705085"
+	private static let dbVersion = "1510675089509"
+    private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
 
 	private static var _logoDB: JSON?
 	private static var logoDB: JSON? {
@@ -54,14 +55,20 @@ class LogoLoader {
 	}
 
 	class func loadLogo(_ url: String, completionBlock: @escaping (_ image: UIImage?, _ logoInfo: LogoInfo?,  _ error: Error?) -> Void) {
-		let details = LogoLoader.fetchLogoDetails(url)
-		if let u = details.url {
-			LogoLoader.downloadImage(u, completed: { (image, error) in
-				completionBlock(image, details, error)
-			})
-		} else {
-			completionBlock(nil, details, nil)
-		}
+        dispatchQueue.async {
+            let details = LogoLoader.fetchLogoDetails(url)
+            if let u = details.url {
+                LogoLoader.downloadImage(u, completed: { (image, error) in
+                    DispatchQueue.main.async {
+                        completionBlock(image, details, error)
+                    }
+                })
+            } else {
+                DispatchQueue.main.async {
+                    completionBlock(nil, details, nil)
+                }
+            }
+        }
 	}
 
 	class func clearDB() {
@@ -72,11 +79,16 @@ class LogoLoader {
 		var logoDetails = LogoInfo()
 		logoDetails.color = nil
 		logoDetails.fontSize = 16
-		if let urlDetails = URLParser.getURLDetails(url),
+		var fixedURL = url
+		// TODO: Remove this crazy hack, which is done for localNews. For the next release we should change url parsing lib to https://publicsuffix.org/learn/
+		if url.contains("tz.de") {
+			fixedURL = "http://tz.de"
+		}
+		if let urlDetails = URLParser.getURLDetails(fixedURL),
 		   let hostName = urlDetails.name,
 		   let details = self.logoDB?["domains"][hostName] {
 			logoDetails.hostName = hostName
-			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: 2)).capitalized
+			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: min(2, hostName.characters.count))).capitalized
 			if let list = details.array,
 				list.count > 0 {
 				for info in list {

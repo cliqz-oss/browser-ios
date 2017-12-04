@@ -220,6 +220,7 @@ class BrowserViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         log.debug("BVC received memory warning")
+		self.tabManager.purgeInactiveTabs()
     }
 
     fileprivate func didInit() {
@@ -237,7 +238,6 @@ class BrowserViewController: UIViewController {
         return previousTraitCollection.verticalSizeClass != .compact &&
                previousTraitCollection.horizontalSizeClass != .regular
     }
-
 
     func toggleSnackBarVisibility(show: Bool) {
         if show {
@@ -370,6 +370,8 @@ class BrowserViewController: UIViewController {
 
         // Re-show toolbar which might have been hidden during scrolling (prior to app moving into the background)
         scrollController.showToolbars(false)
+        //Cliqz send rotate telemetry signal for warm start
+        logOrientationSignal()
     }
 
     deinit {
@@ -382,6 +384,11 @@ class BrowserViewController: UIViewController {
         // Cliqz: removed observers for Connect features
         NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
+        // Cliqz: removed observer for device orientation
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
+        // Cliqz: removed observer for favorites removed
+        NotificationCenter.default.removeObserver(self, name: FavoriteRemovedNotification, object: nil)
+
     }
 
     override func viewDidLoad() {
@@ -397,7 +404,19 @@ class BrowserViewController: UIViewController {
         // Cliqz: Add observers for Connection features
         NotificationCenter.default.addObserver(self, selector: #selector(openTabViaConnect), name: SendTabNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(downloadVideoViaConnect), name: DownloadVideoNotification, object: nil)
-
+        
+        // Cliqz: Add observer for device orientation
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(BrowserViewController.logOrientationSignal),
+                                               name: Notification.Name.UIApplicationDidChangeStatusBarOrientation,
+                                               object: nil)
+        
+        // Cliqz: Add observer for favorites removed to refresh the bookmark status
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateBookmarkStatus),
+                                               name: FavoriteRemovedNotification,
+                                               object: nil)
+        
         KeyboardHelper.defaultHelper.addDelegate(self)
 
         log.debug("BVC adding footer and header…")
@@ -499,7 +518,9 @@ class BrowserViewController: UIViewController {
             // Cliqz:  setup back and forward swipe
             historySwiper.setup(self.view, webViewContainer: self.webViewContainer)            
         #endif
-
+        
+        //Cliqz send rotate telemetry signal for cold start
+        logOrientationSignal()
     }
 
     fileprivate func setupConstraints() {
@@ -606,25 +627,26 @@ class BrowserViewController: UIViewController {
 
         log.debug("Updating tab count.")
         updateTabCountUsingTabManager(tabManager, animated: false)
-        log.debug("BVC done.")
 
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.openSettings),
-                                                         name: NSNotification.Name(rawValue: NotificationStatusNotificationTapped),
+                                                         name: Notification.Name(rawValue: NotificationStatusNotificationTapped),
                                                          object: nil)
         
         // Cliqz: add observer for keyboard actions for Telemetry signals
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.keyboardWillShow(_:)),
-                                                         name: NSNotification.Name.UIKeyboardWillShow,
+                                                         name: Notification.Name.UIKeyboardWillShow,
                                                          object: nil)
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(BrowserViewController.keyboardWillHide(_:)),
-                                                         name: NSNotification.Name.UIKeyboardWillHide,
+                                                         name: Notification.Name.UIKeyboardWillHide,
                                                          object: nil)
+        
 		if let tab = self.tabManager.selectedTab {
 			applyTheme(tab.isPrivate ? Theme.PrivateMode : Theme.NormalMode)
 		}
+        log.debug("BVC done.")
     }
 
     fileprivate func showRestoreTabsAlert() {
@@ -654,7 +676,7 @@ class BrowserViewController: UIViewController {
 
     fileprivate func shouldRestoreTabs() -> Bool {
         guard let tabsToRestore = TabManager.tabsToRestore() else { return false }
-        let onlyNoHistoryTabs = !tabsToRestore.every { ($0.sessionData?.urls.count)! > 1 || !AboutUtils.isAboutHomeURL($0.sessionData?.urls.first) }
+        let onlyNoHistoryTabs = !tabsToRestore.every { ($0.sessionData?.urls.count ?? 0) > 1 || !AboutUtils.isAboutHomeURL($0.sessionData?.urls.first) }
         return !onlyNoHistoryTabs && !DebugSettingsBundleOptions.skipSessionRestore
     }
 
@@ -723,11 +745,11 @@ class BrowserViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationStatusNotificationTapped), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: NotificationStatusNotificationTapped), object: nil)
         
         // Cliqz: remove keyboard obervers
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillHide, object: nil)
     }
 
     func resetBrowserChrome() {
@@ -945,7 +967,7 @@ class BrowserViewController: UIViewController {
         if !urlBar.inOverlayMode {
 
             // Cliqz: Added check to test if url is nul due to changing the method parameter to urlBar.url instead of selectedTab.url inside urlBarDidLeaveOverlayMode
-            if url == nil || AboutUtils.isAboutHomeURL(url) {
+            if url == nil || AboutUtils.isAboutHomeURL(url) || isTrampolineURL(url!) {
                 // Cliqz: always set showInline to true to show the bottom toolbar
 //                let showInline = AppConstants.MOZ_MENU || ((tabManager.selectedTab?.canGoForward ?? false || tabManager.selectedTab?.canGoBack ?? false))
                 let showInline = true
@@ -1252,11 +1274,11 @@ class BrowserViewController: UIViewController {
     /// Updates the URL bar text and button states.
     /// Call this whenever the page URL changes.
     fileprivate func updateURLBarDisplayURL(_ tab: Tab) {
-        guard tab.displayURL != nil else {
+        guard tab.displayURL?.host != "localhost" else {
             return
         }
         
-        if (urlBar.currentURL != tab.displayURL){
+        if (urlBar.currentURL != tab.displayURL) {
             urlBar.currentURL = tab.displayURL
         }
 		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
@@ -1792,6 +1814,7 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
+        dashboard.switchToTabsPanel()
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
@@ -1934,7 +1957,7 @@ extension BrowserViewController: URLBarDelegate {
 			urlBar.locationTextField?.enforceResignFirstResponder()
             self.showHint(.cliqzSearch(text.characters.count))
 		} else {
-
+            self.tabManager.selectedTab?.query = self.searchController?.searchQuery
 			var url = URIFixup.getURL(text)
 			
 			// If we can't make a valid URL, do a search query.
@@ -1946,7 +1969,7 @@ extension BrowserViewController: URLBarDelegate {
 				} else {
 					// If we still don't have a valid URL, something is broken. Give up.
 					log.error("Error handling URL entry: \"\(text)\".")
-		}
+                }
 			} else {
 				finishEditingAndSubmit(url!, visitType: VisitType.Typed)
 			}
@@ -1994,9 +2017,8 @@ extension BrowserViewController: URLBarDelegate {
             let isPage = tab.displayURL?.isWebPage() ?? false
             navigationToolbar.updatePageStatus(isPage)
         }
-		// Cliqz: changed method parameter because there is an inconsistency between urlBar.url and selectedTab.url, especially when the app is opened from push notifications
-        updateInContentHomePanel(urlBar.currentURL as URL?)
-//		updateInContentHomePanel(tabManager.selectedTab?.url)
+        
+        updateInContentHomePanel(tabManager.selectedTab?.url)
         //self.urlBar.hideReaderModeButton(hidden: false)
     }
     
@@ -2205,6 +2227,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.navigationController?.pushViewController(tabTrayController, animated: true)
          self.tabTrayController = tabTrayController
          */
+        dashboard.switchToTabsPanel()
         self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
@@ -3040,6 +3063,8 @@ extension BrowserViewController: WKNavigationDelegate {
     }
 
     fileprivate func postLocationChangeNotificationForTab(_ tab: Tab, navigation: WKNavigation?) {
+        guard let tabUrl = tab.displayURL, !isTrampolineURL(tabUrl) else { return }
+        
         let notificationCenter = NotificationCenter.default
         var info = [AnyHashable: Any]()
         info["url"] = tab.displayURL
@@ -3048,6 +3073,10 @@ extension BrowserViewController: WKNavigationDelegate {
             info["visitType"] = visitType
         }
         info["isPrivate"] = tab.isPrivate
+        if let query = tab.query {
+            info["query"] = query.trim().escape()
+            tab.query = nil
+        }
 		notificationCenter.post(name: NotificationOnLocationChange, object: self, userInfo: info)
     }
 }
@@ -3658,17 +3687,17 @@ extension BrowserViewController: ContextMenuHelperDelegate {
             let saveImageAction = UIAlertAction(title: saveImageTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
                 if photoAuthorizeStatus == PHAuthorizationStatus.authorized || photoAuthorizeStatus == PHAuthorizationStatus.notDetermined {
                     self.getImage(url as URL) { UIImageWriteToSavedPhotosAlbum($0, nil, nil, nil) }
-                } else {
-                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.alert)
-                    let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.default, handler: nil)
-                    accessDenied.addAction(dismissAction)
-                    let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.default ) { (action: UIAlertAction!) -> Void in
-                        UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
-                    }
-                    accessDenied.addAction(settingsAction)
-                    self.present(accessDenied, animated: true, completion: nil)
                     TelemetryLogger.sharedInstance.logEvent(.ContextMenu("save", "image", nil))
-
+                } else {
+                    //TODO: provide our own wording if the app is not authorized to save photos to device
+//                    let accessDenied = UIAlertController(title: NSLocalizedString("Firefox would like to access your Photos", comment: "See http://mzl.la/1G7uHo7"), message: NSLocalizedString("This allows you to save the image to your Camera Roll.", comment: "See http://mzl.la/1G7uHo7"), preferredStyle: UIAlertControllerStyle.alert)
+//                    let dismissAction = UIAlertAction(title: UIConstants.CancelString, style: UIAlertActionStyle.default, handler: nil)
+//                    accessDenied.addAction(dismissAction)
+//                    let settingsAction = UIAlertAction(title: NSLocalizedString("Open Settings", comment: "See http://mzl.la/1G7uHo7"), style: UIAlertActionStyle.default ) { (action: UIAlertAction!) -> Void in
+//                        UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+//                    }
+//                    accessDenied.addAction(settingsAction)
+//                    self.present(accessDenied, animated: true, completion: nil)
                 }
             }
             actionSheetController.addAction(saveImageAction)
@@ -4098,6 +4127,7 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
 extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 
     func didSelectURL(_ url: URL, searchQuery: String?) {
+        self.tabManager.selectedTab?.query = searchQuery
         navigateToUrl(url, searchQuery: searchQuery)
     }
 
@@ -4283,14 +4313,18 @@ extension BrowserViewController {
     // Cliqz: Added to get the current view for telemetry signals
     func getCurrentView() -> String? {
         var currentView: String?
-        
-        if let _ = self.urlBar.currentURL, self.searchController?.view.isHidden == true {
+        if self.presentedViewController != nil {
+            currentView = "settings"
+        } else if self.navigationController?.topViewController == dashboard {
+            currentView = "overview"
+        } else if self.searchController?.view.isHidden == false {
+            currentView = "cards"
+        } else if let _ = self.urlBar.currentURL {
             currentView = "web"
         } else {
             currentView = "home"
         }
         return currentView
-        
     }
 }
 

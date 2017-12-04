@@ -29,7 +29,7 @@ class AdBlockerPanel: AntitrackingPanel {
     
     //MARK: - Abstract methods implementation
     override func getPanelTitle() -> String {
-        if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite {
             return NSLocalizedString("You surf the web without ads", tableName: "Cliqz", comment: "AdBlocker panel title in the control center when it is enabled.")
         } else {
             return NSLocalizedString("You surf the web with ads", tableName: "Cliqz", comment: "AdBlocker panel title in the control center when it is disabled.")
@@ -38,7 +38,7 @@ class AdBlockerPanel: AntitrackingPanel {
     
     override func getPanelSubTitle() -> String {
         if isFeatureEnabled() {
-            if isFeatureEnabledForCurrentWebsite() {
+            if isFeatureEnabledForCurrentWebsite {
                 return NSLocalizedString("Ads have been blocked", tableName: "Cliqz", comment: "AdBlocker panel subtitle in the control center when it is enabled.")
             } else {
                 return NSLocalizedString("Ad-Blocking is turned off for this website", tableName: "Cliqz", comment: "AdBlocker panel subtitle in the control center when it is disabled for the current website.")
@@ -88,7 +88,7 @@ class AdBlockerPanel: AntitrackingPanel {
     }
 
     override func getThemeColor() -> UIColor {
-        if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabled() && isFeatureEnabledForCurrentWebsite {
             return enabledColor
         } else if isFeatureEnabled(){
             return partiallyDisabledColor
@@ -96,26 +96,28 @@ class AdBlockerPanel: AntitrackingPanel {
         return disabledColor
     }
     override func isFeatureEnabled() -> Bool {
-        return SettingsPrefs.getAdBlockerPref() //&& AdblockingModule.sharedInstance.isAdblockEnabled()
+        return SettingsPrefs.shared.getAdBlockerPref() //&& AdblockingModule.sharedInstance.isAdblockEnabled()
     }
     
     override func enableFeature() {
-        SettingsPrefs.updateAdBlockerPref(true)
+        SettingsPrefs.shared.updateAdBlockerPref(true)
+        evaluateIsFeatureEnabledForCurrentWebsite()
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()
         logTelemetrySignal("click", target: "activate", customData: nil)
     }
     
-    override func isFeatureEnabledForCurrentWebsite() -> Bool {
+    override func evaluateIsFeatureEnabledForCurrentWebsite() {
         //INVESTIGATE
         let urlString = self.currentURL.absoluteString
-		return isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
+		isFeatureEnabledForCurrentWebsite = isFeatureEnabled() && !AdblockingModule.sharedInstance.isUrlBlackListed(urlString)
     }
     
     override func toggleFeatureForCurrentWebsite() {
         logDomainSwitchTelemetrySignal()
         AdblockingModule.sharedInstance.toggleUrl(self.currentURL)
+        evaluateIsFeatureEnabledForCurrentWebsite()
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()

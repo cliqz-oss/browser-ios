@@ -200,10 +200,25 @@ class BoolSetting: Setting {
     
     // Cliqz: log telemetry signal
     fileprivate func logStateChangeTelemetrySingal(_ prefKey: String, oldValue: Bool) {
-        let target = prefKey == SettingsPrefs.BlockExplicitContentPrefKey ? "block_ads" : "block_popups"
+        let target = getTarget(prefKey)
         let state = oldValue == true ? "on" : "off"
         let valueChangedSignal = TelemetryLogEventType.Settings("main", "click", target, state, nil)
         TelemetryLogger.sharedInstance.logEvent(valueChangedSignal)
+    }
+    
+    private func getTarget(_ prefKey: String) -> String {
+        switch prefKey {
+        case SettingsPrefs.BlockExplicitContentPrefKey:
+            return "block_ads"
+        case SettingsPrefs.blockPopupsPrefKey:
+            return "block_popups"
+        case SettingsPrefs.ShowTopSitesPrefKey:
+            return "show_topsites"
+        case SettingsPrefs.ShowNewsPrefKey:
+            return "show_news"
+        default:
+            return "UNDEFINED"
+        }
     }
 }
 
