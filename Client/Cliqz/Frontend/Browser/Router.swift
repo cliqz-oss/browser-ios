@@ -58,6 +58,7 @@ let RouterActions: [ActionType] = [.tabsPressed, .sharePressed, .remindersPresse
 enum ActionFlag {
     case openNewTab
     case isReminder
+    case search
 }
 
 struct Action: Equatable {

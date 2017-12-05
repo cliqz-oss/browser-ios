@@ -36,6 +36,7 @@ class DomainsCell: UITableViewCell {
         titleLabel.textColor = UIColor.lightGray
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.textAlignment = .left
+        titleLabel.numberOfLines = 1
         self.contentView.addSubview(URLLabel)
         URLLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
         URLLabel.textColor = UIColor.white
@@ -71,7 +72,7 @@ class DomainsCell: UITableViewCell {
             make.top.equalTo(self.contentView).offset(15)
             make.left.equalTo(self.logoButton.snp.right).offset(15)
             make.height.equalTo(20)
-            make.right.equalTo(self.contentView).offset(40)
+            make.right.equalTo(self.contentView).offset(60)
         }
         self.titleLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(self.URLLabel.snp.bottom).offset(5)

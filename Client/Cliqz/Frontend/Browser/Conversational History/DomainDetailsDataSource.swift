@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
-import UIKit
+import RealmSwift
 
 let domainDetailsDataSourceID = "DomainDetailsDataSource"
 
@@ -15,58 +15,66 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     
     //group details by their date. 
     //order the dates.
-	var domain: DomainModel
-	let details: [DomainDetailModel]? = nil
+	var domain: Domain
+	var details: Results<Entry>
+    
+    
+    //timestamp, number of timestamps, sum of previous number of timestamps
+    //example [(date0, 1, 0), (date1, 3, 1), (date2, 2, 4), ... ]
+    //I use the sum to easily map section and row to the index of the entry in details.
+    var dateBuckets: [(Date, Int, Int)] = []
 
 	var delegate: HasDataSource?
-
-    struct SortedDomainDetail: Comparable {
-        let date: String
-        var details: [DomainDetailModel]?
-        
-        static func ==(x: SortedDomainDetail, y: SortedDomainDetail) -> Bool {
-            return x.date == y.date
-        }
-        static func <(x: SortedDomainDetail, y: SortedDomainDetail) -> Bool {
-            return x.date < y.date
-        }
-    }
     
     private let standardDateFormat = "dd-MM-yyyy"
     private let standardTimeFormat = "HH:mm"
     
     private let standardDateFormatter = DateFormatter()
     private let standardTimeFormatter = DateFormatter()
-
-	
-    var sortedDetails: [SortedDomainDetail] = []
     
-    init(domain: DomainModel) {
+    init(domain: Domain) {
 		self.domain = domain
+        self.details = domain.entries.sorted(byKeyPath: "timestamp", ascending: true)
+        self.dateBuckets = self.buildDateBuckets(details: self.details)
         standardDateFormatter.dateFormat = standardDateFormat
         standardTimeFormatter.dateFormat = standardTimeFormat
-		if let details = domain.domainDetails {
-			self.sortedDetails = groupByDate(details)
-		} else {
-			loadDetails()
-		}
     }
-
-	private func loadDetails() {
-		DomainsModule.shared.loadDomainDetails(self.domain) {
-			(result) in
-			self.domain.domainDetails = result
-			self.sortedDetails = self.groupByDate(result)
-			self.delegate?.dataSourceWasUpdated(identifier: domainDetailsDataSourceID)
-		}
-	}
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func buildDateBuckets(details: Results<Entry>) -> [(Date, Int, Int)] {
+        
+        guard details.count > 0 else { return [] }
+        
+        var array: [(Date, Int, Int)] = [(details[0].timestamp, 1, 0)]
+        
+        var last: Date = details[0].timestamp
+        var last_sum: Int = 0
+        
+        for i in 1..<details.count {
+            let detail = details[i]
+            let detail_comp = detail.timestamp.dayMonthYear()
+            
+            let last_comp = last.dayMonthYear()
+            
+            if detail_comp != last_comp {
+                last_sum += array[array.count - 1].1
+                array.append((detail.timestamp, 1, last_sum))
+                last = detail.timestamp
+            }
+            else {
+                let (d, c, s) = array[array.count - 1]
+                array[array.count - 1] = (d, c + 1, s)
+            }
+        }
+        
+        return array
+    }
 
 	func logo(completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
-        LogoLoader.loadLogo(self.domain.host ?? "") { (image, logoInfo, error) in
+        LogoLoader.loadLogo(self.domain.name) { (image, logoInfo, error) in
 			if let img = image {
 				completionBlock(img, nil)
 			} else if let info = logoInfo {
@@ -79,35 +87,38 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     }
 
     func url(indexPath: IndexPath) -> String {
-        return detail(indexPath: indexPath)?.url.absoluteString ?? ""
+        return detail(indexPath: indexPath)?.url ?? ""
     }
     
     func title(indexPath: IndexPath) -> String {
-        return detail(indexPath: indexPath)?.title ?? ""
+        guard let detail = detail(indexPath: indexPath) else { return "" }
+        if detail.isQuery {
+            return detail.query
+        }
+        return detail.title
     }
     
     func titleSectionHeader(section: Int) -> String {
-        guard sectionWithinBounds(section: section) else { return "" }
-        return sortedDetails[section].date
+        return standardDateFormatter.string(from: dateBuckets[section].0)
     }
     
     func time(indexPath: IndexPath) -> String {
-        if let date = detail(indexPath: indexPath)?.date {
+        if let date = detail(indexPath: indexPath)?.timestamp {
             return standardTimeFormatter.string(from: date)
         }
         return ""
     }
     
     func numberOfSections() -> Int {
-        return sortedDetails.count
+        return dateBuckets.count//sortedDetails.count
     }
     
     func numberOfRows(section: Int) -> Int {
-        return sortedDetails[section].details?.count ?? 0
+        return dateBuckets[section].1
     }
     
     func baseUrl() -> String {
-		return self.domain.host
+		return self.domain.name
     }
     
     func isNews() -> Bool {
@@ -115,51 +126,30 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     }
     
     func useRightCell(indexPath: IndexPath) -> Bool {
-        return false
+        return detail(indexPath: indexPath)?.isQuery ?? false
     }
     
-    func detail(indexPath: IndexPath) -> DomainDetailModel? {
-        if indexWithinBounds(indexPath: indexPath) {
-            return sortedDetails[indexPath.section].details?[indexPath.row]
-        }
-        return nil
+    func detail(indexPath: IndexPath) -> Entry? {
+        let section = indexPath.section
+        let row = indexPath.row
+        //transform from section and row to list index
+        let list_index = dateBuckets[section].2 + row
+        return details[list_index]
     }
     
-    func sectionWithinBounds(section: Int) -> Bool {
-        if section >= 0 && section < sortedDetails.count {
-            return true
-        }
-        return false
-    }
-    
-    func indexWithinBounds(indexPath: IndexPath) -> Bool {
-        guard sectionWithinBounds(section: indexPath.section) else { return false }
-        if indexPath.row >= 0 && indexPath.row < sortedDetails[indexPath.section].details?.count ?? 0 {
-            return true
-        }
-        return false
-    }
-    
-    func groupByDate(_ domainDetails: [DomainDetailModel]?) -> [SortedDomainDetail] {
-		var result  = [SortedDomainDetail]()
-		guard let data = domainDetails else {
-			return result
-		}
-		for d in data {
-			var date: String?
-			if let dd = d.date {
-				date = standardDateFormatter.string(from: dd)
-			} else {
-				date = "01-01-1970"
-			}
-			if result.count > 0 && result[result.count - 1].date == date {
-				result[result.count - 1].details?.append(d)
-			} else {
-				let x = SortedDomainDetail(date: date!, details:[d])
-				result.append(x)
-			}
-		}
-		return result
-    }
+//    func sectionWithinBounds(section: Int) -> Bool {
+//        if section >= 0 && section < sortedDetails.count {
+//            return true
+//        }
+//        return false
+//    }
+//
+//    func indexWithinBounds(indexPath: IndexPath) -> Bool {
+//        guard sectionWithinBounds(section: indexPath.section) else { return false }
+//        if indexPath.row >= 0 && indexPath.row < sortedDetails[indexPath.section].details?.count ?? 0 {
+//            return true
+//        }
+//        return false
+//    }
 
 }

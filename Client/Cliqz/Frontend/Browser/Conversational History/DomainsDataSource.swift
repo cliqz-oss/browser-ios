@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mozilla. All rights reserved.
 //
 
-import Foundation
+import RealmSwift
 //The data source for the ConversationalHistory View. 
 
 final class DomainsDataSource: NSObject, DomainsProtocol {
@@ -14,7 +14,9 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     //This still needs work
     //Loads every time this view is shown. This can be problematic with big history. Need to handle that.
     
-    var domains: [DomainModel] = []
+    var domains: Results<Domain>
+    
+    var notificationToken: NotificationToken? = nil
     
     let cliqzNews_header = "Cliqz News"
     let cliqzNews_title  = "Tap to Read"
@@ -22,30 +24,52 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     weak var delegate: HasDataSource?
     
     override init() {
+        
+        let realm = try! Realm()
+        domains = realm.objects(Domain.self).sorted(byKeyPath: "last_timestamp", ascending: false)
+        
         super.init()
-        loadDomains()
-        NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
+        //loadDomains()
+        //NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reminderFired), name: CIReminderManager.notification_fired, object: nil)
+        
+        notificationToken = domains.observe { [weak self] (changes: RealmCollectionChange) in
+
+            switch changes {
+            case .initial:
+                // Results are now populated and can be accessed without blocking the UI
+                self?.update()
+            case .update(_, _, _, _):
+                // Query results have changed, so apply them to the UITableView
+                self?.update()
+            case .error(let error):
+                // An error occurred while opening the Realm file on the background worker thread
+                fatalError("\(error)")
+            }
+        }
+
+        
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        notificationToken?.invalidate()
     }
     
-    func loadDomains() {
-        domains = processDomains(domains: DomainsModule.shared.domains)
-    }
+//    func loadDomains() {
+//        domains = processDomains(domains: DomainsModule.shared.domains)
+//    }
 
     func numberOfCells() -> Int {
         return self.domains.count
     }
 
     func urlLabelText(indexPath: IndexPath) -> String {
-        return domains[indexPath.row].host
+        return domains[indexPath.row].name
     }
 
     func titleLabelText(indexPath:IndexPath) -> String {
-        return domains[indexPath.row].date?.toRelativeTimeString() ?? ""
+        return domains[indexPath.row].last_timestamp.toRelativeTimeString()
     }
 
     func timeLabelText(indexPath: IndexPath) -> String {
@@ -53,23 +77,33 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
 
     func baseUrl(indexPath: IndexPath) -> String {
-        let domain = domains[indexPath.row]
-		return domain.host
+		return domains[indexPath.row].name
     }
 
 	func image(indexPath: IndexPath, completionBlock: @escaping (_ image: UIImage?, _ customView: UIView?) -> Void) {
-		LogoLoader.loadLogo(self.baseUrl(indexPath: indexPath)) { (image, logoInfo, error) in
-			if let img = image {
-				completionBlock(img, nil)
-			} else {
-				if let info = logoInfo {
-					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
-					completionBlock(nil, logoPlaceholder)
-				} else {
-					completionBlock(nil, nil)
-				}
-			}
-		}
+        
+        let baseUrl = self.baseUrl(indexPath: indexPath)
+        
+        DispatchQueue(label:"background").async {
+            LogoLoader.loadLogo(baseUrl) { (image, logoInfo, error) in
+                if let img = image {
+                    DispatchQueue.main.async {
+                        completionBlock(img, nil)
+                    }
+                } else {
+                    if let info = logoInfo {
+                        let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
+                        DispatchQueue.main.async {
+                            completionBlock(nil, logoPlaceholder)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completionBlock(nil, nil)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func shouldShowNotification(indexPath:IndexPath) -> Bool {
@@ -101,16 +135,18 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     private func update() {
-        loadDomains()
+//        loadDomains()
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
 
 	func removeDomain(at index: Int) {
-		if index < self.domains.count {
-			self.domains.remove(at: index)
-			DomainsModule.shared.removeDomain(at: index)
-		}
+        guard isIndexValid(index: index) else { return }
+        RealmStore.removeDomain(domain: domains[index])
 	}
+    
+    func isIndexValid(index: Int) -> Bool {
+        return index >= 0 && index < domains.count
+    }
     
     //-------------------------------------------------------
     

@@ -101,13 +101,20 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
         let articleLink = dataSource.urlLabelText(indexPath: indexPath)
         cell.URLLabel.text   = articleLink
         cell.titleLabel.text = dataSource.titleLabelText(indexPath: indexPath)
+        
+        cell.logoButton.alpha = 0.0
+        
+        //images in memory can take quite a lot - see about caching them to disk
         self.dataSource.image(indexPath: indexPath) { (image, customView) in
-			if cell.tag == indexPath.row {
-				if let img = image {
-					cell.logoButton.setImage(img)
-				} else if let view = customView {
-					cell.logoButton.setView(view)
-				}
+            if cell.tag == indexPath.row {
+                //UIView.animate(withDuration: 0.2, animations: {
+                    if let img = image {
+                        cell.logoButton.setImage(img)
+                    } else if let view = customView {
+                        cell.logoButton.setView(view)
+                    }
+                    cell.logoButton.alpha = 1.0
+                //})
             }
         }
 
@@ -130,8 +137,7 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! DomainsCell
-        didPressCell(indexPath, dataSource.domains[indexPath.row].host)
+        didPressCell(indexPath, dataSource.domains[indexPath.row].name)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -140,8 +146,9 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
+            let host = dataSource.domains[indexPath.row].name
 			self.dataSource.removeDomain(at: indexPath.row)
-            didDeleteCell(indexPath, dataSource.domains[indexPath.row].host)
+            didDeleteCell(indexPath, host)
         }
     }
     

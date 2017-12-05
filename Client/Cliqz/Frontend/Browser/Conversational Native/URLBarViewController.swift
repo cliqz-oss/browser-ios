@@ -189,10 +189,10 @@ extension URLBarViewController: RefactoredURLProtocol {
         var data: [String: Any]? = nil
         
         if let t = URLBar.textField.text {
-            data = ["url": t]
+            data = ["text": t, "url": t]
         }
         
-        StateManager.shared.handleAction(action: Action(data: data, type: .urlSelected))
+        StateManager.shared.handleAction(action: Action(data: data, type: .urlSelected, actionFlag: .search))
     }
 }
 

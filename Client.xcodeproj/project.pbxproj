@@ -595,6 +595,7 @@
 		A91528D21D0E637600CD0425 /* NoImageModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A91528D11D0E637600CD0425 /* NoImageModeHelper.js */; };
 		A93067D91D0FE15E00C49C6E /* NightModeHelper.js in Resources */ = {isa = PBXBuildFile; fileRef = A93067D81D0FE15E00C49C6E /* NightModeHelper.js */; };
 		A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */; };
+		AF0065281FD56FE20019E502 /* RealmStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0065271FD56FE20019E502 /* RealmStore.swift */; };
 		AF0E13C71F4C58F800651728 /* RecommendationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */; };
 		AF0E13CE1F4DC39700651728 /* GeneralUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */; };
 		AF2C3DF41EEFDEF1005DD628 /* CIDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */; };
@@ -2101,6 +2102,7 @@
 		A93067D81D0FE15E00C49C6E /* NightModeHelper.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = NightModeHelper.js; sourceTree = "<group>"; };
 		A93067E71D0FE18E00C49C6E /* NightModeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NightModeHelper.swift; sourceTree = "<group>"; };
 		AC51CC4D525D25940DC5DDFD /* Pods-CliqzUITests.fennec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CliqzUITests.fennec.xcconfig"; path = "Pods/Target Support Files/Pods-CliqzUITests/Pods-CliqzUITests.fennec.xcconfig"; sourceTree = "<group>"; };
+		AF0065271FD56FE20019E502 /* RealmStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmStore.swift; sourceTree = "<group>"; };
 		AF0E13C61F4C58F800651728 /* RecommendationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendationsManager.swift; sourceTree = "<group>"; };
 		AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralUtils.swift; sourceTree = "<group>"; };
 		AF2C3DE51EEFDEF1005DD628 /* CIDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIDatePickerViewController.swift; sourceTree = "<group>"; };
@@ -4151,6 +4153,14 @@
 			path = Animators;
 			sourceTree = "<group>";
 		};
+		AF0065181FD56FBE0019E502 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AF0065271FD56FE20019E502 /* RealmStore.swift */,
+			);
+			name = Storage;
+			sourceTree = "<group>";
+		};
 		AF0E13C81F4C58FF00651728 /* Recommendations */ = {
 			isa = PBXGroup;
 			children = (
@@ -4392,6 +4402,7 @@
 			children = (
 				AF0E13CD1F4DC39700651728 /* GeneralUtils.swift */,
 				AFA93A631F4B0D10001425C4 /* Router.swift */,
+				AF0065181FD56FBE0019E502 /* Storage */,
 				AFA93A601F4AE6EC001425C4 /* Managers and Modules */,
 				AFC8E5511F41AF1C004822D5 /* Reusable Components */,
 				AFA93A5C1F4AE68B001425C4 /* Main Navigation */,
@@ -7087,6 +7098,7 @@
 				AF7771AC1FBB08C700C18123 /* StateGlobals.swift in Sources */,
 				1E79DEA31D508368006BEB4A /* AWSTMCache.m in Sources */,
 				AF2C3E251EEFEDB2005DD628 /* HistoryBridge.m in Sources */,
+				AF0065281FD56FE20019E502 /* RealmStore.swift in Sources */,
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,

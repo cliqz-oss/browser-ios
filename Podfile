@@ -19,6 +19,7 @@ def project_pods
     ]
     pod 'Yoga', :path => yoga_path
     pod 'RNFS', :path => './JSEngine/node_modules/react-native-fs'
+    pod 'RealmSwift'
 end
 
 target 'Client' do

@@ -23,7 +23,7 @@ final class DomainDetailsViewController: UIViewController {
     var headerViewDataSource: DomainDetailsHeaderViewProtocol
 	
     var didPressBack: () -> ()
-    var cellPressed: (String) -> Void
+    var cellPressed: (String, Bool) -> Void
     
     //scroll
     var finger_on_screen: Bool = true
@@ -36,7 +36,7 @@ final class DomainDetailsViewController: UIViewController {
         case undefined
     }
     
-    init(tableViewDataSource: BubbleTableViewDataSource, recommendationsDataSource: RecommendationsCollectionProtocol & RecommendationsCollectionDelegate, headerViewDataSource: DomainDetailsHeaderViewProtocol, didPressBack: @escaping () -> (), cellPressed: @escaping (String) -> Void) {
+    init(tableViewDataSource: BubbleTableViewDataSource, recommendationsDataSource: RecommendationsCollectionProtocol & RecommendationsCollectionDelegate, headerViewDataSource: DomainDetailsHeaderViewProtocol, didPressBack: @escaping () -> (), cellPressed: @escaping (String, Bool) -> Void) {
         
         self.tableViewDataSource = tableViewDataSource
         self.recommendationsDataSource = recommendationsDataSource
@@ -115,21 +115,11 @@ final class DomainDetailsViewController: UIViewController {
 	}
 }
 
-//extension DomainDetailsViewController: RecommendationsCollectionDelegate {
-//    func itemPressed(indexPath: IndexPath) {
-//        let url = recommendationsCollection.customDataSource?.url(indexPath: indexPath) ?? ""
-//        CIReminderManager.sharedInstance
-//        StateManager.shared.handleAction(action: Action(data: ["url": url], type: .urlSelected))
-//    }
-//    
-//    func deletePressed(indexPath: IndexPath) {
-//        recommendationsCollection.customDataSource?.deletePressed(indexPath: indexPath)
-//    }
-//}
-
 extension DomainDetailsViewController: BubbleTableViewDelegate {
-    func cellPressed(indexPath: IndexPath) {
-        self.cellPressed(tableViewDataSource.url(indexPath: indexPath))
+    func cellPressed(indexPath: IndexPath, rightCell: Bool) {
+        //send the url, and whether it is the right cell or not
+        let string = rightCell ? tableViewDataSource.title(indexPath: indexPath) : tableViewDataSource.url(indexPath: indexPath)
+        self.cellPressed(string, rightCell)
     }
 }
 

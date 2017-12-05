@@ -393,7 +393,7 @@ extension ContentNavigationViewController: SearchViewDelegate {
     //TO DO: Route these
     
     func didSelectURL(_ url: URL, searchQuery: String?) {
-        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlSelected))
+        StateManager.shared.handleAction(action: Action(data: ["url": url.absoluteString], type: .urlSelected, actionFlag: .search))
     }
     
     func searchForQuery(_ query: String) {
