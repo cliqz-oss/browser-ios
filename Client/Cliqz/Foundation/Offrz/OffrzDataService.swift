@@ -30,13 +30,15 @@ class OffrzDataService {
 		} else {
 			self.loadData(successHandler: {
 				print("Hello1")
+				completionHandler(self.lastOffrz, nil)
 			}, failureHandler: { (e) in
+				completionHandler([], nil)
 				print("Hello : \(e)")
 			})
 		}
 	}
 
-	private func loadData(successHandler: @escaping () -> Void, failureHandler: @escaping (Error) -> Void) {
+	private func loadData(successHandler: @escaping () -> Void, failureHandler: @escaping (Error?) -> Void) {
 		Alamofire.request(OffrzDataService.APIURL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
 				if let data = response.result.value as? [Any] {
@@ -44,18 +46,24 @@ class OffrzDataService {
 					self.lastUpdateTime = Date()
 					for o in data {
 						if let offr = o as? [String: Any],
-						let actions = offr["actions"] as? [String: Any],
-						let level1 = actions["1"] as? [String: Any],
-						let level2 = level1["1"] as? [String: Any],
-						let level3 = level2["1"] as? [String: Any],
+						let actions = offr["actions"] as? [Any],
+						actions.count > 1,
+						let level1 = actions[1] as? [Any],
+						level1.count > 1,
+						let level2 = level1[1] as? [Any],
+						level2.count > 1,
+						let level3 = level2[1] as? [String: Any],
 						let info = level3["ui_info"] as? [String: Any],
 						let details = info["template_data"] as? [String: Any] {
 							self.lastOffrz.append(Offrz(title: details["title"] as? String, description: details["desc"] as? String, logoURL: details["logo_url"] as? String, code: details["code"] as? String))
 						}
 					}
+					successHandler()
+					return
 				}
+				failureHandler(nil) // TODO proper Error
 			} else {
-				
+				failureHandler(response.error) // TODO proper Error
 			}
 		}
 	}
