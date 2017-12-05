@@ -1,5 +1,5 @@
 //
-//  SearchHistoryViewController.swift
+//  HistoryViewController.swift
 //  Client
 //
 //  Created by Mahmoud Adam on 11/25/15.
@@ -9,86 +9,152 @@
 import UIKit
 import Shared
 
-protocol HistoryDelegate: class {
-    
-    func didSelectURL(_ url: URL)
-    func didSelectQuery(_ query: String)
+
+protocol HasDataSource: class {
+    func dataSourceWasUpdated()
 }
 
-class HistoryViewController: CliqzExtensionViewController {
+class HistoryViewController: UIViewController {
 
-    weak var delegate: HistoryDelegate?
-	
-	override init(profile: Profile) {
-		super.init(profile: profile, viewType: "history")
+    weak var delegate: BrowsingDelegate?
+    var historyTableView: BubbleTableView!
+    var tableViewDataSource: HistoryDataSource!
+    var emptyHistroyLabel = UILabel()
+    fileprivate var lastContentOffset = CGPoint(x: 0, y: 0)
+    
+    init(profile: Profile) {
+        super.init(nibName: nil, bundle: nil)
+        
+        tableViewDataSource = createDataSource(profile)
+        tableViewDataSource.delegate = self
 
-		NotificationCenter.default.addObserver(self, selector: #selector(clearQueries as (Notification) -> Void), name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
+        historyTableView = BubbleTableView(customDataSource: tableViewDataSource, customDelegate: self)
+        historyTableView.scrollViewDelegate = self
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: nil)
+    func createDataSource(_ profile: Profile) -> HistoryDataSource {
+        return HistoryDataSource(profile: profile)
     }
-	
-	override func mainRequestURL() -> String {
-		return NavigationExtension.historyURL
-	}
-}
-
-
-extension HistoryViewController {
     
-    override func didSelectUrl(_ url: URL) {
-		self.delegate?.didSelectURL(url)
+    func emptyViewText() -> String {
+        return NSLocalizedString("Here you will find your history.\n\n\nYou haven't searched or visited any website so far.", tableName: "Cliqz", comment: "[History] Text for empty history")
     }
-
-    func searchForQuery(_ query: String) {
-		self.delegate?.didSelectQuery(query)
+    
+    func getViewName() -> String {
+        return "history"
     }
-
-    func getSearchHistory(_ offset:Int,limit:Int,callback: String?) {
-		if let c = callback {
-            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
-				if let sites = result.successValue {
-					var historyResults = [[String: Any]]()
-					for site in sites {
-						var d = [String: Any]()
-						d["id"] = site!.id
-						d["url"] = site!.url
-						d["title"] = site!.title
-						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-						historyResults.append(d)
-					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
-				}
-			}
-		}
-	}
-
-    override func isReady() {
-        super.isReady()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        componentSetUp()
+        setStyling()
     }
-
-    // MARK: - Clear History
-	@objc func clearQueries(notification notification: Notification) {
-        let includeFavorites: Bool = (notification.object as? Bool) ?? false
-		self.clearQueries(includeFavorites)
-	}
-
-	@objc func clearQueries(_ favorites: Bool) {
-        //Cliqz: [IB-946][WORKAROUND] call `jsAPI` directly instead of publishing events because the event is executed when the history is opened next time not immediately
-        //TODO: Queries will be stored in native side not in JavaScript
-        if favorites == true {
-//            self.javaScriptBridge.publishEvent("clear-favorites")
-            self.javaScriptBridge.callJSMethod("jsAPI.clearFavorites()", parameter: nil, completionHandler: nil)
-        } else {
-//            self.javaScriptBridge.publishEvent("clear-history")
-            self.javaScriptBridge.callJSMethod("jsAPI.clearHistory()", parameter: nil, completionHandler: nil)
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setConstraints()
+        self.tableViewDataSource.reloadHistory(completion: { [weak self] in
+            DispatchQueue.main.async {
+                self?.dataSourceWasUpdated()
+                self?.historyTableView.reloadData()
+                self?.scrollToBottom()
+            }
+        })
+    }
+    
+    private func componentSetUp() {
+        emptyHistroyLabel.text = emptyViewText()
+        emptyHistroyLabel.textAlignment = .center
+        emptyHistroyLabel.numberOfLines = 0
+        emptyHistroyLabel.isHidden = true
+        emptyHistroyLabel.textColor = UIColor(colorString: "AAAAAA")
+        self.view.addSubview(emptyHistroyLabel)
+        
+        self.view.addSubview(historyTableView)
+    }
+    
+    private func setStyling() {
+        self.view.backgroundColor = UIConstants.AppBackgroundColor
+        historyTableView.backgroundColor = UIColor.clear
+    }
+    
+    private func setConstraints() {
+        self.historyTableView.snp.makeConstraints { (make) in
+            make.left.right.top.bottom.equalTo(self.view)
+        }
+        self.emptyHistroyLabel.snp.makeConstraints { (make) in
+            make.left.right.equalTo(self.view).inset(25)
+            make.top.equalTo(self.view).inset(45)
         }
     }
+    
+    private func scrollToBottom() {
+        guard self.tableViewDataSource.numberOfSections() > 0 else { return }
+        
+        let lastSection = self.tableViewDataSource.numberOfSections() - 1
+        let lastRow = self.tableViewDataSource.numberOfRows(section: lastSection) - 1
+        let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
+        self.historyTableView.scrollToRow(at: lastIndexPath, at: .top, animated: false)
+    }
 
 }
 
+extension HistoryViewController: BubbleTableViewDelegate {
+    func cellPressed(indexPath: IndexPath, clickedElement: String) {
+        
+        if tableViewDataSource.useRightCell(indexPath: indexPath) {
+            let query = tableViewDataSource.title(indexPath: indexPath)
+            self.delegate?.didSelectQuery(query)
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "query", ["element" : clickedElement]))
+        } else if let url = tableViewDataSource.url(indexPath: indexPath) {
+            self.delegate?.didSelectURL(url)
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "click", "site", ["element" : clickedElement]))
+        }
+    }
+    
+    func deleteItem(at indexPath: IndexPath, direction: SwipeDirection, completion: (() -> Void )?) {
+        tableViewDataSource.deleteItem(at: indexPath, completion: completion)
+        
+        let target = tableViewDataSource.useRightCell(indexPath: indexPath) ? "query" : "site"
+        let action = direction == .Right ? "swipe_right" : "swipe_left"
+        TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), action, target, nil))
+    }
+}
+
+extension HistoryViewController: HasDataSource {
+    func dataSourceWasUpdated() {
+        if let isEmpty = self.tableViewDataSource?.isEmpty() {
+            self.emptyHistroyLabel.isHidden = !isEmpty
+        } 
+    }
+}
+
+extension HistoryViewController : CustomScrollDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y < lastContentOffset.y ) {
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "scroll_up", nil, nil))
+        } else if (scrollView.contentOffset.y > lastContentOffset.y) {
+            TelemetryLogger.sharedInstance.logEvent(.DashBoard(getViewName(), "scroll_down", nil, nil))
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastContentOffset = scrollView.contentOffset;
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+
+    }
+}

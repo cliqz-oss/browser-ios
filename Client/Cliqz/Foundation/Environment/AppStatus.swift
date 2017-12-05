@@ -82,7 +82,6 @@ class AppStatus {
         
         lastOpenedDate = Date()
         NetworkReachability.sharedInstance.startMonitoring()
-        
     }
 
     internal func appDidFinishLaunching() {
@@ -209,6 +208,7 @@ class AppStatus {
             TelemetryLogger.sharedInstance.logEvent(TelemetryLogEventType.ApplicationUsage(action, network!, battery, memory, startupType, startupTime, openDuration))
         }
     }
+
     //MARK: application Environment event
     fileprivate func logEnvironmentEventIfNecessary(_ profile: Profile) {
         if let lastdate = lastEnvironmentEventDate {
@@ -237,14 +237,16 @@ class AppStatus {
 
         }
     }
+
     fileprivate func getEnvironmentPrefs(_ profile: Profile) -> [String: AnyObject] {
         var prefs = [String: AnyObject]()
-        prefs["block_popups"] = SettingsPrefs.getBlockPopupsPref() as AnyObject?
-        prefs["block_explicit"] = SettingsPrefs.getBlockExplicitContentPref() as AnyObject?
-        prefs["block_ads"] = SettingsPrefs.getAdBlockerPref() as AnyObject?
-        prefs["fair_blocking"] = SettingsPrefs.getFairBlockingPref() as AnyObject?
-        prefs["human_web"] = SettingsPrefs.getHumanWebPref() as AnyObject?
-        prefs["country"]   = SettingsPrefs.getDefaultRegion() as AnyObject?
+        prefs["block_popups"] = SettingsPrefs.shared.getBlockPopupsPref() as AnyObject?
+        prefs["block_explicit"] = SettingsPrefs.shared.getBlockExplicitContentPref() as AnyObject?
+        prefs["block_ads"] = SettingsPrefs.shared.getAdBlockerPref() as AnyObject?
+        prefs["fair_blocking"] = SettingsPrefs.shared.getFairBlockingPref() as AnyObject?
+        prefs["human_web"] = SettingsPrefs.shared.getHumanWebPref() as AnyObject?
+        prefs["country"]   = SettingsPrefs.shared.getDefaultRegion() as AnyObject?
+        prefs["location_access"] = LocationManager.sharedInstance.isLocationAcessEnabled() as AnyObject?
         if let abTests = ABTestsManager.getABTests(), JSONSerialization.isValidJSONObject(abTests) {
             do {
                 let data = try JSONSerialization.data(withJSONObject: abTests, options: [])
@@ -254,10 +256,9 @@ class AppStatus {
                 Answers.logCustomEvent(withName: "stringifyABTests", customAttributes: ["error": error.localizedDescription])
             }
         }
-        
         return prefs
     }
-    
+
     fileprivate func getAppLanguage() -> String {
         
         if let languageCode = Locale.current.languageCode, let regionCode = Locale.current.regionCode {
@@ -266,7 +267,7 @@ class AppStatus {
         
         return ""
     }
-    
+
     fileprivate func getHistoryDays(_ profile: Profile) -> Int {
         var historyDays = 0
         if let oldestVisitDate = profile.history.getOldestVisitDate() {
@@ -274,11 +275,11 @@ class AppStatus {
         }
         return historyDays
     }
-    
+
     func getMemoryUsage()-> Double {
         var info = task_basic_info()
         var count = mach_msg_type_number_t(MemoryLayout.size(ofValue: info))/4
-        
+
         let kerr: kern_return_t = withUnsafeMutablePointer(to: &info) {
 			$0.withMemoryRebound(to: integer_t.self, capacity: 1) {
 				task_info(mach_task_self_,
@@ -287,7 +288,7 @@ class AppStatus {
 					&count)
 			}
         }
-        
+
         if kerr == KERN_SUCCESS {
             let memorySize = Double(info.resident_size) / 1048576.0
             return memorySize

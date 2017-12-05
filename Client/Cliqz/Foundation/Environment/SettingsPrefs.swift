@@ -22,108 +22,115 @@ class SettingsPrefs {
     static let querySuggestionPrefKey = "QuerySuggestion"
     static let LimitMobileDataUsagePrefKey = "LimitMobileDataUsage"
     static let AutoForgetTabPrefKey = "AutoForgetTab"
+    static let LogTelemetryPrefKey = "showTelemetry"
+    static let ShowTopSitesPrefKey = "showFreshTabTopSites"
+    static let ShowNewsPrefKey = "showFreshTabNews"
 
 	static let SearchBackendOptions = ["DE", "US", "FR"]
 
-	class func getAdBlockerPref() -> Bool {
+	var profile: Profile?
+
+	open static var shared = SettingsPrefs()
+
+	func getAdBlockerPref() -> Bool {
 		let defaultValue = false
-		if let blockAdsPref = SettingsPrefs.getBoolPref(AdBlockerPrefKey) {
+		if let blockAdsPref = self.getBoolPref(SettingsPrefs.AdBlockerPrefKey) {
 			return blockAdsPref
 		}
 		return defaultValue
 	}
 	
-	class func getFairBlockingPref() -> Bool {
+	func getFairBlockingPref() -> Bool {
 		let defaultValue = true
-		if let FairBlockingPref = SettingsPrefs.getBoolPref(FairBlockingPrefKey) {
+		if let FairBlockingPref = self.getBoolPref(SettingsPrefs.FairBlockingPrefKey) {
 			return FairBlockingPref
 		}
 		return defaultValue
 	}
 	
-	class func updateAdBlockerPref(_ newValue: Bool) {
-		SettingsPrefs.updatePref(AdBlockerPrefKey, value: newValue as AnyObject)
+	func updateAdBlockerPref(_ newValue: Bool) {
+		self.updatePref(SettingsPrefs.AdBlockerPrefKey, value: newValue as AnyObject)
         AdblockingModule.sharedInstance.setAdblockEnabled(newValue)
 	}
 
-	class func updateFairBlockingPref(_ newValue: Bool) {
-		SettingsPrefs.updatePref(FairBlockingPrefKey, value: newValue as AnyObject)
+	func updateFairBlockingPref(_ newValue: Bool) {
+		self.updatePref(SettingsPrefs.FairBlockingPrefKey, value: newValue as AnyObject)
 	}
 
-    class func getBlockExplicitContentPref() -> Bool {
+    func getBlockExplicitContentPref() -> Bool {
         let defaultValue = true
-        if let blockExplicitContentPref = SettingsPrefs.getBoolPref(BlockExplicitContentPrefKey) {
+        if let blockExplicitContentPref = self.getBoolPref(SettingsPrefs.BlockExplicitContentPrefKey) {
             return blockExplicitContentPref
         }
         return defaultValue
     }
     
-    class func getHumanWebPref() -> Bool {
+    func getHumanWebPref() -> Bool {
         let defaultValue = true
-        if let humanWebPref = SettingsPrefs.getBoolPref(HumanWebPrefKey) {
+        if let humanWebPref = self.getBoolPref(SettingsPrefs.HumanWebPrefKey) {
             return humanWebPref
         }
         return defaultValue
     }
     
-    class func updateHumanWebPref(_ newValue: Bool) {
-        SettingsPrefs.updatePref(HumanWebPrefKey, value: newValue as AnyObject)
+    func updateHumanWebPref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.HumanWebPrefKey, value: newValue as AnyObject)
     }
     
-	class func updateShowAntitrackingHintPref(_ newValue: Bool) {
-		SettingsPrefs.updatePref(ShowAntitrackingHintKey, value: newValue as AnyObject)
+	func updateShowAntitrackingHintPref(_ newValue: Bool) {
+		self.updatePref(SettingsPrefs.ShowAntitrackingHintKey, value: newValue as AnyObject)
 	}
 
-	class func updateShowCliqzSearchHintPref(_ newValue: Bool) {
-		SettingsPrefs.updatePref(ShowCliqzSearchHintKey, value: newValue as AnyObject)
+	func updateShowCliqzSearchHintPref(_ newValue: Bool) {
+		self.updatePref(SettingsPrefs.ShowCliqzSearchHintKey, value: newValue as AnyObject)
 	}
     
-    class func updateShowVideoDownloaderHintPref(_ newValue: Bool) {
-        SettingsPrefs.updatePref(ShowVideoDownloaderHintKey, value: newValue as AnyObject)
+    func updateShowVideoDownloaderHintPref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.ShowVideoDownloaderHintKey, value: newValue as AnyObject)
     }
 
-	class func getShowCliqzSearchHintPref() -> Bool {
+	func getShowCliqzSearchHintPref() -> Bool {
 		let defaultValue = true
-		if let showCliqSearchPref = SettingsPrefs.getBoolPref(ShowCliqzSearchHintKey) {
+		if let showCliqSearchPref = self.getBoolPref(SettingsPrefs.ShowCliqzSearchHintKey) {
 			return showCliqSearchPref
 		}
 		return defaultValue
 	}
 
-	class func getShowAntitrackingHintPref() -> Bool {
+	func getShowAntitrackingHintPref() -> Bool {
 		let defaultValue = true
-		if let showAntitrackingHintPref = SettingsPrefs.getBoolPref(ShowAntitrackingHintKey) {
+		if let showAntitrackingHintPref = self.getBoolPref(SettingsPrefs.ShowAntitrackingHintKey) {
 			return showAntitrackingHintPref
 		}
 		return defaultValue
     }
     
-    class func getShowVideoDownloaderHintPref() -> Bool {
+    func getShowVideoDownloaderHintPref() -> Bool {
         let defaultValue = true
-        if let showVideoDownloaderPref = SettingsPrefs.getBoolPref(ShowVideoDownloaderHintKey) {
+        if let showVideoDownloaderPref = self.getBoolPref(SettingsPrefs.ShowVideoDownloaderHintKey) {
             return showVideoDownloaderPref
         }
         return defaultValue
     }
 
     
-    class func getBlockPopupsPref() -> Bool {
+    func getBlockPopupsPref() -> Bool {
         let defaultValue = true
-        if let blockPopupsPref = SettingsPrefs.getBoolPref(blockPopupsPrefKey) {
+        if let blockPopupsPref = self.getBoolPref(SettingsPrefs.blockPopupsPrefKey) {
             return blockPopupsPref
         }
         return defaultValue
     }
     
-    class func updateBlockPopupsPref(_ newValue: Bool) {
-        SettingsPrefs.updatePref(blockPopupsPrefKey, value: newValue as AnyObject)
+    func updateBlockPopupsPref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.blockPopupsPrefKey, value: newValue as AnyObject)
     }
 
-    class func getRegionPref() -> String? {
-        return SettingsPrefs.getStringPref(countryPrefKey)
+    func getRegionPref() -> String? {
+        return self.getStringPref(SettingsPrefs.countryPrefKey)
     }
 
-    class func getDefaultRegion() -> String {
+    func getDefaultRegion() -> String {
         let currentLocale = Locale.current
 		let langToRegionMapping = ["de": "DE", "en": "US", "fr": "FR"]
         if let languageCode = currentLocale.languageCode,
@@ -134,45 +141,44 @@ class SettingsPrefs {
         return "US"
     }
 
-    class func updateRegionPref(_ newValue: String) {
-        SettingsPrefs.updatePref(countryPrefKey, value: newValue as AnyObject)
+    func updateRegionPref(_ newValue: String) {
+        self.updatePref(SettingsPrefs.countryPrefKey, value: newValue as AnyObject)
     }
 
-    class func updateQuerySuggestionPref(_ newValue: Bool) {
-        SettingsPrefs.updatePref(querySuggestionPrefKey, value: newValue as AnyObject)
+    func updateQuerySuggestionPref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.querySuggestionPrefKey, value: newValue as AnyObject)
     }
 
-    class func getQuerySuggestionPref() -> Bool {
+    func getQuerySuggestionPref() -> Bool {
         let defaultValue = true
-        if let querySuggestionPref = SettingsPrefs.getBoolPref(querySuggestionPrefKey) {
+        if let querySuggestionPref = self.getBoolPref(SettingsPrefs.querySuggestionPrefKey) {
             return querySuggestionPref
         }
         return defaultValue
     }
     
-    class func getLimitMobileDataUsagePref() -> Bool {
+    func getLimitMobileDataUsagePref() -> Bool {
         let defaultValue = true
-        if let LimitMobileDataUsagePref = SettingsPrefs.getBoolPref(LimitMobileDataUsagePrefKey) {
+        if let LimitMobileDataUsagePref = SettingsPrefs.shared.getBoolPref(SettingsPrefs.LimitMobileDataUsagePrefKey) {
             return LimitMobileDataUsagePref
         }
         return defaultValue
     }
     
-    class func updateLimitMobileDataUsagePref(_ newValue: Bool) {
-        SettingsPrefs.updatePref(LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
+    func updateLimitMobileDataUsagePref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.LimitMobileDataUsagePrefKey, value: newValue as AnyObject)
     }
     
-    class func getAutoForgetTabPref() -> Bool {
+    func getAutoForgetTabPref() -> Bool {
         let defaultValue = true
-        if let AutoForgetTabPref = SettingsPrefs.getBoolPref(AutoForgetTabPrefKey) {
+        if let AutoForgetTabPref = self.getBoolPref(SettingsPrefs.AutoForgetTabPrefKey) {
             return AutoForgetTabPref
         }
         return defaultValue
     }
     
-    class func updateAutoForgetTabPref(_ newValue: Bool) {
-        
-        SettingsPrefs.updatePref(AutoForgetTabPrefKey, value: newValue as AnyObject)
+    func updateAutoForgetTabPref(_ newValue: Bool) {
+        self.updatePref(SettingsPrefs.AutoForgetTabPrefKey, value: newValue as AnyObject)
         
         if newValue == true {
             BloomFilterManager.sharedInstance.turnOn()
@@ -182,29 +188,38 @@ class SettingsPrefs {
         
     }
     
+    func getLogTelemetryPref() -> Bool {
+        return self.getBoolPref(SettingsPrefs.LogTelemetryPrefKey) ?? false
+    }
+    
+    func getShowTopSitesPref() -> Bool {
+        return self.getBoolPref(SettingsPrefs.ShowTopSitesPrefKey) ?? true
+    }
+    
+    func getShowNewsPref() -> Bool {
+        return self.getBoolPref(SettingsPrefs.ShowNewsPrefKey) ?? true
+    }
+    
     // MARK: - Private helper metods
-	class fileprivate func getBoolPref(_ forKey: String) -> Bool? {
-		let appDelegate = UIApplication.shared.delegate as! AppDelegate
-		if let profile = appDelegate.profile {
-			return profile.prefs.boolForKey(forKey)
+	fileprivate func getBoolPref(_ forKey: String) -> Bool? {
+		
+		if let p = self.profile {
+			return p.prefs.boolForKey(forKey)
 		}
 		return nil
 	}
 	
-	class fileprivate func updatePref(_ forKey: String, value: AnyObject) {
-		let appDelegate = UIApplication.shared.delegate as! AppDelegate
-		if let profile = appDelegate.profile {
-			profile.prefs.setObject(value, forKey: forKey)
+	fileprivate func updatePref(_ forKey: String, value: AnyObject) {
+		if let p = self.profile {
+			p.prefs.setObject(value, forKey: forKey)
 		}
 	}
     
-    class fileprivate func getStringPref(_ forKey: String) -> String? {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        if let profile = appDelegate.profile {
-            return profile.prefs.stringForKey(forKey)
+    fileprivate func getStringPref(_ forKey: String) -> String? {
+		if let p = self.profile {
+            return p.prefs.stringForKey(forKey)
         }
         return nil
     }
-    
     
 }

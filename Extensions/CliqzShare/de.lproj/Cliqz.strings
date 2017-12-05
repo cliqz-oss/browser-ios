@@ -1,0 +1,15 @@
+/* 
+  File.strings
+  Client
+
+  Created by Sahakyan on 10/30/17.
+  Copyright © 2017 Mozilla. All rights reserved.
+*/
+/* Cancel button title */
+"Cancel" = "Abbrechen";
+
+/* Open button title */
+"Open" = "Öffnen";
+
+/* Action sheet title */
+"Open Link" = "Link in Cliqz öffnen?";

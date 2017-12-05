@@ -39,9 +39,9 @@ class ShareExtensionHelper: NSObject {
         
         if #available(iOS 11, *) {
             if let displayURL = selectedTab?.displayURL {
-                activityItems.append(displayURL as AnyObject)
+                activityItems.append(displayURL.absoluteString as AnyObject)
             } else {
-                activityItems.append(selectedURL as AnyObject)
+                activityItems.append(selectedURL.absoluteString as AnyObject)
             }
         } else {
             activityItems.append(self)

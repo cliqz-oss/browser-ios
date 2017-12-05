@@ -1,9 +1,7 @@
-"NSLocationWhenInUseUsageDescription" = "Your location is used to provide better search results.";
-
-"ShortcutItemTitleNewPrivateTab" = "New Private Tab";
-
-"ShortcutItemTitleNewTab" = "New Tab";
-
-"NSPhotoLibraryUsageDescription" = "CLIQZ will only use this access to download videos to your device.";
-
-"NSMicrophoneUsageDescription" = "CLIQZ will only use the microphone when you choose to record videos inside the browser.";
+"NSLocationWhenInUseUsageDescription" = "Condividendo la tua posizione ci permetti di fornirti dei risultati migliori";
+"ShortcutItemTitleNewPrivateTab" = "Nuovo DimentiTab";
+"ShortcutItemTitleNewTab" = "Nuovo Tab";
+"NSPhotoLibraryUsageDescription" = "Cliqz accederà solo per scaricare video o foto sul tuo telefono.";
+"NSPhotoLibraryAddUsageDescription" = "Cliqz accederà solo per scaricare video o foto sul tuo telefono.";
+"NSMicrophoneUsageDescription" = "Cliqz userà il microfono solo quando vorrai registrare dei video all'interno del browser.";
+"NSCameraUsageDescription" = "Così puoi scansionare codici, fare o caricare video e foto.";

@@ -14,9 +14,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = NSLocalizedString("Settings", comment: "Settings")
+        navigationItem.title = NSLocalizedString("Settings", tableName: "Cliqz", comment: "Settings")
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: NSLocalizedString("Done", comment: "Done button on left side of the Settings view controller title bar"),
+            title: NSLocalizedString("Done", tableName: "Cliqz", comment: "Done button on left side of the Settings view controller title bar"),
             style: UIBarButtonItemStyle.done,
             target: navigationController, action: Selector("SELdone"))
         navigationItem.leftBarButtonItem?.accessibilityIdentifier = "AppSettingsTableViewController.navigationItem.leftBarButtonItem"
@@ -46,9 +46,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
         
         // Search settings Section
         let regionalSetting                 = RegionalSetting(settings: self)
-        let querySuggestionSettings         = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.getQuerySuggestionPref(),
+        let querySuggestionSettings         = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.querySuggestionPrefKey, defaultValue: SettingsPrefs.shared.getQuerySuggestionPref(),
                                                           titleText: NSLocalizedString("Search Query Suggestions", tableName: "Cliqz", comment: "[Settings] Search Query Suggestions"))
-        let blockExplicitContentSettings    = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.getBlockExplicitContentPref(),
+        let blockExplicitContentSettings    = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.BlockExplicitContentPrefKey, defaultValue: SettingsPrefs.shared.getBlockExplicitContentPref(),
                                                           titleText: NSLocalizedString("Block Explicit Content", tableName: "Cliqz", comment: "[Settings] Block explicit content"))
         let humanWebSetting                 = HumanWebSetting(settings: self)
         let cliqzSearchSetting              = CliqzSearchSetting(settings: self)
@@ -79,10 +79,6 @@ class AppSettingsTableViewController: SettingsTableViewController {
         }
         
         browsingAndHistorySection += [blockPopupsSetting, autoForgetTabSetting, limitMobileDataUsageSetting, adBlockerSetting, clearPrivateDataSetting, restoreTopSitesSetting, resetSubscriptionsSetting]
-
-#if BETA
-        browsingAndHistorySection += [ShowIntroductionSetting(settings: self), ExportLocalDatabaseSetting(settings: self)]
-#endif
         
 #if React_Debug
         browsingAndHistorySection += [TestReact(settings: self)]
@@ -91,6 +87,11 @@ class AppSettingsTableViewController: SettingsTableViewController {
 //            EnablePushNotifications(prefs: prefs, prefKey: "enableNewsPushNotifications", defaultValue: false,
 //				titleText: NSLocalizedString("Enable News Push Notifications", tableName: "Cliqz", comment: "Enable News Push Notifications"))
 
+        // Cliqz Tab section
+        let showTopSitesSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.ShowTopSitesPrefKey, defaultValue: true, titleText: NSLocalizedString("Show most visited websites", tableName: "Cliqz", comment: "[Settings] Show most visited websites"))
+        let showNewsSetting          = BoolSetting(prefs: prefs, prefKey: SettingsPrefs.ShowNewsPrefKey, defaultValue: true, titleText: NSLocalizedString("Show News", tableName: "Cliqz", comment: "[Settings] Show News"))
+        let cliqzTabSection = [showTopSitesSetting, showNewsSetting]
+        
         
         // Help Section
         let supportSetting          = SupportSetting(delegate: settingsDelegate)
@@ -107,13 +108,24 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let AboutCliqzSection: [Setting] = [rateSetting, aboutSetting]
         
         // Combine All sections together
-        let settings = [
+        var settings = [
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Search", tableName: "Cliqz", comment: "[Settings] Search section title")), children: searchSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Browsing & History", tableName: "Cliqz", comment: "[Settings] Browsing & History section header")), children: browsingAndHistorySection),
+            SettingSection(title: NSAttributedString(string: NSLocalizedString("Cliqz Tab", tableName: "Cliqz", comment: "[Settings] Cliqz Tab section header")), children: cliqzTabSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("Help", tableName: "Cliqz", comment: "[Settings] Help section header")), children: helpSection),
             SettingSection(title: NSAttributedString(string: NSLocalizedString("About Cliqz", tableName: "Cliqz", comment: "[Settings] About Cliqz section header")), children: AboutCliqzSection)
                         ]
 
+        
+        #if BETA
+            let betaSection = [BoolSetting(prefs: prefs, prefKey: SettingsPrefs.LogTelemetryPrefKey, defaultValue: false, titleText: "Log Telemetry Signals"),
+                                        ShowIntroductionSetting(settings: self),
+                                        ExportLocalDatabaseSetting(settings: self)]
+            
+            settings += [SettingSection(title: NSAttributedString(string: "Beta Settings"), children: betaSection)]
+        #endif
+        
+        
         return settings
     
     }

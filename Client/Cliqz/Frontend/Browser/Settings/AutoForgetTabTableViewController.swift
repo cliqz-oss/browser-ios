@@ -19,7 +19,7 @@ class AutoForgetTabTableViewController: SubSettingsTableViewController {
     ]
     
     private lazy var toggles: [Bool] = {
-        return [SettingsPrefs.getAutoForgetTabPref()]
+        return [SettingsPrefs.shared.getAutoForgetTabPref()]
     }()
     
     override func getSectionFooter(section: Int) -> String {
@@ -75,7 +75,7 @@ class AutoForgetTabTableViewController: SubSettingsTableViewController {
     }
     
     private func saveToggles() {
-        SettingsPrefs.updateAutoForgetTabPref(self.toggles[0])
+        SettingsPrefs.shared.updateAutoForgetTabPref(self.toggles[0])
     }
 }
 

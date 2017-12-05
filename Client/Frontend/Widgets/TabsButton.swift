@@ -15,7 +15,7 @@ struct TabsButtonUX {
     static let CornerRadius: CGFloat = 2
     // Cliqz: change the the title font of TabsButton
     static let TitleFont: UIFont = UIFont.boldSystemFont(ofSize: 10) //UIFont.boldSystemFontOfSize
-    static let BorderStrokeWidth: CGFloat = 1
+    static let BorderStrokeWidth: CGFloat = 0
 
     static let BorderColor: UIColor = UIColor.clear
 	// Cliqz: Changed Insets to make Tabs button as big as UITextField
@@ -28,7 +28,7 @@ struct TabsButtonUX {
         theme.borderColor = UIConstants.PrivateModePurple
 
 		// Cliqz: Removed Border in Private Mode
-        theme.borderWidth = 0 // BorderStrokeWidth
+        theme.borderWidth = BorderStrokeWidth
         // Cliqz: use title font same as one in normal mode
         theme.font = TitleFont//UIConstants.DefaultChromeBoldFont
 		// Cliqz: Changed background&text colors and insets of TabsButton in Private Mode according to requirements (Commented out original color)
@@ -47,7 +47,7 @@ struct TabsButtonUX {
         theme.font = TitleFont
 		// Cliqz: Changed text colors and backgroundColor of TabsButton in Normal Mode according to requirements (Commented out original color)
         theme.backgroundColor = UIColor.clear //TitleBackgroundColor
-        theme.textColor = UIColor.black // TitleColor
+        theme.textColor = TitleColor
         theme.insets = TitleInsets
         theme.highlightButtonColor = TabsButtonUX.TitleColor
         theme.highlightTextColor = TabsButtonUX.TitleBackgroundColor
@@ -61,7 +61,12 @@ struct TabsButtonUX {
 //class TabsButton: UIControl {
 class TabsButton: UIButton {
     fileprivate var theme: Theme = TabsButtonUX.Themes[Theme.NormalMode]!
-    
+
+	override func setTitleColor(_ color: UIColor?, for state: UIControlState) {
+		super.setTitleColor(color, for: state)
+		self.title.textColor = color
+	}
+
     override var isHighlighted: Bool {
         didSet {
             //Cliqz: disable highlighting effect for tabs button

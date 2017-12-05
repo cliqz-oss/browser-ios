@@ -46,7 +46,7 @@ var nullWKNavigation: WKNavigation = WKNavigation()
         postAsyncToMain(0) { // we now know JS callbacks can be off main
             guard let wv = getCurrentWebView() else { return }
             let current = wv.url
-            if SettingsPrefs.getBlockPopupsPref() {
+            if SettingsPrefs.shared.getBlockPopupsPref() {
                 guard let lastTappedTime = wv.lastTappedTime else { return }
                 if fabs(lastTappedTime.timeIntervalSinceNow) > 0.75 { // outside of the 3/4 sec time window and we ignore it
                     return

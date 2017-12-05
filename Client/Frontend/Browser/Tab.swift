@@ -64,6 +64,7 @@ class Tab: NSObject {
 //  Cliqz:  var webView: WKWebView? = nil
 	var webView: CliqzWebView? = nil
     weak var tabDelegate: TabDelegate? = nil
+
     weak var appStateDelegate: AppStateDelegate?
     var bars = [SnackBar]()
     var favicons = [Favicon]()
@@ -78,7 +79,11 @@ class Tab: NSObject {
     var requestInProgress = false
     /// The last title shown by this tab. Used by the tab tray to show titles for zombie tabs.
     var lastTitle: String?
-
+    
+    //Cliqz: added query field so that we can save it before navigating to a url
+    var query: String?
+    
+    
     /// Whether or not the desktop site was requested with the last request, reload or navigation. Note that this property needs to
     /// be managed by the web view's navigation delegate.
     var desktopSite: Bool = false {
@@ -167,7 +172,6 @@ class Tab: NSObject {
 
     func createWebview() {
         if webView == nil {
-            assert(configuration != nil, "Create webview can only be called once")
             configuration!.userContentController = WKUserContentController()
             configuration!.preferences = WKPreferences()
             configuration!.preferences.javaScriptCanOpenWindowsAutomatically = false
@@ -179,8 +183,6 @@ class Tab: NSObject {
 #else
 			webView.delegate = self
 #endif
-            configuration = nil
-
             webView.accessibilityLabel = NSLocalizedString("Web content", comment: "Accessibility label for the main web content view")
             webView.allowsBackForwardNavigationGestures = true
             webView.backgroundColor = UIColor.lightGray
@@ -202,7 +204,7 @@ class Tab: NSObject {
 
 // Cliqz:[UIWebView] Changed type to CliqzWebView
 //    func restore(webView: WKWebView) {
-	func restore(_ webView: CliqzWebView) {
+	private func restore(_ webView: CliqzWebView) {
         // Pulls restored session data from a previous SavedTab to load into the Tab. If it's nil, a session restore
         // has already been triggered via custom URL, so we use the last request to trigger it again; otherwise,
         // we extract the information needed to restore the tabs and create a NSURLRequest with the custom session restore URL
@@ -235,11 +237,13 @@ class Tab: NSObject {
             log.error("creating webview with no lastRequest and no session data: \(self.url)")
         }
     }
+
     private func getEscapedJSON(_ jsonDict: [String: Any]) -> String?{
         let jsonString = JSON(jsonDict).rawString(String.Encoding.utf8, options: [])
         let escapedJSON = jsonString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         return escapedJSON
     }
+
     deinit {
         if let webView = webView {
             tabDelegate?.tab?(self, willDeleteWebView: webView)
@@ -254,7 +258,7 @@ class Tab: NSObject {
     var estimatedProgress: Double {
         return webView?.estimatedProgress ?? 0
     }
-    
+
 #if CLIQZ
     var backList: [LegacyBackForwardListItem]? {
         return webView?.backForwardList.backList
@@ -539,7 +543,28 @@ class Tab: NSObject {
 
     func setNightMode(_ enabled: Bool) {
         webView?.evaluateJavaScript("__firefox__.setNightMode(\(enabled))", completionHandler: nil)
-    }
+	}
+
+	func purgeWebView() {
+		if let webView = self.webView {
+			tabDelegate?.tab?(self, willDeleteWebView: webView)
+			webView.removeObserver(self, forKeyPath: "URL")
+			self.sessionData = self.generateSessionData()
+			self.webView = nil
+		}
+	}
+
+	func generateSessionData() -> SessionData? {
+		if let currentItem = self.webView?.backForwardList.currentItem {
+			let backList = self.webView?.backForwardList.backList ?? []
+			let forwardList = self.webView?.backForwardList.forwardList ?? []
+			let urls = (backList + [currentItem] + forwardList).map { $0.url }
+			let currentPage = -forwardList.count
+			return SessionData(currentPage: currentPage, urls: urls, lastUsedTime: self.lastExecutedTime ?? Date.now())
+		}
+		return nil
+	}
+
 }
 
 extension Tab: TabWebViewDelegate {

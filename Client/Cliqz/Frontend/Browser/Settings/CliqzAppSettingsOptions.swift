@@ -64,7 +64,7 @@ class HumanWebSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
 
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getHumanWebPref() ? Setting.onStatus : Setting.offStatus)
     }
 
     init(settings: SettingsTableViewController) {
@@ -118,8 +118,14 @@ class RateUsSetting: Setting {
     }
     
     override func onClick(_ navigationController: UINavigationController?) {
+        var urlString: String!
+        if #available(iOS 11.0, *) {
+            urlString = "itms-apps://itunes.apple.com/app/id\(AppId)"
+        } else {
+            urlString = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
+        }
         
-        if let url = URL(string: "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(AppId)&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8") {
+        if let url = URL(string: urlString) {
             UIApplication.shared.openURL(url)
         }
     }
@@ -154,7 +160,7 @@ class AdBlockerSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getAdBlockerPref() ? Setting.onStatus : Setting.offStatus)
     }
 
     init(settings: SettingsTableViewController) {
@@ -361,10 +367,10 @@ class RegionalSetting: Setting {
     
     override var status: NSAttributedString {
         var localizedRegionName: String?
-        if let region = SettingsPrefs.getRegionPref() {
+        if let region = SettingsPrefs.shared.getRegionPref() {
             localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
         } else {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.getDefaultRegion())
+            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.shared.getDefaultRegion())
             
         }
         return NSAttributedString(string: localizedRegionName!)
@@ -435,7 +441,7 @@ class LimitMobileDataUsageSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getLimitMobileDataUsagePref() ? Setting.onStatus : Setting.offStatus)
     }
     
     init(settings: SettingsTableViewController) {
@@ -466,7 +472,7 @@ class AutoForgetTabSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        return NSAttributedString(string: SettingsPrefs.getAutoForgetTabPref() ? Setting.onStatus : Setting.offStatus)
+        return NSAttributedString(string: SettingsPrefs.shared.getAutoForgetTabPref() ? Setting.onStatus : Setting.offStatus)
     }
     
     init(settings: SettingsTableViewController) {

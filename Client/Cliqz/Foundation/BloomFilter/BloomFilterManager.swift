@@ -20,7 +20,7 @@ class BloomFilterManager: NSObject {
     var bloomFilter: BloomFilter? = nil
     
     func turnOn() {
-        if bloomFilter == nil && SettingsPrefs.getAutoForgetTabPref() == true {
+        if bloomFilter == nil && SettingsPrefs.shared.getAutoForgetTabPref() == true {
             DispatchQueue.global(qos: .background).async {
                 self.load()
             }

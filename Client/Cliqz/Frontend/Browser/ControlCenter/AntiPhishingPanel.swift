@@ -29,7 +29,7 @@ class AntiPhishingPanel: ControlCenterPanel {
 
     //MARK: - Abstract methods implementation
     override func getPanelTitle() -> String {
-        if isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabledForCurrentWebsite {
             return NSLocalizedString("You are safe", tableName: "Cliqz", comment: "Anti-Phishing panel title in the control center if the current website is safe.")
         } else {
             return NSLocalizedString("Your data is not protected", tableName: "Cliqz", comment: "Anti-Phishing panel title in the control center if the current website is a phishing one.")
@@ -37,7 +37,7 @@ class AntiPhishingPanel: ControlCenterPanel {
     }
     
     override func getPanelSubTitle() -> String {
-        if isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabledForCurrentWebsite {
             return NSLocalizedString("No suspicious activities detected", tableName: "Cliqz", comment: "Anti-Phishing panel subtitle in the control center if the current website is safe.")
         } else {
             return NSLocalizedString("Suspicious activities were detected", tableName: "Cliqz", comment: "Anti-Phishing panel subtitle in the control center if the current website is a phishing one.")
@@ -124,8 +124,8 @@ class AntiPhishingPanel: ControlCenterPanel {
 
     }
     
-    override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        return !AntiPhishingDetector.isDetectedPhishingURL(self.currentURL)
+    override func evaluateIsFeatureEnabledForCurrentWebsite() {
+        isFeatureEnabledForCurrentWebsite = !AntiPhishingDetector.isDetectedPhishingURL(self.currentURL)
     }
     
     override func getViewName() -> String {

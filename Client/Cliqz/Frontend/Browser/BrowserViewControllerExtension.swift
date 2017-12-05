@@ -8,6 +8,7 @@
 
 import Foundation
 import JavaScriptCore
+import Shared
 
 extension BrowserViewController: ControlCenterViewDelegate {
 
@@ -230,7 +231,14 @@ extension BrowserViewController: ControlCenterViewDelegate {
         TelemetryLogger.sharedInstance.logEvent(.AntiPhishing("show", nil, nil))
         
     }
-	
+    
+    func isTrampolineURL(_ url: URL) -> Bool {
+        let scheme = url.scheme, host = url.host, path = url.path
+        if (scheme == "http" && host == "localhost" && path == "/cliqz/trampolineForward.html") { return true }
+        if (scheme == "http" && host == "localhost" && path == "/cliqz/goto.html") { return true }
+        return false        
+    }
+
     // MARK: - toolbar telemetry signals
     func logToolbarFocusSignal() {
         logToolbarSignal("focus", target: "search", customData: nil)
@@ -276,6 +284,16 @@ extension BrowserViewController: ControlCenterViewDelegate {
         }
     }
     
+    func logOrientationSignal() {
+        guard let view = getCurrentView() else {
+            return
+        }
+        
+        let orientation = UIApplication.shared.statusBarOrientation
+        let state = UIInterfaceOrientationIsLandscape(orientation) ? "Landscape" : "Portrait"
+        TelemetryLogger.sharedInstance.logEvent(.Rotation(state, view))
+        
+    }
     //MARK - WebMenu signals
     func logWebMenuSignal(_ action: String, target: String) {
         if let isForgetMode = self.tabManager.selectedTab?.isPrivate {
@@ -322,7 +340,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
     }
     
     private func canDownloadYoutubeVideo() -> Bool {
-        let limitMobileDataUsage = SettingsPrefs.getLimitMobileDataUsagePref()
+        let limitMobileDataUsage = SettingsPrefs.shared.getLimitMobileDataUsagePref()
         
         if let networkReachabilityStatus = NetworkReachability.sharedInstance.networkReachabilityStatus, limitMobileDataUsage == true && networkReachabilityStatus != .reachableViaWiFi {
             showNoWifiConnectionAlert()
@@ -349,6 +367,19 @@ extension BrowserViewController: ControlCenterViewDelegate {
         
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    // MARK: - Favorites
+    func updateBookmarkStatus(notification: NSNotification) {
+        if let url = notification.object as? URL,
+            let tab = self.tabManager.getTabForURL(url) {
+            tab.isBookmarked = false
+            if !AppConstants.MOZ_MENU {
+                self.toolbar?.updateBookmarkStatus(false)
+                self.urlBar.updateBookmarkStatus(false)
+            }
+        }
+        
+    }
 }
 
 extension BrowserViewController: RemoteNotificationDelegate {
@@ -356,4 +387,3 @@ extension BrowserViewController: RemoteNotificationDelegate {
         self.present(viewControllerToPresent, animated: flag, completion: nil)
     }
 }
-

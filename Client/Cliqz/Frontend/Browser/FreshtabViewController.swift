@@ -15,8 +15,8 @@ import SwiftyJSON
 
 struct FreshtabViewUX {
 
-	static let TopSitesMinHeight = 95.0
-	static let TopSitesMaxHeight = 185.0
+    static let TopSitesMinHeight: CGFloat = 95.0
+    static let TopSitesMaxHeight: CGFloat = 185.0
 	static let TopSitesCellSize = CGSize(width: 76, height: 86)
 	static let TopSitesCountOnRow = 4
 	static let TopSitesOffset = 5.0
@@ -27,7 +27,7 @@ struct FreshtabViewUX {
 	static let NewsViewMinHeight: CGFloat = 162.0
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
-	static let MaxNewsCellsCount = 4
+    static let topOffset: CGFloat = 10.0
 }
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -40,7 +40,9 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
     fileprivate let configUrl = "https://newbeta.cliqz.com/api/v1/config"
     fileprivate let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
-	
+	fileprivate let breakingNewsKey = "breaking"
+	fileprivate let localNewsKey = "local_label"
+
 	// TODO: Change topSitesCollection to optional
 	fileprivate var topSitesCollection: UICollectionView?
 	fileprivate var newsTableView: UITableView?
@@ -53,24 +55,24 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		lbl.textAlignment = .center
 		return lbl
 	}()
+    fileprivate var scrollView: UIScrollView!
 	fileprivate var normalModeView: UIView!
 	fileprivate var forgetModeView: UIView!
 
-	var isNewsExpanded = false {
-		didSet {
-			self.updateNewsView()
-		}
-	}
+	var isNewsExpanded = false
+    var expandNewsbutton = UIButton()
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
 	var news = [[String: Any]]()
-    var region = SettingsPrefs.getRegionPref()
+    var region = SettingsPrefs.shared.getRegionPref()
 
 	weak var delegate: SearchViewDelegate?
     
     var startTime : Double = Date.getCurrentMillis()
     var isLoadCompleted = false
-
+    var scrollCount = 0
+    var isScrollable = false
+    
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
@@ -97,21 +99,33 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         startTime = Date.getCurrentMillis()
-
+        
         isLoadCompleted = false
-        region = SettingsPrefs.getRegionPref()
-		updateView()
-		self.isNewsExpanded = false
+        region = SettingsPrefs.shared.getRegionPref()
+        
+        restoreToInitialState()
+        updateView()
+        if !isForgetMode {
+            self.loadNews()
+            self.loadTopsites()
+        }
+		
+        self.updateViewConstraints()
+        scrollCount = 0
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         logHideSignal()
+        logScrollSignal()
     }
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.updateViewConstraints()
+        }
 	}
 
 	override func viewWillLayoutSubviews() {
@@ -120,20 +134,88 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	func restoreToInitialState() {
-		self.isNewsExpanded = false
+        if !isForgetMode {
+            isNewsExpanded = false
+            self.newsTableView?.reloadData()
+        }
 	}
 
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
-		self.topSitesCollection?.snp.updateConstraints({ (make) in
-			if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
-				make.height.equalTo(FreshtabViewUX.TopSitesMaxHeight)
-			} else {
-				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
-			}
-		})
-	}
+        // topsites hint
+        if self.topSites.count == 0 && SettingsPrefs.shared.getShowTopSitesPref() {
+            self.emptyTopSitesHint.isHidden = false
+        } else {
+            self.emptyTopSitesHint.isHidden = true
+        }
 
+        // topsites collection
+        let topSitesHeight = getTopSitesHeight()
+        self.topSitesCollection?.snp.updateConstraints({ (make) in
+            make.height.equalTo(topSitesHeight)
+        })
+        
+        // news table
+        let newsHeight = getNewsHeight()
+        self.newsTableView?.snp.updateConstraints({ (make) in
+            make.height.equalTo(newsHeight)
+        })
+		
+        if !isForgetMode {
+            // normalModeView height
+            let invisibleFreshTabHeight = getInvisibleFreshTabHeight(topSitesHeight: topSitesHeight, newsHeight: newsHeight)
+            let normalModeViewHeight = self.view.bounds.height + invisibleFreshTabHeight
+           
+            self.normalModeView.snp.remakeConstraints({ (make) in
+                make.top.left.bottom.right.equalTo(scrollView)
+                make.width.equalTo(self.view)
+                make.height.equalTo(normalModeViewHeight)
+            })
+        }
+	}
+    
+    private func getTopSitesHeight() -> CGFloat {
+        guard SettingsPrefs.shared.getShowTopSitesPref() else {
+            return 0.0
+        }
+        
+        if self.topSites.count > FreshtabViewUX.TopSitesCountOnRow && !UIDevice.current.isSmallIphoneDevice() {
+            return FreshtabViewUX.TopSitesMaxHeight
+            
+        } else {
+            return FreshtabViewUX.TopSitesMinHeight
+        }
+    }
+    
+    private func getNewsHeight() -> CGFloat {
+        guard SettingsPrefs.shared.getShowNewsPref() && self.news.count != 0 else {
+            return 0.0
+        }
+        
+        if self.isNewsExpanded {
+            return (FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
+            
+        } else {
+            return FreshtabViewUX.NewsViewMinHeight
+        }
+    }
+    
+    private func getInvisibleFreshTabHeight(topSitesHeight: CGFloat, newsHeight: CGFloat) -> CGFloat {
+
+        let viewHeight = self.view.bounds.height
+        var freshTabHeight = topSitesHeight + newsHeight + 10.0
+        if topSitesHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset }
+        if newsHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset}
+        
+        if freshTabHeight > viewHeight {
+            isScrollable = true
+            return freshTabHeight - viewHeight
+        } else {
+            return 10.0
+        }
+        
+    }
+    
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
 			let location = touch.location(in: self.topSitesCollection)
@@ -228,7 +310,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			description.textColor = UIColor(white: 1, alpha: 0.57)
 			description.textColor = FreshtabViewUX.ForgetModeTextColor
 			description.snp.makeConstraints({ (make) in
-				make.top.equalTo(title.snp.bottom).offset(15)
+				make.top.equalTo(title.snp.bottom).offset(FreshtabViewUX.topOffset)
 				make.left.equalTo(self.forgetModeView).offset(FreshtabViewUX.ForgetModeOffset)
 				make.right.equalTo(self.forgetModeView).offset(-FreshtabViewUX.ForgetModeOffset)
 			})
@@ -237,17 +319,32 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	fileprivate func constructNormalModeView() {
 		if self.normalModeView == nil {
+            self.scrollView = UIScrollView()
+            self.scrollView.delegate = self
+            self.view.addSubview(self.scrollView)
+            self.scrollView.snp.makeConstraints({ (make) in
+                make.top.left.bottom.right.equalTo(self.view)
+            })
 			self.normalModeView = UIView()
-			self.normalModeView.backgroundColor = UIConstants.AppBackgroundColor
-			self.view.addSubview(self.normalModeView)
+			self.normalModeView.backgroundColor = UIColor.clear
+			self.scrollView.addSubview(self.normalModeView)
 			self.normalModeView.snp.makeConstraints({ (make) in
-				make.top.left.bottom.right.equalTo(self.view)
+				make.top.left.bottom.right.equalTo(scrollView)
+                make.height.width.equalTo(self.view)
 			})
 			let bgView = UIImageView(image: UIImage(named: "normalModeFreshtabBgImage"))
-			self.normalModeView.addSubview(bgView)
+			self.view.addSubview(bgView)
+            self.view.sendSubview(toBack: bgView)
 			bgView.snp.makeConstraints { (make) in
-				make.left.right.top.bottom.equalTo(self.normalModeView)
+				make.left.right.top.bottom.equalTo(self.view)
 			}
+            
+            self.normalModeView.addSubview(self.emptyTopSitesHint)
+            self.emptyTopSitesHint.snp.makeConstraints({ (make) in
+                make.top.equalTo(self.normalModeView).offset(8)
+                make.left.right.equalTo(self.normalModeView)
+                make.height.equalTo(14)
+            })
 		}
 		if self.topSitesCollection == nil {
 			self.topSitesCollection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -258,7 +355,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.topSitesCollection?.isScrollEnabled = false
 			self.normalModeView.addSubview(self.topSitesCollection!)
 			self.topSitesCollection?.snp.makeConstraints { (make) in
-				make.top.equalTo(self.normalModeView).offset(11)
+				make.top.equalTo(self.normalModeView).offset(FreshtabViewUX.topOffset)
 				make.left.equalTo(self.normalModeView).offset(FreshtabViewUX.TopSitesOffset)
 				make.right.equalTo(self.normalModeView).offset(-FreshtabViewUX.TopSitesOffset)
 				make.height.equalTo(FreshtabViewUX.TopSitesMinHeight)
@@ -279,7 +376,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.left.equalTo(self.view).offset(21)
 				make.right.equalTo(self.view).offset(-21)
 				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(15)
+				make.top.equalTo(self.topSitesCollection!.snp.bottom).offset(FreshtabViewUX.topOffset)
 			}
 			newsTableView?.register(NewsViewCell.self, forCellReuseIdentifier: "NewsCell")
 			newsTableView?.separatorStyle = .singleLine
@@ -297,13 +394,13 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.normalModeView.isHidden = false
 			self.forgetModeView?.isHidden = true
 		}
-		if !isForgetMode {
-			self.loadNews()
-			self.loadTopsites()
-		}
 	}
 
 	@objc fileprivate func loadTopsites() {
+        guard SettingsPrefs.shared.getShowTopSitesPref() else {
+            return
+        }
+        
 		let _ = self.loadTopSitesWithLimit(15)
         //self.topSitesCollection?.reloadData()
 	}
@@ -321,22 +418,28 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						self.region = location.uppercased()
 						self.loadNews()
 					} else {
-						self.region = SettingsPrefs.getDefaultRegion()
+						self.region = SettingsPrefs.shared.getDefaultRegion()
 					}
-					SettingsPrefs.updateRegionPref(self.region!)
+					SettingsPrefs.shared.updateRegionPref(self.region!)
 				}
             }
         }
     }
 
 	fileprivate func loadNews() {
-		self.news.removeAll()
+        guard SettingsPrefs.shared.getShowNewsPref() else {
+            return
+        }
+        
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
-        let userRegion = region != nil ? region : SettingsPrefs.getDefaultRegion()
+        let userRegion = region != nil ? region : SettingsPrefs.shared.getDefaultRegion()
 		
-        let uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&count=5"
+        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&platform=1"
+		if let coord = LocationManager.sharedInstance.getUserLocation() {
+			uri += "&loc=\(coord.coordinate.latitude),\(coord.coordinate.longitude)"
+		}
 
 		Alamofire.request(newsUrl + uri, method: .put, parameters: data, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
@@ -346,15 +449,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 						let extra = snippet["extra"] as? [String: Any],
 						let articles = extra["articles"] as? [[String: Any]]
 						{
+                            // remove old news
+                            self.news.removeAll()
 							// Temporary filter to avoid reuters crashing UIWebview on iOS 10.3.2/10.3.3
 							self.news = articles.filter({ (article) -> Bool in
-								print(article)
 								if let domain = article["domain"] as? String {
 									return !domain.contains("reuters")
 								}
 								return true
 							})
 							self.newsTableView?.reloadData()
+                            self.updateViewConstraints()
                             if !self.isLoadCompleted {
                                 self.isLoadCompleted = true
                                 self.logShowSignal()
@@ -384,16 +489,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 					}
 				}
 			}
-			if self.topSites.count == 0 {
-				self.normalModeView.addSubview(self.emptyTopSitesHint)
-				self.emptyTopSitesHint.snp.makeConstraints({ (make) in
-					make.top.equalTo(self.normalModeView).offset(8)
-					make.left.right.equalTo(self.normalModeView)
-					make.height.equalTo(14)
-				})
-			} else {
-				self.emptyTopSitesHint.removeFromSuperview()
-			}
 			self.updateViewConstraints()
             self.topSitesCollection?.reloadData()
             
@@ -401,32 +496,44 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 	}
 
-	@objc fileprivate func modifyNewsView() {
+	@objc fileprivate func toggoleShowMoreNews() {
 		self.delegate?.dismissKeyboard()
 		self.isNewsExpanded = !self.isNewsExpanded
+        
+        self.updateViewConstraints()
+        isNewsExpanded ? showMoreNews() : showLessNews()
+        
+        if isNewsExpanded {
+            expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        } else {
+            expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        }
 		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
 	}
 
-	private func updateNewsView() {
-		if self.isNewsExpanded {
-			self.newsTableView?.snp.updateConstraints { (make) in
-				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
-			}
-		} else {
-			self.newsTableView?.snp.updateConstraints { (make) in
-				make.height.equalTo(FreshtabViewUX.NewsViewMinHeight)
-			}
-		}
-		self.newsTableView?.reloadData()
+	private func showMoreNews() {
+        let indexPaths = getExtraNewsIndexPaths()
+        self.newsTableView?.insertRows(at:indexPaths, with: .automatic)
 	}
+    
+    private func showLessNews() {
+        let indexPaths = getExtraNewsIndexPaths()
+        self.newsTableView?.deleteRows(at:indexPaths, with: .automatic)
+    }
+    
+    private func getExtraNewsIndexPaths() -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        for i in FreshtabViewUX.MinNewsCellsCount..<self.news.count {
+            indexPaths.append(IndexPath(row: i, section: 0))
+        }
+        return indexPaths
+    }
 }
 
-extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
+extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.news.count >= FreshtabViewUX.MinNewsCellsCount ?
-			self.isNewsExpanded ? min(self.news.count, (UIDevice.current.isSmallIphoneDevice() ? FreshtabViewUX.MaxNewsCellsCount - 1 : FreshtabViewUX.MaxNewsCellsCount)) : FreshtabViewUX.MinNewsCellsCount :
-		FreshtabViewUX.MinNewsCellsCount
+        return self.isNewsExpanded ? self.news.count : FreshtabViewUX.MinNewsCellsCount
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -434,9 +541,11 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 		if indexPath.row < self.news.count {
 			var n = self.news[indexPath.row]
 			let title = NSMutableAttributedString()
-			if let b = n["breaking"] as? NSNumber,
+			if let b = n[breakingNewsKey] as? NSNumber,
 				let t = n["breaking_label"] as? String, b.boolValue == true {
 				title.append(NSAttributedString(string: t.uppercased() + ": ", attributes: [NSForegroundColorAttributeName: UIColor(rgb: 0xE64C66)]))
+			} else if let local = n[localNewsKey] as? String {
+				title.append(NSAttributedString(string: local.uppercased() + ": ", attributes: [NSForegroundColorAttributeName: UIConstants.CliqzThemeColor]))
 			}
 			if let t = n["short_title"] as? String {
 				title.append(NSAttributedString(string: t))
@@ -452,8 +561,9 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
             
             cell.tag = indexPath.row
             
-			if let url = n["url"] as? String {
-                LogoLoader.loadLogo(url, completionBlock: { (image, logoInfo, error) in
+			if let domain = n["domain"] as? String {
+                let domainUrl = "http://www.\(domain)"
+                LogoLoader.loadLogo(domainUrl, completionBlock: { (image, logoInfo, error) in
 					if cell.tag == indexPath.row {
 						if let img = image {
 							cell.logoImageView.image = img
@@ -479,6 +589,8 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard SettingsPrefs.shared.getShowNewsPref() else { return }
+        
 		if indexPath.row < self.news.count {
 			let selectedNews = self.news[indexPath.row]
 			let urlString = selectedNews["url"] as? String
@@ -487,14 +599,23 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			} else if let url = URL(string: urlString!.escapeURL()) {
 				delegate?.didSelectURL(url, searchQuery: nil)
 			}
-            
-            if let currentCell = tableView.cellForRow(at: indexPath) as? NewsViewCell, let isBreakingNews = selectedNews["breaking"] as? Bool {
-                let target  = isBreakingNews ? "breakingnews" : "topnews"
+            if let currentCell = tableView.cellForRow(at: indexPath) as? ClickableUITableViewCell {
+                let target = getNewsTarget(selectedNews)
                 logNewsSignal(target, element: currentCell.clickedElement, index: indexPath.row)
-            }
+			}
 		}
 	}
-
+    private func getNewsTarget(_ selectedNews: [String: Any]) -> String {
+        var target = "topnews"
+        if let isBreakingNews = selectedNews[breakingNewsKey] as? Bool, isBreakingNews == true {
+            target  = "breakingnews"
+        }
+        if let _ = selectedNews[localNewsKey] as? String {
+            target = "localnews"
+        }
+        return target
+    }
+    
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let v = UIView()
 //		v.backgroundColor = UIColor(colorString: "D1D1D2")
@@ -510,24 +631,24 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 			make.height.equalTo(27)
 			make.right.equalTo(v)
 		}
-		let btn = UIButton()
-		v.addSubview(btn)
-		btn.contentHorizontalAlignment = .right
-		btn.snp.makeConstraints { (make) in
+		expandNewsbutton = UIButton()
+		v.addSubview(expandNewsbutton)
+		expandNewsbutton.contentHorizontalAlignment = .right
+		expandNewsbutton.snp.makeConstraints { (make) in
 			make.top.equalTo(v).offset(-2)
 			make.right.equalTo(v).offset(-9)
 			make.height.equalTo(30)
 			make.width.equalTo(v).dividedBy(2)
 		}
-		if self.isNewsExpanded {
-			btn.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
-		} else {
-			btn.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
-		}
-		btn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-		btn.titleLabel?.textAlignment = .right
-		btn.setTitleColor(UIColor.white, for: .normal)
-		btn.addTarget(self, action: #selector(modifyNewsView), for: .touchUpInside)
+        if isNewsExpanded {
+            expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        } else {
+            expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
+        }
+		expandNewsbutton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
+		expandNewsbutton.titleLabel?.textAlignment = .right
+		expandNewsbutton.setTitleColor(UIColor.white, for: .normal)
+		expandNewsbutton.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
 		return v
 	}
 
@@ -544,10 +665,10 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		return 27.0
 	}
-
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		self.delegate?.dismissKeyboard()
-	}
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.delegate?.dismissKeyboard()
+        scrollCount += 1
+    }
 }
 
 extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -605,6 +726,8 @@ extension FreshtabViewController: UICollectionViewDataSource, UICollectionViewDe
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard SettingsPrefs.shared.getShowTopSitesPref() else { return }
+        
 		if indexPath.row < self.topSites.count && !self.topSitesIndexesToRemove.contains(indexPath.row) {
 			let s = self.topSites[indexPath.row]
 			if let urlString = s["url"] {
@@ -676,50 +799,82 @@ extension FreshtabViewController: TopSiteCellDelegate {
 // extension for telemetry signals
 extension FreshtabViewController {
     fileprivate func logTopsiteSignal(action: String, index: Int) {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["topsite_count": topSites.count, "index": index]
         self.logFreshTabSignal(action, target: "topsite", customData: customData)
     }
     
     fileprivate func logDeleteTopsiteSignal(_ index: Int) {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["index": index]
         self.logFreshTabSignal("click", target: "delete_topsite", customData: customData)
     }
     
     fileprivate func logTopsiteEditModeSignal() {
+        guard isForgetMode == false else { return }
+        
         let customData: [String: Any] = ["topsite_count": topSites.count, "delete_count": topSitesIndexesToRemove.count, "view": "topsite_edit_mode"]
         self.logFreshTabSignal("click", target: nil, customData: customData)
     }
     
     fileprivate func logNewsSignal(_ target: String, element: String, index: Int) {
+        guard isForgetMode == false else { return }
         
         let customData: [String: Any] = ["element": element, "index": index]
         self.logFreshTabSignal("click", target: target, customData: customData)
     }
-    
+
+	fileprivate func breakingNewsCount() -> Int {
+		let breakingNews = news.filter() {
+			if let breaking = ($0 as NSDictionary)[breakingNewsKey] as? Bool {
+				return breaking
+			}
+			return false
+		}
+		return breakingNews.count
+	}
+
+	fileprivate func localNewsCount() -> Int {
+		let localNews = news.filter() {
+			if let _ = ($0 as NSDictionary)[localNewsKey] as? String {
+				return true
+			}
+			return false
+		}
+		return localNews.count
+	}
+
     fileprivate func logShowSignal() {
+        guard isForgetMode == false else { return }
+
         let loadDuration = Int(Date.getCurrentMillis() - startTime)
         var customData: [String: Any] = ["topsite_count": topSites.count, "load_duration": loadDuration]
+        let breakingNewsCount = self.breakingNewsCount()
+        let localNewsCount = self.localNewsCount()
+        
         if isLoadCompleted {
             customData["is_complete"] = true
-            let breakingNews = news.filter() {
-                if let breaking = ($0 as NSDictionary)["breaking"] as? Bool {
-                    return breaking
-                } else {
-                    return false
-                }
-            }
-            customData["topnews_count"] = news.count - breakingNews.count
-            customData["breakingnews_count"] = breakingNews.count
+            customData["topnews_available_count"] = news.count - breakingNewsCount - localNewsCount
+            customData["topnews_count"] = min(news.count, FreshtabViewUX.MinNewsCellsCount) - breakingNewsCount - localNewsCount
+            customData["breakingnews_count"] = breakingNewsCount
+			customData["localnews_count"] = localNewsCount
         } else {
             customData["is_complete"] = false
+            customData["topnews_available_count"] = 0
             customData["topnews_count"] = 0
             customData["breakingnews_count"] = 0
+			customData["localnews_count"] = 0
         }
+        customData["is_topsites_on"] = SettingsPrefs.shared.getShowTopSitesPref()
+        customData["is_news_on"] = SettingsPrefs.shared.getShowNewsPref()
         logFreshTabSignal("show", target: nil, customData: customData)
-
     }
     
     fileprivate func logHideSignal() {
+        guard isForgetMode == false else { return }
+        
         if !isLoadCompleted {
             logShowSignal()
         }
@@ -728,13 +883,29 @@ extension FreshtabViewController {
     }
 
 	fileprivate func logNewsViewModifiedSignal(isExpanded expanded: Bool) {
+        guard isForgetMode == false else { return }
+        
 		let target = expanded ? "show_more" : "show_less"
 		let customData: [String: Any] = ["view": "news"]
 		logFreshTabSignal("click", target: target, customData: customData)
 	}
 
     private func logFreshTabSignal(_ action: String, target: String?, customData: [String: Any]?) {
+        guard isForgetMode == false else { return }
+        
         TelemetryLogger.sharedInstance.logEvent(.FreshTab(action, target, customData))
+    }
+    
+    fileprivate func logScrollSignal() {
+        guard isForgetMode == false else { return }
+        
+        guard scrollCount > 0 else {
+            return
+        }
+        
+        let customData: [String: Any] = ["scroll_count": scrollCount, "is_scrollable" : isScrollable]
+        TelemetryLogger.sharedInstance.logEvent(.FreshTab("scroll", nil, customData))
+
     }
 
 }

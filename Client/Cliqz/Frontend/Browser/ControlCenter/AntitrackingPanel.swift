@@ -71,7 +71,7 @@ class AntitrackingPanel: ControlCenterPanel {
         }
         self.configContainerView.addSubview(domainLabel)
         
-		enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
+		enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite, animated: false)
         enableFeatureSwitch.addTarget(self, action: #selector(toggleFeatureForCurrentWebsite), for: .valueChanged)
         enableFeatureSwitch.onTintColor = UIConstants.CliqzThemeColor
         self.configContainerView.addSubview(enableFeatureSwitch)
@@ -296,7 +296,7 @@ class AntitrackingPanel: ControlCenterPanel {
     
     //MARK: - Abstract methods implementation
     override func getPanelTitle() -> String {
-        if isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabledForCurrentWebsite {
             return NSLocalizedString("Your data is protected", tableName: "Cliqz", comment: "Anti-tracking panel title in the control center when it is enabled.")
         } else {
             return NSLocalizedString("Your data is not protected", tableName: "Cliqz", comment: "Anti-tracking panel title in the control center when it is disabled")
@@ -304,7 +304,7 @@ class AntitrackingPanel: ControlCenterPanel {
     }
     
     override func getPanelSubTitle() -> String {
-        if isFeatureEnabledForCurrentWebsite() {
+        if isFeatureEnabledForCurrentWebsite {
             return NSLocalizedString("Private data points have been removed", tableName: "Cliqz", comment: "Anti-tracking panel subtitle in the control center when it is enabled.")
         } else {
             return NSLocalizedString("Anti-Tracking is turned off for this website", tableName: "Cliqz", comment: "Anti-tracking panel subtitle in the control center when it is disabled")
@@ -319,17 +319,20 @@ class AntitrackingPanel: ControlCenterPanel {
         return URL(string: "https://cliqz.com/whycliqz/anti-tracking")
     }
     
-    override func isFeatureEnabledForCurrentWebsite() -> Bool {
-        if let host = self.currentURL.host{
+    override func evaluateIsFeatureEnabledForCurrentWebsite() {
+        if let host = self.currentURL.host {
             let whitelisted = AntiTrackingModule.sharedInstance.isDomainWhiteListed(host)
-            return !whitelisted
+            isFeatureEnabledForCurrentWebsite = !whitelisted
+        } else {
+            isFeatureEnabledForCurrentWebsite = false
         }
-        return false
+        
     }
     
     func toggleFeatureForCurrentWebsite() {
         logDomainSwitchTelemetrySignal()
         AntiTrackingModule.sharedInstance.toggleAntiTrackingForURL(self.currentURL)
+        evaluateIsFeatureEnabledForCurrentWebsite()
         self.updateView()
         self.setupConstraints()
         self.controlCenterPanelDelegate?.reloadCurrentPage()
@@ -343,7 +346,7 @@ class AntitrackingPanel: ControlCenterPanel {
     override func updateView() {
         super.updateView()
         updateTrackers()
-        enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite(), animated: false)
+        enableFeatureSwitch.setOn(isFeatureEnabledForCurrentWebsite, animated: false)
         trackersCountLabel.text = "\(trackersCount)"
         trackersTableView.reloadData()
         
@@ -351,7 +354,7 @@ class AntitrackingPanel: ControlCenterPanel {
         if isFeatureEnabled() {
             configContainerView.isHidden = false
             
-            if isFeatureEnabledForCurrentWebsite() {
+            if isFeatureEnabledForCurrentWebsite {
                 trackersCountLabel.isHidden = false
                 legendView.isHidden = trackersList.isEmpty ? true : false
                 trackersTableView.isHidden =  trackersList.isEmpty ? true : false
@@ -512,7 +515,7 @@ class AntitrackingPanel: ControlCenterPanel {
         nameTitle.font = UIFont.systemFont(ofSize: 12)
         nameTitle.textColor = self.textColor()
         nameTitle.textAlignment = .left
-nameTitle.tag = 10
+        nameTitle.tag = 10
         header.addSubview(nameTitle)
         
         let countTitle = UILabel()

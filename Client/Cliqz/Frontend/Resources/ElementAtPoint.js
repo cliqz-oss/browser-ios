@@ -17,6 +17,8 @@
  return url;
  } else if (begins(url, 'mailto:')) {
  return url;
+ } else if (begins(url, 'data:image/')) {
+ return url;
  } else if (begins(url, '//')) {
  return window.location.protocol + url;
  } else {

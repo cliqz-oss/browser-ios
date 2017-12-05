@@ -70,7 +70,7 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
         // Cliqz: Moved `blockPopups` to SettingsPrefs
 //        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.shared.getBlockPopupsPref()
         
         return configuration
     }()
@@ -82,7 +82,7 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
         // Cliqz: Moved `blockPopups` to SettingsPrefs
 //        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !(self.prefs.boolForKey("blockPopups") ?? true)
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.getBlockPopupsPref()
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = !SettingsPrefs.shared.getBlockPopupsPref()
 
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
         return configuration
@@ -533,14 +533,22 @@ class TabManager : NSObject {
 
     func resetProcessPool() {
         assert(Thread.isMainThread)
-
         configuration.processPool = WKProcessPool()
     }
+
+	func purgeInactiveTabs() {
+		for tab in self.tabs {
+			if tab != self.selectedTab {
+				tab.purgeWebView()
+			}
+		}
+	}
+
 }
 
 extension TabManager {
 
-    class SavedTab: NSObject, NSCoding {
+    public class SavedTab: NSObject, NSCoding {
         let isSelected: Bool
         let title: String?
         let isPrivate: Bool
@@ -582,27 +590,13 @@ extension TabManager {
             super.init()
 
             if tab.sessionData == nil {
-                // Cliqz: changed type of currentItem from WKBackForwardListItem to LegacyBackForwardListItem
-//                let currentItem: WKBackForwardListItem! = tab.webView?.backForwardList.currentItem
-                let currentItem: LegacyBackForwardListItem! = tab.webView?.backForwardList.currentItem
-
-                // Freshly created web views won't have any history entries at all.
-                // If we have no history, abort.
-                if currentItem == nil {
-                    return nil
-                }
-
-                let backList = tab.webView?.backForwardList.backList ?? []
-                let forwardList = tab.webView?.backForwardList.forwardList ?? []
-                let urls = (backList + [currentItem] + forwardList).map { $0.url }
-                let currentPage = -forwardList.count
-                self.sessionData = SessionData(currentPage: currentPage, urls: urls, lastUsedTime: tab.lastExecutedTime ?? Date.now())
+				self.sessionData = tab.generateSessionData()
             } else {
                 self.sessionData = tab.sessionData
             }
         }
 
-        required init?(coder: NSCoder) {
+        required public init?(coder: NSCoder) {
             self.sessionData = coder.decodeObject(forKey: "sessionData") as? SessionData
             self.screenshotUUID = coder.decodeObject(forKey: "screenshotUUID") as? UUID
             self.isSelected = coder.decodeBool(forKey: "isSelected")

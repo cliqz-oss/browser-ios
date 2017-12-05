@@ -357,7 +357,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
 	
 	fileprivate func updateExtensionPreferences() {
-		let isBlocked = SettingsPrefs.getBlockExplicitContentPref()
+		let isBlocked = SettingsPrefs.shared.getBlockExplicitContentPref()
         let subscriptions = SubscriptionsHandler.sharedInstance.getSubscriptions()
 		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
 		              "incognito" : self.privateMode,
@@ -368,10 +368,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         javaScriptBridge.publishEvent("notify-preferences", parameters: params)
 	}
     fileprivate func getCountry() -> String {
-        if let country = SettingsPrefs.getRegionPref() {
+        if let country = SettingsPrefs.shared.getRegionPref() {
             return country
         }
-        return SettingsPrefs.getDefaultRegion()
+        return SettingsPrefs.shared.getDefaultRegion()
     }
 	
     //MARK: - Reset TopSites
@@ -523,6 +523,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
 		self.sendUrlBarFocusEvent()
 		javaScriptBridge.setDefaultSearchEngine()
 		self.updateExtensionPreferences()
+        self.migrateQueries()
 	}
     
     func shareCard(_ card: String, title: String, width: Int, height: Int) {
@@ -550,6 +551,22 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
         self.updateExtensionPreferences()
         self.searchWithLastQuery()
+    }
+    
+    private func migrateQueries() {
+        let isQueriesMigratedKey = "Queries-Migrated"
+        guard LocalDataStore.objectForKey(isQueriesMigratedKey) == nil else {
+            return
+        }
+        
+        self.webView?.evaluateJavaScript("JSON.parse(localStorage.recentQueries || '[]')", completionHandler: { [weak self] (result, error) in
+            if let queriesMetaData = result as? [[String: Any]] {
+                self?.profile.insertPatchQueries(queriesMetaData)
+            }
+        })
+        
+        
+        LocalDataStore.setObject(true, forKey: isQueriesMigratedKey)
     }
 }
 
