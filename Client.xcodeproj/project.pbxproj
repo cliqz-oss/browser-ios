@@ -473,6 +473,9 @@
 		4FA29B261D64C0B100C59F5E /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B221D64C0B100C59F5E /* TabsViewController.swift */; };
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
+		4FA486D71FD69B9D00299540 /* OffrzDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486D61FD69B9D00299540 /* OffrzDataService.swift */; };
+		4FA486DA1FD69C0000299540 /* OffrzDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486D91FD69C0000299540 /* OffrzDataSource.swift */; };
+		4FA486DC1FD69C1D00299540 /* OffrzViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */; };
 		4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */; };
 		4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C661E39F3620008E5CC /* NewsViewCell.swift */; };
 		4FBE88F81E97941F00D5B1F8 /* FxADeviceRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE88F61E97941F00D5B1F8 /* FxADeviceRegistration.swift */; };
@@ -1949,6 +1952,9 @@
 		4FA29B221D64C0B100C59F5E /* TabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		4FA486D61FD69B9D00299540 /* OffrzDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzDataService.swift; sourceTree = "<group>"; };
+		4FA486D91FD69C0000299540 /* OffrzDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzDataSource.swift; sourceTree = "<group>"; };
+		4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzViewController.swift; sourceTree = "<group>"; };
 		4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSiteViewCell.swift; sourceTree = "<group>"; };
 		4FB77C661E39F3620008E5CC /* NewsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsViewCell.swift; sourceTree = "<group>"; };
 		4FBE88F61E97941F00D5B1F8 /* FxADeviceRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxADeviceRegistration.swift; sourceTree = "<group>"; };
@@ -2736,6 +2742,7 @@
 		1E79DC971D4FB2C5006BEB4A /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				4FA486C71FD69B6000299540 /* Offrz */,
 				AFAF9AD11F14E95A0009E718 /* BloomFilter */,
 				B354B5AD1E5C59C5001B38A1 /* JSEngine */,
 				1E9F4E461D65E277000E4D0A /* Anti-Phishing */,
@@ -3830,6 +3837,7 @@
 		4FA29B131D64BFE300C59F5E /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				4FA486D81FD69BB800299540 /* Offrz */,
 				AF82661C1EB09FBA0023C77C /* Tab Redesign */,
 				4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */,
 				4FA29B221D64C0B100C59F5E /* TabsViewController.swift */,
@@ -3838,6 +3846,23 @@
 				4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */,
 			);
 			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		4FA486C71FD69B6000299540 /* Offrz */ = {
+			isa = PBXGroup;
+			children = (
+				4FA486D61FD69B9D00299540 /* OffrzDataService.swift */,
+			);
+			path = Offrz;
+			sourceTree = "<group>";
+		};
+		4FA486D81FD69BB800299540 /* Offrz */ = {
+			isa = PBXGroup;
+			children = (
+				4FA486D91FD69C0000299540 /* OffrzDataSource.swift */,
+				4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */,
+			);
+			path = Offrz;
 			sourceTree = "<group>";
 		};
 		4FB77C631E39F0D60008E5CC /* Freshtab */ = {
@@ -6525,6 +6550,7 @@
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
 				E4CD9F6D1A77DD2800318571 /* ReaderModeStyleViewController.swift in Sources */,
 				7B59FC441C68E9B600F58EF5 /* SWTableViewCell.m in Sources */,
+				4FA486DC1FD69C1D00299540 /* OffrzViewController.swift in Sources */,
 				E4A960061ABB9C450069AD6F /* ReaderModeUtils.swift in Sources */,
 				4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */,
 				1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */,
@@ -6537,6 +6563,7 @@
 				1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */,
 				1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */,
 				1E6E5D111F94F92C00D23A1E /* BubbleTableView.swift in Sources */,
+				4FA486D71FD69B9D00299540 /* OffrzDataService.swift in Sources */,
 				1E2AD4DE1EC2F26700F71159 /* AddConnectionViewController.swift in Sources */,
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
@@ -6809,6 +6836,7 @@
 				B34E1A571F8D256B00868AD8 /* UserAgentConstantsBridge.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,
 				1E79DD0C1D4FB2C5006BEB4A /* UIDeviceExtension.swift in Sources */,
+				4FA486DA1FD69C0000299540 /* OffrzDataSource.swift in Sources */,
 				AFAF9ADC1F14E95A0009E718 /* BloomFilter.swift in Sources */,
 				1E2DEC831E816516003D76B7 /* WebViewBackForward.swift in Sources */,
 				7BC68CC61CC152B70043562A /* MenuItem.swift in Sources */,
