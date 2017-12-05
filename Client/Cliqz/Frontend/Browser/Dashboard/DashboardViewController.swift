@@ -48,6 +48,11 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		return tabsViewController
 	}()
 
+	fileprivate lazy var offrzViewController: OffrzViewController = {
+		let offrz = OffrzViewController()
+		return offrz
+	}()
+
 	init(profile: Profile, tabManager: TabManager) {
 		self.tabManager = tabManager
 		self.profile = profile
@@ -77,8 +82,9 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
         let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
         let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
 		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
+		let offrz = "Offrz"
         
-		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav])
+		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav, offrz])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
@@ -128,7 +134,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     func dismissView() {
         self.navigationController?.popViewController(animated: false)
     }
-    
+
 	func didSelectURL(_ url: URL) {
 		self.navigationController?.popViewController(animated: false)
 		self.delegate?.navigateToURL(url)
@@ -156,6 +162,8 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		case 2:
 			self.showPanelViewController(self.favoritesViewController)
             target = "favorites"
+		case 3:
+			self.showPanelViewController(self.offrzViewController)
 		default:
 			break
 		}
@@ -277,13 +285,13 @@ extension DashboardViewController {
         switch panel {
         case tabsViewController:
             return "open_tabs"
-            
+
         case historyViewController:
             return "history"
-            
+
         case favoritesViewController:
             return "favorites"
-            
+
         default:
             return "UNDEFINED"
         }

@@ -88,11 +88,19 @@ class QuerySuggestionView: UIView {
         }
         self.isHidden = true
     }
-    
+	
+	fileprivate func displayQuickAccessBar() {
+		self.scrollView.addSubview(createQuickAccessButton("tabs_quick_access"))
+		self.scrollView.addSubview(createQuickAccessButton("history_quick_access"))
+		self.scrollView.addSubview(createQuickAccessButton("offrz_active"))
+		self.scrollView.addSubview(createQuickAccessButton("favorite_quick_access"))
+	}
+
     fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
         currentSuggestions = suggestions
         
         guard currentQuery == query && suggestions.count > 0 && OrientationUtil.isPortrait() else {
+			displayQuickAccessBar()
             return
         }
         self.isHidden = false
@@ -118,7 +126,7 @@ class QuerySuggestionView: UIView {
             index = index + 1
             displayedSuggestions.append((suggestion, suggestionWidth))
         }
-        
+
         // distribute the extra space evenly on all suggestions
         difference = self.frame.width - x
         offset = round(difference/CGFloat(index))
@@ -158,7 +166,15 @@ class QuerySuggestionView: UIView {
         verticalSeparator.backgroundColor = separatorBgColor
         return verticalSeparator;
     }
-    
+
+	fileprivate func createQuickAccessButton(_ imgName: String) -> UIButton {
+		let button = UIButton(type: .custom)
+		button.setImage(UIImage(named: imgName), for: .normal)
+		button.addTarget(self, action: #selector(selectQuickAccessItem(_:)), for: .touchUpInside)
+		return button
+
+	}
+
     fileprivate func createSuggestionButton(_ x: CGFloat, index: Int, suggestion: String, suggestionWidth: CGFloat) -> UIButton {
         let button = UIButton(type: .custom)
         let suggestionTitle = getTitle(suggestion)
@@ -196,7 +212,11 @@ class QuerySuggestionView: UIView {
         let customData = ["index" : button.tag]
         TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("click", customData))
     }
-    
+
+	@objc fileprivate func selectQuickAccessItem(_ button: UIButton) {
+		
+	}
+
     @objc fileprivate func viewRotated() {
         guard QuerySuggestions.isEnabled() else {
             self.isHidden = true
