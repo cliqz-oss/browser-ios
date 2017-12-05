@@ -66,9 +66,15 @@ final class HistoryNavigationViewController: UIViewController {
             //self.showHistory()
             StateManager.shared.handleAction(action: Action(data: nil, type: .detailBackPressed))
             
-        }) { (url) in
-            StateManager.shared.handleAction(action: Action(data: ["url":url], type: .urlSelected))
-        }
+        }, cellPressed: { (text, rightCell) in
+            if rightCell == false {
+                StateManager.shared.handleAction(action: Action(data: ["url": text], type: .urlSelected))
+            }
+            else {
+                StateManager.shared.handleAction(action: Action(data: ["text": text], type: .urlSearchTextChanged))
+            }
+            
+        })
         
         recommendationsDataSource.delegate = conversationalHistoryDetails
         headerAndTableDataSource.delegate = conversationalHistoryDetails
@@ -88,7 +94,7 @@ final class HistoryNavigationViewController: UIViewController {
     }
     
     func indexPathFor(host:String) -> IndexPath? {
-        let hosts = conversationalHistory.dataSource.domains.map { a in a.host }
+        let hosts = conversationalHistory.dataSource.domains.map { a in a.name }
         
         for i in 0..<hosts.count {
             if host == hosts[i] {
@@ -104,7 +110,7 @@ final class HistoryNavigationViewController: UIViewController {
         let domains = conversationalHistory.dataSource.domains
         
         if row >= 0 && row < domains.count {
-            return domains[row].host
+            return domains[row].name
         }
         
         return nil
@@ -135,7 +141,7 @@ final class HistoryNavigationViewController: UIViewController {
         self.view.isHidden = true
     }
     
-    private func domain(indexPath: IndexPath) -> DomainModel {
+    private func domain(indexPath: IndexPath) -> Domain {
         return conversationalHistory.dataSource.domains[indexPath.row]
     }
 

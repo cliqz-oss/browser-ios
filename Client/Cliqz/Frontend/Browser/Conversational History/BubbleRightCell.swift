@@ -51,7 +51,7 @@ class BubbleRightCell: UITableViewCell {
         titleLabel.textColor = UIColor.white
         timeLabel.textColor = UIColor.white
         
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = 1
         timeLabel.numberOfLines = 1
         
     }
@@ -60,18 +60,24 @@ class BubbleRightCell: UITableViewCell {
         bubbleView.snp.makeConstraints { (make) in
             make.top.equalTo(self.contentView).inset(10)
             make.bottom.equalTo(self.contentView)
-            make.right.equalTo(self.contentView).inset(20)
+            make.right.equalTo(self.contentView).inset(10)
             make.width.equalTo(self.contentView.bounds.width * 0.7)
         }
         
         titleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.bubbleView.snp.centerY).offset(9)
+            make.bottom.equalTo(self.timeLabel.snp.top)
             make.left.equalTo(self.bubbleView).offset(10)
             make.right.equalTo(self.bubbleView).inset(10)
         }
         
         timeLabel.snp.makeConstraints { (make) in
             make.bottom.right.equalTo(self.bubbleView).inset(4)
+        }
+    }
+    
+    func setWidth(width: CGFloat) {
+        bubbleView.snp.updateConstraints { (make) in
+            make.width.equalTo(width)
         }
     }
 

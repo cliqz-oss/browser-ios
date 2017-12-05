@@ -19,7 +19,7 @@ protocol BubbleTableViewDataSource {
 }
 
 protocol BubbleTableViewDelegate {
-    func cellPressed(indexPath: IndexPath)
+    func cellPressed(indexPath: IndexPath, rightCell: Bool)
 }
 
 protocol CustomScrollDelegate {
@@ -95,6 +95,11 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
             cell.titleLabel.text = customDataSource.title(indexPath: indexPath)
             cell.timeLabel.text  = customDataSource.time(indexPath: indexPath)
             cell.selectionStyle  = .none
+            
+            let maxWidth = self.bounds.width * 0.7
+            let potential_width = cell.titleLabel.intrinsicContentSize.width + cell.timeLabel.intrinsicContentSize.width + 10.0
+            cell.setWidth(width: potential_width < maxWidth ? potential_width : maxWidth)
+            
             return cell
         }
         
@@ -109,7 +114,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if customDataSource.useRightCell(indexPath: indexPath) == true {
-            return 70
+            return 50
         }
         
         return 90
@@ -155,7 +160,7 @@ extension BubbleTableView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         //To Do: Create a delegate
-        self.customDelegate?.cellPressed(indexPath: indexPath)
+        self.customDelegate?.cellPressed(indexPath: indexPath, rightCell: customDataSource.useRightCell(indexPath: indexPath))
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

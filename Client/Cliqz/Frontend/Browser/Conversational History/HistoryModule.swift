@@ -91,8 +91,8 @@ final class HistoryModule: NSObject {
     }
     
     class func getHistory(profile: Profile, completion: @escaping (_ result:[DomainModel]?, _ error:NSError?) -> Void) {
-		getDomains(profile: profile) { (domains, error) in
-		}
+//        getDomains(profile: profile) { (domains, error) in
+//        }
 		
         //limit is static for now.
         //later there will be a mechanism in place to handle a variable limit and offset.
@@ -107,14 +107,14 @@ final class HistoryModule: NSObject {
         //getHistoryWithLimit(100, startFrame: 1494928155776220, endFrame: 1494928369784560, domain: NSString(string: "reuters.com"), resolve: { _ in}, reject: { _ in})
 	}
 
-	class func getDomains(profile: Profile, completion: @escaping (_ result:[DomainModel]?, _ error:NSError?) -> Void) {
-		let backgroundQueue = DispatchQueue.global(qos: .background)
-		profile.history.getHistoryDomains(limit: 0).uponQueue(backgroundQueue) {
-			(result) in
-			let domains = processDomainData(result: result)
-			completion(domains, nil)
-		}
-	}
+//    class func getDomains(profile: Profile, completion: @escaping (_ result:[DomainModel]?, _ error:NSError?) -> Void) {
+//        let backgroundQueue = DispatchQueue.global(qos: .background)
+//        profile.history.getHistoryDomains(limit: 0).uponQueue(backgroundQueue) {
+//            (result) in
+//            let domains = processDomainData(result: result)
+//            completion(domains, nil)
+//        }
+//    }
 
 	class func removeDomain(profile: Profile, id: Int, completion: @escaping (_ success: Bool, _ error:NSError?) -> Void) {
 		if profile.history.removeDomain(id).value.isSuccess {
@@ -124,21 +124,21 @@ final class HistoryModule: NSObject {
 		}
 	}
 
-	class func processDomainData(result: Maybe<Cursor<Domain>>) -> [DomainModel] {
-		var processedResults: [DomainModel] = []
-		guard let domains = result.successValue else {
-			return processedResults
-		}
-
-		for d in domains {
-			if let newID = d?.id,
-				let newHost = d?.name {
-				let new = DomainModel(id: newID, host: newHost, domainDetails: nil, date: Date.fromMicrosecondTimestamp(d?.lastVisit ?? 0))
-				processedResults.append(new)
-			}
-		}
-		return processedResults
-	}
+//    class func processDomainData(result: Maybe<Cursor<Domain>>) -> [DomainModel] {
+//        var processedResults: [DomainModel] = []
+//        guard let domains = result.successValue else {
+//            return processedResults
+//        }
+//
+//        for d in domains {
+//            if let newID = d?.id,
+//                let newHost = d?.name {
+//                let new = DomainModel(id: newID, host: newHost, domainDetails: nil, date: Date.fromMicrosecondTimestamp(d?.lastVisit ?? 0))
+//                processedResults.append(new)
+//            }
+//        }
+//        return processedResults
+//    }
 
 	class func getDomainVisits(profile: Profile, domainID: Int, completion: @escaping (_ result:[DomainDetailModel]?, _ error:NSError?) -> Void) {
 		profile.history.getHistoryVisits(forDomain: domainID).upon({ (result) in

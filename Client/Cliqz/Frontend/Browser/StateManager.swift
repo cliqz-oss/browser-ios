@@ -71,6 +71,14 @@ final class StateManager {
             GeneralUtils.tabManager().removeEmptyTabs()
         }
         
+        if action.type == .urlSelected && action.actionFlag == .search {
+            //entered query and pressed search
+            //add query to the store
+            if let query = nextState.stateData.query, let url = nextState.stateData.url {
+                RealmStore.addQuerySync(query: query, forUrl: url)
+            }
+        }
+        
         changeToState(nextState: nextState, action: action)
         
         if action.type == .backButtonPressed || action.type == .forwardButtonPressed {

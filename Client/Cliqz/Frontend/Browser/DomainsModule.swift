@@ -35,44 +35,44 @@ class DomainsModule {
 
     func loadData(completion:((_ ready: Bool) -> Void)?) {
         
-        if loading == false {
-            loading = true
-            self.completionBlocks.append(completion)
-            domains = []
-            
-            if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
-                HistoryModule.getDomains(profile: profile, completion: { (result, error) in
-                    DispatchQueue.main.async(execute: {
-                        if let domains = result {
-                            self.domains.append(contentsOf: domains.sorted(by: { (a, b) -> Bool in
-                                if let date_a = a.date, let date_b = b.date {
-                                    return date_a > date_b
-                                }
-                                return false
-                            }))
-                        }
-                        
-                        NotificationCenter.default.post(name: DomainsModule.notification_updated, object: nil)
-                        
-                        self.loading = false
-                        //this is not needed. Iteration has its own copy of value it is iterating over.
-                        let blocks = self.completionBlocks //array is a value type, as well as the clojures inside. So this is a deep copy on demand (= copies when needed).
-                        for completion in blocks{
-                            completion?(true)
-                        }
-                        //elements could have been added in the meantime to completionBlocks, so take out only the first blocks.count
-                        //take out the elements starting from the end, so the correspondence betweeen i and the indexes is not messed up.
-                        for i in (0..<blocks.count).reversed() {
-                            self.completionBlocks.remove(at: i)
-                        }
-                    })
-                })
-            }
-            
-        }
-        else {
-            self.completionBlocks.append(completion)
-        }
+//        if loading == false {
+//            loading = true
+//            self.completionBlocks.append(completion)
+//            domains = []
+//
+//            if let appDel = UIApplication.shared.delegate as? AppDelegate , let profile = appDel.profile {
+//                HistoryModule.getDomains(profile: profile, completion: { (result, error) in
+//                    DispatchQueue.main.async(execute: {
+//                        if let domains = result {
+//                            self.domains.append(contentsOf: domains.sorted(by: { (a, b) -> Bool in
+//                                if let date_a = a.date, let date_b = b.date {
+//                                    return date_a > date_b
+//                                }
+//                                return false
+//                            }))
+//                        }
+//
+//                        NotificationCenter.default.post(name: DomainsModule.notification_updated, object: nil)
+//
+//                        self.loading = false
+//                        //this is not needed. Iteration has its own copy of value it is iterating over.
+//                        let blocks = self.completionBlocks //array is a value type, as well as the clojures inside. So this is a deep copy on demand (= copies when needed).
+//                        for completion in blocks{
+//                            completion?(true)
+//                        }
+//                        //elements could have been added in the meantime to completionBlocks, so take out only the first blocks.count
+//                        //take out the elements starting from the end, so the correspondence betweeen i and the indexes is not messed up.
+//                        for i in (0..<blocks.count).reversed() {
+//                            self.completionBlocks.remove(at: i)
+//                        }
+//                    })
+//                })
+//            }
+//
+//        }
+//        else {
+//            self.completionBlocks.append(completion)
+//        }
     }
 
     @objc
