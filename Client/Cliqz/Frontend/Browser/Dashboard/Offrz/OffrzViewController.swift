@@ -9,5 +9,11 @@
 import Foundation
 
 class OffrzViewController: UIViewController {
-	
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		OffrzDataService.shared.getMyOffrz { (ofrrz, error) in
+			print("Hello")
+		}
+	}
 }
