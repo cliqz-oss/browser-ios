@@ -34,24 +34,7 @@ class FavoritesViewController: CliqzExtensionViewController {
 	}
 
 	func getFavorites(_ callback: String?) {
-		self.profile.bookmarks.getBookmarks().uponQueue(DispatchQueue.main) { result in
-			if let bookmarks = result.successValue {
-				var favorites = [[String: Any]]()
-				for i in bookmarks {
-					switch (i) {
-					case let item as CliqzBookmarkItem:
-						var bm = [String: Any]()
-						bm["title"] = item.title
-						bm["url"] = item.url
-						bm["timestamp"] = Double(item.bookmarkedDate)
-						favorites.append(bm)
-					default:
-						debugPrint("Not a bookmark item")
-					}
-				}
-				self.javaScriptBridge.callJSMethod(callback!, parameter: Array(favorites.reversed()), completionHandler: nil)
-			}
-		}
+
 	}
 
 }

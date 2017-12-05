@@ -149,27 +149,27 @@ class ClientPickerViewController: UITableViewController {
         }
 
         reloading = true
-        profile.getClients().upon({ result in
-            withExtendedLifetime(profile) {
-                self.reloading = false
-                guard let c = result.successValue else {
-                    return
-                }
-
-                self.clients = c
-                DispatchQueue.main.async() {
-                    if self.clients.count == 0 {
-                        self.navigationItem.rightBarButtonItem = nil
-                    } else {
-                        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Send", tableName: "SendTo", comment: "Navigation bar button to Send the current page to a device"), style: UIBarButtonItemStyle.done, target: self, action: #selector(ClientPickerViewController.send))
-                        self.navigationItem.rightBarButtonItem?.isEnabled = false
-                    }
-                    self.selectedClients.removeAllObjects()
-                    self.tableView.reloadData()
-                    self.refreshControl?.endRefreshing()
-                }
-            }
-        })
+//        profile.getClients().upon({ result in
+//            withExtendedLifetime(profile) {
+//                self.reloading = false
+//                guard let c = result.successValue else {
+//                    return
+//                }
+//
+//                self.clients = c
+//                DispatchQueue.main.async() {
+//                    if self.clients.count == 0 {
+//                        self.navigationItem.rightBarButtonItem = nil
+//                    } else {
+//                        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Send", tableName: "SendTo", comment: "Navigation bar button to Send the current page to a device"), style: UIBarButtonItemStyle.done, target: self, action: #selector(ClientPickerViewController.send))
+//                        self.navigationItem.rightBarButtonItem?.isEnabled = false
+//                    }
+//                    self.selectedClients.removeAllObjects()
+//                    self.tableView.reloadData()
+//                    self.refreshControl?.endRefreshing()
+//                }
+//            }
+//        })
     }
 
     func refresh() {

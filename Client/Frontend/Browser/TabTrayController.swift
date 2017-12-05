@@ -1040,7 +1040,7 @@ extension TabTrayController: ClientPickerViewControllerDelegate {
 
     func clientPickerViewController(_ clientPickerViewController: ClientPickerViewController, didPickClients clients: [RemoteClient]) {
         if let item = clientPickerViewController.shareItem {
-            self.profile.sendItems([item], toClients: clients)
+            //self.profile.sendItems([item], toClients: clients)
         }
         clientPickerViewController.dismiss(animated: true, completion: nil)
     }

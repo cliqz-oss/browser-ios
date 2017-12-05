@@ -99,11 +99,11 @@ class LoginsHelper: TabHelper {
     }
 
     func updateLoginByGUID(_ guid: GUID, new: LoginData, significant: Bool) -> Success {
-        return profile.logins.updateLoginByGUID(guid, new: new, significant: significant)
+        return Success() //profile.logins.updateLoginByGUID(guid, new: new, significant: significant)
     }
 
     func removeLoginsWithGUIDs(_ guids: [GUID]) -> Success {
-        return profile.logins.removeLoginsWithGUIDs(guids)
+        return Success() //profile.logins.removeLoginsWithGUIDs(guids)
     }
 
     func setCredentials(_ login: LoginData) {
@@ -164,7 +164,7 @@ class LoginsHelper: TabHelper {
                 SnackButton(title: Strings.LoginsHelperSaveLoginButtonTitle, accessibilityIdentifier: "SaveLoginPrompt.saveLoginButton", callback: { (bar: SnackBar) -> Void in
                     self.tab?.removeSnackbar(bar)
                     self.snackBar = nil
-                    self.profile.logins.addLogin(login)
+                    //self.profile.logins.addLogin(login)
                 })
             ])
         tab?.addSnackbar(snackBar!)
@@ -203,8 +203,8 @@ class LoginsHelper: TabHelper {
                 SnackButton(title: Strings.LoginsHelperUpdateButtonTitle, accessibilityIdentifier: "UpdateLoginPrompt.updateButton", callback: { (bar: SnackBar) -> Void in
                     self.tab?.removeSnackbar(bar)
                     self.snackBar = nil
-                    self.profile.logins.updateLoginByGUID(guid, new: new,
-                                                          significant: new.isSignificantlyDifferentFrom(old))
+                    //self.profile.logins.updateLoginByGUID(guid, new: new,
+                                                          //significant: new.isSignificantlyDifferentFrom(old))
                 })
             ])
         tab?.addSnackbar(snackBar!)

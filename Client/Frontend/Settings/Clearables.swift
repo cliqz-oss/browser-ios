@@ -43,14 +43,7 @@ class HistoryClearable: Clearable {
         // Cliqz: clear unfavorite history itmes
 		NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: 0)
 
-        return profile.history.clearHistory().bind { success in
-            SDImageCache.shared().clearDisk()
-            SDImageCache.shared().clearMemory()
-            self.profile.recentlyClosedTabs.clearTabs()
-            NotificationCenter.default.post(name: NotificationPrivateDataClearedHistory, object: nil)
-            log.debug("HistoryClearable succeeded: \(success).")
-            return Deferred(value: success)
-        }
+        return Deferred<Maybe<Void>>()
     }
 }
 
@@ -68,13 +61,7 @@ class BookmarksClearable: Clearable {
     func clear() -> Success {
         // clear bookmarked itmes
 		NotificationCenter.default.post(name: NSNotification.Name(rawValue: NotificationPrivateDataClearQueries), object: 1)
-        return profile.bookmarks.clearBookmarks().bind { success in
-            SDImageCache.shared().clearDisk()
-            SDImageCache.shared().clearMemory()
-            NotificationCenter.default.post(name: NotificationPrivateDataClearedHistory, object: nil)
-            log.debug("BookmarksClearable succeeded: \(success).")
-            return Deferred(value: success)
-        }
+        return Deferred<Maybe<Void>>()
     }
 }
 

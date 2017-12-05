@@ -188,7 +188,7 @@ open class FaviconFetcher : NSObject, XMLParserDelegate {
                 if let img = img {
                     fav.width = Int(img.size.width)
                     fav.height = Int(img.size.height)
-                    profile.favicons.addFavicon(fav, forSite: site)
+                    //profile.favicons.addFavicon(fav, forSite: site)
                 } else {
                     fav.width = 0
                     fav.height = 0

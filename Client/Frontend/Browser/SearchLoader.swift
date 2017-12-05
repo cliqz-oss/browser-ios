@@ -47,36 +47,36 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<Cursor<Site>, CliqzSearchViewContr
                 self.inProgress = nil
             }
             
-            let deferred = self.profile.history.getSitesByFrecencyWithHistoryLimit(100, bookmarksLimit: 5, whereURLContains: query)
-            inProgress = deferred as? Cancellable
-
-            deferred.uponQueue(DispatchQueue.main) { result in
-                self.inProgress = nil
-             
-                // Failed cursors are excluded in .get().
-                if let cursor = result.successValue {
-                    // First, see if the query matches any URLs from the user's search history.
-                    self.load(cursor)
-                    // Cliqz: disable auto complete from both history and top domains
-                    /*
-                    for site in cursor {
-                        if let url = site?.url,
-                               completion = self.completionForURL(url) {
-                            self.urlBar.setAutocompleteSuggestion(completion)
-                            return
-                        }
-                    }
-                    // Cliqz: disable auto complete from both history and top domains
-                    // If there are no search history matches, try matching one of the Alexa top domains.
-                    for domain in self.topDomains {
-                        if let completion = self.completionForDomain(domain) {
-                            self.urlBar.setAutocompleteSuggestion(completion)
-                            return
-                        }
-                    }
-                    */
-                }
-            }
+//            let deferred = self.profile.history.getSitesByFrecencyWithHistoryLimit(100, bookmarksLimit: 5, whereURLContains: query)
+//            inProgress = deferred as? Cancellable
+//
+//            deferred.uponQueue(DispatchQueue.main) { result in
+//                self.inProgress = nil
+//             
+//                // Failed cursors are excluded in .get().
+//                if let cursor = result.successValue {
+//                    // First, see if the query matches any URLs from the user's search history.
+//                    self.load(cursor)
+//                    // Cliqz: disable auto complete from both history and top domains
+//                    /*
+//                    for site in cursor {
+//                        if let url = site?.url,
+//                               completion = self.completionForURL(url) {
+//                            self.urlBar.setAutocompleteSuggestion(completion)
+//                            return
+//                        }
+//                    }
+//                    // Cliqz: disable auto complete from both history and top domains
+//                    // If there are no search history matches, try matching one of the Alexa top domains.
+//                    for domain in self.topDomains {
+//                        if let completion = self.completionForDomain(domain) {
+//                            self.urlBar.setAutocompleteSuggestion(completion)
+//                            return
+//                        }
+//                    }
+//                    */
+//                }
+//            }
         }
     }
 

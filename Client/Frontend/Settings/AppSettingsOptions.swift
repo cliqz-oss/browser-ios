@@ -101,34 +101,11 @@ class SyncNowSetting: WithAccountSetting {
     override var style: UITableViewCellStyle { return .value1 }
 
     override var title: NSAttributedString? {
-        guard let syncStatus = profile.syncManager.syncDisplayState else {
-            return syncNowTitle
-        }
-
-        switch syncStatus {
-        case .bad(let message):
-            guard let message = message else { return syncNowTitle }
-            return NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowErrorTextColor, NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont])
-        case .stale(let message):
-            return  NSAttributedString(string: message, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowWarningTextColor, NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFont])
-        case .inProgress:
-            return syncingTitle
-        default:
-            return syncNowTitle
-        }
+        return nil
     }
 
     override var status: NSAttributedString? {
-        guard let timestamp = profile.syncManager.lastSyncFinishTime else {
-            return nil
-        }
-
-        let formattedLabel = timestampFormatter.string(from: Date.fromTimestamp(timestamp))
-        let attributedString = NSMutableAttributedString(string: formattedLabel)
-        let attributes = [NSForegroundColorAttributeName: UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)]
-        let range = NSMakeRange(0, attributedString.length)
-        attributedString.setAttributes(attributes, range: range)
-        return attributedString
+        return nil
     }
 
     override var enabled: Bool {
@@ -169,36 +146,11 @@ class SyncNowSetting: WithAccountSetting {
         cell.textLabel?.attributedText = title
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.lineBreakMode = .byWordWrapping
-        if let syncStatus = profile.syncManager.syncDisplayState {
-            switch syncStatus {
-            case .bad(let message):
-                if let _ = message {
-                    // add the red warning symbol
-                    // add a link to the MANA page
-                    cell.detailTextLabel?.attributedText = nil
-                    cell.accessoryView = troubleshootButton
-                    addIcon(errorIcon, toCell: cell)
-                } else {
-                    cell.detailTextLabel?.attributedText = status
-                    cell.accessoryView = nil
-                }
-            case .stale(_):
-                // add the amber warning symbol
-                // add a link to the MANA page
-                cell.detailTextLabel?.attributedText = nil
-                cell.accessoryView = troubleshootButton
-                addIcon(warningIcon, toCell: cell)
-            case .good:
-                cell.detailTextLabel?.attributedText = status
-                fallthrough
-            default:
-                cell.accessoryView = nil
-            }
-        } else {
-            cell.accessoryView = nil
-        }
+
+        cell.accessoryView = nil
+        
         cell.accessoryType = accessoryType
-        cell.isUserInteractionEnabled = !profile.syncManager.isSyncing
+        //cell.isUserInteractionEnabled = !profile.syncManager.isSyncing
     }
 
     fileprivate func addIcon(_ image: UIImageView, toCell cell: UITableViewCell) {
@@ -218,7 +170,7 @@ class SyncNowSetting: WithAccountSetting {
 
     override func onClick(_ navigationController: UINavigationController?) {
         NotificationCenter.default.post(name: Notification.Name(rawValue: SyncNowSetting.NotificationUserInitiatedSyncManually), object: nil)
-        profile.syncManager.syncEverything()
+        //profile.syncManager.syncEverything()
     }
 }
 

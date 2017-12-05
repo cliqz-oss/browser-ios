@@ -69,11 +69,11 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         // the root; otherwise, just use the existing source to select a folder.
         guard let source = self.source else {
             // Get all the bookmarks split by folders
-            if let bookmarkFolder = bookmarkFolder {
-                profile.bookmarks.modelFactory >>== { $0.modelForFolder(bookmarkFolder).upon(self.onModelFetched) }
-            } else {
-                profile.bookmarks.modelFactory >>== { $0.modelForRoot().upon(self.onModelFetched) }
-            }
+//            if let bookmarkFolder = bookmarkFolder {
+//                profile.bookmarks.modelFactory >>== { $0.modelForFolder(bookmarkFolder).upon(self.onModelFetched) }
+//            } else {
+//                profile.bookmarks.modelFactory >>== { $0.modelForRoot().upon(self.onModelFetched) }
+//            }
             return
         }
 
