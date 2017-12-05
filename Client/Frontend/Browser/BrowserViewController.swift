@@ -41,8 +41,6 @@ private struct BrowserViewControllerUX {
 
 class BrowserViewController: UIViewController {
     // Cliqz: modifed the type of homePanelController to CliqzSearchViewController to show Cliqz index page instead of FireFox home page
-//    var homePanelController: CliqzSearchViewController?
-    var homePanelController: FreshtabViewController?
     
     var visible: Bool = false
     
@@ -142,16 +140,7 @@ class BrowserViewController: UIViewController {
 
     // Cliqz: Added to adjust header constraint to work during the animation to/from past layer
     var headerConstraintUpdated:Bool = false
-    
-    lazy var recommendationsContainer: UINavigationController = {
-        let recommendationsViewController = RecommendationsViewController(profile: self.profile)
-        recommendationsViewController.delegate = self
-        recommendationsViewController.tabManager = self.tabManager
-        
-        let containerViewController = UINavigationController(rootViewController: recommendationsViewController)
-        containerViewController.transitioningDelegate = self
-        return containerViewController
-    }()
+
     // Cliqz: added to record keyboard show duration for keyboard telemetry signal
     var keyboardShowTime : Double?
     
@@ -543,28 +532,7 @@ class BrowserViewController: UIViewController {
     }
 
     fileprivate func dequeueQueuedTabs() {
-        assert(!Thread.current.isMainThread, "This must be called in the background.")
-        self.profile.queue.getQueuedTabs() >>== { cursor in
 
-            // This assumes that the DB returns rows in some kind of sane order.
-            // It does in practice, so WFM.
-            log.debug("Queue. Count: \(cursor.count).")
-            if cursor.count <= 0 {
-                return
-            }
-
-            let urls = cursor.flatMap { $0?.url.asURL }
-            if !urls.isEmpty {
-				DispatchQueue.main.async {
-                    self.tabManager.addTabsForURLs(urls, zombie: false)
-                }
-            }
-
-            // Clear *after* making an attempt to open. We're making a bet that
-            // it's better to run the risk of perhaps opening twice on a crash,
-            // rather than losing data.
-            self.profile.queue.clearQueuedTabs()
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -829,15 +797,6 @@ class BrowserViewController: UIViewController {
 
         // Remake constraints even if we're already showing the home controller.
         // The home controller may change sizes if we tap the URL bar while on about:home.
-        homePanelController?.view.snp.remakeConstraints { make in
-            make.top.equalTo(self.urlBar.snp.bottom)
-            make.left.right.equalTo(self.view)
-            if self.homePanelIsInline {
-                make.bottom.equalTo(self.toolbar?.snp.top ?? self.view.snp.bottom)
-            } else {
-                make.bottom.equalTo(self.view.snp.bottom)
-            }
-        }
 
         findInPageContainer.snp.remakeConstraints { make in
             make.left.right.equalTo(self.view)
@@ -854,34 +813,6 @@ class BrowserViewController: UIViewController {
     
     // Cliqz: modifed showHomePanelController to show Cliqz index page (SearchViewController) instead of FireFox home page
     fileprivate func showHomePanelController(inline: Bool) {
-        log.debug("BVC showHomePanelController.")
-        homePanelIsInline = inline
-        
-        //navigationToolbar.updateForwardStatus(false)
-        navigationToolbar.updateBackStatus(false)
-        
-        if homePanelController == nil {
-			
-			homePanelController = FreshtabViewController(profile: self.profile)
-			homePanelController?.delegate = self
-//            homePanelController!.delegate = self
-            addChildViewController(homePanelController!)
-            view.addSubview(homePanelController!.view)
-        }
-		if let tab = tabManager.selectedTab {
-			homePanelController?.isForgetMode = tab.isPrivate
-			//            homePanelController?.updatePrivateMode(tab.isPrivate)
-		}
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.homePanelController!.view.alpha = 1
-            }, completion: { finished in
-                if finished {
-                    self.webViewContainer.accessibilityElementsHidden = true
-                    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
-                }
-        })
-        view.setNeedsUpdateConstraints()
-        log.debug("BVC done with showHomePanelController.")
         
     }
     /*
@@ -930,28 +861,7 @@ class BrowserViewController: UIViewController {
     */
 
     fileprivate func hideHomePanelController() {
-        if let controller = homePanelController {
-            UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
-                controller.view.alpha = 0
-            }, completion: { finished in
-                if finished {
-                    controller.willMove(toParentViewController: nil)
-                    controller.view.removeFromSuperview()
-                    controller.removeFromParentViewController()
-                    self.homePanelController = nil
-                    self.webViewContainer.accessibilityElementsHidden = false
-                    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
-
-                    // Refresh the reading view toolbar since the article record may have changed
-                    if let readerMode = self.tabManager.selectedTab?.getHelper(ReaderMode.name()) as? ReaderMode, readerMode.state == .Active {
-                        self.showReaderModeBar(animated: false)
-                    }
-                    
-                    self.navigationToolbar.updateBackStatus(self.tabManager.selectedTab?.webView?.canGoBack ?? false)
-                    
-                }
-            })
-        }
+        
     }
 
     fileprivate func updateInContentHomePanel(_ url: URL?) {
@@ -993,7 +903,6 @@ class BrowserViewController: UIViewController {
             searchController?.updatePrivateMode(selectedTab.isPrivate)
         }
         
-        homePanelController?.view?.isHidden = true
         searchController!.view.isHidden = false
         searchController!.didMove(toParentViewController: self)
         
@@ -1033,7 +942,6 @@ class BrowserViewController: UIViewController {
         if let searchController = searchController {
             // Cliqz: Modify hiding the search view controller as our behaviour is different than regular search that was exist
             searchController.view.isHidden = true
-            homePanelController?.view?.isHidden = false
 
             /*
             searchController.willMoveToParentViewController(nil)
@@ -1074,7 +982,7 @@ class BrowserViewController: UIViewController {
         let shareItem = CliqzShareItem(url: url.absoluteString, title: tabState.title, favicon: nil, bookmarkedDate: Date.now())
 //        let shareItem = ShareItem(url: url.absoluteString, title: tabState.title, favicon: tabState.favicon)
         
-        profile.bookmarks.shareItem(shareItem)
+//        profile.bookmarks.shareItem(shareItem)
         
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
@@ -1120,20 +1028,20 @@ class BrowserViewController: UIViewController {
 
     fileprivate func removeBookmark(_ tabState: TabState) {
         guard let url = tabState.url else { return }
-        profile.bookmarks.modelFactory >>== {
-            $0.removeByURL(url.absoluteString)
-                .uponQueue(DispatchQueue.main) { res in
-                if res.isSuccess {
-                    if let tab = self.tabManager.getTabForURL(url) {
-                        tab.isBookmarked = false
-                    }
-                    if !AppConstants.MOZ_MENU {
-                        //self.toolbar?.updateBookmarkStatus(false)
-                        //self.urlBar.updateBookmarkStatus(false)
-                    }
-                }
-            }
-        }
+//        profile.bookmarks.modelFactory >>== {
+//            $0.removeByURL(url.absoluteString)
+//                .uponQueue(DispatchQueue.main) { res in
+//                if res.isSuccess {
+//                    if let tab = self.tabManager.getTabForURL(url) {
+//                        tab.isBookmarked = false
+//                    }
+//                    if !AppConstants.MOZ_MENU {
+//                        //self.toolbar?.updateBookmarkStatus(false)
+//                        //self.urlBar.updateBookmarkStatus(false)
+//                    }
+//                }
+//            }
+//        }
     }
 
 	// Cliqz: Changed bookmarkItem to String, because for Cliqz Bookmarks status change notifications only URL is sent
@@ -1273,18 +1181,18 @@ class BrowserViewController: UIViewController {
             return
         }
 
-        profile.bookmarks.modelFactory >>== {
-            $0.isBookmarked(url).uponQueue(DispatchQueue.main) { [weak tab] result in
-                guard let bookmarked = result.successValue else {
-                    log.error("Error getting bookmark status: \(String(describing: result.failureValue)).")
-                    return
-                }
-                tab?.isBookmarked = bookmarked
-                if !AppConstants.MOZ_MENU {
-                    ///self.navigationToolbar.updateBookmarkStatus(bookmarked)
-                }
-            }
-        }
+//        profile.bookmarks.modelFactory >>== {
+//            $0.isBookmarked(url).uponQueue(DispatchQueue.main) { [weak tab] result in
+//                guard let bookmarked = result.successValue else {
+//                    log.error("Error getting bookmark status: \(String(describing: result.failureValue)).")
+//                    return
+//                }
+//                tab?.isBookmarked = bookmarked
+//                if !AppConstants.MOZ_MENU {
+//                    ///self.navigationToolbar.updateBookmarkStatus(bookmarked)
+//                }
+//            }
+//        }
         self.toolbar?.updateTabStatus(tab.keepOpen)
         // ------------------------------------------
         self.updateReminderButtonState(url_str: url)
@@ -1504,30 +1412,18 @@ class BrowserViewController: UIViewController {
     }
 
     func reloadTab(){
-        if(homePanelController == nil){
-            tabManager.selectedTab?.reload()
-        }
+
     }
 
     func goBack(){
-        if(tabManager.selectedTab?.canGoBack == true && homePanelController == nil){
-            tabManager.selectedTab?.goBack()
-        }
+
     }
     func goForward(){
-        if(tabManager.selectedTab?.canGoForward == true) {
-            tabManager.selectedTab?.goForward()
-            if (homePanelController != nil) {
-                urlBar.leaveOverlayMode()
-                self.hideHomePanelController()
-            }
-        }
+
     }
 
     func findOnPage(){
-        if(homePanelController == nil){
-            tab( (tabManager.selectedTab)!, didSelectFindInPageForSelection: "")
-        }
+
     }
 
     func selectLocationBar(){
@@ -1608,9 +1504,7 @@ class BrowserViewController: UIViewController {
     }
 
     fileprivate func getCurrentUIState() -> UIState {
-        if let homePanelController = homePanelController {
-            return .homePanels(homePanelState: HomePanelState(isPrivate: false	, selectedIndex: 0))  //homePanelController.homePanelState)
-        }
+
         guard let tab = tabManager.selectedTab, !tab.loading else {
             return .loading
         }
@@ -1899,9 +1793,6 @@ extension BrowserViewController: URLBarDelegate {
     func urlBarDidPressScrollToTop(_ urlBar: URLBarView) {
         if let selectedTab = tabManager.selectedTab {
             // Only scroll to top if we are not showing the home view controller
-            if homePanelController == nil {
-                selectedTab.webView?.scrollView.setContentOffset(CGPoint.zero, animated: true)
-            }
         }
     }
 
@@ -2804,23 +2695,23 @@ extension BrowserViewController: TabManagerDelegate {
                 if AboutUtils.isAboutURL(webView.url) {
                     // Indeed, because we don't show the toolbar at all, don't even blank the star.
                 } else {
-                    profile.bookmarks.modelFactory >>== { [weak tab] in
-                        $0.isBookmarked(url)
-                            .uponQueue(DispatchQueue.main) {
-                            guard let isBookmarked = $0.successValue else {
-                                log.error("Error getting bookmark status: \(String(describing: $0.failureValue)).")
-                                return
-                            }
-
-                            tab?.isBookmarked = isBookmarked
-
-
-                            if !AppConstants.MOZ_MENU {
-                                //self.toolbar?.updateBookmarkStatus(isBookmarked)
-                                //self.urlBar.updateBookmarkStatus(isBookmarked)
-                            }
-                        }
-                    }
+//                    profile.bookmarks.modelFactory >>== { [weak tab] in
+//                        $0.isBookmarked(url)
+//                            .uponQueue(DispatchQueue.main) {
+//                            guard let isBookmarked = $0.successValue else {
+//                                log.error("Error getting bookmark status: \(String(describing: $0.failureValue)).")
+//                                return
+//                            }
+//
+//                            tab?.isBookmarked = isBookmarked
+//
+//
+//                            if !AppConstants.MOZ_MENU {
+//                                //self.toolbar?.updateBookmarkStatus(isBookmarked)
+//                                //self.urlBar.updateBookmarkStatus(isBookmarked)
+//                            }
+//                        }
+//                    }
                 }
             } else {
                 // The web view can go gray if it was zombified due to memory pressure.
@@ -2829,7 +2720,6 @@ extension BrowserViewController: TabManagerDelegate {
             }
             //Cliqz: update private mode in search view to notify JavaScript when switching between normal and private mode
             searchController?.updatePrivateMode(tab.isPrivate)
-			homePanelController?.isForgetMode = tab.isPrivate
         }
 
         if let selected = selected, let previous = previous, selected.isPrivate != previous.isPrivate {
@@ -4350,8 +4240,6 @@ extension BrowserViewController {
             if (selectedTab.inSearchMode) {
                 self.urlBar.enterOverlayMode("", pasted: true)
                 scrollController.showToolbars(false)
-            } else if self.homePanelController?.view.isHidden == false {
-                self.urlBar.leaveOverlayMode()
             }
         }
     }

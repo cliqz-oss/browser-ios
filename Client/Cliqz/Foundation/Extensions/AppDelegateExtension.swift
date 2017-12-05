@@ -39,63 +39,36 @@ extension AppDelegate {
 
     // MARK:- Public API
     // configure the dynamic shortcuts
-	@available(iOS 9.0, *)
-    func configureHomeShortCuts() {
-        var shortcutItems = [UIApplicationShortcutItem]()
-        
-        // last website shortcut
-        let lastWebsiteTitle = NSLocalizedString("Last site", tableName: "Cliqz", comment: "Title for `Last site` home shortcut.")
-        let lastWebsiteIcon =  UIApplicationShortcutIcon(templateImageName: "lastVisitedSite")
-        let lastWebsiteShortcutItem = UIApplicationShortcutItem(type: lastWebsiteIdentifier, localizedTitle: lastWebsiteTitle, localizedSubtitle: nil, icon: lastWebsiteIcon, userInfo: nil)
-        shortcutItems.append(lastWebsiteShortcutItem)
-        
-        // top news shortcut
-        let topNewsTitle = NSLocalizedString("Top news", tableName: "Cliqz", comment: "Title for `Top news` home shortcut.")
-        let topNewsIcon =  UIApplicationShortcutIcon(templateImageName: "topNews")
-        let topNewsShortcutItem = UIApplicationShortcutItem(type: topNewsIdentifier, localizedTitle: topNewsTitle, localizedSubtitle: nil, icon: topNewsIcon, userInfo: nil)
-        shortcutItems.append(topNewsShortcutItem)
-        
-        if self.profile!.history.count() > 0 {
-            // add shortcuts for 2 top-sites
-            appendTopSitesWithLimit(2, shortcutItems: shortcutItems)
-        } else {
-            // assign the applicaiton shortcut items
-            UIApplication.shared.shortcutItems = shortcutItems
-            
-        }
-    }
+//    @available(iOS 9.0, *)
+//    func configureHomeShortCuts() {
+//        var shortcutItems = [UIApplicationShortcutItem]()
+//        
+//        // last website shortcut
+//        let lastWebsiteTitle = NSLocalizedString("Last site", tableName: "Cliqz", comment: "Title for `Last site` home shortcut.")
+//        let lastWebsiteIcon =  UIApplicationShortcutIcon(templateImageName: "lastVisitedSite")
+//        let lastWebsiteShortcutItem = UIApplicationShortcutItem(type: lastWebsiteIdentifier, localizedTitle: lastWebsiteTitle, localizedSubtitle: nil, icon: lastWebsiteIcon, userInfo: nil)
+//        shortcutItems.append(lastWebsiteShortcutItem)
+//        
+//        // top news shortcut
+//        let topNewsTitle = NSLocalizedString("Top news", tableName: "Cliqz", comment: "Title for `Top news` home shortcut.")
+//        let topNewsIcon =  UIApplicationShortcutIcon(templateImageName: "topNews")
+//        let topNewsShortcutItem = UIApplicationShortcutItem(type: topNewsIdentifier, localizedTitle: topNewsTitle, localizedSubtitle: nil, icon: topNewsIcon, userInfo: nil)
+//        shortcutItems.append(topNewsShortcutItem)
+//        
+//        if self.profile!.history.count() > 0 {
+//            // add shortcuts for 2 top-sites
+//            appendTopSitesWithLimit(2, shortcutItems: shortcutItems)
+//        } else {
+//            // assign the applicaiton shortcut items
+//            UIApplication.shared.shortcutItems = shortcutItems
+//            
+//        }
+//    }
     // Cliqz: Change the status bar style and color
     static func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor) {
         UIApplication.shared.setStatusBarStyle(statusBarStyle, animated: false)
 		UIApplication.shared.delegate?.window??.backgroundColor = backgroundColor
 	}
-
-	// MARK:- Private methods
-    // append top sites shortcuts to the application shortcut items
-	@available(iOS 9.0, *)
-    fileprivate func appendTopSitesWithLimit(_ limit: Int, shortcutItems: [UIApplicationShortcutItem]) -> Success {
-        let topSitesIcon =  UIApplicationShortcutIcon(templateImageName: "topSites")
-        var allShortcutItems = shortcutItems
-        return self.profile!.history.getTopSitesWithLimit(limit).bindQueue(DispatchQueue.main) { result in
-            if let r = result.successValue {
-                for site in r {
-                    // top news shortcut
-                    if let url = site?.url,
-                        let domainURL = self.extractDomainUrl(url),
-                        let domainName = self.extractDomainName(url) {
-                            let userInfo = ["url" : domainURL]
-                            let topSiteShortcutItem = UIApplicationShortcutItem(type: self.topSitesIdentifier, localizedTitle: domainName, localizedSubtitle: nil, icon: topSitesIcon, userInfo: userInfo)
-                            allShortcutItems.append(topSiteShortcutItem)
-                    }
-                }
-            }
-            DispatchQueue.main.async(execute: { 
-                // assign the applicaiton shortcut items
-                UIApplication.shared.shortcutItems = allShortcutItems
-            })
-            return succeed()
-        }
-    }
 
     // getting the domain name of the url to be used as title for the shortcut
     fileprivate func extractDomainName(_ urlString: String) -> String? {

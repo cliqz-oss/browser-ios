@@ -143,27 +143,27 @@ class TabPeekViewController: UIViewController, WKNavigationDelegate {
         }
 
         let mainQueue = DispatchQueue.main
-        browserProfile.bookmarks.modelFactory >>== {
-            $0.isBookmarked(displayURL).uponQueue(mainQueue) {
-                self.isBookmarked = $0.successValue ?? false
-            }
-        }
+//        browserProfile.bookmarks.modelFactory >>== {
+//            $0.isBookmarked(displayURL).uponQueue(mainQueue) {
+//                self.isBookmarked = $0.successValue ?? false
+//            }
+//        }
 
-        browserProfile.remoteClientsAndTabs.getClientGUIDs().uponQueue(mainQueue) {
-            guard let clientGUIDs = $0.successValue else {
-                return
-            }
-
-            self.hasRemoteClients = !clientGUIDs.isEmpty
-            let clientPickerController = ClientPickerViewController()
-            clientPickerController.clientPickerDelegate = clientPickerDelegate
-            clientPickerController.profile = browserProfile
-            if let url = tab.url?.absoluteString {
-                clientPickerController.shareItem = ShareItem(url: url, title: tab.title, favicon: nil)
-            }
-
-            self.clientPicker = UINavigationController(rootViewController: clientPickerController)
-        }
+//        browserProfile.remoteClientsAndTabs.getClientGUIDs().uponQueue(mainQueue) {
+//            guard let clientGUIDs = $0.successValue else {
+//                return
+//            }
+//
+//            self.hasRemoteClients = !clientGUIDs.isEmpty
+//            let clientPickerController = ClientPickerViewController()
+//            clientPickerController.clientPickerDelegate = clientPickerDelegate
+//            clientPickerController.profile = browserProfile
+//            if let url = tab.url?.absoluteString {
+//                clientPickerController.shareItem = ShareItem(url: url, title: tab.title, favicon: nil)
+//            }
+//
+//            self.clientPicker = UINavigationController(rootViewController: clientPickerController)
+//        }
 
         let result = browserProfile.readingList?.getRecordWithURL(displayURL).successValue!
 

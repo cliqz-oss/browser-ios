@@ -19,7 +19,7 @@ class HomePanels {
     let enabledPanels = [
         HomePanelDescriptor(
             makeViewController: { profile in
-                TopSitesPanel(profile: profile)
+                return UIViewController()
             },
             imageName: "TopSites",
             accessibilityLabel: NSLocalizedString("Top sites", comment: "Panel accessibility label"),
@@ -44,12 +44,12 @@ class HomePanels {
 
         HomePanelDescriptor(
             makeViewController: { profile in
-                let history = HistoryPanel()
-                history.profile = profile
-                let controller = UINavigationController(rootViewController: history)
-                controller.setNavigationBarHidden(true, animated: false)
-                controller.interactivePopGestureRecognizer?.delegate = nil
-                return controller
+//                let history = HistoryPanel()
+//                history.profile = profile
+//                let controller = UINavigationController(rootViewController: history)
+//                controller.setNavigationBarHidden(true, animated: false)
+//                controller.interactivePopGestureRecognizer?.delegate = nil
+                return UINavigationController()
             },
             imageName: "History",
             accessibilityLabel: NSLocalizedString("History", comment: "Panel accessibility label"),

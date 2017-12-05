@@ -420,7 +420,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         NightModeHelper.restoreNightModeBrightness((self.profile?.prefs)!, toForeground: true)
-        self.profile?.syncManager.applicationDidBecomeActive()
+        //self.profile?.syncManager.applicationDidBecomeActive()
 
         //Cliqz: disable loading queued tables
         // We could load these here, but then we have to futz with the tab counter
@@ -453,9 +453,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Cliqz: Added to confire home shortcuts
-        if #available(iOS 9.0, *) {
-            self.configureHomeShortCuts()
-        }
+//        if #available(iOS 9.0, *) {
+//            self.configureHomeShortCuts()
+//        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -501,7 +501,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
 
-        self.profile?.syncManager.applicationDidEnterBackground()
+//        self.profile?.syncManager.applicationDidEnterBackground()
 
         var taskId: UIBackgroundTaskIdentifier = 0
         taskId = application.beginBackgroundTask (expirationHandler: { _ in
@@ -510,11 +510,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             application.endBackgroundTask(taskId)
         })
 
-        let backgroundQueue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
-        self.profile?.syncManager.syncEverything().uponQueue(backgroundQueue) { _ in
-            self.profile?.shutdown()
-            application.endBackgroundTask(taskId)
-        }
+//        let backgroundQueue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
+//        self.profile?.syncManager.syncEverything().uponQueue(backgroundQueue) { _ in
+//            self.profile?.shutdown()
+//            application.endBackgroundTask(taskId)
+//        }
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -849,10 +849,10 @@ extension AppDelegate: TabManagerStateDelegate {
 
         // Don't insert into the DB immediately. We tend to contend with more important
         // work like querying for top sites.
-        let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
-        queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(ProfileRemoteTabsSyncDelay * Double(NSEC_PER_MSEC))) / Double(NSEC_PER_SEC)) {
-            self.profile?.storeTabs(storedTabs)
-        }
+//        let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
+//        queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(ProfileRemoteTabsSyncDelay * Double(NSEC_PER_MSEC))) / Double(NSEC_PER_SEC)) {
+//            self.profile?.storeTabs(storedTabs)
+//        }
     }
 }
 

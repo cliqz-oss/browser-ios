@@ -35,9 +35,9 @@ class HistorySwiper : NSObject {
     }
     
     fileprivate func handleSwipe(_ recognizer: UIGestureRecognizer) {
-        if getApp().browserViewController.homePanelController != nil {
-            return
-        }
+//        if getApp().browserViewController.homePanelController != nil {
+//            return
+//        }
         
         guard let tab = getApp().browserViewController.tabManager.selectedTab, let webview = tab.webView else { return }
         let p = recognizer.location(in: recognizer.view)

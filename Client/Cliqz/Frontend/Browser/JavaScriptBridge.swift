@@ -35,9 +35,6 @@ class JavaScriptBridge {
 
     init(profile: Profile) {
         self.profile = profile
-        (backgorundQueue).async {
-            self.profile.history.setTopSitesCacheSize(Int32(self.maxFrecencyLimit))
-        }
     }
     
     func publishEvent(_ eventName: String, parameters: Any? = nil) {
@@ -204,7 +201,7 @@ class JavaScriptBridge {
 			
         case "removeHistoryItems":
             if let ids = data as? [Int] {
-                self.profile.history.removeHistory(ids)
+                //self.profile.history.removeHistory(ids)
             }
         
         case "isReady":
@@ -243,26 +240,26 @@ class JavaScriptBridge {
 
 	fileprivate func addURLToBookmarks(_ url: String?, title: String?, bookmarkedDate: NSNumber?) {
 		if let u = url, let t = title, let d = bookmarkedDate {
-			self.profile.bookmarks.modelFactory >>== {
-				$0.isBookmarked(u).uponQueue(DispatchQueue.main) { result in
-					guard let bookmarked = result.successValue else {
-						return
-					}
-					if !bookmarked {
-						let shareItem = CliqzShareItem(url: u, title: t, favicon: nil, bookmarkedDate: d.uint64Value)
-						self.profile.bookmarks.shareItem(shareItem)
-						NotificationCenter.default.post(name: Notification.Name(rawValue: BookmarkStatusChangedNotification), object: u, userInfo:["added": true])
-					}
-				}
-			}
+//            self.profile.bookmarks.modelFactory >>== {
+//                $0.isBookmarked(u).uponQueue(DispatchQueue.main) { result in
+//                    guard let bookmarked = result.successValue else {
+//                        return
+//                    }
+//                    if !bookmarked {
+//                        let shareItem = CliqzShareItem(url: u, title: t, favicon: nil, bookmarkedDate: d.uint64Value)
+//                        self.profile.bookmarks.shareItem(shareItem)
+//                        NotificationCenter.default.post(name: Notification.Name(rawValue: BookmarkStatusChangedNotification), object: u, userInfo:["added": true])
+//                    }
+//                }
+//            }
 		}
 	}
 
 	fileprivate func removeURLFromBookmarks(_ url: String?) {
 		if let u = url {
-			profile.bookmarks.modelFactory >>== {
-				$0.removeByURL(u)
-			}
+//            profile.bookmarks.modelFactory >>== {
+//                $0.removeByURL(u)
+//            }
 			NotificationCenter.default.post(name: Notification.Name(rawValue: BookmarkStatusChangedNotification), object: u, userInfo:["added": false])
 		}
 	}
@@ -272,26 +269,14 @@ class JavaScriptBridge {
         // invalidate the cache and requery. This allows us to always show results right away if they are cached but
         // also load in the up-to-date results asynchronously if needed
         reloadTopSitesWithLimit(frecencyLimit, callback: callback) >>> {
-            return self.profile.history.updateTopSitesCacheIfInvalidated() >>== { result in
-                return result ? self.reloadTopSitesWithLimit(frecencyLimit, callback: callback) : succeed()
-            }
+//            return self.profile.history.updateTopSitesCacheIfInvalidated() >>== { result in
+//                return result ? self.reloadTopSitesWithLimit(frecencyLimit, callback: callback) : succeed()
+//            }
         }
     }
     
     fileprivate func reloadTopSitesWithLimit(_ limit: Int, callback: String) -> Success {
-        return self.profile.history.getTopSitesWithLimit(limit).bindQueue(DispatchQueue.main) { result in
-            var results = [[String: String]]()
-            if let r = result.successValue {
-                for site in r {
-                    var d = Dictionary<String, String>()
-                    d["url"] = site!.url
-                    d["title"] = site!.title
-                    results.append(d)
-                }
-            }
-            self.callJSMethod(callback, parameter: results as AnyObject, completionHandler: nil)
-            return succeed()
-        }
+        return succeed()
 	}
 
     fileprivate func callPhoneNumber(_ phoneNumber: String) {

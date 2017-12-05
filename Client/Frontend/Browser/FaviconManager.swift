@@ -71,7 +71,7 @@ class FaviconManager : TabHelper {
                             }
 
                             if !tab.isPrivate {
-                                self.profile.favicons.addFavicon(fav, forSite: site)
+                                //self.profile.favicons.addFavicon(fav, forSite: site)
                                 if tab.favicons.isEmpty {
                                     self.makeFaviconAvailable(tab, atURL: currentURL, favicon: fav, withImage: img!)
                                 }

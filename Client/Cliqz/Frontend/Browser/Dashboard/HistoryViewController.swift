@@ -51,20 +51,20 @@ extension HistoryViewController {
 
     func getSearchHistory(_ offset:Int,limit:Int,callback: String?) {
 		if let c = callback {
-            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
-				if let sites = result.successValue {
-					var historyResults = [[String: Any]]()
-					for site in sites {
-						var d = [String: Any]()
-						d["id"] = site!.id
-						d["url"] = site!.url
-						d["title"] = site!.title
-						d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-						historyResults.append(d)
-					}
-					self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
-				}
-			}
+//            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
+//                if let sites = result.successValue {
+//                    var historyResults = [[String: Any]]()
+//                    for site in sites {
+//                        var d = [String: Any]()
+//                        d["id"] = site!.id
+//                        d["url"] = site!.url
+//                        d["title"] = site!.title
+//                        d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
+//                        historyResults.append(d)
+//                    }
+//                    self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
+//                }
+//            }
 		}
 	}
 

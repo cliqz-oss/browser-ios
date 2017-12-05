@@ -76,7 +76,7 @@ class BackForwardListViewController: UIViewController, UITableViewDataSource, UI
     }
     
     func loadSites(_ backForwardList: WKBackForwardList) {
-        let sql = profile.favicons as! SQLiteHistory
+        //let sql = profile.favicons as! SQLiteHistory
         var urls: [String] = [String]()
         
         for page in backForwardList.forwardList.reversed() {
@@ -96,16 +96,16 @@ class BackForwardListViewController: UIViewController, UITableViewDataSource, UI
         
         listData = listData.filter { !(($0.item.title ?? "").isEmpty && $0.item.url.baseDomain()?.contains("localhost") ?? false)}
         
-        sql.getSitesForURLs(urls).uponQueue(DispatchQueue.main) { result in
-            if let cursor = result.successValue {
-                for cursorSite in cursor {
-                    if let site = cursorSite, let url = site?.url {
-                        self.sites[url] = site
-                    }
-                }
-                self.tableView.reloadData()
-            }
-        }
+//        sql.getSitesForURLs(urls).uponQueue(DispatchQueue.main) { result in
+//            if let cursor = result.successValue {
+//                for cursorSite in cursor {
+//                    if let site = cursorSite, let url = site?.url {
+//                        self.sites[url] = site
+//                    }
+//                }
+//                self.tableView.reloadData()
+//            }
+//        }
     }
     
     func scrollTableViewToIndex(_ index: Int) {

@@ -551,30 +551,30 @@ fileprivate class RemoteTabsTableViewController : UITableViewController {
             return
         }
 
-        self.profile.getCachedClientsAndTabs().uponQueue(DispatchQueue.main) { result in
-            if let clientAndTabs = result.successValue {
-                self.updateDelegateClientAndTabData(clientAndTabs)
-            }
-
-            // Otherwise, fetch the tabs cloud if its been more than 1 minute since last sync
-            let lastSyncTime = self.profile.prefs.timestampForKey(PrefsKeys.KeyLastRemoteTabSyncTime)
-            if Date.now() - (lastSyncTime ?? 0) > OneMinuteInMilliseconds && !(self.refreshControl?.isRefreshing ?? false) {
-                self.startRefreshing()
-                self.profile.getClientsAndTabs().uponQueue(DispatchQueue.main) { result in
-                    if let clientAndTabs = result.successValue {
-                        self.profile.prefs.setTimestamp(Date.now(), forKey: PrefsKeys.KeyLastRemoteTabSyncTime)
-                        self.updateDelegateClientAndTabData(clientAndTabs)
-                    }
-                    self.endRefreshing()
-                }
-            } else {
-                // If we failed before and didn't sync, show the failure delegate
-                if let _ = result.failureValue {
-                    self.tableViewDelegate = RemoteTabsPanelErrorDataSource(homePanel: remoteTabsPanel, error: .failedToSync)
-                }
-
-                self.endRefreshing()
-            }
-        }
+//        self.profile.getCachedClientsAndTabs().uponQueue(DispatchQueue.main) { result in
+//            if let clientAndTabs = result.successValue {
+//                self.updateDelegateClientAndTabData(clientAndTabs)
+//            }
+//
+//            // Otherwise, fetch the tabs cloud if its been more than 1 minute since last sync
+//            let lastSyncTime = self.profile.prefs.timestampForKey(PrefsKeys.KeyLastRemoteTabSyncTime)
+//            if Date.now() - (lastSyncTime ?? 0) > OneMinuteInMilliseconds && !(self.refreshControl?.isRefreshing ?? false) {
+//                self.startRefreshing()
+//                self.profile.getClientsAndTabs().uponQueue(DispatchQueue.main) { result in
+//                    if let clientAndTabs = result.successValue {
+//                        self.profile.prefs.setTimestamp(Date.now(), forKey: PrefsKeys.KeyLastRemoteTabSyncTime)
+//                        self.updateDelegateClientAndTabData(clientAndTabs)
+//                    }
+//                    self.endRefreshing()
+//                }
+//            } else {
+//                // If we failed before and didn't sync, show the failure delegate
+//                if let _ = result.failureValue {
+//                    self.tableViewDelegate = RemoteTabsPanelErrorDataSource(homePanel: remoteTabsPanel, error: .failedToSync)
+//                }
+//
+//                self.endRefreshing()
+//            }
+//        }
     }
 }

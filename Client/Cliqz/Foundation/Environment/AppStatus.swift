@@ -228,7 +228,7 @@ class AppStatus {
             let hostVersion = self.hostVersion
             let osVersion = UIDevice.current.systemVersion
             let defaultSearchEngine = profile.searchEngines.defaultEngine.shortName
-            let historyUrls = profile.history.count()
+            let historyUrls = 0//profile.history.count()
             let historyDays = self.getHistoryDays(profile)
             //TODO `prefs`
             let prefs = self.getEnvironmentPrefs(profile)
@@ -265,9 +265,9 @@ class AppStatus {
     
     fileprivate func getHistoryDays(_ profile: Profile) -> Int {
         var historyDays = 0
-        if let oldestVisitDate = profile.history.getOldestVisitDate() {
-            historyDays = Date().daysSinceDate(oldestVisitDate)
-        }
+//        if let oldestVisitDate = profile.history.getOldestVisitDate() {
+//            historyDays = Date().daysSinceDate(oldestVisitDate)
+//        }
         return historyDays
     }
     

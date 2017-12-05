@@ -29,8 +29,6 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         domains = realm.objects(Domain.self).sorted(byKeyPath: "last_timestamp", ascending: false)
         
         super.init()
-        //loadDomains()
-        //NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reminderFired), name: CIReminderManager.notification_fired, object: nil)
         
         notificationToken = domains.observe { [weak self] (changes: RealmCollectionChange) in
@@ -55,10 +53,6 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         NotificationCenter.default.removeObserver(self)
         notificationToken?.invalidate()
     }
-    
-//    func loadDomains() {
-//        domains = processDomains(domains: DomainsModule.shared.domains)
-//    }
 
     func numberOfCells() -> Int {
         return self.domains.count
@@ -123,11 +117,6 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         }
         return false
     }
-
-    @objc
-    func domainsUpdated(_ notification: Notification) {
-        update()
-    }
     
     @objc
     func reminderFired(_ notification: Notification) {
@@ -135,7 +124,6 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     private func update() {
-//        loadDomains()
         delegate?.dataSourceWasUpdated(identifier: "DomainsDataSource")
     }
 
@@ -148,43 +136,4 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         return index >= 0 && index < domains.count
     }
     
-    //-------------------------------------------------------
-    
-    private func processDomains(domains: [DomainModel]) -> [DomainModel] {
-        let domainsWithNotificationOnTop = putDomainsWithNotificationOnTop(domains: domains)
-        return domainsWithNotificationOnTop
-    }
-    
-    private func putDomainsWithNotificationOnTop(domains: [DomainModel]) -> [DomainModel] {
-        let (extracted, domains_wo_extracted) = extractElements(from: domains) { (domain) -> Bool in
-             return ReminderNotificationManager.shared.notificationsFor(host: domain.host) > 0
-        }
-        
-        return extracted + domains_wo_extracted
-    }
-    
-    //this method takes the elements that meet the predicate out of the list and returns two lists:
-    //one with the elements that meet the predicate
-    //the second is the initial list without the extracted elements
-    private func extractElements(from domains: [DomainModel], predicate: (DomainModel) -> Bool) -> ([DomainModel], [DomainModel]){
-        
-        var copy = domains
-        var extracted: [DomainModel] = []
-        
-        var index = 0
-        var index_array:[Int] = []
-        for element in domains {
-            if predicate(element) {
-                extracted.append(element)
-                index_array.append(index)
-            }
-            index += 1
-        }
-        
-        for i in index_array.sorted(by: >) {
-            copy.remove(at: i)
-        }
-        
-        return (extracted, copy)
-    }
 }

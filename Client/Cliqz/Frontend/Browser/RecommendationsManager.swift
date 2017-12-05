@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 enum RecommendationType {
     case news
@@ -38,7 +39,6 @@ final class RecommendationsManager {
     init() {
         self.loadRecommendations()
         NotificationCenter.default.addObserver(self, selector: #selector(newsUpdated), name: NewsManager.notification_updated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(domainsUpdated), name: DomainsModule.notification_updated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(remindersUpdated), name: CIReminderManager.notification_update, object: nil)
     }
     
@@ -199,8 +199,9 @@ final class RecommendationsManager {
         //filter rule: News with a domain that matches any domain in the history should be eliminated. Those news are presented in History Details.
         
         //get a list of all domains in the history
-        let domains = DomainsModule.shared.domains.map { (domain_struct) -> String in
-            return domain_struct.host
+        let realm = try! Realm()
+        let domains = realm.objects(Domain.self).map { (domain) -> String in
+            return domain.name
         }
         
         let host_set = Set.init(domains)
