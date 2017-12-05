@@ -370,3 +370,5 @@
  [Settings] Done button title
  [Settings] Done button on left side of the Settings view controller title bar */
 "Done" = "Fatto";
+/* [Settings] About MyOffrz */
+"About MyOffrz" = "Su MyOffrz";
