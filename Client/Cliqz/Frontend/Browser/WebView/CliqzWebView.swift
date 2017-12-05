@@ -539,6 +539,9 @@ extension CliqzWebView: UIWebViewDelegate {
 		if let nd = self.navigationDelegate {
 			globalContainerWebView.legacyWebView = self
 			nd.webView?(globalContainerWebView, didCommit: nullWKNavigation)
+            if !AboutUtils.isAboutHomeURL(self.url) {
+                nd.webView?(globalContainerWebView, didStartProvisionalNavigation: nullWKNavigation)
+            }
 		}
         updateObservableAttributes()
 	}
