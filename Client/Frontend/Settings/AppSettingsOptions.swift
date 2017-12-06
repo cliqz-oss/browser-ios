@@ -40,7 +40,7 @@ class ConnectSetting: WithoutAccountSetting {
     override func onClick(_ navigationController: UINavigationController?) {
         let viewController = FxAContentViewController()
         viewController.delegate = self
-        viewController.url = settings.profile.accountConfiguration.signInURL
+        //viewController.url = settings.profile.accountConfiguration.signInURL
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
@@ -67,7 +67,7 @@ class DisconnectSetting: WithAccountSetting {
             })
         alertController.addAction(
             UIAlertAction(title: NSLocalizedString("Log Out", comment: "Disconnect button in the 'log out firefox account' alert"), style: .destructive) { (action) in
-                self.settings.profile.removeAccount()
+                //self.settings.profile.removeAccount()
                 self.settings.settings = self.settings.generateSettings()
                 self.settings.SELfirefoxAccountDidChange()
             })
@@ -109,7 +109,7 @@ class SyncNowSetting: WithAccountSetting {
     }
 
     override var enabled: Bool {
-        return profile.hasSyncableAccount()
+        return false
     }
 
     fileprivate lazy var troubleshootButton: UIButton = {
@@ -177,54 +177,54 @@ class SyncNowSetting: WithAccountSetting {
 // Sync setting that shows the current Firefox Account status.
 class AccountStatusSetting: WithAccountSetting {
     override var accessoryType: UITableViewCellAccessoryType {
-        if let account = profile.getAccount() {
-            switch account.actionNeeded {
-            case .needsVerification:
-                // We link to the resend verification email page.
-                return .disclosureIndicator
-            case .needsPassword:
-                 // We link to the re-enter password page.
-                return .disclosureIndicator
-            case .none, .needsUpgrade:
-                // In future, we'll want to link to /settings and an upgrade page, respectively.
-                return .none
-            }
-        }
+//        if let account = profile.getAccount() {
+//            switch account.actionNeeded {
+//            case .needsVerification:
+//                // We link to the resend verification email page.
+//                return .disclosureIndicator
+//            case .needsPassword:
+//                 // We link to the re-enter password page.
+//                return .disclosureIndicator
+//            case .none, .needsUpgrade:
+//                // In future, we'll want to link to /settings and an upgrade page, respectively.
+//                return .none
+//            }
+//        }
         return .disclosureIndicator
     }
 
     override var title: NSAttributedString? {
-        if let account = profile.getAccount() {
-            return NSAttributedString(string: account.email, attributes: [NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFontBold, NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
-        }
+//        if let account = profile.getAccount() {
+//            return NSAttributedString(string: account.email, attributes: [NSFontAttributeName: DynamicFontHelper.defaultHelper.DefaultStandardFontBold, NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+//        }
         return nil
     }
 
     override var status: NSAttributedString? {
-        if let account = profile.getAccount() {
-            switch account.actionNeeded {
-            case .none:
-                return nil
-            case .needsVerification:
-                return NSAttributedString(string: NSLocalizedString("Verify your email address.", comment: "Text message in the settings table view"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
-            case .needsPassword:
-                let string = NSLocalizedString("Enter your password to connect.", comment: "Text message in the settings table view")
-                let range = NSRange(location: 0, length: string.characters.count)
-                let orange = UIColor(red: 255.0 / 255, green: 149.0 / 255, blue: 0.0 / 255, alpha: 1)
-                let attrs = [NSForegroundColorAttributeName : orange]
-                let res = NSMutableAttributedString(string: string)
-                res.setAttributes(attrs, range: range)
-                return res
-            case .needsUpgrade:
-                let string = NSLocalizedString("Upgrade Firefox to connect.", comment: "Text message in the settings table view")
-                let range = NSRange(location: 0, length: string.characters.count)
-                let orange = UIColor(red: 255.0 / 255, green: 149.0 / 255, blue: 0.0 / 255, alpha: 1)
-                let attrs = [NSForegroundColorAttributeName : orange]
-                let res = NSMutableAttributedString(string: string)
-                res.setAttributes(attrs, range: range)
-                return res
-            }
-        }
+//        if let account = profile.getAccount() {
+//            switch account.actionNeeded {
+//            case .none:
+//                return nil
+//            case .needsVerification:
+//                return NSAttributedString(string: NSLocalizedString("Verify your email address.", comment: "Text message in the settings table view"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+//            case .needsPassword:
+//                let string = NSLocalizedString("Enter your password to connect.", comment: "Text message in the settings table view")
+//                let range = NSRange(location: 0, length: string.characters.count)
+//                let orange = UIColor(red: 255.0 / 255, green: 149.0 / 255, blue: 0.0 / 255, alpha: 1)
+//                let attrs = [NSForegroundColorAttributeName : orange]
+//                let res = NSMutableAttributedString(string: string)
+//                res.setAttributes(attrs, range: range)
+//                return res
+//            case .needsUpgrade:
+//                let string = NSLocalizedString("Upgrade Firefox to connect.", comment: "Text message in the settings table view")
+//                let range = NSRange(location: 0, length: string.characters.count)
+//                let orange = UIColor(red: 255.0 / 255, green: 149.0 / 255, blue: 0.0 / 255, alpha: 1)
+//                let attrs = [NSForegroundColorAttributeName : orange]
+//                let res = NSMutableAttributedString(string: string)
+//                res.setAttributes(attrs, range: range)
+//                return res
+//            }
+//        }
         return nil
     }
 
@@ -232,21 +232,21 @@ class AccountStatusSetting: WithAccountSetting {
         let viewController = FxAContentViewController()
         viewController.delegate = self
 
-        if let account = profile.getAccount() {
-            switch account.actionNeeded {
-            case .needsVerification:
-                var cs = URLComponents(url: account.configuration.settingsURL, resolvingAgainstBaseURL: false)
-                cs?.queryItems?.append(URLQueryItem(name: "email", value: account.email))
-                viewController.url = cs?.url
-            case .needsPassword:
-                var cs = URLComponents(url: account.configuration.forceAuthURL, resolvingAgainstBaseURL: false)
-                cs?.queryItems?.append(URLQueryItem(name: "email", value: account.email))
-                viewController.url = cs?.url
-            case .none, .needsUpgrade:
-                // In future, we'll want to link to /settings and an upgrade page, respectively.
-                return
-            }
-        }
+//        if let account = profile.getAccount() {
+//            switch account.actionNeeded {
+//            case .needsVerification:
+//                var cs = URLComponents(url: account.configuration.settingsURL, resolvingAgainstBaseURL: false)
+//                cs?.queryItems?.append(URLQueryItem(name: "email", value: account.email))
+//                viewController.url = cs?.url
+//            case .needsPassword:
+//                var cs = URLComponents(url: account.configuration.forceAuthURL, resolvingAgainstBaseURL: false)
+//                cs?.queryItems?.append(URLQueryItem(name: "email", value: account.email))
+//                viewController.url = cs?.url
+//            case .none, .needsUpgrade:
+//                // In future, we'll want to link to /settings and an upgrade page, respectively.
+//                return
+//            }
+//        }
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
@@ -257,9 +257,9 @@ class RequirePasswordDebugSetting: WithAccountSetting {
         if !ShowDebugSettings {
             return true
         }
-        if let account = profile.getAccount(), account.actionNeeded != FxAActionNeeded.needsPassword {
-            return false
-        }
+//        if let account = profile.getAccount(), account.actionNeeded != FxAActionNeeded.needsPassword {
+//            return false
+//        }
         return true
     }
 
@@ -268,7 +268,7 @@ class RequirePasswordDebugSetting: WithAccountSetting {
     }
 
     override func onClick(_ navigationController: UINavigationController?) {
-        profile.getAccount()?.makeSeparated()
+        //profile.getAccount()?.makeSeparated()
         settings.tableView.reloadData()
     }
 }
@@ -280,9 +280,9 @@ class RequireUpgradeDebugSetting: WithAccountSetting {
         if !ShowDebugSettings {
             return true
         }
-        if let account = profile.getAccount(), account.actionNeeded != FxAActionNeeded.needsUpgrade {
-            return false
-        }
+//        if let account = profile.getAccount(), account.actionNeeded != FxAActionNeeded.needsUpgrade {
+//            return false
+//        }
         return true
     }
 
@@ -291,7 +291,7 @@ class RequireUpgradeDebugSetting: WithAccountSetting {
     }
 
     override func onClick(_ navigationController: UINavigationController?) {
-        profile.getAccount()?.makeDoghouse()
+        //profile.getAccount()?.makeDoghouse()
         settings.tableView.reloadData()
     }
 }
@@ -302,9 +302,9 @@ class ForgetSyncAuthStateDebugSetting: WithAccountSetting {
         if !ShowDebugSettings {
             return true
         }
-        if let _ = profile.getAccount() {
-            return false
-        }
+//        if let _ = profile.getAccount() {
+//            return false
+//        }
         return true
     }
 
@@ -313,7 +313,7 @@ class ForgetSyncAuthStateDebugSetting: WithAccountSetting {
     }
 
     override func onClick(_ navigationController: UINavigationController?) {
-        profile.getAccount()?.syncAuthState.invalidate()
+        //profile.getAccount()?.syncAuthState.invalidate()
         settings.tableView.reloadData()
     }
 }

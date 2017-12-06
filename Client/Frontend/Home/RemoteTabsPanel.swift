@@ -545,11 +545,11 @@ fileprivate class RemoteTabsTableViewController : UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
 
         // Short circuit if the user is not logged in
-        if !profile.hasSyncableAccount() {
-            self.tableViewDelegate = RemoteTabsPanelErrorDataSource(homePanel: remoteTabsPanel, error: .notLoggedIn)
-            self.endRefreshing()
-            return
-        }
+//        if !profile.hasSyncableAccount() {
+//            self.tableViewDelegate = RemoteTabsPanelErrorDataSource(homePanel: remoteTabsPanel, error: .notLoggedIn)
+//            self.endRefreshing()
+//            return
+//        }
 
 //        self.profile.getCachedClientsAndTabs().uponQueue(DispatchQueue.main) { result in
 //            if let clientAndTabs = result.successValue {

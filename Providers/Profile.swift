@@ -195,18 +195,6 @@ protocol Profile: class {
     // Similar to <http://stackoverflow.com/questions/26029317/exc-bad-access-when-indirectly-accessing-inherited-member-in-swift>.
     func localName() -> String
 
-    // URLs and account configuration.
-    var accountConfiguration: FirefoxAccountConfiguration { get }
-
-    // Do we have an account at all?
-    func hasAccount() -> Bool
-
-    // Do we have an account that (as far as we know) is in a syncable state?
-    func hasSyncableAccount() -> Bool
-
-    func getAccount() -> FirefoxAccount?
-    func removeAccount()
-    func setAccount(_ account: FirefoxAccount)
 }
 
 public class BrowserProfile: Profile {
@@ -239,7 +227,7 @@ public class BrowserProfile: Profile {
         }
 
 		self.loginsDB = BrowserDB(filename: "logins.db", secretKey: BrowserProfile.loginsKey, files: files)
-		//self.db = BrowserDB(filename: "browser.db", files: files)
+		// self.db = BrowserDB(filename: "browser.db", files: files)
 
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(BrowserProfile.onLocationChange(_:)), name: NotificationOnLocationChange, object: nil)
@@ -250,8 +238,8 @@ public class BrowserProfile: Profile {
         // If the profile dir doesn't exist yet, this is first run (for this profile).
         if !files.exists("") {
             log.info("New profile. Removing old account metadata.")
-            self.removeAccountMetadata()
-            self.removeExistingAuthenticationInfo()
+            //self.removeAccountMetadata()
+            //self.removeExistingAuthenticationInfo()
             prefs.clearAll()
         }
 
@@ -399,71 +387,6 @@ public class BrowserProfile: Profile {
     var isChinaEdition: Bool {
         let locale = NSLocale.current
         return prefs.boolForKey("useChinaSyncService") ?? (locale.identifier == "zh_CN")
-    }
-
-    var accountConfiguration: FirefoxAccountConfiguration {
-        if isChinaEdition {
-            return ChinaEditionFirefoxAccountConfiguration()
-        }
-        return ProductionFirefoxAccountConfiguration()
-    }
-
-    private lazy var account: FirefoxAccount? = {
-		if let dictionary = KeychainWrapper.sharedAppContainerKeychain.object(forKey: self.name + ".account") as? [String: AnyObject] {
-            return FirefoxAccount.fromDictionary(dictionary)
-        }
-        return nil
-    }()
-
-    func hasAccount() -> Bool {
-        return account != nil
-    }
-
-    func hasSyncableAccount() -> Bool {
-        return account?.actionNeeded == FxAActionNeeded.none
-    }
-
-    func getAccount() -> FirefoxAccount? {
-        return account
-    }
-
-    func removeAccountMetadata() {
-        self.prefs.removeObjectForKey(PrefsKeys.KeyLastRemoteTabSyncTime)
-        KeychainWrapper.sharedAppContainerKeychain.removeObject(forKey: self.name + ".account")
-    }
-
-    func removeExistingAuthenticationInfo() {
-        KeychainWrapper.sharedAppContainerKeychain.setAuthenticationInfo(nil)
-    }
-
-    func removeAccount() {
-        let old = self.account
-        removeAccountMetadata()
-        self.account = nil
-
-        // Tell any observers that our account has changed.
-        NotificationCenter.default.post(name: NotificationFirefoxAccountChanged, object: nil)
-
-        // Trigger cleanup. Pass in the account in case we want to try to remove
-        // client-specific data from the server.
-        //self.syncManager.onRemovedAccount(old)
-
-        // Deregister for remote notifications.
-        app?.unregisterForRemoteNotifications()
-    }
-
-    func setAccount(_ account: FirefoxAccount) {
-        KeychainWrapper.sharedAppContainerKeychain.set(account.dictionary() as NSCoding, forKey: name + ".account")
-        self.account = account
-
-        // register for notifications for the account
-        registerForNotifications()
-        
-        // tell any observers that our account has changed
-        let userInfo = [NotificationUserInfoKeyHasSyncableAccount: hasSyncableAccount()]
-        NotificationCenter.default.post(name: NotificationFirefoxAccountChanged, object: nil, userInfo: userInfo)
-
-        //self.syncManager.onAddedAccount()
     }
 
     func registerForNotifications() {
