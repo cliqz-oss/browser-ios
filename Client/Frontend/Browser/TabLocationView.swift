@@ -185,7 +185,7 @@ class TabLocationView: UIView {
         addSubview(readerModeButton)
         
         // Cliqz: added constaints for forget mode icon
-        forgetModeImageView.snp_makeConstraints { make in
+        forgetModeImageView.snp.makeConstraints { make in
             make.leading.centerY.equalTo(self)
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
@@ -196,15 +196,15 @@ class TabLocationView: UIView {
 			make.left.equalTo(self).offset(30)
         }
         
-        lockImageView.snp_makeConstraints { make in
-            make.trailing.equalTo(urlTextField.snp_leading)
+        lockImageView.snp.makeConstraints { make in
+            make.trailing.equalTo(urlTextField.snp.leading)
             make.centerY.equalTo(self)
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
         
-        readerModeButton.snp_makeConstraints { make in
+        readerModeButton.snp.makeConstraints { make in
             make.centerY.equalTo(self)
-            make.leading.equalTo(forgetModeImageView.snp_trailing)
+            make.leading.equalTo(forgetModeImageView.snp.trailing)
             // Cliqz: changd the width constraint of the readerModeButton
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
         }
@@ -243,7 +243,7 @@ class TabLocationView: UIView {
 			make.width.greaterThanOrEqualTo(urlTextFieldWidth)
 		}
 		
-        readerModeButton.snp_remakeConstraints { make in
+        readerModeButton.snp.remakeConstraints { make in
             
             make.centerY.equalTo(self)
             make.width.equalTo(TabLocationViewUX.ButtonWidth)
@@ -251,7 +251,7 @@ class TabLocationView: UIView {
             if forgetModeImageView.isHidden {
                 make.leading.equalTo(self)
             } else {
-                make.leading.equalTo(forgetModeImageView.snp_trailing)
+                make.leading.equalTo(forgetModeImageView.snp.trailing)
             }
         }
         super.updateConstraints()

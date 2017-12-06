@@ -109,22 +109,22 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
         controllerContainerView = UIView()
         view.addSubview(controllerContainerView)
 
-        blur?.snp_makeConstraints { make in
+        blur?.snp.makeConstraints { make in
             make.edges.equalTo(self.view)
         }
 
-        buttonContainerView.snp_makeConstraints { make in
+        buttonContainerView.snp.makeConstraints { make in
             make.top.left.right.equalTo(self.view)
             make.height.equalTo(HomePanelViewControllerUX.ButtonContainerHeight)
         }
 
-        buttonContainerBottomBorderView.snp_makeConstraints { make in
-            make.top.equalTo(self.buttonContainerView.snp_bottom).offset(-1)
+        buttonContainerBottomBorderView.snp.makeConstraints { make in
+            make.top.equalTo(self.buttonContainerView.snp.bottom).offset(-1)
             make.left.right.bottom.equalTo(self.buttonContainerView)
         }
 
-        controllerContainerView.snp_makeConstraints { make in
-            make.top.equalTo(self.buttonContainerView.snp_bottom)
+        controllerContainerView.snp.makeConstraints { make in
+            make.top.equalTo(self.buttonContainerView.snp.bottom)
             make.left.right.bottom.equalTo(self.view)
         }
 
@@ -206,8 +206,8 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
     fileprivate func showPanel(_ panel: UIViewController) {
         addChildViewController(panel)
         controllerContainerView.addSubview(panel.view)
-        panel.view.snp_makeConstraints { make in
-            make.top.equalTo(self.buttonContainerView.snp_bottom)
+        panel.view.snp.makeConstraints { make in
+            make.top.equalTo(self.buttonContainerView.snp.bottom)
             make.left.right.bottom.equalTo(self.view)
         }
         panel.didMove(toParentViewController: self)
@@ -251,8 +251,8 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
             button.accessibilityIdentifier = panel.accessibilityIdentifier
             buttons.append(button)
 
-            button.snp_remakeConstraints { make in
-                let left = prev?.snp_right ?? self.view.snp_left
+            button.snp.remakeConstraints { make in
+                let left = prev?.snp.right ?? self.view.snp.left
                 make.left.equalTo(left)
                 make.height.centerY.equalTo(self.buttonContainerView)
                 make.width.equalTo(self.buttonContainerView).dividedBy(self.panels.count)
@@ -307,7 +307,7 @@ class HomePanelViewController: UIViewController, UITextFieldDelegate, HomePanelD
             button.transform = translateDown
             button.titleLabel?.textAlignment = .right
             self.buttonContainerView.addSubview(button)
-            button.snp_makeConstraints { make in
+            button.snp.makeConstraints { make in
                 make.right.equalTo(self.buttonContainerView).offset(HomePanelViewControllerUX.EditDoneButtonRightPadding)
                 make.centerY.equalTo(self.buttonContainerView)
             }

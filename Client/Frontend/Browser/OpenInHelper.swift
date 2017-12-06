@@ -213,7 +213,7 @@ class OpenInView: UIView {
         openInButton.titleLabel?.font = OpenInViewUX.TextFont
         openInButton.sizeToFit()
         self.addSubview(openInButton)
-        openInButton.snp_makeConstraints { make in
+        openInButton.snp.makeConstraints { make in
             make.centerY.equalTo(self)
             make.height.equalTo(self)
             make.trailing.equalTo(self).offset(OpenInViewUX.TextOffset)

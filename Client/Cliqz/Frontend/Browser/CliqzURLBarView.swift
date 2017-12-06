@@ -164,16 +164,16 @@ class CliqzURLBarView: URLBarView {
         NotificationCenter.default.addObserver(self, selector:#selector(refreshAntiTrackingButton) , name: NSNotification.Name(rawValue: NotificationRefreshAntiTrackingButton), object: nil)
         
 		addSubview(self.antitrackingButton)
-		antitrackingButton.snp_makeConstraints { make in
+		antitrackingButton.snp.makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
-			make.leading.equalTo(self.locationContainer.snp_trailing).offset(-1.5 * URLBarViewUX.ButtonWidth)
+			make.leading.equalTo(self.locationContainer.snp.trailing).offset(-1.5 * URLBarViewUX.ButtonWidth)
 			make.size.equalTo(CliqzURLBarView.antitrackingButtonSize)
 		}
         
         addSubview(newTabButton)
         // Cliqz: Changed new tab position, now it should be befores tabs button
         newTabButton.snp.makeConstraints { make in
-            make.right.equalTo(self.tabsButton.snp_left).offset(-URLBarViewUX.URLBarButtonOffset)
+            make.right.equalTo(self.tabsButton.snp.left).offset(-URLBarViewUX.URLBarButtonOffset)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }

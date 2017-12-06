@@ -99,7 +99,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         button.setBackgroundImage(UIImage(named: "getting-started"), for: UIControlState())
         button.setTitleColor(UIColor.white, for: UIControlState())
         button.addTarget(self, action: #selector(IntroViewController.SELstartBrowsing), for: UIControlEvents.touchUpInside)
-        button.snp_makeConstraints { (make) -> Void in
+        button.snp.makeConstraints { (make) -> Void in
             make.width.equalTo(200.0)
             make.height.equalTo(40.0)
         }
@@ -133,7 +133,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         startBrowsingButton.accessibilityIdentifier = "IntroViewController.startBrowsingButton"
 
         view.addSubview(startBrowsingButton)
-        startBrowsingButton.snp_makeConstraints { (make) -> Void in
+        startBrowsingButton.snp.makeConstraints { (make) -> Void in
             make.left.right.bottom.equalTo(self.view)
             make.height.equalTo(IntroViewControllerUX.StartBrowsingButtonHeight)
         }
@@ -158,11 +158,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         }
 
         scrollView.addSubview(slideContainer)
-        scrollView.snp_makeConstraints { (make) -> Void in
+        scrollView.snp.makeConstraints { (make) -> Void in
             // Cliqz: remove start browsing button
             make.left.right.top.bottom.equalTo(self.view)
 //            make.left.right.top.equalTo(self.view)
-//            make.bottom.equalTo(startBrowsingButton.snp_top)
+//            make.bottom.equalTo(startBrowsingButton.snp.top)
         }
 
         // Cliqz: Used custom page control to be able to change the indicator images
@@ -176,11 +176,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         pageControl.addTarget(self, action: #selector(IntroViewController.changePage), for: UIControlEvents.valueChanged)
 
         view.addSubview(pageControl)
-        pageControl.snp_makeConstraints { (make) -> Void in
+        pageControl.snp.makeConstraints { (make) -> Void in
             make.centerX.equalTo(self.scrollView)
             // Cliqz: remove start browsing button
-            make.centerY.equalTo(self.view.snp_bottom).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
-//            make.centerY.equalTo(self.startBrowsingButton.snp_top).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
+            make.centerY.equalTo(self.view.snp.bottom).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
+//            make.centerY.equalTo(self.startBrowsingButton.snp.top).offset(-IntroViewControllerUX.PagerCenterOffsetFromScrollViewBottom)
         }
 
 
@@ -214,7 +214,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         signInButton.layer.cornerRadius = IntroViewControllerUX.SignInButtonCornerRadius
         signInButton.clipsToBounds = true
         signInButton.addTarget(self, action: #selector(IntroViewController.SELlogin), forControlEvents: UIControlEvents.TouchUpInside)
-        signInButton.snp_makeConstraints { (make) -> Void in
+        signInButton.snp.makeConstraints { (make) -> Void in
             make.height.equalTo(IntroViewControllerUX.SignInButtonHeight)
         }
 
@@ -228,11 +228,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         for introView in introViews {
             introView.alpha = 0
             self.view.addSubview(introView)
-            introView.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(self.slideContainer.snp_bottom)
+            introView.snp.makeConstraints { (make) -> Void in
+                make.top.equalTo(self.slideContainer.snp.bottom)
                 // Cliqz: remove start browsing button
-                make.bottom.equalTo(self.view.snp_bottom)
-//                make.bottom.equalTo(self.startBrowsingButton.snp_top)
+                make.bottom.equalTo(self.view.snp.bottom)
+//                make.bottom.equalTo(self.startBrowsingButton.snp.top)
                 make.left.right.equalTo(self.view)
             }
         }
@@ -266,11 +266,11 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        scrollView.snp_remakeConstraints { (make) -> Void in
+        scrollView.snp.remakeConstraints { (make) -> Void in
             make.left.right.top.equalTo(self.view)
             // Cliqz: remove start browsing button
-            make.bottom.equalTo(self.view.snp_bottom)
-//            make.bottom.equalTo(self.startBrowsingButton.snp_top)
+            make.bottom.equalTo(self.view.snp.bottom)
+//            make.bottom.equalTo(self.startBrowsingButton.snp.top)
         }
 
         for i in 0..<IntroViewControllerUX.NumberOfCards {
@@ -459,7 +459,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     fileprivate func addViewsToIntroView(_ introView: UIView, view: UIView, title: String = "") {
         introView.addSubview(view)
-        view.snp_makeConstraints { (make) -> Void in
+        view.snp.makeConstraints { (make) -> Void in
             make.center.equalTo(introView)
             make.width.equalTo(self.view.frame.width <= 320 ? 240 : 280) // TODO Talk to UX about small screen sizes
         }
@@ -473,9 +473,9 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
 //            titleLabel.text = title
 //            titleLabels.append(titleLabel)
             introView.addSubview(titleLabel)
-            titleLabel.snp_makeConstraints { (make) -> Void in
+            titleLabel.snp.makeConstraints { (make) -> Void in
                 make.top.equalTo(introView)
-                make.bottom.equalTo(view.snp_top)
+                make.bottom.equalTo(view.snp.top)
                 make.centerX.equalTo(introView)
                 make.width.equalTo(self.view.frame.width <= 320 ? 240 : 280) // TODO Talk to UX about small screen sizes
             }
@@ -523,7 +523,7 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         
         
         introView.addSubview(textLabel)
-        textLabel.snp_makeConstraints { (make) -> Void in
+        textLabel.snp.makeConstraints { (make) -> Void in
             make.topMargin.equalTo(30)
             make.centerX.equalTo(introView)
             make.width.equalTo(self.view.frame.width <= 320 ? 240 : 280) // TODO Talk to UX about small screen sizes
@@ -531,8 +531,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         
         if let view = additionalView {
             introView.addSubview(view)
-            view.snp_makeConstraints { (make) -> Void in
-                make.top.equalTo(textLabel.snp_bottom).offset(self.view.frame.width > 320 ? 50 : 20)
+            view.snp.makeConstraints { (make) -> Void in
+                make.top.equalTo(textLabel.snp.bottom).offset(self.view.frame.width > 320 ? 50 : 20)
                 make.centerX.equalTo(introView)
             }
         }

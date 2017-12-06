@@ -43,7 +43,7 @@ class CliqzTabsButton: TabsButton {
 
 	override func updateConstraints() {
 		super.updateConstraints()
-		backgroundImage.snp_remakeConstraints { (make) -> Void in
+		backgroundImage.snp.remakeConstraints { (make) -> Void in
 			make.edges.equalTo(self).inset(BackgroundInsets)
 		}
 	}

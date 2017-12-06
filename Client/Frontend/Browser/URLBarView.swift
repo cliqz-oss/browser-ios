@@ -289,21 +289,21 @@ class URLBarView: UIView {
 
     fileprivate func setupConstraints() {
 
-        scrollToTopButton.snp_makeConstraints { make in
+        scrollToTopButton.snp.makeConstraints { make in
             make.top.equalTo(self)
             make.left.right.equalTo(self.locationContainer)
         }
 
-        progressBar.snp_makeConstraints { make in
-            make.top.equalTo(self.snp_bottom)
+        progressBar.snp.makeConstraints { make in
+            make.top.equalTo(self.snp.bottom)
             make.width.equalTo(self)
         }
 
-        locationView.snp_makeConstraints { make in
+        locationView.snp.makeConstraints { make in
             make.edges.equalTo(self.locationContainer)
         }
 
-		cancelButton.snp_makeConstraints { make in
+		cancelButton.snp.makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.trailing.equalTo(self)
             // Cliz: set the size of the cancel button as it is we changed it to a regular button with icon
@@ -311,70 +311,70 @@ class URLBarView: UIView {
 		}
 
 		// Cliqz: Moved Tabs button to the right of URL bar
-		tabsButton.snp_makeConstraints { make in
+		tabsButton.snp.makeConstraints { make in
 			make.centerY.equalTo(self.locationContainer)
 			make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 			make.size.equalTo(UIConstants.ToolbarHeight)
 		}
 
 		// Cliqz: Commented curveShape constraints because it's removed from view
-//		curveShape.snp_makeConstraints { make in
+//		curveShape.snp.makeConstraints { make in
 //            make.top.left.bottom.equalTo(self)
 //            self.rightBarConstraint = make.right.equalTo(self).constraint
 //            self.rightBarConstraint?.updateOffset(defaultRightOffset)
 //        }
 
 		// Cliqz: changed backButtons constraint to position after tabs button
-        backButton.snp_makeConstraints { make in
+        backButton.snp.makeConstraints { make in
 			make.centerY.equalTo(self)
             make.left.equalTo(self).offset(URLBarViewUX.URLBarButtonOffset)
             make.size.equalTo(UIConstants.ToolbarHeight)
         }
 
-        forwardButton.snp_makeConstraints { make in
-            make.left.equalTo(self.backButton.snp_right).offset(URLBarViewUX.URLBarButtonOffset)
+        forwardButton.snp.makeConstraints { make in
+            make.left.equalTo(self.backButton.snp.right).offset(URLBarViewUX.URLBarButtonOffset)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
 
 		// Cliqz: Removed stopReloadingButton from toolBar
 /*
-		stopReloadButton.snp_makeConstraints { make in
-            make.left.equalTo(self.forwardButton.snp_right)
+		stopReloadButton.snp.makeConstraints { make in
+            make.left.equalTo(self.forwardButton.snp.right)
             make.centerY.equalTo(self)
             make.size.equalTo(backButton)
         }
 */
 
         if AppConstants.MOZ_MENU {
-            shareButton.snp_makeConstraints { make in
-                make.right.equalTo(self.menuButton.snp_left)
+            shareButton.snp.makeConstraints { make in
+                make.right.equalTo(self.menuButton.snp.left)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
             
-            homePageButton.snp_makeConstraints { make in
+            homePageButton.snp.makeConstraints { make in
                 make.center.equalTo(shareButton)
                 make.size.equalTo(shareButton)
             }
             
-            menuButton.snp_makeConstraints { make in
-                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+            menuButton.snp.makeConstraints { make in
+                make.right.equalTo(self.tabsButton.snp.left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
         } else {
 			
-            shareButton.snp_makeConstraints { make in
+            shareButton.snp.makeConstraints { make in
                 // Cliqz: commented the left constaints as this will be overriden in CliqzURLBarView subclass
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
             
             // Cliqz: Changed Bookmark button position, next to back button
-            bookmarkButton.snp_makeConstraints { make in
-//                make.right.equalTo(self.tabsButton.snp_left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
-				make.left.equalTo(self.forwardButton.snp_right).offset(URLBarViewUX.URLBarButtonOffset)
+            bookmarkButton.snp.makeConstraints { make in
+//                make.right.equalTo(self.tabsButton.snp.left).offset(URLBarViewUX.URLBarCurveOffsetLeft)
+				make.left.equalTo(self.forwardButton.snp.right).offset(URLBarViewUX.URLBarButtonOffset)
                 make.centerY.equalTo(self)
                 make.size.equalTo(backButton)
             }
@@ -390,13 +390,13 @@ class URLBarView: UIView {
 				// Cliqz: Changed locationContainer's constraints to align with new buttons
                 
                 make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                make.trailing.equalTo(self.cancelButton.snp_leading)//                make.height.equalTo(URLBarViewUX.LocationHeight)
+                make.trailing.equalTo(self.cancelButton.snp.leading)//                make.height.equalTo(URLBarViewUX.LocationHeight)
                 make.height.equalTo(URLBarViewUX.ExpandedLocationHeight)
                 make.centerY.equalTo(self)
                 
             })
 			// Cliqz: Moved Tabs button to the left side of URLbar
-			tabsButton.snp_remakeConstraints { make in
+			tabsButton.snp.remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
 				make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 				make.size.equalTo(UIConstants.ToolbarHeight)
@@ -407,13 +407,13 @@ class URLBarView: UIView {
 				
                 if self.toolbarIsShowing {
                     // If we are showing a toolbar, show the text field next to the forward button
-					make.leading.equalTo(self.bookmarkButton.snp_trailing).offset(URLBarViewUX.URLBarButtonOffset)
-                    make.trailing.equalTo(self.shareButton.snp_leading).offset(-URLBarViewUX.URLBarButtonOffset)
+					make.leading.equalTo(self.bookmarkButton.snp.trailing).offset(URLBarViewUX.URLBarButtonOffset)
+                    make.trailing.equalTo(self.shareButton.snp.leading).offset(-URLBarViewUX.URLBarButtonOffset)
                 } else {
                     // Otherwise, left align the location view
                     /*
                     make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
-                    make.trailing.equalTo(self.tabsButton.snp_leading).offset(-14)
+                    make.trailing.equalTo(self.tabsButton.snp.leading).offset(-14)
                     */
 					make.leading.equalTo(self).offset(URLBarViewUX.LocationLeftPadding)
                     make.trailing.equalTo(self).offset(-URLBarViewUX.LocationLeftPadding)
@@ -423,7 +423,7 @@ class URLBarView: UIView {
                 make.centerY.equalTo(self)
             }
 			// Cliqz: Moved Tabs button to the left side of URLbar
-			tabsButton.snp_remakeConstraints { make in
+			tabsButton.snp.remakeConstraints { make in
 				make.centerY.equalTo(self.locationContainer)
                 make.right.equalTo(self).offset(-URLBarViewUX.URLBarButtonOffset)
 				make.size.equalTo(UIConstants.ToolbarHeight)
@@ -456,7 +456,7 @@ class URLBarView: UIView {
         locationTextField.attributedPlaceholder = self.locationView.placeholder
         locationContainer.addSubview(locationTextField)
 
-        locationTextField.snp_makeConstraints { make in
+        locationTextField.snp.makeConstraints { make in
             // Cliqz: make edges of the locationTextField to locationView as urlTextField is not take the whole super view any more to preving the flicking of the clear button icon
             make.edges.equalTo(self.locationView.urlTextField)
             make.edges.equalTo(self.locationView)
@@ -529,7 +529,7 @@ class URLBarView: UIView {
             newTabsButton.accessibilityValue = countToBe
             addSubview(newTabsButton)
 			// Cliqz: change tailing constraint to the left because we moved the button to the left side of
-            newTabsButton.snp_makeConstraints { make in
+            newTabsButton.snp.makeConstraints { make in
                 make.centerY.equalTo(self.locationContainer)
 				make.left.equalTo(self)
                 make.size.equalTo(UIConstants.ToolbarHeight)
@@ -722,7 +722,7 @@ class URLBarView: UIView {
 //            self.rightBarConstraint?.updateOffset(URLBarViewUX.URLBarCurveOffset + URLBarViewUX.URLBarCurveBounceBuffer + tabsButton.frame.width)
 
             // Make the editable text field span the entire URL bar, covering the lock and reader icons.
-            self.locationTextField?.snp_remakeConstraints { make in
+            self.locationTextField?.snp.remakeConstraints { make in
                 make.leading.equalTo(self.locationContainer)
                 make.top.bottom.trailing.equalTo(self.locationContainer)
             }
@@ -736,7 +736,7 @@ class URLBarView: UIView {
             self.rightBarConstraint?.updateOffset(amount: defaultRightOffset)
 
             // Shrink the editable text field back to the size of the location view before hiding it.
-            self.locationTextField?.snp_remakeConstraints { make in
+            self.locationTextField?.snp.remakeConstraints { make in
                 make.edges.equalTo(self.locationView.urlTextField)
             }
         }

@@ -122,14 +122,14 @@ class BackForwardListViewController: UIViewController, UITableViewDataSource, UI
         guard let bvc = self.bvc else {
             return
         }
-        tableView.snp_updateConstraints { make in
+        tableView.snp.updateConstraints { make in
             make.bottom.equalTo(self.view).offset(bvc.shouldShowFooterForTraitCollection(newCollection) ? -UIConstants.ToolbarHeight : 0)
         }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        tableView.snp_updateConstraints { make in
+        tableView.snp.updateConstraints { make in
             make.height.equalTo(min(CGFloat(BackForwardViewUX.RowHeight*listData.count), size.height/2))
         }
     }
@@ -141,14 +141,14 @@ class BackForwardListViewController: UIViewController, UITableViewDataSource, UI
         }
         view.addSubview(shadow)
         view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.height.equalTo(0)
             make.left.right.equalTo(self.view)
             make.bottom.equalTo(self.view).offset(-bvc.footer.frame.height)
         }
-        shadow.snp_makeConstraints { make in
+        shadow.snp.makeConstraints { make in
             make.top.left.right.equalTo(self.view)
-            make.bottom.equalTo(tableView.snp_top)
+            make.bottom.equalTo(tableView.snp.top)
         }
         view.layoutIfNeeded()
         scrollTableViewToIndex(currentRow)

@@ -125,17 +125,17 @@ class TabsButton: UIButton {
 
     override func updateConstraints() {
         super.updateConstraints()
-        labelBackground.snp_remakeConstraints { (make) -> Void in
+        labelBackground.snp.remakeConstraints { (make) -> Void in
             make.edges.equalTo(insideButton)
         }
-        borderView.snp_remakeConstraints { (make) -> Void in
+        borderView.snp.remakeConstraints { (make) -> Void in
             make.edges.equalTo(insideButton)
         }
         // Cliqz: use new variable title instead of old one titleLabel
-        title.snp_remakeConstraints { (make) -> Void in
+        title.snp.remakeConstraints { (make) -> Void in
             make.edges.equalTo(insideButton)
         }
-        insideButton.snp_remakeConstraints { (make) -> Void in
+        insideButton.snp.remakeConstraints { (make) -> Void in
             make.edges.equalTo(self).inset(insets)
         }
     }
