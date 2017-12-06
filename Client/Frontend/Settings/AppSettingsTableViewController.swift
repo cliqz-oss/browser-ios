@@ -204,34 +204,34 @@ class AppSettingsTableViewController: SettingsTableViewController {
     }
     */
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if !profile.hasAccount() {
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
-            let sectionSetting = settings[section]
-            headerView.titleLabel.text = sectionSetting.title?.string
-            
-            // Cliqz: remove all FireFox header customizations due to hiding unneeded sections
-            return super.tableView(tableView, viewForHeaderInSection: section)
-            /*
-            switch section {
-                // Hide the bottom border for the Sign In to Firefox value prop
-                case 1:
-                    headerView.titleAlignment = .Top
-                    headerView.titleLabel.numberOfLines = 0
-                    headerView.showBottomBorder = false
-                    headerView.titleLabel.snp_updateConstraints { make in
-                        make.right.equalTo(headerView).offset(-50)
-                    }
-
-                // Hide the top border for the General section header when the user is not signed in.
-                case 2:
-                    headerView.showTopBorder = false
-                default:
-                    return super.tableView(tableView, viewForHeaderInSection: section)
-            }
-            return headerView
-            */
-        }
-        
+//        if !profile.hasAccount() {
+//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderIdentifier) as! SettingsTableSectionHeaderFooterView
+//            let sectionSetting = settings[section]
+//            headerView.titleLabel.text = sectionSetting.title?.string
+//            
+//            // Cliqz: remove all FireFox header customizations due to hiding unneeded sections
+//            return super.tableView(tableView, viewForHeaderInSection: section)
+//            /*
+//            switch section {
+//                // Hide the bottom border for the Sign In to Firefox value prop
+//                case 1:
+//                    headerView.titleAlignment = .Top
+//                    headerView.titleLabel.numberOfLines = 0
+//                    headerView.showBottomBorder = false
+//                    headerView.titleLabel.snp_updateConstraints { make in
+//                        make.right.equalTo(headerView).offset(-50)
+//                    }
+//
+//                // Hide the top border for the General section header when the user is not signed in.
+//                case 2:
+//                    headerView.showTopBorder = false
+//                default:
+//                    return super.tableView(tableView, viewForHeaderInSection: section)
+//            }
+//            return headerView
+//            */
+//        }
+//        
         return super.tableView(tableView, viewForHeaderInSection: section)
     }
 }

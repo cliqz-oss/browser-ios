@@ -3622,18 +3622,18 @@ extension BrowserViewController: IntroViewControllerDelegate {
     func presentSignInViewController() {
         // Show the settings page if we have already signed in. If we haven't then show the signin page
         let vcToPresent: UIViewController
-        if profile.hasAccount() {
-            let settingsTableViewController = AppSettingsTableViewController()
-            settingsTableViewController.profile = profile
-            settingsTableViewController.tabManager = tabManager
-            vcToPresent = settingsTableViewController
-        } else {
+//        if profile.hasAccount() {
+//            let settingsTableViewController = AppSettingsTableViewController()
+//            settingsTableViewController.profile = profile
+//            settingsTableViewController.tabManager = tabManager
+//            vcToPresent = settingsTableViewController
+//        } else {
             let signInVC = FxAContentViewController()
             signInVC.delegate = self
-            signInVC.url = profile.accountConfiguration.signInURL
+            //signInVC.url = profile.accountConfiguration.signInURL
             signInVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(BrowserViewController.dismissSignInViewController))
             vcToPresent = signInVC
-        }
+//        }
 
         let settingsNavigationController = SettingsNavigationController(rootViewController: vcToPresent)
 		settingsNavigationController.modalPresentationStyle = .formSheet
@@ -3660,11 +3660,11 @@ extension BrowserViewController: FxAContentViewControllerDelegate {
         }
 
         // TODO: Error handling.
-        let account = FirefoxAccount.from(profile.accountConfiguration, andJSON: data)!
-        profile.setAccount(account)
-        if let account = self.profile.getAccount() {
-            account.advance()
-        }
+//        let account = FirefoxAccount.from(profile.accountConfiguration, andJSON: data)!
+//        profile.setAccount(account)
+//        if let account = self.profile.getAccount() {
+//            account.advance()
+//        }
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -4383,7 +4383,6 @@ extension BrowserViewController: CrashlyticsDelegate {
 			completionHandler(true)
 		}
     }
-    
 }
 
 

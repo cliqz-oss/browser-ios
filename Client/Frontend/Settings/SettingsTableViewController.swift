@@ -357,9 +357,9 @@ class AccountSetting: Setting, FxAContentViewControllerDelegate {
 
     override func onConfigureCell(_ cell: UITableViewCell) {
         super.onConfigureCell(cell)
-        if settings.profile.getAccount() != nil {
-            cell.selectionStyle = .none
-        }
+//        if settings.profile.getAccount() != nil {
+//            cell.selectionStyle = .none
+//        }
     }
 
     override var accessoryType: UITableViewCellAccessoryType { return .none }
@@ -381,11 +381,11 @@ class AccountSetting: Setting, FxAContentViewControllerDelegate {
 }
 
 class WithAccountSetting: AccountSetting {
-    override var hidden: Bool { return !profile.hasAccount() }
+    override var hidden: Bool { return true }
 }
 
 class WithoutAccountSetting: AccountSetting {
-    override var hidden: Bool { return profile.hasAccount() }
+    override var hidden: Bool { return false }
 }
 
 @objc
@@ -485,15 +485,15 @@ class SettingsTableViewController: UITableViewController {
 
     @objc fileprivate func SELrefresh() {
         // Through-out, be aware that modifying the control while a refresh is in progress is /not/ supported and will likely crash the app.
-        if let account = self.profile.getAccount() {
-            account.advance().upon { _ in
-                DispatchQueue.main.async { () -> Void in
-                    self.tableView.reloadData()
-                }
-            }
-        } else {
+//        if let account = self.profile.getAccount() {
+//            account.advance().upon { _ in
+//                DispatchQueue.main.async { () -> Void in
+//                    self.tableView.reloadData()
+//                }
+//            }
+//        } else {
             self.tableView.reloadData()
-        }
+        //}
     }
 
     @objc func SELfirefoxAccountDidChange() {

@@ -54,7 +54,7 @@ var nullWKNavigation: WKNavigation = WKNavigation()
             }
             wv.lastTappedTime = nil
             if let _url = URL(string: url, relativeTo: current) {
-                getApp().browserViewController.openURLInNewTab(_url)
+                //getApp().browserViewController.openURLInNewTab(_url)
             }
         }
     }
