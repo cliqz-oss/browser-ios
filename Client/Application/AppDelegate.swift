@@ -381,7 +381,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         NightModeHelper.restoreNightModeBrightness((self.profile?.prefs)!, toForeground: true)
-        //self.profile?.syncManager.applicationDidBecomeActive()
 
         // Check if we have a URL from an external app or extension waiting to launch,
         // then launch it on the main thread.
@@ -436,7 +435,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            return
 //        }
 //
-////        self.profile?.syncManager.applicationDidEnterBackground()
 //
 //        var taskId: UIBackgroundTaskIdentifier = 0
 //        taskId = application.beginBackgroundTask (expirationHandler: { _ in
@@ -445,11 +443,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            application.endBackgroundTask(taskId)
 //        })
 //
-////        let backgroundQueue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
-////        self.profile?.syncManager.syncEverything().uponQueue(backgroundQueue) { _ in
-////            self.profile?.shutdown()
-////            application.endBackgroundTask(taskId)
-////        }
 //    }
     
     func applicationWillResignActive(_ application: UIApplication) {

@@ -150,7 +150,7 @@ class SyncNowSetting: WithAccountSetting {
         cell.accessoryView = nil
         
         cell.accessoryType = accessoryType
-        //cell.isUserInteractionEnabled = !profile.syncManager.isSyncing
+        cell.isUserInteractionEnabled = true
     }
 
     fileprivate func addIcon(_ image: UIImageView, toCell cell: UITableViewCell) {
@@ -170,7 +170,6 @@ class SyncNowSetting: WithAccountSetting {
 
     override func onClick(_ navigationController: UINavigationController?) {
         NotificationCenter.default.post(name: Notification.Name(rawValue: SyncNowSetting.NotificationUserInitiatedSyncManually), object: nil)
-        //profile.syncManager.syncEverything()
     }
 }
 

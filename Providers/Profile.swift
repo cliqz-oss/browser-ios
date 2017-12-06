@@ -20,68 +20,9 @@ public let NotificationProfileDidStartSyncing = "NotificationProfileDidStartSync
 public let NotificationProfileDidFinishSyncing = Notification.Name("NotificationProfileDidFinishSyncing")
 public let ProfileRemoteTabsSyncDelay: TimeInterval = 0.1
 
-public enum SyncDisplayState {
-    case inProgress
-    case good
-    case bad(message: String?)
-    case stale(message: String)
-
-    func asObject() -> [String: String]? {
-        switch self {
-        case .bad(let msg):
-            guard let message = msg else {
-                return ["state": "Error"]
-            }
-            return ["state": "Error",
-                    "message": message]
-        case .stale(let message):
-            return ["state": "Warning",
-                    "message": message]
-        default:
-            break
-        }
-        return nil
-    }
-}
-
-public func ==(a: SyncDisplayState, b: SyncDisplayState) -> Bool {
-    switch (a, b) {
-    case (.inProgress,   .inProgress): return true
-    case (.good,   .good): return true
-    case (.bad(let a), .bad(let b)) where a == b: return true
-    case (.stale(let a), .stale(let b)) where a == b: return true
-    default: return false
-    }
-}
-
-public protocol SyncManager {
-    var isSyncing: Bool { get }
-    var lastSyncFinishTime: Timestamp? { get set }
-    var syncDisplayState: SyncDisplayState? { get }
-
-    func hasSyncedHistory() -> Deferred<Maybe<Bool>>
-    func hasSyncedLogins() -> Deferred<Maybe<Bool>>
-
-    func syncClients() -> SyncResult
-    func syncClientsThenTabs() -> SyncResult
-    func syncHistory() -> SyncResult
-    func syncLogins() -> SyncResult
-    func syncEverything() -> Success
-
-    // The simplest possible approach.
-    func beginTimedSyncs()
-    func endTimedSyncs()
-    func applicationDidEnterBackground()
-    func applicationDidBecomeActive()
-
-    func onNewProfile()
-    func onRemovedAccount(_ account: FirefoxAccount?) -> Success
-    func onAddedAccount() -> Success
-}
 
 typealias EngineIdentifier = String
-typealias SyncFunction = (SyncDelegate, Prefs, Ready) -> SyncResult
-private typealias EngineStatus = (EngineIdentifier, SyncStatus)
+private typealias EngineStatus = (EngineIdentifier)
 
 class ProfileFileAccessor: FileAccessor {
     convenience init(profile: Profile) {
@@ -107,19 +48,6 @@ class ProfileFileAccessor: FileAccessor {
     }
 }
 
-//class CommandStoringSyncDelegate: SyncDelegate {
-//    let profile: Profile
-//
-//    init() {
-//        profile = BrowserProfile(localName: "profile", app: nil)
-//    }
-//
-////    func displaySentTabForURL(_ URL: URL, title: String) {
-////        let item = ShareItem(url: URL.absoluteString, title: title, favicon: nil)
-////        //self.profile.queue.addToQueue(item)
-////    }
-//}
-
 /**
  * This exists because the Sync code is extension-safe, and thus doesn't get
  * direct access to UIApplication.sharedApplication, which it would need to
@@ -127,47 +55,6 @@ class ProfileFileAccessor: FileAccessor {
  * This will also likely be the extension point for wipes, resets, and
  * getting access to data sources during a sync.
  */
-
-let TabSendURLKey = "TabSendURL"
-let TabSendTitleKey = "TabSendTitle"
-let TabSendCategory = "TabSendCategory"
-
-enum SentTabAction: String {
-    case View = "TabSendViewAction"
-    case Bookmark = "TabSendBookmarkAction"
-    case ReadingList = "TabSendReadingListAction"
-}
-
-class BrowserProfileSyncDelegate: SyncDelegate {
-    let app: UIApplication
-
-    init(app: UIApplication) {
-        self.app = app
-    }
-
-    // SyncDelegate
-    func displaySentTabForURL(_ URL: URL, title: String) {
-        // check to see what the current notification settings are and only try and send a notification if
-        // the user has agreed to them
-        if let currentSettings = app.currentUserNotificationSettings {
-            if currentSettings.types.rawValue & UIUserNotificationType.alert.rawValue != 0 {
-                if Logger.logPII {
-                    log.info("Displaying notification for URL \(URL.absoluteString)")
-                }
-
-                let notification = UILocalNotification()
-                notification.fireDate = Date()
-                notification.timeZone = NSTimeZone.default
-                notification.alertBody = String(format: NSLocalizedString("New tab: %@: %@", comment:"New tab [title] [url]"), title, URL.absoluteString)
-                notification.userInfo = [TabSendURLKey: URL.absoluteString, TabSendTitleKey: title]
-                notification.alertAction = nil
-                notification.category = TabSendCategory
-
-                app.presentLocalNotificationNow(notification)
-            }
-        }
-    }
-}
 
 /**
  * A Profile manages access to the user's data.
@@ -387,37 +274,5 @@ public class BrowserProfile: Profile {
     var isChinaEdition: Bool {
         let locale = NSLocale.current
         return prefs.boolForKey("useChinaSyncService") ?? (locale.identifier == "zh_CN")
-    }
-
-    func registerForNotifications() {
-        let viewAction = UIMutableUserNotificationAction()
-        viewAction.identifier = SentTabAction.View.rawValue
-        viewAction.title = NSLocalizedString("View", comment: "View a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440")
-        viewAction.activationMode = UIUserNotificationActivationMode.foreground
-        viewAction.isDestructive = false
-        viewAction.isAuthenticationRequired = false
-
-        let bookmarkAction = UIMutableUserNotificationAction()
-        bookmarkAction.identifier = SentTabAction.Bookmark.rawValue
-        bookmarkAction.title = NSLocalizedString("Bookmark", comment: "Bookmark a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440")
-        bookmarkAction.activationMode = UIUserNotificationActivationMode.foreground
-        bookmarkAction.isDestructive = false
-        bookmarkAction.isAuthenticationRequired = false
-
-        let readingListAction = UIMutableUserNotificationAction()
-        readingListAction.identifier = SentTabAction.ReadingList.rawValue
-        readingListAction.title = NSLocalizedString("Add to Reading List", comment: "Add URL to the reading list - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440")
-        readingListAction.activationMode = UIUserNotificationActivationMode.foreground
-        readingListAction.isDestructive = false
-        readingListAction.isAuthenticationRequired = false
-
-        let sentTabsCategory = UIMutableUserNotificationCategory()
-        sentTabsCategory.identifier = TabSendCategory
-        sentTabsCategory.setActions([readingListAction, bookmarkAction, viewAction], for: UIUserNotificationActionContext.default)
-
-        sentTabsCategory.setActions([bookmarkAction, viewAction], for: UIUserNotificationActionContext.minimal)
-
-        app?.registerUserNotificationSettings(UIUserNotificationSettings(types: UIUserNotificationType.alert, categories: [sentTabsCategory]))
-        app?.registerForRemoteNotifications()
     }
 }
