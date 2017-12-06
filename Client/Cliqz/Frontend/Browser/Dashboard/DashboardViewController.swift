@@ -149,18 +149,18 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 		let switchControlLeftOffset = 10
 		let switchControlRightOffset = -10
 		
-		panelSwitchContainerView.snp_makeConstraints { make in
+		panelSwitchContainerView.snp.makeConstraints { make in
 			make.left.right.equalTo(self.view)
 			make.top.equalTo(topLayoutGuide.snp.bottom)
 			make.height.equalTo(65)
 		}
-		panelSwitchControl.snp_makeConstraints { make in
+		panelSwitchControl.snp.makeConstraints { make in
 			make.centerY.equalTo(panelSwitchContainerView)
 			make.left.equalTo(panelSwitchContainerView).offset(switchControlLeftOffset)
 			make.right.equalTo(panelSwitchContainerView).offset(switchControlRightOffset)
 			make.height.equalTo(switchControlHeight)
 		}
-		panelContainerView.snp_makeConstraints { make in
+		panelContainerView.snp.makeConstraints { make in
 			make.top.equalTo(self.panelSwitchContainerView.snp_bottom)
 			make.left.right.bottom.equalTo(self.view)
 		}
@@ -169,7 +169,7 @@ class DashboardViewController: UIViewController, HistoryDelegate, FavoritesDeleg
 	fileprivate func showPanelViewController(_ viewController: UIViewController) {
 		addChildViewController(viewController)
 		self.panelContainerView.addSubview(viewController.view)
-		viewController.view.snp_makeConstraints { make in
+		viewController.view.snp.makeConstraints { make in
 			make.top.left.right.bottom.equalTo(self.panelContainerView)
 		}
 		viewController.didMove(toParentViewController: self)

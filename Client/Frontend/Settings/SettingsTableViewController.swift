@@ -246,12 +246,12 @@ class StringSetting: Setting, UITextFieldDelegate {
         cell.accessibilityTraits = UIAccessibilityTraitNone
         cell.contentView.addSubview(textField)
 
-        cell.contentView.snp_makeConstraints { make in
+        cell.contentView.snp.makeConstraints { make in
             make.height.equalTo(44)
-            make.width.equalTo(cell.snp_width)
+            make.width.equalTo(cell.snp.width)
         }
 
-        textField.snp_makeConstraints { make in
+        textField.snp.makeConstraints { make in
             make.height.equalTo(cell.contentView)
             make.width.equalTo(cell.contentView).offset(-2 * SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
             make.leading.equalTo(cell.contentView).offset(SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
@@ -686,12 +686,12 @@ class SettingsTableSectionHeaderFooterView: UITableViewHeaderFooterView {
     }
 
     func setupInitialConstraints() {
-        bottomBorder.snp_makeConstraints { make in
+        bottomBorder.snp.makeConstraints { make in
             make.bottom.left.right.equalTo(self)
             make.height.equalTo(0.5)
         }
 
-        topBorder.snp_makeConstraints { make in
+        topBorder.snp.makeConstraints { make in
             make.top.left.right.equalTo(self)
             make.height.equalTo(0.5)
         }
@@ -710,13 +710,13 @@ class SettingsTableSectionHeaderFooterView: UITableViewHeaderFooterView {
     fileprivate func remakeTitleAlignmentConstraints() {
         switch titleAlignment {
         case .top:
-            titleLabel.snp_remakeConstraints { make in
+            titleLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self).inset(SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
                 make.top.equalTo(self).offset(SettingsTableSectionHeaderFooterViewUX.titleVerticalPadding)
                 make.bottom.equalTo(self).offset(-SettingsTableSectionHeaderFooterViewUX.titleVerticalLongPadding)
             }
         case .bottom:
-            titleLabel.snp_remakeConstraints { make in
+            titleLabel.snp.remakeConstraints { make in
                 make.left.right.equalTo(self).inset(SettingsTableSectionHeaderFooterViewUX.titleHorizontalPadding)
                 make.bottom.equalTo(self).offset(-SettingsTableSectionHeaderFooterViewUX.titleVerticalPadding)
                 make.top.equalTo(self).offset(SettingsTableSectionHeaderFooterViewUX.titleVerticalLongPadding)

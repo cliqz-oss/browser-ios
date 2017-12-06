@@ -93,7 +93,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         self.view.addSubview(self.webView!)
         
 
-        self.webView!.snp_makeConstraints { make in
+        self.webView!.snp.makeConstraints { make in
             make.top.equalTo(0)
             make.bottom.left.right.equalTo(self.view)
         }
@@ -307,7 +307,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	fileprivate func layoutSearchEngineScrollView() {
 		let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(self.view) ?? 0
 		if let _ = self.spinnerView.superview {
-			self.spinnerView.snp_makeConstraints { make in
+			self.spinnerView.snp.makeConstraints { make in
 				make.centerX.equalTo(self.view)
 				make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
 			}

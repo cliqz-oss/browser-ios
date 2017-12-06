@@ -5,7 +5,7 @@
 import UIKit
 import SnapKit
 import Storage
-import ReadingList
+//import ReadingList
 import Shared
 import XCGLogger
 
@@ -112,7 +112,7 @@ class ReadingListTableViewCell: SWTableViewCell {
 
         contentView.addSubview(readStatusImageView)
         readStatusImageView.contentMode = UIViewContentMode.scaleAspectFit
-        readStatusImageView.snp_makeConstraints { (make) -> () in
+        readStatusImageView.snp.makeConstraints { (make) -> () in
             make.width.equalTo(ReadingListTableViewCellUX.ReadIndicatorWidth)
             make.height.equalTo(ReadingListTableViewCellUX.ReadIndicatorHeight)
             make.centerY.equalTo(self.contentView)
@@ -124,16 +124,16 @@ class ReadingListTableViewCell: SWTableViewCell {
 
         titleLabel.textColor = ReadingListTableViewCellUX.ActiveTextColor
         titleLabel.numberOfLines = 2
-        titleLabel.snp_makeConstraints { (make) -> () in
+        titleLabel.snp.makeConstraints { (make) -> () in
             make.top.equalTo(self.contentView).offset(ReadingListTableViewCellUX.TitleLabelTopOffset)
             make.leading.equalTo(self.contentView).offset(ReadingListTableViewCellUX.TitleLabelLeftOffset)
             make.trailing.equalTo(self.contentView).offset(ReadingListTableViewCellUX.TitleLabelRightOffset) // TODO Not clear from ux spec
-            make.bottom.lessThanOrEqualTo(hostnameLabel.snp_top).priorityHigh()
+            make.bottom.lessThanOrEqualTo(hostnameLabel.snp.top).priorityHigh()
         }
 
         hostnameLabel.textColor = ReadingListTableViewCellUX.ActiveTextColor
         hostnameLabel.numberOfLines = 1
-        hostnameLabel.snp_makeConstraints { (make) -> () in
+        hostnameLabel.snp.makeConstraints { (make) -> () in
             make.bottom.equalTo(self.contentView).offset(-ReadingListTableViewCellUX.HostnameLabelBottomOffset)
             make.leading.trailing.equalTo(self.titleLabel)
         }
@@ -228,260 +228,260 @@ class ReadingListTableViewCell: SWTableViewCell {
     }
 }
 
-class ReadingListPanel: UITableViewController, HomePanel, SWTableViewCellDelegate {
-    weak var homePanelDelegate: HomePanelDelegate? = nil
-    var profile: Profile!
-
-    fileprivate lazy var emptyStateOverlayView: UIView = self.createEmptyStateOverview()
-
-    fileprivate var records: [ReadingListClientRecord]?
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ReadingListPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ReadingListPanel.notificationReceived(_:)), name: NotificationDynamicFontChanged, object: nil)
-    }
-
-    required init!(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        tableView.accessibilityIdentifier = "ReadingTable"
-        tableView.estimatedRowHeight = ReadingListTableViewCellUX.RowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
-        tableView.separatorInset = UIEdgeInsets.zero
-        tableView.layoutMargins = UIEdgeInsets.zero
-        tableView.separatorColor = UIConstants.SeparatorColor
-        tableView.register(ReadingListTableViewCell.self, forCellReuseIdentifier: "ReadingListTableViewCell")
-
-        // Set an empty footer to prevent empty cells from appearing in the list.
-        tableView.tableFooterView = UIView()
-
-        view.backgroundColor = UIConstants.PanelBackgroundColor
-
-        if let result = profile.readingList?.getAvailableRecords(), result.isSuccess {
-            records = result.successValue
-
-            // If no records have been added yet, we display the empty state
-            if records?.count == 0 {
-                tableView.isScrollEnabled = false
-                view.addSubview(emptyStateOverlayView)
-
-            }
-        }
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
-    }
-
-    func notificationReceived(_ notification: Notification) {
-        switch notification.name {
-        case NotificationFirefoxAccountChanged:
-            refreshReadingList()
-            break
-        case NotificationDynamicFontChanged:
-            if emptyStateOverlayView.superview != nil {
-                emptyStateOverlayView.removeFromSuperview()
-            }
-            emptyStateOverlayView = createEmptyStateOverview()
-            refreshReadingList()
-            break
-        default:
-            // no need to do anything at all
-            log.warning("Received unexpected notification \(notification.name)")
-            break
-        }
-    }
-
-    func refreshReadingList() {
-        let prevNumberOfRecords = records?.count
-        if let result = profile.readingList?.getAvailableRecords(), result.isSuccess {
-            records = result.successValue
-
-            if records?.count == 0 {
-                tableView.isScrollEnabled = false
-                if emptyStateOverlayView.superview == nil {
-                    view.addSubview(emptyStateOverlayView)
-                }
-            } else {
-                if prevNumberOfRecords == 0 {
-                    tableView.isScrollEnabled = true
-                    emptyStateOverlayView.removeFromSuperview()
-                }
-            }
-            self.tableView.reloadData()
-        }
-    }
-
-    fileprivate func createEmptyStateOverview() -> UIView {
-        let overlayView = UIScrollView(frame: tableView.bounds)
-        overlayView.backgroundColor = UIColor.white
-        // Unknown why this does not work with autolayout
-        overlayView.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
-
-        let containerView = UIView()
-        overlayView.addSubview(containerView)
-
-        let logoImageView = UIImageView(image: UIImage(named: "ReadingListEmptyPanel"))
-        containerView.addSubview(logoImageView)
-        logoImageView.snp_makeConstraints { make in
-            make.centerX.equalTo(containerView)
-            make.centerY.lessThanOrEqualTo(overlayView.snp_centerY).priorityHigh()
-
-            // Sets proper top constraint for iPhone 6 in portait and iPads.
-            make.centerY.equalTo(overlayView.snp_centerY).offset(HomePanelUX.EmptyTabContentOffset).priorityMedium()
-
-            // Sets proper top constraint for iPhone 4, 5 in portrait.
-            make.top.greaterThanOrEqualTo(overlayView.snp_top).offset(50).priorityHigh()
-        }
-
-        let welcomeLabel = UILabel()
-        containerView.addSubview(welcomeLabel)
-        welcomeLabel.text = NSLocalizedString("Welcome to your Reading List", comment: "See http://mzl.la/1LXbDOL")
-        welcomeLabel.textAlignment = NSTextAlignment.center
-        welcomeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallBold
-        welcomeLabel.textColor = ReadingListPanelUX.WelcomeScreenHeaderTextColor
-        welcomeLabel.adjustsFontSizeToFitWidth = true
-        welcomeLabel.snp_makeConstraints { make in
-            make.centerX.equalTo(containerView)
-            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth + ReadingListPanelUX.WelcomeScreenCircleSpacer + ReadingListPanelUX.WelcomeScreenCircleWidth)
-            make.top.equalTo(logoImageView.snp_bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
-
-            // Sets proper center constraint for iPhones in landscape.
-            make.centerY.lessThanOrEqualTo(overlayView.snp_centerY).offset(-40).priorityHigh()
-        }
-
-        let readerModeLabel = UILabel()
-        containerView.addSubview(readerModeLabel)
-        readerModeLabel.text = NSLocalizedString("Open articles in Reader View by tapping the book icon when it appears in the title bar.", comment: "See http://mzl.la/1LXbDOL")
-        readerModeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
-        readerModeLabel.textColor = ReadingListPanelUX.WelcomeScreenItemTextColor
-        readerModeLabel.numberOfLines = 0
-        readerModeLabel.snp_makeConstraints { make in
-            make.top.equalTo(welcomeLabel.snp_bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
-            make.leading.equalTo(welcomeLabel.snp_leading)
-            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth)
-        }
-
-        let readerModeImageView = UIImageView(image: UIImage(named: "ReaderModeCircle"))
-        containerView.addSubview(readerModeImageView)
-        readerModeImageView.snp_makeConstraints { make in
-            make.centerY.equalTo(readerModeLabel)
-            make.trailing.equalTo(welcomeLabel.snp_trailing)
-        }
-
-        let readingListLabel = UILabel()
-        containerView.addSubview(readingListLabel)
-        readingListLabel.text = NSLocalizedString("Save pages to your Reading List by tapping the book plus icon in the Reader View controls.", comment: "See http://mzl.la/1LXbDOL")
-        readingListLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
-        readingListLabel.textColor = ReadingListPanelUX.WelcomeScreenItemTextColor
-        readingListLabel.numberOfLines = 0
-        readingListLabel.snp_makeConstraints { make in
-            make.top.equalTo(readerModeLabel.snp_bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
-            make.leading.equalTo(welcomeLabel.snp_leading)
-            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth)
-            make.bottom.equalTo(overlayView).offset(-20) // making AutoLayout compute the overlayView's contentSize
-        }
-
-        let readingListImageView = UIImageView(image: UIImage(named: "AddToReadingListCircle"))
-        containerView.addSubview(readingListImageView)
-        readingListImageView.snp_makeConstraints { make in
-            make.centerY.equalTo(readingListLabel)
-            make.trailing.equalTo(welcomeLabel.snp_trailing)
-        }
-
-        containerView.snp_makeConstraints { make in
-            // Let the container wrap around the content
-            make.top.equalTo(logoImageView.snp_top)
-            make.left.equalTo(welcomeLabel).offset(ReadingListPanelUX.WelcomeScreenItemOffset)
-            make.right.equalTo(welcomeLabel).offset(ReadingListPanelUX.WelcomeScreenCircleOffset)
-
-            // And then center it in the overlay view that sits on top of the UITableView
-            make.centerX.equalTo(overlayView)
-        }
-
-        return overlayView
-    }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return records?.count ?? 0
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ReadingListTableViewCell", for: indexPath) as! ReadingListTableViewCell
-        cell.delegate = self
-        if let record = records?[indexPath.row] {
-            cell.title = record.title
-            cell.url = URL(string: record.url)!
-            cell.unread = record.unread
-        }
-        return cell
-    }
-    
-    fileprivate func deleteItemAtCell(_ cell: SWTableViewCell) {
-        if let cell = cell as? ReadingListTableViewCell, let indexPath = tableView.indexPath(for: cell), let record = records?[indexPath.row] {
-            if let result = profile.readingList?.deleteRecord(record), result.isSuccess {
-                records?.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
-                // reshow empty state if no records left
-                if records?.count == 0 {
-                    view.addSubview(emptyStateOverlayView)
-                }
-            }
-        }
-    }
-    
-    fileprivate func toggleItemAtCell(_ cell: SWTableViewCell) {
-        if let cell = cell as? ReadingListTableViewCell {
-            cell.hideUtilityButtons(animated: true)
-            if let indexPath = tableView.indexPath(for: cell), let record = records?[indexPath.row] {
-                if let result = profile.readingList?.updateRecord(record, unread: !record.unread), result.isSuccess {
-                    // TODO This is a bit odd because the success value of the update is an optional optional Record
-                    if let successValue = result.successValue, let updatedRecord = successValue {
-                        records?[indexPath.row] = updatedRecord
-                        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
-                    }
-                }
-            }
-        }
-    }
-
-    func swipeableTableViewCell(_ cell: SWTableViewCell!, didTriggerLeftUtilityButtonWith index: Int) {
-        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
-            toggleItemAtCell(cell)
-        } else {
-            deleteItemAtCell(cell)
-        }
-    }
-
-    func swipeableTableViewCell(_ cell: SWTableViewCell!, didTriggerRightUtilityButtonWith index: Int) {
-        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
-            deleteItemAtCell(cell)
-        } else {
-            toggleItemAtCell(cell)
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
-        if let record = records?[indexPath.row], let encodedURL = ReaderModeUtils.encodeURL(URL(string: record.url)!) {
-            // Mark the item as read
-            profile.readingList?.updateRecord(record, unread: false)
-            // Reading list items are closest in concept to bookmarks.
-            let visitType = VisitType.Bookmark
-            homePanelDelegate?.homePanel(self, didSelectURL: encodedURL, visitType: visitType)
-        }
-    }
-}
+//class ReadingListPanel: UITableViewController, HomePanel, SWTableViewCellDelegate {
+//    weak var homePanelDelegate: HomePanelDelegate? = nil
+//    var profile: Profile!
+//
+//    fileprivate lazy var emptyStateOverlayView: UIView = self.createEmptyStateOverview()
+//
+//    fileprivate var records: [ReadingListClientRecord]?
+//
+//    init() {
+//        super.init(nibName: nil, bundle: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(ReadingListPanel.notificationReceived(_:)), name: NotificationFirefoxAccountChanged, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(ReadingListPanel.notificationReceived(_:)), name: NotificationDynamicFontChanged, object: nil)
+//    }
+//
+//    required init!(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        tableView.accessibilityIdentifier = "ReadingTable"
+//        tableView.estimatedRowHeight = ReadingListTableViewCellUX.RowHeight
+//        tableView.rowHeight = UITableViewAutomaticDimension
+//        if #available(iOS 9.0, *) {
+//            tableView.cellLayoutMarginsFollowReadableWidth = false
+//        }
+//        tableView.separatorInset = UIEdgeInsets.zero
+//        tableView.layoutMargins = UIEdgeInsets.zero
+//        tableView.separatorColor = UIConstants.SeparatorColor
+//        tableView.register(ReadingListTableViewCell.self, forCellReuseIdentifier: "ReadingListTableViewCell")
+//
+//        // Set an empty footer to prevent empty cells from appearing in the list.
+//        tableView.tableFooterView = UIView()
+//
+//        view.backgroundColor = UIConstants.PanelBackgroundColor
+//
+////        if let result = profile.readingList?.getAvailableRecords(), result.isSuccess {
+////            records = result.successValue
+////
+////            // If no records have been added yet, we display the empty state
+////            if records?.count == 0 {
+////                tableView.isScrollEnabled = false
+////                view.addSubview(emptyStateOverlayView)
+////
+////            }
+////        }
+//    }
+//
+//    deinit {
+//        NotificationCenter.default.removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NotificationDynamicFontChanged, object: nil)
+//    }
+//
+//    func notificationReceived(_ notification: Notification) {
+//        switch notification.name {
+//        case NotificationFirefoxAccountChanged:
+//            refreshReadingList()
+//            break
+//        case NotificationDynamicFontChanged:
+//            if emptyStateOverlayView.superview != nil {
+//                emptyStateOverlayView.removeFromSuperview()
+//            }
+//            emptyStateOverlayView = createEmptyStateOverview()
+//            refreshReadingList()
+//            break
+//        default:
+//            // no need to do anything at all
+//            log.warning("Received unexpected notification \(notification.name)")
+//            break
+//        }
+//    }
+//
+//    func refreshReadingList() {
+//        let prevNumberOfRecords = records?.count
+////        if let result = profile.readingList?.getAvailableRecords(), result.isSuccess {
+////            records = result.successValue
+////
+////            if records?.count == 0 {
+////                tableView.isScrollEnabled = false
+////                if emptyStateOverlayView.superview == nil {
+////                    view.addSubview(emptyStateOverlayView)
+////                }
+////            } else {
+////                if prevNumberOfRecords == 0 {
+////                    tableView.isScrollEnabled = true
+////                    emptyStateOverlayView.removeFromSuperview()
+////                }
+////            }
+////            self.tableView.reloadData()
+////        }
+//    }
+//
+//    fileprivate func createEmptyStateOverview() -> UIView {
+//        let overlayView = UIScrollView(frame: tableView.bounds)
+//        overlayView.backgroundColor = UIColor.white
+//        // Unknown why this does not work with autolayout
+//        overlayView.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+//
+//        let containerView = UIView()
+//        overlayView.addSubview(containerView)
+//
+//        let logoImageView = UIImageView(image: UIImage(named: "ReadingListEmptyPanel"))
+//        containerView.addSubview(logoImageView)
+//        logoImageView.snp.makeConstraints { make in
+//            make.centerX.equalTo(containerView)
+//            make.centerY.lessThanOrEqualTo(overlayView.snp.centerY).priorityHigh()
+//
+//            // Sets proper top constraint for iPhone 6 in portait and iPads.
+//            make.centerY.equalTo(overlayView.snp.centerY).offset(HomePanelUX.EmptyTabContentOffset).priorityMedium()
+//
+//            // Sets proper top constraint for iPhone 4, 5 in portrait.
+//            make.top.greaterThanOrEqualTo(overlayView.snp.top).offset(50).priorityHigh()
+//        }
+//
+//        let welcomeLabel = UILabel()
+//        containerView.addSubview(welcomeLabel)
+//        welcomeLabel.text = NSLocalizedString("Welcome to your Reading List", comment: "See http://mzl.la/1LXbDOL")
+//        welcomeLabel.textAlignment = NSTextAlignment.center
+//        welcomeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallBold
+//        welcomeLabel.textColor = ReadingListPanelUX.WelcomeScreenHeaderTextColor
+//        welcomeLabel.adjustsFontSizeToFitWidth = true
+//        welcomeLabel.snp.makeConstraints { make in
+//            make.centerX.equalTo(containerView)
+//            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth + ReadingListPanelUX.WelcomeScreenCircleSpacer + ReadingListPanelUX.WelcomeScreenCircleWidth)
+//            make.top.equalTo(logoImageView.snp.bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
+//
+//            // Sets proper center constraint for iPhones in landscape.
+//            make.centerY.lessThanOrEqualTo(overlayView.snp.centerY).offset(-40).priorityHigh()
+//        }
+//
+//        let readerModeLabel = UILabel()
+//        containerView.addSubview(readerModeLabel)
+//        readerModeLabel.text = NSLocalizedString("Open articles in Reader View by tapping the book icon when it appears in the title bar.", comment: "See http://mzl.la/1LXbDOL")
+//        readerModeLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
+//        readerModeLabel.textColor = ReadingListPanelUX.WelcomeScreenItemTextColor
+//        readerModeLabel.numberOfLines = 0
+//        readerModeLabel.snp.makeConstraints { make in
+//            make.top.equalTo(welcomeLabel.snp.bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
+//            make.leading.equalTo(welcomeLabel.snp.leading)
+//            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth)
+//        }
+//
+//        let readerModeImageView = UIImageView(image: UIImage(named: "ReaderModeCircle"))
+//        containerView.addSubview(readerModeImageView)
+//        readerModeImageView.snp.makeConstraints { make in
+//            make.centerY.equalTo(readerModeLabel)
+//            make.trailing.equalTo(welcomeLabel.snp.trailing)
+//        }
+//
+//        let readingListLabel = UILabel()
+//        containerView.addSubview(readingListLabel)
+//        readingListLabel.text = NSLocalizedString("Save pages to your Reading List by tapping the book plus icon in the Reader View controls.", comment: "See http://mzl.la/1LXbDOL")
+//        readingListLabel.font = DynamicFontHelper.defaultHelper.DeviceFontSmallLight
+//        readingListLabel.textColor = ReadingListPanelUX.WelcomeScreenItemTextColor
+//        readingListLabel.numberOfLines = 0
+//        readingListLabel.snp.makeConstraints { make in
+//            make.top.equalTo(readerModeLabel.snp.bottom).offset(ReadingListPanelUX.WelcomeScreenPadding)
+//            make.leading.equalTo(welcomeLabel.snp.leading)
+//            make.width.equalTo(ReadingListPanelUX.WelcomeScreenItemWidth)
+//            make.bottom.equalTo(overlayView).offset(-20) // making AutoLayout compute the overlayView's contentSize
+//        }
+//
+//        let readingListImageView = UIImageView(image: UIImage(named: "AddToReadingListCircle"))
+//        containerView.addSubview(readingListImageView)
+//        readingListImageView.snp.makeConstraints { make in
+//            make.centerY.equalTo(readingListLabel)
+//            make.trailing.equalTo(welcomeLabel.snp.trailing)
+//        }
+//
+//        containerView.snp.makeConstraints { make in
+//            // Let the container wrap around the content
+//            make.top.equalTo(logoImageView.snp.top)
+//            make.left.equalTo(welcomeLabel).offset(ReadingListPanelUX.WelcomeScreenItemOffset)
+//            make.right.equalTo(welcomeLabel).offset(ReadingListPanelUX.WelcomeScreenCircleOffset)
+//
+//            // And then center it in the overlay view that sits on top of the UITableView
+//            make.centerX.equalTo(overlayView)
+//        }
+//
+//        return overlayView
+//    }
+//
+//    override func numberOfSections(in tableView: UITableView) -> Int {
+//        return 1
+//    }
+//
+//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return records?.count ?? 0
+//    }
+//
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "ReadingListTableViewCell", for: indexPath) as! ReadingListTableViewCell
+//        cell.delegate = self
+//        if let record = records?[indexPath.row] {
+//            cell.title = record.title
+//            cell.url = URL(string: record.url)!
+//            cell.unread = record.unread
+//        }
+//        return cell
+//    }
+//
+//    fileprivate func deleteItemAtCell(_ cell: SWTableViewCell) {
+//        if let cell = cell as? ReadingListTableViewCell, let indexPath = tableView.indexPath(for: cell), let record = records?[indexPath.row] {
+////            if let result = profile.readingList?.deleteRecord(record), result.isSuccess {
+////                records?.remove(at: indexPath.row)
+////                tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+////                // reshow empty state if no records left
+////                if records?.count == 0 {
+////                    view.addSubview(emptyStateOverlayView)
+////                }
+////            }
+//        }
+//    }
+//
+//    fileprivate func toggleItemAtCell(_ cell: SWTableViewCell) {
+//        if let cell = cell as? ReadingListTableViewCell {
+//            cell.hideUtilityButtons(animated: true)
+//            if let indexPath = tableView.indexPath(for: cell), let record = records?[indexPath.row] {
+////                if let result = profile.readingList?.updateRecord(record, unread: !record.unread), result.isSuccess {
+////                    // TODO This is a bit odd because the success value of the update is an optional optional Record
+////                    if let successValue = result.successValue, let updatedRecord = successValue {
+////                        records?[indexPath.row] = updatedRecord
+////                        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+////                    }
+////                }
+//            }
+//        }
+//    }
+//
+//    func swipeableTableViewCell(_ cell: SWTableViewCell!, didTriggerLeftUtilityButtonWith index: Int) {
+//        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
+//            toggleItemAtCell(cell)
+//        } else {
+//            deleteItemAtCell(cell)
+//        }
+//    }
+//
+//    func swipeableTableViewCell(_ cell: SWTableViewCell!, didTriggerRightUtilityButtonWith index: Int) {
+//        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
+//            deleteItemAtCell(cell)
+//        } else {
+//            toggleItemAtCell(cell)
+//        }
+//    }
+//
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: false)
+//        if let record = records?[indexPath.row], let encodedURL = ReaderModeUtils.encodeURL(URL(string: record.url)!) {
+//            // Mark the item as read
+//            //profile.readingList?.updateRecord(record, unread: false)
+//            // Reading list items are closest in concept to bookmarks.
+//            let visitType = VisitType.Bookmark
+//            homePanelDelegate?.homePanel(self, didSelectURL: encodedURL, visitType: visitType)
+//        }
+//    }
+//}

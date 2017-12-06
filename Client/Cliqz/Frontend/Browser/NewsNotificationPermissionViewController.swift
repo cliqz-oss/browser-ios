@@ -112,7 +112,7 @@ class NewsNotificationPermissionViewController: UIViewController {
         self.view.addSubview(backgroundImageView)
         let height = (getDeviceType() == .iPhone6Plus) ? 1000 : backgroundImageView.frame.height
         
-        backgroundImageView.snp_makeConstraints{ make in
+        backgroundImageView.snp.makeConstraints{ make in
             make.top.equalTo(0)
             make.left.right.equalTo(self.view)
             make.size.height.equalTo(height/2)
@@ -180,17 +180,17 @@ class NewsNotificationPermissionViewController: UIViewController {
             self.view.addSubview(yesButton)
             self.view.addSubview(laterButton)
             
-            yesButton.snp_makeConstraints{ make in
+            yesButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)
                 make.bottom.equalTo(self.view).offset(-30/offsetFactor)
             }
-            laterButton.snp_makeConstraints{ make in
+            laterButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)
-                make.bottom.equalTo(yesButton.snp_top).offset(-20/offsetFactor)
+                make.bottom.equalTo(yesButton.snp.top).offset(-20/offsetFactor)
             }
             
         case .subsequentAsking:
@@ -198,28 +198,28 @@ class NewsNotificationPermissionViewController: UIViewController {
             self.view.addSubview(laterButton)
             self.view.addSubview(noButton)
             
-            yesButton.snp_makeConstraints{ make in
+            yesButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)
                 make.bottom.equalTo(self.view).offset(-20/offsetFactor)
             }
-            laterButton.snp_makeConstraints{ make in
+            laterButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)
-                make.bottom.equalTo(yesButton.snp_top).offset(-15/offsetFactor)
+                make.bottom.equalTo(yesButton.snp.top).offset(-15/offsetFactor)
             }
-            noButton.snp_makeConstraints{ make in
+            noButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)
-                make.bottom.equalTo(laterButton.snp_top).offset(-15/offsetFactor)
+                make.bottom.equalTo(laterButton.snp.top).offset(-15/offsetFactor)
             }
             
         case .howToEnable:
             self.view.addSubview(okButton)
-            okButton.snp_makeConstraints{ make in
+            okButton.snp.makeConstraints{ make in
                 make.centerX.equalTo(self.view)
                 make.width.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonWidth)
                 make.height.equalTo(NewsNotificationPermissionViewControllerUX.ActionButtonHeight)

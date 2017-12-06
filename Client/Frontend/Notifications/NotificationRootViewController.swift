@@ -181,13 +181,13 @@ extension NotificationRootViewController {
 // MARK: - Layout Constraints
 private extension NotificationRootViewController {
     func remakeConstraintsForVisibleNotification() {
-        self.notificationView.snp_remakeConstraints { make in
+        self.notificationView.snp.remakeConstraints { make in
             make.height.equalTo(20)
             make.left.right.equalTo(self.view)
             make.top.equalTo(topLayoutGuide.snp.bottom)
         }
 
-        self.rootViewController.view.snp_remakeConstraints { make in
+        self.rootViewController.view.snp.remakeConstraints { make in
             make.left.right.equalTo(self.view)
             make.bottom.equalTo(bottomLayoutGuide.snp.top)
             make.top.equalTo(self.notificationView.snp.bottom)
@@ -195,13 +195,13 @@ private extension NotificationRootViewController {
     }
 
     func remakeConstraintsForHiddenNotification() {
-        self.notificationView.snp_remakeConstraints { make in
+        self.notificationView.snp.remakeConstraints { make in
             make.height.equalTo(20)
             make.left.right.equalTo(self.view)
             make.bottom.equalTo(topLayoutGuide.snp.top)
         }
 
-        self.rootViewController.view.snp_remakeConstraints { make in
+        self.rootViewController.view.snp.remakeConstraints { make in
             make.left.right.equalTo(self.view)
             make.bottom.equalTo(bottomLayoutGuide.snp.top)
             make.top.equalTo(topLayoutGuide.snp.bottom)
@@ -319,13 +319,13 @@ class NotificationStatusView: UIView {
         backgroundColor = UIConstants.AppBackgroundColor
         addSubview(titleLabel)
         addSubview(ellipsisLabel)
-        titleLabel.snp_makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.center.equalTo(self)
-            make.width.lessThanOrEqualTo(self.snp_width)
+            make.width.lessThanOrEqualTo(self.snp.width)
         }
-        ellipsisLabel.snp_makeConstraints { make in
+        ellipsisLabel.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
-            make.left.equalTo(titleLabel.snp_right)
+            make.left.equalTo(titleLabel.snp.right)
         }
     }
 

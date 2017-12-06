@@ -46,20 +46,20 @@ class RecentlyClosedTabsPanel: UIViewController, HomePanel {
         self.view.addSubview(historyBackButton)
         self.view.addSubview(recentlyClosedHeader)
 
-        historyBackButton.snp_makeConstraints { make in
+        historyBackButton.snp.makeConstraints { make in
             make.top.left.right.equalTo(self.view)
             make.height.equalTo(50)
-            make.bottom.equalTo(recentlyClosedHeader.snp_top)
+            make.bottom.equalTo(recentlyClosedHeader.snp.top)
         }
 
-        recentlyClosedHeader.snp_makeConstraints { make in
-            make.top.equalTo(historyBackButton.snp_bottom)
+        recentlyClosedHeader.snp.makeConstraints { make in
+            make.top.equalTo(historyBackButton.snp.bottom)
             make.height.equalTo(20)
-            make.bottom.equalTo(tableViewController.view.snp_top).offset(-10)
+            make.bottom.equalTo(tableViewController.view.snp.top).offset(-10)
             make.left.right.equalTo(self.view)
         }
 
-        tableViewController.view.snp_makeConstraints { make in
+        tableViewController.view.snp.makeConstraints { make in
             make.left.right.bottom.equalTo(self.view)
         }
 
