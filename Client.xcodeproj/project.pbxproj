@@ -628,6 +628,7 @@
 		AF671F7A1F7A51D2009F1473 /* BackForwardNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF671F791F7A51D2009F1473 /* BackForwardNavigation.swift */; };
 		AF671F8B1F7A7756009F1473 /* BackForwardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */; };
 		AF6741091F619F9B008BE919 /* NewsIgnoreList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */; };
+		AF6B7ADB1FD9531200B1F236 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6B7ADA1FD9531200B1F236 /* MigrationManager.swift */; };
 		AF6D095B1FCC3982006129E4 /* ReminderNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6D095A1FCC3982006129E4 /* ReminderNotificationManager.swift */; };
 		AF6D096B1FCC473A006129E4 /* PersistentDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6D096A1FCC473A006129E4 /* PersistentDict.swift */; };
 		AF7771AC1FBB08C700C18123 /* StateGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7771AB1FBB08C700C18123 /* StateGlobals.swift */; };
@@ -657,6 +658,7 @@
 		AFB76A1B1F8E13BB00379B99 /* NavigationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6B5E9A1F73B72E004FEE00 /* NavigationStore.swift */; };
 		AFC8E5541F41AF8E004822D5 /* BubbleTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC8E5531F41AF8E004822D5 /* BubbleTableView.swift */; };
 		AFC8E5571F41B9A2004822D5 /* DomainDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC8E5561F41B9A2004822D5 /* DomainDetailsHeaderView.swift */; };
+		AFCA70E81FD95C31000EC199 /* MigrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA70E71FD95C31000EC199 /* MigrationViewController.swift */; };
 		AFCD36A31F5D933D004AE609 /* CIToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD36A21F5D933D004AE609 /* CIToolBarView.swift */; };
 		AFCD36BB1F5EA28B004AE609 /* CIReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD36BA1F5EA28B004AE609 /* CIReminderManager.swift */; };
 		AFCD36BE1F5EA978004AE609 /* Reminders.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCD36BD1F5EA978004AE609 /* Reminders.swift */; };
@@ -2130,6 +2132,7 @@
 		AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackForwardUtil.swift; sourceTree = "<group>"; };
 		AF6741081F619F9B008BE919 /* NewsIgnoreList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsIgnoreList.swift; sourceTree = "<group>"; };
 		AF6B5E9A1F73B72E004FEE00 /* NavigationStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationStore.swift; sourceTree = "<group>"; };
+		AF6B7ADA1FD9531200B1F236 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		AF6D095A1FCC3982006129E4 /* ReminderNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderNotificationManager.swift; sourceTree = "<group>"; };
 		AF6D096A1FCC473A006129E4 /* PersistentDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistentDict.swift; path = ../PersistentDict.swift; sourceTree = "<group>"; };
 		AF7771AB1FBB08C700C18123 /* StateGlobals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateGlobals.swift; sourceTree = "<group>"; };
@@ -2158,6 +2161,7 @@
 		AFB749941E6076DB00195004 /* AdblockingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdblockingModule.swift; path = AdBlocking/AdblockingModule.swift; sourceTree = "<group>"; };
 		AFC8E5531F41AF8E004822D5 /* BubbleTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTableView.swift; sourceTree = "<group>"; };
 		AFC8E5561F41B9A2004822D5 /* DomainDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainDetailsHeaderView.swift; sourceTree = "<group>"; };
+		AFCA70E71FD95C31000EC199 /* MigrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationViewController.swift; sourceTree = "<group>"; };
 		AFCD36A21F5D933D004AE609 /* CIToolBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIToolBarView.swift; sourceTree = "<group>"; };
 		AFCD36BA1F5EA28B004AE609 /* CIReminderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIReminderManager.swift; sourceTree = "<group>"; };
 		AFCD36BD1F5EA978004AE609 /* Reminders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reminders.swift; sourceTree = "<group>"; };
@@ -2757,6 +2761,7 @@
 		1E79DC961D4FB2C5006BEB4A /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
+				AF6B7AD91FD952F900B1F236 /* Migration */,
 				1E79DC971D4FB2C5006BEB4A /* Foundation */,
 				1E79DCC51D4FB2C5006BEB4A /* Frontend */,
 			);
@@ -4258,6 +4263,15 @@
 				AF671F8A1F7A7756009F1473 /* BackForwardUtil.swift */,
 			);
 			name = BackForwardNavigation;
+			sourceTree = "<group>";
+		};
+		AF6B7AD91FD952F900B1F236 /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				AF6B7ADA1FD9531200B1F236 /* MigrationManager.swift */,
+				AFCA70E71FD95C31000EC199 /* MigrationViewController.swift */,
+			);
+			path = Migration;
 			sourceTree = "<group>";
 		};
 		AF6D096C1FCC581C006129E4 /* Reusable DataStructures */ = {
@@ -6923,6 +6937,7 @@
 				7BEFC6801BFF68C30059C952 /* QuickActions.swift in Sources */,
 				1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */,
 				0BF1B7E31AC60DEA00A7B407 /* InsetButton.swift in Sources */,
+				AFCA70E81FD95C31000EC199 /* MigrationViewController.swift in Sources */,
 				4F8E74BC1E1AB1C900E7C590 /* LogoLoader.swift in Sources */,
 				1E79DEA51D508368006BEB4A /* AWSTMMemoryCache.m in Sources */,
 				D31CF65C1CC1959A001D0BD0 /* PrivilegedRequest.swift in Sources */,
@@ -6979,6 +6994,7 @@
 				6BB2FD981B017DAB001A189B /* AuralProgressBar.swift in Sources */,
 				AFA6F3E41E67424700BA630B /* AntiPhishingPanel.swift in Sources */,
 				4F5307331F62D73000368EAD /* URLParserWrapper.mm in Sources */,
+				AF6B7ADB1FD9531200B1F236 /* MigrationManager.swift in Sources */,
 				E698FFDA1B4AADF40001F623 /* TabScrollController.swift in Sources */,
 				1E79DD081D4FB2C5006BEB4A /* AppDelegateExtension.swift in Sources */,
 				B354B5DE1E5C7096001B38A1 /* WebRequestBridge.m in Sources */,

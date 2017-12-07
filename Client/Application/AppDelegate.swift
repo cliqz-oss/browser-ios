@@ -51,6 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   //Cliqz: capacity limits for URLCache
     let CacheMemoryCapacity = 8 * 1024 * 1024
     let CacheDiskCapacity   = 50 * 1024 * 1024
+    
+    var migrationManager: MigrationManager? = MigrationManager()
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -152,18 +154,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // will restore with.
         log.debug("Initing BVC…")
         
-        let viewController = MainContainerViewController()
 
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.delegate = self
-        navigationController.isNavigationBarHidden = true
-
-        rootViewController = navigationController
-
-        self.window!.rootViewController = navigationController
         
-        self.window?.backgroundColor = UIColor.red
-        self.window?.rootViewController?.view.backgroundColor = UIColor.green
+        if migrationManager?.isMigrationNecessary() == true {
+            debugPrint("migration necessary -- true)")
+            let viewController = migrationManager?.migrationVC
+            
+            self.window!.rootViewController = viewController
+            
+            migrationManager?.startMigration { [weak self] in
+                self?.migrationManager = nil
+                
+                let viewController = MainContainerViewController()
+                
+                let navigationController = UINavigationController(rootViewController: viewController)
+                navigationController.delegate = self
+                navigationController.isNavigationBarHidden = true
+                
+                self?.rootViewController = navigationController
+                
+                self?.window!.rootViewController = navigationController
+            }
+        }
+        else {
+            debugPrint("migration necessary -- false)")
+            
+            let viewController = MainContainerViewController()
+            
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.delegate = self
+            navigationController.isNavigationBarHidden = true
+            
+            rootViewController = navigationController
+            
+            self.window!.rootViewController = navigationController
+        }
+
+        
 
         // Cliqz: disable crash reporting
 //        do {
