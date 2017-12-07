@@ -37,6 +37,7 @@ public enum TelemetryLogEventType {
     case Subscription (String, String?, [String: Any]?)
     case Notification (String, String)
     case Rotation (String, String)
+    case QuickAccessBar (String, String, String?)
 }
 
 
@@ -186,6 +187,9 @@ class TelemetryLogger : EventsLogger {
             
             case .Rotation (let state, let view):
                 event = self.createRotationEvent(state, view: view)
+            
+            case .QuickAccessBar (let action, let view, let target):
+                event = self.createQuickAccessBarEvent(action, view: view, target: target)
                 
             }
         
@@ -658,6 +662,15 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    
+    private func createQuickAccessBarEvent(_ action: String, view: String, target: String?) -> [String: Any] {
+        var event = createBasicEvent()
+        
+        event["type"] = "quick_access_bar"
+        event["action"] = action
+        event["view"] = view
+        if let target = target { event["target"] = target }
+        
+        return event
+    }
     
 }
