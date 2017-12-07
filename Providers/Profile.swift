@@ -182,7 +182,8 @@ protocol Profile: class {
     var queue: TabQueue { get }
     var searchEngines: SearchEngines { get }
     var files: FileAccessor { get }
-    
+	var offrzDataSource: OffrzDataSource? { get set }
+
     // Cliqz: added ExtendedBrowserHistory protocol to history to get extra data for telemetry signals
     var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> { get }
     
@@ -418,6 +419,8 @@ public class BrowserProfile: Profile {
     var history: protocol<BrowserHistory, SyncableHistory, ResettableSyncStorage, ExtendedBrowserHistory> {
         return self.places
     }
+
+	var offrzDataSource: OffrzDataSource?
 
     lazy var bookmarks: protocol<BookmarksModelFactorySource, ShareToDestination, SyncableBookmarks, LocalItemSource, MirrorItemSource, CliqzShareToDestination, CliqzSQLiteBookmarks> = {
         // Make sure the rest of our tables are initialized before we try to read them!

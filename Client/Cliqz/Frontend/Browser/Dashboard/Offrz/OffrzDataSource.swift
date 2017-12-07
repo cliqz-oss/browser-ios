@@ -11,6 +11,7 @@ import Foundation
 class OffrzDataSource {
 	
 	private var currentOffr: Offrz?
+	var lastOffrz = [Offrz]()
 
 	init() {
 		OffrzDataService.shared.getMyOffrz { (offrz, error) in
