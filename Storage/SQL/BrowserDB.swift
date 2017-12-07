@@ -87,7 +87,7 @@ open class BrowserDB {
         self.db = SwiftData(filename: file, key: secretKey, prevKey: nil)
 
         if AppConstants.BuildChannel == .Developer && secretKey != nil {
-            log.debug("Creating db: \(file) with secret = \(secretKey)")
+            log.debug("Creating db: \(file) with secret = \(String(describing: secretKey))")
         }
 
         // Create or update will also delete and create the database if our key was incorrect.
@@ -98,7 +98,7 @@ open class BrowserDB {
         case .closed:
             log.info("Database not created as the SQLiteConnection is closed.")
         case .success:
-            log.debug("db: \(file) with secret = \(secretKey) has been created")
+            log.debug("db: \(file) with secret = \(String(describing: secretKey)) has been created")
         }
         
         if filename == "browser.db" {

@@ -59,7 +59,7 @@ extension SQLiteHistory: ExtendedBrowserHistory {
             "FROM \(TableHistory) " +
             "INNER JOIN \(TableVisits) ON \(TableVisits).siteID = \(TableHistory).id " +
             "ORDER BY \(TableVisits).id DESC " +
-        "LIMIT \(limit) OFFSET \(offset)"
+        "LIMIT \(offset), \(limit)"
         
         // TODO countFactory
         return db.runQuery(historySQL, args: args, factory: SQLiteHistory.historyVisitsFactory)

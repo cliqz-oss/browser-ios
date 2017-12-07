@@ -40,9 +40,9 @@ final class RealmStore: NSObject {
     
     //TODO: clean entries without domain
     
-    class func addVisitSync(url: String, title: String) {
+    class func addVisitSync(url: String, title: String, date: Date = Date()) {
         let realm = try! Realm()
-        _ = self.addVisit(realm: realm, url: url, title: title)
+        _ = self.addVisit(realm: realm, url: url, title: title, date: date)
     }
     
     class func addQuerySync(query: String, forUrl: String) {
@@ -73,14 +73,14 @@ final class RealmStore: NSObject {
 //        executeDelete(realm: realm, objects: [object])
 //    }
     
-    private class func addVisit(realm: Realm, url: String, title: String) -> Entry? {
+    private class func addVisit(realm: Realm, url: String, title: String, date: Date = Date()) -> Entry? {
         
         //use normalizedHost here
         guard let host = URL(string: url)?.normalizedHost() else { debugPrint("visit add failed -- \(url) -- \(title)"); return nil }
         
         let domain = self.getDomain(realm: realm, host: host)
         
-        let visit = createVisit(url: url, title: title, domain: domain)
+        let visit = createVisit(url: url, title: title, date: date, domain: domain)
         
         do {
             try realm.write {
@@ -124,12 +124,12 @@ final class RealmStore: NSObject {
         return query
     }
     
-    private class func createVisit(url: String, title: String, domain: Domain) -> Entry {
+    private class func createVisit(url: String, title: String, date: Date, domain: Domain) -> Entry {
         let visit = Entry()
         visit.domain = domain
         visit.url = url
         visit.title = title
-        visit.timestamp = Date()
+        visit.timestamp = date
         visit.isBookmarked = false
         return visit
     }
