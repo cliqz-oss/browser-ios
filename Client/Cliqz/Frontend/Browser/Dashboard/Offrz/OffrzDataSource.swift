@@ -28,4 +28,8 @@ class OffrzDataSource {
 		// TODO: ....
 		return true
 	}
+
+	func markRead() {
+		
+	}
 }

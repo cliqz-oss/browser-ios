@@ -79,12 +79,12 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		panelSwitchContainerView.backgroundColor = UIColor.white
 		view.addSubview(panelSwitchContainerView)
 		
-        let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
-        let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
-		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
-		let offrz = "Offrz"
+		let tabs = UIImage(named: "tabs") //NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
+        let history = UIImage(named: "history_quick_access") //NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
+		let fav = UIImage(named: "favorite_quick_access") //NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
+		let offrz = UIImage(named: "offrz_inactive") //"Offrz"
         
-		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav, offrz])
+		panelSwitchControl = UISegmentedControl(items: [tabs, history, offrz, fav])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
@@ -160,10 +160,11 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 			self.showPanelViewController(self.historyViewController)
             target = "history"
 		case 2:
-			self.showPanelViewController(self.favoritesViewController)
-            target = "favorites"
-		case 3:
 			self.showPanelViewController(self.offrzViewController)
+			target = "offrz" // TODO: check expected target with Alina
+		case 3:
+			self.showPanelViewController(self.favoritesViewController)
+			target = "favorites"
 		default:
 			break
 		}
