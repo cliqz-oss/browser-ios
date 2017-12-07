@@ -1814,7 +1814,7 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
-        dashboard.switchToTabsPanel()
+        dashboard.currentPanel = .TabsPanel
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
@@ -2055,6 +2055,26 @@ extension BrowserViewController: URLBarDelegate {
             self.showHint(.videoDownloader)
         }
     }
+    
+    // Cliqz: Added delegate methods for QuickAcessBar
+    func urlBarDidPressHistroy(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .HistoryPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func urlBarDidPressFavorites(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .FavoritesPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func urlBarDidPressOffrz(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .OffrzPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func urlBarDidPressDismissKeyboard(_ urlBar: URLBarView) {
+        
+    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {
@@ -2227,7 +2247,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.navigationController?.pushViewController(tabTrayController, animated: true)
          self.tabTrayController = tabTrayController
          */
-        dashboard.switchToTabsPanel()
+        dashboard.currentPanel = .TabsPanel
         self.navigationController?.pushViewController(dashboard, animated: false)
     }
     

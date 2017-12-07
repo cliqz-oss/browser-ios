@@ -66,6 +66,7 @@
 		1E37480E1FB313B2006FA367 /* ClickableUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */; };
 		1E3F25041EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */; };
 		1E3F25151EC1CA3C00D9DC0F /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */; };
+		1E4036101FD7CEE70049318E /* KeyboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */; };
 		1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */; };
 		1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */; };
 		1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */; };
@@ -243,6 +244,7 @@
 		1E8046BD1FB4AD7F003701C5 /* BubbleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */; };
 		1E91FA601F334321003C8A03 /* SubscriptionsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */; };
 		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		1E9E509C1FD82FC7007ABAD6 /* QuickAccessBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
 		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
@@ -1446,6 +1448,7 @@
 		1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableUITableViewCell.swift; sourceTree = "<group>"; };
 		1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimitMobileDataUsageTableViewController.swift; sourceTree = "<group>"; };
 		1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
+		1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAccessoryView.swift; sourceTree = "<group>"; };
 		1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzAppSettingsOptions.swift; sourceTree = "<group>"; };
@@ -1733,6 +1736,7 @@
 		1E79DE721D508368006BEB4A /* AWSXMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSXMLWriter.m; sourceTree = "<group>"; };
 		1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCell.swift; sourceTree = "<group>"; };
 		1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsHandler.swift; sourceTree = "<group>"; };
+		1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAccessBar.swift; sourceTree = "<group>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
 		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
@@ -2903,7 +2907,6 @@
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
 				4FA29B131D64BFE300C59F5E /* Dashboard */,
 				4FF239C71D52464A00EEDE89 /* WebView */,
-				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
 				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
@@ -3837,6 +3840,9 @@
 				1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */,
 				1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */,
 				1E6E5D0E1F94F92C00D23A1E /* BubbleTableView.swift */,
+				1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */,
+				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
+				1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -6796,6 +6802,7 @@
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
+				1E4036101FD7CEE70049318E /* KeyboardAccessoryView.swift in Sources */,
 				3BF56D271CDBBE1F00AC4D75 /* SimpleToast.swift in Sources */,
 				AFF105541F25EE9D0093B73D /* AutoForgetTabTableViewController.swift in Sources */,
 				1E79DE8C1D508368006BEB4A /* AWSMTLReflection.m in Sources */,
@@ -6864,6 +6871,7 @@
 				1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
+				1E9E509C1FD82FC7007ABAD6 /* QuickAccessBar.swift in Sources */,
 				1E79DD121D4FB2C5006BEB4A /* TelemetryLogger.swift in Sources */,
 				1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */,
 				1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */,
