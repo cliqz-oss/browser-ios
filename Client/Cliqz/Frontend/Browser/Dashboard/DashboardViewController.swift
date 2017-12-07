@@ -15,6 +15,10 @@ protocol BrowsingDelegate: class {
     func didSelectQuery(_ query: String)
 }
 
+enum DashBoardPanelType: Int {
+    case TabsPanel = 0, HistoryPanel, FavoritesPanel, OffrzPanel
+}
+
 class DashboardViewController: UIViewController, BrowsingDelegate {
 	
 	var profile: Profile!
@@ -22,6 +26,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     
     var viewOpenTime : Double?
     var panelOpenTime : Double?
+    var currentPanel : DashBoardPanelType = .TabsPanel
 
 	fileprivate var panelSwitchControl: UISegmentedControl!
 	fileprivate var panelSwitchContainerView: UIView!
@@ -67,11 +72,6 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		fatalError("init(coder:) has not been implemented")
 	}
     
-    func switchToTabsPanel() {
-        if let panelSwitchControl = panelSwitchControl {
-            panelSwitchControl.selectedSegmentIndex = 0
-        }
-    }
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -79,16 +79,15 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		panelSwitchContainerView.backgroundColor = UIColor.white
 		view.addSubview(panelSwitchContainerView)
 		
-		let tabs = UIImage(named: "tabs") //NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
-        let history = UIImage(named: "history_quick_access") //NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
-		let fav = UIImage(named: "favorite_quick_access") //NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
-		let offrz = UIImage(named: "offrz_inactive") //"Offrz"
+		let tabs = UIImage(named: "tabs")
+        let history = UIImage(named: "history_quick_access")
+		let fav = UIImage(named: "favorite_quick_access")
+		let offrz = UIImage(named: "offrz_active") 
         
-		panelSwitchControl = UISegmentedControl(items: [tabs, history, offrz, fav])
+		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav, offrz])
 		panelSwitchControl.tintColor = self.dashboardThemeColor
 		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
 		panelSwitchContainerView.addSubview(panelSwitchControl)
-        switchToTabsPanel()
         
 		panelContainerView = UIView()
 		view.addSubview(panelContainerView)
@@ -112,9 +111,9 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
-        self.switchPanel(self.panelSwitchControl)
-	}
-
+        self.switchToCurrentPanel()
+    }
+    
 	override func viewWillDisappear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
@@ -148,29 +147,41 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.navigationController?.popViewController(animated: false)
 		CATransaction.commit()
 	}
-
-	func switchPanel(_ sender: UISegmentedControl) {
-		self.hideCurrentPanelViewController()
+    
+    func switchPanel(_ sender: UISegmentedControl) {
+        if let panelType = DashBoardPanelType(rawValue: sender.selectedSegmentIndex) {
+            currentPanel = panelType
+            self.switchToCurrentPanel()
+        }
+    }
+    
+    private func switchToCurrentPanel() {
+        self.panelSwitchControl?.selectedSegmentIndex = currentPanel.rawValue
         var target = "UNDEFINED"
-		switch sender.selectedSegmentIndex {
-		case 0:
-			self.showPanelViewController(self.tabsViewController)
+        
+        self.hideCurrentPanelViewController()
+        switch currentPanel {
+            
+        case .TabsPanel:
+            self.showPanelViewController(self.tabsViewController)
             target = "openTabs"
-		case 1:
-			self.showPanelViewController(self.historyViewController)
+            
+        case .HistoryPanel:
+            self.showPanelViewController(self.historyViewController)
             target = "history"
-		case 2:
-			self.showPanelViewController(self.offrzViewController)
-			target = "offrz" // TODO: check expected target with Alina
-		case 3:
-			self.showPanelViewController(self.favoritesViewController)
-			target = "favorites"
-		default:
-			break
-		}
+            
+        case .FavoritesPanel:
+            self.showPanelViewController(self.favoritesViewController)
+            target = "favorites"
+            
+        case .OffrzPanel:
+            self.showPanelViewController(self.offrzViewController)
+            target = "offrz"
+            
+        }
         logToolbarSignal("click", target: target, customData: nil)
-	}
-
+    }
+    
 	fileprivate func setupConstraints() {
 		let switchControlHeight = 30
 		let switchControlLeftOffset = 10

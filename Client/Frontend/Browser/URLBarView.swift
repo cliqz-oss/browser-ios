@@ -97,6 +97,12 @@ protocol URLBarDelegate: class {
     func urlBarDidClickAntitracking(_ urlBar: URLBarView, trackersCount: Int, status: String)
     // Cliqz: Added delegate method for notifing deletge that search field was cleared
     func urlBarDidClearSearchField(_ urlBar: URLBarView, oldText: String?)
+    
+    // Cliqz: Added delegate methods for QuickAcessBar
+    func urlBarDidPressHistroy(_ urlBar: URLBarView)
+    func urlBarDidPressFavorites(_ urlBar: URLBarView)
+    func urlBarDidPressOffrz(_ urlBar: URLBarView)
+    func urlBarDidPressDismissKeyboard(_ urlBar: URLBarView)
 }
 
 class URLBarView: UIView {
@@ -471,11 +477,10 @@ class URLBarView: UIView {
         }
         
         locationTextField.applyTheme(currentTheme)
-        let querySuggestionView = QuerySuggestionView.sharedInstance
-        querySuggestionView.delegate = self
-        locationTextField.inputAccessoryView = querySuggestionView
-    }
+        locationTextField.inputAccessoryView = getKeyboardAccessoryView()
 
+    }
+    
     func removeLocationTextField() {
         locationTextField?.removeFromSuperview()
         locationTextField = nil
@@ -895,7 +900,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
 
     func autocompleteTextField(_ autocompleteTextField: AutocompleteTextField, didEnterText text: String) {
         delegate?.urlBar(self, didEnterText: text)
-        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
+        if let view = autocompleteTextField.inputAccessoryView as? KeyboardAccessoryView {
             view.updateCurrentQuery(text)
         }
     }
@@ -907,7 +912,7 @@ extension URLBarView: AutocompleteTextFieldDelegate {
     func autocompleteTextFieldShouldClear(_ autocompleteTextField: AutocompleteTextField) -> Bool {
 		delegate?.urlBarDidClearSearchField(self, oldText: autocompleteTextField.text)
         
-        if let view = autocompleteTextField.inputAccessoryView as? QuerySuggestionView {
+        if let view = autocompleteTextField.inputAccessoryView as? KeyboardAccessoryView {
             view.updateCurrentQuery("")
         }
         return true
@@ -1230,9 +1235,30 @@ extension ToolbarTextField: Themeable {
     }
 }
 
-extension URLBarView : QuerySuggestionDelegate {
-    func autoComplete(_ suggestion: String) {
-        self.locationTextField?.removeCompletion()
-        self.locationTextField?.text = suggestion
+extension URLBarView {
+    
+    fileprivate func getKeyboardAccessoryView() -> UIView {
+        let keyboardAccessoryView = KeyboardAccessoryView.sharedInstance
+        keyboardAccessoryView.setHandelAccessoryViewAction { (action) in
+
+            switch (action) {
+            case .AutoComplete(let completion):
+                self.locationTextField?.removeCompletion()
+                self.locationTextField?.text = completion
+            case .Tabs:
+                self.delegate?.urlBarDidPressTabs(self)
+            case .History:
+                self.delegate?.urlBarDidPressHistroy(self)
+            case .Favorite:
+                self.delegate?.urlBarDidPressFavorites(self)
+            case .Offrz:
+                self.delegate?.urlBarDidPressOffrz(self)
+            case .DismissKeyboard:
+                self.locationTextField?.enforceResignFirstResponder()
+//                self.delegate?.urlBarDidPressDismissKeyboard(self)
+            }
+        }
+        return keyboardAccessoryView
     }
 }
+
