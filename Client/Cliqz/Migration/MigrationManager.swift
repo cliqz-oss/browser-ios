@@ -49,7 +49,7 @@ class MigrationManager {
     
     func startReadingAndWriting(history: SQLiteHistory, totalCount: Int, completion: @escaping (Bool) -> Void) {
         
-        let batch_size = 1
+        let batch_size = 500
         
         func recursive(offset: Int) {
             history.getHistoryVisits(offset, limit: batch_size).upon({ (result) in
@@ -123,7 +123,6 @@ class MigrationManager {
                 }
             }
         }
-        debugPrint("history Results - \(historyResults.count)")
         return (historyResults, numberOfSitesFromDB)
     }
 }

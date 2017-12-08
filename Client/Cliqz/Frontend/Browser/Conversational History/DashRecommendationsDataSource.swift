@@ -17,7 +17,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     weak var delegate: HasDataSource?
     
     init(delegate: HasDataSource? = nil) {
-        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: true, type: .news)
+        self.recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: false, type: .news)
         self.delegate = delegate
         NotificationCenter.default.addObserver(self, selector: #selector(recommendationsUpdated), name: RecommendationsManager.notification_updated, object: nil)
     }
@@ -39,18 +39,29 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
 	func picture(indexPath: IndexPath, completionBlock: @escaping (_ result:UIImage?, _ customView: UIView?) -> Void) {
-		LogoLoader.loadLogo(self.url(indexPath: indexPath)) { (image, logoInfo, error) in
-			if let img = image {
-				completionBlock(img, nil)
-			} else {
-				if let info = logoInfo {
-					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
-					completionBlock(nil, logoPlaceholder)
-				} else {
-					completionBlock(nil, nil)
-				}
-			}
-		}
+        
+        let baseUrl = self.url(indexPath: indexPath)
+        
+        DispatchQueue(label:"background").async {
+            LogoLoader.loadLogo(baseUrl) { (image, logoInfo, error) in
+                if let img = image {
+                    DispatchQueue.main.async {
+                        completionBlock(img, nil)
+                    }
+                } else {
+                    if let info = logoInfo {
+                        DispatchQueue.main.async {
+                            let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
+                            completionBlock(nil, logoPlaceholder)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completionBlock(nil, nil)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func cellPressed(indexPath: IndexPath) {
@@ -64,7 +75,7 @@ final class DashRecommendationsDataSource: ExpandableViewProtocol {
     }
     
     private func updateRecommendations() {
-        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: true, type: .news)
+        recommendations = RecommendationsManager.sharedInstance.recommendations(domain: nil, includeDomainsFromHistory: false, type: .news)
     }
     
     

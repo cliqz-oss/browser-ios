@@ -39,18 +39,29 @@ class DashRemindersDataSource: ExpandableViewProtocol {
     }
     
     func picture(indexPath: IndexPath, completionBlock: @escaping (UIImage?, UIView?) -> Void) {
-		LogoLoader.loadLogo(self.url(indexPath: indexPath)) { (image, logoInfo, error) in
-			if let img = image {
-				completionBlock(img, nil)
-			} else {
-				if let info = logoInfo {
-					let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
-					completionBlock(nil, logoPlaceholder)
-				} else {
-					completionBlock(nil, nil)
-				}
-			}
-		}
+        
+        let baseUrl = self.url(indexPath: indexPath)
+        
+        DispatchQueue(label:"background").async {
+            LogoLoader.loadLogo(baseUrl) { (image, logoInfo, error) in
+                if let img = image {
+                    DispatchQueue.main.async {
+                        completionBlock(img, nil)
+                    }
+                } else {
+                    if let info = logoInfo {
+                        DispatchQueue.main.async {
+                            let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
+                            completionBlock(nil, logoPlaceholder)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completionBlock(nil, nil)
+                        }
+                    }
+                }
+            }
+        }
 	}
 
     func cellPressed(indexPath: IndexPath) {

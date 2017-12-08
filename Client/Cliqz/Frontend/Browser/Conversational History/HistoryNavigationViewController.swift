@@ -8,12 +8,14 @@
 
 import UIKit
 
-final class HistoryNavigationViewController: UIViewController {
+class HistoryNavigationViewController: UIViewController {
     
     var conversationalHistory: DomainsViewController = DomainsViewController()
     var nc: UINavigationController = UINavigationController()
     
     weak var externalDelegate: ActionDelegate? = nil
+    
+    //let animator = HistoryNavigationAnimator()
     
     enum State {
         case Domains
@@ -37,6 +39,7 @@ final class HistoryNavigationViewController: UIViewController {
             make.top.bottom.left.right.equalTo(self.view)
         }
         nc.view.backgroundColor = UIColor.clear
+        //nc.delegate = self
     }
     
     private func setupConversationalHistory() {
@@ -129,6 +132,7 @@ final class HistoryNavigationViewController: UIViewController {
             UIView.animate(withDuration: 0.16, animations: {
                 self.conversationalHistory.view.alpha = 0.0
                 self.nc.pushViewController(conversationalHistoryDetails, animated: true)
+                
             })
         }
         else {
@@ -151,3 +155,10 @@ final class HistoryNavigationViewController: UIViewController {
     }
     
 }
+
+//extension HistoryNavigationViewController: UINavigationControllerDelegate {
+//    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return self.animator
+//    }
+//}
+
