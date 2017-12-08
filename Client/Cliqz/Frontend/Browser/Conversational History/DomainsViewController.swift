@@ -103,18 +103,20 @@ class DomainsViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.titleLabel.text = dataSource.titleLabelText(indexPath: indexPath)
         
         cell.logoButton.alpha = 0.0
+        cell.logoButton.transform = CGAffineTransform.init(scaleX: 0.2, y: 0.2)
         
         //images in memory can take quite a lot - see about caching them to disk
         self.dataSource.image(indexPath: indexPath) { (image, customView) in
             if cell.tag == indexPath.row {
-                //UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: {
                     if let img = image {
                         cell.logoButton.setImage(img)
                     } else if let view = customView {
                         cell.logoButton.setView(view)
                     }
                     cell.logoButton.alpha = 1.0
-                //})
+                    cell.logoButton.transform = CGAffineTransform.identity
+                })
             }
         }
 

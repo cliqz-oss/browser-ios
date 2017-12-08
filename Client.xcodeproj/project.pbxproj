@@ -672,6 +672,7 @@
 		AFD9F61E1F3E10E100215365 /* CustomDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61C1F3E10E100215365 /* CustomDots.swift */; };
 		AFD9F61F1F3E10E100215365 /* SurfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F61D1F3E10E100215365 /* SurfViewController.swift */; };
 		AFD9F6211F3E10F700215365 /* PageNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */; };
+		AFEC3AF01FDAA4D1008D18C8 /* HistoryNavigationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEC3AEF1FDAA4D1008D18C8 /* HistoryNavigationAnimator.swift */; };
 		AFEDF28B1F558F6A0053F209 /* DomainsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEDF28A1F558F6A0053F209 /* DomainsModule.swift */; };
 		AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */; };
 		AFF2B68A1EFAA8C500475971 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFF2B6891EFAA8C500475971 /* UserNotifications.framework */; };
@@ -2175,6 +2176,7 @@
 		AFD9F61C1F3E10E100215365 /* CustomDots.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDots.swift; sourceTree = "<group>"; };
 		AFD9F61D1F3E10E100215365 /* SurfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfViewController.swift; sourceTree = "<group>"; };
 		AFD9F6201F3E10F700215365 /* PageNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageNavigationViewController.swift; sourceTree = "<group>"; };
+		AFEC3AEF1FDAA4D1008D18C8 /* HistoryNavigationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryNavigationAnimator.swift; sourceTree = "<group>"; };
 		AFEDF28A1F558F6A0053F209 /* DomainsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsModule.swift; sourceTree = "<group>"; };
 		AFEEA8171E5F30F6006E1A4F /* DebugingLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugingLogger.swift; sourceTree = "<group>"; };
 		AFF2B6891EFAA8C500475971 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
@@ -4214,6 +4216,7 @@
 				AF2C3DEA1EEFDEF1005DD628 /* DomainsViewController.swift */,
 				AF7ED4C91F39B83B00E41737 /* DomainsCell.swift */,
 				AF2C3DED1EEFDEF1005DD628 /* DomainsDataSource.swift */,
+				AFEC3AEF1FDAA4D1008D18C8 /* HistoryNavigationAnimator.swift */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -6928,6 +6931,7 @@
 				7B31E6851CBC09DC00A57805 /* MenuPresentationAnimator.swift in Sources */,
 				4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */,
 				0BB5B2891AC0A2B90052877D /* Toolbar.swift in Sources */,
+				AFEC3AF01FDAA4D1008D18C8 /* HistoryNavigationAnimator.swift in Sources */,
 				1E79DD261D4FB2C5006BEB4A /* NavigationExtension.swift in Sources */,
 				E6108FF91C84E91C005D25E8 /* BasePasscodeViewController.swift in Sources */,
 				E4CD9F2D1A6DC91200318571 /* TabLocationView.swift in Sources */,

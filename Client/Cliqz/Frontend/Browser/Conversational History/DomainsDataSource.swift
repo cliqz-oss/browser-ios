@@ -86,8 +86,8 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
                     }
                 } else {
                     if let info = logoInfo {
-                        let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
                         DispatchQueue.main.async {
+                            let logoPlaceholder = LogoPlaceholder.init(logoInfo: info)
                             completionBlock(nil, logoPlaceholder)
                         }
                     } else {
