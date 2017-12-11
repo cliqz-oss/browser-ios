@@ -36,11 +36,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     
     var inSelectionMode = false
     
-    // for homepanel state because we show the cliqz search as the home panel
-    var homePanelState: HomePanelState {
-        return HomePanelState(isPrivate: privateMode, selectedIndex: 0)
-    }
-    
     lazy var javaScriptBridge: JavaScriptBridge = {
         let javaScriptBridge = JavaScriptBridge(profile: self.profile)
         javaScriptBridge.delegate = self

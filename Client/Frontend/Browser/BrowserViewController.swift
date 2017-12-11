@@ -360,7 +360,6 @@ class BrowserViewController: UIViewController {
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
@@ -372,7 +371,6 @@ class BrowserViewController: UIViewController {
         log.debug("BVC viewDidLoad…")
         super.viewDidLoad()
         log.debug("BVC super viewDidLoad called.")
-        NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELBookmarkStatusDidChange(_:)), name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappWillResignActiveNotification), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidBecomeActiveNotification), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(BrowserViewController.SELappDidEnterBackgroundNotification), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
@@ -2468,25 +2466,6 @@ extension BrowserViewController: TabDelegate {
     }
 }
 
-extension BrowserViewController: HomePanelViewControllerDelegate {
-    func homePanelViewController(_ homePanelViewController: HomePanelViewController, didSelectURL url: URL, visitType: VisitType) {
-        finishEditingAndSubmit(url, visitType: visitType)
-    }
-
-    func homePanelViewController(_ homePanelViewController: HomePanelViewController, didSelectPanel panel: Int) {
-        if AboutUtils.isAboutHomeURL(tabManager.selectedTab?.url) {
-            tabManager.selectedTab?.webView?.evaluateJavaScript("history.replaceState({}, '', '#panel=\(panel)')", completionHandler: nil)
-        }
-    }
-
-    func homePanelViewControllerDidRequestToCreateAccount(_ homePanelViewController: HomePanelViewController) {
-        presentSignInViewController() // TODO UX Right now the flow for sign in and create account is the same
-    }
-
-    func homePanelViewControllerDidRequestToSignIn(_ homePanelViewController: HomePanelViewController) {
-        presentSignInViewController() // TODO UX Right now the flow for sign in and create account is the same
-    }
-}
 
 extension BrowserViewController: SearchViewControllerDelegate {
     func searchViewController(_ searchViewController: SearchViewController, didSelectURL url: URL) {
@@ -3986,26 +3965,6 @@ private extension WKNavigationAction {
         }
         
         return !url.isWebPage() || !url.isLocal || request.isPrivileged
-    }
-}
-
-//MARK: - Cliqz
-// CLiqz: Added extension for HomePanelDelegate to react for didSelectURL from SearchHistoryViewController
-extension BrowserViewController: HomePanelDelegate {
-    
-    func homePanelDidRequestToSignIn(_ homePanel: HomePanel) {
-        
-    }
-    func homePanelDidRequestToCreateAccount(_ homePanel: HomePanel) {
-        
-    }
-    func homePanel(_ homePanel: HomePanel, didSelectURL url: URL, visitType: VisitType) {
-        // Delegate method for History panel
-        finishEditingAndSubmit(url, visitType: VisitType.Typed)
-    }
-    
-    func homePanel(_ homePanel: HomePanel, didSelectURLString url: String, visitType: VisitType) {
-        
     }
 }
 

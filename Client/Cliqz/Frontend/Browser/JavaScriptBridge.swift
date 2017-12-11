@@ -260,7 +260,7 @@ class JavaScriptBridge {
 //            profile.bookmarks.modelFactory >>== {
 //                $0.removeByURL(u)
 //            }
-			NotificationCenter.default.post(name: Notification.Name(rawValue: BookmarkStatusChangedNotification), object: u, userInfo:["added": false])
+//            NotificationCenter.default.post(name: Notification.Name(rawValue: BookmarkStatusChangedNotification), object: u, userInfo:["added": false])
 		}
 	}
 
