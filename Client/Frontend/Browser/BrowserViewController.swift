@@ -11,7 +11,6 @@ import Storage
 import SnapKit
 import XCGLogger
 import Alamofire
-import Account
 import ReadingList
 import MobileCoreServices
 import WebImage
