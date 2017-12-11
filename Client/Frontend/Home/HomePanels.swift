@@ -57,9 +57,7 @@ class HomePanels {
 
         HomePanelDescriptor(
             makeViewController: { profile in
-                let controller = ReadingListPanel()
-                controller.profile = profile
-                return controller
+                return UIViewController()
             },
             imageName: "ReadingList",
             accessibilityLabel: NSLocalizedString("Reading list", comment: "Panel accessibility label"),
