@@ -739,13 +739,14 @@ extension AppDelegate: UINavigationControllerDelegate {
         animationControllerFor operation: UINavigationControllerOperation,
         from fromVC: UIViewController,
         to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-            if operation == UINavigationControllerOperation.push {
-                return BrowserToTrayAnimator()
-            } else if operation == UINavigationControllerOperation.pop {
-                return TrayToBrowserAnimator()
-            } else {
-                return nil
-            }
+//            if operation == UINavigationControllerOperation.push {
+//                return BrowserToTrayAnimator()
+//            } else if operation == UINavigationControllerOperation.pop {
+//                return TrayToBrowserAnimator()
+//            } else {
+//                return nil
+//            }
+        return nil
     }
 }
 
