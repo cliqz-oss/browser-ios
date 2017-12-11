@@ -47,7 +47,6 @@ class BrowserViewController: UIViewController {
     var controlCenterActiveInLandscape: Bool = false
 	
     var webViewContainer: UIView!
-    var menuViewController: MenuViewController?
 	// Cliqz: replace URLBarView with our custom URLBarView
 //    var urlBar: URLBarView!
 	var urlBar: CliqzURLBarView!
@@ -84,8 +83,6 @@ class BrowserViewController: UIViewController {
     fileprivate var pasteGoAction: AccessibleAction!
     fileprivate var pasteAction: AccessibleAction!
     fileprivate var copyAddressAction: AccessibleAction!
-
-    fileprivate weak var tabTrayController: TabTrayController!
 
     fileprivate let profile: Profile
     let tabManager: TabManager
@@ -1202,12 +1199,6 @@ class BrowserViewController: UIViewController {
     @available(iOS 9, *)
     func switchToPrivacyMode(isPrivate: Bool ){
         applyTheme(isPrivate ? Theme.PrivateMode : Theme.NormalMode)
-
-        let tabTrayController = self.tabTrayController ?? TabTrayController(tabManager: tabManager, profile: profile, tabTrayDelegate: self)
-        if tabTrayController.privateMode != isPrivate {
-            tabTrayController.changePrivacyMode(isPrivate)
-        }
-        self.tabTrayController = tabTrayController
     }
 
     func switchToTabForURLOrOpen(_ url: URL, isPrivate: Bool = false) {
@@ -1528,86 +1519,8 @@ class BrowserViewController: UIViewController {
 extension BrowserViewController: AppStateDelegate {
 
     func appDidUpdateState(_ appState: AppState) {
-        if AppConstants.MOZ_MENU {
-            menuViewController?.appState = appState
-        }
         toolbar?.appDidUpdateState(appState)
         urlBar?.appDidUpdateState(appState)
-    }
-}
-
-extension BrowserViewController: MenuActionDelegate {
-    func performMenuAction(_ action: MenuAction, withAppState appState: AppState) {
-        if let menuAction = AppMenuAction(rawValue: action.action) {
-            switch menuAction {
-            case .OpenNewNormalTab:
-                if #available(iOS 9, *) {
-                    self.openURLInNewTab(nil, isPrivate: false)
-                } else {
-                    self.tabManager.addTabAndSelect(nil)
-                }
-            // this is a case that is only available in iOS9
-            case .OpenNewPrivateTab:
-                if #available(iOS 9, *) {
-                    self.openURLInNewTab(nil, isPrivate: true)
-                }
-            case .FindInPage:
-                self.updateFindInPageVisibility(visible: true)
-            case .ToggleBrowsingMode:
-                if #available(iOS 9, *) {
-                    guard let tab = tabManager.selectedTab else { break }
-                    tab.toggleDesktopSite()
-                }
-            case .ToggleBookmarkStatus:
-                switch appState.ui {
-                case .tab(let tabState):
-                    self.toggleBookmarkForTabState(tabState)
-                default: break
-                }
-            case .ShowImageMode:
-                self.setNoImageMode(false)
-            case .HideImageMode:
-                self.setNoImageMode(true)
-            case .ShowNightMode:
-                NightModeHelper.setNightMode(self.profile.prefs, tabManager: self.tabManager, enabled: false)
-            case .HideNightMode:
-                NightModeHelper.setNightMode(self.profile.prefs, tabManager: self.tabManager, enabled: true)
-            case .OpenSettings:
-                self.openSettings()
-            case .OpenTopSites:
-                openHomePanel(.topSites, forAppState: appState)
-            case .OpenBookmarks:
-                openHomePanel(.bookmarks, forAppState: appState)
-            case .OpenHistory:
-                openHomePanel(.history, forAppState: appState)
-            case .OpenReadingList:
-                openHomePanel(.readingList, forAppState: appState)
-            case .SetHomePage:
-                guard let tab = tabManager.selectedTab else { break }
-                HomePageHelper(prefs: profile.prefs).setHomePage(toTab: tab, withNavigationController: navigationController)
-            case .OpenHomePage:
-                guard let tab = tabManager.selectedTab else { break }
-                HomePageHelper(prefs: profile.prefs).openHomePage(inTab: tab, withNavigationController: navigationController)
-            case .SharePage:
-                guard let url = tabManager.selectedTab?.url else { break }
-				// Cliqz: Removed menu button as we don't need it
-//                let sourceView = self.navigationToolbar.menuButton
-//                presentActivityViewController(url, sourceView: sourceView.superview, sourceRect: sourceView.frame, arrowDirection: .Up)
-            default: break
-            }
-        }
-    }
-
-    fileprivate func openHomePanel(_ panel: HomePanelType, forAppState appState: AppState) {
-        switch appState.ui {
-        case .tab(_):
-            self.openURLInNewTab(panel.localhostURL as URL, isPrivate: appState.ui.isPrivate())
-        case .homePanels(_):
-            // Not aplicable
-            print("Not aplicable")
-//            self.homePanelController?.selectedPanel = panel
-        default: break
-        }
     }
 }
 
@@ -1877,13 +1790,6 @@ extension BrowserViewController: URLBarDelegate {
         // Cliqz: send `urlbar-focus` to extension
         self.searchController?.sendUrlBarFocusEvent()
 		navigationToolbar.updatePageStatus(false)
-
-        if .BlankPage == NewTabAccessors.getNewTabPage(profile.prefs) {
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
-        } else {
-            // Cliqz: disable showing home panel when entering overlay mode
-//            showHomePanelController(inline: false)
-        }
     }
 
     func urlBarDidLeaveOverlayMode(_ urlBar: URLBarView) {
@@ -1981,27 +1887,7 @@ extension BrowserViewController: TabToolbarDelegate {
     }
 
     func tabToolbarDidPressMenu(_ tabToolbar: TabToolbarProtocol, button: UIButton) {
-        // ensure that any keyboards or spinners are dismissed before presenting the menu
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-        // check the trait collection
-        // open as modal if portrait\
-        let presentationStyle: MenuViewPresentationStyle = (self.traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular) ? .modal : .popover
-        let mvc = MenuViewController(withAppState: getCurrentAppState(), presentationStyle: presentationStyle)
-        mvc.delegate = self
-        mvc.actionDelegate = self
-        mvc.menuTransitionDelegate = MenuPresentationAnimator()
-        mvc.modalPresentationStyle = presentationStyle == .modal ? .overCurrentContext : .popover
-
-        if let popoverPresentationController = mvc.popoverPresentationController {
-            popoverPresentationController.backgroundColor = UIColor.clear
-            popoverPresentationController.delegate = self
-            popoverPresentationController.sourceView = button
-            popoverPresentationController.sourceRect = CGRect(x: button.frame.width/2, y: button.frame.size.height * 0.75, width: 1, height: 1)
-            popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirection.up
-        }
-
-        self.present(mvc, animated: true, completion: nil)
-        menuViewController = mvc
+        
     }
 
     fileprivate func setNoImageMode(_ enabled: Bool) {
@@ -2317,32 +2203,6 @@ extension BrowserViewController {
     }
 }
 
-extension BrowserViewController: MenuViewControllerDelegate {
-    func menuViewControllerDidDismiss(_ menuViewController: MenuViewController) {
-        self.menuViewController = nil
-        displayedPopoverController = nil
-        updateDisplayedPopoverProperties = nil
-    }
-
-    func shouldCloseMenu(_ menuViewController: MenuViewController, forRotationToNewSize size: CGSize, forTraitCollection traitCollection: UITraitCollection) -> Bool {
-        // if we're presenting in popover but we haven't got a preferred content size yet, don't dismiss, otherwise we might dismiss before we've presented
-        if (traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact) && menuViewController.preferredContentSize == CGSize.zero {
-            return false
-        }
-
-        func orientationForSize(_ size: CGSize) -> UIInterfaceOrientation {
-            return size.height < size.width ? .landscapeLeft : .portrait
-        }
-
-        let currentOrientation = orientationForSize(self.view.bounds.size)
-        let newOrientation = orientationForSize(size)
-        let isiPhone = UI_USER_INTERFACE_IDIOM() == .phone
-
-        // we only want to dismiss when rotating on iPhone
-        // if we're rotating from landscape to portrait then we are rotating from popover to modal
-        return isiPhone && currentOrientation != newOrientation
-    }
-}
 
 extension BrowserViewController: CIDatePickerDelegate {
     func cancelPressed(sender: UIButton, datePicker: CIDatePickerViewController) {
@@ -2789,21 +2649,21 @@ extension BrowserViewController: TabManagerDelegate {
     }
     
     func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
-        guard !tabTrayController.privateMode else {
-            return
-        }
-        
-        if let undoToast = toast {
-            let time = DispatchTime(uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds + UInt64(ButtonToastUX.ToastDelay * Double(NSEC_PER_SEC)))
-            DispatchQueue.main.asyncAfter(deadline: time) {
-                self.view.addSubview(undoToast)
-                undoToast.snp.makeConstraints { make in
-                    make.left.right.equalTo(self.view)
-                    make.bottom.equalTo(self.webViewContainer)
-                }
-                undoToast.showToast()
-            }
-        }
+//        guard !tabTrayController.privateMode else {
+//            return
+//        }
+//
+//        if let undoToast = toast {
+//            let time = DispatchTime(uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds + UInt64(ButtonToastUX.ToastDelay * Double(NSEC_PER_SEC)))
+//            DispatchQueue.main.asyncAfter(deadline: time) {
+//                self.view.addSubview(undoToast)
+//                undoToast.snp.makeConstraints { make in
+//                    make.left.right.equalTo(self.view)
+//                    make.bottom.equalTo(self.webViewContainer)
+//                }
+//                undoToast.showToast()
+//            }
+//        }
     }
 
     fileprivate func updateTabCountUsingTabManager(_ tabManager: TabManager, animated: Bool = true) {
@@ -4000,29 +3860,6 @@ extension BrowserViewController: SessionRestoreHelperDelegate {
             tab.url = tab.restoringUrl
             urlBar.currentURL = tab.restoringUrl
         }
-    }
-}
-
-extension BrowserViewController: TabTrayDelegate {
-    // This function animates and resets the tab chrome transforms when
-    // the tab tray dismisses.
-    func tabTrayDidDismiss(_ tabTray: TabTrayController) {
-        resetBrowserChrome()
-    }
-
-    func tabTrayDidAddBookmark(_ tab: Tab) {
-        guard let url = tab.url?.absoluteString, url.characters.count > 0 else { return }
-        self.addBookmark(tab.tabState)
-    }
-
-
-    func tabTrayDidAddToReadingList(_ tab: Tab) -> ReadingListClientRecord? {
-        guard let url = tab.url?.absoluteString, url.characters.count > 0 else { return nil }
-        return profile.readingList?.createRecordWithURL(url, title: tab.title ?? url, addedBy: UIDevice.current.name).successValue
-    }
-
-    func tabTrayRequestsPresentationOf(_ viewController: UIViewController) {
-        self.present(viewController, animated: false, completion: nil)
     }
 }
 

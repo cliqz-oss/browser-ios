@@ -980,15 +980,7 @@ extension URLBarView {
 
 extension URLBarView: AppStateDelegate {
     func appDidUpdateState(_ appState: AppState) {
-        if toolbarIsShowing {
-            let showShareButton = HomePageAccessors.isButtonInMenu(appState)
-            homePageButton.isHidden = showShareButton
-            shareButton.isHidden = !showShareButton
-            homePageButton.isEnabled = HomePageAccessors.isButtonEnabled(appState)
-        } else {
-            homePageButton.isHidden = true
-            shareButton.isHidden = true
-        }
+        
     }
 }
 

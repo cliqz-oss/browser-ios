@@ -519,78 +519,6 @@ class SearchSetting: Setting {
     }
 }
 
-class LoginsSetting: Setting {
-    let profile: Profile
-    var tabManager: TabManager!
-    weak var navigationController: UINavigationController?
-    weak var settings: AppSettingsTableViewController?
-
-    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
-
-    override var accessibilityIdentifier: String? { return "Logins" }
-
-    init(settings: SettingsTableViewController, delegate: SettingsDelegate?) {
-        self.profile = settings.profile
-        self.tabManager = settings.tabManager
-        self.navigationController = settings.navigationController
-        self.settings = settings as? AppSettingsTableViewController
-
-        let loginsTitle = NSLocalizedString("Logins", comment: "Label used as an item in Settings. When touched, the user will be navigated to the Logins/Password manager.")
-        super.init(title: NSAttributedString(string: loginsTitle, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]),
-                   delegate: delegate)
-    }
-
-    override func onClick(_: UINavigationController?) {
-        guard let authInfo = KeychainWrapper.sharedAppContainerKeychain.authenticationInfo() else {
-            settings?.navigateToLoginsList()
-            return
-        }
-
-        if authInfo.requiresValidation() {
-            AppAuthenticator.presentAuthenticationUsingInfo(authInfo,
-            touchIDReason: AuthenticationStrings.loginsTouchReason,
-            success: {
-                self.settings?.navigateToLoginsList()
-            },
-            cancel: nil,
-            fallback: {
-                AppAuthenticator.presentPasscodeAuthentication(self.navigationController, delegate: self.settings)
-            })
-        } else {
-            settings?.navigateToLoginsList()
-        }
-    }
-}
-
-class TouchIDPasscodeSetting: Setting {
-    let profile: Profile
-    var tabManager: TabManager!
-
-    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
-
-    override var accessibilityIdentifier: String? { return "TouchIDPasscode" }
-
-    init(settings: SettingsTableViewController, delegate: SettingsDelegate? = nil) {
-        self.profile = settings.profile
-        self.tabManager = settings.tabManager
-
-        let title: String
-        if LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-            title = AuthenticationStrings.touchIDPasscodeSetting
-        } else {
-            title = AuthenticationStrings.passcode
-        }
-        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]),
-                   delegate: delegate)
-    }
-
-    override func onClick(_ navigationController: UINavigationController?) {
-        let viewController = AuthenticationSettingsViewController()
-        viewController.profile = profile
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-}
-
 class ClearPrivateDataSetting: Setting {
     let profile: Profile
     var tabManager: TabManager!
@@ -714,22 +642,3 @@ class HomePageSetting: Setting {
 
 }
 
-class NewTabPageSetting: Setting {
-    let profile: Profile
-
-    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
-
-    override var accessibilityIdentifier: String? { return "NewTabPage.Setting" }
-
-    init(settings: SettingsTableViewController) {
-        self.profile = settings.profile
-
-        super.init(title: NSAttributedString(string: Strings.SettingsNewTabSectionName, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
-    }
-
-    override func onClick(_ navigationController: UINavigationController?) {
-        let viewController = NewTabChoiceViewController(prefs: profile.prefs)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-    
-}
