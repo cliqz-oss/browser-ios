@@ -2213,7 +2213,6 @@
 		1E79DC961D4FB2C5006BEB4A /* Cliqz */ = {
 			isa = PBXGroup;
 			children = (
-				AF6B7AD91FD952F900B1F236 /* Migration */,
 				1E79DC971D4FB2C5006BEB4A /* Foundation */,
 				1E79DCC51D4FB2C5006BEB4A /* Frontend */,
 			);
@@ -3621,6 +3620,7 @@
 				AFA93A601F4AE6EC001425C4 /* Managers and Modules */,
 				AFC8E5511F41AF1C004822D5 /* Reusable Components */,
 				AFA93A5C1F4AE68B001425C4 /* Main Navigation */,
+				AF6B7AD91FD952F900B1F236 /* Migration */,
 			);
 			name = "Conversational UI";
 			sourceTree = "<group>";
