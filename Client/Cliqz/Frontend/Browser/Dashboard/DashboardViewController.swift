@@ -28,7 +28,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     var panelOpenTime : Double?
     var currentPanel : DashBoardPanelType = .TabsPanel
 
-	fileprivate var panelSwitchControl: UISegmentedControl!
+    fileprivate var panelSwitchControl = UISegmentedControl(items: [])
 	fileprivate var panelSwitchContainerView: UIView!
 	fileprivate var panelContainerView: UIView!
 
@@ -78,16 +78,6 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		panelSwitchContainerView = UIView()
 		panelSwitchContainerView.backgroundColor = UIColor.white
 		view.addSubview(panelSwitchContainerView)
-		
-		let tabs = UIImage(named: "tabs")
-        let history = UIImage(named: "history_quick_access")
-		let fav = UIImage(named: "favorite_quick_access")
-		let offrz = UIImage(named: "offrz_active") 
-        
-		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav, offrz])
-		panelSwitchControl.tintColor = self.dashboardThemeColor
-		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
-		panelSwitchContainerView.addSubview(panelSwitchControl)
         
 		panelContainerView = UIView()
 		view.addSubview(panelContainerView)
@@ -111,7 +101,49 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
+        
+        adJustPanelSwitchControl()
         self.switchToCurrentPanel()
+    }
+    
+    private func createPanelSwitchControl(numberOfSegments: Int) {
+        guard panelSwitchControl.numberOfSegments != numberOfSegments else {
+            return
+        }
+
+        let tabs = UIImage(named: "tabs")
+        let history = UIImage(named: "history_quick_access")
+        let fav = UIImage(named: "favorite_quick_access")
+        let offrz = UIImage(named: "offrz_active")
+        var items = [tabs, history, fav]
+        if numberOfSegments == 4 {
+            items.append(offrz)
+        }
+        if currentPanel.rawValue >= numberOfSegments {
+            currentPanel = .TabsPanel
+        }
+        
+        panelSwitchControl.removeFromSuperview()
+        panelSwitchControl = UISegmentedControl(items: items)
+        panelSwitchControl.tintColor = self.dashboardThemeColor
+        panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
+        panelSwitchContainerView.addSubview(panelSwitchControl)
+       
+        panelSwitchControl.snp.makeConstraints { make in
+            make.centerY.equalTo(panelSwitchContainerView)
+            make.left.equalTo(panelSwitchContainerView).offset(10)
+            make.right.equalTo(panelSwitchContainerView).offset(-10)
+            make.height.equalTo(30)
+        }
+    }
+    
+    private func adJustPanelSwitchControl() {
+        let region = SettingsPrefs.shared.getRegionPref()
+        if region == "DE" { // TODO: Should call `DataSource.ShouldShowOffers()`
+            createPanelSwitchControl(numberOfSegments: 4)
+        } else {
+            createPanelSwitchControl(numberOfSegments: 3)
+        }
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
@@ -156,7 +188,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     }
     
     private func switchToCurrentPanel() {
-        self.panelSwitchControl?.selectedSegmentIndex = currentPanel.rawValue
+        self.panelSwitchControl.selectedSegmentIndex = currentPanel.rawValue
         var target = "UNDEFINED"
         
         self.hideCurrentPanelViewController()
@@ -183,20 +215,10 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     }
     
 	fileprivate func setupConstraints() {
-		let switchControlHeight = 30
-		let switchControlLeftOffset = 10
-		let switchControlRightOffset = -10
-		
 		panelSwitchContainerView.snp.makeConstraints { make in
 			make.left.right.equalTo(self.view)
 			make.top.equalTo(topLayoutGuide.snp.bottom)
 			make.height.equalTo(65)
-		}
-		panelSwitchControl.snp.makeConstraints { make in
-			make.centerY.equalTo(panelSwitchContainerView)
-			make.left.equalTo(panelSwitchContainerView).offset(switchControlLeftOffset)
-			make.right.equalTo(panelSwitchContainerView).offset(switchControlRightOffset)
-			make.height.equalTo(switchControlHeight)
 		}
 		panelContainerView.snp.makeConstraints { make in
 			make.top.equalTo(self.panelSwitchContainerView.snp.bottom)

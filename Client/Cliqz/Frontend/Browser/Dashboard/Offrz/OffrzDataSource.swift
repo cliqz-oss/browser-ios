@@ -29,6 +29,10 @@ class OffrzDataSource {
 		// TODO: ....
 		return true
 	}
+    
+    func shouldShowOffrz() -> Bool {
+        return SettingsPrefs.shared.getRegionPref() == "DE" 
+    }
 
 	func markRead() {
 		

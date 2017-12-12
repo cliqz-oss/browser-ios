@@ -2072,8 +2072,18 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
-    func urlBarDidPressDismissKeyboard(_ urlBar: URLBarView) {
-        
+    func hasUnreadOffrz() -> Bool {
+        if let offrzDataSource = self.profile.offrzDataSource {
+            return offrzDataSource.hasUnreadOffrz()
+        }
+        return false
+    }
+    
+    func shouldShowOffrz() -> Bool {
+        if let offrzDataSource = self.profile.offrzDataSource {
+            return offrzDataSource.shouldShowOffrz()
+        }
+        return false
     }
 }
 
