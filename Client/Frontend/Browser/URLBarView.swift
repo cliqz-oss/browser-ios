@@ -102,7 +102,8 @@ protocol URLBarDelegate: class {
     func urlBarDidPressHistroy(_ urlBar: URLBarView)
     func urlBarDidPressFavorites(_ urlBar: URLBarView)
     func urlBarDidPressOffrz(_ urlBar: URLBarView)
-    func urlBarDidPressDismissKeyboard(_ urlBar: URLBarView)
+    func hasUnreadOffrz() -> Bool
+    func shouldShowOffrz() -> Bool
 }
 
 class URLBarView: UIView {
@@ -1255,9 +1256,23 @@ extension URLBarView {
                 self.delegate?.urlBarDidPressOffrz(self)
             case .DismissKeyboard:
                 self.locationTextField?.enforceResignFirstResponder()
-//                self.delegate?.urlBarDidPressDismissKeyboard(self)
             }
         }
+        
+        keyboardAccessoryView.setHasUnreadOffrzAction { () -> Bool in
+            if let delegate = self.delegate {
+                return delegate.hasUnreadOffrz()
+            }
+            return false
+        }
+        
+        keyboardAccessoryView.setShouldShowOffrzAction { () -> Bool in
+            if let delegate = self.delegate {
+                return delegate.shouldShowOffrz()
+            }
+            return false
+        }
+        
         return keyboardAccessoryView
     }
 }
