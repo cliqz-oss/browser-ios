@@ -773,6 +773,7 @@ extension CIBrowserViewController: CliqzContextMenuDelegate {
 			let isPrivate = currentTab.isPrivate
 			if !isPrivate {
 				let newTabTitle = NSLocalizedString("Open In Background", comment: "Context menu item for opening a link in the background")
+                
 				let openNewTabAction =  UIAlertAction(title: newTabTitle, style: UIAlertActionStyle.default) { (action: UIAlertAction) in
 //					self.scrollController.showToolbars(!self.scrollController.toolbarsShowing, completion: { _ in
 //						self.tabManager.addTab(URLRequest(url: url as URL))
@@ -784,6 +785,14 @@ extension CIBrowserViewController: CliqzContextMenuDelegate {
                     
 				}
 				actionSheetController.addAction(openNewTabAction)
+                
+                let setReminderTitle = NSLocalizedString("Set Reminder", tableName: "Cliqz", comment: "Text for set reminders title")
+                
+                let setReminderAction = UIAlertAction(title: setReminderTitle, style: UIAlertActionStyle.default, handler: { (action) in
+                    Router.shared.action(action: Action(data: nil, type: .remindersPressed))
+                })
+                
+                actionSheetController.addAction(setReminderAction)
 			}
 			
 			// Cliqz: Added Action handler for the long press to download Youtube videos
