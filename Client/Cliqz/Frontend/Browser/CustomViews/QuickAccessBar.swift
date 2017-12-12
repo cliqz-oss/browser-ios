@@ -16,6 +16,8 @@ class QuickAccessBar: UIView {
     let dismissKeyboardButton = UIButton(type: .custom)
     
     var handelAccessoryViewAction: HandelAccessoryAction?
+    var hasUnreadOffrzAction: HasUnreadOffrzAction?
+    var shouldShowOffrzAction: ShouldShowOffrzAction?
     var viewName = "home"
     
     // MARK:- Public APIs
@@ -50,12 +52,19 @@ class QuickAccessBar: UIView {
     }
     
     func updateButtonsStates() {
-        let region = SettingsPrefs.shared.getRegionPref()
+        let hasUnreadOffrz = self.hasUnreadOffrzAction?() ?? false
+        let shouldShowOffrz = self.shouldShowOffrzAction?() ?? false
+        
+        if hasUnreadOffrz {
+            offrzButton.setImage(UIImage(named: "offrz_active"), for: .normal)
+        } else {
+            offrzButton.setImage(UIImage(named: "offrz_inactive"), for: .normal)
+        }
         
         offrzButton.snp.remakeConstraints { (make) in
             make.centerY.equalTo(self)
             make.left.equalTo(favoriteButton.snp.right)
-            if region == "DE" { // TODO: Should call `DataSource.ShouldShowOffers()`
+            if shouldShowOffrz {
                 make.width.equalTo(self).dividedBy(4)
             } else {
                 make.width.equalTo(0)
@@ -65,7 +74,7 @@ class QuickAccessBar: UIView {
         dismissKeyboardButton.snp.remakeConstraints { (make) in
             make.centerY.equalTo(self)
             make.left.equalTo(favoriteButton.snp.right)
-            if region == "DE" { // TODO: Should call `DataSource.ShouldShowOffers()`
+            if shouldShowOffrz {
                 make.width.equalTo(0)
             } else {
                 make.width.equalTo(self).dividedBy(4)

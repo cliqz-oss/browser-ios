@@ -14,6 +14,8 @@ enum AccessoryViewAction {
 }
 
 typealias HandelAccessoryAction = (AccessoryViewAction) -> Void
+typealias HasUnreadOffrzAction = () -> Bool
+typealias ShouldShowOffrzAction = () -> Bool
 
 class KeyboardAccessoryView: UIView {
 
@@ -82,6 +84,14 @@ class KeyboardAccessoryView: UIView {
     func setHandelAccessoryViewAction(_ handelAccessoryViewAction: @escaping HandelAccessoryAction) {
         querySuggestionView.handelAccessoryViewAction = handelAccessoryViewAction
         quickAccessBarView.handelAccessoryViewAction = handelAccessoryViewAction
+    }
+    
+    func setHasUnreadOffrzAction(_ hasUnreadOffrzAction: @escaping HasUnreadOffrzAction) {
+        quickAccessBarView.hasUnreadOffrzAction = hasUnreadOffrzAction
+    }
+    
+    func setShouldShowOffrzAction(_ shouldShowOffrzAction: @escaping ShouldShowOffrzAction) {
+        quickAccessBarView.shouldShowOffrzAction = shouldShowOffrzAction
     }
     
     // MARK:- Private Helpers
