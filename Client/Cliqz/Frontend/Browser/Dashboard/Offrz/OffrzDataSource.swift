@@ -42,6 +42,18 @@ class OffrzDataSource {
 		LocalDataStore.setObject(self.currentOffr?.uid, forKey: OffrzDataSource.LastSeenOffrID)
 	}
 
+    func hasOffrz() -> Bool {
+        return false
+    }
+    
+    func shouldShowOnBoarding() -> Bool {
+        return true
+    }
+    
+    func hideOnBoarding() {
+        
+    }
+    
 	private func updateMyOffrzList() {
 		OffrzDataService.shared.getMyOffrz { (offrz, error) in
 			if error == nil && offrz.count > 0 {
@@ -65,7 +77,7 @@ class OffrzDataSource {
 		}
 		return nil
 	}
-
+    
 	private func getLastSeenOffr() -> Offr? {
 		let offrID = self.getLastSeenOffrID()
 		for o in self.myOffrz {
@@ -76,7 +88,7 @@ class OffrzDataSource {
 			}
 		}
 		return nil
-	}
+    }
 
 	private func getLastSeenOffrID() -> String? {
 		return LocalDataStore.objectForKey(OffrzDataSource.LastSeenOffrID) as? String
@@ -90,5 +102,4 @@ class OffrzDataSource {
 		}
 		return false
 	}
-
 }
