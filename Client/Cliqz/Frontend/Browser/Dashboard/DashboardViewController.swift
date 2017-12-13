@@ -54,7 +54,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 	}()
 
 	fileprivate lazy var offrzViewController: OffrzViewController = {
-		let offrz = OffrzViewController()
+		let offrz = OffrzViewController(profile: self.profile)
 		return offrz
 	}()
 
