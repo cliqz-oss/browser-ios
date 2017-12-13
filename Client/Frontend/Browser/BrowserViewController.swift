@@ -2074,7 +2074,7 @@ extension BrowserViewController: URLBarDelegate {
     
     func hasUnreadOffrz() -> Bool {
         if let offrzDataSource = self.profile.offrzDataSource {
-            return offrzDataSource.hasUnreadOffrz()
+            return offrzDataSource.hasUnseenOffrz()
         }
         return false
     }

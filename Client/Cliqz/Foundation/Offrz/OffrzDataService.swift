@@ -8,8 +8,9 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
-struct Offrz {
+struct Offr {
 	let uid: String?
 	let title: String?
 	let description: String?
@@ -17,10 +18,13 @@ struct Offrz {
 	let code: String?
 	let url: String?
 	let actionTitle: String?
+	let startDate: Date?
+	let endDate: Date?
+	var isSeen = false
 }
 
 class OffrzDataService {
-	var lastOffrz = [Offrz]()
+	var lastOffrz = [Offr]()
 
 	private var validityStart: Date?
 	private var validityEnd: Date?
@@ -29,7 +33,7 @@ class OffrzDataService {
 
 	static let shared = OffrzDataService()
 
-	func getMyOffrz(completionHandler: @escaping ([Offrz], Error?) -> Void) {
+	func getMyOffrz(completionHandler: @escaping ([Offr], Error?) -> Void) {
 		self.loadData(successHandler: {
 			print("Hello1")
 			completionHandler(self.lastOffrz, nil)
@@ -46,29 +50,38 @@ class OffrzDataService {
 	private func loadData(successHandler: @escaping () -> Void, failureHandler: @escaping (Error?) -> Void) {
 		Alamofire.request(OffrzDataService.APIURL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil).responseJSON { (response) in
 			if response.result.isSuccess {
-				if let data = response.result.value as? [Any] {
-					self.lastOffrz = [Offrz]()
-//					self.lastUpdateTime = Date()
+				let json = JSON(response.result.value ?? "")
+				if let data = json.array {
+					self.lastOffrz = [Offr]()
 					for o in data {
-						if let offr = o as? [String: Any],
-							let actions = offr["actions"] as? [Any] {
-
-							for action in actions {
-								if let actionType = action as? [Any], actionType.count > 1,
-									let type = actionType[0] as? String,
-									type == "$show_offer",
-									let showOffer = actionType[1] as? [Any],
-									showOffer.count > 1,
-									let offrInfo = showOffer[1] as? [String: Any],
-									let uiInfo = offrInfo["ui_info"] as? [String: Any],
-									let details = uiInfo["template_data"] as? [String: Any] {
-									var actionTitle: String?
-									var url: String?
-									if let callToAction = details["call_to_action"] as? [String: Any] {
-										actionTitle = callToAction["text"] as? String
-										url = callToAction["url"] as? String
-									}
-									self.lastOffrz.append(Offrz(uid: "1", title: details["title"] as? String, description: details["desc"] as? String, logoURL: details["logo_url"] as? String, code: details["code"] as? String, url: url, actionTitle: actionTitle))
+						if let offr = o.dictionary {
+							var startDate: Date?
+							var endDate: Date?
+							var uid: String? = offr["trigger_uid"]?.string
+							if let validity = offr["validity"]?.array {
+								if validity.count >= 2 {
+									startDate = Date(timeIntervalSince1970: validity[0].doubleValue)
+									endDate = Date(timeIntervalSince1970: validity[1].doubleValue)
+								}
+							}
+							if let actions = offr["actions"]?.array {
+								for action in actions {
+									if let actionType = action.array, actionType.count > 1,
+										let type = actionType[0].string,
+										type == "$show_offer",
+										let showOffer = actionType[1].array,
+										showOffer.count > 1,
+										let offrInfo = showOffer[1].dictionary,
+										let uiInfo = offrInfo["ui_info"]?.dictionary,
+										let details = uiInfo["template_data"]?.dictionary {
+										var actionTitle: String?
+										var url: String?
+										if let callToAction = details["call_to_action"]?.dictionary {
+											actionTitle = callToAction["text"]?.string
+											url = callToAction["url"]?.string
+										}
+										self.lastOffrz.append(Offr(uid: uid, title: details["title"] as? String, description: details["desc"] as? String, logoURL: details["logo_url"] as? String, code: details["code"] as? String, url: url, actionTitle: actionTitle, startDate: startDate, endDate: endDate, isSeen: false))
+										}
 								}
 							}
 						}
