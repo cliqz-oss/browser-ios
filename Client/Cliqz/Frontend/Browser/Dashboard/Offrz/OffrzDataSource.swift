@@ -12,6 +12,7 @@ class OffrzDataSource {
 	
 	private var currentOffr: Offr?
 	private static let LastSeenOffrID = "LastSeenOffrID"
+	private static let OffrzOnboardingKey = "OffrzOnboardingNeeded"
 
 	var myOffrz = [Offr]()
 
@@ -43,15 +44,19 @@ class OffrzDataSource {
 	}
 
     func hasOffrz() -> Bool {
-        return false
+        return self.getCurrentOffr() != nil
     }
     
     func shouldShowOnBoarding() -> Bool {
-        return true
+		guard let v = LocalDataStore.objectForKey(OffrzDataSource.OffrzOnboardingKey) as? Bool
+			else {
+			return true
+		}
+        return v
     }
     
     func hideOnBoarding() {
-        
+		LocalDataStore.setObject(false, forKey: OffrzDataSource.OffrzOnboardingKey)
     }
     
 	private func updateMyOffrzList() {
