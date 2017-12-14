@@ -13,7 +13,8 @@ class OffrzViewController: UIViewController {
     private var containerView = UIView()
     private var onboardingView = UIView()
     private let offrzPresentImageView = UIImageView(image: UIImage(named: "offrz_present"))
-    private let offerzLabel = UILabel()
+    private let offrzLabel = UILabel()
+    private var offrView: OffrView?
     
     weak var offrzDataSource : OffrzDataSource!
     
@@ -46,11 +47,14 @@ class OffrzViewController: UIViewController {
         self.view.addSubview(scrollView)
         scrollView.addSubview(containerView)
         containerView.addSubview(onboardingView)
-        if !self.offrzDataSource.hasOffrz() {
+        if offrzDataSource.hasOffrz(), let currentOffr = offrzDataSource.getCurrentOffr() {
+            offrView = OffrView(offr: currentOffr)
+            containerView.addSubview(offrView!)
+        } else {
             containerView.addSubview(offrzPresentImageView)
-            containerView.addSubview(offerzLabel)
-            offerzLabel.text = NSLocalizedString("Here you'll find a new offer every week", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
-            offerzLabel.textColor = UIColor.gray
+            containerView.addSubview(offrzLabel)
+            offrzLabel.text = NSLocalizedString("Here you'll find a new offer every week", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
+            offrzLabel.textColor = UIColor.gray
         }
         
         remakeConstaints()
@@ -118,7 +122,8 @@ class OffrzViewController: UIViewController {
         
         self.containerView.snp.remakeConstraints({ (make) in
             make.top.left.bottom.right.equalTo(scrollView)
-            make.height.width.equalTo(self.view)
+            make.width.equalTo(self.view)
+            make.height.equalTo(self.view.frame.height + 200) //TODO Adjust the height in all various cases
         })
         
         if offrzDataSource.hasOffrz() {
@@ -128,13 +133,24 @@ class OffrzViewController: UIViewController {
                     make.height.equalTo(175)
                 })
             }
+            if let offrView = self.offrView {
+                offrView.snp.remakeConstraints({ (make) in
+                    if offrzDataSource.shouldShowOnBoarding() {
+                        make.top.equalTo(onboardingView.snp.bottom).offset(25)
+                    } else {
+                        make.top.equalTo(containerView).offset(25)
+                    }
+                    make.left.right.equalTo(containerView).inset(50)
+                    make.height.equalTo(500)
+                })
+            }
             
         } else {
             offrzPresentImageView.snp.remakeConstraints({ (make) in
                 make.centerX.equalTo(containerView)
                 make.centerY.equalTo(containerView).dividedBy(2)
             })
-            offerzLabel.snp.remakeConstraints({ (make) in
+            offrzLabel.snp.remakeConstraints({ (make) in
                 make.centerX.equalTo(containerView)
                 make.top.equalTo(offrzPresentImageView.snp.bottom).offset(10)
             })
