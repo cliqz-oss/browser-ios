@@ -28,12 +28,12 @@ class OffrzViewController: UIViewController {
     
     override func viewDidLoad() {
 		super.viewDidLoad()
-//        OffrzDataService.shared.getMyOffrz { (offrz, error) in
-//            print("Hello ---- \(offrz)")
-//        }
         setStyles()
         setupComponents()
         
+        if self.offrzDataSource.hasOffrz() {
+            self.offrzDataSource.markCurrentOffrSeen()
+        }
 	}
     
     private func setStyles() {
@@ -45,17 +45,24 @@ class OffrzViewController: UIViewController {
         
         self.view.addSubview(scrollView)
         scrollView.addSubview(containerView)
-        containerView.addSubview(offrzPresentImageView)
-        containerView.addSubview(offerzLabel)
-        offerzLabel.text = NSLocalizedString("Here you'll find a new offer every week", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
-        offerzLabel.textColor = UIColor.gray
+        containerView.addSubview(onboardingView)
+        if !self.offrzDataSource.hasOffrz() {
+            containerView.addSubview(offrzPresentImageView)
+            containerView.addSubview(offerzLabel)
+            offerzLabel.text = NSLocalizedString("Here you'll find a new offer every week", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
+            offerzLabel.textColor = UIColor.gray
+        }
         
         remakeConstaints()
         setupOnboardingView()
+        
     }
     
     private func setupOnboardingView() {
-        guard offrzDataSource.hasOffrz() && offrzDataSource.shouldShowOnBoarding() else { return }
+        guard offrzDataSource.hasOffrz() && offrzDataSource.shouldShowOnBoarding() else {
+            onboardingView.removeFromSuperview()
+            return
+        }
         
         onboardingView.backgroundColor = UIColor(colorString: "ABD8EA")
         containerView.addSubview(onboardingView)
@@ -121,9 +128,11 @@ class OffrzViewController: UIViewController {
                     make.height.equalTo(175)
                 })
             }
+            
         } else {
             offrzPresentImageView.snp.remakeConstraints({ (make) in
-                make.center.equalTo(containerView)
+                make.centerX.equalTo(containerView)
+                make.centerY.equalTo(containerView).dividedBy(2)
             })
             offerzLabel.snp.remakeConstraints({ (make) in
                 make.centerX.equalTo(containerView)
