@@ -137,6 +137,7 @@ class OffrView: UIView {
 
 	@objc
 	private func copyCode() {
+		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("copy", "code"))
 		let pastBoard = UIPasteboard.general
 		pastBoard.string = offr.code
 	}

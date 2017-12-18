@@ -50,17 +50,17 @@ class QuickAccessBar: UIView {
         }
         updateButtonsStates()
     }
-    
+
     func updateButtonsStates() {
         let hasUnreadOffrz = self.hasUnreadOffrzAction?() ?? false
         let shouldShowOffrz = self.shouldShowOffrzAction?() ?? false
-        
+
         if hasUnreadOffrz {
             offrzButton.setImage(UIImage(named: "offrz_active"), for: .normal)
         } else {
             offrzButton.setImage(UIImage(named: "offrz_inactive"), for: .normal)
         }
-        
+
         offrzButton.snp.remakeConstraints { (make) in
             make.centerY.equalTo(self)
             make.left.equalTo(favoriteButton.snp.right)

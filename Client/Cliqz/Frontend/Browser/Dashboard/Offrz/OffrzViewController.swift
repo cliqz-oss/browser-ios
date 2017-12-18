@@ -24,7 +24,9 @@ class OffrzViewController: UIViewController {
 	private var offrOverlay: UIView?
 
     weak var offrzDataSource : OffrzDataSource!
-    
+
+	private var startDate = Date()
+
     init(profile: Profile) {
         super.init(nibName: nil, bundle: nil)
         self.offrzDataSource = profile.offrzDataSource
@@ -43,7 +45,18 @@ class OffrzViewController: UIViewController {
             self.offrzDataSource.markCurrentOffrSeen()
         }
 	}
-    
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		self.startDate = Date()
+		TelemetryLogger.sharedInstance.logEvent(.Toolbar("show", nil, "offrz", nil, ["offer_count": self.offrzDataSource.hasOffrz() ? 1 : 0]))
+	}
+
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		TelemetryLogger.sharedInstance.logEvent(.Toolbar("hide", nil, "offrz", nil, ["show_duration": Date().timeIntervalSince(self.startDate)]))
+	}
+
     private func setStyles() {
         self.view.backgroundColor = UIConstants.AppBackgroundColor
         containerView.backgroundColor = UIColor.clear
@@ -77,7 +90,7 @@ class OffrzViewController: UIViewController {
             onboardingView.removeFromSuperview()
             return
         }
-        
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", "offrz", nil))
         onboardingView.backgroundColor = UIColor(colorString: "ABD8EA")
         containerView.addSubview(onboardingView)
 
@@ -87,7 +100,7 @@ class OffrzViewController: UIViewController {
         hideButton.addTarget(self, action: #selector(hideOnboardingView) , for: .touchUpInside)
         onboardingView.addSubview(hideButton)
         onboardingView.addSubview(offrzPresentImageView)
-        
+
         let descriptionLabel = UILabel()
         descriptionLabel.text = NSLocalizedString("Receive attractive discounts and bargains with MyOffrz", tableName: "Cliqz", comment: "[MyOffrz] MyOffrz description")
         descriptionLabel.textColor = UIColor.gray
@@ -120,6 +133,7 @@ class OffrzViewController: UIViewController {
     }
     
     @objc private func hideOnboardingView() {
+		TelemetryLogger.sharedInstance.logEvent(.Onboarding("hide", nil, ["view" : "offrz"]))
         self.onboardingView.removeFromSuperview()
         self.offrzDataSource?.hideOnBoarding()
 		self.remakeConstaints(false)
@@ -173,6 +187,7 @@ class OffrzViewController: UIViewController {
 
 	@objc
 	private func openLearnMore() {
+		TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", nil, ["view" : "offrz"]))
 		if let url = URL(string: OffrzViewController.learnMoreURL) {
 			self.delegate?.didSelectURL(url)
 		}
@@ -180,6 +195,7 @@ class OffrzViewController: UIViewController {
 
 	@objc
 	private func openOffr() {
+		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("click", "use"))
 		if let urlStr = self.myOffr?.url,
 			let url = URL(string: urlStr) {
 			self.delegate?.didSelectURL(url)
