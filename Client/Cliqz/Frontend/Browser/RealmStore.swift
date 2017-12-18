@@ -68,11 +68,6 @@ final class RealmStore: NSObject {
         executeDelete(realm: realm, objects: [domain])
     }
     
-//    class func removeObject(object: Object) {
-//        let realm = try! Realm()
-//        executeDelete(realm: realm, objects: [object])
-//    }
-    
     private class func addVisit(realm: Realm, url: String, title: String, date: Date = Date()) -> Entry? {
         
         //use normalizedHost here
