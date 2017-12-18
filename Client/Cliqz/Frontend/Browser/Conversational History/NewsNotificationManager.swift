@@ -8,32 +8,56 @@
 
 import Foundation
 
-//This takes care of remembering which news are read.
-
 final class NewsNotificationManager {
     
-    //articles change every day. So only articles that are youger than 1 day should stay in my manager
-    //I will write to disk the current articles when the application is closed.
-    
-    //user defaults key
-    
     static  let shared = NewsNotificationManager()
-    private let readArticlesDict: PersistentDict<String,Date>
+    private let internalDict: PersistentDict<String,[String]>
+    private var differenceArticles: [String] = [] //difference array
     
     init() {
-        self.readArticlesDict = PersistentDict(id: "ID_READ_NEWS")
-        self.readArticlesDict.filter { (date) -> Bool in
-            return date.isYoungerThanOneDay()
+        self.internalDict = PersistentDict(id: "ID_NEWS_NOTIFICATIONS")
+        self.differenceArticles = self.internalDict.value(key: "differenceArticles") ?? []
+    }
+    
+    func setLatestArticles(new_articles: [String]) {
+        if let old_articles = self.internalDict.value(key: "articles") {
+            differenceArticles += new_articles.difference(array: old_articles)
         }
+        else {
+            differenceArticles += new_articles
+        }
+        
+        self.internalDict.setValue(value: new_articles, forKey: "articles")
+        self.internalDict.setValue(value: differenceArticles, forKey: "differenceArticles")
     }
     
-    func isRead(articleLink:String) -> Bool {
-        return readArticlesDict.keys.contains(articleLink)
+    func newArticlesCount(host: String) -> Int {
+        return differenceArticles.filter({ (article) -> Bool in
+            if let article_host = URL(string: article)?.normalizedHost() {
+                return article_host == host
+            }
+            return false
+        }).count
     }
     
-    func markAsRead(articleLink:String?) {
-        guard let art_link = articleLink else { return }
-        readArticlesDict.setValue(value: Date(timeIntervalSinceNow: 0), forKey: art_link)
+    func domainPressed(host: String) {
+        differenceArticles = differenceArticles.filter({ (article) -> Bool in
+            if let article_host = URL(string: article)?.normalizedHost() {
+                return article_host != host
+            }
+            return false
+        })
+        
+        self.internalDict.setValue(value: differenceArticles, forKey: "differenceArticles")
     }
     
+}
+
+
+extension Array where Element: Equatable {
+    func difference(array: Array<Element>) -> Array<Element> {
+        return self.filter({ (element) -> Bool in
+            return !array.contains(element)
+        })
+    }
 }

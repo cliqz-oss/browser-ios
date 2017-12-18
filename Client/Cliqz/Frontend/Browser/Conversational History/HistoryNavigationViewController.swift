@@ -45,12 +45,7 @@ class HistoryNavigationViewController: UIViewController {
     private func setupConversationalHistory() {
         conversationalHistory.view.backgroundColor = UIColor.clear
         conversationalHistory.didPressCell = { (indexPath, host) in
-            
-            ReminderNotificationManager.shared.domainPressed(host: host)
-            
-            let data: [String: Any] = ["detailsHost": host]
-            
-            StateManager.shared.handleAction(action: Action(data: data, type: .domainPressed))
+            StateManager.shared.handleAction(action: Action(data: ["detailsHost": host], type: .domainPressed))
         }
         conversationalHistory.didDeleteCell = { (indexPath, host) in
             ReminderNotificationManager.shared.domainDeleted(host: host)

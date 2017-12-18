@@ -46,6 +46,11 @@ final class StateManager {
             return
         }
         
+        if action.type == .domainPressed, let host = actionStateData.detailsHost {
+            ReminderNotificationManager.shared.domainPressed(host: host)
+            NewsNotificationManager.shared.domainPressed(host: host)
+        }
+        
         //Add tab: Rule - whenever a url is selected open a new tab (press on card, press on news, press on reminder, press on history entry)
         if action.type == .urlSelected && (GeneralUtils.tabManager().selectedTab?.webView?.url != nil || GeneralUtils.tabManager().tabs.count == 0) {
             
