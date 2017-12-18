@@ -2,25 +2,22 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "i_Icon_2.png",
+      "filename" : "Close@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "i_Icon_1.png",
+      "filename" : "Close@2x (1).png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "i_Icon_3.png",
+      "filename" : "Close@3x (1).png",
       "scale" : "3x"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }

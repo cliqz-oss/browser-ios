@@ -80,7 +80,7 @@ class OffrzDataService {
 											actionTitle = callToAction["text"]?.string
 											url = callToAction["url"]?.string
 										}
-										self.lastOffrz.append(Offr(uid: uid, title: details["title"] as? String, description: details["desc"] as? String, logoURL: details["logo_url"] as? String, code: details["code"] as? String, url: url, actionTitle: actionTitle, startDate: startDate, endDate: endDate, isSeen: false))
+										self.lastOffrz.append(Offr(uid: uid, title: details["title"]?.string, description: details["desc"]?.string, logoURL: details["logo_url"]?.string, code: details["code"]?.string, url: url, actionTitle: actionTitle, startDate: startDate, endDate: endDate, isSeen: false))
 										}
 								}
 							}
