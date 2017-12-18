@@ -30,6 +30,9 @@ final class DomainDetailsViewController: UIViewController {
     var prev_offset: CGFloat = 0.0
     //var animating: Bool = false
     
+    //
+    var shouldScrollToBottom = false
+    
     enum ScrollDirection {
         case up
         case down
@@ -76,6 +79,18 @@ final class DomainDetailsViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
         
         setConstraints()
+        
+        shouldScrollToBottom = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        debugPrint("scroll size = \(historyTableView.contentSize.height)")
+        let offset = historyTableView.contentSize.height - historyTableView.frame.height
+        if shouldScrollToBottom && offset > 0 {
+            shouldScrollToBottom = false
+            historyTableView.setContentOffset(CGPoint(x: 0, y: offset), animated: false)
+        }
     }
     
     private func componentSetUp() {

@@ -34,7 +34,7 @@ class DomainDetailsDataSource: DomainDetailsHeaderViewProtocol, BubbleTableViewD
     
     init(domain: Domain) {
 		self.domain = domain
-        self.details = domain.entries.sorted(byKeyPath: "timestamp", ascending: false)
+        self.details = domain.entries.sorted(byKeyPath: "timestamp", ascending: true)
         self.dateBuckets = self.buildDateBuckets(details: self.details)
         standardDateFormatter.dateFormat = standardDateFormat
         standardTimeFormatter.dateFormat = standardTimeFormat
