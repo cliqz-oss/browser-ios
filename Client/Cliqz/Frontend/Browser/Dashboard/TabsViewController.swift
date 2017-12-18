@@ -146,20 +146,20 @@ class TabsViewController: UIViewController {
             self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
         }
 	}
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.setupConstraints()
 	}
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-	
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         self.collectionView.alpha = 0.0

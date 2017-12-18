@@ -55,6 +55,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 
 	fileprivate lazy var offrzViewController: OffrzViewController = {
 		let offrz = OffrzViewController(profile: self.profile)
+		offrz.delegate = self
 		return offrz
 	}()
 
@@ -63,6 +64,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.profile = profile
 		super.init(nibName: nil, bundle: nil)
 	}
+
     deinit {
         // Removed observers for Connect features
         NotificationCenter.default.removeObserver(self, name: ShowBrowserViewControllerNotification, object: nil)
@@ -114,7 +116,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
         let tabs = UIImage(named: "tabs")
         let history = UIImage(named: "history_quick_access")
         let fav = UIImage(named: "favorite_quick_access")
-        let offrz = UIImage(named: "offrz_active")
+		let offrz = (self.profile.offrzDataSource?.hasUnseenOffrz() ?? false) ? UIImage(named: "offrz_active") : UIImage(named: "offrz_inactive")
         var items = [tabs, history, fav]
         if numberOfSegments == 4 {
             items.append(offrz)
