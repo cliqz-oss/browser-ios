@@ -100,6 +100,8 @@ final class NewsManager {
         let new_links = newLinks(articles: articles)
         self.new_article_count = newArticles(between: articleLinks, and: new_links)
         self.articleLinks = new_links
+        
+        NewsNotificationManager.shared.setLatestArticles(new_articles: Array(self.articleLinks))
     }
     
     private func newLinks(articles: [[String: Any]]) -> Set<String> {

@@ -101,14 +101,14 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     }
     
     func shouldShowNotification(indexPath:IndexPath) -> Bool {
-        if ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath)) > 0 {
+        if ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath)) > 0 || NewsNotificationManager.shared.newArticlesCount(host: baseUrl(indexPath: indexPath)) > 0 {
             return true
         }
         return false
     }
  
     func notificationNumber(indexPath:IndexPath) -> Int {
-        return ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath))
+        return ReminderNotificationManager.shared.notificationsFor(host: baseUrl(indexPath: indexPath)) + NewsNotificationManager.shared.newArticlesCount(host: baseUrl(indexPath: indexPath))
     }
     
     func indexWithinBounds(indexPath:IndexPath) -> Bool {
