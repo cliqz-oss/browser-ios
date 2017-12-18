@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import RealmSwift
 
 protocol HistoryDelegate: class {
     
@@ -51,20 +52,32 @@ extension HistoryViewController {
 
     func getSearchHistory(_ offset:Int,limit:Int,callback: String?) {
 		if let c = callback {
-//            self.profile.history.getHistoryVisits(offset, limit: limit).uponQueue(DispatchQueue.main) { result in
-//                if let sites = result.successValue {
-//                    var historyResults = [[String: Any]]()
-//                    for site in sites {
-//                        var d = [String: Any]()
-//                        d["id"] = site!.id
-//                        d["url"] = site!.url
-//                        d["title"] = site!.title
-//                        d["timestamp"] = Double(site!.latestVisit!.date) / 1000.0
-//                        historyResults.append(d)
-//                    }
-//                    self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
-//                }
-//            }
+            
+            do {
+                let realm = try Realm()
+                let visits = realm.objects(Entry.self).filter({ (entry) -> Bool in
+                    return !entry.isQuery
+                })
+                
+                var historyResults = [[String: Any]]()
+                
+                var index = 0
+                
+                for site in visits {
+                    var d = [String: Any]()
+                    d["id"] = index
+                    d["url"] = site.url
+                    d["title"] = site.title
+                    d["timestamp"] = Double(site.timestamp.timeIntervalSince1970) / 1000.0
+                    historyResults.append(d)
+                    index += 1
+                }
+                self.javaScriptBridge.callJSMethod(c, parameter: historyResults, completionHandler: nil)
+                
+            }
+            catch {
+                //silently fail
+            }
 		}
 	}
 
