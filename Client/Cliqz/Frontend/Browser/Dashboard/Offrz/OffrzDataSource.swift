@@ -35,7 +35,6 @@ class OffrzDataSource {
 	}
 
 	func hasUnseenOffrz() -> Bool {
-		print("Unread Offrz -- \(!(self.currentOffr?.isSeen ?? true))")
 		return !(self.currentOffr?.isSeen ?? true)
 	}
 
@@ -49,13 +48,10 @@ class OffrzDataSource {
     }
 
     func shouldShowOnBoarding() -> Bool {
-		print("OOOOO --- \(LocalDataStore.objectForKey(OffrzDataSource.OffrzOnboardingKey))")
 		guard let v = LocalDataStore.objectForKey(OffrzDataSource.OffrzOnboardingKey)
 			else {
-				print("Onboarding ---true")
 			return true
 		}
-		print("Onboarding \(v)")
         return false
     }
 
