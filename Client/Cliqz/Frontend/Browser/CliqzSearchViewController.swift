@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 import Shared
 import Storage
+import RealmSwift
 
 protocol SearchViewDelegate: class {
 
@@ -212,12 +213,17 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
 	func getHistory() -> NSArray {
 		let results = NSMutableArray()
-		if let r = self.historyResults {
-			for site in r {
-				let d: NSDictionary = ["url": site!.url, "title": site!.title]
-				results.add(d)
-			}
-		}
+        
+        let realm = try! Realm()
+        let visits = realm.objects(Entry.self).filter { (entry) -> Bool in
+            return !entry.isQuery
+        }
+        
+        for site in visits {
+            let d: NSDictionary = ["url": site.url, "title": site.title]
+            results.add(d)
+        }
+        
 		return NSArray(array: results)
 	}
 
