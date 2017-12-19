@@ -77,7 +77,7 @@ class OffrzViewController: UIViewController {
         } else {
             containerView.addSubview(offrzPresentImageView)
             containerView.addSubview(offrzLabel)
-            offrzLabel.text = NSLocalizedString("Here you'll find a new offer every week", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
+            offrzLabel.text = NSLocalizedString("MyOffrz Empty Description", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
             offrzLabel.textColor = UIColor.gray
         }
         
@@ -102,7 +102,7 @@ class OffrzViewController: UIViewController {
         onboardingView.addSubview(offrzPresentImageView)
 
         let descriptionLabel = UILabel()
-        descriptionLabel.text = NSLocalizedString("Receive attractive discounts and bargains with MyOffrz", tableName: "Cliqz", comment: "[MyOffrz] MyOffrz description")
+        descriptionLabel.text = NSLocalizedString("MyOffrz Onboarding", tableName: "Cliqz", comment: "[MyOffrz] MyOffrz description")
         descriptionLabel.textColor = UIColor.gray
         descriptionLabel.textAlignment = .center
         descriptionLabel.numberOfLines = 2
