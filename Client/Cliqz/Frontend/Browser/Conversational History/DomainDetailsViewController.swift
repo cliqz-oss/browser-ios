@@ -196,6 +196,7 @@ extension DomainDetailsViewController {
         let translation = pan.translation(in: historyTableView)
         let velocity = pan.velocity(in: historyTableView)
         let offset = -(translation.y - prev_offset)
+        let time = abs(velocity.y) >= 340 ? recommendationsCollection.timeFor(velocity: velocity.y) : 0.6
         
         var direction: ScrollDirection = .undefined
         if velocity.y < 0.0 {
@@ -206,21 +207,28 @@ extension DomainDetailsViewController {
         }
         
         if direction == .up {
+            
             if recommendationsCollection.currentHeight != recommendationsCollection.minHeight && recommendationsCollection.canPerformChanges() {
-                self.historyTableView.setContentOffset(CGPoint(x: 0, y:0), animated: false)
+                //self.historyTableView.setContentOffset(CGPoint(x: 0, y:0), animated: false)
+                self.historyTableView.setContentOffset(self.historyTableView.contentOffset, animated: false)
             }
             
             self.recommendationsCollection.adjustOpacity()
             self.recommendationsCollection.adjustConstraints(offset: offset)
+            
         }
         else if direction == .down {
+            
             if historyTableView.contentOffset.y < 0.5 {
                 self.recommendationsCollection.adjustOpacity()
                 self.recommendationsCollection.adjustConstraints(offset: offset)
+            } else {
+                UIView.animate(withDuration: time, animations: {
+                    self.recommendationsCollection.collapse()
+                    self.view.layoutIfNeeded()
+                })
             }
         }
-        
-        let time = abs(velocity.y) >= 340 ? recommendationsCollection.timeFor(velocity: velocity.y) : 0.6
         
         if finger_on_screen {
             prev_offset = translation.y
