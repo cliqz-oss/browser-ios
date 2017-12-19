@@ -10,6 +10,8 @@ import Foundation
 
 final class NewsNotificationManager {
     
+    //algorithms here could be more efficient, but I am dealing with small sizes, so it should not be a problem
+    
     static  let shared = NewsNotificationManager()
     private let internalDict: PersistentDict<String,[String]>
     private var differenceArticles: [String] = [] //difference array
@@ -26,6 +28,12 @@ final class NewsNotificationManager {
         else {
             differenceArticles += new_articles
         }
+        
+        //make sure all differenceArticles are part of the new_articles
+        //otherwise it may contain an article that is no longer in the news, so it would show a misleading notification
+        differenceArticles = differenceArticles.filter({ (article) -> Bool in
+            return new_articles.contains(article)
+        })
         
         self.internalDict.setValue(value: new_articles, forKey: "articles")
         self.internalDict.setValue(value: differenceArticles, forKey: "differenceArticles")

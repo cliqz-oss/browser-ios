@@ -30,6 +30,7 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
         
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(reminderFired), name: CIReminderManager.notification_fired, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(newsUpdated), name: NewsManager.notification_updated, object: nil)
         
         notificationToken = domains.observe { [weak self] (changes: RealmCollectionChange) in
 
@@ -120,6 +121,11 @@ final class DomainsDataSource: NSObject, DomainsProtocol {
     
     @objc
     func reminderFired(_ notification: Notification) {
+        update()
+    }
+    
+    @objc
+    func newsUpdated(_ notification: Notification) {
         update()
     }
     
