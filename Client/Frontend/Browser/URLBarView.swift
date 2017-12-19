@@ -1241,7 +1241,7 @@ extension URLBarView {
     fileprivate func getKeyboardAccessoryView() -> UIView {
         let keyboardAccessoryView = KeyboardAccessoryView.sharedInstance
         keyboardAccessoryView.setHandelAccessoryViewAction { (action) in
-
+			self.leaveOverlayMode()
             switch (action) {
             case .AutoComplete(let completion):
                 self.locationTextField?.removeCompletion()
