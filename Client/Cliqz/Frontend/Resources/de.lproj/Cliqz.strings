@@ -369,5 +369,24 @@
  [Settings] Done button title
  [Settings] Done button on left side of the Settings view controller title bar */
 "Done" = "Fertig";
+
 /* [Settings] About MyOffrz */
 "About MyOffrz" = "Über MyOffrz";
+
+/* [MyOffrz] No offers label */
+"MyOffrz Empty Description" = "Hier findest du jede Woche ein neues Angebot";
+
+/* [MyOffrz] MyOffrz description */
+"MyOffrz Onboarding" = "Sichere dir attraktive Rabatte und Schnäppchen mit MyOffrz.";
+
+/* [MyOffrz] Learn more button title */
+"MyOffrz LEARN MORE" = "MEHR ERFAHREN";
+
+/* [MyOffrz] copy promocode action hint */
+"MyOffrz Copy promocode" = "Tippe um den Code zu kopieren";
+
+/* [MyOffrz] copy promocode done */
+"MyOffrz Code copied" = "Code kopiert";
+
+/* [MyOffrz] Conditions title */
+"MyOffrz Conditions" = "Konditionen";

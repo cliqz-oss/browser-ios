@@ -46,12 +46,12 @@ class OffrView: UIView {
                 self.logoView.image = logoImage
             })
         }
-        promoCodeLabel.text = NSLocalizedString("Copy", tableName: "Cliqz", comment: "[MyOffrz] copy promocode title")
+        promoCodeLabel.text = NSLocalizedString("MyOffrz Copy promocode", tableName: "Cliqz", comment: "[MyOffrz] copy promocode action hint")
         promoCodeButton.setTitle(offr.code, for: .normal)
 		promoCodeButton.addTarget(self, action: #selector(copyCode), for: .touchUpInside)
-		conditionsLabel.text = NSLocalizedString("Conditions", tableName: "Cliqz", comment: "[MyOffrz] Conditions title")
+		conditionsLabel.text = NSLocalizedString("MyOffrz Conditions", tableName: "Cliqz", comment: "[MyOffrz] Conditions title")
 		conditionsIcon.image = UIImage(named: "trackerInfo")
-        offrButton.setTitle(NSLocalizedString("Go To Offr", tableName: "Cliqz", comment: "[MyOffrz] Conditions title"), for: .normal)
+        offrButton.setTitle(offr.actionTitle, for: .normal)
         self.addSubview(titleLabel)
         self.addSubview(descriptionLabel)
         self.addSubview(logoView)
@@ -140,6 +140,7 @@ class OffrView: UIView {
 		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("copy", "code"))
 		let pastBoard = UIPasteboard.general
 		pastBoard.string = offr.code
+		self.promoCodeLabel.text = NSLocalizedString("MyOffrz Code copied", tableName: "Cliqz", comment: "[MyOffrz] copy promocode done")
 	}
 
 }
