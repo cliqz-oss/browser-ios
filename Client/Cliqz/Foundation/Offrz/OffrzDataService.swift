@@ -14,10 +14,11 @@ struct Offr {
 	let uid: String?
 	let title: String?
 	let description: String?
+	let url: String?
 	let logoURL: String?
 	let code: String?
-	let url: String?
 	let actionTitle: String?
+	let conditions: String?
 	let startDate: Date?
 	let endDate: Date?
 	var isSeen = false
@@ -80,7 +81,7 @@ class OffrzDataService {
 											actionTitle = callToAction["text"]?.string
 											url = callToAction["url"]?.string
 										}
-										self.lastOffrz.append(Offr(uid: uid, title: details["title"]?.string, description: details["desc"]?.string, logoURL: details["logo_url"]?.string, code: details["code"]?.string, url: url, actionTitle: actionTitle, startDate: startDate, endDate: endDate, isSeen: false))
+										self.lastOffrz.append(Offr(uid: uid, title: details["title"]?.string, description: details["desc"]?.string, url: url, logoURL: details["logo_url"]?.string, code: details["code"]?.string,  actionTitle: actionTitle, conditions: details["conditions"]?.string, startDate: startDate, endDate: endDate, isSeen: false))
 										}
 								}
 							}

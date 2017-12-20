@@ -4274,7 +4274,7 @@ extension BrowserViewController {
 		}
 
         isAppResponsive = false
-        
+
         if self.tabManager.selectedTab?.isPrivate == false {
             if searchController?.view.isHidden == true {
                 let webView = self.tabManager.selectedTab?.webView
@@ -4286,7 +4286,7 @@ extension BrowserViewController {
         
         saveLastVisitedWebSite()
     }
-	
+
 	// Cliqz: Method to store last visited sites
     fileprivate func saveLastVisitedWebSite() {
         if let selectedTab = self.tabManager.selectedTab,
@@ -4303,14 +4303,14 @@ extension BrowserViewController {
             AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
         }
     }
-    
+
     // Cliqz: Added to navigate to the last visited website (3D quick home actions)
     func navigateToLastWebsite() {
         if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
             self.initialURL = lastVisitedWebsite
         }
     }
-    
+
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
     fileprivate func fixHeaderConstraint(){
         let currentDevice = UIDevice.current
@@ -4340,6 +4340,7 @@ extension BrowserViewController {
             browser.webView!.configuration.userContentController.addUserScript(userScript)
         }
     }
+
     // Cliqz: Added to get the current view for telemetry signals
     func getCurrentView() -> String? {
         var currentView: String?
@@ -4358,8 +4359,6 @@ extension BrowserViewController {
     }
 }
 
-
-
 extension BrowserViewController: CrashlyticsDelegate {
     func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
         hasPendingCrashReport = true
@@ -4367,5 +4366,5 @@ extension BrowserViewController: CrashlyticsDelegate {
 			completionHandler(true)
 		}
     }
-    
+
 }
