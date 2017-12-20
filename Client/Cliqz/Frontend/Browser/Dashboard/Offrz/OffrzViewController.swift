@@ -20,6 +20,7 @@ class OffrzViewController: UIViewController {
 	private static let learnMoreURL = "https://cliqz.com/myoffrz"
     private var offrView: OffrView?
 	private var myOffr: Offr?
+	private let offrHeight: CGFloat = 510
 
 	private var offrOverlay: UIView?
 
@@ -73,7 +74,7 @@ class OffrzViewController: UIViewController {
             containerView.addSubview(offrView!)
 			offrView?.addTapAction(self, action: #selector(openOffr))
 			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(expandOffr))
-//			offrView?.addGestureRecognizer(tapGesture)
+			offrView?.addGestureRecognizer(tapGesture)
         } else {
             containerView.addSubview(offrzPresentImageView)
             containerView.addSubview(offrzLabel)
@@ -145,12 +146,12 @@ class OffrzViewController: UIViewController {
         })
         
         self.containerView.snp.remakeConstraints({ (make) in
-            make.top.left.bottom.right.equalTo(scrollView)
+            make.top.left.right.bottom.equalTo(scrollView)
             make.width.equalTo(self.view)
 			if withOnboarding && offrzDataSource.shouldShowOnBoarding() {
-				make.height.equalTo(self.view.frame.height + 200) //TODO Adjust the height in all various cases
+				make.height.equalTo(offrHeight + 200)
 			} else {
-				make.height.equalTo(self.view).offset(10)
+				make.height.equalTo(offrHeight + 30)
 			}
         })
 
@@ -168,8 +169,9 @@ class OffrzViewController: UIViewController {
                     } else {
                         make.top.equalTo(containerView).offset(25)
                     }
-                    make.left.right.equalTo(containerView).inset(50)
-                    make.height.equalTo(510)
+                    make.left.equalTo(containerView).offset(50)
+					make.right.equalTo(containerView).offset(-50)
+                    make.height.equalTo(offrHeight)
                 })
             }
             
@@ -195,6 +197,9 @@ class OffrzViewController: UIViewController {
 
 	@objc
 	private func openOffr() {
+		if self.offrOverlay != nil {
+			self.shrinkOffr()
+		}
 		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("click", "use"))
 		if let urlStr = self.myOffr?.url,
 			let url = URL(string: urlStr) {
@@ -204,96 +209,46 @@ class OffrzViewController: UIViewController {
 
 	@objc
 	private func expandOffr() {
-		let overlay = UIView()
-		overlay.backgroundColor = UIColor.lightGray
 		if let w = getApp().window,
 			let offr = self.myOffr {
+			let overlay = UIView()
+			overlay.backgroundColor = UIColor.clear
 			w.addSubview(overlay)
-			overlay.frame = CGRect(x: 50, y: 154, width: w.frame.size.width - 100, height: 510)
-//			overlay.snp.makeConstraints { (make) in
-//				make.top.equalTo(w).offset(154)
-//				make.left.right.equalTo(w).inset(50)
-//				make.height.equalTo(510)
-//			}
-//			overlay.layoutIfNeeded()
-
-			let offrView = OffrView(offr: offr)
-			overlay.addSubview(offrView)
-			offrView.frame = overlay.bounds
-//			offrView.snp.makeConstraints({ (make) in
-//				make.top.left.right.bottom.equalTo(overlay)
-////					make.top.equalTo(overlay).offset(35)
-////					make.bottom.equalTo(overlay).offset(-25)
-////					make.left.right.equalTo(overlay).inset(50)
-//			})
-			self.offrOverlay = overlay
-			UIView.animate(withDuration: 2.0, animations: {
-				overlay.frame = w.bounds
-				overlay.layoutIfNeeded()
-				offrView.frame = CGRect(x: 35, y: 50, width: w.frame.size.width - 100, height: w.frame.size.height - 60)
-//				offrView.snp.remakeConstraints({ (make) in
-//					make.top.equalTo(overlay).offset(35)
-//					make.bottom.equalTo(overlay).offset(-25)
-//					make.left.equalTo(overlay).inset(50)
-//					make.right.equalTo(overlay).inset(50)
-//				})
-//				offrView.layoutIfNeeded()
-
-			}, completion: { (finished) in
-				overlay.snp.remakeConstraints({ (make) in
-					make.top.left.right.bottom.equalTo(w)
-				})
-				offrView.snp.remakeConstraints({ (make) in
-					make.top.equalTo(overlay).offset(35)
-					make.bottom.equalTo(overlay).offset(-25)
-					make.left.equalTo(overlay).inset(50)
-					make.right.equalTo(overlay).inset(50)
-				})
-
-				let closeBtn = UIButton(type: .custom)
-				closeBtn.setBackgroundImage(UIImage(named:"closeOffr"), for: .normal)
-				overlay.addSubview(closeBtn)
-				closeBtn.snp.makeConstraints({ (make) in
-					make.top.equalTo(overlay).offset(33)
-					make.left.equalTo(overlay).offset(48)
-				})
-				closeBtn.addTarget(self, action: #selector(self.closeOverlay), for: .touchUpInside)
+			overlay.snp.remakeConstraints({ (make) in
+				make.top.left.right.bottom.equalTo(w)
 			})
+
+			let blurEffect = UIBlurEffect(style: .dark)
+			let blurView = UIVisualEffectView(effect: blurEffect)
+			overlay.addSubview(blurView)
+			blurView.snp.makeConstraints({ (make) in
+				make.top.left.right.bottom.equalTo(overlay)
+			})
+			let expandedOffrView = OffrView(offr: offr)
+			overlay.addSubview(expandedOffrView)
+			expandedOffrView.expand()
+			expandedOffrView.snp.makeConstraints({ (make) in
+					make.top.equalTo(overlay).offset(45)
+					make.bottom.equalTo(overlay).offset(-25)
+					make.left.right.equalTo(overlay).inset(50)
+			})
+			expandedOffrView.addTapAction(self, action: #selector(openOffr))
+			self.offrOverlay = overlay
+
+			let closeBtn = UIButton(type: .custom)
+			closeBtn.setBackgroundImage(UIImage(named:"closeOffr"), for: .normal)
+			overlay.addSubview(closeBtn)
+			closeBtn.snp.makeConstraints({ (make) in
+				make.top.equalTo(overlay).offset(40)
+				make.left.equalTo(overlay).offset(45)
+			})
+			closeBtn.addTarget(self, action: #selector(self.shrinkOffr), for: .touchUpInside)
 		}
 	}
 
 	@objc
-	private func closeOverlay() {
-		UIView.animate(withDuration: 2.0, animations: {
-			if let w = getApp().window {
-
-				let rect = CGRect(x: 50, y: 154, width: w.frame.size.width - 100, height: 510)
-				self.offrOverlay?.frame = rect
-
-				self.offrOverlay?.layoutIfNeeded()
-				if let sbView = self.offrOverlay?.subviews.last {
-					sbView.removeFromSuperview()
-					sbView.layoutIfNeeded()
-					
-	//				sbView.snp.remakeConstraints({ (make) in
-	//					make.edges.equalTo(self.offrView!.snp.edges)
-	//				})
-	//
-				}
-				if let sbView = self.offrOverlay?.subviews.last {
-					sbView.frame = CGRect(x: 0, y: 0, width: rect.size.width, height: rect.size.height)
-					sbView.layoutIfNeeded()
-					
-					//				sbView.snp.remakeConstraints({ (make) in
-					//					make.edges.equalTo(self.offrView!.snp.edges)
-					//				})
-					//
-				}
-			}
-
-		}, completion: { (finished) in
-			self.offrOverlay?.removeFromSuperview()
-			self.offrOverlay = nil
-		})
+	private func shrinkOffr() {
+		self.offrOverlay?.removeFromSuperview()
+		self.offrOverlay = nil
 	}
 }

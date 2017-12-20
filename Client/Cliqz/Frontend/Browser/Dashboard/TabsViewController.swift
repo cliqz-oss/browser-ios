@@ -443,17 +443,17 @@ extension TabsViewController: TabManagerDelegate {
             UIView.animate(withDuration: 0.1, animations: {
                 cv.contentOffset = CGPoint(x: 0.0,y: 0.0)
             })
-        }
+		}
         self.collectionView?.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
         self.collectionView?.collectionViewLayout.invalidateLayout()
-    }
-    
+	}
+
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
     }
-    
+
     func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
     }
-    
+
     func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
     }
 }
