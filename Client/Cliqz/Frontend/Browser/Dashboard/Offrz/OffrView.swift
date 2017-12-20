@@ -18,8 +18,11 @@ class OffrView: UIView {
     private let promoCodeButton = UIButton(type: .custom)
 	private let conditionsIcon = UIImageView()
 	private let conditionsLabel = UILabel()
+	private let conditionsDesc = UILabel()
 	private let myOffrzLogo = UIImageView()
 	private let offrButton = UIButton(type: .custom)
+
+	private var isExpanded = false
 
     init(offr: Offr) {
         super.init(frame: CGRect.zero)
@@ -36,6 +39,18 @@ class OffrView: UIView {
 
 	func addTapAction(_ target: Any?, action: Selector) {
 		self.offrButton.addTarget(target, action: action, for: .touchUpInside)
+	}
+
+	func expand() {
+		self.isExpanded = true
+		conditionsDesc.text = offr.conditions
+		setConstraints()
+	}
+
+	func shrink() {
+		self.isExpanded = false
+		self.conditionsDesc.removeFromSuperview()
+		setConstraints()
 	}
 
     private func setupComponents() {
@@ -59,6 +74,7 @@ class OffrView: UIView {
         self.addSubview(promoCodeButton)
 		self.addSubview(conditionsIcon)
 		self.addSubview(conditionsLabel)
+		self.addSubview(conditionsDesc)
 		self.addSubview(myOffrzLogo)
 		self.addSubview(offrButton)
     }
@@ -80,10 +96,13 @@ class OffrView: UIView {
 		promoCodeButton.setTitleColor(UIConstants.CliqzThemeColor, for: .normal)
 		promoCodeButton.backgroundColor = UIColor(rgb: 0xE7ECEE)
 		promoCodeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-		conditionsLabel.textColor = UIColor.black
-		conditionsLabel.font = UIFont.boldSystemFont(ofSize: 10)
 		conditionsIcon.tintColor = UIConstants.CliqzThemeColor
 		conditionsIcon.contentMode = .scaleAspectFit
+		conditionsLabel.textColor = UIColor.black
+		conditionsLabel.font = UIFont.boldSystemFont(ofSize: 10)
+		conditionsDesc.textColor = UIColor.black
+		conditionsDesc.font = UIFont.boldSystemFont(ofSize: 10)
+		conditionsDesc.numberOfLines = 0
 
 		myOffrzLogo.image = UIImage(named: "offrzLogo")
 		offrButton.backgroundColor = UIColor(rgb: 0xF67057)
@@ -91,44 +110,67 @@ class OffrView: UIView {
 	}
 
     private func setConstraints() {
-        titleLabel.snp.makeConstraints { (make) in
+        titleLabel.snp.remakeConstraints { (make) in
 			make.left.right.equalTo(self).inset(15)
             make.top.equalTo(self).inset(20)
 			make.height.greaterThanOrEqualTo(20)
         }
 
-        descriptionLabel.snp.makeConstraints { (make) in
+        descriptionLabel.snp.remakeConstraints { (make) in
             make.left.right.equalTo(self).inset(15)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
 			make.height.greaterThanOrEqualTo(60)
         }
-        logoView.snp.makeConstraints { (make) in
+        logoView.snp.remakeConstraints { (make) in
 //            make.top.equalTo(descriptionLabel.snp.bottom).offset(10)
             make.center.equalTo(self)
 			make.width.lessThanOrEqualTo(self).offset(-10)
         }
-        promoCodeLabel.snp.makeConstraints { (make) in
+        promoCodeLabel.snp.remakeConstraints { (make) in
             make.bottom.equalTo(promoCodeButton.snp.top).offset(-4)
             make.left.right.equalTo(self).inset(15)
         }
-        promoCodeButton.snp.makeConstraints { (make) in
+        promoCodeButton.snp.remakeConstraints { (make) in
             make.bottom.equalTo(conditionsIcon.snp.top).offset(-10)
             make.left.right.equalTo(self).inset(15)
         }
-		conditionsIcon.snp.makeConstraints { (make) in
-			make.bottom.equalTo(offrButton.snp.top).offset(-10)
+		conditionsIcon.snp.remakeConstraints { (make) in
+			make.bottom.equalTo(conditionsDesc.snp.top).offset(-10)
 			make.left.equalTo(self).inset(15)
 		}
-		conditionsLabel.snp.makeConstraints { (make) in
-			make.bottom.equalTo(offrButton.snp.top).offset(-11)
+		conditionsLabel.snp.remakeConstraints { (make) in
+			make.bottom.equalTo(conditionsDesc.snp.top).offset(-11)
 			make.left.equalTo(conditionsIcon.snp.right).offset(5)
 			make.height.equalTo(15)
 		}
-		myOffrzLogo.snp.makeConstraints { (make) in
+		conditionsDesc.snp.remakeConstraints { (make) in
+			make.bottom.equalTo(offrButton.snp.top).offset(-11)
+			make.left.equalTo(self).inset(15)
+			make.right.equalTo(self).inset(10)
+		}
+		if (offr.conditions ?? "") == "" {
+			conditionsIcon.snp.remakeConstraints { (make) in
+				make.bottom.equalTo(conditionsDesc.snp.top).offset(-10)
+				make.left.equalTo(self).inset(15)
+				make.width.height.equalTo(0)
+			}
+			conditionsLabel.snp.remakeConstraints { (make) in
+				make.bottom.equalTo(conditionsDesc.snp.top).offset(-11)
+				make.left.equalTo(conditionsIcon.snp.right).offset(5)
+				make.height.equalTo(0)
+			}
+			conditionsDesc.snp.remakeConstraints { (make) in
+				make.bottom.equalTo(offrButton.snp.top).offset(-11)
+				make.left.equalTo(self).inset(15)
+				make.right.equalTo(self).inset(10)
+				make.height.equalTo(0)
+			}
+		}
+		myOffrzLogo.snp.remakeConstraints { (make) in
 			make.right.equalTo(self).offset(-8)
 			make.bottom.equalTo(offrButton.snp.top)
 		}
-		offrButton.snp.makeConstraints { (make) in
+		offrButton.snp.remakeConstraints { (make) in
 			make.bottom.equalTo(self)
 			make.left.right.equalTo(self)
 			make.height.equalTo(61)
