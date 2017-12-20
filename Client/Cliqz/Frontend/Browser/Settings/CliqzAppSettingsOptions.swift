@@ -230,6 +230,32 @@ class ReportWebsiteSetting: Setting {
     }
     
 }
+//Cliqz: Added Setting for redirecting to MyOffrz url
+class MyOffrzSetting: Setting {
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override var title: NSAttributedString? {
+        //TODO Translations
+        return NSAttributedString(string: NSLocalizedString("About MyOffrz", tableName: "Cliqz", comment: "[Settings] About MyOffrz"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+    override var url: URL? {
+        if let languageCode = Locale.current.regionCode, languageCode == "de"{
+            return URL(string: "https://cliqz.com/myoffrz")
+        }
+        return URL(string: "https://cliqz.com/en/myoffrz")
+    }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let contactSignal = TelemetryLogEventType.Settings("main", "click", "myoffrz", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(contactSignal)
+    }
+    
+}
 
 // Cliqz: Custom Bool settings for News Push Notifications
 class EnablePushNotifications: BoolSetting {

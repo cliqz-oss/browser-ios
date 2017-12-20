@@ -97,8 +97,9 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let supportSetting          = SupportSetting(delegate: settingsDelegate)
         let tipsAndTricksSetting    = TipsAndTricksSetting()
         let reportWebsiteSetting    = ReportWebsiteSetting()
+        let myOffrzSetting          = MyOffrzSetting()
         
-        let helpSection: [Setting] = [supportSetting, tipsAndTricksSetting, reportWebsiteSetting]
+        let helpSection: [Setting] = [supportSetting, tipsAndTricksSetting, reportWebsiteSetting, myOffrzSetting]
         
         
         // About Cliqz Section

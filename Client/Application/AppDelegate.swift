@@ -238,6 +238,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         let p = BrowserProfile(localName: "profile", app: application)
         self.profile = p
+		p.offrzDataSource = OffrzDataSource()
         return p
     }
 

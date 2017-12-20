@@ -130,7 +130,7 @@ class LogoLoader {
 		return false
 	}
 
-	private class func downloadImage(_ url: String, completed: @escaping (_ image: UIImage?, _ error:  Error?) -> Void) {
+	class func downloadImage(_ url: String, completed: @escaping (_ image: UIImage?, _ error:  Error?) -> Void) {
 		if let u = URL(string: url) {
 			SDWebImageManager.shared().downloadImage(with: u, options:SDWebImageOptions.highPriority, progress: { (receivedSize, expectedSize) in },
 													 completed: { (image, error, _, _, _) in completed(image, error)} as SDWebImageCompletionWithFinishedBlock)

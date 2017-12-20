@@ -3,60 +3,32 @@
 //  Client
 //
 //  Created by Mahmoud Adam on 1/2/17.
-//  Copyright © 2017 Mozilla. All rights reserved.
+//  Copyright © 2017 Cliqz. All rights reserved.
 //
 
 import UIKit
-protocol QuerySuggestionDelegate : class {
-    func autoComplete(_ suggestion: String)
-}
-
 class QuerySuggestionView: UIView {
     
     //MARK:- Constants
-    fileprivate let kViewHeight: CGFloat = 44
-    fileprivate let scrollView = UIScrollView()
     fileprivate let boldFontAttributes = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17), NSForegroundColorAttributeName: UIColor.white]
     fileprivate let normalFontAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 16), NSForegroundColorAttributeName: UIColor.white]
-    fileprivate let bgColor = UIColor(rgb: 0xADB5BD)
     fileprivate let separatorBgColor = UIColor(rgb: 0xC7CBD3)
     fileprivate let margin: CGFloat = 10
     
     //MARK:- instance variables
-    weak var delegate : QuerySuggestionDelegate? = nil
+    var handelAccessoryViewAction: HandelAccessoryAction?
     
     private var currentQuery: String = ""
     private var currentSuggestions: [String] = []
-    
-    
-    static let sharedInstance = QuerySuggestionView()
-    
-    init() {
-        let screenBounds = UIScreen.main.bounds
-        let frame = CGRect(x: 0.0, y: 0.0, width: screenBounds.width, height: kViewHeight);
-        
-        super.init(frame: frame)
-        self.autoresizingMask = .flexibleWidth
-        self.backgroundColor = bgColor
-        
-        scrollView.frame = frame
-        self.addSubview(self.scrollView)
-        
-        //initially hide the view until the user type query
-        self.isHidden = true
 
-        NotificationCenter.default.addObserver(self, selector: #selector(showSuggestions) , name: QuerySuggestions.ShowSuggestionsNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(viewRotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+    // MARK:- Public APIs
 
+    func shouldShowSuggestions() -> Bool {
+        return shouldShowSuggestions(query: currentQuery, suggestions: currentSuggestions)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    func shouldShowSuggestions(query: String, suggestions: [String]) -> Bool {
+        return QuerySuggestions.isEnabled() && currentQuery == query && suggestions.count > 0
     }
     
     func updateCurrentQuery(_ query: String) {
@@ -67,35 +39,24 @@ class QuerySuggestionView: UIView {
         }
     }
     
-    func showSuggestions(notification: NSNotification) {
-        
-        guard let suggestionsData = notification.object as? [String: AnyObject],
-            let query = suggestionsData["query"] as? String,
-            let suggestions = suggestionsData["suggestions"] as? [String] else {
-            return
-        }
-        
-        clearSuggestions()
-        displaySuggestions(query, suggestions: suggestions)
-        
+    func updateSuggestions(_ suggestions: [String]) {
+        currentSuggestions = suggestions
     }
     
-    //MARK:- Helper methods
-    fileprivate func clearSuggestions() {
-        let subViews = scrollView.subviews
+    func clearSuggestions() {
+        let subViews = self.subviews
         for subView in subViews {
             subView.removeFromSuperview()
         }
-        self.isHidden = true
     }
     
-    fileprivate func displaySuggestions(_ query: String, suggestions: [String]) {
+    func displayLastestSuggestions() {
+        self.displaySuggestions(currentQuery, suggestions: currentSuggestions)
+    }
+    
+    func displaySuggestions(_ query: String, suggestions: [String]) {
+        self.clearSuggestions()
         currentSuggestions = suggestions
-        
-        guard currentQuery == query && suggestions.count > 0 && OrientationUtil.isPortrait() else {
-            return
-        }
-        self.isHidden = false
         
         var index = 0
         var x: CGFloat = margin
@@ -118,7 +79,7 @@ class QuerySuggestionView: UIView {
             index = index + 1
             displayedSuggestions.append((suggestion, suggestionWidth))
         }
-        
+
         // distribute the extra space evenly on all suggestions
         difference = self.frame.width - x
         offset = round(difference/CGFloat(index))
@@ -131,11 +92,11 @@ class QuerySuggestionView: UIView {
             // Adding vertical separator between suggestions
             if index > 0 {
                 let verticalSeparator = createVerticalSeparator(x)
-                scrollView.addSubview(verticalSeparator)
+                self.addSubview(verticalSeparator)
             }
             // Adding the suggestion button
             let suggestionButton = createSuggestionButton(x, index: index, suggestion: suggestion, suggestionWidth: suggestionWidth)
-            scrollView.addSubview(suggestionButton)
+            self.addSubview(suggestionButton)
             
             // increment step
             x = x + suggestionWidth + 2*margin + 1
@@ -147,6 +108,8 @@ class QuerySuggestionView: UIView {
         TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("show", customData))
     }
     
+    //MARK:- Helper methods
+    
     fileprivate func getWidth(_ suggestion: String) -> CGFloat {
         let sizeOfString = (suggestion as NSString).size(attributes: boldFontAttributes)
         return sizeOfString.width + 5
@@ -154,16 +117,16 @@ class QuerySuggestionView: UIView {
 
     fileprivate func createVerticalSeparator(_ x: CGFloat) -> UIView {
         let verticalSeparator = UIView()
-        verticalSeparator.frame = CGRect(x: x-11, y: 0, width: 1, height: kViewHeight)
+        verticalSeparator.frame = CGRect(x: x-11, y: 0, width: 1, height: self.frame.height)
         verticalSeparator.backgroundColor = separatorBgColor
         return verticalSeparator;
     }
-    
+
     fileprivate func createSuggestionButton(_ x: CGFloat, index: Int, suggestion: String, suggestionWidth: CGFloat) -> UIButton {
         let button = UIButton(type: .custom)
         let suggestionTitle = getTitle(suggestion)
         button.setAttributedTitle(suggestionTitle, for: UIControlState())
-        button.frame = CGRect(x: x, y: 0, width: suggestionWidth, height: kViewHeight)
+        button.frame = CGRect(x: x, y: 0, width: suggestionWidth, height: self.frame.height)
         button.addTarget(self, action: #selector(selectSuggestion(_:)), for: .touchUpInside)
         button.tag = index
         return button
@@ -191,22 +154,10 @@ class QuerySuggestionView: UIView {
         guard let suggestion = button.titleLabel?.text else {
             return
         }
-        delegate?.autoComplete(suggestion + " ")
+        handelAccessoryViewAction?(.AutoComplete(suggestion + " "))
         
         let customData = ["index" : button.tag]
         TelemetryLogger.sharedInstance.logEvent(.QuerySuggestions("click", customData))
     }
-    
-    @objc fileprivate func viewRotated() {
-        guard QuerySuggestions.isEnabled() else {
-            self.isHidden = true
-            return
-        }
 
-        clearSuggestions()
-        if OrientationUtil.isPortrait() {
-            self.displaySuggestions(currentQuery, suggestions: currentSuggestions)
-        }
-        
-    }
 }
