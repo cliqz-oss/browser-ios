@@ -33,10 +33,13 @@
     "react-native-share": "1.0.23",
     "react-native-snap-carousel": "3.3.4",
     "react-native-sqlite-2": "1.5.0",
-    "react-native-view-shot": "2.1.1",
+    "react-native-view-shot": "2.2.0",
     "react-native-webrtc": "1.58.3",
     "stream-browserify": "2.0.1",
     "stream-http": "2.7.2",
     "url": "^0.11.0"
+  },
+  "resolutions": {
+    "**/core-js": "2.5.1"
   }
 }
