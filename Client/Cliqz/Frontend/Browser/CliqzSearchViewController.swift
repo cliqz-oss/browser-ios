@@ -29,8 +29,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     fileprivate let lastTitleKey = "LastTitle"
     
     fileprivate var lastQuery: String?
+    
+    let searchView = Engine.sharedInstance.rootView
 
-	var webView: WKWebView?
+//    var webView: WKWebView?
     lazy var shareCardWebView: WKWebView = {
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = false
@@ -93,16 +95,21 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 
         let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
 
-        self.webView = WKWebView(frame: self.view.bounds, configuration: config)
-		self.webView?.navigationDelegate = self
-        self.webView?.scrollView.isScrollEnabled = false
-        self.webView?.accessibilityLabel = "Web content"
-        self.view.addSubview(self.webView!)
+//        self.webView = WKWebView(frame: self.view.bounds, configuration: config)
+//        self.webView?.navigationDelegate = self
+//        self.webView?.scrollView.isScrollEnabled = false
+//        self.webView?.accessibilityLabel = "Web content"
+//        self.view.addSubview(self.webView!)
+//
+//
+//        self.webView!.snp_makeConstraints { make in
+//            make.top.equalTo(0)
+//            make.bottom.left.right.equalTo(self.view)
+//        }
         
-
-        self.webView!.snp_makeConstraints { make in
-            make.top.equalTo(0)
-            make.bottom.left.right.equalTo(self.view)
+        self.view.addSubview(searchView)
+        self.searchView.snp.makeConstraints { (make) in
+            make.left.right.top.bottom.equalToSuperview()
         }
         
         
@@ -115,7 +122,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         addGuestureRecognizers()
         
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-        NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: NSNotification.Name.UIDeviceOrientationDidChange, object: UIDevice.current)
+        //NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: NSNotification.Name.UIDeviceOrientationDidChange, object: UIDevice.current)
         
         NotificationCenter.default.addObserver(self, selector: #selector(showOpenSettingsAlert(_:)), name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
 
@@ -157,33 +164,33 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         
     }
 
-    func fixViewport() {
-        if #available(iOS 9.0, *) {
-            return
-        }
-
-        var currentWidth = "device-width"
-        var currentHeight = "device-height"
-        if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
-            currentWidth = "device-height"
-            currentHeight = "device-width"
-        }
-        if let path = Bundle.main.path(forResource: "viewport", ofType: "js"), let source = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String {
-            var modifiedSource = source.replacingOccurrences(of: "device-height", with: currentHeight)
-            modifiedSource = modifiedSource.replacingOccurrences(of: "device-width", with: currentWidth)
-            
-            
-            self.webView?.evaluateJavaScript(modifiedSource, completionHandler: nil)
-        }
-    }
+//    func fixViewport() {
+//        if #available(iOS 9.0, *) {
+//            return
+//        }
+//
+//        var currentWidth = "device-width"
+//        var currentHeight = "device-height"
+//        if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
+//            currentWidth = "device-height"
+//            currentHeight = "device-width"
+//        }
+//        if let path = Bundle.main.path(forResource: "viewport", ofType: "js"), let source = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String {
+//            var modifiedSource = source.replacingOccurrences(of: "device-height", with: currentHeight)
+//            modifiedSource = modifiedSource.replacingOccurrences(of: "device-width", with: currentWidth)
+//
+//
+//            self.webView?.evaluateJavaScript(modifiedSource, completionHandler: nil)
+//        }
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         javaScriptBridge.setDefaultSearchEngine()
         self.updateExtensionPreferences()
-		if self.webView?.url == nil {
-			loadExtension()
-		}
+//        if self.webView?.url == nil {
+//            loadExtension()
+//        }
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(searchWithLastQuery), name: NSNotification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
@@ -258,11 +265,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     fileprivate func search(_ query: String) {
-        var parameters = "'\(query.escape())'"
+        var parameters: Array<Any> = [query.escape()]
         if let l = LocationManager.sharedInstance.getUserLocation() {
-            parameters += ", true, \(l.coordinate.latitude), \(l.coordinate.longitude)"
+            parameters += [true, l.coordinate.latitude, l.coordinate.longitude]
         }
-        self.javaScriptBridge.publishEvent("search", parameters: parameters)
+        //self.javaScriptBridge.publishEvent("search", parameters: parameters)
+        //TODO: Bridge can return null, so implement a queue, on Engine level.
+        Engine.sharedInstance.getBridge().publishEvent("search", args: parameters)
         
         lastQuery = query
     }
@@ -312,8 +321,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		switch (buttonIndex) {
 		case 0:
 			stopLoadingAnimation()
-		case 1:
-			loadExtension()
+//        case 1:
+//            //loadExtension()
 		default:
 			debugPrint("Unhandled Button Click")
 		}
@@ -346,10 +355,10 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 		animateSearchEnginesWithKeyboard(state)
 	}
 
-	fileprivate func loadExtension() {
-		let url = URL(string: NavigationExtension.indexURL)
-		self.webView!.load(URLRequest(url: url!))
-	}
+//    fileprivate func loadExtension() {
+//        let url = URL(string: NavigationExtension.indexURL)
+//        self.webView!.load(URLRequest(url: url!))
+//    }
 
 	fileprivate func stopLoadingAnimation() {
 		self.spinnerView.removeFromSuperview()
@@ -382,16 +391,16 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
     //MARK: - Guestures
     func addGuestureRecognizers() {
         // longPress gesture recognizer
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onLongPress(_:)))
-        longPressGestureRecognizer.delegate = self
-        self.webView?.addGestureRecognizer(longPressGestureRecognizer)
+//        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onLongPress(_:)))
+//        longPressGestureRecognizer.delegate = self
+//        self.webView?.addGestureRecognizer(longPressGestureRecognizer)
         
         
         // swiper up gesture recognizer
-        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onSwipeUp(_:)))
-        swipeGestureRecognizer.direction = .up
-        swipeGestureRecognizer.delegate = self
-        self.webView?.addGestureRecognizer(swipeGestureRecognizer)
+//        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onSwipeUp(_:)))
+//        swipeGestureRecognizer.direction = .up
+//        swipeGestureRecognizer.delegate = self
+//        self.webView?.addGestureRecognizer(swipeGestureRecognizer)
     }
     
     func onLongPress(_ gestureRecognizer: UIGestureRecognizer) {
@@ -502,7 +511,7 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
     }
     
     func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
-        self.webView?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler as! ((Any?, Error?) -> Void)?)
+        //self.webView?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler as! ((Any?, Error?) -> Void)?)
     }
     
     func searchForQuery(_ query: String) {
@@ -559,11 +568,11 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
             return
         }
         
-        self.webView?.evaluateJavaScript("JSON.parse(localStorage.recentQueries || '[]')", completionHandler: { [weak self] (result, error) in
-            if let queriesMetaData = result as? [[String: Any]] {
-                self?.profile.insertPatchQueries(queriesMetaData)
-            }
-        })
+//        self.webView?.evaluateJavaScript("JSON.parse(localStorage.recentQueries || '[]')", completionHandler: { [weak self] (result, error) in
+//            if let queriesMetaData = result as? [[String: Any]] {
+//                self?.profile.insertPatchQueries(queriesMetaData)
+//            }
+//        })
         
         
         LocalDataStore.setObject(true, forKey: isQueriesMigratedKey)
