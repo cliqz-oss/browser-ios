@@ -14,7 +14,6 @@ const styles = function () {
     container: {
       flex: 1,
       flexDirection: 'column',
-      paddingTop: 60,
       backgroundColor: '#FFFFFF'
     },
   });
