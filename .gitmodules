@@ -1,3 +1,0 @@
-[submodule "external/autobots"]
-	path = external/autobots
-	url = git@github.com:cliqz/autobots.git
