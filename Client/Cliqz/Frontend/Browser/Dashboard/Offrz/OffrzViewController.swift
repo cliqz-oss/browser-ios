@@ -14,11 +14,14 @@ class OffrzViewController: UIViewController {
 
     private var scrollView = UIScrollView()
     private var containerView = UIView()
-    private var onboardingView = OffrzOnboardingView()
-    private let offrzLabel = UILabel()
+
 	private static let learnMoreURL = "https://cliqz.com/myoffrz"
-    private var offrView: OffrView?
+	private var onboardingView: OffrzOnboardingView!
+
+	private var emptyView: OffrzEmptyView!
+	
 	private var myOffr: Offr?
+	private var offrView: OffrView?
 	private let offrHeight: CGFloat = 510
 
 	private var offrOverlay: UIView?
@@ -75,17 +78,17 @@ class OffrzViewController: UIViewController {
 			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(expandOffr))
 			offrView?.addGestureRecognizer(tapGesture)
         } else {
-            containerView.addSubview(offrzLabel)
-            offrzLabel.text = NSLocalizedString("MyOffrz Empty Description", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
-            offrzLabel.textColor = UIColor.gray
+			self.emptyView = OffrzEmptyView()
+			self.containerView.addSubview(self.emptyView)
         }
         
         setupOnboardingView()
-		remakeConstaints(true)
+		layoutComponents(withOnboarding: true)
     }
     
     private func setupOnboardingView() {
         if offrzDataSource.hasOffrz() && offrzDataSource.shouldShowOnBoarding() {
+			self.onboardingView = OffrzOnboardingView()
 			containerView.addSubview(onboardingView)
 			onboardingView.addActionHandler(.hide) {
 				weak var weakSelf = self
@@ -103,10 +106,10 @@ class OffrzViewController: UIViewController {
 		TelemetryLogger.sharedInstance.logEvent(.Onboarding("hide", nil, ["view" : "offrz"]))
         self.onboardingView.removeFromSuperview()
         self.offrzDataSource?.hideOnBoarding()
-		self.remakeConstaints(false)
+		self.layoutComponents(withOnboarding: false)
     }
     
-	private func remakeConstaints(_ withOnboarding: Bool) {
+	private func layoutComponents(withOnboarding isOnboardingOn: Bool) {
         self.scrollView.snp.remakeConstraints({ (make) in
             make.top.left.bottom.right.equalTo(self.view)
         })
@@ -114,7 +117,7 @@ class OffrzViewController: UIViewController {
         self.containerView.snp.remakeConstraints({ (make) in
             make.top.left.right.bottom.equalTo(scrollView)
             make.width.equalTo(self.view)
-			if withOnboarding && offrzDataSource.shouldShowOnBoarding() {
+			if isOnboardingOn && offrzDataSource.shouldShowOnBoarding() {
 				make.height.equalTo(offrHeight + 200)
 			} else {
 				make.height.equalTo(offrHeight + 30)
@@ -122,7 +125,7 @@ class OffrzViewController: UIViewController {
         })
 
         if offrzDataSource.hasOffrz() {
-            if withOnboarding && offrzDataSource.shouldShowOnBoarding() {
+            if isOnboardingOn && offrzDataSource.shouldShowOnBoarding() {
                 self.onboardingView.snp.remakeConstraints({ (make) in
                     make.top.left.right.equalTo(containerView)
                     make.height.equalTo(175)
@@ -130,7 +133,7 @@ class OffrzViewController: UIViewController {
             }
             if let offrView = self.offrView {
                 offrView.snp.remakeConstraints({ (make) in
-                    if withOnboarding && offrzDataSource.shouldShowOnBoarding() {
+                    if isOnboardingOn && offrzDataSource.shouldShowOnBoarding() {
                         make.top.equalTo(onboardingView.snp.bottom).offset(25)
                     } else {
                         make.top.equalTo(containerView).offset(25)
@@ -140,16 +143,10 @@ class OffrzViewController: UIViewController {
                     make.height.equalTo(offrHeight)
                 })
             }
-            
         } else {
-//            offrzPresentImageView.snp.remakeConstraints({ (make) in
-//                make.centerX.equalTo(containerView)
-//                make.centerY.equalTo(containerView).dividedBy(2)
-//            })
-//            offrzLabel.snp.remakeConstraints({ (make) in
-//                make.centerX.equalTo(containerView)
-//                make.top.equalTo(offrzPresentImageView.snp.bottom).offset(10)
-//            })
+			emptyView?.snp.remakeConstraints({ (make) in
+				make.edges.equalTo(self.containerView)
+			})
         }
     }
 
