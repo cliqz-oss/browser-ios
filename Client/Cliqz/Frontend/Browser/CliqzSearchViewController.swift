@@ -19,7 +19,14 @@ protocol SearchViewDelegate: class {
 	func dismissKeyboard()
 }
 
-class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate, WKScriptMessageHandler, KeyboardHelperDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate  {
+let OpenUrlSearchNotification = NSNotification.Name(rawValue: "mobile-search:openUrl")
+let CopyValueSearchNotification = NSNotification.Name(rawValue: "mobile-search:copyValue")
+let HideKeyboardSearchNotification = NSNotification.Name(rawValue: "mobile-search:hideKeyboard")
+let CallSearchNotification = NSNotification.Name(rawValue: "mobile-search:call")
+let MapSearchNotification = NSNotification.Name(rawValue: "mobile-search:map")
+let ShareLocationSearchNotification = NSNotification.Name(rawValue: "mobile-search:share-location")
+
+class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigationDelegate /*, WKScriptMessageHandler*/, KeyboardHelperDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate  {
 	
     fileprivate var searchLoader: SearchLoader!
     fileprivate let cliqzSearch = CliqzSearch()
@@ -54,15 +61,13 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         return HomePanelState(isPrivate: privateMode, selectedIndex: 0)
     }
     
-    lazy var javaScriptBridge: JavaScriptBridge = {
-        let javaScriptBridge = JavaScriptBridge(profile: self.profile)
-        javaScriptBridge.delegate = self
-        return javaScriptBridge
-        }()
+//    lazy var javaScriptBridge: JavaScriptBridge = {
+//        let javaScriptBridge = JavaScriptBridge(profile: self.profile)
+//        javaScriptBridge.delegate = self
+//        return javaScriptBridge
+//        }()
 
 	weak var delegate: SearchViewDelegate?
-
-	fileprivate var spinnerView: UIActivityIndicatorView!
 
 	fileprivate var historyResults: Cursor<Site>?
 	
@@ -79,50 +84,35 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.showBlockedTopSites(_:)), name: NSNotification.Name(rawValue: NotificationShowBlockedTopSites), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(didSelectUrl), name: OpenUrlSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(copyValue), name: CopyValueSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(hideKeyboard), name: HideKeyboardSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(call), name: CallSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(openMap), name: MapSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(shareLocation), name: ShareLocationSearchNotification, object: nil)
     }
+    
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationShowBlockedTopSites), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-        let config = ConfigurationManager.sharedInstance.getSharedConfiguration(self)
-
-//        self.webView = WKWebView(frame: self.view.bounds, configuration: config)
-//        self.webView?.navigationDelegate = self
-//        self.webView?.scrollView.isScrollEnabled = false
-//        self.webView?.accessibilityLabel = "Web content"
-//        self.view.addSubview(self.webView!)
-//
-//
-//        self.webView!.snp_makeConstraints { make in
-//            make.top.equalTo(0)
-//            make.bottom.left.right.equalTo(self.view)
-//        }
         
         self.view.addSubview(searchView)
         self.searchView.snp.makeConstraints { (make) in
             make.left.right.top.bottom.equalToSuperview()
         }
-        
-        
-		self.spinnerView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-		self.view.addSubview(spinnerView)
-		spinnerView.startAnimating()
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
-		layoutSearchEngineScrollView()
-        addGuestureRecognizers()
         
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-        //NotificationCenter.default.addObserver(self, selector: #selector(CliqzSearchViewController.fixViewport), name: NSNotification.Name.UIDeviceOrientationDidChange, object: UIDevice.current)
         
         NotificationCenter.default.addObserver(self, selector: #selector(showOpenSettingsAlert(_:)), name: NSNotification.Name(rawValue: LocationManager.NotificationShowOpenLocationSettingsAlert), object: nil)
 
@@ -163,43 +153,15 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         present(alertController, animated: true, completion: nil)
         
     }
-
-//    func fixViewport() {
-//        if #available(iOS 9.0, *) {
-//            return
-//        }
-//
-//        var currentWidth = "device-width"
-//        var currentHeight = "device-height"
-//        if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
-//            currentWidth = "device-height"
-//            currentHeight = "device-width"
-//        }
-//        if let path = Bundle.main.path(forResource: "viewport", ofType: "js"), let source = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String {
-//            var modifiedSource = source.replacingOccurrences(of: "device-height", with: currentHeight)
-//            modifiedSource = modifiedSource.replacingOccurrences(of: "device-width", with: currentWidth)
-//
-//
-//            self.webView?.evaluateJavaScript(modifiedSource, completionHandler: nil)
-//        }
-//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        javaScriptBridge.setDefaultSearchEngine()
-        self.updateExtensionPreferences()
-//        if self.webView?.url == nil {
-//            loadExtension()
-//        }
         
+        Engine.sharedInstance.getBridge().setDefaultSearchEngine()
+        self.updateExtensionPreferences()
         
         NotificationCenter.default.addObserver(self, selector: #selector(searchWithLastQuery), name: NSNotification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
 	}
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.javaScriptBridge.publishEvent("show")
-    }
     
     override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -216,7 +178,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     func sendUrlBarFocusEvent() {
-        self.javaScriptBridge.publishEvent("urlbar-focus")
+        Engine.sharedInstance.getBridge().publishEvent("urlbar-focus", args: [])
     }
 /*
 	func getHistory() -> Array<Dictionary<String, String>> {
@@ -283,63 +245,58 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         }
     }
     
-    //MARK: - WKWebView Delegate
-	func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if webView == shareCardWebView {
-            decisionHandler(.allow)
-            return
-        }
-        
-		if !navigationAction.request.url!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
-//			delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
-			decisionHandler(.cancel)
-		}
-		decisionHandler(.allow)
-	}
-
-	func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-	}
-
-	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-
-    }
-
-	func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
-	}
-
-	func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-		ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
-	}
-
-	func userContentController(_ userContentController:  WKUserContentController, didReceive message: WKScriptMessage) {
-		javaScriptBridge.handleJSMessage(message)
-	}
+//    //MARK: - WKWebView Delegate
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//        if webView == shareCardWebView {
+//            decisionHandler(.allow)
+//            return
+//        }
+//
+//        if !navigationAction.request.url!.absoluteString.hasPrefix(NavigationExtension.baseURL) {
+////            delegate?.searchView(self, didSelectUrl: navigationAction.request.URL!)
+//            decisionHandler(.cancel)
+//        }
+//        decisionHandler(.allow)
+//    }
+//
+//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+//    }
+//
+//    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+//
+//    }
+//
+//    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+//        ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+//    }
+//
+//    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+//        ErrorHandler.handleError(.cliqzErrorCodeScriptsLoadingFailed, delegate: self, error: error)
+//    }
+//
+//    func userContentController(_ userContentController:  WKUserContentController, didReceive message: WKScriptMessage) {
+//        javaScriptBridge.handleJSMessage(message)
+//    }
     
 	// Mark: AlertViewDelegate
 	func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 		switch (buttonIndex) {
-		case 0:
-			stopLoadingAnimation()
-//        case 1:
-//            //loadExtension()
 		default:
 			debugPrint("Unhandled Button Click")
 		}
 	}
 
-	fileprivate func layoutSearchEngineScrollView() {
-		let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(self.view) ?? 0
-		if let _ = self.spinnerView.superview {
-			self.spinnerView.snp_makeConstraints { make in
-				make.centerX.equalTo(self.view)
-				make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
-			}
-		}
-	}
+//    fileprivate func layoutSearchEngineScrollView() {
+//        let keyboardHeight = KeyboardHelper.defaultHelper.currentState?.intersectionHeightForView(self.view) ?? 0
+//        if let _ = self.spinnerView.superview {
+//            self.spinnerView.snp_makeConstraints { make in
+//                make.centerX.equalTo(self.view)
+//                make.top.equalTo((self.view.frame.size.height - keyboardHeight) / 2)
+//            }
+//        }
+//    }
 
 	fileprivate func animateSearchEnginesWithKeyboard(_ keyboardState: KeyboardState) {
-		layoutSearchEngineScrollView()
         self.view.layoutIfNeeded()
 	}
 
@@ -354,16 +311,6 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	func keyboardHelper(_ keyboardHelper: KeyboardHelper, keyboardWillHideWithState state: KeyboardState) {
 		animateSearchEnginesWithKeyboard(state)
 	}
-
-//    fileprivate func loadExtension() {
-//        let url = URL(string: NavigationExtension.indexURL)
-//        self.webView!.load(URLRequest(url: url!))
-//    }
-
-	fileprivate func stopLoadingAnimation() {
-		self.spinnerView.removeFromSuperview()
-		self.spinnerView.stopAnimating()
-	}
 	
 	fileprivate func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.shared.getBlockExplicitContentPref()
@@ -374,7 +321,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
                       "suggestionsEnabled"  : QuerySuggestions.isEnabled(),
                       "subscriptions" : subscriptions] as [String : Any]
         
-        javaScriptBridge.publishEvent("notify-preferences", parameters: params)
+        //javaScriptBridge.publishEvent("notify-preferences", parameters: params)
+        Engine.sharedInstance.getBridge().publishEvent("notify-preferences", args: [params])
 	}
     fileprivate func getCountry() -> String {
         if let country = SettingsPrefs.shared.getRegionPref() {
@@ -385,22 +333,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
     //MARK: - Reset TopSites
     func showBlockedTopSites(_ notification: Notification) {
-        javaScriptBridge.publishEvent("restore-blocked-topsites")
-    }
-    
-    //MARK: - Guestures
-    func addGuestureRecognizers() {
-        // longPress gesture recognizer
-//        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onLongPress(_:)))
-//        longPressGestureRecognizer.delegate = self
-//        self.webView?.addGestureRecognizer(longPressGestureRecognizer)
-        
-        
-        // swiper up gesture recognizer
-//        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(CliqzSearchViewController.onSwipeUp(_:)))
-//        swipeGestureRecognizer.direction = .up
-//        swipeGestureRecognizer.delegate = self
-//        self.webView?.addGestureRecognizer(swipeGestureRecognizer)
+        Engine.sharedInstance.getBridge().publishEvent("restore-blocked-topsites", args: [])
+        //javaScriptBridge.publishEvent("restore-blocked-topsites")
     }
     
     func onLongPress(_ gestureRecognizer: UIGestureRecognizer) {
@@ -500,15 +434,10 @@ extension CliqzSearchViewController {
     }    
 }
 
-extension CliqzSearchViewController: JavaScriptBridgeDelegate {
-    
-    func didSelectUrl(_ url: URL) {
-        if !inSelectionMode {
-            delegate?.didSelectURL(url, searchQuery: self.searchQuery)
-        } else {
-            inSelectionMode = false
-        }
-    }
+
+
+extension CliqzSearchViewController/*: JavaScriptBridgeDelegate*/ {
+
     
     func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?, NSError?) -> Void)?) {
         //self.webView?.evaluateJavaScript(javaScriptString, completionHandler: completionHandler as! ((Any?, Error?) -> Void)?)
@@ -518,22 +447,14 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         delegate?.searchForQuery(query)
     }
     
-	func getSearchHistoryResults(_ query: String?, _ callback: String?) {
-		let fullResults = NSDictionary(objects: [getHistory(), query ?? ""], forKeys: ["results" as NSCopying, "query" as NSCopying])
-        javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
-    }
+//    func getSearchHistoryResults(_ query: String?, _ callback: String?) {
+//        let fullResults = NSDictionary(objects: [getHistory(), query ?? ""], forKeys: ["results" as NSCopying, "query" as NSCopying])
+//        javaScriptBridge.callJSMethod(callback!, parameter: fullResults, completionHandler: nil)
+//    }
     
     func autoCompeleteQuery(_ autoCompleteText: String) {
         delegate?.autoCompeleteQuery(autoCompleteText)
     }
-	
-	func isReady() {
-        stopLoadingAnimation()
-		self.sendUrlBarFocusEvent()
-		javaScriptBridge.setDefaultSearchEngine()
-		self.updateExtensionPreferences()
-        self.migrateQueries()
-	}
     
     func shareCard(_ card: String, title: String, width: Int, height: Int) {
         let screenWidth = Int(UIScreen.main.bounds.width)
@@ -576,6 +497,60 @@ extension CliqzSearchViewController: JavaScriptBridgeDelegate {
         
         
         LocalDataStore.setObject(true, forKey: isQueriesMigratedKey)
+    }
+}
+
+
+//handle Search Events
+extension CliqzSearchViewController {
+    
+    @objc func didSelectUrl(_ notification: Notification) {
+        if let url_str = notification.object as? String, let url = URL(string: url_str) {
+            if !inSelectionMode {
+                delegate?.didSelectURL(url, searchQuery: self.searchQuery)
+            } else {
+                inSelectionMode = false
+            }
+        }
+    }
+    
+    @objc func hideKeyboard(_ notification: Notification) {
+        delegate?.dismissKeyboard()
+    }
+    
+    @objc func copyValue(_ notification: Notification) {
+        if let result = notification.object as? String {
+            UIPasteboard.general.string = result
+        }
+    }
+    
+    @objc func call(_ notification: Notification) {
+        if let number = notification.object as? String {
+            self.callPhoneNumber(number)
+        }
+    }
+    
+    @objc func openMap(_ notification: Notification) {
+        if let url = notification.object as? String {
+            self.openGoogleMaps(url)
+        }
+    }
+    
+    @objc func shareLocation(_ notification: Notification) {
+        LocationManager.sharedInstance.shareLocation()
+    }
+    
+    fileprivate func callPhoneNumber(_ phoneNumber: String) {
+        let trimmedPhoneNumber = phoneNumber.removeWhitespaces()
+        if let url = URL(string: "tel://\(trimmedPhoneNumber)") {
+            UIApplication.shared.openURL(url)
+        }
+    }
+    
+    fileprivate func openGoogleMaps(_ url: String) {
+        if let mapURL = URL(string:url) {
+            delegate?.didSelectURL(mapURL, searchQuery: nil)
+        }
     }
 }
 
