@@ -21,7 +21,7 @@ class QuickAccessBar: UIView {
     var viewName = "home"
     
     // MARK:- Public APIs
-    
+
     func configureBarComponents() {
         configureButton(tabsButton, imageName: "tabs_quick_access")
         configureButton(historyButton, imageName: "history_quick_access")

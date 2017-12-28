@@ -14,8 +14,7 @@ class OffrzViewController: UIViewController {
 
     private var scrollView = UIScrollView()
     private var containerView = UIView()
-    private var onboardingView = UIView()
-    private let offrzPresentImageView = UIImageView(image: UIImage(named: "offrz_present"))
+    private var onboardingView = OffrzOnboardingView()
     private let offrzLabel = UILabel()
 	private static let learnMoreURL = "https://cliqz.com/myoffrz"
     private var offrView: OffrView?
@@ -39,6 +38,7 @@ class OffrzViewController: UIViewController {
     
     override func viewDidLoad() {
 		super.viewDidLoad()
+
         setStyles()
         setupComponents()
         
@@ -64,10 +64,9 @@ class OffrzViewController: UIViewController {
     }
     
     private func setupComponents() {
-        
         self.view.addSubview(scrollView)
         scrollView.addSubview(containerView)
-        containerView.addSubview(onboardingView)
+
         if offrzDataSource.hasOffrz(), let currentOffr = offrzDataSource.getCurrentOffr() {
 			self.myOffr = currentOffr
             offrView = OffrView(offr: currentOffr)
@@ -76,7 +75,6 @@ class OffrzViewController: UIViewController {
 			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(expandOffr))
 			offrView?.addGestureRecognizer(tapGesture)
         } else {
-            containerView.addSubview(offrzPresentImageView)
             containerView.addSubview(offrzLabel)
             offrzLabel.text = NSLocalizedString("MyOffrz Empty Description", tableName: "Cliqz", comment: "[MyOffrz] No offers label")
             offrzLabel.textColor = UIColor.gray
@@ -87,49 +85,17 @@ class OffrzViewController: UIViewController {
     }
     
     private func setupOnboardingView() {
-        guard offrzDataSource.hasOffrz() && offrzDataSource.shouldShowOnBoarding() else {
-            onboardingView.removeFromSuperview()
-            return
-        }
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", "offrz", nil))
-        onboardingView.backgroundColor = UIColor(colorString: "ABD8EA")
-        containerView.addSubview(onboardingView)
-
-        // Components
-        let hideButton = UIButton(type: .custom)
-        hideButton.setImage(UIImage(named: "closeTab"), for: .normal)
-        hideButton.addTarget(self, action: #selector(hideOnboardingView) , for: .touchUpInside)
-        onboardingView.addSubview(hideButton)
-        onboardingView.addSubview(offrzPresentImageView)
-
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = NSLocalizedString("MyOffrz Onboarding", tableName: "Cliqz", comment: "[MyOffrz] MyOffrz description")
-        descriptionLabel.textColor = UIColor.gray
-        descriptionLabel.textAlignment = .center
-        descriptionLabel.numberOfLines = 2
-        onboardingView.addSubview(descriptionLabel)
-
-        let moreButton = UIButton(type: .custom)
-        moreButton.setTitle(NSLocalizedString("LEARN MORE", tableName: "Cliqz", comment: "[MyOffrz] Learn more button title"), for: .normal)
-        moreButton.setTitleColor(UIConstants.CliqzThemeColor, for: .normal)
-		moreButton.addTarget(self, action: #selector(openLearnMore), for: .touchUpInside)
-        onboardingView.addSubview(moreButton)
-        
-        // Constraints
-        hideButton.snp.makeConstraints { (make) in
-            make.top.right.equalTo(onboardingView).inset(10)
-        }
-        offrzPresentImageView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(onboardingView)
-            make.top.equalTo(onboardingView).inset(10)
-        }
-        descriptionLabel.snp.makeConstraints { (make) in
-            make.right.left.equalTo(onboardingView).inset(25)
-            make.top.equalTo(offrzPresentImageView.snp.bottom).offset(10)
-        }
-        moreButton.snp.makeConstraints { (make) in
-            make.centerX.equalTo(onboardingView)
-            make.bottom.equalTo(onboardingView)
+        if offrzDataSource.hasOffrz() && offrzDataSource.shouldShowOnBoarding() {
+			containerView.addSubview(onboardingView)
+			onboardingView.addActionHandler(.hide) {
+				weak var weakSelf = self
+				weakSelf?.hideOnboardingView()
+			}
+			onboardingView.addActionHandler(.learnMore) {
+				weak var weakSelf = self
+				weakSelf?.openLearnMore()
+			}
+			TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", "offrz", nil))
         }
     }
     
@@ -176,14 +142,14 @@ class OffrzViewController: UIViewController {
             }
             
         } else {
-            offrzPresentImageView.snp.remakeConstraints({ (make) in
-                make.centerX.equalTo(containerView)
-                make.centerY.equalTo(containerView).dividedBy(2)
-            })
-            offrzLabel.snp.remakeConstraints({ (make) in
-                make.centerX.equalTo(containerView)
-                make.top.equalTo(offrzPresentImageView.snp.bottom).offset(10)
-            })
+//            offrzPresentImageView.snp.remakeConstraints({ (make) in
+//                make.centerX.equalTo(containerView)
+//                make.centerY.equalTo(containerView).dividedBy(2)
+//            })
+//            offrzLabel.snp.remakeConstraints({ (make) in
+//                make.centerX.equalTo(containerView)
+//                make.top.equalTo(offrzPresentImageView.snp.bottom).offset(10)
+//            })
         }
     }
 

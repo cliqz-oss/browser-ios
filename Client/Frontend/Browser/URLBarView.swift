@@ -1241,18 +1241,21 @@ extension URLBarView {
     fileprivate func getKeyboardAccessoryView() -> UIView {
         let keyboardAccessoryView = KeyboardAccessoryView.sharedInstance
         keyboardAccessoryView.setHandelAccessoryViewAction { (action) in
-			self.leaveOverlayMode()
             switch (action) {
             case .AutoComplete(let completion):
                 self.locationTextField?.removeCompletion()
                 self.locationTextField?.text = completion
             case .Tabs:
+				self.leaveOverlayMode()
                 self.delegate?.urlBarDidPressTabs(self)
             case .History:
+				self.leaveOverlayMode()
                 self.delegate?.urlBarDidPressHistroy(self)
             case .Favorite:
+				self.leaveOverlayMode()
                 self.delegate?.urlBarDidPressFavorites(self)
             case .Offrz:
+				self.leaveOverlayMode()
                 self.delegate?.urlBarDidPressOffrz(self)
             case .DismissKeyboard:
                 self.locationTextField?.enforceResignFirstResponder()
