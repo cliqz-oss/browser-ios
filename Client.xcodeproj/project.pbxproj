@@ -497,6 +497,8 @@
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
 		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
 		4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		4FF0789B1FF3BCAE00514B43 /* OffrzEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */; };
+		4FF078AB1FF3BCDA00514B43 /* OffrzOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
 		4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */; };
@@ -1979,6 +1981,8 @@
 		4FE3CA471FA73C4D0081A639 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
 		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
+		4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzEmptyView.swift; sourceTree = "<group>"; };
+		4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzOnboardingView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
 		4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsPrefs.swift; sourceTree = "<group>"; };
@@ -3873,6 +3877,8 @@
 				4FA486D91FD69C0000299540 /* OffrzDataSource.swift */,
 				4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */,
 				4F2AC82F1FD95026001E66D0 /* OffrView.swift */,
+				4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */,
+				4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */,
 			);
 			path = Offrz;
 			sourceTree = "<group>";
@@ -6659,6 +6665,7 @@
 				D31CF65C1CC1959A001D0BD0 /* PrivilegedRequest.swift in Sources */,
 				D3B6923D1B9F9444004B87A4 /* FindInPageBar.swift in Sources */,
 				2F44FC721A9E840300FD20CC /* SettingsNavigationController.swift in Sources */,
+				4FF0789B1FF3BCAE00514B43 /* OffrzEmptyView.swift in Sources */,
 				E69E06BA1C76173D00D0F926 /* RequirePasscodeIntervalViewController.swift in Sources */,
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
@@ -6894,6 +6901,7 @@
 				E6327A641BF6438E008D12E0 /* DebugSettingsBundleOptions.swift in Sources */,
 				D3E8EF101B97BE69001900FB /* ClearPrivateDataTableViewController.swift in Sources */,
 				7B59FC4A1C68E9B600F58EF5 /* SWUtilityButtonView.m in Sources */,
+				4FF078AB1FF3BCDA00514B43 /* OffrzOnboardingView.swift in Sources */,
 				7BC68CCC1CC152B70043562A /* MenuDelegate.swift in Sources */,
 				1E79DEAC1D508368006BEB4A /* AWSXMLWriter.m in Sources */,
 				4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */,
