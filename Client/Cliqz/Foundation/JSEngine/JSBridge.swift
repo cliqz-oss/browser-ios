@@ -48,11 +48,18 @@ open class JSBridge : RCTEventEmitter {
     }
 
     override open func constantsToExport() -> [AnyHashable : Any]! {
-        return ["events": ["openUrl", "mobile-pairing:openTab",
+        return ["events": ["openUrl",
+                           "mobile-pairing:openTab",
                            "mobile-pairing:downloadVideo",
                            "mobile-pairing:pushPairingData",
                            "mobile-pairing:notifyPairingError",
-                           "mobile-pairing:notifyPairingSuccess"]
+                           "mobile-pairing:notifyPairingSuccess",
+                           "mobile-search:openUrl",
+                           "mobile-search:copyValue",
+                           "mobile-search:hideKeyboard",
+                           "mobile-search:call",
+                           "mobile-search:map",
+                           "mobile-search:share-location"]
         ]
     }
     
@@ -187,12 +194,19 @@ open class JSBridge : RCTEventEmitter {
         }
     }
     
-    
+    //Javascript -> Native
     @objc(pushEvent:data:)
     func pushEvent(eventId: NSString, data: NSArray) {
         DispatchQueue.main.async() {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: eventId as String), object: data[0], userInfo: nil)
+            let name: String = eventId as String
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: name), object: data.count > 0 ? data[0] : nil, userInfo: nil)
         }
+    }
+    
+    //------------
+    
+    //TODO: Implement this
+    func setDefaultSearchEngine() {
         
     }
     
