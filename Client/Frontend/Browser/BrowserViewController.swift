@@ -1814,7 +1814,7 @@ extension BrowserViewController: URLBarDelegate {
         self.navigationController?.pushViewController(tabTrayController, animated: true)
 		self.tabTrayController = tabTrayController
         */
-        dashboard.switchToTabsPanel()
+        dashboard.currentPanel = .TabsPanel
 		self.navigationController?.pushViewController(dashboard, animated: false)
     }
 
@@ -2055,6 +2055,36 @@ extension BrowserViewController: URLBarDelegate {
             self.showHint(.videoDownloader)
         }
     }
+    
+    // Cliqz: Added delegate methods for QuickAcessBar
+    func urlBarDidPressHistroy(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .HistoryPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func urlBarDidPressFavorites(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .FavoritesPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func urlBarDidPressOffrz(_ urlBar: URLBarView) {
+        dashboard.currentPanel = .OffrzPanel
+        self.navigationController?.pushViewController(dashboard, animated: false)
+    }
+    
+    func hasUnreadOffrz() -> Bool {
+        if let offrzDataSource = self.profile.offrzDataSource {
+            return offrzDataSource.hasUnseenOffrz()
+        }
+        return false
+    }
+    
+    func shouldShowOffrz() -> Bool {
+        if let offrzDataSource = self.profile.offrzDataSource {
+            return offrzDataSource.shouldShowOffrz()
+        }
+        return false
+    }
 }
 
 extension BrowserViewController: TabToolbarDelegate {
@@ -2227,7 +2257,7 @@ extension BrowserViewController: TabToolbarDelegate {
          self.navigationController?.pushViewController(tabTrayController, animated: true)
          self.tabTrayController = tabTrayController
          */
-        dashboard.switchToTabsPanel()
+        dashboard.currentPanel = .TabsPanel
         self.navigationController?.pushViewController(dashboard, animated: false)
     }
     
@@ -4244,7 +4274,7 @@ extension BrowserViewController {
 		}
 
         isAppResponsive = false
-        
+
         if self.tabManager.selectedTab?.isPrivate == false {
             if searchController?.view.isHidden == true {
                 let webView = self.tabManager.selectedTab?.webView
@@ -4256,7 +4286,7 @@ extension BrowserViewController {
         
         saveLastVisitedWebSite()
     }
-	
+
 	// Cliqz: Method to store last visited sites
     fileprivate func saveLastVisitedWebSite() {
         if let selectedTab = self.tabManager.selectedTab,
@@ -4273,14 +4303,14 @@ extension BrowserViewController {
             AppStatus.sharedInstance.appDidBecomeResponsive(startupType)
         }
     }
-    
+
     // Cliqz: Added to navigate to the last visited website (3D quick home actions)
     func navigateToLastWebsite() {
         if let lastVisitedWebsite = LocalDataStore.objectForKey(self.lastVisitedWebsiteKey) as? String {
             self.initialURL = lastVisitedWebsite
         }
     }
-    
+
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
     fileprivate func fixHeaderConstraint(){
         let currentDevice = UIDevice.current
@@ -4310,6 +4340,7 @@ extension BrowserViewController {
             browser.webView!.configuration.userContentController.addUserScript(userScript)
         }
     }
+
     // Cliqz: Added to get the current view for telemetry signals
     func getCurrentView() -> String? {
         var currentView: String?
@@ -4328,8 +4359,6 @@ extension BrowserViewController {
     }
 }
 
-
-
 extension BrowserViewController: CrashlyticsDelegate {
     func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
         hasPendingCrashReport = true
@@ -4337,5 +4366,5 @@ extension BrowserViewController: CrashlyticsDelegate {
 			completionHandler(true)
 		}
     }
-    
+
 }

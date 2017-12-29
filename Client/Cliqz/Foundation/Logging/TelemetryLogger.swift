@@ -14,7 +14,7 @@ public enum TelemetryLogEventType {
     case NetworkStatus      (String, Int)
     case QueryInteraction   (String, Int)
     case Environment        (String, String, String, String, String, String, String, Int, Int, [String: Any])
-    case Onboarding         (String, [String: Any]?)
+    case Onboarding         (String, String?, [String: Any]?)
     case Navigation         (String, Int, Int, Double)
     case ResultEnter        (Int, Int, String?, Double, Double)
     case JavaScriptSignal   ([String: Any])
@@ -37,6 +37,9 @@ public enum TelemetryLogEventType {
     case Subscription (String, String?, [String: Any]?)
     case Notification (String, String)
     case Rotation (String, String)
+    case QuickAccessBar (String, String, String?)
+	case MyOffrz (String, String)
+
 }
 
 
@@ -115,8 +118,8 @@ class TelemetryLogger : EventsLogger {
             case .Environment(let device, let language, let extensionVersion, let distVersion, let hostVersion, let osVersion, let defaultSearchEngine, let historyUrls, let historyDays, let prefs):
                 event = self.createEnvironmentEvent(device, language: language, extensionVersion: extensionVersion, distVersion: distVersion, hostVersion: hostVersion, osVersion: osVersion, defaultSearchEngine: defaultSearchEngine, historyUrls: historyUrls, historyDays: historyDays, prefs: prefs)
 
-            case .Onboarding(let action, let customData):
-                event = self.createOnboardingEvent(action, customData: customData)
+            case .Onboarding(let action, let target, let customData):
+				event = self.createOnboardingEvent(action, target: target, customData: customData)
                
             case .Navigation(let action, let step, let urlLength, let displayTime):
                 event = self.createNavigationEvent(action, step: step, urlLength: urlLength, displayTime: displayTime)
@@ -186,7 +189,11 @@ class TelemetryLogger : EventsLogger {
             
             case .Rotation (let state, let view):
                 event = self.createRotationEvent(state, view: view)
-                
+            
+            case .QuickAccessBar (let action, let view, let target):
+                event = self.createQuickAccessBarEvent(action, view: view, target: target)
+			case .MyOffrz(let action, let target):
+				event = self.createMyOffrzEvent(action, target: target)
             }
         
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -312,12 +319,14 @@ class TelemetryLogger : EventsLogger {
         return event
     }
     
-    fileprivate func createOnboardingEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
+	fileprivate func createOnboardingEvent(_ action: String, target: String?, customData: [String: Any]?) -> [String: Any] {
         var event = createBasicEvent()
         
         event["type"] = "onboarding"
         event["action"] = action
-        
+		if let t = target {
+			event["target"] = t
+		}
         if let customData = customData {
             for (key, value) in customData {
                 event[key] = value
@@ -658,6 +667,25 @@ class TelemetryLogger : EventsLogger {
         
         return event
     }
-    
-    
+
+    private func createQuickAccessBarEvent(_ action: String, view: String, target: String?) -> [String: Any] {
+        var event = createBasicEvent()
+        
+        event["type"] = "quick_access_bar"
+        event["action"] = action
+        event["view"] = view
+        if let target = target { event["target"] = target }
+        
+        return event
+    }
+
+	private func createMyOffrzEvent(_ action: String, target: String) -> [String: Any] {
+		var event = createBasicEvent()
+		
+		event["type"] = "offrz"
+		event["action"] = action
+		event["target"] = target
+		return event
+	}
+
 }

@@ -197,7 +197,7 @@ class InteractiveIntroViewController: UIViewController {
                                           "show_count" : showCount,
                                           "query_length" : queryLength,
                                           "version" : version]
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+		TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", nil, customData))
         LocalDataStore.setObject(showCount+1, forKey: cardsShowCountKey)
 	}
 	
@@ -364,7 +364,7 @@ class InteractiveIntroViewController: UIViewController {
                                           "tracker_count" : trackerCount,
                                           "version" : version]
         
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", nil, customData))
         LocalDataStore.setObject(showCount+1, forKey: attrackShowCountKey)
 	}
     
@@ -434,7 +434,7 @@ class InteractiveIntroViewController: UIViewController {
                                           "show_count" : showCount,
                                           "version" : version]
         
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", customData))
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("show", nil, customData))
         LocalDataStore.setObject(showCount+1, forKey: videoDownloaderShowCountKey)
     }
     
@@ -512,7 +512,6 @@ class InteractiveIntroViewController: UIViewController {
             customData["view"] = "unknown"
         }
 
-        
-        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", customData))
+        TelemetryLogger.sharedInstance.logEvent(.Onboarding("click", nil, customData))
 	}
 }
