@@ -178,7 +178,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	}
     
     func sendUrlBarFocusEvent() {
-        Engine.sharedInstance.getBridge().publishEvent("urlbar-focus", args: [])
+        Engine.sharedInstance.getBridge().publishEvent("mobile-browser:urlbar-focus", args: [])
     }
 /*
 	func getHistory() -> Array<Dictionary<String, String>> {
@@ -315,14 +315,14 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	fileprivate func updateExtensionPreferences() {
 		let isBlocked = SettingsPrefs.shared.getBlockExplicitContentPref()
         let subscriptions = SubscriptionsHandler.sharedInstance.getSubscriptions()
-		let params = ["adultContentFilter" : isBlocked ? "moderate" : "liberal",
+		let params = ["adultContentFilter" : isBlocked ? "conservative" : "liberal",
 		              "incognito" : self.privateMode,
                       "backend_country" : self.getCountry(),
                       "suggestionsEnabled"  : QuerySuggestions.isEnabled(),
                       "subscriptions" : subscriptions] as [String : Any]
         
         //javaScriptBridge.publishEvent("notify-preferences", parameters: params)
-        Engine.sharedInstance.getBridge().publishEvent("notify-preferences", args: [params])
+        Engine.sharedInstance.getBridge().publishEvent("mobile-browser:notify-preferences", args: [params])
 	}
     fileprivate func getCountry() -> String {
         if let country = SettingsPrefs.shared.getRegionPref() {
@@ -333,7 +333,7 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
 	
     //MARK: - Reset TopSites
     func showBlockedTopSites(_ notification: Notification) {
-        Engine.sharedInstance.getBridge().publishEvent("restore-blocked-topsites", args: [])
+        Engine.sharedInstance.getBridge().publishEvent("mobile-browser:restore-blocked-topsites", args: [])
         //javaScriptBridge.publishEvent("restore-blocked-topsites")
     }
     
