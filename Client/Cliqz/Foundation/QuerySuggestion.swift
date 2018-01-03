@@ -13,5 +13,8 @@ open class QuerySuggestion: RCTEventEmitter {
     @objc(showQuerySuggestions:suggestions:)
     func showQuerySuggestions(query: NSString, suggestions: NSArray) {
         debugPrint("showQuerySuggestions")
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: QuerySuggestions.ShowSuggestionsNotification, object: ["query": query, "suggestions": suggestions])
+        }
     }
 }

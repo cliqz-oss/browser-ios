@@ -44,6 +44,13 @@ class SubscriptionsHandler: NSObject {
         AWSSNSManager.configureCongnitoPool()
     }
     
+    func isSubscribed(withType type: String, subType: String, id: String) -> Bool {
+        if let types = currentSubscription[type], let subType = types[subType] {
+            return subType.contains(id)
+        }
+        return false
+    }
+    
     func subscribeForRemoteNotification(ofType type: RemoteNotificationType, completionHandler: @escaping () -> Void) {
         // prevent to call subscribe multiple times in the same request
         guard awaitingSubscriptionType == nil else {

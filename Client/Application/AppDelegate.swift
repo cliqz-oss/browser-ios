@@ -695,6 +695,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    }
 }
 
+//Util
+extension AppDelegate {
+    func presentContollerOnTop(controller: UIViewController) {
+        
+        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        if let navigationController = rootViewController as? UINavigationController {
+            rootViewController = navigationController.viewControllers.first
+        }
+        if let tabBarController = rootViewController as? UITabBarController {
+            rootViewController = tabBarController.selectedViewController
+        }
+        rootViewController?.present(controller, animated: true, completion: nil)
+    }
+}
+
 // MARK: - Root View Controller Animations
 extension AppDelegate: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController,

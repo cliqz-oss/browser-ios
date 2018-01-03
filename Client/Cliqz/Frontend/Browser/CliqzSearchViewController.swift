@@ -11,6 +11,17 @@ import WebKit
 import Shared
 import Storage
 
+class HistoryListener {
+    var historyResults: Cursor<Site>?
+    static let shared = HistoryListener()
+}
+
+extension HistoryListener: LoaderListener {
+    public func loader(dataLoaded data: Cursor<Site>) {
+        self.historyResults = data
+    }
+}
+
 protocol SearchViewDelegate: class {
 
     func didSelectURL(_ url: URL, searchQuery: String?)
@@ -90,9 +101,8 @@ class CliqzSearchViewController : UIViewController, LoaderListener, WKNavigation
         NotificationCenter.default.addObserver(self, selector: #selector(call), name: CallSearchNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openMap), name: MapSearchNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(shareLocation), name: ShareLocationSearchNotification, object: nil)
+        
     }
-    
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

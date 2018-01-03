@@ -20,6 +20,7 @@ def project_pods
     pod 'react-native-webrtc', :path => './node_modules/react-native-webrtc'
     pod 'RNDeviceInfo', :path => './node_modules/react-native-device-info'
     pod 'RNSqlite2', :path => './node_modules/react-native-sqlite-2/ios/'
+    pod 'RNViewShot', :path => './node_modules/react-native-view-shot/'
 end
 
 target 'Client' do
