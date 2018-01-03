@@ -375,20 +375,7 @@ class BrowserViewController: UIViewController {
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-		// Cliqz: removed observer of NotificationBadRequestDetected notification
-		NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
-        // Cliqz: removed observers for Connect features
-        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
-        // Cliqz: removed observer for device orientation
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
-        // Cliqz: removed observer for favorites removed
-        NotificationCenter.default.removeObserver(self, name: FavoriteRemovedNotification, object: nil)
-
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -416,6 +403,9 @@ class BrowserViewController: UIViewController {
                                                selector: #selector(updateBookmarkStatus),
                                                name: FavoriteRemovedNotification,
                                                object: nil)
+        
+        //Cliqz: Add observer for autocomplete notification from AutoComplete Module
+        NotificationCenter.default.addObserver(self, selector: #selector(autocomplete(_:)), name: AutoCompleteNotification, object: nil)
         
         KeyboardHelper.defaultHelper.addDelegate(self)
 
@@ -987,7 +977,7 @@ class BrowserViewController: UIViewController {
         
         searchController = CliqzSearchViewController(profile: self.profile)
         searchController!.delegate = self
-        searchLoader.addListener(searchController!)
+        searchLoader.addListener(HistoryListener.shared)
         view.addSubview(searchController!.view)
         addChildViewController(searchController!)
         searchController!.view.snp_makeConstraints { make in
@@ -4154,6 +4144,16 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
 }
 
 // Cliqz: combined the two extensions for SearchViewDelegate and BrowserNavigationDelegate into one extension
+
+//listens to autocomplete notification
+extension BrowserViewController {
+    @objc func autocomplete(_ notification: Notification) {
+        if let str = notification.object as? String {
+            self.autoCompeleteQuery(str)
+        }
+    }
+}
+
 extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 
     func didSelectURL(_ url: URL, searchQuery: String?) {

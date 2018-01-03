@@ -8,10 +8,15 @@
 
 import React
 
+let AutoCompleteNotification = Notification.Name(rawValue: "reactAutoCompleteNotification")
+
 @objc(AutoCompletion)
 open class AutoCompletion: RCTEventEmitter {
     @objc(autoComplete:)
     func autoComplete(data: NSString) {
         debugPrint("autocomplete -- \(data)")
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: AutoCompleteNotification, object: data)
+        }
     }
 }
