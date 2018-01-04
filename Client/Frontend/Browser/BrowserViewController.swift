@@ -4274,15 +4274,6 @@ extension BrowserViewController {
 		}
 
         isAppResponsive = false
-
-        if self.tabManager.selectedTab?.isPrivate == false {
-            if searchController?.view.isHidden == true {
-                let webView = self.tabManager.selectedTab?.webView
-                searchController?.appDidEnterBackground(webView?.url, lastTitle:webView?.title)
-            } else {
-                searchController?.appDidEnterBackground()
-            }
-        }
         
         saveLastVisitedWebSite()
     }
