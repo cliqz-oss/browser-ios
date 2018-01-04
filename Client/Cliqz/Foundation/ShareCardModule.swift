@@ -13,21 +13,27 @@ open class ShareCardModule: RCTEventEmitter {
     @objc(share:success:error:)
     func share(data: NSDictionary, success: RCTResponseErrorBlock, error: RCTResponseSenderBlock) {
         debugPrint("share")
-        if let image_data_str = data["url"] as? String {
+        if var image_data_str = data["url"] as? String {
+            //the image_data_str has this format: "data:image/png;base64," + base64Image
+            //so what I am interested in is after the ","
+            let components = image_data_str.components(separatedBy: ",")
+            
+            if components.count == 2 {
+                image_data_str = components[1]
+            }
+            
             if let image_data = Data.init(base64Encoded: image_data_str, options: .ignoreUnknownCharacters) {
                 if let title = data["title"] as? String {
+                    
                     self.presentShareCardActivityViewController(title, data: image_data)
                 }
             }
+            
         }
     }
     
     
     func presentShareCardActivityViewController(_ title:String, data: Data) {
-        
-        guard let appDel = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
 
         let fileName = String(Date.getCurrentMillis())
         let tempFile = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(fileName).png")
@@ -48,8 +54,12 @@ open class ShareCardModule: RCTEventEmitter {
                 try? FileManager.default.removeItem(at: tempFile)
             }
             
-            appDel.presentContollerOnTop(controller: activityViewController)
-            //present(activityViewController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                if let appDel = UIApplication.shared.delegate as? AppDelegate {
+                    appDel.presentContollerOnTop(controller: activityViewController)
+                }
+            }
+
         } catch _ {
             
         }
