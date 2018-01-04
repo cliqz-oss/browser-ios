@@ -11,7 +11,7 @@ import React
 @objc(ShareCardModule)
 open class ShareCardModule: RCTEventEmitter {
     @objc(share:success:error:)
-    func share(data: NSDictionary, success: RCTResponseErrorBlock, error: RCTResponseSenderBlock) {
+    func share(data: NSDictionary, success: RCTResponseSenderBlock, error: RCTResponseErrorBlock) {
         debugPrint("share")
         if var image_data_str = data["url"] as? String {
             //the image_data_str has this format: "data:image/png;base64," + base64Image
@@ -24,9 +24,13 @@ open class ShareCardModule: RCTEventEmitter {
             
             if let image_data = Data.init(base64Encoded: image_data_str, options: .ignoreUnknownCharacters) {
                 if let title = data["title"] as? String {
-                    
                     self.presentShareCardActivityViewController(title, data: image_data)
+                    success([])
                 }
+            }
+            else {
+                let error_msg = NSError.init(domain: "com.cliqz.ShareCardModule", code: 0, userInfo: ["error": "Could not extract image from string"]) as Error
+                error(error_msg)
             }
             
         }

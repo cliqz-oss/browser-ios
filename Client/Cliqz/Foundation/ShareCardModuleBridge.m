@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 @interface RCT_EXTERN_MODULE(ShareCardModule, NSObject)
-RCT_EXTERN_METHOD(share:(NSDictionary*)data success:(RCTResponseErrorBlock)success error:(RCTResponseErrorBlock)error)
+RCT_EXTERN_METHOD(share:(NSDictionary*)data success:(RCTResponseSenderBlock)success error:(RCTResponseErrorBlock)error)
 @end
