@@ -206,6 +206,8 @@ class OffrzViewController: UIViewController {
 				make.left.equalTo(overlay).offset(45)
 			})
 			closeBtn.addTarget(self, action: #selector(self.shrinkOffr), for: .touchUpInside)
+			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.shrinkOffr))
+			overlay.addGestureRecognizer(tapGesture)
 		}
 	}
 
