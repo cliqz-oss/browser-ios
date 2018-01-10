@@ -11,10 +11,12 @@ import React
 @objc(QuerySuggestion)
 open class QuerySuggestion: RCTEventEmitter {
     @objc(showQuerySuggestions:suggestions:)
-    func showQuerySuggestions(query: NSString, suggestions: NSArray) {
+    func showQuerySuggestions(query: NSString?, suggestions: NSArray?) {
         debugPrint("showQuerySuggestions")
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: QuerySuggestions.ShowSuggestionsNotification, object: ["query": query, "suggestions": suggestions])
+        if let query = query, let suggestions = suggestions {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: QuerySuggestions.ShowSuggestionsNotification, object: ["query": query, "suggestions": suggestions])
+            }
         }
     }
 }
