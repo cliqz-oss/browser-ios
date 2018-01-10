@@ -29,27 +29,43 @@ open class SubscriptionModule: RCTEventEmitter {
     }
     
     @objc(isSubscribed:subType:identifier:resolve:reject:)
-    func isSubscribed(type: NSString, subType: NSString, identifier: NSString, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func isSubscribed(type: NSString, subType: NSString, identifier: NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         debugPrint("isSubscribed")
-        let isSubscribed = SubscriptionsHandler.sharedInstance.isSubscribed(withType: type as String, subType: subType as String, id: identifier as String)
+        
+        var isSubscribed = false
+        
+        if let id = identifier {
+            isSubscribed = SubscriptionsHandler.sharedInstance.isSubscribed(withType: type as String, subType: subType as String, id: id as String)
+        }
+        
         resolve(isSubscribed)
     }
     
     @objc(subscribeToNotifications:subType:identifier:resolve:reject:)
-    func subscribeToNotifications(type: NSString, subType: NSString, identifier: NSString, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func subscribeToNotifications(type: NSString, subType: NSString, identifier: NSString?, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         debugPrint("subscribeToNotifications")
-        let notificationType = RemoteNotificationType.subscriptoinNotification(type as String, subType as String, identifier as String)
-        SubscriptionsHandler.sharedInstance.subscribeForRemoteNotification(ofType: notificationType, completionHandler: { _ in
-            resolve(true)
-        })
+        if let id = identifier {
+            let notificationType = RemoteNotificationType.subscriptoinNotification(type as String, subType as String, id as String)
+            SubscriptionsHandler.sharedInstance.subscribeForRemoteNotification(ofType: notificationType, completionHandler: { _ in
+                resolve(true)
+            })
+        }
+        else {
+            resolve(false)
+        }
     }
     
     @objc(unsubscribeToNotifications:subType:identifier:resolve:reject:)
-    func unsubscribeToNotifications(type: NSString, subType: NSString, identifier: NSString, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func unsubscribeToNotifications(type: NSString, subType: NSString, identifier: NSString?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         debugPrint("unsubscribeToNotifications")
-        let notificationType = RemoteNotificationType.subscriptoinNotification(type as String, subType as String, identifier as String)
-        SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
-        resolve(true)
+        if let id = identifier {
+            let notificationType = RemoteNotificationType.subscriptoinNotification(type as String, subType as String, id as String)
+            SubscriptionsHandler.sharedInstance.unsubscribeForRemoteNotification(ofType: notificationType)
+            resolve(true)
+        }
+        else {
+            resolve(false)
+        }
     }
     
 }

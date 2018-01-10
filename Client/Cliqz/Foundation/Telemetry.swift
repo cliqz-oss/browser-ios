@@ -16,11 +16,12 @@ open class TelemetryJS: RCTEventEmitter {
     }
     
     @objc(sendTelemetry:)
-    func sendTelemetry(data: NSString) {
-        debugPrint("send telemetry -- \(data)")
-        let data = data as String
-        if let json = data.parseJSONString as? [String: Any] {
-            TelemetryLogger.sharedInstance.logEvent(.JavaScriptSignal(json))
+    func sendTelemetry(data: NSString?) {
+        debugPrint("send telemetry")
+        if let data = data {
+            if let json = (data as String).parseJSONString as? [String: Any] {
+                TelemetryLogger.sharedInstance.logEvent(.JavaScriptSignal(json))
+            }
         }
     }
 }

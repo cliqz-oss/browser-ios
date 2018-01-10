@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 @interface RCT_EXTERN_MODULE(AutoCompletion, NSObject)
-RCT_EXTERN_METHOD(autoComplete:(nonnull NSString *)data)
+RCT_EXTERN_METHOD(autoComplete:(NSString *)data)
 @end
 
 
