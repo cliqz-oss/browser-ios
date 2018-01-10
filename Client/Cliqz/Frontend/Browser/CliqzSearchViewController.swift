@@ -146,7 +146,7 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
 	}
     
     fileprivate func search(_ query: String) {
-        var parameters: Array<Any> = [query.escape()]
+        var parameters: Array<Any> = [query/*.escape()*/]
         if let l = LocationManager.sharedInstance.getUserLocation() {
             parameters += [true, l.coordinate.latitude, l.coordinate.longitude]
         }

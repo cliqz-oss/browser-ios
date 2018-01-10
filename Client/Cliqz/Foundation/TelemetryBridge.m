@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 @interface RCT_EXTERN_MODULE(Telemetry, NSObject)
-RCT_EXTERN_METHOD(sendTelemetry:(nonnull NSString *)data)
+RCT_EXTERN_METHOD(sendTelemetry:(nullable NSString *)data)
 @end
 
