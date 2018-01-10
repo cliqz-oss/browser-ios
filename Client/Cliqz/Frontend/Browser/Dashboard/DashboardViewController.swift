@@ -208,6 +208,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
             target = "favorites"
             
         case .OffrzPanel:
+			self.panelSwitchControl.setImage(UIImage(named: "offrz_inactive"), forSegmentAt: 3)
             self.showPanelViewController(self.offrzViewController)
             target = "offrz"
             
