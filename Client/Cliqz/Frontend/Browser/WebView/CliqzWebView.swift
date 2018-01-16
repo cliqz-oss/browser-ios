@@ -295,12 +295,13 @@ class CliqzWebView: UIWebView {
 			if !(self.url?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScript(from: "document.title") ?? Foundation.URL(string: docLoc)?.baseDomain() ?? ""
 			}
-
-			if let nd = self.navigationDelegate {
-				globalContainerWebView.legacyWebView = self
-				nd.webView?(globalContainerWebView, didFinish: nullWKNavigation)
-			}
 		}
+        
+        if let nd = self.navigationDelegate {
+            globalContainerWebView.legacyWebView = self
+            nd.webView?(globalContainerWebView, didFinish: nullWKNavigation)
+        }
+        
 		self.prevDocumentLocation = docLoc
         
         NotificationCenter.default.post(name: Notification.Name(rawValue: CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed), object: self)
