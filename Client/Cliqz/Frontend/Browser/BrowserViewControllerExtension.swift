@@ -46,7 +46,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             DispatchQueue.main.async {
                 var supportedVideoLinks = [[String: Any]]()
                 for videoLink in videoLinks {
-                    if let isVideoAudio = videoLink["isVideoAudio"] as? Bool, isVideoAudio == true {
+                    if let videoClass = videoLink["class"] as? String, videoClass == "video" {
                         supportedVideoLinks.append(videoLink)
                     }
                 }
