@@ -42,6 +42,10 @@ extension AppDelegate {
         SubscriptionsHandler.sharedInstance.didReceiveRemoteNotification(userInfo, fetchCompletionHandler: completionHandler)
 	}
 
+	func application(_ application: UIApplication, willChangeStatusBarOrientation newStatusBarOrientation: UIInterfaceOrientation, duration: TimeInterval) {
+		self.normalModeBgImage?.image = UIImage.fullBackgroundImage()
+	}
+
     // MARK:- Public API
     // configure the dynamic shortcuts
 	@available(iOS 9.0, *)

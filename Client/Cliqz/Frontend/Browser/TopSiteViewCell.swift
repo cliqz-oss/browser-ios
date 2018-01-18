@@ -65,7 +65,7 @@ class TopSiteViewCell: UICollectionViewCell {
 		logoImageView.snp_makeConstraints { make in
 			make.top.left.bottom.right.equalTo(self.logoContainerView)
 		}
-		self.logoContainerView.backgroundColor = UIColor(rgb: 0x97A4AE).withAlphaComponent(0.1)
+		self.logoContainerView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
 		self.logoContainerView.layer.cornerRadius = 12
         self.logoContainerView.layer.borderWidth = 2
         self.logoContainerView.layer.borderColor = UIColor.clear.cgColor//UIConstants.AppBackgroundColor.CGColor
@@ -79,7 +79,7 @@ class TopSiteViewCell: UICollectionViewCell {
 		}
 		self.logoHostLabel.textAlignment = .center
 		self.logoHostLabel.font = UIFont.systemFont(ofSize: 10)
-		self.logoHostLabel.textColor = UIColor.black
+		self.logoHostLabel.textColor = UIColor.white
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
