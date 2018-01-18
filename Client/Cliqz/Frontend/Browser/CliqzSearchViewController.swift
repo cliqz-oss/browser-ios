@@ -188,6 +188,7 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
             self.privateMode = privateMode
 			self.updateExtensionPreferences()
         }
+		self.updateBackgroundImage()
     }
 
 	fileprivate func animateSearchEnginesWithKeyboard(_ keyboardState: KeyboardState) {
