@@ -28,6 +28,7 @@ struct FreshtabViewUX {
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
     static let topOffset: CGFloat = 10.0
+	static let bottomOffset: CGFloat = 45.0
 }
 
 class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -51,12 +52,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let lbl = UILabel()
 		lbl.text = NSLocalizedString("Empty TopSites hint", tableName: "Cliqz", comment: "Hint on Freshtab when there is no topsites")
 		lbl.font = UIFont.systemFont(ofSize: 12)
-		lbl.textColor = UIColor(rgb: 0x97A4AE)
+		lbl.textColor = UIColor.white
 		lbl.textAlignment = .center
 		return lbl
 	}()
     fileprivate var scrollView: UIScrollView!
 	fileprivate var normalModeView: UIView!
+	fileprivate var normalModeBgImage: UIImageView?
+
 	fileprivate var forgetModeView: UIView!
 
 	var isNewsExpanded = false
@@ -72,7 +75,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
     var isLoadCompleted = false
     var scrollCount = 0
     var isScrollable = false
-    
+
 	init(profile: Profile) {
 		super.init(nibName: nil, bundle: nil)
 		self.profile = profile
@@ -86,7 +89,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.view.backgroundColor = UIConstants.AppBackgroundColor
@@ -124,6 +127,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		super.viewWillTransition(to: size, with: coordinator)
 		self.topSitesCollection?.collectionViewLayout.invalidateLayout()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+			self?.normalModeBgImage?.image = UIImage.freshtabBackgroundImage()
             self?.updateViewConstraints()
         }
 	}
@@ -171,9 +175,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
                 make.width.equalTo(self.view)
                 make.height.equalTo(normalModeViewHeight)
             })
+			self.normalModeBgImage?.snp.remakeConstraints({ (make) in
+				make.left.right.top.bottom.equalTo(self.view)
+			})
         }
 	}
-    
+
     private func getTopSitesHeight() -> CGFloat {
         guard SettingsPrefs.shared.getShowTopSitesPref() else {
             return 0.0
@@ -186,7 +193,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             return FreshtabViewUX.TopSitesMinHeight
         }
     }
-    
+
     private func getNewsHeight() -> CGFloat {
         guard SettingsPrefs.shared.getShowNewsPref() && self.news.count != 0 else {
             return 0.0
@@ -194,19 +201,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         
         if self.isNewsExpanded {
             return (FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
-            
         } else {
             return FreshtabViewUX.NewsViewMinHeight
         }
     }
-    
+
     private func getInvisibleFreshTabHeight(topSitesHeight: CGFloat, newsHeight: CGFloat) -> CGFloat {
 
-        let viewHeight = self.view.bounds.height
+        let viewHeight = self.view.bounds.height - FreshtabViewUX.bottomOffset
         var freshTabHeight = topSitesHeight + newsHeight + 10.0
         if topSitesHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset }
         if newsHeight > 0 { freshTabHeight += FreshtabViewUX.topOffset}
-        
         if freshTabHeight > viewHeight {
             isScrollable = true
             return freshTabHeight - viewHeight
@@ -215,7 +220,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         
     }
-    
+
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		if gestureRecognizer is UITapGestureRecognizer {
 			let location = touch.location(in: self.topSitesCollection)
@@ -240,7 +245,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		}
 		self.delegate?.dismissKeyboard()
 	}
-    
+
     fileprivate func removeDeletedTopSites() {
 		if let cells = self.topSitesCollection?.visibleCells as? [TopSiteViewCell] {
 			for cell in cells {
@@ -332,13 +337,14 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 				make.top.left.bottom.right.equalTo(scrollView)
                 make.height.width.equalTo(self.view)
 			})
-			let bgView = UIImageView(image: UIImage(named: "normalModeFreshtabBgImage"))
+			let bgView = UIImageView(image: UIImage.freshtabBackgroundImage())
 			self.view.addSubview(bgView)
             self.view.sendSubview(toBack: bgView)
 			bgView.snp.makeConstraints { (make) in
 				make.left.right.top.bottom.equalTo(self.view)
 			}
-            
+			self.normalModeBgImage = bgView
+
             self.normalModeView.addSubview(self.emptyTopSitesHint)
             self.emptyTopSitesHint.snp.makeConstraints({ (make) in
                 make.top.equalTo(self.normalModeView).offset(8)
@@ -369,6 +375,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.newsTableView?.dataSource = self
 			self.newsTableView?.backgroundColor = UIColor.clear
 			self.normalModeView.addSubview(self.newsTableView!)
+//			self.newsTableView?.isHidden = true
 			self.newsTableView?.tableFooterView = UIView(frame: CGRect.zero)
 			self.newsTableView?.layer.cornerRadius = 9.0
 			self.newsTableView?.isScrollEnabled = false
@@ -389,10 +396,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.constructForgetModeView()
 			self.forgetModeView.isHidden = false
 			self.normalModeView?.isHidden = true
+			self.normalModeBgImage?.isHidden = true
 		} else {
 			self.constructNormalModeView()
 			self.normalModeView.isHidden = false
 			self.forgetModeView?.isHidden = true
+			self.normalModeBgImage?.isHidden = false
 		}
 	}
 

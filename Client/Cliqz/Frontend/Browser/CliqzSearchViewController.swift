@@ -46,9 +46,10 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
     private static let KVOLoading = "loading"
     
     var privateMode = false
-    
     var inSelectionMode = false
-    
+	
+	fileprivate var searchBgImage: UIImageView?
+
     // for homepanel state because we show the cliqz search as the home panel
     var homePanelState: HomePanelState {
         return HomePanelState(isPrivate: privateMode, selectedIndex: 0)
@@ -88,11 +89,19 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-        
+
         self.view.addSubview(searchView)
         self.searchView.snp.makeConstraints { (make) in
             make.left.right.top.bottom.equalToSuperview()
         }
+		let bgView = UIImageView(image: UIImage.freshtabBackgroundImage())
+		bgView.isHidden = true
+		self.searchView.addSubview(bgView)
+		bgView.snp.makeConstraints { (make) in
+			make.left.right.top.bottom.equalToSuperview()
+		}
+		self.searchView.sendSubview(toBack: bgView)
+		self.searchBgImage = bgView
 
 		KeyboardHelper.defaultHelper.addDelegate(self)
         
@@ -104,7 +113,9 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
+		self.updateBackgroundImage()
+		self.searchBgImage?.isHidden = false
         Engine.sharedInstance.getBridge().setDefaultSearchEngine()
         self.updateExtensionPreferences()
         
@@ -117,10 +128,25 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
     }
 
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+			self?.updateBackgroundImage()
+		}
+	}
+
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
     }
-    
+
+	func updateBackgroundImage() {
+		if self.privateMode {
+			self.searchBgImage?.image = UIImage(named: "forgetModeFreshtabBgImage")
+		} else {
+			self.searchBgImage?.image = UIImage.freshtabBackgroundImage()
+		}
+	}
+
     func sendUrlBarFocusEvent() {
         Engine.sharedInstance.getBridge().publishEvent("mobile-browser:urlbar-focus", args: [])
     }

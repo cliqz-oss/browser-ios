@@ -150,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         self.window!.rootViewController = rootViewController
-		self.normalModeBgImage = UIImageView(image: UIImage(named: "normalModeBgImage"))
+		self.normalModeBgImage = UIImageView(image: UIImage.fullBackgroundImage())
 		self.forgetModeBgImage = UIImageView(image: UIImage(named: "forgetModeBgImage"))
 
         // Cliqz: disable crash reporting
@@ -599,7 +599,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         viewURLInNewTab(notification)
     }
-    
+
     fileprivate func presentEmailComposerWithLogs() {
         if let buildNumber = Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? NSString {
             let mailComposeViewController = MFMailComposeViewController()

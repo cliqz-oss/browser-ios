@@ -831,10 +831,11 @@ class BrowserViewController: UIViewController {
         homePanelController?.view.snp.remakeConstraints { make in
             make.top.equalTo(self.urlBar.snp.bottom)
             make.left.right.equalTo(self.view)
-            if self.homePanelIsInline {
-                make.bottom.equalTo(self.toolbar?.snp.top ?? self.view.snp.bottom)
-            } else {
-                make.bottom.equalTo(self.view.snp.bottom)
+			if self.homePanelIsInline, let toolbar = self.toolbar {
+				make.bottom.equalTo(self.view)
+				self.view.bringSubview(toFront: self.footer)
+			} else {
+			make.bottom.equalTo(self.view.snp.bottom)
             }
         }
 
@@ -978,8 +979,8 @@ class BrowserViewController: UIViewController {
         searchController = CliqzSearchViewController(profile: self.profile)
         searchController!.delegate = self
         searchLoader.addListener(HistoryListener.shared)
+		addChildViewController(searchController!)
         view.addSubview(searchController!.view)
-        addChildViewController(searchController!)
         searchController!.view.snp_makeConstraints { make in
             make.top.equalTo(self.urlBar.snp_bottom)
             make.left.right.bottom.equalTo(self.view)
@@ -995,7 +996,7 @@ class BrowserViewController: UIViewController {
         homePanelController?.view?.isHidden = true
         searchController!.view.isHidden = false
         searchController!.didMove(toParentViewController: self)
-        
+        self.view.sendSubview(toBack: self.footer)
         // Cliqz: reset navigation steps
         navigationStep = 0
         backNavigationStep = 0
@@ -1029,6 +1030,7 @@ class BrowserViewController: UIViewController {
     }
     */
     fileprivate func hideSearchController() {
+		self.view.bringSubview(toFront: self.footer)
         if let searchController = searchController {
             // Cliqz: Modify hiding the search view controller as our behaviour is different than regular search that was exist
             searchController.view.isHidden = true
@@ -4303,7 +4305,7 @@ extension BrowserViewController {
     }
 
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
-    fileprivate func fixHeaderConstraint(){
+    fileprivate func fixHeaderConstraint() {
         let currentDevice = UIDevice.current
         let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .phone)
         if transition.isAnimating && !iphoneLandscape {
@@ -4359,3 +4361,4 @@ extension BrowserViewController: CrashlyticsDelegate {
     }
 
 }
+

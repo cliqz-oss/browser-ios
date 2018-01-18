@@ -492,6 +492,7 @@
 		4FC0FE041E8A8FC200A3459A /* libPhoneNumberiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */; };
 		4FC0FE051E8A8FDF00A3459A /* libPhoneNumberiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */; };
 		4FD933401D5CD50600EBA7D6 /* CliqzTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */; };
+		4FDA19A8200CFCDE000795EB /* CliqzBackgroundImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA19A7200CFCDE000795EB /* CliqzBackgroundImage.swift */; };
 		4FE3C9F71FA0D2D20081A639 /* Storage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCAE21A1ABB51F800877008 /* Storage.framework */; };
 		4FE3CA061FA0D3660081A639 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288A2D861AB8B3260023ABC3 /* Shared.framework */; };
 		4FE3CA421FA73C460081A639 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FE3CA441FA73C460081A639 /* Cliqz.strings */; };
@@ -1989,6 +1990,7 @@
 		4FBE89201E979C9E00D5B1F8 /* PushRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushRegistration.swift; sourceTree = "<group>"; };
 		4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libPhoneNumberiOS.framework; path = Carthage/Build/iOS/libPhoneNumberiOS.framework; sourceTree = "<group>"; };
 		4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzTabButton.swift; sourceTree = "<group>"; };
+		4FDA19A7200CFCDE000795EB /* CliqzBackgroundImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CliqzBackgroundImage.swift; sourceTree = "<group>"; };
 		4FE3CA431FA73C460081A639 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4FE3CA451FA73C490081A639 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4FE3CA461FA73C4C0081A639 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Cliqz.strings; sourceTree = "<group>"; };
@@ -2847,6 +2849,7 @@
 				1E79DCA91D4FB2C5006BEB4A /* StringExtension.swift */,
 				1E79DCAA1D4FB2C5006BEB4A /* UIDeviceExtension.swift */,
 				1E79DCAB1D4FB2C5006BEB4A /* UITextFieldExtension.swift */,
+				4FDA19A7200CFCDE000795EB /* CliqzBackgroundImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -6760,6 +6763,7 @@
 				AFEEA8181E5F30F6006E1A4F /* DebugingLogger.swift in Sources */,
 				AF1FE14C1FF67A4600122BDF /* Telemetry.swift in Sources */,
 				4F9A7B751D6F2BFA005F02CB /* CliqzURLBarView.swift in Sources */,
+				4FDA19A8200CFCDE000795EB /* CliqzBackgroundImage.swift in Sources */,
 				AF80E7941FFD290500FA145E /* ShareCardModule.swift in Sources */,
 				7BEDD29B1CB7CB24004B51F3 /* JumpAndSpinAnimator.swift in Sources */,
 				1E79DE8E1D508368006BEB4A /* AWSEXTRuntimeExtensions.m in Sources */,
