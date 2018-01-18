@@ -146,20 +146,20 @@ class TabsViewController: UIViewController {
             self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentSize.height - self.collectionView.frame.size.height)
         }
 	}
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    
+
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		self.setupConstraints()
 	}
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-	
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         self.collectionView.alpha = 0.0
@@ -435,25 +435,25 @@ extension TabsViewController: TabManagerDelegate {
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab) {
         guard let index = tabManager.tabs.index(of: tab) else { return }
-        self.collectionView.insertItems(at: [IndexPath(row: index, section: 0)])
+        self.collectionView?.insertItems(at: [IndexPath(row: index, section: 0)])
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, removeIndex: Int) {
-        if self.collectionView.numberOfItems(inSection: 0) <= 2{
+        if let cv = self.collectionView, cv.numberOfItems(inSection: 0) <= 2{
             UIView.animate(withDuration: 0.1, animations: {
-                self.collectionView.contentOffset = CGPoint(x: 0.0,y: 0.0)
+                cv.contentOffset = CGPoint(x: 0.0,y: 0.0)
             })
-        }
-        self.collectionView.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
-        self.collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
+		}
+        self.collectionView?.deleteItems(at: [IndexPath(row: removeIndex, section: 0)])
+        self.collectionView?.collectionViewLayout.invalidateLayout()
+	}
+
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
     }
-    
+
     func tabManagerDidRestoreTabs(_ tabManager: TabManager) {
     }
-    
+
     func tabManagerDidRemoveAllTabs(_ tabManager: TabManager, toast:ButtonToast?) {
     }
 }

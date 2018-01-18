@@ -66,6 +66,7 @@
 		1E37480E1FB313B2006FA367 /* ClickableUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */; };
 		1E3F25041EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */; };
 		1E3F25151EC1CA3C00D9DC0F /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */; };
+		1E4036101FD7CEE70049318E /* KeyboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */; };
 		1E4706861EB0952000516BA5 /* AboutSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */; };
 		1E4706871EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */; };
 		1E4706881EB0952000516BA5 /* CliqzAppSettingsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */; };
@@ -242,6 +243,7 @@
 		1E8046BD1FB4AD7F003701C5 /* BubbleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */; };
 		1E91FA601F334321003C8A03 /* SubscriptionsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */; };
 		1E97773C1E50EEAE0035EF60 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		1E9E509C1FD82FC7007ABAD6 /* QuickAccessBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */; };
 		1E9F4E481D65E337000E4D0A /* AntiPhishingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */; };
 		1EB293E01DB7AAC500D852C8 /* CliqzMainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */; };
 		1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */; };
@@ -449,6 +451,7 @@
 		4F18DD311F9F6A3800ADC6D0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F18DD2F1F9F6A3800ADC6D0 /* MainInterface.storyboard */; };
 		4F1FACC51FD1AD870023E076 /* CliqzShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F247DDD1E9D02740025A8BD /* BatchingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F247DDC1E9D02740025A8BD /* BatchingClient.swift */; };
+		4F2AC8301FD95026001E66D0 /* OffrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2AC82F1FD95026001E66D0 /* OffrView.swift */; };
 		4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */; };
 		4F4AADD71E9BC0D000B39F14 /* SyncTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4AADD61E9BC0D000B39F14 /* SyncTelemetry.swift */; };
 		4F4AADE71E9BCD2B00B39F14 /* URLRequestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4AADE61E9BCD2B00B39F14 /* URLRequestExtensions.swift */; };
@@ -473,6 +476,10 @@
 		4FA29B261D64C0B100C59F5E /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B221D64C0B100C59F5E /* TabsViewController.swift */; };
 		4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */; };
 		4FA29B281D64C0B100C59F5E /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */; };
+		4FA486D71FD69B9D00299540 /* OffrzDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486D61FD69B9D00299540 /* OffrzDataService.swift */; };
+		4FA486DA1FD69C0000299540 /* OffrzDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486D91FD69C0000299540 /* OffrzDataSource.swift */; };
+		4FA486DC1FD69C1D00299540 /* OffrzViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */; };
+		4FA486E11FD7001500299540 /* URLBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0DB931A8545800039F300 /* URLBarView.swift */; };
 		4FB77C651E39F14E0008E5CC /* TopSiteViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */; };
 		4FB77C671E39F3620008E5CC /* NewsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB77C661E39F3620008E5CC /* NewsViewCell.swift */; };
 		4FBE88F81E97941F00D5B1F8 /* FxADeviceRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE88F61E97941F00D5B1F8 /* FxADeviceRegistration.swift */; };
@@ -490,6 +497,8 @@
 		4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */; };
 		4FE422401DD5E207000A7D1C /* InteractiveIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */; };
 		4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBC01431DD4786D000912B9 /* CRToast.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		4FF0789B1FF3BCAE00514B43 /* OffrzEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */; };
+		4FF078AB1FF3BCDA00514B43 /* OffrzOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */; };
 		4FF239C91D5339EE00EEDE89 /* CliqzUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */; };
 		4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */; };
 		4FF7DCF41D785A4200089234 /* SettingsPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */; };
@@ -1439,6 +1448,7 @@
 		1E37480D1FB313B2006FA367 /* ClickableUITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableUITableViewCell.swift; sourceTree = "<group>"; };
 		1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimitMobileDataUsageTableViewController.swift; sourceTree = "<group>"; };
 		1E3F25141EC1CA3C00D9DC0F /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
+		1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAccessoryView.swift; sourceTree = "<group>"; };
 		1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBlockerSettingsTableViewController.swift; sourceTree = "<group>"; };
 		1E4706811EB0952000516BA5 /* CliqzAppSettingsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzAppSettingsOptions.swift; sourceTree = "<group>"; };
@@ -1725,6 +1735,7 @@
 		1E79DE721D508368006BEB4A /* AWSXMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSXMLWriter.m; sourceTree = "<group>"; };
 		1E8046BC1FB4AD7F003701C5 /* BubbleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleCell.swift; sourceTree = "<group>"; };
 		1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsHandler.swift; sourceTree = "<group>"; };
+		1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAccessBar.swift; sourceTree = "<group>"; };
 		1E9F4E471D65E337000E4D0A /* AntiPhishingDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AntiPhishingDetector.swift; sourceTree = "<group>"; };
 		1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzMainWindow.swift; sourceTree = "<group>"; };
 		1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzContextMenu.swift; sourceTree = "<group>"; };
@@ -1927,6 +1938,7 @@
 		4F1FACBB1FD1A9B90023E076 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		4F1FACBD1FD1A9B90023E076 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4F247DDC1E9D02740025A8BD /* BatchingClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatchingClient.swift; sourceTree = "<group>"; };
+		4F2AC82F1FD95026001E66D0 /* OffrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrView.swift; sourceTree = "<group>"; };
 		4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshtabViewController.swift; sourceTree = "<group>"; };
 		4F4AADD61E9BC0D000B39F14 /* SyncTelemetry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncTelemetry.swift; sourceTree = "<group>"; };
 		4F4AADE61E9BCD2B00B39F14 /* URLRequestExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestExtensions.swift; sourceTree = "<group>"; };
@@ -1952,6 +1964,9 @@
 		4FA29B221D64C0B100C59F5E /* TabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		4FA29B231D64C0B100C59F5E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		4FA29B241D64C0B100C59F5E /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		4FA486D61FD69B9D00299540 /* OffrzDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzDataService.swift; sourceTree = "<group>"; };
+		4FA486D91FD69C0000299540 /* OffrzDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzDataSource.swift; sourceTree = "<group>"; };
+		4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzViewController.swift; sourceTree = "<group>"; };
 		4FB77C641E39F14E0008E5CC /* TopSiteViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopSiteViewCell.swift; sourceTree = "<group>"; };
 		4FB77C661E39F3620008E5CC /* NewsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsViewCell.swift; sourceTree = "<group>"; };
 		4FBE88F61E97941F00D5B1F8 /* FxADeviceRegistration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxADeviceRegistration.swift; sourceTree = "<group>"; };
@@ -1968,6 +1983,8 @@
 		4FE3CA471FA73C4D0081A639 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4FE4223D1DD4ADFC000A7D1C /* ModifyLinksForNewTab.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ModifyLinksForNewTab.js; sourceTree = "<group>"; };
 		4FE4223F1DD5E207000A7D1C /* InteractiveIntro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveIntro.swift; sourceTree = "<group>"; };
+		4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzEmptyView.swift; sourceTree = "<group>"; };
+		4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrzOnboardingView.swift; sourceTree = "<group>"; };
 		4FF239C81D5339EE00EEDE89 /* CliqzUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzUtils.swift; sourceTree = "<group>"; };
 		4FF239DC1D5391FB00EEDE89 /* WebViewProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewProgress.swift; sourceTree = "<group>"; };
 		4FF7DCF31D785A4200089234 /* SettingsPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsPrefs.swift; sourceTree = "<group>"; };
@@ -2739,6 +2756,7 @@
 		1E79DC971D4FB2C5006BEB4A /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				4FA486C71FD69B6000299540 /* Offrz */,
 				AFAF9AD11F14E95A0009E718 /* BloomFilter */,
 				B354B5AD1E5C59C5001B38A1 /* JSEngine */,
 				1E9F4E461D65E277000E4D0A /* Anti-Phishing */,
@@ -2892,7 +2910,6 @@
 				4FB77C631E39F0D60008E5CC /* Freshtab */,
 				4FA29B131D64BFE300C59F5E /* Dashboard */,
 				4FF239C71D52464A00EEDE89 /* WebView */,
-				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
 				4FD9333F1D5CD50600EBA7D6 /* CliqzTabButton.swift */,
 				1EB293DF1DB7AAC500D852C8 /* CliqzMainWindow.swift */,
 				1EB293EE1DB7AB3200D852C8 /* CliqzContextMenu.swift */,
@@ -3836,6 +3853,9 @@
 				1E3747EB1FB1FBF7006FA367 /* BubbleLeftExpandedCell.swift */,
 				1E6E5CFE1F94F92B00D23A1E /* BubbleRightCell.swift */,
 				1E6E5D0E1F94F92C00D23A1E /* BubbleTableView.swift */,
+				1E40360F1FD7CEE70049318E /* KeyboardAccessoryView.swift */,
+				1E0844B21E48A3E6005B4DFF /* QuerySuggestionView.swift */,
+				1E9E509B1FD82FC7007ABAD6 /* QuickAccessBar.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -3843,6 +3863,7 @@
 		4FA29B131D64BFE300C59F5E /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				4FA486D81FD69BB800299540 /* Offrz */,
 				AF82661C1EB09FBA0023C77C /* Tab Redesign */,
 				4FA29B211D64C0B100C59F5E /* DashboardViewController.swift */,
 				4FA29B221D64C0B100C59F5E /* TabsViewController.swift */,
@@ -3851,6 +3872,26 @@
 				4F9A7B601D6DDAC6005F02CB /* CliqzExtensionViewController.swift */,
 			);
 			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		4FA486C71FD69B6000299540 /* Offrz */ = {
+			isa = PBXGroup;
+			children = (
+				4FA486D61FD69B9D00299540 /* OffrzDataService.swift */,
+			);
+			path = Offrz;
+			sourceTree = "<group>";
+		};
+		4FA486D81FD69BB800299540 /* Offrz */ = {
+			isa = PBXGroup;
+			children = (
+				4FA486D91FD69C0000299540 /* OffrzDataSource.swift */,
+				4FA486DB1FD69C1D00299540 /* OffrzViewController.swift */,
+				4F2AC82F1FD95026001E66D0 /* OffrView.swift */,
+				4FF0789A1FF3BCAE00514B43 /* OffrzEmptyView.swift */,
+				4FF078AA1FF3BCDA00514B43 /* OffrzOnboardingView.swift */,
+			);
+			path = Offrz;
 			sourceTree = "<group>";
 		};
 		4FB77C631E39F0D60008E5CC /* Freshtab */ = {
@@ -6433,6 +6474,7 @@
 			files = (
 				E444F7E01B4B1C1A00FEB19B /* NSUserDefaultsPrefs.swift in Sources */,
 				E4BA8AA81B4B15EF00BC2E95 /* ActionRequestHandler.swift in Sources */,
+				4FA486E11FD7001500299540 /* URLBarView.swift in Sources */,
 				E444F7E21B4B1C6800FEB19B /* SearchEngines.swift in Sources */,
 				E444F7DF1B4B1C1200FEB19B /* Profile.swift in Sources */,
 				E444F7E31B4B1C8000FEB19B /* OpenSearch.swift in Sources */,
@@ -6539,6 +6581,7 @@
 				E66C5B481BDA81050051AA93 /* UIImage+ImageEffects.m in Sources */,
 				E4CD9F6D1A77DD2800318571 /* ReaderModeStyleViewController.swift in Sources */,
 				7B59FC441C68E9B600F58EF5 /* SWTableViewCell.m in Sources */,
+				4FA486DC1FD69C1D00299540 /* OffrzViewController.swift in Sources */,
 				E4A960061ABB9C450069AD6F /* ReaderModeUtils.swift in Sources */,
 				4FF239DD1D5391FB00EEDE89 /* WebViewProgress.swift in Sources */,
 				1E79DD031D4FB2C5006BEB4A /* LocalDataStore.swift in Sources */,
@@ -6551,6 +6594,7 @@
 				1EB293EF1DB7AB3200D852C8 /* CliqzContextMenu.swift in Sources */,
 				1E106E591E643C1C00E6F53B /* QuerySuggestions.swift in Sources */,
 				1E6E5D111F94F92C00D23A1E /* BubbleTableView.swift in Sources */,
+				4FA486D71FD69B9D00299540 /* OffrzDataService.swift in Sources */,
 				1E2AD4DE1EC2F26700F71159 /* AddConnectionViewController.swift in Sources */,
 				1E79DE7A1D508368006BEB4A /* AWSCancellationTokenRegistration.m in Sources */,
 				1E79DD0F1D4FB2C5006BEB4A /* YoutubeVideoDownloader.swift in Sources */,
@@ -6577,6 +6621,7 @@
 				0B3E7DB81B27A7F600E2E84D /* AboutUtils.swift in Sources */,
 				AFA6F3AF1E673B3500BA630B /* AntiTrackingModule.swift in Sources */,
 				7BC68CC71CC152B70043562A /* MenuItemImageView.swift in Sources */,
+				4F2AC8301FD95026001E66D0 /* OffrView.swift in Sources */,
 				1E79DE7C1D508368006BEB4A /* AWSExecutor.m in Sources */,
 				D301AAEE1A3A55B70078DD1D /* TabTrayController.swift in Sources */,
 				1E79DD1C1D4FB2C5006BEB4A /* SessionState.swift in Sources */,
@@ -6631,6 +6676,7 @@
 				D31CF65C1CC1959A001D0BD0 /* PrivilegedRequest.swift in Sources */,
 				D3B6923D1B9F9444004B87A4 /* FindInPageBar.swift in Sources */,
 				2F44FC721A9E840300FD20CC /* SettingsNavigationController.swift in Sources */,
+				4FF0789B1FF3BCAE00514B43 /* OffrzEmptyView.swift in Sources */,
 				E69E06BA1C76173D00D0F926 /* RequirePasscodeIntervalViewController.swift in Sources */,
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
@@ -6769,6 +6815,7 @@
 				E4ECD0881B70FD4F00B90D22 /* WindowCloseHelper.swift in Sources */,
 				0BD19A671A25309B0084FBA7 /* NSUserDefaultsPrefs.swift in Sources */,
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
+				1E4036101FD7CEE70049318E /* KeyboardAccessoryView.swift in Sources */,
 				3BF56D271CDBBE1F00AC4D75 /* SimpleToast.swift in Sources */,
 				AFF105541F25EE9D0093B73D /* AutoForgetTabTableViewController.swift in Sources */,
 				1E79DE8C1D508368006BEB4A /* AWSMTLReflection.m in Sources */,
@@ -6823,6 +6870,7 @@
 				B34E1A571F8D256B00868AD8 /* UserAgentConstantsBridge.m in Sources */,
 				7BC68CCE1CC152B70043562A /* MenuViewController.swift in Sources */,
 				1E79DD0C1D4FB2C5006BEB4A /* UIDeviceExtension.swift in Sources */,
+				4FA486DA1FD69C0000299540 /* OffrzDataSource.swift in Sources */,
 				AFAF9ADC1F14E95A0009E718 /* BloomFilter.swift in Sources */,
 				1E2DEC831E816516003D76B7 /* WebViewBackForward.swift in Sources */,
 				7BC68CC61CC152B70043562A /* MenuItem.swift in Sources */,
@@ -6836,6 +6884,7 @@
 				1E4706891EB0952000516BA5 /* HumanWebSettingsTableViewController.swift in Sources */,
 				E65D89181C8647420006EA35 /* AppAuthenticator.swift in Sources */,
 				AFA6F3E51E67424700BA630B /* AntitrackingPanel.swift in Sources */,
+				1E9E509C1FD82FC7007ABAD6 /* QuickAccessBar.swift in Sources */,
 				1E79DD121D4FB2C5006BEB4A /* TelemetryLogger.swift in Sources */,
 				1E79DD201D4FB2C5006BEB4A /* CliqzSearch.swift in Sources */,
 				1E47068C1EB0952000516BA5 /* SubSettingsTableViewController.swift in Sources */,
@@ -6862,6 +6911,7 @@
 				E6327A641BF6438E008D12E0 /* DebugSettingsBundleOptions.swift in Sources */,
 				D3E8EF101B97BE69001900FB /* ClearPrivateDataTableViewController.swift in Sources */,
 				7B59FC4A1C68E9B600F58EF5 /* SWUtilityButtonView.m in Sources */,
+				4FF078AB1FF3BCDA00514B43 /* OffrzOnboardingView.swift in Sources */,
 				7BC68CCC1CC152B70043562A /* MenuDelegate.swift in Sources */,
 				1E79DEAC1D508368006BEB4A /* AWSXMLWriter.m in Sources */,
 				4FA29B271D64C0B100C59F5E /* HistoryViewController.swift in Sources */,

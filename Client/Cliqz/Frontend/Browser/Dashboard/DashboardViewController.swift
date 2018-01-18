@@ -15,6 +15,10 @@ protocol BrowsingDelegate: class {
     func didSelectQuery(_ query: String)
 }
 
+enum DashBoardPanelType: Int {
+    case TabsPanel = 0, HistoryPanel, FavoritesPanel, OffrzPanel
+}
+
 class DashboardViewController: UIViewController, BrowsingDelegate {
 	
 	var profile: Profile!
@@ -22,8 +26,9 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     
     var viewOpenTime : Double?
     var panelOpenTime : Double?
+    var currentPanel : DashBoardPanelType = .TabsPanel
 
-	fileprivate var panelSwitchControl: UISegmentedControl!
+    fileprivate var panelSwitchControl = UISegmentedControl(items: [])
 	fileprivate var panelSwitchContainerView: UIView!
 	fileprivate var panelContainerView: UIView!
 
@@ -48,11 +53,18 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		return tabsViewController
 	}()
 
+	fileprivate lazy var offrzViewController: OffrzViewController = {
+		let offrz = OffrzViewController(profile: self.profile)
+		offrz.delegate = self
+		return offrz
+	}()
+
 	init(profile: Profile, tabManager: TabManager) {
 		self.tabManager = tabManager
 		self.profile = profile
 		super.init(nibName: nil, bundle: nil)
 	}
+
     deinit {
         // Removed observers for Connect features
         NotificationCenter.default.removeObserver(self, name: ShowBrowserViewControllerNotification, object: nil)
@@ -62,27 +74,12 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		fatalError("init(coder:) has not been implemented")
 	}
     
-    func switchToTabsPanel() {
-        if let panelSwitchControl = panelSwitchControl {
-            panelSwitchControl.selectedSegmentIndex = 0
-        }
-    }
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		panelSwitchContainerView = UIView()
 		panelSwitchContainerView.backgroundColor = UIColor.white
 		view.addSubview(panelSwitchContainerView)
-		
-        let tabs = NSLocalizedString("Tabs", tableName: "Cliqz", comment: "Tabs title on dashboard")
-        let history = NSLocalizedString("History", tableName: "Cliqz", comment: "History title on dashboard")
-		let fav = NSLocalizedString("Favorites", tableName: "Cliqz", comment: "Favorites title on dashboard")
-        
-		panelSwitchControl = UISegmentedControl(items: [tabs, history, fav])
-		panelSwitchControl.tintColor = self.dashboardThemeColor
-		panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
-		panelSwitchContainerView.addSubview(panelSwitchControl)
-        switchToTabsPanel()
         
 		panelContainerView = UIView()
 		view.addSubview(panelContainerView)
@@ -106,9 +103,51 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.navigationController?.isNavigationBarHidden = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:  .default)
-        self.switchPanel(self.panelSwitchControl)
-	}
+        
+        adJustPanelSwitchControl()
+        self.switchToCurrentPanel()
+    }
+    
+    private func createPanelSwitchControl(numberOfSegments: Int) {
+        guard panelSwitchControl.numberOfSegments != numberOfSegments else {
+            return
+        }
 
+        let tabs = UIImage(named: "tabs")
+        let history = UIImage(named: "history_quick_access")
+        let fav = UIImage(named: "favorite_quick_access")
+		let offrz = (self.profile.offrzDataSource?.hasUnseenOffrz() ?? false) ? UIImage(named: "offrz_active") : UIImage(named: "offrz_inactive")
+        var items = [tabs, history, fav]
+        if numberOfSegments == 4 {
+            items.append(offrz)
+        }
+        if currentPanel.rawValue >= numberOfSegments {
+            currentPanel = .TabsPanel
+        }
+        
+        panelSwitchControl.removeFromSuperview()
+        panelSwitchControl = UISegmentedControl(items: items)
+        panelSwitchControl.tintColor = self.dashboardThemeColor
+        panelSwitchControl.addTarget(self, action: #selector(switchPanel), for: .valueChanged)
+        panelSwitchContainerView.addSubview(panelSwitchControl)
+       
+        panelSwitchControl.snp.makeConstraints { make in
+            make.centerY.equalTo(panelSwitchContainerView)
+            make.left.equalTo(panelSwitchContainerView).offset(10)
+            make.right.equalTo(panelSwitchContainerView).offset(-10)
+            make.height.equalTo(30)
+        }
+    }
+    
+    private func adJustPanelSwitchControl() {
+        let region = SettingsPrefs.shared.getRegionPref()
+        if region == "DE" { // TODO: Should call `DataSource.ShouldShowOffers()`
+            createPanelSwitchControl(numberOfSegments: 4)
+        } else {
+            createPanelSwitchControl(numberOfSegments: 3)
+        }
+    }
+    
 	override func viewWillDisappear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 		super.viewWillDisappear(animated)
@@ -128,7 +167,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     func dismissView() {
         self.navigationController?.popViewController(animated: false)
     }
-    
+
 	func didSelectURL(_ url: URL) {
 		self.navigationController?.popViewController(animated: false)
 		self.delegate?.navigateToURL(url)
@@ -142,41 +181,46 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
 		self.navigationController?.popViewController(animated: false)
 		CATransaction.commit()
 	}
-
-	func switchPanel(_ sender: UISegmentedControl) {
-		self.hideCurrentPanelViewController()
+    
+    func switchPanel(_ sender: UISegmentedControl) {
+        if let panelType = DashBoardPanelType(rawValue: sender.selectedSegmentIndex) {
+            currentPanel = panelType
+            self.switchToCurrentPanel()
+        }
+    }
+    
+    private func switchToCurrentPanel() {
+        self.panelSwitchControl.selectedSegmentIndex = currentPanel.rawValue
         var target = "UNDEFINED"
-		switch sender.selectedSegmentIndex {
-		case 0:
-			self.showPanelViewController(self.tabsViewController)
+        
+        self.hideCurrentPanelViewController()
+        switch currentPanel {
+            
+        case .TabsPanel:
+            self.showPanelViewController(self.tabsViewController)
             target = "openTabs"
-		case 1:
-			self.showPanelViewController(self.historyViewController)
+            
+        case .HistoryPanel:
+            self.showPanelViewController(self.historyViewController)
             target = "history"
-		case 2:
-			self.showPanelViewController(self.favoritesViewController)
+            
+        case .FavoritesPanel:
+            self.showPanelViewController(self.favoritesViewController)
             target = "favorites"
-		default:
-			break
-		}
+            
+        case .OffrzPanel:
+            self.showPanelViewController(self.offrzViewController)
+            target = "offrz"
+            
+        }
         logToolbarSignal("click", target: target, customData: nil)
-	}
-
+    }
+    
 	fileprivate func setupConstraints() {
-		let switchControlHeight = 30
-		let switchControlLeftOffset = 10
-		let switchControlRightOffset = -10
-		
 		panelSwitchContainerView.snp.makeConstraints { make in
 			make.left.right.equalTo(self.view)
 			make.top.equalTo(topLayoutGuide.snp.bottom)
 			make.height.equalTo(65)
-		}
-		panelSwitchControl.snp.makeConstraints { make in
-			make.centerY.equalTo(panelSwitchContainerView)
-			make.left.equalTo(panelSwitchContainerView).offset(switchControlLeftOffset)
-			make.right.equalTo(panelSwitchContainerView).offset(switchControlRightOffset)
-			make.height.equalTo(switchControlHeight)
 		}
 		panelContainerView.snp.makeConstraints { make in
 			make.top.equalTo(self.panelSwitchContainerView.snp.bottom)
@@ -277,13 +321,13 @@ extension DashboardViewController {
         switch panel {
         case tabsViewController:
             return "open_tabs"
-            
+
         case historyViewController:
             return "history"
-            
+
         case favoritesViewController:
             return "favorites"
-            
+
         default:
             return "UNDEFINED"
         }
