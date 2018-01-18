@@ -1,6 +1,6 @@
 import 'react-native/Libraries/Core/InitializeCore';
 import React from 'react';
-import { AppRegistry, StyleSheet, View, NativeModules } from 'react-native';
+import { AppRegistry, StyleSheet, View } from 'react-native';
 import { startup, components } from 'browser-core';
 import 'babel-polyfill';
 
@@ -9,20 +9,18 @@ const appStart = startup.then((app) => {
   global.app = app;
 });
 
-const styles = function () {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      backgroundColor: '#FFFFFF'
-    },
-  });
-};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'transparent'
+  },
+});
 
 // wrapper for a component to add top padding on iOS
 function AppContainer(App, appStart) {
   return () => (
-    <View style={styles().container}>
+    <View style={styles.container}>
       <App appStart={appStart} />
     </View>
   );
