@@ -316,23 +316,28 @@ extension BrowserViewController: ControlCenterViewDelegate {
     // MARK: - Connect
     
     func openTabViaConnect(notification: NSNotification) {
-        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
-        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
+        
+        guard let data = notification.object as? [String: Any],
+            let urlString = data["url"] as? String,
+            let url = URL(string: urlString) else {
             return
         }
-        if let url = URL(string: urlString)  {
-            openURLInNewTab(url)
-            self.urlBar.leaveOverlayMode()
-            self.homePanelController?.view.isHidden = true
-        }
+        
+        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
+        
+        openURLInNewTab(url)
+        self.urlBar.leaveOverlayMode()
+        self.homePanelController?.view.isHidden = true
         
         // Telemetry
         TelemetryLogger.sharedInstance.logEvent(.Connect("open_tab", nil))
+        
     }
     
     func downloadVideoViaConnect(notification: NSNotification) {
-        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
-            return
+        guard let data = notification.object as? [String: Any],
+            let urlString = data["url"] as? String else {
+                return
         }
         if self.canDownloadYoutubeVideo() {
             YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
