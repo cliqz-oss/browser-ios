@@ -880,6 +880,9 @@ class BrowserViewController: UIViewController {
                     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
                 }
         })
+		if !urlBar.inOverlayMode {
+			getApp().changeToBgImage(.lightContent, isNormalMode: !(tabManager.selectedTab?.isPrivate ?? false))
+		}
         view.setNeedsUpdateConstraints()
         log.debug("BVC done with showHomePanelController.")
         

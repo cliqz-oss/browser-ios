@@ -11,41 +11,41 @@ import Foundation
 extension UIImage {
 
 	class func fullBackgroundImage() -> UIImage? {
-		if UIDevice.current.orientation == .portrait {
+		if UIDevice.current.orientation.isLandscape {
 			if UIDevice.current.isiPhoneXDevice() {
-				return UIImage(named: "normalModeBgImage")
+				return UIImage(named: "normalModeiPhoneXLandscapeBgImage")
 			}
 			if UIDevice.current.isiPad() {
-				return UIImage(named: "normalModeiPadBgImage")
+				return UIImage(named: "normalModeiPadLandscapeBgImage")
 			}
-			return UIImage(named: "normalModeBgImage")
+			return UIImage(named: "normalModeLandscapeBgImage")
 		}
 		if UIDevice.current.isiPhoneXDevice() {
-			return UIImage(named: "normalModeiPhoneXLandscapeBgImage")
+			return UIImage(named: "normalModeBgImage")
 		}
 		if UIDevice.current.isiPad() {
-			return UIImage(named: "normalModeiPadLandscapeBgImage")
+			return UIImage(named: "normalModeiPadBgImage")
 		}
-		return UIImage(named: "normalModeLandscapeBgImage")
+		return UIImage(named: "normalModeBgImage")
 	}
 
 	class func freshtabBackgroundImage() -> UIImage? {
-		if UIDevice.current.orientation == .portrait {
+		if UIDevice.current.orientation.isLandscape {
 			if UIDevice.current.isiPhoneXDevice() {
-				return UIImage(named: "normalModeiPhoneXFreshtabBgImage")
+				return UIImage(named: "normalModeiPhoneXFreshtabLandscapeBgImage")
 			}
 			if UIDevice.current.isiPad() {
-				return UIImage(named: "normalModeiPadFreshtabBgImage")
+				return UIImage(named: "normalModeiPadFreshtabLandscapeBgImage")
 			}
-			return UIImage(named: "normalModeFreshtabBgImage")
+			return UIImage(named: "normalModeFreshtabLandscapeBgImage")
 		}
 		if UIDevice.current.isiPhoneXDevice() {
-			return UIImage(named: "normalModeiPhoneXFreshtabLandscapeBgImage")
+			return UIImage(named: "normalModeiPhoneXFreshtabBgImage")
 		}
 		if UIDevice.current.isiPad() {
-			return UIImage(named: "normalModeiPadFreshtabLandscapeBgImage")
+			return UIImage(named: "normalModeiPadFreshtabBgImage")
 		}
-		return UIImage(named: "normalModeFreshtabLandscapeBgImage")
+		return UIImage(named: "normalModeFreshtabBgImage")
 	}
 
 }

@@ -77,22 +77,26 @@ extension AppDelegate {
     // Cliqz: Change the status bar style and color
 	func changeStatusBarStyle(_ statusBarStyle: UIStatusBarStyle, backgroundColor: UIColor, isNormalMode: Bool) {
         UIApplication.shared.statusBarStyle = statusBarStyle
-		var img = self.forgetModeBgImage
-		if isNormalMode {
-			img = self.normalModeBgImage
+		if backgroundColor != UIColor.clear {
+			self.forgetModeBgImage?.removeFromSuperview()
+			self.normalModeBgImage?.removeFromSuperview()
+			UIApplication.shared.delegate?.window??.backgroundColor = backgroundColor
 		}
+	}
+
+	func changeToBgImage(_ statusBarStyle: UIStatusBarStyle, isNormalMode: Bool) {
+		UIApplication.shared.statusBarStyle = statusBarStyle
 		self.forgetModeBgImage?.removeFromSuperview()
 		self.normalModeBgImage?.removeFromSuperview()
-		if backgroundColor == UIColor.clear {
-			if img?.superview == nil {
-				self.window?.addSubview(img!)
-				self.window?.sendSubview(toBack: img!)
-				img?.snp.makeConstraints { (make) in
-					make.left.right.top.bottom.equalTo(self.window!)
-				}
-			}
-		} else {
-			UIApplication.shared.delegate?.window??.backgroundColor = backgroundColor
+		var img = self.forgetModeBgImage
+		if isNormalMode {
+			self.normalModeBgImage?.image = UIImage.fullBackgroundImage()
+			img = self.normalModeBgImage
+		}
+		self.window?.addSubview(img!)
+		self.window?.sendSubview(toBack: img!)
+		img?.snp.makeConstraints { (make) in
+			make.left.right.top.bottom.equalTo(self.window!)
 		}
 	}
 
