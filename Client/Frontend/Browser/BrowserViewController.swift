@@ -1276,7 +1276,9 @@ class BrowserViewController: UIViewController {
         if (urlBar.currentURL != tab.displayURL) {
             urlBar.currentURL = tab.displayURL
         }
-		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
+		if let w = tab.webView {
+			urlBar.updateTrackersCount(w.unsafeRequests)
+		}
         // Cliqz: update the toolbar only if the search controller is not visible
         if searchController?.view.isHidden == true {
             let isPage = tab.displayURL?.isWebPage() ?? false
@@ -1548,6 +1550,7 @@ class BrowserViewController: UIViewController {
     func newTab() {
         openBlankNewTabAndFocus(isPrivate: false)
     }
+
     func newPrivateTab() {
         openBlankNewTabAndFocus(isPrivate: true)
     }
