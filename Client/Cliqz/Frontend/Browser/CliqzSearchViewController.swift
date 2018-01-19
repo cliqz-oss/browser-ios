@@ -212,7 +212,8 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
 extension CliqzSearchViewController {
     
     @objc func didSelectUrl(_ notification: Notification) {
-        if let url_str = notification.object as? String, let url = URL(string: url_str) {
+        if let url_str = notification.object as? NSString, let encodedString = url_str.addingPercentEncoding(
+            withAllowedCharacters: NSCharacterSet.urlFragmentAllowed), let url = URL(string: encodedString as String) {
             if !inSelectionMode {
                 delegate?.didSelectURL(url, searchQuery: self.searchQuery)
             } else {
