@@ -353,7 +353,7 @@ class TabManager : NSObject {
     // This method is duplicated to hide the flushToDisk option from consumers.
     func removeTab(_ tab: Tab) {
         self.removeTab(tab, flushToDisk: true, notify: true)
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
     }
 
     /// - Parameter notify: if set to true, will call the delegate after the tab
@@ -811,7 +811,7 @@ extension TabManager {
 
 extension TabManager : WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -823,7 +823,7 @@ extension TabManager : WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
         // only store changes if this is not an error page
         // as we current handle tab restore as error page redirects then this ensures that we don't
         // call storeChanges unnecessarily on startup
@@ -835,20 +835,20 @@ extension TabManager : WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
     }
 
-    func hideNetworkActivitySpinner() {
-        for tab in tabs {
-            if let tabWebView = tab.webView {
-                // If we find one tab loading, we don't hide the spinner
-                if tabWebView.isLoading {
-                    return
-                }
-            }
-        }
-        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-    }
+//    func hideNetworkActivitySpinner() {
+//        for tab in tabs {
+//            if let tabWebView = tab.webView {
+//                // If we find one tab loading, we don't hide the spinner
+//                if tabWebView.isLoading {
+//                    return
+//                }
+//            }
+//        }
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//    }
 
     /// Called when the WKWebView's content process has gone away. If this happens for the currently selected tab
     /// then we immediately reload it.

@@ -1190,6 +1190,9 @@ class BrowserViewController: UIViewController {
                 let progress = change?[NSKeyValueChangeKey.newKey] as? Float else { break }
             
             urlBar.updateProgressBar(progress)
+            if progress > 0.99 {
+                hideNetworkActivitySpinner()
+            }
         case KVOLoading:
             guard let loading = change?[NSKeyValueChangeKey.newKey] as? Bool else { break }
 
@@ -2730,6 +2733,7 @@ extension BrowserViewController: TabManagerDelegate {
         if let url = tab.url, !AboutUtils.isAboutURL(tab.url) && !tab.isPrivate {
             profile.recentlyClosedTabs.addTab(url, title: tab.title, faviconURL: tab.displayFavicon?.url)
         }
+        hideNetworkActivitySpinner()
     }
 
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
@@ -2772,10 +2776,13 @@ extension BrowserViewController: TabManagerDelegate {
 
 extension BrowserViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        if tabManager.selectedTab?.webView !== webView {
+        
+        if let containerWebView = webView as? ContainerWebView, tabManager.selectedTab?.webView !== containerWebView.legacyWebView {
             return
         }
 
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
         updateFindInPageVisibility(visible: false)
 
         // If we are going to navigate to a new page, hide the reader mode button. Unless we
@@ -2970,6 +2977,9 @@ extension BrowserViewController: WKNavigationDelegate {
 #else
 		let tab: Tab! = tabManager[webView]
 #endif
+        
+        hideNetworkActivitySpinner()
+        
         tabManager.expireSnackbars()
 
         if let url = webView.url, !ErrorPageHelper.isErrorPageURL(url) && !AboutUtils.isAboutHomeURL(url) {
@@ -3045,6 +3055,8 @@ extension BrowserViewController: WKNavigationDelegate {
         guard let webView = container.legacyWebView else { return }
         guard let tab = tabManager.tabForWebView(webView) else { return }
 
+        hideNetworkActivitySpinner()
+        
         // Ignore the "Frame load interrupted" error that is triggered when we cancel a request
         // to open an external application and hand it over to UIApplication.openURL(). The result
         // will be that we switch to the external app, for example the app store, while keeping the
