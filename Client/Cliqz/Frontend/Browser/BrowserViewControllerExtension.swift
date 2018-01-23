@@ -385,6 +385,18 @@ extension BrowserViewController: ControlCenterViewDelegate {
         }
         
     }
+    
+    func hideNetworkActivitySpinner() {
+        for tab in tabManager.tabs {
+            if let tabWebView = tab.webView {
+                // If we find one tab loading, we don't hide the spinner
+                if tabWebView.isLoading {
+                    return
+                }
+            }
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
 }
 
 extension BrowserViewController: RemoteNotificationDelegate {
