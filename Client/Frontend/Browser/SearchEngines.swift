@@ -12,6 +12,8 @@ private let ShowSearchSuggestionsOptIn = "search.suggestions.showOptIn"
 private let ShowSearchSuggestions = "search.suggestions.show"
 private let customSearchEnginesFileName = "customEngines.plist"
 
+let SearchEngineChangedNotification = Notification.Name(rawValue: "SearchEngineChangedNotification")
+
 /**
  * Manage a set of Open Search engines.
  *
@@ -62,6 +64,7 @@ class SearchEngines {
             var orderedEngines = self.orderedEngines.filter { engine in engine.shortName != defaultEngine.shortName }
             orderedEngines.insert(defaultEngine, at: 0)
             self.orderedEngines = orderedEngines
+            NotificationCenter.default.post(name: SearchEngineChangedNotification, object: self)
         }
     }
 

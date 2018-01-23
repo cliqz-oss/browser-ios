@@ -203,11 +203,4 @@ open class JSBridge : RCTEventEmitter {
         }
     }
     
-    //------------
-    
-    //TODO: Implement this
-    func setDefaultSearchEngine() {
-        
-    }
-    
 }

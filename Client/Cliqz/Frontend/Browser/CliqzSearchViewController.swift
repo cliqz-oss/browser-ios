@@ -77,6 +77,8 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
         NotificationCenter.default.addObserver(self, selector: #selector(openMap), name: MapSearchNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(shareLocation), name: ShareLocationSearchNotification, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(searchEngineChanged), name: SearchEngineChangedNotification, object: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -116,8 +118,9 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
 
 		self.updateBackgroundImage()
 		self.searchBgImage?.isHidden = false
-        Engine.sharedInstance.getBridge().setDefaultSearchEngine()
+
         self.updateExtensionPreferences()
+        self.updateExtensionSearchEngine()
         
         NotificationCenter.default.addObserver(self, selector: #selector(searchWithLastQuery), name: NSNotification.Name(rawValue: LocationManager.NotificationUserLocationAvailable), object: nil)
 	}
@@ -220,6 +223,17 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
         Engine.sharedInstance.getBridge().publishEvent("mobile-browser:notify-preferences", args: [params])
 	}
     
+    fileprivate func updateExtensionSearchEngine() {
+            
+        if let profile = (UIApplication.shared.delegate as? AppDelegate)?.profile {
+            let searchComps = profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.components(separatedBy: "=queryString")
+            let searchEngineName = profile.searchEngines.defaultEngine.shortName
+            let parameters = ["name": searchEngineName, "url": searchComps![0] + "="]//"'\(searchEngineName)', `\(searchComps![0])=`"
+            
+            Engine.sharedInstance.getBridge().publishEvent("mobile-browser:set-search-engine", args: [parameters])
+        }
+    }
+    
     fileprivate func getCountry() -> String {
         if let country = SettingsPrefs.shared.getRegionPref() {
             return country
@@ -232,6 +246,10 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
         Engine.sharedInstance.getBridge().publishEvent("mobile-browser:restore-blocked-topsites", args: [])
     }
     
+    //MARK: - Search Engine
+    func searchEngineChanged(_ notification: Notification) {
+        self.updateExtensionSearchEngine()
+    }
 }
 
 
