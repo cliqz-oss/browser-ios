@@ -31,7 +31,8 @@ class KeyboardAccessoryView: UIView {
     // MARK:- Initialization
     init() {
         let screenBounds = UIScreen.main.bounds
-        let frame = CGRect(x: 0.0, y: 0.0, width: screenBounds.width, height: kViewHeight);
+        let width = min(screenBounds.width, screenBounds.height)
+        let frame = CGRect(x: 0.0, y: 0.0, width: width, height: kViewHeight);
         
         super.init(frame: frame)
         self.autoresizingMask = .flexibleWidth
