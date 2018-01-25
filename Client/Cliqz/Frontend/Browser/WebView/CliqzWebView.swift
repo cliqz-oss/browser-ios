@@ -9,6 +9,9 @@
 import Foundation
 import WebKit
 import Shared
+
+let kNotificationAllWebViewsDeallocated = "kNotificationAllWebViewsDeallocated"
+
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -227,7 +230,11 @@ class CliqzWebView: UIWebView {
 		commonInit()
 	}
     deinit {
-        
+        CliqzWebView.allocCounter -= 1
+        if (CliqzWebView.allocCounter == 0) {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: kNotificationAllWebViewsDeallocated), object: nil)
+            print("NO LIVE WEB VIEWS")
+        }
         WebViewToUAMapper.removeWebViewWithId(self.uniqueId)
         
         _ = Try(withTry: {
@@ -288,12 +295,15 @@ class CliqzWebView: UIWebView {
 			if !(self.url?.absoluteString.startsWith(WebServer.sharedInstance.base) ?? false) && !docLoc.startsWith(WebServer.sharedInstance.base) {
 				self.title = self.stringByEvaluatingJavaScript(from: "document.title") ?? Foundation.URL(string: docLoc)?.baseDomain() ?? ""
 			}
-
-			if let nd = self.navigationDelegate {
-				globalContainerWebView.legacyWebView = self
-				nd.webView?(globalContainerWebView, didFinish: nullWKNavigation)
-			}
+            
+            if let nd = self.navigationDelegate {
+                globalContainerWebView.legacyWebView = self
+                nd.webView?(globalContainerWebView, didFinish: nullWKNavigation)
+            }
 		}
+        
+        
+        
 		self.prevDocumentLocation = docLoc
         
         NotificationCenter.default.post(name: Notification.Name(rawValue: CliqzWebViewConstants.kNotificationWebViewLoadCompleteOrFailed), object: self)
@@ -377,8 +387,11 @@ class CliqzWebView: UIWebView {
 	fileprivate class func isTopFrameRequest(_ request:URLRequest) -> Bool {
 		return request.url == request.mainDocumentURL
 	}
-	
+    static var allocCounter = 0
+
 	fileprivate func commonInit() {
+        
+        CliqzWebView.allocCounter += 1
 		delegate = self
         scalesPageToFit = true
         generateUniqueUserAgent()
@@ -529,6 +542,9 @@ extension CliqzWebView: UIWebViewDelegate {
 		if let nd = self.navigationDelegate {
 			globalContainerWebView.legacyWebView = self
 			nd.webView?(globalContainerWebView, didCommit: nullWKNavigation)
+            if !AboutUtils.isAboutHomeURL(self.url) {
+                nd.webView?(globalContainerWebView, didStartProvisionalNavigation: nullWKNavigation)
+            }
 		}
         updateObservableAttributes()
 	}

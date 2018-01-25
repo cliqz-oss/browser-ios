@@ -98,10 +98,11 @@ class JavaScriptBridge {
             
             let searchComps = self.profile.searchEngines.defaultEngine.searchURLForQuery("queryString")?.absoluteString.components(separatedBy: "=queryString")
             let searchEngineName = self.profile.searchEngines.defaultEngine.shortName
-            let parameters = "'\(searchEngineName)', `\(searchComps![0])=`"
+            let parameters = ["name": searchEngineName, "url": searchComps![0] + "="]//"'\(searchEngineName)', `\(searchComps![0])=`"
             
             DispatchQueue.main.async {
-                self.publishEvent("set-search-engine", parameters: parameters)
+                //self.publishEvent("set-search-engine", parameters: parameters)
+                Engine.sharedInstance.getBridge().publishEvent("mobile-browser:set-search-engine", args: [parameters])
             }
         }
 		

@@ -25,6 +25,7 @@ class OffrzViewController: UIViewController {
 	private let offrHeight: CGFloat = 510
 
 	private var offrOverlay: UIView?
+	private weak var expandedOffrView: OffrView?
 
     weak var offrzDataSource : OffrzDataSource!
 
@@ -196,6 +197,7 @@ class OffrzViewController: UIViewController {
 					make.left.right.equalTo(overlay).inset(50)
 			})
 			expandedOffrView.addTapAction(self, action: #selector(openOffr))
+			self.expandedOffrView = expandedOffrView
 			self.offrOverlay = overlay
 
 			let closeBtn = UIButton(type: .custom)
@@ -206,6 +208,16 @@ class OffrzViewController: UIViewController {
 				make.left.equalTo(overlay).offset(45)
 			})
 			closeBtn.addTarget(self, action: #selector(self.shrinkOffr), for: .touchUpInside)
+			let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapOnOverlay))
+			overlay.addGestureRecognizer(tapGesture)
+		}
+	}
+	
+	@objc
+	private func tapOnOverlay(_ sender: UITapGestureRecognizer) {
+		let point = sender.location(in: self.expandedOffrView)
+		if !(self.expandedOffrView?.point(inside: point, with: nil) ?? true) {
+			self.shrinkOffr()
 		}
 	}
 

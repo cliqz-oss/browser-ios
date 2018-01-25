@@ -35,7 +35,7 @@ extension String {
 
 class LogoLoader {
 
-	private static let dbVersion = "1510675089509"
+	private static let dbVersion = "1515404421880"
     private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
 
 	private static var _logoDB: JSON?
@@ -86,10 +86,12 @@ class LogoLoader {
 		}
 		if let urlDetails = URLParser.getURLDetails(fixedURL),
 		   let hostName = urlDetails.name,
-		   let details = self.logoDB?["domains"][hostName] {
+			let details = self.logoDB?["domains"],
+			details != JSON.null {
+			let host = details[hostName]
 			logoDetails.hostName = hostName
 			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: min(2, hostName.characters.count))).capitalized
-			if let list = details.array,
+			if let list = host.array,
 				list.count > 0 {
 				for info in list {
 					if info != JSON.null,

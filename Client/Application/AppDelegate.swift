@@ -150,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         self.window!.rootViewController = rootViewController
-		self.normalModeBgImage = UIImageView(image: UIImage(named: "normalModeBgImage"))
+		self.normalModeBgImage = UIImageView(image: UIImage.fullBackgroundImage())
 		self.forgetModeBgImage = UIImageView(image: UIImage(named: "forgetModeBgImage"))
 
         // Cliqz: disable crash reporting
@@ -599,7 +599,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         viewURLInNewTab(notification)
     }
-    
+
     fileprivate func presentEmailComposerWithLogs() {
         if let buildNumber = Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? NSString {
             let mailComposeViewController = MFMailComposeViewController()
@@ -693,6 +693,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //
 //        completionHandler(handledShortCutItem)
 //    }
+}
+
+//Util
+extension AppDelegate {
+    func presentContollerOnTop(controller: UIViewController) {
+        
+        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        if let navigationController = rootViewController as? UINavigationController {
+            rootViewController = navigationController.viewControllers.first
+        }
+        if let tabBarController = rootViewController as? UITabBarController {
+            rootViewController = tabBarController.selectedViewController
+        }
+        rootViewController?.present(controller, animated: true, completion: nil)
+    }
 }
 
 // MARK: - Root View Controller Animations

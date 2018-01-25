@@ -46,7 +46,7 @@ extension BrowserViewController: ControlCenterViewDelegate {
             DispatchQueue.main.async {
                 var supportedVideoLinks = [[String: Any]]()
                 for videoLink in videoLinks {
-                    if let isVideoAudio = videoLink["isVideoAudio"] as? Bool, isVideoAudio == true {
+                    if let videoClass = videoLink["class"] as? String, videoClass == "video" {
                         supportedVideoLinks.append(videoLink)
                     }
                 }
@@ -316,23 +316,28 @@ extension BrowserViewController: ControlCenterViewDelegate {
     // MARK: - Connect
     
     func openTabViaConnect(notification: NSNotification) {
-        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
-        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
+        
+        guard let data = notification.object as? [String: Any],
+            let urlString = data["url"] as? String,
+            let url = URL(string: urlString) else {
             return
         }
-        if let url = URL(string: urlString)  {
-            openURLInNewTab(url)
-            self.urlBar.leaveOverlayMode()
-            self.homePanelController?.view.isHidden = true
-        }
+        
+        NotificationCenter.default.post(name: ShowBrowserViewControllerNotification, object: nil)
+        
+        openURLInNewTab(url)
+        self.urlBar.leaveOverlayMode()
+        self.homePanelController?.view.isHidden = true
         
         // Telemetry
         TelemetryLogger.sharedInstance.logEvent(.Connect("open_tab", nil))
+        
     }
     
     func downloadVideoViaConnect(notification: NSNotification) {
-        guard let data = notification.object as? [String: String], let urlString = data["url"] else {
-            return
+        guard let data = notification.object as? [String: Any],
+            let urlString = data["url"] as? String else {
+                return
         }
         if self.canDownloadYoutubeVideo() {
             YoutubeVideoDownloader.downloadFromURL(urlString, viaConnect: true)
@@ -379,6 +384,18 @@ extension BrowserViewController: ControlCenterViewDelegate {
             }
         }
         
+    }
+    
+    func hideNetworkActivitySpinner() {
+        for tab in tabManager.tabs {
+            if let tabWebView = tab.webView {
+                // If we find one tab loading, we don't hide the spinner
+                if tabWebView.isLoading {
+                    return
+                }
+            }
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
