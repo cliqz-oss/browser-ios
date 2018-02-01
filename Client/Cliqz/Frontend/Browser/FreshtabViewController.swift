@@ -39,8 +39,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 			self.updateView()
 		}
 	}
-    fileprivate let configUrl = "https://newbeta.cliqz.com/api/v1/config"
-    fileprivate let newsUrl = "https://newbeta.cliqz.com/api/v2/rich-header?"
+    fileprivate let configUrl = "https://api.cliqz.com/api/v1/config"
+    fileprivate let newsUrl = "https://api.cliqz.com/api/v2/rich-header?"
 	fileprivate let breakingNewsKey = "breaking"
 	fileprivate let localNewsKey = "local_label"
 
@@ -475,6 +475,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
                             }
 					}
 				}
+			} else {
+//				print(response.result.error)
 			}
 		}
 	}
