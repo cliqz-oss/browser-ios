@@ -32,5 +32,3 @@ if [ ! -f Carthage/Cartfile.resolved ]; then
   carthage bootstrap $CARTHAGE_VERBOSE --platform ios --color auto --no-use-binaries
   cp Cartfile.resolved Carthage/Cartfile.resolved
 fi
-
-./downloadExtension.sh
