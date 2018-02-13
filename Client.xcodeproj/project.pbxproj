@@ -154,8 +154,6 @@
 		1E79DD681D4FB4AF006BEB4A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */; };
 		1E79DD6A1D4FB4B7006BEB4A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */; };
 		1E79DD6C1D4FB4BA006BEB4A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */; };
-		1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */; };
-		1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */; };
 		1E79DD741D4FB58D006BEB4A /* CliqzShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD721D4FB58D006BEB4A /* CliqzShareItem.swift */; };
 		1E79DD751D4FB58D006BEB4A /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD731D4FB58D006BEB4A /* ExtendedBrowserHistory.swift */; };
 		1E79DD7C1D4FB59D006BEB4A /* BookmarksModelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD771D4FB59D006BEB4A /* BookmarksModelExtension.swift */; };
@@ -1569,8 +1567,6 @@
 		1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1E79DD721D4FB58D006BEB4A /* CliqzShareItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzShareItem.swift; sourceTree = "<group>"; };
 		1E79DD731D4FB58D006BEB4A /* ExtendedBrowserHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedBrowserHistory.swift; sourceTree = "<group>"; };
 		1E79DD771D4FB59D006BEB4A /* BookmarksModelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksModelExtension.swift; sourceTree = "<group>"; };
@@ -2526,8 +2522,6 @@
 				E4D5672F1ADECE2800F1EFE7 /* ReadingList.framework in Frameworks */,
 				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
-				1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */,
-				1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */,
 				4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */,
 				8DC821586D08E51D7AFC3B2E /* Pods_Client.framework in Frameworks */,
 			);
@@ -4000,8 +3994,6 @@
 				B3F220351F2F274000E4EEE6 /* libsqlite3.tbd */,
 				4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */,
 				1EBC01431DD4786D000912B9 /* CRToast.framework */,
-				1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */,
-				1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */,
 				1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */,
 				1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */,
 				1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */,
@@ -5394,7 +5386,6 @@
 				F84B22531A0920C600AAB793 /* Embed App Extensions */,
 				E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */,
 				E6B09CD31C74EEDB00C63FA1 /* Copy Frameworks */,
-				1E79DD561D4FB3E3006BEB4A /* Fabric Run script */,
 				9AF7B95024985E2D5D124946 /* [CP] Embed Pods Frameworks */,
 				0706FD9BB25C989AA2F14363 /* [CP] Copy Pods Resources */,
 			);
@@ -6095,20 +6086,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Client/Pods-Client-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		1E79DD561D4FB3E3006BEB4A /* Fabric Run script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Fabric Run script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run e2196a01734594e39924c95dc61ee2b0603549f8 518c6e5dad5c6e09ec4ac71d46025a3a0db744abd167929cebb9b98686da9bd4";
 		};
 		7B604F8F1C494AAA006EEEC3 /* Copy Carthage Dependencies */ = {
 			isa = PBXShellScriptBuildPhase;

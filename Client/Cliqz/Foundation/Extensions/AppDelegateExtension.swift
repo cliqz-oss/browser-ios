@@ -8,7 +8,6 @@
 
 import UIKit
 import Shared
-import Crashlytics
 
 // Cliqz: handel home screen quick actions
 extension AppDelegate {
@@ -169,7 +168,7 @@ extension AppDelegate {
             }
         } else {
             let eventAttributes = ["title" : shortcutItem.localizedTitle, "type" : shortcutItem.type]
-            Answers.logCustomEvent(withName: "UnhandledHomeScreenAction", customAttributes: eventAttributes)
+            print("UnhandledHomeScreenAction \(eventAttributes)")
         }
         
         return succeeded
@@ -189,7 +188,7 @@ extension AppDelegate {
             },
             onFailure: { (data, error) in
                 let eventAttributes = ["url" : self.topNewsURL, "error" : "\(error)"]
-                Answers.logCustomEvent(withName: "TopNewsError", customAttributes: eventAttributes)
+                print("TopNewsError\(eventAttributes)")
         })
 
     }

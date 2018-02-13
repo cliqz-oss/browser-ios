@@ -8,7 +8,6 @@
 
 import Foundation
 import JavaScriptCore
-import Crashlytics
 
 class AdblockingModule: NSObject {
 

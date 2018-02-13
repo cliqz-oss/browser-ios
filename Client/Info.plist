@@ -39,20 +39,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>5</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>e2196a01734594e39924c95dc61ee2b0603549f8</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>HostVersion</key>
 	<string>5.0</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
