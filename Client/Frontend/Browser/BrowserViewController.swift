@@ -15,7 +15,6 @@ import Account
 import ReadingList
 import MobileCoreServices
 import WebImage
-import Crashlytics
 import SwiftyJSON
 
 
@@ -2842,9 +2841,6 @@ extension BrowserViewController: WKNavigationDelegate {
         if !navigationAction.isAllowed && navigationAction.navigationType != .backForward {
             log.warning("Denying unprivileged request: \(navigationAction.request)")
             decisionHandler(WKNavigationActionPolicy.allow)
-#if BETA
-			Answers.logCustomEvent(withName: "UnprivilegedURL", customAttributes: ["URL": url])
-#endif
             return
         }
 		
@@ -4373,14 +4369,14 @@ extension BrowserViewController {
         return currentView
     }
 }
-
-extension BrowserViewController: CrashlyticsDelegate {
-    func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
-        hasPendingCrashReport = true
-		DispatchQueue.global(qos: .default).async {
-			completionHandler(true)
-		}
-    }
-
-}
+// TODO: Detect if the app is opened after a crash
+//extension BrowserViewController: CrashlyticsDelegate {
+//    func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
+//        hasPendingCrashReport = true
+//        DispatchQueue.global(qos: .default).async {
+//            completionHandler(true)
+//        }
+//    }
+//
+//}
 

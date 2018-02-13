@@ -7,8 +7,6 @@ import Storage
 import AVFoundation
 import XCGLogger
 import MessageUI
-import Fabric
-import Crashlytics
 import WebImage
 import SwiftKeychainWrapper
 import LocalAuthentication
@@ -267,10 +265,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Logger.syncLogger.deleteOldLogsDownToSizeLimit()
 //            Logger.browserLogger.deleteOldLogsDownToSizeLimit()
 //        }
-
-        // Cliqz: Start Crashlytics
-        Crashlytics.sharedInstance().delegate = self.browserViewController
-        Fabric.with([Crashlytics.self])
         
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
