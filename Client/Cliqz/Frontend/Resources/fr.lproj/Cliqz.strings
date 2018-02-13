@@ -390,3 +390,9 @@
 
 /* [MyOffrz] Conditions title */
 "MyOffrz Conditions" = "Termes et conditions";
+
+/* [Settings] Send Crash Reports */
+"Send Crash Reports" = "Envoyer les rapports d’erreur";
+/* [Settings -> Send Crash Reports] Footer text */
+"Send Crash Reports footer" = "Nous utilisons le logiciel libre Sentry (http://sentry.io) pour nos rapports d’erreur. Ces rapports ne contiennent aucunes données personnelles.";
+

@@ -75,6 +75,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     fileprivate func startApplication(_ application: UIApplication,  withLaunchOptions launchOptions: [AnyHashable: Any]?) -> Bool {
+        // Cliqz: Starting Sentry for crash reporting
+        let sendCrashReports = SettingsPrefs.shared.getSendCrashReportsPref()
+        Sentry.shared.setup(sendCrashReports: sendCrashReports)
+        
         log.debug("Setting UA…")
         // Set the Firefox UA for browsing.
         setUserAgent()
