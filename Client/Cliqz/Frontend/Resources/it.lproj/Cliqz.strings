@@ -391,3 +391,9 @@
 
 /* [MyOffrz] Conditions title */
 "MyOffrz Conditions" = "Termini e Condizioni";
+
+/* [Settings] Send Crash Reports */
+"Send Crash Reports" = "Segnalazioni di arresto anomalo";
+/* [Settings -> Send Crash Reports] Footer text */
+"Send Crash Reports footer" = "Usiamo il software open source Sentry (http://sentry.io) per le segnalazioni di arresto anomalo. Queste segnalazioni non contengono alcun dato personale.";
+

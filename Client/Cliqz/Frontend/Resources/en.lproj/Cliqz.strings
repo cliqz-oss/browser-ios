@@ -391,3 +391,8 @@
 
 /* [MyOffrz] Conditions title */
 "MyOffrz Conditions" = "Terms";
+
+/* [Settings] Send Crash Reports */
+"Send Crash Reports" = "Send Crash Reports";
+/* [Settings -> Send Crash Reports] Footer text */
+"Send Crash Reports footer" = "We use opensource software Sentry (http://sentry.io) for our crash reports. these reports do not contain any personal data.";

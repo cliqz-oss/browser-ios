@@ -87,6 +87,37 @@ class HumanWebSetting: Setting {
     }
 }
 
+//Cliqz: Added new settings item for Sending crash reports
+class SendCrashReportsSetting: Setting {
+    
+    let profile: Profile
+    
+    override var style: UITableViewCellStyle { return .value1 }
+    
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.shared.getSendCrashReportsPref() ? Setting.onStatus : Setting.offStatus)
+    }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Send Crash Reports", tableName: "Cliqz", comment: "[Settings] Send Crash Reports")
+        
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = SendCrashReportsSubSettingsController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        // log Telemerty signal
+        let humanWebSingal = TelemetryLogEventType.Settings("main", "click", "crash_reports", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
+    }
+}
+
 class AboutSetting: Setting {
     
     override var style: UITableViewCellStyle { return .value1 }

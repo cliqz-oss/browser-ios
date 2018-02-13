@@ -69,6 +69,8 @@
 	<array>
 		<string>cliqz.ios.CliqzBeta.browsing</string>
 	</array>
+	<key>SentryDSN</key>
+	<string>$(SENTRY_DSN)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CharisSILB.ttf</string>
