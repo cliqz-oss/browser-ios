@@ -953,12 +953,7 @@ extension URLBarView {
         case Theme.NormalMode:
 			if inOverlayMode {
 				getApp().changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!, isNormalMode: true)
-			} else {
-				if let _ = self.currentURL {
-					getApp().changeStatusBarStyle(.lightContent,	backgroundColor: self.backgroundColor!, isNormalMode: true)
-				} else {
-					getApp().changeStatusBarStyle(.default, backgroundColor: self.backgroundColor!, isNormalMode: true)
-				}
+			} else {					getApp().changeStatusBarStyle(.lightContent,	backgroundColor: self.backgroundColor!, isNormalMode: true)
 			}
         case Theme.PrivateMode:
 			getApp().changeStatusBarStyle(.lightContent, backgroundColor: self.backgroundColor!, isNormalMode: false)
@@ -995,8 +990,8 @@ extension URLBarView: Themeable {
 			if self.currentURL == nil || self.currentURL!.absoluteString == "" {
 				self.backgroundColor = UIColor.clear
 				if currentTheme == Theme.NormalMode {
-					actionButtonTextColor = UIColor.black
-					actionButtonTintColor = UIColor.black
+					actionButtonTextColor = theme.buttonTintColor
+					actionButtonTintColor = theme.buttonTintColor
 				}
 			} else {
 				self.backgroundColor = URLBarViewUX.NonEditModeBackgroundColor

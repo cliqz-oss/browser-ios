@@ -21,7 +21,7 @@ struct LogoInfo {
 }
 
 extension String {
-
+	
 	func asciiValue() -> Int {
 		var s = UInt32(0)
 		for ch in self.unicodeScalars {
@@ -34,16 +34,16 @@ extension String {
 }
 
 class LogoLoader {
-
-	private static let dbVersion = "1510675089509"
-    private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
-
+	
+	private static let dbVersion = "1515404421880"
+	private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
+	
 	private static var _logoDB: JSON?
 	private static var logoDB: JSON? {
 		get {
 			if self._logoDB == nil {
 				if let path = Bundle.main.path(forResource: "logo-database", ofType: "json", inDirectory: "Extension/build/mobile/search/core"),
-				   let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data {
+					let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data {
 					self._logoDB = JSON(jsonData)
 				}
 			}
@@ -53,7 +53,7 @@ class LogoLoader {
 			self._logoDB = newValue
 		}
 	}
-
+	
 	class func loadLogo(_ url: String, completionBlock: @escaping (_ image: UIImage?, _ logoInfo: LogoInfo?,  _ error: Error?) -> Void) {
         dispatchQueue.async {
             let details = LogoLoader.fetchLogoDetails(url)
@@ -70,11 +70,11 @@ class LogoLoader {
             }
         }
 	}
-
+	
 	class func clearDB() {
 		self.logoDB = nil
 	}
-
+	
 	private class func fetchLogoDetails(_ url: String) -> LogoInfo {
 		var logoDetails = LogoInfo()
 		logoDetails.color = nil
@@ -85,11 +85,15 @@ class LogoLoader {
 			fixedURL = "http://tz.de"
 		}
 		if let urlDetails = URLParser.getURLDetails(fixedURL),
-		   let hostName = urlDetails.name,
-		   let details = self.logoDB?["domains"][hostName] {
+			let hostName = urlDetails.name,
+			let db = self.logoDB,
+			db != JSON.null,
+			db["domains"] != JSON.null {
+			let details = db["domains"]
+			let host = details[hostName]
 			logoDetails.hostName = hostName
 			logoDetails.prefix = hostName.substring(to: hostName.index(hostName.startIndex, offsetBy: min(2, hostName.characters.count))).capitalized
-			if let list = details.array,
+			if let list = host.array,
 				list.count > 0 {
 				for info in list {
 					if info != JSON.null,
@@ -119,7 +123,7 @@ class LogoLoader {
 		}
 		return logoDetails
 	}
-
+	
 	private class func isMatchingLogoRule(_ urlDetails: URLDetails, _ rule: String) -> Bool {
 		if let host = urlDetails.host,
 			let name = urlDetails.name,
@@ -129,7 +133,7 @@ class LogoLoader {
 		}
 		return false
 	}
-
+	
 	class func downloadImage(_ url: String, completed: @escaping (_ image: UIImage?, _ error:  Error?) -> Void) {
 		if let u = URL(string: url) {
 			SDWebImageManager.shared().downloadImage(with: u, options:SDWebImageOptions.highPriority, progress: { (receivedSize, expectedSize) in },
@@ -138,5 +142,6 @@ class LogoLoader {
 			completed(nil, nil)
 		}
 	}
-
+	
 }
+

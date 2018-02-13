@@ -207,6 +207,12 @@ class TabManager : NSObject {
 
         if let tab = tab {
             _selectedIndex = tabs.index(of: tab) ?? -1
+            if tab.isPrivate {
+                PrivateBrowsing.singleton.enter()
+            }
+            else {
+                PrivateBrowsing.singleton.exit()
+            }
         } else {
             _selectedIndex = -1
         }
@@ -214,10 +220,14 @@ class TabManager : NSObject {
         preserveTabs()
 
         assert(tab === selectedTab, "Expected tab is selected")
-        selectedTab?.createWebview()
-
-        for delegate in self.delegates {
-            delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
+        // Delay creating the webview to make sure that the number of the webViews in memory will reach 0
+        // so that we can clean the cookies correctly when moving between private tabs and normal tabs
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.selectedTab?.createWebview()
+            
+            for delegate in self.delegates {
+                delegate.get()?.tabManager(self, didSelectedTabChange: tab, previous: previous)
+            }
         }
         
     }
@@ -344,7 +354,7 @@ class TabManager : NSObject {
     // This method is duplicated to hide the flushToDisk option from consumers.
     func removeTab(_ tab: Tab) {
         self.removeTab(tab, flushToDisk: true, notify: true)
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
     }
 
     /// - Parameter notify: if set to true, will call the delegate after the tab
@@ -536,9 +546,9 @@ class TabManager : NSObject {
         configuration.processPool = WKProcessPool()
     }
 
-	func purgeInactiveTabs() {
+    func purgeTabs(includeSelectedTab: Bool) {
 		for tab in self.tabs {
-			if tab != self.selectedTab {
+			if includeSelectedTab || tab != self.selectedTab {
 				tab.purgeWebView()
 			}
 		}
@@ -802,7 +812,7 @@ extension TabManager {
 
 extension TabManager : WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -814,7 +824,7 @@ extension TabManager : WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
         // only store changes if this is not an error page
         // as we current handle tab restore as error page redirects then this ensures that we don't
         // call storeChanges unnecessarily on startup
@@ -826,20 +836,20 @@ extension TabManager : WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        hideNetworkActivitySpinner()
+//        hideNetworkActivitySpinner()
     }
 
-    func hideNetworkActivitySpinner() {
-        for tab in tabs {
-            if let tabWebView = tab.webView {
-                // If we find one tab loading, we don't hide the spinner
-                if tabWebView.isLoading {
-                    return
-                }
-            }
-        }
-        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-    }
+//    func hideNetworkActivitySpinner() {
+//        for tab in tabs {
+//            if let tabWebView = tab.webView {
+//                // If we find one tab loading, we don't hide the spinner
+//                if tabWebView.isLoading {
+//                    return
+//                }
+//            }
+//        }
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//    }
 
     /// Called when the WKWebView's content process has gone away. If this happens for the currently selected tab
     /// then we immediately reload it.

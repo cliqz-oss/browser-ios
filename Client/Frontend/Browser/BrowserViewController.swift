@@ -220,7 +220,7 @@ class BrowserViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         log.debug("BVC received memory warning")
-		self.tabManager.purgeInactiveTabs()
+		self.tabManager.purgeTabs(includeSelectedTab: false)
     }
 
     fileprivate func didInit() {
@@ -375,20 +375,7 @@ class BrowserViewController: UIViewController {
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: BookmarkStatusChangedNotification), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-		// Cliqz: removed observer of NotificationBadRequestDetected notification
-		NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: NotificationBadRequestDetected), object: nil)
-        // Cliqz: removed observers for Connect features
-        NotificationCenter.default.removeObserver(self, name: SendTabNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: DownloadVideoNotification, object: nil)
-        // Cliqz: removed observer for device orientation
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
-        // Cliqz: removed observer for favorites removed
-        NotificationCenter.default.removeObserver(self, name: FavoriteRemovedNotification, object: nil)
-
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -416,6 +403,9 @@ class BrowserViewController: UIViewController {
                                                selector: #selector(updateBookmarkStatus),
                                                name: FavoriteRemovedNotification,
                                                object: nil)
+        
+        //Cliqz: Add observer for autocomplete notification from AutoComplete Module
+        NotificationCenter.default.addObserver(self, selector: #selector(autocomplete(_:)), name: AutoCompleteNotification, object: nil)
         
         KeyboardHelper.defaultHelper.addDelegate(self)
 
@@ -841,10 +831,11 @@ class BrowserViewController: UIViewController {
         homePanelController?.view.snp.remakeConstraints { make in
             make.top.equalTo(self.urlBar.snp.bottom)
             make.left.right.equalTo(self.view)
-            if self.homePanelIsInline {
-                make.bottom.equalTo(self.toolbar?.snp.top ?? self.view.snp.bottom)
-            } else {
-                make.bottom.equalTo(self.view.snp.bottom)
+			if self.homePanelIsInline, let toolbar = self.toolbar {
+				make.bottom.equalTo(self.view)
+				self.view.bringSubview(toFront: self.footer)
+			} else {
+			make.bottom.equalTo(self.view.snp.bottom)
             }
         }
 
@@ -889,6 +880,9 @@ class BrowserViewController: UIViewController {
                     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil)
                 }
         })
+		if !urlBar.inOverlayMode {
+			getApp().changeToBgImage(.lightContent, isNormalMode: !(tabManager.selectedTab?.isPrivate ?? false))
+		}
         view.setNeedsUpdateConstraints()
         log.debug("BVC done with showHomePanelController.")
         
@@ -987,9 +981,9 @@ class BrowserViewController: UIViewController {
         
         searchController = CliqzSearchViewController(profile: self.profile)
         searchController!.delegate = self
-        searchLoader.addListener(searchController!)
+        searchLoader.addListener(HistoryListener.shared)
+		addChildViewController(searchController!)
         view.addSubview(searchController!.view)
-        addChildViewController(searchController!)
         searchController!.view.snp_makeConstraints { make in
             make.top.equalTo(self.urlBar.snp_bottom)
             make.left.right.bottom.equalTo(self.view)
@@ -1005,7 +999,7 @@ class BrowserViewController: UIViewController {
         homePanelController?.view?.isHidden = true
         searchController!.view.isHidden = false
         searchController!.didMove(toParentViewController: self)
-        
+        self.view.sendSubview(toBack: self.footer)
         // Cliqz: reset navigation steps
         navigationStep = 0
         backNavigationStep = 0
@@ -1039,6 +1033,7 @@ class BrowserViewController: UIViewController {
     }
     */
     fileprivate func hideSearchController() {
+		self.view.bringSubview(toFront: self.footer)
         if let searchController = searchController {
             // Cliqz: Modify hiding the search view controller as our behaviour is different than regular search that was exist
             searchController.view.isHidden = true
@@ -1195,6 +1190,9 @@ class BrowserViewController: UIViewController {
                 let progress = change?[NSKeyValueChangeKey.newKey] as? Float else { break }
             
             urlBar.updateProgressBar(progress)
+            if progress > 0.99 {
+                hideNetworkActivitySpinner()
+            }
         case KVOLoading:
             guard let loading = change?[NSKeyValueChangeKey.newKey] as? Bool else { break }
 
@@ -1281,7 +1279,9 @@ class BrowserViewController: UIViewController {
         if (urlBar.currentURL != tab.displayURL) {
             urlBar.currentURL = tab.displayURL
         }
-		urlBar.updateTrackersCount((tab.webView?.unsafeRequests)!)
+		if let w = tab.webView {
+			urlBar.updateTrackersCount(w.unsafeRequests)
+		}
         // Cliqz: update the toolbar only if the search controller is not visible
         if searchController?.view.isHidden == true {
             let isPage = tab.displayURL?.isWebPage() ?? false
@@ -1553,6 +1553,7 @@ class BrowserViewController: UIViewController {
     func newTab() {
         openBlankNewTabAndFocus(isPrivate: false)
     }
+
     func newPrivateTab() {
         openBlankNewTabAndFocus(isPrivate: true)
     }
@@ -2732,6 +2733,7 @@ extension BrowserViewController: TabManagerDelegate {
         if let url = tab.url, !AboutUtils.isAboutURL(tab.url) && !tab.isPrivate {
             profile.recentlyClosedTabs.addTab(url, title: tab.title, faviconURL: tab.displayFavicon?.url)
         }
+        hideNetworkActivitySpinner()
     }
 
     func tabManagerDidAddTabs(_ tabManager: TabManager) {
@@ -2774,10 +2776,13 @@ extension BrowserViewController: TabManagerDelegate {
 
 extension BrowserViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        if tabManager.selectedTab?.webView !== webView {
+        
+        if let containerWebView = webView as? ContainerWebView, tabManager.selectedTab?.webView !== containerWebView.legacyWebView {
             return
         }
 
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
         updateFindInPageVisibility(visible: false)
 
         // If we are going to navigate to a new page, hide the reader mode button. Unless we
@@ -2972,6 +2977,9 @@ extension BrowserViewController: WKNavigationDelegate {
 #else
 		let tab: Tab! = tabManager[webView]
 #endif
+        
+        hideNetworkActivitySpinner()
+        
         tabManager.expireSnackbars()
 
         if let url = webView.url, !ErrorPageHelper.isErrorPageURL(url) && !AboutUtils.isAboutHomeURL(url) {
@@ -3047,6 +3055,8 @@ extension BrowserViewController: WKNavigationDelegate {
         guard let webView = container.legacyWebView else { return }
         guard let tab = tabManager.tabForWebView(webView) else { return }
 
+        hideNetworkActivitySpinner()
+        
         // Ignore the "Frame load interrupted" error that is triggered when we cancel a request
         // to open an external application and hand it over to UIApplication.openURL(). The result
         // will be that we switch to the external app, for example the app store, while keeping the
@@ -4154,6 +4164,16 @@ extension BrowserViewController: UIViewControllerTransitioningDelegate {
 }
 
 // Cliqz: combined the two extensions for SearchViewDelegate and BrowserNavigationDelegate into one extension
+
+//listens to autocomplete notification
+extension BrowserViewController {
+    @objc func autocomplete(_ notification: Notification) {
+        if let str = notification.object as? String {
+            self.autoCompeleteQuery(str)
+        }
+    }
+}
+
 extension BrowserViewController: SearchViewDelegate, BrowserNavigationDelegate {
 
     func didSelectURL(_ url: URL, searchQuery: String?) {
@@ -4274,15 +4294,6 @@ extension BrowserViewController {
 		}
 
         isAppResponsive = false
-
-        if self.tabManager.selectedTab?.isPrivate == false {
-            if searchController?.view.isHidden == true {
-                let webView = self.tabManager.selectedTab?.webView
-                searchController?.appDidEnterBackground(webView?.url, lastTitle:webView?.title)
-            } else {
-                searchController?.appDidEnterBackground()
-            }
-        }
         
         saveLastVisitedWebSite()
     }
@@ -4312,7 +4323,7 @@ extension BrowserViewController {
     }
 
     // Cliqz: fix headerTopConstraint for scrollController to work properly during the animation to/from past layer
-    fileprivate func fixHeaderConstraint(){
+    fileprivate func fixHeaderConstraint() {
         let currentDevice = UIDevice.current
         let iphoneLandscape = currentDevice.orientation.isLandscape && (currentDevice.userInterfaceIdiom == .phone)
         if transition.isAnimating && !iphoneLandscape {
@@ -4368,3 +4379,4 @@ extension BrowserViewController: CrashlyticsDelegate {
     }
 
 }
+

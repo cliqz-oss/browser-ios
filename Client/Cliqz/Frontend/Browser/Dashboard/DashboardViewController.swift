@@ -140,12 +140,11 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
     }
     
     private func adJustPanelSwitchControl() {
-        let region = SettingsPrefs.shared.getRegionPref()
-        if region == "DE" { // TODO: Should call `DataSource.ShouldShowOffers()`
-            createPanelSwitchControl(numberOfSegments: 4)
-        } else {
-            createPanelSwitchControl(numberOfSegments: 3)
-        }
+		if (self.profile.offrzDataSource?.shouldShowOffrz() ?? false) {
+			createPanelSwitchControl(numberOfSegments: 4)
+		} else {
+			createPanelSwitchControl(numberOfSegments: 3)
+		}
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
@@ -209,6 +208,7 @@ class DashboardViewController: UIViewController, BrowsingDelegate {
             target = "favorites"
             
         case .OffrzPanel:
+			self.panelSwitchControl.setImage(UIImage(named: "offrz_inactive"), forSegmentAt: 3)
             self.showPanelViewController(self.offrzViewController)
             target = "offrz"
             
