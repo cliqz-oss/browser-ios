@@ -277,7 +277,7 @@
 /* [Settings] About */
 "About" = "Informazioni";
 /* [Settings -> About] Privacy Policy */
-"Privacy Policy" = "Informativa sulla privacy";
+"Privacy Policy" = "Norme sulla privacy";
 /* [Settings -> About] Licenses */
 "Licenses" = "Licenze";
 /* [Settings] Limit Mobile Data Usage */
@@ -397,3 +397,5 @@
 /* [Settings -> Send Crash Reports] Footer text */
 "Send Crash Reports footer" = "Usiamo il software open source Sentry (http://sentry.io) per le segnalazioni di arresto anomalo. Queste segnalazioni non contengono alcun dato personale.";
 
+/* [Settings -> About] EULA */
+"EULA" = "EULA";

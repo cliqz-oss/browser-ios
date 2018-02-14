@@ -10,7 +10,7 @@ import UIKit
 
 class AboutSettingsTableViewController: SubSettingsTableViewController {
     
-    private let settings = [PrivacyPolicySetting(), LicenseAndAcknowledgementsSetting()]
+    private let settings = [PrivacyPolicySetting(), EulaSetting(), LicenseAndAcknowledgementsSetting()]
     private let info = [("Version", AppStatus.sharedInstance.distVersion), ("Extension", AppStatus.sharedInstance.extensionVersion)]
     
     override func getViewName() -> String {
@@ -20,15 +20,18 @@ class AboutSettingsTableViewController: SubSettingsTableViewController {
     // MARK: - Table view data source
     
 	override func numberOfSections(in tableView: UITableView) -> Int {
-#if BETA
         return 2
-#else
-        return 1
-#endif
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        if section == 0 {
+            return settings.count
+        }
+        #if BETA
+            return 2
+        #else
+            return 1
+        #endif
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
