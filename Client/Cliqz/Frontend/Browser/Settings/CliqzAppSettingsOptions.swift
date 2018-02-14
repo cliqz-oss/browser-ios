@@ -129,7 +129,6 @@ class AboutSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-#if BETA
     override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
 
     
@@ -138,7 +137,6 @@ class AboutSetting: Setting {
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
     }
-#endif
 }
 
 class RateUsSetting: Setting {
@@ -575,5 +573,25 @@ class CliqzConnectSetting: Setting {
         // log Telemerty signal
         let connectSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(connectSingal)
+    }
+}
+
+
+// Cliqz: Opens the the Eula page in a new tab
+class EulaSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("EULA", tableName: "Cliqz", comment: "[Settings -> About] EULA"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+    override var url: URL? {
+        return URL(string: WebServer.sharedInstance.URLForResource("eula", module: "about"))
+    }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let licenseSignal = TelemetryLogEventType.Settings("main", "click", "eula", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(licenseSignal)
     }
 }

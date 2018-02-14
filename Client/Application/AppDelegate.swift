@@ -533,6 +533,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ErrorPageHelper.register(server, certStore: profile.certStore)
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
+        AboutEulaHandler.register(server)
         SessionRestoreHandler.register(server)
         ShareCardHelper.register(server)
 

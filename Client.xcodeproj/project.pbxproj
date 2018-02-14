@@ -253,6 +253,7 @@
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		1EFA316320331FDA00068001 /* SentryIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316220331FDA00068001 /* SentryIntegration.swift */; };
 		1EFA316D203360A200068001 /* SendCrashReportsSubSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */; };
+		1EFA31AE20346F5500068001 /* Eula.html in Resources */ = {isa = PBXBuildFile; fileRef = 1EFA31B020346F5500068001 /* Eula.html */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		280CB1371C20E0A3005AF147 /* BookmarksSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */; };
@@ -1761,6 +1762,10 @@
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		1EFA316220331FDA00068001 /* SentryIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryIntegration.swift; sourceTree = "<group>"; };
 		1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCrashReportsSubSettingsController.swift; sourceTree = "<group>"; };
+		1EFA31AF20346F5500068001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31BF20346F5700068001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = de; path = de.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31C020346F5900068001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = fr; path = fr.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31C120346F5B00068001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = it; path = it.lproj/Eula.html; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
 		28126F6D1C2F94F9006466CC /* SQLiteBookmarksModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModel.swift; sourceTree = "<group>"; };
@@ -4678,6 +4683,7 @@
 		E699220D1B94E3EF007C480D /* About */ = {
 			isa = PBXGroup;
 			children = (
+				1EFA31B020346F5500068001 /* Eula.html */,
 				E69922121B94E3EF007C480D /* Licenses.html */,
 			);
 			path = About;
@@ -6001,6 +6007,7 @@
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
 				D30684F11C84F12A002D8D82 /* SearchPlugins in Resources */,
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
+				1EFA31AE20346F5500068001 /* Eula.html in Resources */,
 				1E79DD311D4FB2C5006BEB4A /* NewsPermissionAsking-6Plus.png in Resources */,
 				4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
@@ -7542,6 +7549,17 @@
 				1E0926CA1DFAB4320002BB13 /* fr */,
 			);
 			name = Storage.strings;
+			sourceTree = "<group>";
+		};
+		1EFA31B020346F5500068001 /* Eula.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EFA31AF20346F5500068001 /* en */,
+				1EFA31BF20346F5700068001 /* de */,
+				1EFA31C020346F5900068001 /* fr */,
+				1EFA31C120346F5B00068001 /* it */,
+			);
+			name = Eula.html;
 			sourceTree = "<group>";
 		};
 		4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */ = {

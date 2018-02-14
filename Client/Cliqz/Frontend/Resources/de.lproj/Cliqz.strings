@@ -395,3 +395,6 @@
 "Send Crash Reports" = "Fehlerberichte senden";
 /* [Settings -> Send Crash Reports] Footer text */
 "Send Crash Reports footer" = "Für die Fehlerberichte nutzen wir die Open Source Software Sentry (http://sentry.io). Es werden hierbei keine persönlichen Daten übermittelt.";
+
+/* [Settings -> About] EULA */
+"EULA" = "Endnutzer-Lizenzvertrag (EULA)";
