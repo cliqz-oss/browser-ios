@@ -2833,13 +2833,6 @@ extension BrowserViewController: WKNavigationDelegate {
             return
         }
 
-		// Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
-		AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
-			if isPhishingSite {
-				self.showAntiPhishingAlert(url.host!)
-			}
-		}
-
         // Fixes 1261457 - Rich text editor fails because requests to about:blank are blocked
         if url.scheme == "about" {
             decisionHandler(WKNavigationActionPolicy.allow)
@@ -2884,6 +2877,17 @@ extension BrowserViewController: WKNavigationDelegate {
             UIApplication.shared.openURL(url)
             decisionHandler(WKNavigationActionPolicy.cancel)
             return
+        }
+        
+        
+        // Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
+        // Cliqz: (Tim) - Antiphising should only check the mainDocumentURL.
+        if navigationAction.request.mainDocumentURL == url, let host = url.host {
+            AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
+                if isPhishingSite {
+                    self.showAntiPhishingAlert(host)
+                }
+            }
         }
         
         // This is the normal case, opening a http or https url, which we handle by loading them in this WKWebView. We

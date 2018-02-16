@@ -21,7 +21,13 @@ class AntiPhishingDetector: NSObject {
             completion(false)
             return
         }
-		let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
+        
+        if isDetectedPhishingURL(url) {
+            completion(true)
+            return
+        }
+        
+		let queue = DispatchQueue.global(qos: .background)
 		queue.async { 
 			AntiPhishingDetector.scanURL(url, queue: queue, completion: completion)
 		}
