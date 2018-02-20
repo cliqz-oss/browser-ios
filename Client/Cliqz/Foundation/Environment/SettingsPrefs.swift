@@ -127,8 +127,15 @@ class SettingsPrefs {
         self.updatePref(SettingsPrefs.blockPopupsPrefKey, value: newValue as AnyObject)
     }
 
-    func getRegionPref() -> String? {
-        return self.getStringPref(SettingsPrefs.countryPrefKey)
+	func getRegionPref() -> String? {
+		return self.getStringPref(SettingsPrefs.countryPrefKey)
+	}
+
+    func getUserRegionPref() -> String {
+		if let reg = self.getRegionPref() {
+			return reg
+		}
+		return self.getDefaultRegion()
     }
 
     func getDefaultRegion() -> String {

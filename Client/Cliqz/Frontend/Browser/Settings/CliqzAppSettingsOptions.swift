@@ -421,14 +421,9 @@ class RegionalSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        var localizedRegionName: String?
-        if let region = SettingsPrefs.shared.getRegionPref() {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
-        } else {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.shared.getDefaultRegion())
-            
-        }
-        return NSAttributedString(string: localizedRegionName!)
+		let region = SettingsPrefs.shared.getUserRegionPref()
+		let localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
+		return NSAttributedString(string: localizedRegionName)
     }
     
     override var accessibilityIdentifier: String? { return "Search Results for" }

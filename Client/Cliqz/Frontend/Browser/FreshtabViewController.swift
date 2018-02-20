@@ -423,7 +423,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             if response.result.isSuccess {
 				if let data = response.result.value as? [String: Any] {
 					if let location = data["location"] as? String, let backends = data["backends"] as? [String], backends.contains(location) {
-						
 						self.region = location.uppercased()
 						self.loadNews()
 					} else {
@@ -443,9 +442,8 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
-        let userRegion = region != nil ? region : SettingsPrefs.shared.getDefaultRegion()
-		
-        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&platform=1"
+
+        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(region)&adult=0&loc_pref=ask&platform=1"
 		if let coord = LocationManager.sharedInstance.getUserLocation() {
 			uri += "&loc=\(coord.coordinate.latitude),\(coord.coordinate.longitude)"
 		}

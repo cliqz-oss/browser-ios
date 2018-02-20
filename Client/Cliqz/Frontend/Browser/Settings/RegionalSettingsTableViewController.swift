@@ -14,11 +14,8 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
     let telemetrySignalViewName = "search_results_from"
     
     var selectedRegion: String {
-        get{
-            if let region = SettingsPrefs.shared.getRegionPref() {
-                return region
-            }
-            return SettingsPrefs.shared.getDefaultRegion()
+        get {
+            return SettingsPrefs.shared.getUserRegionPref()
         }
     }
     
