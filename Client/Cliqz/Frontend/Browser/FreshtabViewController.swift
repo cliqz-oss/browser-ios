@@ -629,12 +629,13 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
     }
     
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let headerAlpha: CGFloat = 0.6
 		let v = UIView()
 //		v.backgroundColor = UIColor(colorString: "D1D1D2")
-		v.backgroundColor = UIColor.black
+		v.backgroundColor = UIColor.white.withAlphaComponent(headerAlpha)
 		let l = UILabel()
 		l.text = NSLocalizedString("NEWS", tableName: "Cliqz", comment: "Title to expand news stream")
-		l.textColor = UIColor.white
+		l.textColor = UIColor.black.withAlphaComponent(headerAlpha)
 		l.font = UIFont.systemFont(ofSize: 13)
 		v.addSubview(l)
 		l.snp.makeConstraints { (make) in
@@ -659,7 +660,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
         }
 		expandNewsbutton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
 		expandNewsbutton.titleLabel?.textAlignment = .right
-		expandNewsbutton.setTitleColor(UIColor.white, for: .normal)
+		expandNewsbutton.setTitleColor(UIColor.black.withAlphaComponent(headerAlpha), for: .normal)
 		expandNewsbutton.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
 		return v
 	}
