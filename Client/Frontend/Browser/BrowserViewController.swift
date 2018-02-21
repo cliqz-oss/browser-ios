@@ -1482,6 +1482,7 @@ class BrowserViewController: UIViewController {
                 self.findInPageBar = findInPageBar
                 findInPageBar.delegate = self
                 findInPageContainer.addSubview(findInPageBar)
+                findInPageContainer.superview?.bringSubview(toFront: findInPageContainer)
 
                 findInPageBar.snp_makeConstraints { make in
                     make.edges.equalTo(findInPageContainer)
