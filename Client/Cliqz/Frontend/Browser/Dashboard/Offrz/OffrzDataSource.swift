@@ -58,7 +58,7 @@ class OffrzDataSource {
     func hideOnBoarding() {
 		LocalDataStore.setObject("closed", forKey: OffrzDataSource.OffrzOnboardingKey)
     }
-    
+
 	private func updateMyOffrzList() {
 		OffrzDataService.shared.getMyOffrz { (offrz, error) in
 			if error == nil && offrz.count > 0 {

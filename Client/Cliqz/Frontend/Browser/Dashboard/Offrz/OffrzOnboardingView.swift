@@ -81,6 +81,7 @@ class OffrzOnboardingView: UIView {
 	private func layoutComponents() {
 		hideButton.snp.remakeConstraints { (make) in
 			make.top.right.equalTo(self).inset(10)
+			make.height.width.equalTo(25)
 		}
 		offrzPresentImageView.snp.remakeConstraints { (make) in
 			make.centerX.equalTo(self)
