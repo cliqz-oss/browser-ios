@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Crashlytics
 
 
 enum CliqzErrorCode {
@@ -28,9 +27,7 @@ class ErrorHandler {
             
 			showErrorMessage(title, message: message, cancelButtonTitle: cancel, otherButtonTitle: retry, delegate: delegate)
             */
-            
-            let attirbutes = ["errorDescription": error.localizedDescription]
-            Answers.logCustomEvent(withName: "JavaScriptLoadError", customAttributes: attirbutes)
+            print("JavaScriptLoadError \(error)")
 		}
 	}
 	

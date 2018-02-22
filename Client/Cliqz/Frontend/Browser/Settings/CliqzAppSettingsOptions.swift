@@ -87,6 +87,37 @@ class HumanWebSetting: Setting {
     }
 }
 
+//Cliqz: Added new settings item for Sending crash reports
+class SendCrashReportsSetting: Setting {
+    
+    let profile: Profile
+    
+    override var style: UITableViewCellStyle { return .value1 }
+    
+    override var status: NSAttributedString {
+        return NSAttributedString(string: SettingsPrefs.shared.getSendCrashReportsPref() ? Setting.onStatus : Setting.offStatus)
+    }
+    
+    init(settings: SettingsTableViewController) {
+        self.profile = settings.profile
+        
+        let title = NSLocalizedString("Send Crash Reports", tableName: "Cliqz", comment: "[Settings] Send Crash Reports")
+        
+        super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
+    }
+    
+    override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        let viewController = SendCrashReportsSubSettingsController()
+        viewController.title = self.title?.string
+        navigationController?.pushViewController(viewController, animated: true)
+        // log Telemerty signal
+        let humanWebSingal = TelemetryLogEventType.Settings("main", "click", "crash_reports", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(humanWebSingal)
+    }
+}
+
 class AboutSetting: Setting {
     
     override var style: UITableViewCellStyle { return .value1 }
@@ -98,7 +129,6 @@ class AboutSetting: Setting {
         super.init(title: NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor]))
     }
     
-#if BETA
     override var accessoryType: UITableViewCellAccessoryType { return .disclosureIndicator }
 
     
@@ -107,7 +137,6 @@ class AboutSetting: Setting {
         viewController.title = self.title?.string
         navigationController?.pushViewController(viewController, animated: true)
     }
-#endif
 }
 
 class RateUsSetting: Setting {
@@ -392,14 +421,9 @@ class RegionalSetting: Setting {
     override var style: UITableViewCellStyle { return .value1 }
     
     override var status: NSAttributedString {
-        var localizedRegionName: String?
-        if let region = SettingsPrefs.shared.getRegionPref() {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
-        } else {
-            localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(SettingsPrefs.shared.getDefaultRegion())
-            
-        }
-        return NSAttributedString(string: localizedRegionName!)
+		let region = SettingsPrefs.shared.getUserRegionPref()
+		let localizedRegionName = RegionalSettingsTableViewController.getLocalizedRegionName(region)
+		return NSAttributedString(string: localizedRegionName)
     }
     
     override var accessibilityIdentifier: String? { return "Search Results for" }
@@ -544,5 +568,25 @@ class CliqzConnectSetting: Setting {
         // log Telemerty signal
         let connectSingal = TelemetryLogEventType.Settings("main", "click", "connect", nil, nil)
         TelemetryLogger.sharedInstance.logEvent(connectSingal)
+    }
+}
+
+
+// Cliqz: Opens the the Eula page in a new tab
+class EulaSetting: Setting {
+    override var title: NSAttributedString? {
+        return NSAttributedString(string: NSLocalizedString("EULA", tableName: "Cliqz", comment: "[Settings -> About] EULA"), attributes: [NSForegroundColorAttributeName: UIConstants.TableViewRowTextColor])
+    }
+    
+    override var url: URL? {
+        return URL(string: WebServer.sharedInstance.URLForResource("eula", module: "about"))
+    }
+    
+    override func onClick(_ navigationController: UINavigationController?) {
+        setUpAndPushSettingsContentViewController(navigationController)
+        
+        // Cliqz: log telemetry signal
+        let licenseSignal = TelemetryLogEventType.Settings("main", "click", "eula", nil, nil)
+        TelemetryLogger.sharedInstance.logEvent(licenseSignal)
     }
 }

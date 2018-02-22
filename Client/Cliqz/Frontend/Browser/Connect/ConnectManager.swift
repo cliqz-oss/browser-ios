@@ -97,15 +97,15 @@ class ConnectManager: NSObject {
     }
     //MARK: - Private Helpers
     @objc private func updateConnections(notification: NSNotification) {
-        guard let pairingData = notification.object as? [String: AnyObject], let devices = pairingData["devices"] as? [[String: String]] else {
+        guard let pairingData = notification.object as? [String: AnyObject], let devices = pairingData["devices"] as? [[String: AnyObject]] else {
             return
         }
 
         connections.removeAll()
         for device in devices {
-            if let id = device["id"], let status = device["status"] {
+            if let id = device["id"] as? String, let status = device["status"] as? String {
                 let connection = Connection()
-                connection.name = device["name"] ?? NSLocalizedString("Connecting to Desktop", tableName: "Cliqz", comment: "[Settings -> Connect] pending connection title")
+                connection.name = device["name"] as? String ?? NSLocalizedString("Connecting to Desktop", tableName: "Cliqz", comment: "[Settings -> Connect] pending connection title")
                 connection.id = id
                 connection.status = ConnectionStatus(string: status)
                 connections.append(connection)

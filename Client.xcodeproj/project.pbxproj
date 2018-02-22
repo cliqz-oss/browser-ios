@@ -154,8 +154,6 @@
 		1E79DD681D4FB4AF006BEB4A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */; };
 		1E79DD6A1D4FB4B7006BEB4A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */; };
 		1E79DD6C1D4FB4BA006BEB4A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */; };
-		1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */; };
-		1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */; };
 		1E79DD741D4FB58D006BEB4A /* CliqzShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD721D4FB58D006BEB4A /* CliqzShareItem.swift */; };
 		1E79DD751D4FB58D006BEB4A /* ExtendedBrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD731D4FB58D006BEB4A /* ExtendedBrowserHistory.swift */; };
 		1E79DD7C1D4FB59D006BEB4A /* BookmarksModelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79DD771D4FB59D006BEB4A /* BookmarksModelExtension.swift */; };
@@ -253,6 +251,9 @@
 		1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC603A51E718926007921BF /* ABTestsManager.swift */; };
 		1ED365C51F98DD790043D97C /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED365B61F98DD790043D97C /* HistoryModule.swift */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
+		1EFA316320331FDA00068001 /* SentryIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316220331FDA00068001 /* SentryIntegration.swift */; };
+		1EFA316D203360A200068001 /* SendCrashReportsSubSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */; };
+		1EFA31AE20346F5500068001 /* Eula.html in Resources */ = {isa = PBXBuildFile; fileRef = 1EFA31B020346F5500068001 /* Eula.html */; };
 		2805F5A61B8BCA7A00268FD1 /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		28078A471B1507EF0053B46A /* ReadingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D567181ADECE2700F1EFE7 /* ReadingList.framework */; };
 		280CB1371C20E0A3005AF147 /* BookmarksSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */; };
@@ -1569,8 +1570,6 @@
 		1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1E79DD721D4FB58D006BEB4A /* CliqzShareItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CliqzShareItem.swift; sourceTree = "<group>"; };
 		1E79DD731D4FB58D006BEB4A /* ExtendedBrowserHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedBrowserHistory.swift; sourceTree = "<group>"; };
 		1E79DD771D4FB59D006BEB4A /* BookmarksModelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksModelExtension.swift; sourceTree = "<group>"; };
@@ -1761,6 +1760,12 @@
 		1EC603A51E718926007921BF /* ABTestsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABTestsManager.swift; sourceTree = "<group>"; };
 		1ED365B61F98DD790043D97C /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
+		1EFA316220331FDA00068001 /* SentryIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryIntegration.swift; sourceTree = "<group>"; };
+		1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCrashReportsSubSettingsController.swift; sourceTree = "<group>"; };
+		1EFA31AF20346F5500068001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = en.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31BF20346F5700068001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = de; path = de.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31C020346F5900068001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = fr; path = fr.lproj/Eula.html; sourceTree = "<group>"; };
+		1EFA31C120346F5B00068001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = it; path = it.lproj/Eula.html; sourceTree = "<group>"; };
 		280CB1361C20E0A3005AF147 /* BookmarksSynchronizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookmarksSynchronizer.swift; path = Sync/Synchronizers/Bookmarks/BookmarksSynchronizer.swift; sourceTree = SOURCE_ROOT; };
 		28126F471C2F948E006466CC /* SQLiteBookmarksHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksHelpers.swift; sourceTree = "<group>"; };
 		28126F6D1C2F94F9006466CC /* SQLiteBookmarksModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteBookmarksModel.swift; sourceTree = "<group>"; };
@@ -2529,8 +2534,6 @@
 				E4D5672F1ADECE2800F1EFE7 /* ReadingList.framework in Frameworks */,
 				0B8E0FF41A932BD500161DC3 /* ImageIO.framework in Frameworks */,
 				E4A888161A95679500CDC337 /* FxA.framework in Frameworks */,
-				1E79DD6F1D4FB4E7006BEB4A /* Crashlytics.framework in Frameworks */,
-				1E79DD701D4FB4E7006BEB4A /* Fabric.framework in Frameworks */,
 				4FE4225D1DDB4C5A000A7D1C /* CRToast.framework in Frameworks */,
 				8DC821586D08E51D7AFC3B2E /* Pods_Client.framework in Frameworks */,
 			);
@@ -2746,6 +2749,7 @@
 				1E4706851EB0952000516BA5 /* SubSettingsTableViewController.swift */,
 				1E4706831EB0952000516BA5 /* RegionalSettingsTableViewController.swift */,
 				1E4706821EB0952000516BA5 /* HumanWebSettingsTableViewController.swift */,
+				1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */,
 				1E4706801EB0952000516BA5 /* AdBlockerSettingsTableViewController.swift */,
 				1E47067F1EB0952000516BA5 /* AboutSettingsTableViewController.swift */,
 				1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */,
@@ -2885,6 +2889,7 @@
 				1E79DCB61D4FB2C5006BEB4A /* ErrorHandler.swift */,
 				1E79DCB71D4FB2C5006BEB4A /* LocationManager.swift */,
 				1E91FA5F1F334321003C8A03 /* SubscriptionsHandler.swift */,
+				1EFA316220331FDA00068001 /* SentryIntegration.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -4013,8 +4018,6 @@
 				B3F220351F2F274000E4EEE6 /* libsqlite3.tbd */,
 				4FC0FE031E8A8FC200A3459A /* libPhoneNumberiOS.framework */,
 				1EBC01431DD4786D000912B9 /* CRToast.framework */,
-				1E79DD6D1D4FB4E7006BEB4A /* Crashlytics.framework */,
-				1E79DD6E1D4FB4E7006BEB4A /* Fabric.framework */,
 				1E79DD6B1D4FB4BA006BEB4A /* VideoToolbox.framework */,
 				1E79DD691D4FB4B7006BEB4A /* SystemConfiguration.framework */,
 				1E79DD671D4FB4AF006BEB4A /* QuartzCore.framework */,
@@ -4693,6 +4696,7 @@
 		E699220D1B94E3EF007C480D /* About */ = {
 			isa = PBXGroup;
 			children = (
+				1EFA31B020346F5500068001 /* Eula.html */,
 				E69922121B94E3EF007C480D /* Licenses.html */,
 			);
 			path = About;
@@ -5407,7 +5411,6 @@
 				28CE83DE1A1D1E7C00576538 /* Frameworks */,
 				E6639F191BF11E3A002D0853 /* Conditionally Add Settings Bundle */,
 				E6B09CD31C74EEDB00C63FA1 /* Copy Frameworks */,
-				1E79DD561D4FB3E3006BEB4A /* Fabric Run script */,
 				9AF7B95024985E2D5D124946 /* [CP] Embed Pods Frameworks */,
 				0706FD9BB25C989AA2F14363 /* [CP] Copy Pods Resources */,
 				4F1FACC41FD1A9B90023E076 /* Embed App Extensions */,
@@ -6018,6 +6021,7 @@
 				E4424B201AC6EBE100F44C38 /* ReaderSettings.xcassets in Resources */,
 				D30684F11C84F12A002D8D82 /* SearchPlugins in Resources */,
 				E47536FC1C85415F0022CC69 /* PrintHelper.js in Resources */,
+				1EFA31AE20346F5500068001 /* Eula.html in Resources */,
 				1E79DD311D4FB2C5006BEB4A /* NewsPermissionAsking-6Plus.png in Resources */,
 				4FE4223E1DD4ADFD000A7D1C /* ModifyLinksForNewTab.js in Resources */,
 				D308EE561CBF0BF5006843F2 /* CertError.css in Resources */,
@@ -6110,20 +6114,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Client/Pods-Client-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1E79DD561D4FB3E3006BEB4A /* Fabric Run script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Fabric Run script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run e2196a01734594e39924c95dc61ee2b0603549f8 518c6e5dad5c6e09ec4ac71d46025a3a0db744abd167929cebb9b98686da9bd4";
-		};
 		7B604F8F1C494AAA006EEEC3 /* Copy Carthage Dependencies */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -6143,6 +6133,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/CRToast.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Sentry.framework",
 			);
 			name = "Copy Carthage Dependencies";
 			outputPaths = (
@@ -6614,6 +6605,7 @@
 				E692E3371C46E86A009D1240 /* AppSettingsOptions.swift in Sources */,
 				AFAF9ADA1F14E95A0009E718 /* BitArray.swift in Sources */,
 				1E79DE801D508368006BEB4A /* AWSCognitoIdentityResources.m in Sources */,
+				1EFA316320331FDA00068001 /* SentryIntegration.swift in Sources */,
 				1E6E5D101F94F92C00D23A1E /* BubbleLeftCell.swift in Sources */,
 				D38F02D11C05127100175932 /* Authenticator.swift in Sources */,
 				1E6E5D0F1F94F92C00D23A1E /* BubbleRightCell.swift in Sources */,
@@ -6874,6 +6866,7 @@
 				E68AEDB01B18F81A00133D99 /* SwipeAnimator.swift in Sources */,
 				1E4036101FD7CEE70049318E /* KeyboardAccessoryView.swift in Sources */,
 				3BF56D271CDBBE1F00AC4D75 /* SimpleToast.swift in Sources */,
+				1EFA316D203360A200068001 /* SendCrashReportsSubSettingsController.swift in Sources */,
 				AFF105541F25EE9D0093B73D /* AutoForgetTabTableViewController.swift in Sources */,
 				1E79DE8C1D508368006BEB4A /* AWSMTLReflection.m in Sources */,
 				D31F95E91AC226CB005C9F3B /* ScreenshotHelper.swift in Sources */,
@@ -7572,6 +7565,17 @@
 			name = Storage.strings;
 			sourceTree = "<group>";
 		};
+		1EFA31B020346F5500068001 /* Eula.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1EFA31AF20346F5500068001 /* en */,
+				1EFA31BF20346F5700068001 /* de */,
+				1EFA31C020346F5900068001 /* fr */,
+				1EFA31C120346F5B00068001 /* it */,
+			);
+			name = Eula.html;
+			sourceTree = "<group>";
+		};
 		4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -8012,7 +8016,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.cliqzshare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "daac57fd-b93a-40e3-a780-b2769afc6c92";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalWithiCloud;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -8075,7 +8079,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.cliqzshare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d4507b9a-9857-43ce-bf9f-57fc7043e760";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "UniversalBeta App Store";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
