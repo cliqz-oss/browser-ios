@@ -7,8 +7,6 @@ import Storage
 import AVFoundation
 import XCGLogger
 import MessageUI
-import Fabric
-import Crashlytics
 import WebImage
 import SwiftKeychainWrapper
 import LocalAuthentication
@@ -77,6 +75,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     fileprivate func startApplication(_ application: UIApplication,  withLaunchOptions launchOptions: [AnyHashable: Any]?) -> Bool {
+        // Cliqz: Starting Sentry for crash reporting
+        let sendCrashReports = SettingsPrefs.shared.getSendCrashReportsPref()
+        Sentry.shared.setup(sendCrashReports: sendCrashReports)
+        
         log.debug("Setting UA…")
         // Set the Firefox UA for browsing.
         setUserAgent()
@@ -267,10 +269,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Logger.syncLogger.deleteOldLogsDownToSizeLimit()
 //            Logger.browserLogger.deleteOldLogsDownToSizeLimit()
 //        }
-
-        // Cliqz: Start Crashlytics
-        Crashlytics.sharedInstance().delegate = self.browserViewController
-        Fabric.with([Crashlytics.self])
         
         // Cliqz: comented Firefox 3D Touch code
 //        if #available(iOS 9, *) {
@@ -535,6 +533,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ErrorPageHelper.register(server, certStore: profile.certStore)
         AboutHomeHandler.register(server)
         AboutLicenseHandler.register(server)
+        AboutEulaHandler.register(server)
         SessionRestoreHandler.register(server)
         ShareCardHelper.register(server)
 

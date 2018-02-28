@@ -8,7 +8,6 @@
 
 import UIKit
 import Shared
-import Crashlytics
 import WebKit
 import Storage
 
@@ -182,7 +181,7 @@ class JavaScriptBridge {
                         let type = telemetrySignal["type"] {
                             customAttributes = ["acion": action,"type": type]
                     }
-                    Answers.logCustomEvent(withName: "InvalidJavaScriptTelemetrySignal", customAttributes: customAttributes)
+                    print("InvalidJavaScriptTelemetrySignal: \(customAttributes)")
                 }
             }
             

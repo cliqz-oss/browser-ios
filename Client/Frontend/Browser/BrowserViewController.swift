@@ -15,7 +15,6 @@ import Account
 import ReadingList
 import MobileCoreServices
 import WebImage
-import Crashlytics
 import SwiftyJSON
 
 
@@ -1483,6 +1482,7 @@ class BrowserViewController: UIViewController {
                 self.findInPageBar = findInPageBar
                 findInPageBar.delegate = self
                 findInPageContainer.addSubview(findInPageBar)
+                findInPageContainer.superview?.bringSubview(toFront: findInPageContainer)
 
                 findInPageBar.snp_makeConstraints { make in
                     make.edges.equalTo(findInPageContainer)
@@ -2833,13 +2833,6 @@ extension BrowserViewController: WKNavigationDelegate {
             return
         }
 
-		// Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
-		AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
-			if isPhishingSite {
-				self.showAntiPhishingAlert(url.host!)
-			}
-		}
-
         // Fixes 1261457 - Rich text editor fails because requests to about:blank are blocked
         if url.scheme == "about" {
             decisionHandler(WKNavigationActionPolicy.allow)
@@ -2849,9 +2842,6 @@ extension BrowserViewController: WKNavigationDelegate {
         if !navigationAction.isAllowed && navigationAction.navigationType != .backForward {
             log.warning("Denying unprivileged request: \(navigationAction.request)")
             decisionHandler(WKNavigationActionPolicy.allow)
-#if BETA
-			Answers.logCustomEvent(withName: "UnprivilegedURL", customAttributes: ["URL": url])
-#endif
             return
         }
 		
@@ -2884,6 +2874,17 @@ extension BrowserViewController: WKNavigationDelegate {
             UIApplication.shared.openURL(url)
             decisionHandler(WKNavigationActionPolicy.cancel)
             return
+        }
+        
+        
+        // Cliqz: display AntiPhishing Alert to warn the user of in case of anti-phishing website
+        // Cliqz: (Tim) - Antiphising should only check the mainDocumentURL.
+        if navigationAction.request.mainDocumentURL == url, let host = url.host {
+            AntiPhishingDetector.isPhishingURL(url) { (isPhishingSite) in
+                if isPhishingSite {
+                    self.showAntiPhishingAlert(host)
+                }
+            }
         }
         
         // This is the normal case, opening a http or https url, which we handle by loading them in this WKWebView. We
@@ -4369,14 +4370,14 @@ extension BrowserViewController {
         return currentView
     }
 }
-
-extension BrowserViewController: CrashlyticsDelegate {
-    func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
-        hasPendingCrashReport = true
-		DispatchQueue.global(qos: .default).async {
-			completionHandler(true)
-		}
-    }
-
-}
+// TODO: Detect if the app is opened after a crash
+//extension BrowserViewController: CrashlyticsDelegate {
+//    func crashlyticsDidDetectReport(forLastExecution report: CLSReport, completionHandler: @escaping (Bool) -> Void) {
+//        hasPendingCrashReport = true
+//        DispatchQueue.global(qos: .default).async {
+//            completionHandler(true)
+//        }
+//    }
+//
+//}
 

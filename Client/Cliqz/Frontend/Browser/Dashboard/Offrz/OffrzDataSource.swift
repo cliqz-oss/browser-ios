@@ -31,7 +31,7 @@ class OffrzDataSource {
 	}
 
 	func shouldShowOffrz() -> Bool {
-		return SettingsPrefs.shared.getRegionPref() == "DE"
+		return SettingsPrefs.shared.getUserRegionPref() == "DE"
 	}
 
 	func hasUnseenOffrz() -> Bool {
@@ -48,7 +48,7 @@ class OffrzDataSource {
     }
 
     func shouldShowOnBoarding() -> Bool {
-		guard let v = LocalDataStore.objectForKey(OffrzDataSource.OffrzOnboardingKey)
+		guard let _ = LocalDataStore.objectForKey(OffrzDataSource.OffrzOnboardingKey)
 			else {
 			return true
 		}
@@ -58,7 +58,7 @@ class OffrzDataSource {
     func hideOnBoarding() {
 		LocalDataStore.setObject("closed", forKey: OffrzDataSource.OffrzOnboardingKey)
     }
-    
+
 	private func updateMyOffrzList() {
 		OffrzDataService.shared.getMyOffrz { (offrz, error) in
 			if error == nil && offrz.count > 0 {

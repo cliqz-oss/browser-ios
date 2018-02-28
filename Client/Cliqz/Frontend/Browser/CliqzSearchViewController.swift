@@ -235,11 +235,8 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
     }
     
     fileprivate func getCountry() -> String {
-        if let country = SettingsPrefs.shared.getRegionPref() {
-            return country
-        }
-        return SettingsPrefs.shared.getDefaultRegion()
-    }
+        return SettingsPrefs.shared.getUserRegionPref()
+	}
 	
     //MARK: - Reset TopSites
     func showBlockedTopSites(_ notification: Notification) {

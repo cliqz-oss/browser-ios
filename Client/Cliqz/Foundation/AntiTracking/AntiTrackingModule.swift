@@ -8,7 +8,6 @@
 
 import Foundation
 import JavaScriptCore
-import Crashlytics
 import Shared
 
 class AntiTrackingModule: NSObject {

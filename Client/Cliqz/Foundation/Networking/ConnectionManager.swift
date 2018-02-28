@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import Crashlytics
 
 enum ResponseType {
     case jsonResponse
@@ -75,10 +74,10 @@ class ConnectionManager {
                     }
                 }
             } catch let error as NSError {
-                Answers.logCustomEvent(withName: "sendPostRequestError", customAttributes: ["error": error.localizedDescription])
+                print("sendPostRequestError: \(error.localizedDescription)")
             }
         } else {
-            Answers.logCustomEvent(withName: "sendPostRequestError", customAttributes: nil)
+            print("sendPostRequestError")
         }
         
     }

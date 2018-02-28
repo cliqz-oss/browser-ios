@@ -30,7 +30,7 @@ class OffrzDataService {
 	private var validityStart: Date?
 	private var validityEnd: Date?
 
-	private static let APIURL = "https://offers-api.cliqz.com/api/v1/loadsubtriggers?parent_id=mobile-root&t_eng_ver=1"
+	private static let APIURL = "https://offers-api.cliqz.com/api/v1/loadsubtriggers?parent_id=mobile-root&t_eng_ver=1" //  "http://10.1.21.104/api/v1/loadsubtriggers?parent_id=mobile-root&t_eng_ver=1"
 
 	static let shared = OffrzDataService()
 

@@ -423,7 +423,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             if response.result.isSuccess {
 				if let data = response.result.value as? [String: Any] {
 					if let location = data["location"] as? String, let backends = data["backends"] as? [String], backends.contains(location) {
-						
 						self.region = location.uppercased()
 						self.loadNews()
 					} else {
@@ -443,9 +442,11 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		let data = ["q": "",
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
-        let userRegion = region != nil ? region : SettingsPrefs.shared.getDefaultRegion()
-		
-        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&country=\(userRegion!)&adult=0&loc_pref=ask&platform=1"
+
+        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&adult=0&loc_pref=ask&platform=1"
+		if let r = self.region {
+			uri += "&country=\(r)"
+		}
 		if let coord = LocationManager.sharedInstance.getUserLocation() {
 			uri += "&loc=\(coord.coordinate.latitude),\(coord.coordinate.longitude)"
 		}
@@ -628,12 +629,13 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
     }
     
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let headerAlpha: CGFloat = 0.6
 		let v = UIView()
 //		v.backgroundColor = UIColor(colorString: "D1D1D2")
-		v.backgroundColor = UIColor.black
+		v.backgroundColor = UIColor.white.withAlphaComponent(headerAlpha)
 		let l = UILabel()
 		l.text = NSLocalizedString("NEWS", tableName: "Cliqz", comment: "Title to expand news stream")
-		l.textColor = UIColor.white
+		l.textColor = UIColor.black.withAlphaComponent(headerAlpha)
 		l.font = UIFont.systemFont(ofSize: 13)
 		v.addSubview(l)
 		l.snp.makeConstraints { (make) in
@@ -658,7 +660,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
         }
 		expandNewsbutton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
 		expandNewsbutton.titleLabel?.textAlignment = .right
-		expandNewsbutton.setTitleColor(UIColor.white, for: .normal)
+		expandNewsbutton.setTitleColor(UIColor.black.withAlphaComponent(headerAlpha), for: .normal)
 		expandNewsbutton.addTarget(self, action: #selector(toggoleShowMoreNews), for: .touchUpInside)
 		return v
 	}
