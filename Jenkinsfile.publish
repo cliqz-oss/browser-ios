@@ -2,6 +2,11 @@
 
 @Library('cliqz-shared-library@vagrant') _
 
+properties([
+    disableConcurrentBuilds(), 
+    [$class: 'JobRestrictionProperty'], 
+    pipelineTriggers([pollSCM('H 5 * * * ')])
+])
 node('mac-vm-host') {
 
     writeFile file: 'Vagrantfile', text: '''
