@@ -250,6 +250,8 @@
 		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
 		1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC603A51E718926007921BF /* ABTestsManager.swift */; };
 		1ED365C51F98DD790043D97C /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED365B61F98DD790043D97C /* HistoryModule.swift */; };
+		1ED569B520494EA1003868D3 /* LocaleConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED569A520494EA0003868D3 /* LocaleConstants.swift */; };
+		1ED569B620494EA1003868D3 /* LocaleConstantsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		1EFA316320331FDA00068001 /* SentryIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316220331FDA00068001 /* SentryIntegration.swift */; };
 		1EFA316D203360A200068001 /* SendCrashReportsSubSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */; };
@@ -1759,6 +1761,8 @@
 		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
 		1EC603A51E718926007921BF /* ABTestsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABTestsManager.swift; sourceTree = "<group>"; };
 		1ED365B61F98DD790043D97C /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
+		1ED569A520494EA0003868D3 /* LocaleConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocaleConstants.swift; path = JSEngine/LocaleConstants.swift; sourceTree = "<group>"; };
+		1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocaleConstantsBridge.m; path = JSEngine/LocaleConstantsBridge.m; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		1EFA316220331FDA00068001 /* SentryIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryIntegration.swift; sourceTree = "<group>"; };
 		1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCrashReportsSubSettingsController.swift; sourceTree = "<group>"; };
@@ -4234,6 +4238,8 @@
 				AF4875951FF5382E00F8BB10 /* NativeDrawable.m */,
 				AF80E7931FFD290500FA145E /* ShareCardModule.swift */,
 				AF80E7B71FFD2E6C00FA145E /* ShareCardModuleBridge.m */,
+				1ED569A520494EA0003868D3 /* LocaleConstants.swift */,
+				1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */,
 			);
 			name = JSEngine;
 			sourceTree = "<group>";
@@ -6707,6 +6713,7 @@
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
+				1ED569B520494EA1003868D3 /* LocaleConstants.swift in Sources */,
 				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
@@ -6869,6 +6876,7 @@
 				D3A9949D1A3686BD008AD1AC /* Tab.swift in Sources */,
 				A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
+				1ED569B620494EA1003868D3 /* LocaleConstantsBridge.m in Sources */,
 				7BC68D091CC153020043562A /* RoundedToolbar.swift in Sources */,
 				39AC591A1CC574AB0042C2F5 /* HomePageSettingsViewController.swift in Sources */,
 				1E79DE7E1D508368006BEB4A /* AWSTaskCompletionSource.m in Sources */,
