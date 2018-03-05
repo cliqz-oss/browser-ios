@@ -92,7 +92,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.backgroundColor = UIConstants.AppBackgroundColor
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(cancelActions))
 		tapGestureRecognizer.delegate = self
 		self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -632,14 +631,21 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 		let headerAlpha: CGFloat = 0.6
 		let v = UIView()
 //		v.backgroundColor = UIColor(colorString: "D1D1D2")
-		v.backgroundColor = UIColor.white.withAlphaComponent(headerAlpha)
+		v.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+		let logo = UIImageView(image: UIImage(named: "freshtabIcon"))
+		v.addSubview(logo)
+		logo.snp.makeConstraints { (make) in
+			make.top.equalTo(v).offset(4)
+			make.left.equalTo(v).offset(7)
+			make.height.width.equalTo(20)
+		}
 		let l = UILabel()
 		l.text = NSLocalizedString("NEWS", tableName: "Cliqz", comment: "Title to expand news stream")
 		l.textColor = UIColor.black.withAlphaComponent(headerAlpha)
 		l.font = UIFont.systemFont(ofSize: 13)
 		v.addSubview(l)
 		l.snp.makeConstraints { (make) in
-			make.left.equalTo(v).offset(10)
+			make.left.equalTo(logo.snp.right).offset(7)
 			make.top.equalTo(v)
 			make.height.equalTo(27)
 			make.right.equalTo(v)
