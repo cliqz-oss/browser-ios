@@ -35,14 +35,14 @@ extension String {
 
 class LogoLoader {
 	
-	private static let dbVersion = "1515404421880"
+	private static let dbVersion = "1519889788305"
 	private static let dispatchQueue = DispatchQueue(label: "com.cliqz.logoLoader", attributes: .concurrent);
 	
 	private static var _logoDB: JSON?
 	private static var logoDB: JSON? {
 		get {
 			if self._logoDB == nil {
-				if let path = Bundle.main.path(forResource: "logo-database", ofType: "json", inDirectory: "Extension/build/mobile/search/core"),
+				if let path = Bundle.main.path(forResource: "logo-database", ofType: "json"),
 					let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe) as Data {
 					self._logoDB = JSON(jsonData)
 				}
