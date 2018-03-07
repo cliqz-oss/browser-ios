@@ -451,6 +451,7 @@
 		3BF56D271CDBBE1F00AC4D75 /* SimpleToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF56D261CDBBE1F00AC4D75 /* SimpleToast.swift */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
 		4F0DFC121DF033D200B1C9F0 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */; };
+		4F0E869C205022B100777237 /* logo-database.json in Resources */ = {isa = PBXBuildFile; fileRef = 4F0E868D205022B000777237 /* logo-database.json */; };
 		4F18DD2E1F9F6A3800ADC6D0 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F18DD2D1F9F6A3800ADC6D0 /* ShareViewController.swift */; };
 		4F18DD311F9F6A3800ADC6D0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F18DD2F1F9F6A3800ADC6D0 /* MainInterface.storyboard */; };
 		4F18DD351F9F6A3800ADC6D0 /* CliqzShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1955,6 +1956,7 @@
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F0DFC131DF033D200B1C9F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4F0DFC151DF033D500B1C9F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		4F0E868D205022B000777237 /* logo-database.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "logo-database.json"; sourceTree = "<group>"; };
 		4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CliqzShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F18DD2D1F9F6A3800ADC6D0 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		4F18DD301F9F6A3800ADC6D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -2975,6 +2977,7 @@
 		1E79DCD71D4FB2C5006BEB4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F0E868D205022B000777237 /* logo-database.json */,
 				1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */,
 				1E79DCD91D4FB2C5006BEB4A /* Breaking News Screens */,
 				1E79DCF21D4FB2C5006BEB4A /* Cliqz.strings */,
@@ -5965,6 +5968,7 @@
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,
+				4F0E869C205022B100777237 /* logo-database.json in Resources */,
 				1E79DC951D4FB2B3006BEB4A /* Extension in Resources */,
 				1E79DDD11D507D26006BEB4A /* LightweightThemes.strings in Resources */,
 				1E79DD301D4FB2C5006BEB4A /* NewsPermissionAsking-6.png in Resources */,
