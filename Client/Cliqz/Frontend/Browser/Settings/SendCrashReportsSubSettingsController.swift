@@ -46,7 +46,7 @@ class SendCrashReportsSubSettingsController: SubSettingsTableViewController {
     
     @objc func switchValueChanged(_ toggle: UISwitch) {
         self.toggle = toggle.isOn
-        SettingsPrefs.shared.updateHumanWebPref(self.toggle)
+        SettingsPrefs.shared.updateSendCrashReportsPref(self.toggle)
         
         // log telemetry signal
         let state = toggle.isOn == true ? "off" : "on" // we log old value

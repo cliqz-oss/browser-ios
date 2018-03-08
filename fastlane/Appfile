@@ -1,0 +1,16 @@
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
+
+for_platform :ios do
+  # for all iOS related things
+  apple_id ENV["ITUNES_USER"]
+
+  for_lane :beta do
+    app_identifier 'cliqz.ios.CliqzBeta'
+  end
+
+  for_lane :release do
+    app_identifier 'com.cliqz'
+  end
+  
+end
