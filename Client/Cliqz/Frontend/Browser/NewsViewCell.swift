@@ -21,8 +21,8 @@ class NewsViewCell: ClickableUITableViewCell {
     
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-		self.contentView.backgroundColor = UIColor.white.withAlphaComponent(0.6)
-		self.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+		self.contentView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+		self.backgroundColor = UIColor.white.withAlphaComponent(0.3)
 		cardView.backgroundColor = UIColor.clear
 		cardView.layer.cornerRadius = 4
 		contentView.addSubview(cardView)

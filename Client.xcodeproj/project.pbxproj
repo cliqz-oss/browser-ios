@@ -250,6 +250,8 @@
 		1EB293F31DB7D0E100D852C8 /* ElementAtPoint.js in Resources */ = {isa = PBXBuildFile; fileRef = 1EB293F21DB7D0E100D852C8 /* ElementAtPoint.js */; };
 		1EC603A61E718926007921BF /* ABTestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC603A51E718926007921BF /* ABTestsManager.swift */; };
 		1ED365C51F98DD790043D97C /* HistoryModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED365B61F98DD790043D97C /* HistoryModule.swift */; };
+		1ED569B520494EA1003868D3 /* LocaleConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED569A520494EA0003868D3 /* LocaleConstants.swift */; };
+		1ED569B620494EA1003868D3 /* LocaleConstantsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */; };
 		1EDB7F741D784A4A00C8CAF0 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */; };
 		1EFA316320331FDA00068001 /* SentryIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316220331FDA00068001 /* SentryIntegration.swift */; };
 		1EFA316D203360A200068001 /* SendCrashReportsSubSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */; };
@@ -449,6 +451,7 @@
 		3BF56D271CDBBE1F00AC4D75 /* SimpleToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF56D261CDBBE1F00AC4D75 /* SimpleToast.swift */; };
 		4A59B58AD11B5EE1F80BBDEB /* TestHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */; };
 		4F0DFC121DF033D200B1C9F0 /* Cliqz.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DFC141DF033D200B1C9F0 /* Cliqz.strings */; };
+		4F0E869C205022B100777237 /* logo-database.json in Resources */ = {isa = PBXBuildFile; fileRef = 4F0E868D205022B000777237 /* logo-database.json */; };
 		4F18DD2E1F9F6A3800ADC6D0 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F18DD2D1F9F6A3800ADC6D0 /* ShareViewController.swift */; };
 		4F18DD311F9F6A3800ADC6D0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F18DD2F1F9F6A3800ADC6D0 /* MainInterface.storyboard */; };
 		4F1FACC51FD1AD870023E076 /* CliqzShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1759,6 +1762,8 @@
 		1EBC01431DD4786D000912B9 /* CRToast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRToast.framework; path = Carthage/Build/iOS/CRToast.framework; sourceTree = "<group>"; };
 		1EC603A51E718926007921BF /* ABTestsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABTestsManager.swift; sourceTree = "<group>"; };
 		1ED365B61F98DD790043D97C /* HistoryModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryModule.swift; sourceTree = "<group>"; };
+		1ED569A520494EA0003868D3 /* LocaleConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocaleConstants.swift; path = JSEngine/LocaleConstants.swift; sourceTree = "<group>"; };
+		1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocaleConstantsBridge.m; path = JSEngine/LocaleConstantsBridge.m; sourceTree = "<group>"; };
 		1EDB7F731D784A4A00C8CAF0 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		1EFA316220331FDA00068001 /* SentryIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryIntegration.swift; sourceTree = "<group>"; };
 		1EFA316C203360A200068001 /* SendCrashReportsSubSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCrashReportsSubSettingsController.swift; sourceTree = "<group>"; };
@@ -1951,6 +1956,7 @@
 		4A59BF410BBD9B3BE71F4C7C /* TestHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHistory.swift; sourceTree = "<group>"; };
 		4F0DFC131DF033D200B1C9F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Cliqz.strings; sourceTree = "<group>"; };
 		4F0DFC151DF033D500B1C9F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Cliqz.strings; sourceTree = "<group>"; };
+		4F0E868D205022B000777237 /* logo-database.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "logo-database.json"; sourceTree = "<group>"; };
 		4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CliqzShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F18DD2D1F9F6A3800ADC6D0 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		4F18DD301F9F6A3800ADC6D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -2974,6 +2980,7 @@
 		1E79DCD71D4FB2C5006BEB4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F0E868D205022B000777237 /* logo-database.json */,
 				1E01FD1D1DDB148E00570663 /* Gotham-Book.otf */,
 				1E79DCD91D4FB2C5006BEB4A /* Breaking News Screens */,
 				1E79DCF21D4FB2C5006BEB4A /* Cliqz.strings */,
@@ -4247,6 +4254,8 @@
 				AF4875951FF5382E00F8BB10 /* NativeDrawable.m */,
 				AF80E7931FFD290500FA145E /* ShareCardModule.swift */,
 				AF80E7B71FFD2E6C00FA145E /* ShareCardModuleBridge.m */,
+				1ED569A520494EA0003868D3 /* LocaleConstants.swift */,
+				1ED569B420494EA0003868D3 /* LocaleConstantsBridge.m */,
 			);
 			name = JSEngine;
 			sourceTree = "<group>";
@@ -5521,8 +5530,8 @@
 					};
 					2FA435FA1ABB83B4008031D1 = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 2UYYSSHVUH;
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
 					};
 					2FA436041ABB83B4008031D1 = {
 						CreatedOnToolsVersion = 6.2;
@@ -5973,6 +5982,7 @@
 				E49943F71AE69EDD00BF9DE4 /* Intro.xcassets in Resources */,
 				E4B7B7631A793CF20022C5E0 /* CharisSILI.ttf in Resources */,
 				E4CD9F541A71506400318571 /* Reader.html in Resources */,
+				4F0E869C205022B100777237 /* logo-database.json in Resources */,
 				1E79DC951D4FB2B3006BEB4A /* Extension in Resources */,
 				1E79DDD11D507D26006BEB4A /* LightweightThemes.strings in Resources */,
 				1E79DD301D4FB2C5006BEB4A /* NewsPermissionAsking-6.png in Resources */,
@@ -6721,6 +6731,7 @@
 				1E79DE9A1D508368006BEB4A /* AWSURLRequestRetryHandler.m in Sources */,
 				1E79DEAB1D508368006BEB4A /* AWSXMLDictionary.m in Sources */,
 				1E79DEA11D508368006BEB4A /* AWSSTSResources.m in Sources */,
+				1ED569B520494EA1003868D3 /* LocaleConstants.swift in Sources */,
 				4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */,
 				1E79DE9F1D508368006BEB4A /* AWSService.m in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
@@ -6883,6 +6894,7 @@
 				D3A9949D1A3686BD008AD1AC /* Tab.swift in Sources */,
 				A93067E81D0FE18E00C49C6E /* NightModeHelper.swift in Sources */,
 				D3C744CD1A687D6C004CE85D /* URIFixup.swift in Sources */,
+				1ED569B620494EA1003868D3 /* LocaleConstantsBridge.m in Sources */,
 				7BC68D091CC153020043562A /* RoundedToolbar.swift in Sources */,
 				39AC591A1CC574AB0042C2F5 /* HomePageSettingsViewController.swift in Sources */,
 				1E79DE7E1D508368006BEB4A /* AWSTaskCompletionSource.m in Sources */,
@@ -7819,8 +7831,10 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -7845,6 +7859,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Account/Account-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
@@ -7952,8 +7967,8 @@
 				OTHER_SWIFT_FLAGS = "-DMOZ_CHANNEL_RELEASE -DCLIQZ";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.Today;
 				PRODUCT_NAME = Today;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
+				PROVISIONING_PROFILE = "02d8cc8c-34e7-4c7f-a27e-e037aec1be4c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore *";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Firefox;
@@ -8009,7 +8024,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Extensions/CliqzShare/Info.plist";
+				INFOPLIST_FILE = Extensions/CliqzShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -8073,7 +8088,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Extensions/CliqzShare/Info.plist";
+				INFOPLIST_FILE = Extensions/CliqzShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -8303,8 +8318,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.SendTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
+				PROVISIONING_PROFILE = "02d8cc8c-34e7-4c7f-a27e-e037aec1be4c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore *";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -8388,9 +8403,10 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Cliqz GmbH (2UYYSSHVUH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 2UYYSSHVUH;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -8416,6 +8432,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.mozilla.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "$SRCROOT/Account/Account-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
@@ -8582,8 +8599,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cliqz.ViewLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal Cliqz AppStore";
+				PROVISIONING_PROFILE = "02d8cc8c-34e7-4c7f-a27e-e037aec1be4c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore *";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
