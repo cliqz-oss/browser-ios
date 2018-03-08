@@ -8,7 +8,7 @@ properties([
     pipelineTriggers([pollSCM('H 5 * * * ')])
 ])
 node('mac-vm-host') {
-    def branchName = "$GIT_BRANCH"
+    def branchName = "${BRANCH_NAME}"
 
     writeFile file: 'Vagrantfile', text: '''
     Vagrant.configure("2") do |config|
@@ -97,7 +97,7 @@ node('mac-vm-host') {
                         string(credentialsId: 'd1c8fe0f-6481-4aec-8c6f-e0bbc5ec82b9', variable: 'SentryDSN'),
                         string(credentialsId: '05be12cd-5177-4adf-9812-809f01451fa0', variable: 'FASTLANE_PASSWORD'),
                         string(credentialsId: 'ea8c47ad-1de8-4300-ae93-ec9ff4b68f39', variable: 'MATCH_PASSWORD')]) 
-                    steps{
+                    {
                         sh '''#!/bin/bash -l
                             set -x
                             set -e
@@ -121,7 +121,7 @@ node('mac-vm-host') {
                         string(credentialsId: 'c21d2e60-e4b9-4f75-bad7-6736398a1a05', variable: 'SentryDSN'),
                         string(credentialsId: '05be12cd-5177-4adf-9812-809f01451fa0', variable: 'FASTLANE_PASSWORD'),
                         string(credentialsId: 'ea8c47ad-1de8-4300-ae93-ec9ff4b68f39', variable: 'MATCH_PASSWORD')]) 
-                    steps{
+                    {
                         sh '''#!/bin/bash -l
                             set -x
                             set -e
