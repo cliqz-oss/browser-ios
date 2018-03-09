@@ -8,6 +8,7 @@ properties([
     pipelineTriggers([pollSCM('H 5 * * * ')])
 ])
 node('mac-vm-host') {
+    def branchName = "${BRANCH_NAME}"
 
     writeFile file: 'Vagrantfile', text: '''
     Vagrant.configure("2") do |config|
@@ -52,15 +53,7 @@ node('mac-vm-host') {
     ) { nodeId ->
         node(nodeId) {
             stage('Checkout') {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: scm.branches,
-                    extensions: scm.extensions + [
-                        [$class: 'CheckoutOption', timeout: 30],
-                        [$class: 'CloneOption', depth: 0, noTags: true, reference: '', shallow: true, timeout: 30, honorRefspec: true],
-                    ],
-                    userRemoteConfigs: scm.userRemoteConfigs
-                ])
+                checkout scm
             }
 
             stage('Prepare') {
@@ -83,27 +76,52 @@ node('mac-vm-host') {
                 '''                
             }
 
-            stage('Build & Upload') {
-                withCredentials([
-                    [
-                        $class          : 'UsernamePasswordMultiBinding',
-                        credentialsId   : '85859bba-4927-4b14-bfdf-aca726009962',
-                        passwordVariable: 'GITHUB_PASSWORD',
-                        usernameVariable: 'GITHUB_USERNAME',
-                    ],
-                    string(credentialsId: '8b4f7459-c446-4058-be61-3c3d98fe72e2', variable: 'ITUNES_USER'),
-                    string(credentialsId: 'd1c8fe0f-6481-4aec-8c6f-e0bbc5ec82b9', variable: 'SentryDSN'),
-                    string(credentialsId: '05be12cd-5177-4adf-9812-809f01451fa0', variable: 'FASTLANE_PASSWORD'),
-                    string(credentialsId: 'ea8c47ad-1de8-4300-ae93-ec9ff4b68f39', variable: 'MATCH_PASSWORD')]) 
-                {
-                    sh '''#!/bin/bash -l
-                        set -x
-                        set -e
-                        set -x
-                        rm -rf /Users/vagrant/Library/Keychains/ios-build.keychain*
-                        export MATCH_KEYCHAIN_NAME=ios-build.keychain      
-                        fastlane beta    
-                    '''
+            if("${branchName}".contains("development") || "${branchName}".contains("-beta")){
+                stage('Build & Upload') {
+                    withCredentials([
+                        [
+                            $class          : 'UsernamePasswordMultiBinding',
+                            credentialsId   : '85859bba-4927-4b14-bfdf-aca726009962',
+                            passwordVariable: 'GITHUB_PASSWORD',
+                            usernameVariable: 'GITHUB_USERNAME',
+                        ],
+                        string(credentialsId: '8b4f7459-c446-4058-be61-3c3d98fe72e2', variable: 'ITUNES_USER'),
+                        string(credentialsId: 'd1c8fe0f-6481-4aec-8c6f-e0bbc5ec82b9', variable: 'SentryDSN'),
+                        string(credentialsId: '05be12cd-5177-4adf-9812-809f01451fa0', variable: 'FASTLANE_PASSWORD'),
+                        string(credentialsId: 'ea8c47ad-1de8-4300-ae93-ec9ff4b68f39', variable: 'MATCH_PASSWORD')]) 
+                    {
+                        sh '''#!/bin/bash -l
+                            set -x
+                            set -e
+                            rm -rf /Users/vagrant/Library/Keychains/ios-build.keychain*
+                            export MATCH_KEYCHAIN_NAME=ios-build.keychain      
+                            fastlane beta    
+                        '''
+                    }
+                }
+            }
+            else if ("${branchName}".contains("-r")){
+                stage('Build & Upload') {
+                    withCredentials([
+                        [
+                            $class          : 'UsernamePasswordMultiBinding',
+                            credentialsId   : '85859bba-4927-4b14-bfdf-aca726009962',
+                            passwordVariable: 'GITHUB_PASSWORD',
+                            usernameVariable: 'GITHUB_USERNAME',
+                        ],
+                        string(credentialsId: '8b4f7459-c446-4058-be61-3c3d98fe72e2', variable: 'ITUNES_USER'),
+                        string(credentialsId: 'c21d2e60-e4b9-4f75-bad7-6736398a1a05', variable: 'SentryDSN'),
+                        string(credentialsId: '05be12cd-5177-4adf-9812-809f01451fa0', variable: 'FASTLANE_PASSWORD'),
+                        string(credentialsId: 'ea8c47ad-1de8-4300-ae93-ec9ff4b68f39', variable: 'MATCH_PASSWORD')]) 
+                    {
+                        sh '''#!/bin/bash -l
+                            set -x
+                            set -e
+                            rm -rf /Users/vagrant/Library/Keychains/ios-build.keychain*
+                            export MATCH_KEYCHAIN_NAME=ios-build.keychain      
+                            fastlane beta    
+                        '''
+                    }
                 }
             }
         }
