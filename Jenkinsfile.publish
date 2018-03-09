@@ -53,15 +53,7 @@ node('mac-vm-host') {
     ) { nodeId ->
         node(nodeId) {
             stage('Checkout') {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: scm.branches,
-                    extensions: scm.extensions + [
-                        [$class: 'CheckoutOption', timeout: 30],
-                        [$class: 'CloneOption', depth: 0, noTags: true, reference: '', shallow: true, timeout: 30, honorRefspec: true],
-                    ],
-                    userRemoteConfigs: scm.userRemoteConfigs
-                ])
+                checkout scm
             }
 
             stage('Prepare') {
