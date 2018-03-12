@@ -98,12 +98,12 @@ platform :ios do
       scheme: "Firefox",
       export_options: {
         provisioningProfiles: { 
-          "cliqz.ios.CliqzBeta" => "match AppStore com.cliqz",
-          "cliqz.ios.CliqzBeta.Cliqz" => "match AppStore *",
-          "cliqz.ios.CliqzBeta.SendTo" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.ShareTo" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.Today" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.ViewLater" => "match AppStore *"
+          "com.cliqz" => "match AppStore com.cliqz",
+          "com.cliqz.cliqzshare" => "match AppStore *",
+          "com.cliqz.SendTo" => "match AppStore *", 
+          "com.cliqz.ShareTo" => "match AppStore *", 
+          "com.cliqz.Today" => "match AppStore *", 
+          "com.cliqz.ViewLater" => "match AppStore *"
         }
       }
     )
