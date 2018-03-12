@@ -61,11 +61,11 @@ platform :ios do
       }
     )
 
-  	upload_to_testflight(
-  		changelog: "Nightly build",
-  		demo_account_required: "false",
+    upload_to_testflight(
+      changelog: "Nightly build",
+      demo_account_required: "false",
       skip_waiting_for_build_processing: "true"
-  	)
+    )
   end
 
   lane :release do
@@ -87,23 +87,18 @@ platform :ios do
       verbose: true
     )
 
-    increment_build_number(
-      build_number: latest_testflight_build_number + 1,
-      xcodeproj: "Client.xcodeproj"
-    )
-
     build_app(
       workspace: "Client.xcworkspace",
       clean: "true",
       scheme: "Firefox",
       export_options: {
         provisioningProfiles: { 
-          "cliqz.ios.CliqzBeta" => "match AppStore com.cliqz",
-          "cliqz.ios.CliqzBeta.Cliqz" => "match AppStore *",
-          "cliqz.ios.CliqzBeta.SendTo" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.ShareTo" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.Today" => "match AppStore *", 
-          "cliqz.ios.CliqzBeta.ViewLater" => "match AppStore *"
+          "com.cliqz" => "match AppStore com.cliqz",
+          "com.cliqz.cliqzshare" => "match AppStore *",
+          "com.cliqz.SendTo" => "match AppStore *", 
+          "com.cliqz.ShareTo" => "match AppStore *", 
+          "com.cliqz.Today" => "match AppStore *", 
+          "com.cliqz.ViewLater" => "match AppStore *"
         }
       }
     )
