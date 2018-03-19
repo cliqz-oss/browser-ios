@@ -4,20 +4,8 @@
 
 properties([
     disableConcurrentBuilds(), 
-    [$class: 'JobRestrictionProperty'], 
-    pipelineTriggers([pollSCM('H 5 * * * ')])
+    [$class: 'JobRestrictionProperty']
 ])
-import java.text.SimpleDateFormat
-    def date = new Date()
-    sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
-if(BRANCH_NAME.contains("development")) {
-    time =  sdf.format(date) 
-    if (!time.contains(" 05:00:")) {
-        echo "Its not time to build" 
-        currentBuild.result = 'SUCCESS'
-        return
-    }  
-}
 node('mac-vm-host') {
     def branchName = "${BRANCH_NAME}"
 
