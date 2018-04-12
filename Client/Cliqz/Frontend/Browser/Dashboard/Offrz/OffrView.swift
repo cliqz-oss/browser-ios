@@ -179,7 +179,7 @@ class OffrView: UIView {
 
 	@objc
 	private func copyCode() {
-		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("copy", "code"))
+		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("copy", ["target" : "code"]))
 		let pastBoard = UIPasteboard.general
 		pastBoard.string = offr.code
 		self.promoCodeLabel.text = NSLocalizedString("MyOffrz Code copied", tableName: "Cliqz", comment: "[MyOffrz] copy promocode done")
