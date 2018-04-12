@@ -38,7 +38,7 @@ public enum TelemetryLogEventType {
     case Notification (String, String)
     case Rotation (String, String)
     case QuickAccessBar (String, String, String?)
-	case MyOffrz (String, String)
+	case MyOffrz (String, [String: Any]?)
 
 }
 
@@ -192,8 +192,8 @@ class TelemetryLogger : EventsLogger {
             
             case .QuickAccessBar (let action, let view, let target):
                 event = self.createQuickAccessBarEvent(action, view: view, target: target)
-			case .MyOffrz(let action, let target):
-				event = self.createMyOffrzEvent(action, target: target)
+			case .MyOffrz(let action, let customData):
+				event = self.createMyOffrzEvent(action, customData: customData)
             }
         
             if self.isForgetModeActivate && self.shouldPreventEventInForgetMode(event) {
@@ -679,12 +679,17 @@ class TelemetryLogger : EventsLogger {
         return event
     }
 
-	private func createMyOffrzEvent(_ action: String, target: String) -> [String: Any] {
+	private func createMyOffrzEvent(_ action: String, customData: [String: Any]?) -> [String: Any] {
 		var event = createBasicEvent()
 		
 		event["type"] = "offrz"
 		event["action"] = action
-		event["target"] = target
+        
+        if let customData = customData {
+            for (key, value) in customData {
+                event[key] = value
+            }
+        }
 		return event
 	}
 
