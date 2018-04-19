@@ -28,6 +28,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
 		let m = LocationManager()
 		m.manager.delegate = m
 		m.manager.desiredAccuracy = 300
+		m.manager.distanceFilter = 500
 		return m
 	}()
 
