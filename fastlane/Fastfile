@@ -61,11 +61,11 @@ platform :ios do
       }
     )
 
-  	upload_to_testflight(
-  		changelog: "Nightly build",
-  		demo_account_required: "false",
+    upload_to_testflight(
+      changelog: "Nightly build",
+      demo_account_required: "false",
       skip_waiting_for_build_processing: "true"
-  	)
+    )
   end
 
   lane :release do
