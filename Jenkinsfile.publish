@@ -4,8 +4,7 @@
 
 properties([
     disableConcurrentBuilds(), 
-    [$class: 'JobRestrictionProperty'], 
-    pipelineTriggers([pollSCM('H 5 * * * ')])
+    [$class: 'JobRestrictionProperty']
 ])
 node('mac-vm-host') {
     def branchName = "${BRANCH_NAME}"

@@ -12,6 +12,14 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
 
     let regions = SettingsPrefs.SearchBackendOptions
     let telemetrySignalViewName = "search_results_from"
+    static let regionNames = ["DE" : "Deutschland" ,
+                              "US" : "United States",
+                              "FR" : "France",
+                              "GB" : "United Kingdom (Beta)",
+                              "ES" : "España (Beta)",
+                              "IT" : "Italia (Beta)",
+                              "PL" : "Polska (Beta)"]
+
     
     var selectedRegion: String {
         get {
@@ -70,9 +78,10 @@ class RegionalSettingsTableViewController: SubSettingsTableViewController {
     }
     
     static func getLocalizedRegionName(_ region: String) -> String {
-        let key = "region-\(region)"
-        
-        return NSLocalizedString(key, tableName: "Cliqz", comment: "Localized String for specific region")
+        if let regionName = regionNames[region] {
+            return regionName
+        }
+        return ""
     }
     
 }
