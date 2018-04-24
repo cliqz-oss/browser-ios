@@ -11,7 +11,8 @@ import Foundation
 class OffrzDataSource {
 	
 	private var currentOffr: Offr?
-	private static let LastSeenOffrID = "LastSeenOffrID"
+	private static let LastOffrID = "LastOffrID"
+    private static let LastOffrSeenStatus = "LastOffrSeenStatus"
 	private static let OffrzOnboardingKey = "OffrzOnboardingNeeded"
 
 	var myOffrz = [Offr]()
@@ -40,7 +41,7 @@ class OffrzDataSource {
 
 	func markCurrentOffrSeen() {
 		self.currentOffr?.isSeen = true
-		LocalDataStore.setObject(self.currentOffr?.uid, forKey: OffrzDataSource.LastSeenOffrID)
+		LocalDataStore.setObject(true, forKey: OffrzDataSource.LastOffrSeenStatus)
 	}
 
     func hasOffrz() -> Bool {
@@ -63,12 +64,16 @@ class OffrzDataSource {
 		OffrzDataService.shared.getMyOffrz { (offrz, error) in
 			if error == nil && offrz.count > 0 {
 				self.myOffrz = offrz
-				if let o = self.getLastSeenOffr() {
+				if let o = self.getLastOffr() {
 					self.currentOffr = o
-					self.currentOffr?.isSeen = true
+					self.currentOffr?.isSeen = LocalDataStore.objectForKey(OffrzDataSource.LastOffrSeenStatus) as? Bool ?? false
 				} else {
-				LocalDataStore.removeObjectForKey(OffrzDataSource.LastSeenOffrID)
 					self.currentOffr = self.getNotExpiredOffr()
+                    
+                    LocalDataStore.setObject(self.currentOffr?.uid, forKey: OffrzDataSource.LastOffrID)
+                    LocalDataStore.setObject(false, forKey: OffrzDataSource.LastOffrSeenStatus)
+                    self.sendNewOfferTelemetrySignal()
+                    
 				}
 			}
 		}
@@ -83,8 +88,8 @@ class OffrzDataSource {
 		return nil
 	}
     
-	private func getLastSeenOffr() -> Offr? {
-		let offrID = self.getLastSeenOffrID()
+	private func getLastOffr() -> Offr? {
+		let offrID = self.getLastOffrID()
 		for o in self.myOffrz {
 			if o.uid == offrID {
 				if !self.isExpiredOffr(o) {
@@ -95,8 +100,8 @@ class OffrzDataSource {
 		return nil
     }
 
-	private func getLastSeenOffrID() -> String? {
-		return LocalDataStore.objectForKey(OffrzDataSource.LastSeenOffrID) as? String
+	private func getLastOffrID() -> String? {
+		return LocalDataStore.objectForKey(OffrzDataSource.LastOffrID) as? String
 	}
 
 	private func isExpiredOffr(_ offr: Offr) -> Bool {
@@ -107,4 +112,8 @@ class OffrzDataSource {
 		}
 		return false
 	}
+    
+    private func sendNewOfferTelemetrySignal() {
+        TelemetryLogger.sharedInstance.logEvent(.MyOffrz("new", ["count" : "1"]))
+    }
 }
