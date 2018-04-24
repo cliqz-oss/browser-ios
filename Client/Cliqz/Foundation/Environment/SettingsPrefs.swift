@@ -26,9 +26,8 @@ class SettingsPrefs {
     static let ShowTopSitesPrefKey = "showFreshTabTopSites"
     static let ShowNewsPrefKey = "showFreshTabNews"
     static let SendCrashReports = "sendCrashReports"
+	static let SearchBackendOptions = ["DE", "US", "FR", "GB", "ES", "IT", "PL"]
     
-	static let SearchBackendOptions = ["DE", "US", "FR"]
-
 	var profile: Profile?
 
 	open static var shared = SettingsPrefs()
@@ -139,12 +138,15 @@ class SettingsPrefs {
     }
 
     func getDefaultRegion() -> String {
-        let currentLocale = Locale.current
-		let langToRegionMapping = ["de": "DE", "en": "US", "fr": "FR"]
-        if let languageCode = currentLocale.languageCode,
-			langToRegionMapping.keys.contains(languageCode),
-			let val = langToRegionMapping[languageCode] {
-            return val
+        if let regioncode = Locale.current.regionCode {
+            switch regioncode {
+            case "DE", "AT", "CH": // Germany, Austria, Switzerland
+                return "DE"
+            case "FR":
+                return "FR"
+            default:
+                return "US"
+            }
         }
         return "US"
     }

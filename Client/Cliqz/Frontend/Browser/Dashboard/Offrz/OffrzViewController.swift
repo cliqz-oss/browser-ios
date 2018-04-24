@@ -164,7 +164,7 @@ class OffrzViewController: UIViewController {
 		if self.offrOverlay != nil {
 			self.shrinkOffr()
 		}
-		TelemetryLogger.sharedInstance.logEvent(.MyOffrz("click", "use"))
+        TelemetryLogger.sharedInstance.logEvent(.MyOffrz("click", ["target" : "use"]))
 		if let urlStr = self.myOffr?.url,
 			let url = URL(string: urlStr) {
 			self.delegate?.didSelectURL(url)
