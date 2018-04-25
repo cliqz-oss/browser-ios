@@ -27,7 +27,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
 	open static let sharedInstance: LocationManager = {
 		let m = LocationManager()
 		m.manager.delegate = m
-		m.manager.desiredAccuracy = 300
+		m.manager.desiredAccuracy = 500
 		m.manager.distanceFilter = 500
 		return m
 	}()
@@ -35,7 +35,14 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
     open func getUserLocation() -> CLLocation? {
         return self.location
     }
-    
+
+	open func getApproximateUserLocation() -> CLLocation? {
+		if let l = self.location {
+			return CLLocation(latitude: l.coordinate.latitude.roundTo(precision: 2), longitude: l.coordinate.longitude.roundTo(precision: 2))
+		}
+		return nil
+	}
+
     open func askForLocationAccess () {
         TelemetryLogger.sharedInstance.logEvent(.LocationServicesStatus("try_show", nil))
         self.manager.requestWhenInUseAuthorization()
@@ -55,8 +62,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         
 	}
-    
-    
+
     open func startUpdatingLocation() {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         guard authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse else {
@@ -92,6 +98,15 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         return authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse
     }
+
+}
+
+extension Double {
+	
+	func roundTo(precision: Int = 0) -> Double {
+		let multiplier = pow(10, Double(precision))
+		return Darwin.round(self * multiplier) / multiplier
+	}
 
 }
 
