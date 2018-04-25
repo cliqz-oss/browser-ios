@@ -176,7 +176,7 @@ class CliqzSearchViewController : UIViewController, KeyboardHelperDelegate, UIAl
     
     fileprivate func search(_ query: String) {
         var parameters: Array<Any> = [query/*.escape()*/]
-        if let l = LocationManager.sharedInstance.getUserLocation() {
+        if let l = LocationManager.sharedInstance.getApproximateUserLocation() {
             parameters += [true, l.coordinate.latitude, l.coordinate.longitude]
         }
         //self.javaScriptBridge.publishEvent("search", parameters: parameters)

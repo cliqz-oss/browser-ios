@@ -446,7 +446,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		if let r = self.region {
 			uri += "&country=\(r)"
 		}
-		if let coord = LocationManager.sharedInstance.getUserLocation() {
+		if let coord = LocationManager.sharedInstance.getApproximateUserLocation() {
 			uri += "&loc=\(coord.coordinate.latitude),\(coord.coordinate.longitude)"
 		}
 
