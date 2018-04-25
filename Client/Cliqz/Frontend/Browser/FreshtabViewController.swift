@@ -442,7 +442,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 		            "results": [[ "url": "rotated-top-news.cliqz.com",  "snippet":[String:String]()]]
 		] as [String : Any]
 
-        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&adult=0&loc_pref=ask&platform=1"
+        var uri  = "path=/v2/map&q=&lang=N/A&locale=\(Locale.current.identifier)&adult=0&loc_pref=ask&platform=1&sub_platform=11"
 		if let r = self.region {
 			uri += "&country=\(r)"
 		}
