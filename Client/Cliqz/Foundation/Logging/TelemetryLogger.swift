@@ -65,7 +65,7 @@ class TelemetryLogger : EventsLogger {
             self?.isForgetModeActivate = newStatus
         }
     }
-    
+
     //MARK: - Instant Variables
     var telemetrySeq: AtomicInt?
     fileprivate let telementrySequenceKey = "TelementrySequence"
@@ -81,7 +81,7 @@ class TelemetryLogger : EventsLogger {
             }
         }
     }
-    
+
     func storeCurrentTelemetrySeq() {
         LocalDataStore.setObject(telemetrySeq!.get(), forKey: self.telementrySequenceKey)
     }
@@ -94,7 +94,10 @@ class TelemetryLogger : EventsLogger {
     
     //MARK: - Log events
     internal func logEvent(_ eventType: TelemetryLogEventType) {
-        
+		guard SettingsPrefs.shared.getSendTelemetryPref() else {
+			return
+		}
+
         dispatchQueue.async {
             var event: [String: Any]
             var disableSendingEvent = false

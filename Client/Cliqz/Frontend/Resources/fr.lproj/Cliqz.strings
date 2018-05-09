@@ -394,9 +394,13 @@
 /* [Settings] Send Crash Reports */
 "Send Crash Reports" = "Envoyer les rapports d’erreur";
 /* [Settings -> Send Crash Reports] Footer text */
-<<<<<<< HEAD
 "Send Crash Reports footer" = "Nous utilisons le logiciel libre Sentry (http://sentry.io) pour nos rapports d’erreur. Ces rapports ne contiennent aucunes données personnelles.";
 
 /* [Settings -> About] EULA */
 "EULA" = "CGU";
 
+/* [Settings] Send Telemetry */
+"Send Telemetry" = "Envoyer données d'utilisation";
+
+/* [Settings -> Send Telemetry] Footer text" */
+"Send Telemetry footer" = "Aidez-nous à améliorer votre experience de navigation. Cliqz collecte des données d'utilisation de façon entièrement anonyme. Aucune donnée à caractère personnel sera collectée. Pour en savoir plus: https://cliqz.com/fr/privacy-browser";

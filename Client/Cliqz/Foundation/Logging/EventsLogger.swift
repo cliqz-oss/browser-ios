@@ -190,8 +190,10 @@ class EventsLogger: NSObject {
         self.clearPersistedEvents()
     }
     
-    fileprivate func publishEvents(_ publishedEvents: [Any]){
-
+    fileprivate func publishEvents(_ publishedEvents: [Any]) {
+		guard SettingsPrefs.shared.getSendTelemetryPref() else {
+			return
+		}
 		ConnectionManager.sharedInstance.sendPostRequestWithBody(loggerEndPoint, body: publishedEvents, responseType: .jsonResponse, enableCompression: true, queue: self.serialDispatchQueue,
             onSuccess: { json in
                 let jsonDict = json as! [String : Any]
