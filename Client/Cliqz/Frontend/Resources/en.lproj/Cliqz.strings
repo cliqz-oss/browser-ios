@@ -399,3 +399,9 @@
 
 /* [Settings -> About] EULA */
 "EULA" = "EULA";
+
+/* [Settings] Send Telemetry */
+"Send Telemetry" = "Send usage data";
+
+/* [Settings -> Send Telemetry] Footer text" */
+"Send Telemetry footer" = "Help us improve your browsing experience. Cliqz collects strictly anonymous usage data. At no occasion is any PII collected. Learn more at http://cliqz.com/en/privacy-browser";

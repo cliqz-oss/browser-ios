@@ -26,6 +26,7 @@ class SettingsPrefs {
     static let ShowTopSitesPrefKey = "showFreshTabTopSites"
     static let ShowNewsPrefKey = "showFreshTabNews"
     static let SendCrashReports = "sendCrashReports"
+	static let SendTelemetry = "sendTelemetry"
 	static let SearchBackendOptions = ["DE", "US", "FR", "GB", "ES", "IT", "PL"]
     
 	var profile: Profile?
@@ -223,7 +224,20 @@ class SettingsPrefs {
         LocalDataStore.setObject(newValue, forKey: SettingsPrefs.SendCrashReports)
         
     }
-    
+	
+	func getSendTelemetryPref() -> Bool {
+		// Need to get "settings.sendCrashReports" this way so that Sentry can be initialized before getting the Profile.
+		let defaultValue = true
+		if let sendTelemetryPref = LocalDataStore.objectForKey(SettingsPrefs.SendTelemetry) as? Bool {
+			return sendTelemetryPref
+		}
+		return defaultValue
+	}
+	
+	func updateSendTelemetryPref(_ newValue: Bool) {
+		LocalDataStore.setObject(newValue, forKey: SettingsPrefs.SendTelemetry)
+	}
+
     // MARK: - Private helper metods
 	fileprivate func getBoolPref(_ forKey: String) -> Bool? {
 		

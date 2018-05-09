@@ -457,6 +457,7 @@
 		4F18DD351F9F6A3800ADC6D0 /* CliqzShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4F18DD2B1F9F6A3800ADC6D0 /* CliqzShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F247DDD1E9D02740025A8BD /* BatchingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F247DDC1E9D02740025A8BD /* BatchingClient.swift */; };
 		4F2AC8301FD95026001E66D0 /* OffrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2AC82F1FD95026001E66D0 /* OffrView.swift */; };
+		4F3B066220A20B5E0034D5A4 /* SendTelemetrySetttingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B066120A20B5E0034D5A4 /* SendTelemetrySetttingsController.swift */; };
 		4F3F8F771DF718C8007789CB /* FreshtabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */; };
 		4F4AADD71E9BC0D000B39F14 /* SyncTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4AADD61E9BC0D000B39F14 /* SyncTelemetry.swift */; };
 		4F4AADE71E9BCD2B00B39F14 /* URLRequestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4AADE61E9BCD2B00B39F14 /* URLRequestExtensions.swift */; };
@@ -1963,6 +1964,7 @@
 		4F18DD321F9F6A3800ADC6D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4F247DDC1E9D02740025A8BD /* BatchingClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatchingClient.swift; sourceTree = "<group>"; };
 		4F2AC82F1FD95026001E66D0 /* OffrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffrView.swift; sourceTree = "<group>"; };
+		4F3B066120A20B5E0034D5A4 /* SendTelemetrySetttingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTelemetrySetttingsController.swift; sourceTree = "<group>"; };
 		4F3F8F761DF718C8007789CB /* FreshtabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreshtabViewController.swift; sourceTree = "<group>"; };
 		4F4AADD61E9BC0D000B39F14 /* SyncTelemetry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncTelemetry.swift; sourceTree = "<group>"; };
 		4F4AADE61E9BCD2B00B39F14 /* URLRequestExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestExtensions.swift; sourceTree = "<group>"; };
@@ -2758,6 +2760,7 @@
 				1E3F25031EC1B85F00D9DC0F /* LimitMobileDataUsageTableViewController.swift */,
 				1E4706841EB0952000516BA5 /* SettingsActivity.swift */,
 				AFF105531F25EE9D0093B73D /* AutoForgetTabTableViewController.swift */,
+				4F3B066120A20B5E0034D5A4 /* SendTelemetrySetttingsController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -6647,6 +6650,7 @@
 				AFAF9ADD1F14E95A0009E718 /* Primitive Types.swift in Sources */,
 				1E37480E1FB313B2006FA367 /* ClickableUITableViewCell.swift in Sources */,
 				1E79DE771D508368006BEB4A /* AWSSignature.m in Sources */,
+				4F3B066220A20B5E0034D5A4 /* SendTelemetrySetttingsController.swift in Sources */,
 				1E79DD1B1D4FB2C5006BEB4A /* XMLHttpRequest.swift in Sources */,
 				0BF0DB941A8545800039F300 /* URLBarView.swift in Sources */,
 				1E79DD241D4FB2C5006BEB4A /* JavaScriptBridge.swift in Sources */,
