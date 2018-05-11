@@ -98,9 +98,10 @@ class AppSettingsTableViewController: SettingsTableViewController {
         let tipsAndTricksSetting    = TipsAndTricksSetting()
         let reportWebsiteSetting    = ReportWebsiteSetting()
         let sendCrashReportsSetting    = SendCrashReportsSetting(settings: self)
+		let sendTelemetrySetting    = SendTelemetrySetting(settings: self)
         let myOffrzSetting          = MyOffrzSetting()
         
-        let helpSection: [Setting] = [supportSetting, tipsAndTricksSetting, reportWebsiteSetting, sendCrashReportsSetting, myOffrzSetting]
+        let helpSection: [Setting] = [supportSetting, tipsAndTricksSetting, reportWebsiteSetting, sendCrashReportsSetting, sendTelemetrySetting, myOffrzSetting]
         
         
         // About Cliqz Section
