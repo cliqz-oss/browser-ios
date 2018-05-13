@@ -8245,7 +8245,7 @@
 				PRODUCT_NAME = CLIQZ;
 				PROVISIONING_PROFILE = "ec239426-1d14-4899-a12b-82ac41ab7a42";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cliqz";
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -8884,7 +8884,7 @@
 				PRODUCT_NAME = CLIQZ;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "Cliqz Browser Dev";
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules $(PROJECT_DIR)/Client/Cliqz/Foundation/Networking/zlib";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Storage/modules";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Client-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
