@@ -13,6 +13,7 @@ open class Engine {
     
     //MARK: - Singleton
     static let sharedInstance = Engine()
+    static let attrackTelemetryModePrefKey = "attrackTelemetryMode"
     
     let bridge : RCTBridge
     open let rootView : RCTRootView
@@ -28,6 +29,8 @@ open class Engine {
         rootView = RCTRootView( bundleURL: jsCodeLocation, moduleName: "ExtensionApp", initialProperties: nil, launchOptions: nil )
         bridge = rootView.bridge
         ConnectManager.sharedInstance.refresh()
+        
+        migrateAttrackTelemetryModePref()
     }
     
     open func getBridge() -> JSBridge {
@@ -104,4 +107,16 @@ open class Engine {
         }
         
     }
+    
+    // MARK :- Private helper methods
+    private func migrateAttrackTelemetryModePref() {
+        // migrate user setting of SendTelemetryPref to attrackTelemetryMode
+        let SendTelemetryPrefMigrationKey = "SendTelemetryPrefMigration"
+        if LocalDataStore.objectForKey(SendTelemetryPrefMigrationKey) == nil {
+            let sendTelemetryPref = SettingsPrefs.shared.getSendTelemetryPref()
+            self.setPref(Engine.attrackTelemetryModePrefKey, prefValue: sendTelemetryPref ? 2 : 0)
+            LocalDataStore.setObject(true, forKey: SendTelemetryPrefMigrationKey)
+        }
+    }
+
 }
