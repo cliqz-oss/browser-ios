@@ -236,6 +236,7 @@ class SettingsPrefs {
 	
 	func updateSendTelemetryPref(_ newValue: Bool) {
 		LocalDataStore.setObject(newValue, forKey: SettingsPrefs.SendTelemetry)
+        Engine.sharedInstance.setPref(Engine.attrackTelemetryModePrefKey, prefValue: newValue ? 2 : 0)
 	}
 
     // MARK: - Private helper metods
