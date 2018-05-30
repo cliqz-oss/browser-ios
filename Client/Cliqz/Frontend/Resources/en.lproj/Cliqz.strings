@@ -1,0 +1,120 @@
+/* The text shown in the search field */
+"Search" = "Search";
+
+/* Error message title */
+"Sorry" = "Sorry";
+
+/* Error message when JS scripts for search can't be loaded */
+"Something went wrong, the script wasn't loaded." = "Something went wrong, the script wasn't loaded.";
+
+/* Button label to cancel entering a URL or search query
+ Cancel */
+"Cancel" = "Cancel";
+
+/* Button label on Alert view */
+"Retry" = "Retry";
+
+/* Search Recommendations and top visited sites title */
+"Search recommendations" = "Recommendations";
+
+/* Search history title */
+"Search history" = "History";
+
+/* Show Cliqz legal page. See https://cliqz.com/legal" */
+"Imprint" = "Imprint";
+
+/* Send Feedback Email */
+"Send Feedback" = "Send Feedback";
+
+/* Send Feedback Email Subject*/
+"Feedback to iOS Cliqz Browser" = "Feedback to iOS Cliqz Browser";
+
+/* Open search section of settings */
+"Search" = "Search";
+
+/* Footnote message for feedback */
+"Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@" = "Feedback to Cliqz Browser (Version %@) for iOS (Version %@) from %@";
+
+/* Title for No Email account pop-up */
+"No Email account title" = "No Email account";
+
+/* Text for the missing email account for sending feedback pop-up */
+"No Email account message" = "Please setup an Email account to be able to send a feedback.";
+
+/* Error title */
+"The Internet connection appears to be offline." = "The internet connection appears to be offline.";
+
+/* Title for `Top news` home shortcut. */
+"Top news" = "Top news";
+
+/* Title for `Last site` home shortcut. */
+"Last site" =  "Last site";
+
+/* Block explicit content setting. */
+"Block Explicit Content" = "Block Explicit Content";
+
+/* Share footer */
+"Shared with CLIQZ for iOS" = "Shared with CLIQZ for iOS";
+
+/* URL for detailed info for human web */
+"Human Web URL" = "https://cliqz.com/en/whycliqz/human-web";
+
+/* Title for Human Web deteiled info on settings */
+"What is Human Web?" = "What is Human Web?";
+
+/* Navigation title in settings */
+"Human Web" = "Human Web";
+
+/* Block Ads setting
+ Block Ads toogle title in Block Ads settings */
+"Block Ads" = "Block Ads";
+
+/* Fair Blocking toogle title in Block Ads settings
+  Title of navigation controller of Fair Blocking */
+"Fair Blocking" = "Fair Blocking";
+
+/* More details about Fair Blocking */
+"What is 'fair'?" = "What is 'fair'?";
+
+/* Settings item for clearing favorite history */
+"Favorites" = "Favorites";
+
+/* Settings item for clearing private data on termination */
+"Clear Private data on termination" = "Clear Private Data on Termination";
+
+/* Enable News Push Notifications */
+"Enable News Push Notifications" = "News Notification";
+
+/* Show blocked top-sites from settings */
+"Show blocked topsites" = "Show blocked topsites";
+
+/* Title of the 'Show blocked top-sites' alert */
+"Show blocked topsites" = "Show blocked topsites";
+
+/* Text of the 'Show blocked top-sites' alert */
+"All blocked topsites will be shown on the start page again." = "All blocked topsites will be shown on the start page again.";
+
+/* OK button in the 'Show blocked top-sites' alert */
+/* Button label to `OK` in news notification permission screen */
+"OK" = "OK";
+
+/* Cancel button in the 'Show blocked top-sites' alert */
+"Cancel" = "Cancel";
+
+/* Button label to `Yes please!` in news notification permission screen */
+"Yes please!" = "Yes please!";
+
+/* Button label to `Later` in news notification permission screen */
+"Remind me later" = "Remind me later";
+
+/* Button label to `No` in news notification permission screen */
+"No thanks" = "No thanks";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Forget Mode" = "Forget Mode";
+
+/* Description text displayed when there are no open tabs while in Forget mode */
+"Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved." = "Browsing history and cookies will not be remembered, but new downloads and bookmarks will be saved.";
+
+/* Context/Sharing menu item for downloading youtube videos */
+"Download youtube video" = "Make available offline";

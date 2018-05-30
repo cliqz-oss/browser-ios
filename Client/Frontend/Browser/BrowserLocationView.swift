@@ -6,6 +6,9 @@ import Foundation
 import UIKit
 import Shared
 import SnapKit
+import XCGLogger
+
+private let log = Logger.browserLogger
 
 protocol BrowserLocationViewDelegate {
     func browserLocationViewDidTapLocation(browserLocationView: BrowserLocationView)
@@ -22,6 +25,28 @@ struct BrowserLocationViewUX {
     static let BaseURLPitch = 0.75
     static let HostPitch = 1.0
     static let LocationContentInset = 8
+
+    static let Themes: [String: Theme] = {
+        var themes = [String: Theme]()
+        var theme = Theme()
+        theme.URLFontColor = UIColor.lightGrayColor()
+        theme.hostFontColor = UIColor.whiteColor()
+        theme.backgroundColor = UIConstants.PrivateModeLocationBackgroundColor
+        themes[Theme.PrivateMode] = theme
+
+        theme = Theme()
+        theme.URLFontColor = BaseURLFontColor
+        theme.hostFontColor = HostFontColor
+        // Cliqz: Changed LocationView backgroundColor according to requirements
+        theme.backgroundColor = UIColor.clearColor()
+        themes[Theme.NormalMode] = theme
+
+        // TODO: to be removed
+        // Cliqz: Temporary use same mode for both Normal and Private modes
+        themes[Theme.PrivateMode] = theme
+        
+        return themes
+    }()
 }
 
 class BrowserLocationView: UIView {
@@ -31,7 +56,7 @@ class BrowserLocationView: UIView {
 
     dynamic var baseURLFontColor: UIColor = BrowserLocationViewUX.BaseURLFontColor {
         didSet { updateTextWithURL() }
-    }
+	}
 
     dynamic var hostFontColor: UIColor = BrowserLocationViewUX.HostFontColor {
         didSet { updateTextWithURL() }
@@ -75,8 +100,11 @@ class BrowserLocationView: UIView {
     }
 
     lazy var placeholder: NSAttributedString = {
-        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
-        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.grayColor()])
+		// Cliqz: Changed Placeholder text and color according to requirements
+		// TODO Naira: we should localize the string as well
+//        let placeholderText = NSLocalizedString("Search or enter address", comment: "The text shown in the URL bar on about:home")
+		let placeholderText = NSLocalizedString("Search", tableName: "Cliqz", comment: "The text shown in the search field")
+        return NSAttributedString(string: placeholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
     }()
 
     lazy var urlTextField: UITextField = {
@@ -93,7 +121,17 @@ class BrowserLocationView: UIView {
         urlTextField.attributedPlaceholder = self.placeholder
         urlTextField.accessibilityIdentifier = "url"
         urlTextField.accessibilityActionsSource = self
-        urlTextField.font = UIConstants.DefaultMediumFont
+        urlTextField.font = UIConstants.DefaultChromeFont
+
+        // Cliqz: Added text color to the location text field
+		urlTextField.textColor = UIColor.whiteColor()
+
+        // Cliqz: Added background color to the location text field
+        urlTextField.backgroundColor = UIConstants.TextFieldBackgroundColor.colorWithAlphaComponent(1)
+        
+        // Cliqz: Added left pading to the url text field
+        urlTextField.setLeftPading(5)
+        
         return urlTextField
     }()
 
@@ -109,21 +147,19 @@ class BrowserLocationView: UIView {
     private lazy var readerModeButton: ReaderModeButton = {
         let readerModeButton = ReaderModeButton(frame: CGRectZero)
         readerModeButton.hidden = true
-        readerModeButton.addTarget(self, action: "SELtapReaderModeButton", forControlEvents: .TouchUpInside)
-        readerModeButton.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "SELlongPressReaderModeButton:"))
+        readerModeButton.addTarget(self, action: #selector(BrowserLocationView.SELtapReaderModeButton), forControlEvents: .TouchUpInside)
+        readerModeButton.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(BrowserLocationView.SELlongPressReaderModeButton(_:))))
         readerModeButton.isAccessibilityElement = true
         readerModeButton.accessibilityLabel = NSLocalizedString("Reader View", comment: "Accessibility label for the Reader View button")
-        readerModeButton.accessibilityCustomActions = [UIAccessibilityCustomAction(name: NSLocalizedString("Add to Reading List", comment: "Accessibility label for action adding current page to reading list."), target: self, selector: "SELreaderModeCustomAction")]
+        readerModeButton.accessibilityCustomActions = [UIAccessibilityCustomAction(name: NSLocalizedString("Add to Reading List", comment: "Accessibility label for action adding current page to reading list."), target: self, selector: #selector(BrowserLocationView.SELreaderModeCustomAction))]
         return readerModeButton
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "SELlongPressLocation:")
-        tapRecognizer = UITapGestureRecognizer(target: self, action: "SELtapLocation:")
-
-        self.backgroundColor = UIColor.whiteColor()
+        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BrowserLocationView.SELlongPressLocation(_:)))
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(BrowserLocationView.SELtapLocation(_:)))
 
         addSubview(urlTextField)
         addSubview(lockImageView)
@@ -202,8 +238,11 @@ class BrowserLocationView: UIView {
             // Highlight the base domain of the current URL.
             let attributedString = NSMutableAttributedString(string: httplessURL)
             let nsRange = NSMakeRange(0, httplessURL.characters.count)
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
-            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
+			            attributedString.addAttribute(NSForegroundColorAttributeName, value: baseURLFontColor, range: nsRange)
+			            attributedString.colorSubstring(baseDomain, withColor: hostFontColor)
+			// Cliqz: Changed URL styling colors according to requirements.
+			attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.whiteColor(), range: nsRange)
+			attributedString.colorSubstring(baseDomain, withColor: UIColor.whiteColor())
             attributedString.addAttribute(UIAccessibilitySpeechAttributePitch, value: NSNumber(double: BrowserLocationViewUX.BaseURLPitch), range: nsRange)
             attributedString.pitchSubstring(baseDomain, withPitch: BrowserLocationViewUX.HostPitch)
             urlTextField.attributedText = attributedString
@@ -231,6 +270,18 @@ extension BrowserLocationView: AccessibilityActionsSource {
             return delegate?.browserLocationViewLocationAccessibilityActions(self)
         }
         return nil
+    }
+}
+
+extension BrowserLocationView: Themeable {
+    func applyTheme(themeName: String) {
+        guard let theme = BrowserLocationViewUX.Themes[themeName] else {
+            log.error("Unable to apply unknown theme \(themeName)")
+            return
+        }
+        baseURLFontColor = theme.URLFontColor!
+        hostFontColor = theme.hostFontColor!
+        backgroundColor = theme.backgroundColor
     }
 }
 

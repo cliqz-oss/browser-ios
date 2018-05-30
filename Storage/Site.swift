@@ -5,11 +5,36 @@
 import UIKit
 import Shared
 
-protocol Identifiable {
+public protocol Identifiable: Equatable {
     var id: Int? { get set }
 }
 
+public func ==<T where T: Identifiable>(lhs: T, rhs: T) -> Bool {
+    return lhs.id == rhs.id
+}
+
 public enum IconType: Int {
+    public func isPreferredTo (other: IconType) -> Bool {
+        return rank > other.rank
+    }
+
+    private var rank: Int {
+        switch self {
+        case .AppleIconPrecomposed:
+            return 5
+        case .AppleIcon:
+            return 4
+        case .Icon:
+            return 3
+        case .Local:
+            return 2
+        case .Guess:
+            return 1
+        case .NoneFound:
+            return 0
+        }
+    }
+
     case Icon = 0
     case AppleIcon = 1
     case AppleIconPrecomposed = 2
@@ -19,7 +44,7 @@ public enum IconType: Int {
 }
 
 public class Favicon: Identifiable {
-    var id: Int? = nil
+    public var id: Int? = nil
 
     public let url: String
     public let date: NSDate
@@ -36,18 +61,28 @@ public class Favicon: Identifiable {
 
 // TODO: Site shouldn't have all of these optional decorators. Include those in the
 // cursor results, perhaps as a tuple.
-public class Site : Identifiable {
-    var id: Int? = nil
+public class Site: Identifiable {
+    public var id: Int? = nil
     var guid: String? = nil
+
+    public var tileURL: NSURL {
+        return NSURL(string: url)?.domainURL() ?? NSURL(string: "about:blank")!
+    }
 
     public let url: String
     public let title: String
      // Sites may have multiple favicons. We'll return the largest.
     public var icon: Favicon?
     public var latestVisit: Visit?
+    public let bookmarked: Bool?
+    
+    public convenience init(url: String, title: String) {
+        self.init(url: url, title: title, bookmarked: false)
+    }
 
-    public init(url: String, title: String) {
+    public init(url: String, title: String, bookmarked: Bool?) {
         self.url = url
         self.title = title
+        self.bookmarked = bookmarked
     }
 }

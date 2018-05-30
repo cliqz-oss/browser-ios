@@ -1,0 +1,536 @@
+/* Button for larger reader font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"+" = "+";
+
+/* Button for smaller reader font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"-" = "-";
+
+/* Authentication prompt message with no realm. Parameter is the hostname of the site */
+"A username and password are being requested by %@." = "تم طلب كلمة السر و اسم المستخدم من قبل %@.";
+
+/* Authentication prompt message with a realm. First parameter is the hostname. Second is the realm string */
+"A username and password are being requested by %@. The site says: %@" = "تم طلب كلمة السر و اسم المستخدم من قبل %1$@. و رد الموقع : %2$@.";
+
+/* Button for reader mode font size. Keep this extremely short! This is shown in the reader mode toolbar. */
+"Aa" = "Aa";
+
+/* About settings section title */
+"About" = "حول";
+
+/* Accessibility label for the Add Tab button in the Tab Tray. */
+"Add Tab" = "أضف تبويب جديد";
+
+/* Add URL to the reading list - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
+"Add to Reading List" = "أضِف إلى قائمة القراءة";
+
+/* Accessibility message e.g. spoken by VoiceOver after the current page gets added to the Reading List using the Reader View button, e.g. by long-pressing it or by its accessibility custom action. */
+"Added page to Reading List" = "الصفحة مضافة إلى قائمة القراءة";
+
+/* Accessibility label for address and search field, both words (Address, Search) are therefore nouns. */
+"Address and Search" = "العنوان والبحث";
+
+/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+"Always Send" = "أرسل دائمًا";
+
+/* Authentication prompt title */
+"Authentication required" = "عملية المصادقة مطلوبة";
+
+/* Accessibility Label for the browser toolbar Back button */
+"Back" = "السابق";
+
+/* Block pop-up windows setting */
+"Block Pop-up Windows" = "منع النوافذ المنبثقة";
+
+/* Bookmark a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
+"Bookmark" = "إشارة مرجعية";
+
+/* Panel accessibility label */
+"Bookmarks" = "إشارات مرجعية";
+
+/* Accessibility label for brightness adjustment slider in Reader Mode display settings */
+"Brightness" = "السطوع";
+
+/* Alert Call Button */
+"Call" = "مكالمة";
+
+/* Cancel button title in share dialog */
+"Cancel" = "إلغاء";
+
+/* Accessibility hint for the color theme setting buttons in reader mode display settings */
+"Changes color theme." = "تغيير لون الثيم(الموضوع).";
+
+/* Accessibility hint for the font type buttons in reader mode display settings */
+"Changes font type." = "تغيير نوع الخط.";
+
+/* Label used as an item in Settings. When touched it will open a dialog prompting the user to make sure they want to clear all of their private data. */
+"Clear Private Data" = "امسح البيانات الخاصة";
+
+/* Accessibility label for action denoting closing a tab in tab list (tray) */
+"Close" = "إغلاق";
+
+/* No comment provided by engineer. */
+"Closing tab" = "إغلاق صفحة التبويب";
+
+/* Copy the URL from the location bar */
+"Copy Address" = "نسخ العنوان";
+
+/* Context menu item for copying an image to the clipboard */
+"Copy Image" = "نسخ الصورة";
+
+/* Context menu item for copying a link URL to the clipboard */
+"Copy Link" = "نسخ الرابط";
+
+/* Accessibility message e.g. spoken by VoiceOver after the user wanted to add current page to the Reading List and this was not done, likely because it already was in the Reading List, but perhaps also because of real failures. */
+"Could not add page to Reading List. Maybe it's already there?" = "لا يمكن إضافة الصفحة إلى قائمة القراءة. من الممكن أن تكون موجودة هناك بالفعل؟";
+
+/* Accessibility message e.g. spoken by VoiceOver after adding current webpage to the Reading List failed. */
+"Could not add page to Reading list" = "لا يمكن إضافة الصفحة إلى قائمة القراءة";
+
+/* Error message that is shown in settings when there was a problem loading */
+"Could not load page." = "تعذر تحميل الصفحة.";
+
+/* See http://mzl.la/1Qtkf0j */
+"Create an account" = "أنشئ حسابًا";
+
+/* Dark theme setting in Reading View settings */
+"Dark" = "غامق";
+
+/* Debug option */
+"Debug: forget Sync auth state" = "debugging: نسيان حالة مصادقة المزامنة";
+
+/* Debug option */
+"Debug: require password" = "Debug: يحتاج كلمة مرور";
+
+/* Debug option */
+"Debug: require upgrade" = "Debug: تطَلّب تحديث";
+
+/* Accessibility label for button decreasing font size in display settings of reader mode */
+"Decrease text size" = "صغّر النص";
+
+/* Accessibility label for default search engine setting.
+   Title for default search engine picker.
+   Title for default search engine settings section. */
+"Default Search Engine" = "محرك البحث الافتراضي";
+
+/* Pending feature; currently unused string! Checkbox label shown after multiple alerts are shown */
+"Disable additional page dialogs" = "تعطيل حوارات الصفحة الإضافية";
+
+/* Name for display settings button in reader mode. Display in the meaning of presentation, not monitor. */
+"Display Settings" = "إعدادت العرض";
+
+/* Prompt for saving a password. The first parameter is the username being saved. The second parameter is the hostname of the site. */
+"Do you want to save the password for %@ on %@?" = "هل تريد حفظ كلمة المرور ل %1$@ على %2$@؟";
+
+/* Prompt for saving a password with no username. The parameter is the hostname of the site. */
+"Do you want to save the password on %@?" = "هل تريد حفظ كلمة المرور على %@؟";
+
+/* Prompt for updating a password. The first parameter is the username being saved. The second parameter is the hostname of the site. */
+"Do you want to update the password for %@ on %@?" = "هل تريد تحديث كلمة المرور ل %1$@ على %2$@؟";
+
+/* Prompt for updating a password with on username. The parameter is the hostname of the site. */
+"Do you want to update the password on %@?" = "هل تريد تحديث كلمة المرور على %@؟";
+
+/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+"Don't Send" = "لا ترسل";
+
+/* Done button label for search settings table
+   Done button label on back forward list screen
+   Done button on left side of the Settings view controller title bar
+   Done editing button */
+"Done" = "تمّ";
+
+/* No comment provided by engineer. */
+"Double tap and hold to open history" = "ضغطتين متتاليتين مع الاستمرار لفتح تاريخ التصفح";
+
+/* Text message in the settings table view */
+"Enter your password to connect." = "أدخل كلمة المرور الخاصة بك للاتصال.";
+
+/* Tile title for App Help */
+"Firefox Help and Support" = "الدعم والمساعدة الخاص بفيرفكس";
+
+/* Text of the 'log out firefox account' alert */
+"Firefox will stop syncing with your account, but won’t delete any of your browsing data on this device." = "سيقوم فيرفكس بإيقاف التزامن مع حسابك, لكن لن يتم حذف أي شيء من بيانات التصفح على هذا الجهاز.";
+
+/* See http://mzl.la/1G7uHo7 */
+"Firefox would like to access your Photos" = "فيرفكس يرغب بالوصول إلى صورك";
+
+/* Accessibility Label for the browser toolbar Forward button */
+"Forward" = "إعادة توجيه";
+
+/* General settings section title */
+"General" = "عام";
+
+/* A re-worded offer about Sync that emphasizes one-way data transfer, not syncing. */
+"Get your open tabs, bookmarks, and passwords from your other devices." = "استرجع علامات التبويب المفتوحة, الإشارات المرجعية, كلمات المرور الخاصة بك من أجهزتك الأخرى.";
+
+/* Pending feature; currently unused string! Button to browse to URL on the clipboard when browser is opened */
+"Go" = "اذهب";
+
+/* Pending feature; currently unused string! Prompt message shown when browser is opened with URL on the clipboard */
+"Go to copied URL?" = "الانتقال إلى الرابط المنسوخ ؟";
+
+/* Show the SUMO support page from the Support section in the settings. see http://mzl.la/1dmM8tZ */
+"Help" = "مساعدة";
+
+/* Panel accessibility label */
+"History" = "التاريخ";
+
+/* Accessibility label for button increasing font size in display settings of reader mode */
+"Increase text size" = "كبر النص";
+
+/* Accessibility label for the introduction tour carousel */
+"Intro Tour Carousel" = "جولة تقديمية ل Carousel";
+
+/* History tableview section header */
+"Last month" = "الشهر الماضي";
+
+/* Last synced time label beside Sync Now setting option. Argument is the relative date string.
+   Remote tabs last synced time. Argument is the relative date string. */
+"Last synced: %@" = "آخر مزامنة: %@";
+
+/* History tableview section header */
+"Last week" = "الأسبوع الماضي";
+
+/* Settings item that opens a tab containing the licenses. See http://mzl.la/1NSAWCG */
+"Licenses" = "التراخيص";
+
+/* Light theme setting in Reading View settings */
+"Light" = "فاتح";
+
+/* Link for going to the non-reader page when the reader view could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
+"Load original page" = "تحميل الصفحة الأصلية";
+
+/* Message displayed when the reader mode page is loading. This message will appear only when sharing to Firefox reader mode from another app. */
+"Loading content…" = "جارِ تحميل المحتوى...";
+
+/* Button in settings screen to disconnect from your account
+   Disconnect button in the 'log out firefox account' alert */
+"Log Out" = "تسجيل الخروج";
+
+/* Title of the 'log out firefox account' alert */
+"Log Out?" = "تسجيل الخروج؟";
+
+/* Authentication prompt log in button */
+"Log in" = "تسجيل الدخول";
+
+/* Restore Tabs Prompt Description */
+"Looks like Firefox crashed previously. Would you like to restore your tabs?" = "يبدو أن فيرفكس تعطل سابقا. هل تريد استعادة علامات التبويب الخاصة بك؟";
+
+/* Name for Mark as read button in reader mode
+   Title for the button that marks a reading list item as read */
+"Mark as Read" = "حدد كمقروء";
+
+/* Name for Mark as unread button in reader mode
+   Title for the button that marks a reading list item as unread */
+"Mark as Unread" = "حدد كغير مقروء";
+
+/* Error for a missing remote error number */
+"Missing error" = "خطأ مفقود";
+
+/* Error for a missing remote error message */
+"Missing message" = "رسالة مفقودة";
+
+/* Accessibility label for the navigation toolbar displayed at the bottom of the screen. */
+"Navigation Toolbar" = "شريط التصفح";
+
+/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+"Never Send" = "لا ترسل أبدًا";
+
+/* New tab [title] [url] */
+"New tab: %@: %@" = "علامة تبويب جديدة: %1$@: %2$@";
+
+/* Prompt title for application update */
+"New version available" = "يتوفر إصدار جديد";
+
+/* Restore Tabs Negative Action */
+"No" = "لا";
+
+/* Message spoken by VoiceOver to indicate that there are no tabs in the Tabs Tray */
+"No tabs" = "لا علامات تبويب";
+
+/* Label for button to cancel application update prompt */
+"Not Now" = "ليس الآن";
+
+/* Button to not save the user's password */
+"Not now" = "ليس الآن";
+
+/* Alert OK Button
+   Label for OK button in the application update prompt
+   OK button */
+"OK" = "موافق";
+
+/* Restore Tabs Affirmative Action */
+"Okay" = "موافق";
+
+/* Pending feature; currently unused string! Title for prompt displayed to user after the app crashes */
+"Oops! Firefox crashed" = "عذرا! فيرفكس تعطل";
+
+/* Context menu item for opening a link in a new tab */
+"Open In New Tab" = "فتح في علامة تبويب جديدة";
+
+/* See http://mzl.la/1G7uHo7 */
+"Open Settings" = "فتح الإعدادات";
+
+/* See http://mzl.la/1LXbDOL */
+"Open articles in Reader View by tapping the book icon when it appears in the title bar." = "فتح المقالات في وضع القراءة من خلال النقر على أيقونة الكتاب عندما تظهر في شريط العنوان.";
+
+/* String indicating that the file can be opened in another application on the device */
+"Open in…" = "فتح في...";
+
+/* Opening an external URL */
+"Opening %@" = "جارِ الفتح %@";
+
+/* See http://bit.ly/1I7Do4b */
+"Pages you have visited recently will show up here." = "الصفحات التي قمت بزيارتها مؤخرا تظهر هنا.";
+
+/* Accessibility label for the Home panel's top toolbar containing list of the home panels (top sites, bookmarsk, history, remote tabs, reading list). */
+"Panel Chooser" = "مختار اللوحة";
+
+/* Password textbox in Authentication prompt */
+"Password" = "كلمة المرور";
+
+/* Paste the URL into the location bar */
+"Paste" = "لصق";
+
+/* Paste the URL into the location bar and visit */
+"Paste & Go" = "ألصق و اذهب";
+
+/* Privacy section title */
+"Privacy" = "الخصوصية";
+
+/* Show Firefox Browser Privacy Policy page from the Privacy section in the settings. See https://www.mozilla.org/privacy/firefox/ */
+"Privacy Policy" = "سياسة الخصوصية";
+
+/* Title for quick-search engines settings section. */
+"Quick-search Engines" = "محركات البحث السريع";
+
+/* Accessibility label for the Reader View button */
+"Reader View" = "وضع القراءة";
+
+/* Panel accessibility label */
+"Reading list" = "قائمة القراءة";
+
+/* Accessibility Label for the browser toolbar Reload button */
+"Reload" = "أعد التحميل";
+
+/* Title for the button that removes a reading list item */
+"Remove" = "إزالة";
+
+/* Name for button removing current article from reading list in reader mode */
+"Remove from Reading List" = "أزل من قائمة القراءة";
+
+/* Button shown in editing mode to remove this site from the top sites panel. */
+"Remove page" = "إزالة الصفحة";
+
+/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button. */
+"Request Desktop Site" = "اطلب موقع سطح المكتب";
+
+/* Pending feature; currently unused string! Tooltip label triggered by long pressing the refresh button a second time. */
+"Request Mobile Site" = "طلب موقع المحمول";
+
+/* Font type setting in the reading view settings */
+"Sans-serif" = "غير مذيّل";
+
+/* Button to save the user's password */
+"Save" = "حفظ";
+
+/* Context menu item for saving an image */
+"Save Image" = "حفظ الصورة";
+
+/* Setting to enable the built-in password manager */
+"Save Logins" = "احفظ تسجيلات الدخول";
+
+/* See http://mzl.la/1LXbDOL */
+"Save pages to your Reading List by tapping the book plus icon in the Reader View controls." = "حفظ الصفحات في قائمة القراءة الخاصة بك من خلال النقر المستمر على الكتاب مع الأيقونة في ضوابط وضع القارئ.";
+
+/* Navigation title for search settings.
+   Open search section of settings */
+"Search" = "بحث";
+
+/* The text shown in the URL bar on about:home */
+"Search or enter address" = "ابحث أو أدخل عنوانا";
+
+/* Accessibility hint describing the action performed when a search suggestion is clicked */
+"Searches for the suggestion" = "البحث عن اقتراح";
+
+/* Accessibility label for the lock icon, which is only present if the connection is secure */
+"Secure connection" = "اتصال آمن";
+
+/* Setting to enable the sending of crash reports */
+"Send Crash Reports" = "أرسل تقارير الأعطال";
+
+/* Show an input.mozilla.org page where people can submit feedback */
+"Send Feedback" = "أرسل انطباعك";
+
+/* Pending feature; currently unused string! Used as a button label for crash dialog prompt */
+"Send Report" = "أرسل التقرير";
+
+/* Pending feature; currently unused string! Message displayed in the crash dialog above the buttons used to select when sending reports */
+"Send a crash report so Mozilla can fix the problem?" = "إرسال تقرير العطل لكي تتمكن موزيلا من إصلاح العطل ؟";
+
+/* Sepia theme setting in Reading View settings */
+"Sepia" = "بني داكن";
+
+/* Font type setting in the reading view settings */
+"Serif" = "مذيّل";
+
+/* Accessibility label for the Settings button in the Tab Tray.
+   Settings */
+"Settings" = "الإعدادات";
+
+/* Accessibility Label for the browser toolbar Share button */
+"Share" = "مُشاركة";
+
+/* Label for show search suggestions setting. */
+"Show Search Suggestions" = "إظهار اقتراحات البحث";
+
+/* Accessibility label for the tabs button in the (top) browser toolbar
+   Accessibility Label for the tabs button in the browser toolbar */
+"Show Tabs" = "عرض علامات التبويب";
+
+/* Show the on-boarding screen again from the settings */
+"Show Tour" = "إظهار الجولة";
+
+/* Label for show search suggestions setting. */
+"Show search suggestions" = "أظهر اقتراحات البحث";
+
+/* Text message / button in the settings table view */
+"Sign In" = "تسجيل الدخول";
+
+/* Text message / button in the settings table view */
+"Sign in" = "تسجيل الدخول";
+
+/* Accessibility Label for the browser toolbar Stop button */
+"Stop" = "إيقاف";
+
+/* Support section title */
+"Support" = "الدعم";
+
+/* Accessibility hint for tab tray's displayed tab. */
+"Swipe right or left with three fingers to close the tab." = "مرر إلى اليمين أو اليسار باستخدام ثلاثة أصابع لإغلاق التبويب.";
+
+/* Sync Firefox Account */
+"Sync Now" = "قم بالمزامنة الآن";
+
+/* See http://mzl.la/1Qtkf0j */
+"Sync your tabs, bookmarks, passwords and more." = "زامن علامات التبويب الخاصة بك, إشاراتك المرجعية, كلمات المرور و المزيد.";
+
+/* See http://mzl.la/1Qtkf0j */
+"Sync your tabs, passwords and more." = "زامن علامات التبويب الخاصة بك, كلمات المرور و المزيد.";
+
+/* Panel accessibility label */
+"Synced tabs" = "علامات التبويب المُزامنة";
+
+/* Syncing Firefox Account */
+"Syncing…" = "جارِ المزامنة…";
+
+/* Message spoken by VoiceOver saying the position of the single currently visible tab in Tabs Tray, along with the total number of tabs. E.g. \"Tab 2 of 5\" says that tab 2 is visible (and is the only visible tab), out of 5 tabs total. */
+"Tab %@ of %@" = "علامة تبويب %1$@ من %2$@";
+
+/* Message spoken by VoiceOver saying the range of tabs that are currently visible in Tabs Tray, along with the total number of tabs. E.g. \"Tabs 8 to 10 of 15\" says tabs 8, 9 and 10 are visible, out of 15 tabs total. */
+"Tabs %@ to %@ of %@" = "علامات التبويب %1$@ إلى %2$@ من %3$@";
+
+/* Accessibility label for the Tabs Tray view. */
+"Tabs Tray" = "حامل علامات التبويب";
+
+/* Tile title for Mozilla */
+"The Mozilla Project" = "مشروع موزيلا";
+
+/* Message displayed when the reader mode page could not be loaded. This message will appear only when sharing to Firefox reader mode from another app. */
+"The page could not be displayed in Reader View." = "لا يمكن عرض الصفحة بوضع عرض القارئ.";
+
+/* Prompt message for application update */
+"There is a new version available of Firefox Aurora. Tap OK to go to the download page." = "هنالك إصدار جديد لفيرفكس أورورا. اضغط موافق للذهاب إلى صفحة التحميل.";
+
+/* Error message in the remote tabs panel */
+"There was a problem accessing tabs from your other devices. Try again in a few moments." = "كان هنالك مشكلة في الوصول إلى علامات التبويب من أجهزتك الأخرى. أعد المحاولة بعد لحظات.";
+
+/* Error displayed when reader mode cannot be enabled */
+"There was an error converting the page" = "كان هنالك خطأ في تحويل الصفحة";
+
+/* See http://mzl.la/1G7uHo7 */
+"This allows you to save the image to your Camera Roll." = "هذا يسمح لك بأن تحفظ الصورة في سجل الكاميرا.";
+
+/* Opening an external app */
+"This will open in another application" = "هذا سيفتح في تطبيق آخر";
+
+/* History tableview section header */
+"Today" = "اليوم";
+
+/* Panel accessibility label */
+"Top sites" = "المواقع الأكثر زيارة";
+
+/* Button to update the user's password */
+"Update" = "تحديث";
+
+/* Text message in the settings table view */
+"Upgrade Firefox to connect." = "حدّث فيرفكس للاتصال.";
+
+/* Setting to enable compact tabs in the tab overview */
+"Use Compact Tabs" = "استخدم علامات تبويب مدمجة";
+
+/* Username textbox in Authentication prompt */
+"Username" = "اسم المستخدم";
+
+/* Text message in the settings table view */
+"Verify your email address." = "أكِّد البريد الالكتروني الخاص بك.";
+
+/* Version number of Firefox shown in settings */
+"Version %@ (%@)" = "إصدار %1$@ (%2$@)";
+
+/* View a URL - https://bugzilla.mozilla.org/attachment.cgi?id=8624438, https://bug1157303.bugzilla.mozilla.org/attachment.cgi?id=8624440 */
+"View" = "عرض";
+
+/* Accessibility label for the main web content view */
+"Web content" = "محتوى الويب";
+
+/* See http://mzl.la/1Qtkf0j */
+"Welcome to Sync" = "أهلاً بك في التزامن";
+
+/* See http://mzl.la/1LXbDOL */
+"Welcome to your Reading List" = "أهلاً بك في قائمة القراءة الخاصة بك";
+
+/* Restore Tabs Prompt Title */
+"Well, this is embarrassing." = "حسناً, هذا محرِج.";
+
+/* History tableview section header */
+"Yesterday" = "الأمس";
+
+/* Error message in the remote tabs panel */
+"You don't have any other devices connected to this Firefox Account available to sync." = "أنت لا تملك أجهزة أخرى متوفرة للمزامنة متصلة على حساب فيرفكس الحالي.";
+
+/* Error message in the remote tabs panel */
+"You don't have any tabs open in Firefox on your other devices." = "لا يوجد لديك أي علامات تبويب مفتوحة في فيرفكس على أجهزتك الأخرى.";
+
+/* Your Rights settings section title */
+"Your Rights" = "حقوقك";
+
+/* Accessibility label for Desktop Computer (PC) image in remote tabs list */
+"computer" = "جهاز الحاسوب";
+
+/* Relative time for a tab that was visited within the last few moments. */
+"just now" = "فقط الآن";
+
+/* Accessibility label for Mobile Device image in remote tabs list */
+"mobile device" = "الجهاز المحمول";
+
+/* Relative date for dates older than a month and less than two months. */
+"more than a month ago" = "منذ أكثر من شهر";
+
+/* Description for a date more than a week ago, but less than a month ago. */
+"more than a week ago" = "منذ أكثر من أسبوع";
+
+/* Accessibility label for read article in reading list. It's a past participle - functions as an adjective. */
+"read" = "قراءة";
+
+/* Relative date for date in past week. */
+"this week" = "هذا الأسبوع";
+
+/* Relative date for date older than a minute. */
+"today at %@" = "اليوم في %@";
+
+/* Accessibility label for unread article in reading list. It's a past participle - functions as an adjective. */
+"unread" = "غير مقروء";
+
+/* Relative date for yesterday. */
+"yesterday" = "الأمس";
+

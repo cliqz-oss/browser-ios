@@ -4,20 +4,33 @@
 
 import Foundation
 import XCGLogger
+import Deferred
 import Shared
+import Deferred
+
+public let NotificationDatabaseWasRecreated = "NotificationDatabaseWasRecreated"
 
 private let log = Logger.syncLogger
 
-typealias Args = [AnyObject?]
+public typealias Args = [AnyObject?]
 
-/* This is a base interface into our browser db. It holds arrays of tables and handles basic creation/updating of them. */
+protocol Changeable {
+    func run(sql: String, withArgs args: Args?) -> Success
+    func run(commands: [String]) -> Success
+    func run(commands: [(sql: String, args: Args?)]) -> Success
+}
+
+protocol Queryable {
+    func runQuery<T>(sql: String, args: Args?, factory: SDRow -> T) -> Deferred<Maybe<Cursor<T>>>
+}
+
 // Version 1 - Basic history table.
 // Version 2 - Added a visits table, refactored the history table to be a GenericTable.
 // Version 3 - Added a favicons table.
 // Version 4 - Added a readinglist table.
 // Version 5 - Added the clients and the tabs tables.
 // Version 6 - Visit timestamps are now microseconds.
-// Version 7 - Eliminate most tables.
+// Version 7 - Eliminate most tables. See BrowserTable instead.
 public class BrowserDB {
     private let db: SwiftData
     // XXX: Increasing this should blow away old history, since we currently don't support any upgrades.
@@ -31,7 +44,7 @@ public class BrowserDB {
 
     // SQLITE_MAX_VARIABLE_NUMBER = 999 by default. This controls how many ?s can
     // appear in a query string.
-    static let MaxVariableNumber = 999
+    public static let MaxVariableNumber = 999
 
     public init(filename: String, secretKey: String? = nil, files: FileAccessor) {
         log.debug("Initializing BrowserDB: \(filename).")
@@ -49,12 +62,15 @@ public class BrowserDB {
 
         // Create or update will also delete and create the database if our key was incorrect.
         self.createOrUpdate(self.schemaTable)
+		
+		// Cliqz: new method call to extend tables if needed
+		self.extendTables()
     }
 
     // Creates a table and writes its table info into the table-table database.
-    private func createTable(conn: SQLiteDBConnection, table: Table) -> TableResult {
+    private func createTable(conn: SQLiteDBConnection, table: SectionCreator) -> TableResult {
         log.debug("Try create \(table.name) version \(table.version)")
-        if !table.create(conn, version: table.version) {
+        if !table.create(conn) {
             // If creating failed, we'll bail without storing the table info
             log.debug("Creation failed.")
             return .Failed
@@ -66,7 +82,7 @@ public class BrowserDB {
 
     // Updates a table and writes its table into the table-table database.
     // Exposed internally for testing.
-    func updateTable(conn: SQLiteDBConnection, table: Table) -> TableResult {
+    func updateTable(conn: SQLiteDBConnection, table: SectionUpdater) -> TableResult {
         log.debug("Trying update \(table.name) version \(table.version)")
         var from = 0
         // Try to find the stored version of the table
@@ -82,7 +98,7 @@ public class BrowserDB {
             return .Exists
         }
 
-        if !table.updateTable(conn, from: from, to: table.version) {
+        if !table.updateTable(conn, from: from) {
             // If the update failed, we'll bail without writing the change to the table-table.
             log.debug("Updating failed.")
             return .Failed
@@ -104,11 +120,11 @@ public class BrowserDB {
     // creation of the table in the database.
     func createOrUpdate(tables: Table...) -> Bool {
         var success = true
+
         let doCreate = { (table: Table, connection: SQLiteDBConnection) -> () in
             switch self.createTable(connection, table: table) {
             case .Created:
                 success = true
-                connection.checkpoint()
                 return
             case .Exists:
                 log.debug("Table already exists.")
@@ -133,7 +149,6 @@ public class BrowserDB {
                     case .Updated:
                         log.debug("Updated table \(table.name).")
                         success = true
-                        connection.checkpoint()
                         break
                     case .Exists:
                         log.debug("Table \(table.name) already exists.")
@@ -155,6 +170,10 @@ public class BrowserDB {
                     return false
                 }
             }
+			// Cliqz: Added notification to notify when db creation is finished
+			let notify = NSNotification(name: NotificationDatabaseWasCreated, object: self.filename)
+			NSNotificationCenter.defaultCenter().postNotification(notify)
+
             return success
         }) {
             // Err getting a transaction
@@ -163,24 +182,55 @@ public class BrowserDB {
 
         // If we failed, move the file and try again. This will probably break things that are already
         // attached and expecting a working DB, but at least we should be able to restart.
+        var notify: NSNotification? = nil
         if !success {
             log.debug("Couldn't create or update \(tables.map { $0.name }).")
             log.debug("Attempting to move \(self.filename) to another location.")
+
+            // Make sure that we don't still have open the files that we want to move!
+            // Note that we use sqlite3_close_v2, which might actually _not_ close the
+            // database file yet. For this reason we move the -shm and -wal files, too.
+            db.forceClose()
 
             // Note that a backup file might already exist! We append a counter to avoid this.
             var bakCounter = 0
             var bak: String
             repeat {
-                bak = "\(self.filename).bak.\(++bakCounter)"
+                bakCounter += 1
+                bak = "\(self.filename).bak.\(bakCounter)"
             } while self.files.exists(bak)
 
             do {
                 try self.files.move(self.filename, toRelativePath: bak)
+
+                let shm = self.filename + "-shm"
+                let wal = self.filename + "-wal"
+                log.debug("Moving \(shm) and \(wal)…")
+                if self.files.exists(shm) {
+                    log.debug("\(shm) exists.")
+                    try self.files.move(shm, toRelativePath: bak + "-shm")
+                }
+                if self.files.exists(wal) {
+                    log.debug("\(wal) exists.")
+                    try self.files.move(wal, toRelativePath: bak + "-wal")
+                }
                 success = true
+
+                // Notify the world that we moved the database. This allows us to
+                // reset sync and start over in the case of corruption.
+                let notification = NotificationDatabaseWasRecreated
+                notify = NSNotification(name: notification, object: self.filename)
             } catch _ {
                 success = false
             }
             assert(success)
+
+            // Do this after the relevant tables have been created.
+            defer {
+                if let notify = notify {
+                    NSNotificationCenter.defaultCenter().postNotification(notify)
+                }
+            }
 
             if let _ = db.transaction({ connection -> Bool in
                 for table in tables {
@@ -203,6 +253,9 @@ public class BrowserDB {
     func withConnection<T>(flags flags: SwiftData.Flags, inout err: NSError?, callback: (connection: SQLiteDBConnection, inout err: NSError?) -> T) -> T {
         var res: T!
         err = db.withConnection(flags) { connection in
+            // This should never occur. Make it fail hard in debug builds.
+            assert(!(connection is FailedSQLiteDBConnection))
+
             var err: NSError? = nil
             res = callback(connection: connection, err: &err)
             return err
@@ -218,10 +271,32 @@ public class BrowserDB {
         return withConnection(flags: SwiftData.Flags.ReadOnly, err: &err, callback: callback)
     }
 
-    func transaction(inout err: NSError?, callback: (connection: SQLiteDBConnection, inout err: NSError?) -> Bool) {
-        db.transaction { connection in
-            var err: NSError? = nil
+    func transaction(inout err: NSError?, callback: (connection: SQLiteDBConnection, inout err: NSError?) -> Bool) -> NSError? {
+        return self.transaction(synchronous: true, err: &err, callback: callback)
+    }
+
+    func transaction(synchronous synchronous: Bool=true, inout err: NSError?, callback: (connection: SQLiteDBConnection, inout err: NSError?) -> Bool) -> NSError? {
+        return db.transaction(synchronous: synchronous) { connection in
+			// Cliqz: Fixed bug: extra declaration of local variable which overrides method argument and cause wrong behaviour in the case of failing query
+//            var err: NSError? = nil
             return callback(connection: connection, err: &err)
+        }
+    }
+}
+
+extension BrowserDB {
+    func vacuum() {
+        log.debug("Vacuuming a BrowserDB.")
+        db.withConnection(SwiftData.Flags.ReadWriteCreate, synchronous: true) { connection in
+            return connection.vacuum()
+        }
+    }
+
+    func checkpoint() {
+        log.debug("Checkpointing a BrowserDB.")
+        db.transaction(synchronous: true) { connection in
+            connection.checkpoint()
+            return true
         }
     }
 }
@@ -312,52 +387,75 @@ extension BrowserDB {
         }
     }
 
-    public func close() {
-        db.close()
+    public func forceClose() {
+        db.forceClose()
     }
+}
 
+extension BrowserDB: Changeable {
     func run(sql: String, withArgs args: Args? = nil) -> Success {
         return run([(sql, args)])
     }
 
+    func run(commands: [String]) -> Success {
+        return self.run(commands.map { (sql: $0, args: nil) })
+    }
+
     /**
-     * Runs an array of sql commands. Note: These will all run in order in a transaction and will block
-     * the callers thread until they've finished. If any of them fail the operation will abort (no more
-     * commands will be run) and the transaction will rollback, returning a DatabaseError.
+     * Runs an array of SQL commands. Note: These will all run in order in a transaction and will block
+     * the caller's thread until they've finished. If any of them fail the operation will abort (no more
+     * commands will be run) and the transaction will roll back, returning a DatabaseError.
      */
-    func run(sql: [(sql: String, args: Args?)]) -> Success {
+    func run(commands: [(sql: String, args: Args?)]) -> Success {
+        if commands.isEmpty {
+            return succeed()
+        }
+
         var err: NSError? = nil
-        self.transaction(&err) { (conn, err) -> Bool in
-            for (sql, args) in sql {
+        let errorResult = self.transaction(&err) { (conn, err) -> Bool in
+            for (sql, args) in commands {
                 err = conn.executeChange(sql, withArgs: args)
-                if err != nil {
+                if let err = err {
+                    log.warning("SQL operation failed: \(err.localizedDescription)")
                     return false
                 }
             }
             return true
         }
 
-        if let err = err {
+        if let err = err ?? errorResult {
             return deferMaybe(DatabaseError(err: err))
         }
 
         return succeed()
     }
+}
 
+extension BrowserDB: Queryable {
     func runQuery<T>(sql: String, args: Args?, factory: SDRow -> T) -> Deferred<Maybe<Cursor<T>>> {
         return runWithConnection { (connection, err) -> Cursor<T> in
             return connection.executeQuery(sql, factory: factory, withArgs: args)
         }
     }
+
+    func queryReturnsResults(sql: String, args: Args?=nil) -> Deferred<Maybe<Bool>> {
+        return self.runQuery(sql, args: args, factory: { row in true })
+         >>== { deferMaybe($0[0] ?? false) }
+    }
+
+    func queryReturnsNoResults(sql: String, args: Args?=nil) -> Deferred<Maybe<Bool>> {
+        return self.runQuery(sql, args: nil, factory: { row in false })
+          >>== { deferMaybe($0[0] ?? true) }
+    }
 }
 
 extension SQLiteDBConnection {
-    func tablesExist(names: Args) -> Bool {
+    func tablesExist(names: [String]) -> Bool {
         let count = names.count
-        let orClause = Array(count: count, repeatedValue: "name = ?").joinWithSeparator(" OR ")
-        let tablesSQL = "SELECT name FROM sqlite_master WHERE type = 'table' AND (\(orClause))"
+        let inClause = BrowserDB.varlist(names.count)
+        let tablesSQL = "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN \(inClause)"
 
-        let res = self.executeQuery(tablesSQL, factory: StringFactory, withArgs: names)
+        let res = self.executeQuery(tablesSQL, factory: StringFactory, withArgs: names.map { $0 as AnyObject })
         log.debug("\(res.count) tables exist. Expected \(count)")
         return res.count > 0
     }

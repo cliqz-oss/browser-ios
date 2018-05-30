@@ -6,7 +6,7 @@ import Shared
 
 private var appDelegate: AppDelegate.Type
 
-if AppConstants.IsRunningTest {
+if AppConstants.IsRunningTest || AppConstants.IsRunningFastlaneSnapshot {
     appDelegate = TestAppDelegate.self
 } else {
     switch AppConstants.BuildChannel {
@@ -14,7 +14,11 @@ if AppConstants.IsRunningTest {
         appDelegate = AuroraAppDelegate.self
     case .Developer:
         appDelegate = AppDelegate.self
+    case .Fennec:
+        appDelegate = AppDelegate.self
     case .Release:
+        appDelegate = AppDelegate.self
+    case .Beta:
         appDelegate = AppDelegate.self
     }
 }

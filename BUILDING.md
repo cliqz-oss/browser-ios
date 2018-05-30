@@ -1,21 +1,18 @@
-> These are the instructions for building the *master* branch which is focussed on iOS 9 and Xcode 7 for our upcoming v1.1 and v2.0 releases. If you instead want to work on v1.0 then please follow the README.md in that branch.
+> These are the instructions for building the *master* branch which contains a stable version just before releasing. If you need an up-to-date version user development branch.
 
-Building Firefox for iOS
+Building Cliqz for iOS
 ========================
 
-Prerequisites, as of *September 4, 2015*:
+Prerequisites, as of *July 21, 2016*:
 
-* Mac OS X 10.10.5
-* Xcode 7.0 GM with the iOS 9.0 GM SDK (Newer betas not supported)
-* Carthage 0.8 via Homebrew
+* Mac OS X 10.11.4
+* Xcode 7.3 GM with the iOS 9.3 GM SDK (Newer betas not supported)
+* Carthage 0.15 or newer
 
-> There are issues with Carthage on OS X 10.11 El Capitan. We recommend to use OS X 10.10 Yosemite instead.
-
-(For the v1.1 release, we try to keep up to date with the most recent beta versions of Xcode and the iOS SDK.)
 
 When running on a device:
 
-* A device that supports iOS 9.0 GM
+* A device that supports iOS 8.2 GM
 * One of the following:
  * A developer account and Admin access to the *Certificates, Identifiers & Profiles* section of the *iOS DevCenter*
  * A free developer account, new with Xcode 7
@@ -24,8 +21,8 @@ Get the Code
 -----------
 
 ```
-git clone https://github.com/mozilla/firefox-ios
-cd firefox-ios
+git clone https://github.com/cliqz-oss/browser-ios
+cd browser-ios
 ```
 
 (If you have forked the repository, substitute the URL with your own repository location.)
@@ -33,7 +30,7 @@ cd firefox-ios
 Pull in Dependencies
 --------------------
 
-We use Carthage to manage projects that we depend on. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
+We use Carthage to manage projects that we depend on. __The build will currently only work with Carthage v0.15 or newer__. If you do not already have Carthage installed, you need to grab it via Homebrew. Assuming you have Homebrew installed, execute the following:
 
 ```
 brew update
@@ -41,7 +38,6 @@ brew upgrade
 brew install carthage
 ```
 
-> OS X 10.11 El Capitan note: At time of writing it was not possible to install Carthage via homebrew. Instead, install the latest Carthage release manually from their [https://github.com/Carthage/Carthage/releases](releases page)
 
 You can now execute our `checkout.sh` script:
 
@@ -49,16 +45,15 @@ You can now execute our `checkout.sh` script:
 ./checkout.sh
 ```
 
-> If checkout fails with an error like `fatal: Not a git repository (or any of the parent directories): .git` you may have to remove the `~/Library/Caches/org.carthage.CarthageKit` directory first. See [this Carthage issue](https://github.com/Carthage/Carthage/issues/407)
 
-At this point you have checked out the source code for both the Firefox for iOS project and it's dependencies. You can now build and run the application.
+At this point you have checked out the source code for both the Cliqz for iOS project and it's dependencies. You can now build and run the application.
 
 Everything after this point is done from within Xcode.
 
 Run on the Simulator
 -----------------
 
-* Open `Client.xcodeproj` and make sure you have the *Client* scheme and a simulated device selected. The app should run on any simulator. We just have not tested very well on the *Resizable iPad* and *Resizable iPhone* simulators.
+* Open `Client.xcodeproj` and make sure you have the *Fennec* scheme and a simulated device selected. The app should run on any simulator. We just have not tested very well on the *Resizable iPad* and *Resizable iPhone* simulators.
 * Select *Product -> Run* and the application should build and run on the selected simulator.
 
 Run on a Device with Xcode 7 and a Free Developer Account
@@ -66,19 +61,14 @@ Run on a Device with Xcode 7 and a Free Developer Account
 
 > Only follow these instructions if you are using the new free personal developer accounts that Apple enabled with Xcode 7.
 
-In the following files, replace occurrences of `org.mozilla.ios` with your own unique reverse domain like for example `se.mydomain.ios`. If you do not own a domain, just use your full name like for example `jane.appleseed`.  
+Since the bundle identifier we use for Cliqz is tied to our developer account, you'll need to generate your own identifier and update the existing configuration.
 
-Make sure you expand all the fields of the `.entitlements` files. Make sure you just replace the `org.mozilla.ios` part and keep prefixes like `group.` that some files contain.
-
-* `Client/Configuration/BaseConfig.xcconfig`
-* `Client/Info.plist`
-* `Client/Fennec.entitlements`
-* `Extensions/ShareTo/Info.plist`
-* `Extensions/ShareTo/Fennec.entitlements`
-* `Extensions/SendTo/Info.plist`
-* `Extensions/SendTo/Fennec.entitlements`
-* `Extensions/ViewLater/Info.plist`
-* `Extensions/ViewLater/Fennec.entitlements`
+1. Open Client/Configuration/Fennec.xcconfig
+2. Change MOZ_BUNDLE_ID to your own bundle identifier.
+3. Navigate to each of the application targets (Client/SendTo/ShareTo/ViewLater) and for each one:
+  1. select your personal development account
+  2. remove the code signing entitlements
+  3. change Bundle Identifier to your own identifier.
 
 If you submit a patch, be sure to exclude these files because they are only relevant for your personal build.
 
@@ -99,39 +89,33 @@ Before you can run the application on your device, you need to setup a few thing
 
 > _Note_: When we mention `YOURREVEREDOMAIN` below, use your own domain in reverse notation like `com.example` or if you do not have your own domain, just use something unique and personal like `io.github.yourgithubusername`. Please do not use existing domain names which you do not own.
 
-1. Create a Application Group. Name this group 'Fennec' and for its Identifier use `group.YOURREVERSEDOMAIN.Fennec`
-2. Create a new App Id. Name it 'Fennec'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec`. In the App Services section, select *App Groups*.
-3. Create a new App Id. Name it 'Fennec ShareTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ShareTo`. In the App Services section, select *App Groups*.
-4. Create a new App Id. Name it 'Fennec SendTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.SendTo`. In the App Services section, select *App Groups*.
-5. Create a new App Id. Name it 'Fennec ViewLater'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.Fennec.ViewLater`. In the App Services section, select *App Groups*.
-6. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
+1. Create a Application Group. Name this group whatever you want e.g. 'XXX' and for its Identifier use `group.YOURREVERSEDOMAIN.XXX`
+2. Create a new App Id. Name it 'XXX'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX`. In the App Services section, select *App Groups*.
+3. Create a new App Id. Name it 'XXX ShareTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.ShareTo`. In the App Services section, select *App Groups*.
+4. Create a new App Id. Name it 'XXX SendTo'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.SendTo`. In the App Services section, select *App Groups*.
+5. Create a new App Id. Name it 'XXX ViewLater'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.ViewLater`. In the App Services section, select *App Groups*.
+6. Create a new App Id. Name it 'XXX Today'. Give it an Explicit App ID and set its Bundle Identifier to `YOURREVERSEDOMAIN.XXX.Today`. In the App Services section, select *App Groups*.
+7. For all App Ids that you just created, edit their App Groups and make sure they are all part of the Fennec App Group that you created in step 1.
 
 Now we are going to create three Provisioning Profiles that are linked to the App Ids that we just created:
 
-1. Create a new *Development Provisioning Profile* and link it to the *Fennec* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec*.
-2. Create a new *Development Provisioning Profile* and link it to the *Fennec SendTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec SendTo*.
-3. Create a new *Development Provisioning Profile* and link it to the *Fennec ShareTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ShareTo*.
-4. Create a new *Development Provisioning Profile* and link it to the *Fennec ViewLater* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *Fennec ViewLater*.
+1. Create a new *Development Provisioning Profile* and link it to the *XXX* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX*.
+2. Create a new *Development Provisioning Profile* and link it to the *XXX SendTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX SendTo*.
+3. Create a new *Development Provisioning Profile* and link it to the *XXX ShareTo* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX ShareTo*.
+4. Create a new *Development Provisioning Profile* and link it to the *XXX ViewLater* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX ViewLater*.
+5. Create a new *Development Provisioning Profile* and link it to the *XXX Today* App ID that you created. Select the *Developer Certificates* and *Devices* that you wish to include in this profile. Finally, name this profile *XXX Today*.
 
 Now go to Xcode, *Preferences -> Accounts* and select your developer account. Hit the *View Details* button and then press the little reload button in the bottom left corner. This should sync the Provisioning Profiles and you should see the three profiles appear that you creates earlier.
 
-Almost done. The one thing missing is that we need to adjust the following files in the project:
+Almost done. The one thing missing is that we need to adjust the build configuration to use your new bundle identifier.
 
-* `Client/Configuration/BaseConfig.xcconfig`
-* `Client/Info.plist`
-* `Client/Fennec.entitlements`
-* `Extensions/ShareTo/Info.plist`
-* `Extensions/ShareTo/Fennec.entitlements`
-* `Extensions/SendTo/Info.plist`
-* `Extensions/SendTo/Fennec.entitlements`
-* `Extensions/ViewLater/Info.plist`
-* `Extensions/ViewLater/Fennec.entitlements`
-
-In all these files, replace occurrences of `org.mozilla.ios` with `YOURREVERSEDOMAIN`. Make sure you expand all the fields of the `.entitlements` files. Make sure you just replace the `org.mozilla.ios` part and keep prefixes like `group.` that some files contain.
+1. Open Client/Configuration/Fennec.xcconfig
+2. Change MOZ_BUNDLE_ID to `YOURREVERSEDOMAIN`.
+3. Navigate to each of the application targets (Client/SendTo/ShareTo/ViewLater) and your developer account.
 
 Before building, do *Product -> Clean Build Folder* (option-shift-command-k)
 
-You should now be able to build the *Client* scheme and run on your device.
+You should now be able to build the *Fennec* scheme and run on your device.
 
 We would love a Pull Request for a smarter Xcode project configuration or even a shell script that makes this process simpler.
 

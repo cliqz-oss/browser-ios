@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import Deferred
 // Haskell, baby.
 
 // Monadic bind/flatMap operator for Deferred.
@@ -27,6 +28,15 @@ public func >>> <T, U>(x: Deferred<Maybe<T>>, f: () -> Deferred<Maybe<U>>) -> De
             return f();
         }
         return deferMaybe(res.failureValue!)
+    }
+}
+
+// Another termination case.
+public func >>> <T>(x: Deferred<Maybe<T>>, f: () -> ())  {
+    return x.upon { res in
+        if res.isSuccess {
+            f();
+        }
     }
 }
 
@@ -129,7 +139,7 @@ public func walk<T, U>(items: [T], start: Deferred<Maybe<U>>, f: (T, U) -> Defer
 extension Array where Element: Success {
     public func allSucceed() -> Success {
         return all(self).bind { results -> Success in
-            if let failure = find(results, f: { $0.isFailure }) {
+            if let failure = results.find({ $0.isFailure }) {
                 return deferMaybe(failure.failureValue!)
             }
 

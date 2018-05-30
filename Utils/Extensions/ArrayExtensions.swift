@@ -5,6 +5,16 @@
 import Foundation
 
 public extension Array {
+
+    func find(f: (Generator.Element) -> Bool) -> Generator.Element? {
+        for x in self {
+            if f(x) {
+                return x
+            }
+        }
+        return nil
+    }
+
     // Laughably inefficient, but good enough for a handful of items.
     func sameElements(arr: [Element], f: (Element, Element) -> Bool) -> Bool {
         return self.count == arr.count && every { arr.contains($0, f: f) }
@@ -18,8 +28,10 @@ public extension Array {
         }
         return false
     }
+}
 
-    func every(f: (Element) -> Bool) -> Bool {
+public extension SequenceType {
+    func every(f: (Self.Generator.Element) -> Bool) -> Bool {
         for x in self {
             if !f(x) {
                 return false

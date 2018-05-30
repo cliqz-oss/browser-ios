@@ -7,6 +7,7 @@ import Alamofire
 import Shared
 import Account
 import XCGLogger
+import Deferred
 
 private let log = Logger.syncLogger
 
@@ -73,6 +74,20 @@ public class RecordParseError: MaybeErrorType {
 public class MalformedMetaGlobalError: MaybeErrorType {
     public var description: String {
         return "Supplied meta/global for upload did not serialize to valid JSON."
+    }
+}
+
+public class RecordTooLargeError: MaybeErrorType {
+    public let guid: GUID
+    public let size: ByteCount
+
+    public init(size: ByteCount, guid: GUID) {
+        self.size = size
+        self.guid = guid
+    }
+
+    public var description: String {
+        return "Record \(self.guid) too large: \(size) bytes."
     }
 }
 
@@ -220,7 +235,7 @@ public struct StorageResponse<T> {
 public struct POSTResult {
     public let modified: Timestamp
     public let success: [GUID]
-    public let failed: [GUID: [String]]
+    public let failed: [GUID: String]
 
     public static func fromJSON(json: JSON) -> POSTResult? {
         if json.isError {
@@ -232,14 +247,13 @@ public struct POSTResult {
            let f = json["failed"].asDictionary {
             var failed = false
             let asStringOrFail: JSON -> String = { $0.asString ?? { failed = true; return "" }() }
-            let asArrOrFail: JSON -> [String] = { $0.asArray?.map(asStringOrFail) ?? { failed = true; return [] }() }
 
             // That's the basic structure. Now let's transform the contents.
             let successGUIDs = s.map(asStringOrFail)
             if failed {
                 return nil
             }
-            let failedGUIDs = mapValues(f, f: asArrOrFail)
+            let failedGUIDs = mapValues(f, f: asStringOrFail)
             if failed {
                 return nil
             }
@@ -264,6 +278,10 @@ public protocol BackoffStorage {
 public class Sync15StorageClient {
     private let authorizer: Authorizer
     private let serverURI: NSURL
+
+    public static let maxRecordSizeBytes: Int = 262_140       // A shade under 256KB.
+    public static let maxPayloadSizeBytes: Int = 1_000_000    // A shade under 1MB.
+    public static let maxPayloadItemCount: Int = 100          // Bug 1250747 will raise this.
 
     var backoff: BackoffStorage
 
@@ -428,9 +446,13 @@ public class Sync15StorageClient {
         return self.requestWrite(url, method: Method.POST.rawValue, body: body.toString(false), contentType: "application/json;charset=utf-8", ifUnmodifiedSince: ifUnmodifiedSince)
     }
 
+    func requestPOST(url: NSURL, body: [String], ifUnmodifiedSince: Timestamp?) -> Request {
+        let content = body.joinWithSeparator("\n")
+        return self.requestWrite(url, method: Method.POST.rawValue, body: content, contentType: "application/newlines", ifUnmodifiedSince: ifUnmodifiedSince)
+    }
+
     func requestPOST(url: NSURL, body: [JSON], ifUnmodifiedSince: Timestamp?) -> Request {
-        let body = body.map { $0.toString(false) }.joinWithSeparator("\n")
-        return self.requestWrite(url, method: Method.POST.rawValue, body: body, contentType: "application/newlines", ifUnmodifiedSince: ifUnmodifiedSince)
+        return self.requestPOST(url, body: body.map { $0.toString(false) }, ifUnmodifiedSince: ifUnmodifiedSince)
     }
 
     /**
@@ -603,18 +625,19 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
         return self.collectionURI.URLByAppendingPathComponent(guid)
     }
 
-    public func post(records: [Record<T>], ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<POSTResult>>> {
+    // Exposed so we can batch by size.
+    public func serializeRecord(record: Record<T>) -> String? {
+        return self.encrypter.serializer(record)?.toString(false)
+    }
+
+    public func post(lines: [String], ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<POSTResult>>> {
         let deferred = Deferred<Maybe<StorageResponse<POSTResult>>>(defaultQueue: client.resultQueue)
 
         if self.client.checkBackoff(deferred) {
             return deferred
         }
 
-        // TODO: charset
-        // TODO: if any of these fail, we should do _something_. Right now we just ignore them.
-        let json = optFilter(records.map(self.encrypter.serializer))
-
-        let req = client.requestPOST(self.collectionURI, body: json, ifUnmodifiedSince: nil)
+        let req = client.requestPOST(self.collectionURI, body: lines, ifUnmodifiedSince: nil)
         req.responsePartialParsedJSON(queue: collectionQueue, completionHandler: self.client.errorWrap(deferred) { (_, response, result) in
             if let json: JSON = result.value as? JSON,
                let result = POSTResult.fromJSON(json) {
@@ -628,6 +651,14 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
         })
 
         return deferred
+    }
+
+    public func post(records: [Record<T>], ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<POSTResult>>> {
+
+        // TODO: charset
+        // TODO: if any of these fail, we should do _something_. Right now we just ignore them.
+        let lines = optFilter(records.map(self.serializeRecord))
+        return self.post(lines, ifUnmodifiedSince: ifUnmodifiedSince)
     }
 
     public func put(record: Record<T>, ifUnmodifiedSince: Timestamp?) -> Deferred<Maybe<StorageResponse<Timestamp>>> {
@@ -669,6 +700,10 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
      * Unlike every other Sync client, we use the application/json format for fetching
      * multiple requests. The others use application/newlines. We don't want to write
      * another Serializer, and we're loading everything into memory anyway.
+     *
+     * It is the caller's responsibility to check whether the returned payloads are invalid.
+     *
+     * Only non-JSON and malformed envelopes will be dropped.
      */
     public func getSince(since: Timestamp, sort: SortOption?=nil, limit: Int?=nil, offset: String?=nil) -> Deferred<Maybe<StorageResponse<[Record<T>]>>> {
         let deferred = Deferred<Maybe<StorageResponse<[Record<T>]>>>(defaultQueue: client.resultQueue)
@@ -718,7 +753,7 @@ public class Sync15CollectionClient<T: CleartextPayloadJSON> {
                 return Record<T>.fromEnvelope(envelope, payloadFactory: self.encrypter.factory)
             }
 
-            let records = optFilter(arr.map(recordify))
+            let records = arr.flatMap(recordify)
             let response = StorageResponse(value: records, response: response!)
             deferred.fill(Maybe(success: response))
         })

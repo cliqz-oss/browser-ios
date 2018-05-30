@@ -7,23 +7,87 @@ import UIKit
 public enum AppBuildChannel {
     case Developer
     case Aurora
+    case Fennec
     case Release
+    case Beta
 }
 
 public struct AppConstants {
-#if MOZ_CHANNEL_AURORA
-    public static let BuildChannel = AppBuildChannel.Aurora
-#elseif MOZ_CHANNEL_RELEASE
-    public static let BuildChannel = AppBuildChannel.Release
-#else
-    public static let BuildChannel = AppBuildChannel.Developer
-#endif
-
-#if MOZ_CHANNEL_DEBUG
-    public static let IsDebug = true
-#else
-    public static let IsDebug = false
-#endif
 
     public static let IsRunningTest = NSClassFromString("XCTestCase") != nil
+
+    // True if this process is executed as part of a Fastlane Snapshot test
+    public static let IsRunningFastlaneSnapshot = NSProcessInfo.processInfo().arguments.contains("FASTLANE_SNAPSHOT")
+
+    /// Build Channel.
+    public static let BuildChannel: AppBuildChannel = {
+#if MOZ_CHANNEL_AURORA
+    return AppBuildChannel.Aurora
+#elseif MOZ_CHANNEL_FENNEC
+    return AppBuildChannel.Fennec
+#elseif MOZ_CHANNEL_RELEASE
+    return AppBuildChannel.Release
+#elseif MOZ_CHANNEL_BETA
+    return AppBuildChannel.Beta
+#else
+    return AppBuildChannel.Developer
+#endif
+    }()
+
+
+    /// Whether we just mirror (false) or actively merge and upload (true).
+    public static let shouldMergeBookmarks = false
+
+    /// Flag indiciating if we are running in Debug mode or not.
+    public static let isDebug: Bool = {
+#if MOZ_CHANNEL_DEBUG
+    return true
+#else
+    return false
+#endif
+    }()
+
+
+    /// Enables/disables the Login manager UI by hiding the 'Logins' setting item.
+    public static let MOZ_LOGIN_MANAGER: Bool = {
+#if MOZ_CHANNEL_AURORA
+    return true
+#elseif MOZ_CHANNEL_RELEASE
+    return true
+#elseif MOZ_CHANNEL_BETA
+    return true
+#else
+    return true
+#endif
+    }()
+
+    /// Enables/disables the Touch ID/passcode functionality and settings screen
+    public static let MOZ_AUTHENTICATION_MANAGER: Bool = {
+#if MOZ_CHANNEL_AURORA
+    return true
+#elseif MOZ_CHANNEL_FENNEC
+    return true
+#elseif MOZ_CHANNEL_RELEASE
+    return true
+#elseif MOZ_CHANNEL_BETA
+    return true
+#else
+    return true
+#endif
+    }()
+
+    /// Enables/disables the new Menu functionality
+    public static let MOZ_MENU: Bool = {
+        #if MOZ_CHANNEL_AURORA
+            return false
+        #elseif MOZ_CHANNEL_FENNEC
+            return false
+        #elseif MOZ_CHANNEL_RELEASE
+            return false
+        #elseif MOZ_CHANNEL_BETA
+            return true
+        #else
+            return true
+        #endif
+    }()
 }

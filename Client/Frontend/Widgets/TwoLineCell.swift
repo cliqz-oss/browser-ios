@@ -6,6 +6,8 @@ import UIKit
 
 private let ImageSize: CGFloat = 24
 private let ImageMargin: CGFloat = 12
+private let BadgeSize: CGFloat = 16
+private let BadgeMargin: CGFloat = 16
 private let TextColor = UIAccessibilityDarkerSystemColorsEnabled() ? UIColor.blackColor() : UIColor(rgb: 0x333333)
 private let DetailTextColor = UIAccessibilityDarkerSystemColorsEnabled() ? UIColor.darkGrayColor() : UIColor.grayColor()
 private let DetailTextTopMargin = CGFloat(5)
@@ -13,8 +15,23 @@ private let DetailTextTopMargin = CGFloat(5)
 class TwoLineTableViewCell: UITableViewCell {
     private let twoLineHelper = TwoLineCellHelper()
 
+    let _textLabel = UILabel()
+    let _detailTextLabel = UILabel()
+
+    // Override the default labels with our own to disable default UITableViewCell label behaviours like dynamic type
+    override var textLabel: UILabel? {
+        return _textLabel
+    }
+
+    override var detailTextLabel: UILabel? {
+        return _detailTextLabel
+    }
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseIdentifier)
+
+        contentView.addSubview(_textLabel)
+        contentView.addSubview(_detailTextLabel)
 
         twoLineHelper.setUpViews(self, textLabel: textLabel!, detailTextLabel: detailTextLabel!, imageView: imageView!)
 
@@ -30,6 +47,21 @@ class TwoLineTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         twoLineHelper.layoutSubviews()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        separatorInset = UIEdgeInsetsMake(0, ImageSize + 2 * ImageMargin, 0, 0)
+        twoLineHelper.setupDynamicFonts()
+    }
+
+    func setRightBadge(badge: UIImage?) {
+        if let badge = badge {
+            self.accessoryView = UIImageView(image: badge)
+        } else {
+            self.accessoryView = nil
+        }
+        twoLineHelper.hasRightBadge = badge != nil
     }
 
     func setLines(text: String?, detailText: String?) {
@@ -67,6 +99,11 @@ class TwoLineCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         twoLineHelper.layoutSubviews()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        twoLineHelper.setupDynamicFonts()
     }
 
     func setLines(text: String?, detailText: String?) {
@@ -120,6 +157,11 @@ class TwoLineHeaderFooterView: UITableViewHeaderFooterView {
         twoLineHelper.layoutSubviews()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        twoLineHelper.setupDynamicFonts()
+    }
+
     func mergeAccessibilityLabels(views: [AnyObject?]? = nil) {
         twoLineHelper.mergeAccessibilityLabels(views)
     }
@@ -130,6 +172,7 @@ private class TwoLineCellHelper {
     var textLabel: UILabel!
     var detailTextLabel: UILabel!
     var imageView: UIImageView!
+    var hasRightBadge: Bool = false
 
     // TODO: Not ideal. We should figure out a better way to get this initialized.
     func setUpViews(container: UIView, textLabel: UILabel, detailTextLabel: UILabel, imageView: UIImageView) {
@@ -144,13 +187,16 @@ private class TwoLineCellHelper {
             self.container.backgroundColor = UIColor.clearColor()
         }
 
-        textLabel.font = UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)
         textLabel.textColor = TextColor
-
-        detailTextLabel.font = UIFont.systemFontOfSize(10, weight: UIFontWeightRegular)
         detailTextLabel.textColor = DetailTextColor
+        setupDynamicFonts()
 
         imageView.contentMode = .ScaleAspectFill
+    }
+
+    func setupDynamicFonts() {
+        textLabel.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.DefaultMediumFontSize, weight: UIFontWeightMedium)
+        detailTextLabel.font = UIFont.systemFontOfSize(DynamicFontHelper.defaultHelper.DefaultSmallFontSize, weight: UIFontWeightRegular)
     }
 
     func layoutSubviews() {
@@ -162,12 +208,14 @@ private class TwoLineCellHelper {
         if detailTextLabelHeight > 0 {
             contentHeight += detailTextLabelHeight + DetailTextTopMargin
         }
-        
+
+        let textRightInset: CGFloat = hasRightBadge ? (BadgeSize + BadgeMargin) : 0
+
         imageView.frame = CGRectMake(ImageMargin, (height - ImageSize) / 2, ImageSize, ImageSize)
         textLabel.frame = CGRectMake(textLeft, (height - contentHeight) / 2,
-            container.frame.width - textLeft - ImageMargin, textLabelHeight)
+            container.frame.width - textLeft - ImageMargin - textRightInset, textLabelHeight)
         detailTextLabel.frame = CGRectMake(textLeft, textLabel.frame.maxY + DetailTextTopMargin,
-            container.frame.width - textLeft - ImageMargin, detailTextLabelHeight)
+            container.frame.width - textLeft - ImageMargin - textRightInset, detailTextLabelHeight)
     }
 
     func setLines(text: String?, detailText: String?) {
@@ -183,7 +231,8 @@ private class TwoLineCellHelper {
     func mergeAccessibilityLabels(labels: [AnyObject?]?) {
         let labels = labels ?? [textLabel, imageView, detailTextLabel]
 
-        let label = labels.map({ (var label: AnyObject?) -> NSAttributedString? in
+        let label = labels.map({ (label: AnyObject?) -> NSAttributedString? in
+            var label = label
             if let view = label as? UIView {
                 label = view.valueForKey("accessibilityLabel")
             }

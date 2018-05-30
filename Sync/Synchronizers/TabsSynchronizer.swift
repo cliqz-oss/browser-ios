@@ -6,6 +6,7 @@ import Foundation
 import Shared
 import Storage
 import XCGLogger
+import Deferred
 
 private let log = Logger.syncLogger
 let TabsStorageVersion = 1
@@ -84,7 +85,7 @@ public class TabsSynchronizer: TimestampedSingleCollectionSynchronizer, Synchron
 
             func afterWipe() -> Success {
                 let doInsert: (Record<TabsPayload>) -> Deferred<Maybe<(Int)>> = { record in
-                    let remotes = record.payload.remoteTabs
+                    let remotes = record.payload.isValid() ? record.payload.remoteTabs : []
                     let ins = localTabs.insertOrUpdateTabsForClientGUID(record.id, tabs: remotes)
                     ins.upon() { res in
                         if let inserted = res.successValue {
@@ -115,7 +116,7 @@ public class TabsSynchronizer: TimestampedSingleCollectionSynchronizer, Synchron
 
                         let allDone = all(filtered.map(doInsert))
                         return allDone.bind { (results) -> Success in
-                            if let failure = find(results, f: { $0.isFailure }) {
+                            if let failure = results.find({ $0.isFailure }) {
                                 return deferMaybe(failure.failureValue!)
                             }
 

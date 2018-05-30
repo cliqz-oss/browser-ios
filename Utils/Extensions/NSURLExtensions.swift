@@ -53,7 +53,45 @@ private var etldEntries: TLDEntryMap? = {
     return loadEntriesFromDisk()
 }()
 
+// MARK: - Local Resource URL Extensions
 extension NSURL {
+
+    public func allocatedFileSize() -> Int64 {
+        // First try to get the total allocated size and in failing that, get the file allocated size
+        return getResourceLongLongForKey(NSURLTotalFileAllocatedSizeKey)
+            ?? getResourceLongLongForKey(NSURLFileAllocatedSizeKey)
+            ?? 0
+    }
+
+    public func getResourceValueForKey(key: String) -> AnyObject? {
+        var val: AnyObject?
+        do {
+            try getResourceValue(&val, forKey: key)
+        } catch _ {
+            return nil
+        }
+        return val
+    }
+
+    public func getResourceLongLongForKey(key: String) -> Int64? {
+        return (getResourceValueForKey(key) as? NSNumber)?.longLongValue
+    }
+
+    public func getResourceBoolForKey(key: String) -> Bool? {
+        return getResourceValueForKey(key) as? Bool
+    }
+
+    public var isRegularFile: Bool {
+        return getResourceBoolForKey(NSURLIsRegularFileKey) ?? false
+    }
+
+    public func lastComponentIsPrefixedBy(prefix: String) -> Bool {
+        return (pathComponents?.last?.hasPrefix(prefix) ?? false)
+    }
+}
+
+extension NSURL {
+
     public func withQueryParams(params: [NSURLQueryItem]) -> NSURL {
         let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: false)!
         var items = (components.queryItems ?? [])
@@ -95,6 +133,15 @@ extension NSURL {
             return host
         }
         return nil
+    }
+
+    public var origin: String? {
+        guard isWebPage(),
+              let hostPort = self.hostPort else {
+            return nil
+        }
+
+        return "\(scheme)://\(hostPort)"
     }
     
     public func normalizedHostAndPath() -> String? {
@@ -174,6 +221,20 @@ extension NSURL {
         } else {
             return nil
         }
+    }
+
+    public func isWebPage() -> Bool {
+        let httpSchemes = ["http", "https"]
+
+        if let _ = httpSchemes.indexOf(scheme) {
+            return true
+        }
+
+        return false
+    }
+
+    public var isLocal: Bool {
+        return host?.lowercaseString == "localhost" || host == "127.0.0.1" || host == "::1"
     }
 }
 
