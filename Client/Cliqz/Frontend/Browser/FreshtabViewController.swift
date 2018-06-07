@@ -24,7 +24,7 @@ struct FreshtabViewUX {
 	static let ForgetModeTextColor = UIColor(rgb: 0x999999)
 	static let ForgetModeOffset = 50.0
 
-	static let NewsViewMinHeight: CGFloat = 162.0
+	static let NewsViewMinHeight: CGFloat = 26.0
 	static let NewsCellHeight: CGFloat = 68.0
 	static let MinNewsCellsCount = 2
     static let topOffset: CGFloat = 10.0
@@ -62,7 +62,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	fileprivate var forgetModeView: UIView!
 
-	var isNewsExpanded = false
+	static var isNewsExpanded = true
     var expandNewsbutton = UIButton()
 	var topSites = [[String: String]]()
     var topSitesIndexesToRemove = [Int]()
@@ -138,7 +138,6 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	func restoreToInitialState() {
         if !isForgetMode {
-            isNewsExpanded = false
             self.newsTableView?.reloadData()
         }
 	}
@@ -198,11 +197,12 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
             return 0.0
         }
         
-        if self.isNewsExpanded {
-            return (FreshtabViewUX.NewsViewMinHeight + CGFloat((self.tableView(self.newsTableView!, numberOfRowsInSection: 0)) - FreshtabViewUX.MinNewsCellsCount) * FreshtabViewUX.NewsCellHeight)
-        } else {
-            return FreshtabViewUX.NewsViewMinHeight
+        var newsHeight = FreshtabViewUX.NewsViewMinHeight
+        if let newsTableView = self.newsTableView {
+            let rowsCount = CGFloat(self.tableView(newsTableView, numberOfRowsInSection: 0))
+            newsHeight += rowsCount * FreshtabViewUX.NewsCellHeight
         }
+        return newsHeight
     }
 
     private func getInvisibleFreshTabHeight(topSitesHeight: CGFloat, newsHeight: CGFloat) -> CGFloat {
@@ -504,17 +504,17 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	@objc fileprivate func toggoleShowMoreNews() {
 		self.delegate?.dismissKeyboard()
-		self.isNewsExpanded = !self.isNewsExpanded
+		FreshtabViewController.isNewsExpanded = !FreshtabViewController.isNewsExpanded
         
         self.updateViewConstraints()
-        isNewsExpanded ? showMoreNews() : showLessNews()
+        FreshtabViewController.isNewsExpanded ? showMoreNews() : showLessNews()
         
-        if isNewsExpanded {
+        if FreshtabViewController.isNewsExpanded {
             expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
         } else {
             expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
         }
-		self.logNewsViewModifiedSignal(isExpanded: self.isNewsExpanded)
+		self.logNewsViewModifiedSignal(isExpanded: FreshtabViewController.isNewsExpanded)
 	}
 
 	private func showMoreNews() {
@@ -539,7 +539,7 @@ class FreshtabViewController: UIViewController, UIGestureRecognizerDelegate {
 extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.isNewsExpanded ? self.news.count : FreshtabViewUX.MinNewsCellsCount
+        return FreshtabViewController.isNewsExpanded ? self.news.count : FreshtabViewUX.MinNewsCellsCount
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -654,7 +654,7 @@ extension FreshtabViewController: UITableViewDataSource, UITableViewDelegate, UI
 			make.height.equalTo(30)
 			make.width.equalTo(v).dividedBy(2)
 		}
-        if isNewsExpanded {
+        if FreshtabViewController.isNewsExpanded {
             expandNewsbutton.setTitle(NSLocalizedString("LessNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
         } else {
             expandNewsbutton.setTitle(NSLocalizedString("MoreNews", tableName: "Cliqz", comment: "Title to expand news stream"), for: .normal)
