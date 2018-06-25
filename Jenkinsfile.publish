@@ -68,7 +68,6 @@ node('mac-vm-host') {
                     sudo xcodebuild -license accept
                     brew -v
                     npm -g install yarn
-                    rm -rf Cartfile.resolved
                     carthage bootstrap --verbose --platform ios --color auto --no-use-binaries
                     yarn install
                     pod install
@@ -122,6 +121,13 @@ node('mac-vm-host') {
                         '''
                     }
                 }
+            }
+            stage('Clean Up'){
+                sh '''#!/bin/bash -l
+                    set -x
+                    set -e
+                    rm -rf Cartfile.resolved Carthage node_modules Podfile.lock Pods  
+                '''
             }
         }
     }
