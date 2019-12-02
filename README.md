@@ -1,3 +1,6 @@
+# DEPRECATED - Cliqz for iOS version 1.x
+# Current release version is built from https://github.com/cliqz/user-agent-ios 
+
 Cliqz for iOS 
 ===============
 
