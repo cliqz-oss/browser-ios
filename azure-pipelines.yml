@@ -1,0 +1,54 @@
+# Xcode
+# Build, test, and archive an Xcode workspace on macOS.
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
+
+pool:
+  vmImage: 'macOS 10.13'
+
+steps:
+
+- script: sudo xcode-select --switch /Applications/Xcode_9.3.1.app
+  displayName: 'set default xcode to 9.3.1'
+
+- script: $(which carthage) bootstrap --verbose --platform ios --color auto --cache-builds
+  displayName: 'carthage bootstrap'
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    command: 'install'
+
+- task: CocoaPods@0
+  displayName: 'pod install'
+
+- task: Npm@1
+  displayName: 'npm run bundle'
+  inputs:
+    command: 'custom'
+    customCommand: 'run bundle'
+
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,id=7B09A2DD-89CE-40A9-A32A-C1390B0B5CB1" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 6s Sim'
+
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 7 Sim'
+  
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 6 Sim'
+  
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone X Sim'
+ 
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 8 Sim'
+  
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 5 Sim'
+  
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 5s Sim'
+  
+- script: xcodebuild -workspace Client.xcworkspace -scheme "Fennec" -sdk iphonesimulator -destination "platform=iOS Simulator,OS=11.3,name=iPhone 7" OTHER_SWIFT_FLAGS='$(value) -DAUTOMATION' ONLY_ACTIVE_ARCH=NO -derivedDataPath clean build test
+  displayName: 'Xcode Build on iPhone 7s Sim'
+  
